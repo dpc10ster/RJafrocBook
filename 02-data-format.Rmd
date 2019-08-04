@@ -40,7 +40,7 @@ For example, the name of the second treatment is `"2"`.
 attributes(dataset04$readerID)
 ```
 
-For example, the name of the second reader is `"3"`. Apparently reader "2" dropped out of the study.
+For example, the name of the second reader is `"3"`. Apparently reader `"2"` "dropped out" of the study.
 
 ### Numbers of non-diseased and diseased cases
 
@@ -49,19 +49,38 @@ length(dataset04$NL[1,1,,1])
 length(dataset04$LL[1,1,,1])
 ```             
 
-* The third dimension of the `NL` array is the total number of cases, i.e., `r length(dataset04$NL[1,1,,1])`, and the third dimension of the `LL` array,  i.e., `r length(dataset04$LL[1,1,,1])` is the total number of diseased cases. 
+* The third dimension of the `NL` array is the total number of __all__ cases, i.e., `r length(dataset04$NL[1,1,,1])`, and the third dimension of the `LL` array,  i.e., `r length(dataset04$LL[1,1,,1])`, is the total number of diseased cases.
+
+* Subtracting the number of diseased cases from the number of all cases yields the number of non-diseased cases.
 
 * Therefore, in this dataset, there are `r length(dataset04$LL[1,1,,1])` diseased cases and `r (length(dataset04$NL[1,1,,1])-length(dataset04$LL[1,1,,1]))` non-diseased cases.
 
+### Why dimension the `NL` array for the total number of cases?
+* Because, in addition to `LLs`, `NLs` are possible on diseased cases.
+* Only `LLs` are possible on diseased cases.
+* Only `NLs` are possible on non-diseased cases.
+* The missing values are filled in with `-Inf`.
+
 ### Ratings on a non-diseased case
 
-* For treatment 1, reader 1, case 1 (the first non-diseased case) the NL ratings are: 
+* For treatment 1, reader 1 and case 1 (the first non-diseased case), the NL ratings are: 
 ```{r}
 dataset04$NL[1,1,1,]
 ```
 
 ### The meaning of a negative infinity rating
-Obviously, a rating cannot be negative infinity. This value is reserved for __missing ratings__, and more generally, __missing marks__ ^[Since there is a one-to-one correspondence between marks and ratings.]. For example, since all values in the above code chunk are negative infinities, this means this treatment-reader-case combination did not yield any mark-rating pairs. This possibility, alluded to above, is only possible with FROC data. All other paradigms (ROC, LROC and ROI) yield at least one rating per case. 
+* Obviously, a real rating cannot be negative infinity ^[If an observer is so highly confident in the _absence_ of a localized lesion, he will simply _not mark_ the location in question; if he did, then, logically, he should mark _all_ areas in the image that are definitely not lesions; in the FROC paradigm only regions with a reasonable degree of suspicion are marked. The radiologist only wishes to draw attention to regions that are reasonably suspicious; the definition of "reasonable" is determined by clinical considerations.]. This value is reserved for __missing ratings__, and more generally, __missing marks__ ^[Since there is a one-to-one correspondence between marks and ratings.]. For example, since all values in the above code chunk are negative infinities, this means this treatment-reader-case combination did not yield any mark-rating pairs. This possibility, alluded to above, is only possible with FROC data. All other paradigms (ROC, LROC and ROI) yield at least one rating per case. 
+* The length of the fourth dimension of the `NL` array is determined by that treatment-reader-case combination yielding the maximum number of `NLs`. Consider the following chunk:
+
+```{r}
+for (i in 1:5) 
+  for (j in 1:4) 
+    for (k in 1:200) 
+      if (all(dataset04$NL[i,j,k,] != -Inf)) 
+        cat(i, j, k, all(dataset04$NL[i,j,k,] != -Inf),"\n")
+```
+
+* This shows that the fourth dimension of the `NL` array has to be of length 7 because _one, and only reader_, specifically reader "4", made 7 `NL` marks on a diseased case in treatment "5"!
 
 ### Ratings on a non-diseased case
 Unlike non-diseased cases, diseased cases can have both `NL` and `LL` ratings.
@@ -73,8 +92,7 @@ dataset04$NL[1,1,51,]
 dataset04$lesionNum[1]
 dataset04$LL[1,1,1,]
 mean(is.finite(dataset04$LL))
-```             
-
+```
 
 
 `r dataset04$NL[1,1,51,][is.finite(dataset04$NL[1,1,51,])]`. There are only two finite values because this case has two ROI-level-abnormal regions, and 2 plus 2 makes for the assumed 4-regions per case. The corresponding `$lesionNum` field is `r dataset04$lesionNum[1]`.
@@ -84,7 +102,7 @@ dataset04$NL[1,1,51,]
 dataset04$lesionNum[1]
 dataset04$LL[1,1,1,]
 mean(is.finite(dataset04$LL))
-```     
+```    
 
 ```{r}
 mean(is.finite(dataset04$NL[,,1:50,]))
@@ -92,7 +110,7 @@ dataset04$NL[1,1,51,]
 dataset04$lesionNum[1]
 dataset04$LL[1,1,1,]
 mean(is.finite(dataset04$LL))
-```             
+```
 
 
 * The ratings of the 2 ROI-level-abnormal ROIs on this case are `r dataset04$LL[1,1,1,][is.finite(dataset04$LL[1,1,1,])]`. The mean rating over all ROI-level-abnormal ROIs is `r mean(dataset04$LL[is.finite(dataset04$LL)])`.  
@@ -102,7 +120,7 @@ dataset04$NL[1,1,51,]
 dataset04$lesionNum[1]
 dataset04$LL[1,1,1,]
 mean(is.finite(dataset04$LL))
-```     
+```
 
 ## The FROC  Excel data file
 An Excel file in JAFROC format containing simulated ROI data corresponding to `dataset04`, is included with the distribution. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object `ds`.  
@@ -111,7 +129,8 @@ fileName <- system.file(
     "extdata", "includedFrocData.xlsx", package = "RJafroc", mustWork = TRUE)
 ds <- DfReadDataFile(fileName)
 ds$dataType
-```             
+```
+
 The `DfReadDataFile` function automatically recognizes that this is an *ROI* dataset. Its structure is similar to the JAFROC format Excel file, with some important differences, noted below. It contains three worksheets: 
 
 ![](images/FROC-TP-Truth-1.png){width=40%}![](images/FROC-TP-Truth-2.png){width=40%}
