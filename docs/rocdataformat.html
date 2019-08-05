@@ -137,7 +137,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2.2" data-path="rocdataformat.html"><a href="rocdataformat.html#details-of-the-modalityid-and-readerid-list-members"><i class="fa fa-check"></i><b>3.2.2</b> Details of the <code>modalityID</code> and <code>readerID</code> list members</a></li>
 <li class="chapter" data-level="3.2.3" data-path="rocdataformat.html"><a href="rocdataformat.html#details-of-the-nl-and-ll-list-members"><i class="fa fa-check"></i><b>3.2.3</b> Details of the <code>NL</code> and <code>LL</code> list members</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="rocdataformat.html"><a href="rocdataformat.html#the-roc-excel-data-file"><i class="fa fa-check"></i><b>3.3</b> The ROC Excel data file</a></li>
+<li class="chapter" data-level="3.3" data-path="rocdataformat.html"><a href="rocdataformat.html#the-roc-excel-data-file"><i class="fa fa-check"></i><b>3.3</b> The ROC Excel data file</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="rocdataformat.html"><a href="rocdataformat.html#the-roc-excel-file-organization"><i class="fa fa-check"></i><b>3.3.1</b> The ROC Excel file organization</a></li>
+<li class="chapter" data-level="3.3.2" data-path="rocdataformat.html"><a href="rocdataformat.html#the-truth-worksheet-organization"><i class="fa fa-check"></i><b>3.3.2</b> The Truth worksheet organization</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="frocdataformat.html"><a href="frocdataformat.html"><i class="fa fa-check"></i><b>4</b> FROC data format</a><ul>
 <li class="chapter" data-level="4.1" data-path="frocdataformat.html"><a href="frocdataformat.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
@@ -193,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li>With algorithmic readers, e.g., computer aided detection algorithms a floating point rating, if possible, should be retained.</li>
-<li>In the most common study design, termed multiple-reader multiple-case (<strong>MRMC</strong>) the rating collection procedure is repeated for all cases, treatments and readers.</li>
+<li>In the most common study design, termed multiple-reader multiple-case (<strong>MRMC</strong>), the rating collection procedure is repeated for all cases, treatments and readers.</li>
 </ul>
 </div>
 <div id="an-actual-mrmc-roc-dataset" class="section level2">
@@ -303,25 +306,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="the-roc-excel-data-file" class="section level2">
 <h2><span class="header-section-number">3.3</span> The ROC Excel data file</h2>
 <ul>
-<li>An Excel file in JAFROC format containing ROC data corresponding to <code>dataset02</code>, is included with the distribution. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object <code>ds</code>.</li>
+<li>An Excel file in JAFROC format containing ROC data corresponding to <code>dataset02</code>, is included with the <strong>RJafroc</strong> package. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object <code>ds</code>.</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">fileName &lt;-<span class="st"> </span><span class="kw">system.file</span>(</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">    <span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;includedRocData.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">ds &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(fileName)</a></code></pre></div>
+<div id="the-roc-excel-file-organization" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> The ROC Excel file organization</h3>
 <ul>
 <li>It contains three worksheets, <code>Truth</code>, <code>TP</code> and <code>FP</code>.</li>
 <li>The <code>Truth</code> worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased.</li>
+<li>The <code>FP</code> worksheet lists the ratings of non-diseased cases.</li>
+<li>The <code>TP</code> worksheet lists the ratings of diseased cases.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></li>
+</ul>
+</div>
+<div id="the-truth-worksheet-organization" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> The Truth worksheet organization</h3>
+<ul>
 <li>The <code>CaseID</code> column lists the numeric labels identifying each case. Again, string names are possible, but keep them short.</li>
 <li>A <code>1</code> in the <code>LesionID</code> column denotes a diseased case.</li>
 <li>A <code>0</code> in the <code>LesionID</code> column denotes a non-diseased case.</li>
-<li>The <code>Weight</code> column is irrelevant for ROC data.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></li>
+<li>The <code>Weight</code> column is irrelevant for ROC data.<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></li>
 <li>The contents of the <code>Truth</code> worksheet corresponding to <code>dataset02</code> are displayed next:</li>
 </ul>
 <p><img src="images/ROC-Truth-1.png" style="width:40.0%" /><img src="images/ROC-Truth-2.png" style="width:40.0%" /><img src="images/ROC-Truth-3.png" style="width:40.0%" /><img src="images/ROC-Truth-4.png" style="width:40.0%" /></p>
 <pre><code>+ There are 69 non-diseased cases (labeled 1-69) under column `CaseID`.
-+ There are 45 diseased cases (labeled 70-114).  
-+ The `LesionID` field for each non-diseased case (e.g., `CaseID` = 1) is zero. 
-+ The `LesionID` field for each diseased case (e.g., `CaseID` = 70) is unity. 
++ There are 45 diseased cases (labeled 70-114) under column `CaseID`.  
++ The `LesionID` field for each non-diseased case (e.g., `CaseID` = 1) is zero. A zero in this field defines a non-diseased case. 
++ The `LesionID` field for each diseased case (e.g., `CaseID` = 70) is unity. A unit value in this field defines a diseased case. 
 + The `Weights` field is irrelevant for ROC datasets. For convenience it is filled with zeroes.  </code></pre>
 <p><img src="images/ROI-FP-1.png" style="width:40.0%" />
 <img src="images/ROI-FP-2.png" style="width:40.0%" /></p>
@@ -349,6 +361,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </div>
 </div>
+</div>
 <h3>References</h3>
 <div id="refs" class="references">
 <div id="ref-RN2680">
@@ -368,7 +381,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li id="fn2"><p>This is true for ROC, FROC and ROI datasets. LROC datasets have 9 <code>list</code> members.<a href="rocdataformat.html#fnref2" class="footnote-back">↩</a></p></li>
 <li id="fn3"><p>The second “unnecessary” dimension is necessary for compatibility with FROC datasets.<a href="rocdataformat.html#fnref3" class="footnote-back">↩</a></p></li>
 <li id="fn4"><p>For those not familiar, KISS stands for Keep It Simple, Stupid.<a href="rocdataformat.html#fnref4" class="footnote-back">↩</a></p></li>
-<li id="fn5"><p>It is only needed for FROC data.<a href="rocdataformat.html#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>OK, I am being inconsistent. I am using <code>NL</code>, <code>LL</code> for the ratings and <code>FP</code>, <code>TP</code>j for the worksheets. The worksheet format will accept <code>NL</code> and <code>LL</code> instead of <code>FP</code> and <code>TP</code>. However, for ease of generalization to the FROC pardigm it is necessary to use <code>NL</code> and <code>LL</code> for the list members of the dataset object.<a href="rocdataformat.html#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p>It is only needed for FROC data.<a href="rocdataformat.html#fnref6" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

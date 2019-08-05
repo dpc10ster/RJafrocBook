@@ -11,7 +11,7 @@
     + What is your confidence in the preceding decisions? 
         * Three level response: _Low_, _Medium_ or _High_.
 * With algorithmic readers, e.g., computer aided detection algorithms a floating point rating, if possible, should be retained.
-* In the most common study design, termed multiple-reader multiple-case (__MRMC__) the rating collection procedure is repeated for all cases, treatments and readers.
+* In the most common study design, termed multiple-reader multiple-case (__MRMC__), the rating collection procedure is repeated for all cases, treatments and readers.
 
 ## An actual MRMC ROC dataset
 
@@ -120,7 +120,7 @@ mean(dataset02$LL)
 * The mean rating over all diseased cases, treatments and readers, is 4.2977778.
 
 ## The ROC  Excel data file
-* An Excel file in JAFROC format containing ROC data corresponding to `dataset02`, is included with the distribution. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object `ds`.  
+* An Excel file in JAFROC format containing ROC data corresponding to `dataset02`, is included with the __RJafroc__ package.  The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object `ds`.  
 
 ```r
 fileName <- system.file(
@@ -128,8 +128,13 @@ fileName <- system.file(
 ds <- DfReadDataFile(fileName)
 ```
 
+### The ROC Excel file organization
 * It contains three worksheets, `Truth`, `TP` and `FP`.
 * The `Truth` worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. 
+* The `FP` worksheet lists the ratings of non-diseased cases. 
+* The `TP` worksheet lists the ratings of diseased cases ^[OK, I am being inconsistent. I am using `NL`, `LL` for the ratings and `FP`, `TP`j for the worksheets. The worksheet format will accept `NL` and `LL` instead of `FP` and `TP`. However, for ease of generalization to the FROC pardigm it is necessary to use `NL` and `LL` for the list members of the dataset object.].
+
+### The Truth worksheet organization
 * The `CaseID` column lists the numeric labels identifying each case. Again, string names are possible, but keep them short. 
 * A `1` in the `LesionID` column denotes a diseased case.
 * A `0` in the `LesionID` column denotes a non-diseased case.
@@ -140,9 +145,9 @@ ds <- DfReadDataFile(fileName)
 
 
     + There are 69 non-diseased cases (labeled 1-69) under column `CaseID`.
-    + There are 45 diseased cases (labeled 70-114).  
-    + The `LesionID` field for each non-diseased case (e.g., `CaseID` = 1) is zero. 
-    + The `LesionID` field for each diseased case (e.g., `CaseID` = 70) is unity. 
+    + There are 45 diseased cases (labeled 70-114) under column `CaseID`.  
+    + The `LesionID` field for each non-diseased case (e.g., `CaseID` = 1) is zero. A zero in this field defines a non-diseased case. 
+    + The `LesionID` field for each diseased case (e.g., `CaseID` = 70) is unity. A unit value in this field defines a diseased case. 
     + The `Weights` field is irrelevant for ROC datasets. For convenience it is filled with zeroes.  
 
 ![](images/ROI-FP-1.png){width=40%}
