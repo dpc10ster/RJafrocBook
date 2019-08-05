@@ -124,7 +124,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-08-04}
+    \date{2019-08-05}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -145,7 +145,13 @@
 \hypertarget{prerequisites}{%
 \chapter{Prerequisites}\label{prerequisites}}
 
-TBA
+\begin{itemize}
+\tightlist
+\item
+  This book, basically an extended documentation of the \textbf{RJafroc} package, is undergoing extensive edits. It should not be used by the casual user until I give the go ahead.
+\item
+  This book bypasses the file size limits of \textbf{CRAN}, currently 5 MB (which severely limits the extent of the documentation that can be included with the CRAN version of the package).
+\end{itemize}
 
 \hypertarget{intro}{%
 \chapter{Introduction}\label{intro}}
@@ -164,15 +170,317 @@ TBA
   TBA
 \end{itemize}
 
-\hypertarget{frocdataformat}{%
-\chapter{FROC data format}\label{frocdataformat}}
+\hypertarget{rocdataformat}{%
+\chapter{ROC data format}\label{rocdataformat}}
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
 \begin{itemize}
+\tightlist
 \item
-  In the free-response ROC (\_\_FROC\_\_) paradigm \citep{RN85} the observer's task is to indicate (i.e., \textbf{mark} the location of) and \textbf{rate} (i.e., assign an ordered label - or confidence level - representing the degree of suspicion) regions in the image that are perceived as suspicious for presence of disease. Accordingly, FROC data consists of \textbf{mark-rating pairs}, where each mark indicates a region \footnote{In order to avoid confusion with the ROI-paradigm, I do not like to use the term ROI to describe the marks made by the observer.} that was considered suspicious for presence of a localized lesion and the rating is the corresponding confidence level. The number of mark-rating pairs on any particular case is a-priori unpredictable. It is a non-negative random integer (i.e., 0, 1, 2, \ldots{}) that depends on the case, the reader and the modality. The relatively unstructured nature of FROC data makes FROC paradigm data more difficult to analyze than ROC paradigm data \footnote{Recall that the ROC paradigm always yields a single rating per case.}.
+  In the receiver operating characteristic (\textbf{ROC}) paradigm \citep{RN1766} the observer's task is to \textbf{rate} (i.e., assign an ordered label representing the degree of suspicion) each case for confidence in presence of disease. The rating is frequently called a \emph{confidence level}.
+\item
+  The rating can be an integer or quasi- continuous (e.g., 0 -- 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the case \footnote{The directionaliy of the rating is not a limitation. If lower values correspond to increased confidence level, it is only necessary to transform the observed rating by subtracting it from a constant value. The constant value can be chosen arbitrarily, typically as the maximum of all observed ratings, thereby ensuring that the transformed value is always non-negative.}.
+\item
+  For human observer studies a 6-point rating scale is recommended, collected via two questions \citep{RN2680}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Is the case diseased?
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Binary response: \emph{Yes} or \emph{No}.
+    \end{itemize}
+  \item
+    What is your confidence in the preceding decisions?
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Three level response: \emph{Low}, \emph{Medium} or \emph{High}.
+    \end{itemize}
+  \end{itemize}
+\item
+  With algorithmic readers, e.g., computer aided detection algorithms a floating point rating, if possible, should be retained.
+\item
+  In the most common study design, termed multiple-reader multiple-case (\textbf{MRMC}) the rating collection procedure is repeated for all cases, treatments and readers.
+\end{itemize}
+
+\hypertarget{an-actual-mrmc-roc-dataset}{%
+\section{An actual MRMC ROC dataset}\label{an-actual-mrmc-roc-dataset}}
+
+An actual MRMC ROC dataset \citep{RN1993} is included as \texttt{dataset02}. It has the following structure:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(dataset02)}
+\CommentTok{#> List of 8}
+\CommentTok{#>  $ NL          : num [1:2, 1:5, 1:114, 1] 1 3 2 3 2 2 1 2 3 2 ...}
+\CommentTok{#>  $ LL          : num [1:2, 1:5, 1:45, 1] 5 5 5 5 5 5 5 5 5 5 ...}
+\CommentTok{#>  $ lesionNum   : int [1:45] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ lesionID    : num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ lesionWeight: num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ dataType    : chr "ROC"}
+\CommentTok{#>  $ modalityID  : Named chr [1:2] "0" "1"}
+\CommentTok{#>   ..- attr(*, "names")= chr [1:2] "0" "1"}
+\CommentTok{#>  $ readerID    : Named chr [1:5] "0" "1" "2" "3" ...}
+\CommentTok{#>   ..- attr(*, "names")= chr [1:5] "0" "1" "2" "3" ...}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{overview-of-the-data-structure}{%
+\subsection{Overview of the data structure}\label{overview-of-the-data-structure}}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{dataset} structure is a \texttt{list} variable with 8 members \footnote{This is true for ROC, FROC and ROI datasets. LROC datasets have 9 \texttt{list} members.}.
+\item
+  Ratings of non-diseased cases are stored in the \texttt{NL} list member.
+\item
+  Ratings of diseased cases are stored in the \texttt{LL} list member.
+\item
+  The \texttt{lesionNum} list member is an array of length 45, filled with ones. It lists the number of lesions per case, which for ROC data, is always unity. The length of this array equals the number of diseased cases \texttt{K2}, see below.
+\item
+  The \texttt{lesionID} matrix is a \texttt{{[}45\ x\ 1{]}} array, also filled with ones. \footnote{The second ``unnecessary'' dimension is necessary for compatibility with FROC datasets.}
+\item
+  The \texttt{LesionWeight} list member a also \texttt{{[}45\ x\ 1{]}} array filled with ones.
+\item
+  The \texttt{dataType} list member equals the string \texttt{"ROC"}, identifying it as an ROC dataset.
+\item
+  The \texttt{modalityID} list member is a string array identifying the names of the treatments (see below).
+\item
+  The \texttt{readerID} list member is a string array, identifying the names of the readers (see below).
+\end{itemize}
+
+\hypertarget{details-of-the-modalityid-and-readerid-list-members}{%
+\subsection{\texorpdfstring{Details of the \texttt{modalityID} and \texttt{readerID} list members}{Details of the modalityID and readerID list members}}\label{details-of-the-modalityid-and-readerid-list-members}}
+
+\begin{itemize}
+\tightlist
+\item
+  The names of the treatments are in the \texttt{modalityID} list member:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{attributes}\NormalTok{(dataset02}\OperatorTok{$}\NormalTok{modalityID)}
+\CommentTok{#> $names}
+\CommentTok{#> [1] "0" "1"}
+\end{Highlighting}
+\end{Shaded}
+
+For example, the name of the first treatment is \texttt{"0"}. The names can be longer strings, but use of very long string names may mess up the output formats of the analysis report. Keep the names short.
+
+\begin{itemize}
+\tightlist
+\item
+  The names of the readers are in the \texttt{readerID} array:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{attributes}\NormalTok{(dataset02}\OperatorTok{$}\NormalTok{readerID)}
+\CommentTok{#> $names}
+\CommentTok{#> [1] "0" "1" "2" "3" "4"}
+\end{Highlighting}
+\end{Shaded}
+
+For example, the name of the second reader is \texttt{"1"}. A similar caveat regarding long reader names applies.
+
+\hypertarget{details-of-the-nl-and-ll-list-members}{%
+\subsection{\texorpdfstring{Details of the \texttt{NL} and \texttt{LL} list members}{Details of the NL and LL list members}}\label{details-of-the-nl-and-ll-list-members}}
+
+\begin{itemize}
+\tightlist
+\item
+  For either \texttt{NL} or \texttt{LL} list members, the fourth dimension has unit length. This dimension, which is strictly speaking unnecessary for ROC data, is retained for ease of generalizability to the FROC and ROC paradigms, where more than one rating per case is possible.
+\item
+  \texttt{dataset02} is a 2-treatment 5-reader dataset (the lengths of the first and second dimensions, respectively, of the \texttt{NL} and \texttt{LL} list members).
+\end{itemize}
+
+\hypertarget{numbers-of-non-diseased-and-diseased-cases}{%
+\subsection{Numbers of non-diseased and diseased cases}\label{numbers-of-non-diseased-and-diseased-cases}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{K <-}\StringTok{ }\KeywordTok{length}\NormalTok{(dataset02}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{])}
+\NormalTok{K2 <-}\StringTok{ }\KeywordTok{length}\NormalTok{(dataset02}\OperatorTok{$}\NormalTok{LL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{])}
+\NormalTok{K1 <-}\StringTok{ }\NormalTok{K }\OperatorTok{-}\StringTok{ }\NormalTok{K2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  \texttt{K1} is the number of non-diseased cases, while \texttt{K2} is the number of diseased cases.
+\item
+  The third dimension of the \texttt{NL} array is the total number of \textbf{all} cases, i.e., \texttt{K} = 114, and the third dimension of the \texttt{LL} array, i.e., \texttt{K2} = 45, is the total number of diseased cases.
+\item
+  Subtracting the number of diseased cases from the number of all cases yields the number of non-diseased cases.
+\item
+  Therefore, in this dataset, there are \textbf{45} diseased cases and \textbf{69} non-diseased cases.
+\end{itemize}
+
+\hypertarget{why-dimension-the-nl-array-for-the-total-number-of-cases}{%
+\subsection{\texorpdfstring{Why dimension the \texttt{NL} array for the total number of cases?}{Why dimension the NL array for the total number of cases?}}\label{why-dimension-the-nl-array-for-the-total-number-of-cases}}
+
+\begin{itemize}
+\tightlist
+\item
+  Again, this is for ease of generalizability to the FROC and ROI paradigms.
+\end{itemize}
+
+\hypertarget{ratings-on-a-non-diseased-case}{%
+\subsection{Ratings on a non-diseased case}\label{ratings-on-a-non-diseased-case}}
+
+\begin{itemize}
+\tightlist
+\item
+  For ROC data a non-diseased case can have only one, and exactly one, \texttt{NL} rating.
+\item
+  For treatment 1, reader 1 and case 1 (the first non-diseased case), the NL rating is \texttt{"1"}:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset02}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#> [1] 1}
+\KeywordTok{mean}\NormalTok{(dataset02}\OperatorTok{$}\NormalTok{NL[,,}\DecValTok{1}\OperatorTok{:}\NormalTok{K1,}\DecValTok{1}\NormalTok{])}
+\CommentTok{#> [1] 1.784058}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  This study utilized a 5-point rating scale, 1 thru 5, so non-diseased cases are expected to have low ratings; in this case the lowest rating was observed.
+\item
+  The mean rating over all non-diseased cases, treatments and readers, is 1.784058.
+\end{itemize}
+
+\hypertarget{ratings-on-a-diseased-case}{%
+\subsection{Ratings on a diseased case}\label{ratings-on-a-diseased-case}}
+
+\begin{itemize}
+\tightlist
+\item
+  For ROC data a diseased case can have only one, and exactly one, \texttt{LL} rating.
+\item
+  For treatment 1, reader 1, case 1 (the first diseased case) the LL rating is:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset02}\OperatorTok{$}\NormalTok{LL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#> [1] 5}
+\KeywordTok{mean}\NormalTok{(dataset02}\OperatorTok{$}\NormalTok{LL)}
+\CommentTok{#> [1] 4.297778}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  As noted previously, this study utilized a 5-point rating scale, 1 thru 5, so diseased cases are expected to have high ratings; in this case the highest rating was observed.
+\item
+  The mean rating over all diseased cases, treatments and readers, is 4.2977778.
+\end{itemize}
+
+\hypertarget{the-roc-excel-data-file}{%
+\section{The ROC Excel data file}\label{the-roc-excel-data-file}}
+
+\begin{itemize}
+\tightlist
+\item
+  An Excel file in JAFROC format containing ROC data corresponding to \texttt{dataset02}, is included with the distribution. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object \texttt{ds}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fileName <-}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}
+    \StringTok{"extdata"}\NormalTok{, }\StringTok{"includedRocData.xlsx"}\NormalTok{, }\DataTypeTok{package =} \StringTok{"RJafroc"}\NormalTok{, }\DataTypeTok{mustWork =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{ds <-}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(fileName)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  It contains three worksheets, \texttt{Truth}, \texttt{TP} and \texttt{FP}.
+\item
+  The \texttt{Truth} worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased.
+\item
+  The \texttt{CaseID} column lists the numeric labels identifying each case. Again, string names are possible, but keep them short.
+\item
+  A \texttt{1} in the \texttt{LesionID} column denotes a diseased case.
+\item
+  A \texttt{0} in the \texttt{LesionID} column denotes a non-diseased case.
+\item
+  The \texttt{Weight} column is irrelevant for ROC data \footnote{It is only needed for FROC data.}.
+\item
+  The contents of the \texttt{Truth} worksheet corresponding to \texttt{dataset02} are displayed next:
+\end{itemize}
+
+\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-Truth-1.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-Truth-2.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-Truth-3.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-Truth-4.png}
+
+\begin{verbatim}
++ There are 69 non-diseased cases (labeled 1-69) under column `CaseID`.
++ There are 45 diseased cases (labeled 70-114).  
++ The `LesionID` field for each non-diseased case (e.g., `CaseID` = 1) is zero. 
++ The `LesionID` field for each diseased case (e.g., `CaseID` = 70) is unity. 
++ The `Weights` field is irrelevant for ROC datasets. For convenience it is filled with zeroes.  
+\end{verbatim}
+
+\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROI-FP-1.png}
+\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROI-FP-2.png}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{FP} (or \texttt{NL}) worksheet - this lists the ratings of ROI-level-non-diseased regions.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    For \texttt{ReaderID} = 1, \texttt{ModalityID} = 1 and \texttt{CaseID} = 1 there are 4 rows, corresponding to the 4 ROI-level-non-diseased regions in this case. The corresponding ratings are 1. The pattern repeats for other treatments and readers, but the rating are, of course, different.\\
+  \item
+    Each \texttt{CaseID} is represented in the \texttt{FP} worksheet (a rare exception could occur if a case-level abnon-diseased case has 4 abnon-diseased regions).
+  \end{itemize}
+\end{itemize}
+
+\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROI-TP-1.png}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{TP} (or \texttt{LL}) worksheet - this lists the ratings of ROI-level-abnon-diseased regions.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Because non-diseased cases generate TPs, one does not find any entry with \texttt{CaseID} = 1-50 in the \texttt{TP} worksheet.\\
+  \item
+    The lowest \texttt{CaseID} in the \texttt{TP} worksheet is 51, which corresponds to the first abnon-diseased case.\\
+  \item
+    There are two entries for this case, corresponding to the two ROI-level-abnon-diseased regions present in this case. Recall that corresponding to this \texttt{CaseID} in the \texttt{Truth} worksheet there were two entries with \texttt{LesionID} = 2 and 3. These must match the \texttt{LesionID}'s listed for this case in the \texttt{TP} worksheet. Complementing these two entries, in the \texttt{FP} worksheet for \texttt{CaseID} = 51, there are 2 entries corresponding to the two ROI-level-non-diseased regions in this case.\\
+  \item
+    One should be satisfied that for each abnon-diseased case the sum of the number of entries in the \texttt{TP} and \texttt{FP} worksheets is always 4.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{frocdataformat}{%
+\chapter{FROC data format}\label{frocdataformat}}
+
+\hypertarget{introduction-1}{%
+\section{Introduction}\label{introduction-1}}
+
+\begin{itemize}
+\item
+  In the free-response ROC (\textbf{FROC}) paradigm \citep{RN85} the observer's task is to indicate (i.e., \textbf{mark} the location of) and \textbf{rate} (i.e., assign an ordered label - or confidence level - representing the degree of suspicion) regions in the image that are perceived as suspicious for presence of disease. Accordingly, FROC data consists of \textbf{mark-rating pairs}, where each mark indicates a region \footnote{In order to avoid confusion with the ROI-paradigm, I do not like to use the term ROI to describe the marks made by the observer.} that was considered suspicious for presence of a localized lesion and the rating is the corresponding confidence level. The number of mark-rating pairs on any particular case is a-priori unpredictable. It is a non-negative random integer (i.e., 0, 1, 2, \ldots{}) that depends on the case, the reader and the modality. The relatively unstructured nature of FROC data makes FROC paradigm data more difficult to analyze than ROC paradigm data \footnote{Recall that the ROC paradigm always yields a single rating per case.}.
 \item
   By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (LL) - if it is close to a real lesion - or a non-lesion localization (NL) otherwise.
 \item
@@ -239,8 +547,8 @@ For example, the name of the second treatment is \texttt{"2"}.
 
 For example, the name of the second reader is \texttt{"3"}. Apparently reader \texttt{"2"} ``dropped out'' of the study.
 
-\hypertarget{numbers-of-non-diseased-and-diseased-cases}{%
-\subsection{Numbers of non-diseased and diseased cases}\label{numbers-of-non-diseased-and-diseased-cases}}
+\hypertarget{numbers-of-non-diseased-and-diseased-cases-1}{%
+\subsection{Numbers of non-diseased and diseased cases}\label{numbers-of-non-diseased-and-diseased-cases-1}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -260,8 +568,8 @@ For example, the name of the second reader is \texttt{"3"}. Apparently reader \t
   Therefore, in this dataset, there are 100 diseased cases and 100 non-diseased cases.
 \end{itemize}
 
-\hypertarget{why-dimension-the-nl-array-for-the-total-number-of-cases}{%
-\subsection{\texorpdfstring{Why dimension the \texttt{NL} array for the total number of cases?}{Why dimension the NL array for the total number of cases?}}\label{why-dimension-the-nl-array-for-the-total-number-of-cases}}
+\hypertarget{why-dimension-the-nl-array-for-the-total-number-of-cases-1}{%
+\subsection{\texorpdfstring{Why dimension the \texttt{NL} array for the total number of cases?}{Why dimension the NL array for the total number of cases?}}\label{why-dimension-the-nl-array-for-the-total-number-of-cases-1}}
 
 \begin{itemize}
 \tightlist
@@ -275,8 +583,8 @@ For example, the name of the second reader is \texttt{"3"}. Apparently reader \t
   The missing values are filled in with \texttt{-Inf}.
 \end{itemize}
 
-\hypertarget{ratings-on-a-non-diseased-case}{%
-\subsection{Ratings on a non-diseased case}\label{ratings-on-a-non-diseased-case}}
+\hypertarget{ratings-on-a-non-diseased-case-1}{%
+\subsection{Ratings on a non-diseased case}\label{ratings-on-a-non-diseased-case-1}}
 
 \begin{itemize}
 \tightlist
@@ -319,8 +627,8 @@ For example, the name of the second reader is \texttt{"3"}. Apparently reader \t
   This shows that the fourth dimension of the \texttt{NL} array has to be of length 7 because \emph{one, and only reader}, specifically reader ``4'', made 7 \texttt{NL} marks on a diseased case in treatment ``5''!
 \end{itemize}
 
-\hypertarget{ratings-on-a-non-diseased-case-1}{%
-\subsection{Ratings on a non-diseased case}\label{ratings-on-a-non-diseased-case-1}}
+\hypertarget{ratings-on-a-non-diseased-case-2}{%
+\subsection{Ratings on a non-diseased case}\label{ratings-on-a-non-diseased-case-2}}
 
 Unlike non-diseased cases, diseased cases can have both \texttt{NL} and \texttt{LL} ratings.
 
@@ -470,17 +778,17 @@ The \texttt{DfReadDataFile} function automatically recognizes that this is an \e
   \end{itemize}
 \end{itemize}
 
-\hypertarget{tba-roi-paradigm}{%
-\chapter{TBA ROI paradigm}\label{tba-roi-paradigm}}
+\hypertarget{roidataformat}{%
+\chapter{ROI data format}\label{roidataformat}}
+
+\hypertarget{roi-paradigm}{%
+\section{ROI paradigm}\label{roi-paradigm}}
 
 \begin{itemize}
 \tightlist
 \item
   One can think of the ROI paradigm as similar to the FROC paradigm, but with localization accuracy restricted to belonging to a region (one cannot distinguish multiple lesions within a region). The ROIs are defined prior to the study and made known to all observers participating in the study. Unlike the FROC paradigm, a \textbf{rating is required for every ROI}.
 \end{itemize}
-
-\hypertarget{references}{%
-\section{References}\label{references}}
 
 \bibliography{book.bib,packages.bib,myRefs.bib}
 
