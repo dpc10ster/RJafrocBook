@@ -2,7 +2,10 @@
 
 [![Build Status](https://travis-ci.org/dpc10ster/RJafrocBook.svg?branch=master)](https://travis-ci.org/dpc10ster/RJafrocBook)
 
+# What is this repository for? #
+* Extended documentation for the CRAN version of the RJafroc package
 
+# Documentation (vignettes) is available at https://dpc10ster.github.io/RJafrocBook/ #
 
 * This book, an extended documentation of the __RJafroc__ package, is undergoing extensive edits. 
 * It should not be used by the casual user until I give the go ahead.
