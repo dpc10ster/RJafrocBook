@@ -124,7 +124,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-08-05}
+    \date{2019-08-06}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -662,7 +662,7 @@ Such a dataset \citep{RN1882} is included as \texttt{dataset04}. It has the foll
 \begin{itemize}
 \tightlist
 \item
-  The \texttt{lesionNum} list member is an array of length 100, filled with integers ranging from 1 to the maximum number of actul lesions (per case) in the dataset. The length of this array equals the number of diseased cases \texttt{K2}, 100 in the current example. For this dataset, the contents of \texttt{lesionNum} are shown below:
+  The \texttt{lesionNum} list member is an array of length 100, filled with integers ranging from 1 to 3, the latter being the maximum number of actul lesions (per case) in the dataset. The length of this array equals the number of diseased cases \texttt{K2}, 100 in the current example. For this dataset, the contents of \texttt{lesionNum} are shown below:
 \end{itemize}
 
 \begin{Shaded}
@@ -694,7 +694,7 @@ Such a dataset \citep{RN1882} is included as \texttt{dataset04}. It has the foll
 \item
   The \texttt{lesionID} list member is a \texttt{{[}100\ x\ 3{]}} array.
 \item
-  Essentially it establishes a way of distinguishing between different lesions on a case by naming them.
+  Essentially it establishes a way of distinguishing between different lesions on a case by naming them, or what amounts to the same thing, by labeling them.
 \item
   The problem of distinguishing between different lesions on a case is peculiar to the FROC paradigm.
 \item
@@ -1195,6 +1195,20 @@ The \texttt{DfReadDataFile} function automatically recognizes that this is an \e
     One should be satisfied that for each abnormal case the sum of the number of entries in the \texttt{TP} and \texttt{FP} worksheets is always 4.
   \end{itemize}
 \end{itemize}
+
+\hypertarget{split-plot-analysis}{%
+\chapter{ROC data format}\label{split-plot-analysis}}
+
+\hypertarget{introduction-2}{%
+\section{Introduction}\label{introduction-2}}
+
+Jason:
+Thanks for inviting me to join your profile. Could you describe what you were planning on doing? Please use a simple example that illustrates the basic data collection. The key ~point I want to be sure about is that strict pairing of readers across different treatments is preserved. I once had a study that had different readers interpreting in different treatments, which makes it impossible to separate the treatment effect (which is our primary interest) from a treatment-reader interaction effect. I am going to post that problem on Research Gate (the regulatory agency was telling them to do the study in a non-scientific way). Dev
+
+Dr.~Chakraborty, there will be 8 readers in my study. Around 800 CT images will be collected. Each reader reads 100 CT images unaided and aided by the CADe in two independent reading sessions separated by a washout period of 4 weeks. Each CT image will only be interpreted by one reader. I think it is a split-plot design with cases nested within reader so the strict pairing of readers across different treatments is preserved. Thanks for your help!
+
+Hi Jason,
+This problem has been solved in the ROC context (localization information not used) by Hillis and others; they may even have software. To analyze it using localization, one needs to use a location-sensitive figure of merit, like the weighted AFROC. That would be my recommendation. So, for each reader j, one has a figure of merit theta\_ij, where i is the modality index. One can average over j, yielding theta\_i\_dot. Significance testing can be performed in the usual manner - e.g., DBMH or ORH. A custom program would need to be written or one can construct one out of R-scripts using the existing functions in RJafroc (the Windows program is obsolete). I can help in this regard. I would ask you to read the relevant papers and explain to me if my approach, summarized above, is basically correct. In any case, any method for ROC analysis can be adapted to FROC analysis if one uses the appropriate figure of merit. Good luck. Dev
 
 \hypertarget{roidataformat}{%
 \chapter{ROI data format}\label{roidataformat}}

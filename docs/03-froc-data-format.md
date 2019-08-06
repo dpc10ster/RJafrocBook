@@ -48,7 +48,7 @@ str(dataset04)
 
 #### The `lesionNum` list member
 
-* The `lesionNum` list member is an array of length 100, filled with integers ranging from 1 to the maximum number of actul lesions (per case) in the dataset. The length of this array equals the number of diseased cases `K2`, 100 in the current example. For this dataset, the contents of `lesionNum` are shown below:
+* The `lesionNum` list member is an array of length 100, filled with integers ranging from 1 to 3, the latter being the maximum number of actul lesions (per case) in the dataset. The length of this array equals the number of diseased cases `K2`, 100 in the current example. For this dataset, the contents of `lesionNum` are shown below:
 
 
 ```r
@@ -69,7 +69,7 @@ dataset04$lesionNum[81:100]
 #### The `lesionID` list member
 
 * The `lesionID` list member is a `[100 x 3]` array. 
-* Essentially it establishes a way of distinguishing between different lesions on a case by naming them.
+* Essentially it establishes a way of distinguishing between different lesions on a case by naming them, or what amounts to the same thing, by labeling them.
 * The problem of distinguishing between different lesions on a case is peculiar to the FROC paradigm.
 * With only one conceptual lesion per diseased case, the ROC paradigm does not face this problem.
 * The second dimension of this array indicates that there is at least one diseased case that has three lesions.
