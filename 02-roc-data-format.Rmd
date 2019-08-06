@@ -101,12 +101,23 @@ mean(dataset02$LL)
 * The mean rating over all diseased cases, treatments and readers, is `r mean(dataset02$LL[,,,1])`.
 
 ## The ROC  Excel data file
-* An Excel file in JAFROC format containing ROC data corresponding to `dataset02`, is included with the __RJafroc__ package.  The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object `ds`.  
+* An Excel file in JAFROC format containing ROC data corresponding to `dataset02` is included with the __RJafroc__ package.  The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object `ds`.  
 ```{r}
 fileName <- system.file(
     "extdata", "includedRocData.xlsx", package = "RJafroc", mustWork = TRUE)
 ds <- DfReadDataFile(fileName)
 ```
+
+* `DfReadDataFile` is short for _Data File Function to Read a Data File_. 
+* All data file related functions start with `Df`, and a similar organization applies to other functions. This makes it easier, in my opinion, to find a function in the `R` help system.
+* To see the online help files, use the following command:
+
+```{r}
+help("RJafroc-package")
+```
+
+* Click the `"Show in new window"` button to see it full screen.
+* This bit of experiential advice applies, of course, to all help files.
 
 ### The ROC Excel file organization
 * It contains three worksheets, `Truth`, `TP` and `FP`.
@@ -114,7 +125,7 @@ ds <- DfReadDataFile(fileName)
 * The `FP` worksheet lists the ratings of non-diseased cases. 
 * The `TP` worksheet lists the ratings of diseased cases ^[OK, I am being inconsistent. I am using `NL`, `LL` for the ratings and `FP`, `TP`j for the worksheets. The worksheet format will accept `NL` and `LL` instead of `FP` and `TP`. However, for ease of generalization to the FROC pardigm it is necessary to use `NL` and `LL` for the list members of the dataset object.].
 
-### The Truth worksheet organization
+#### The Truth worksheet organization
 * The `CaseID` column lists the numeric labels identifying each case. Again, string names are possible, but keep them short. 
 * A `1` in the `LesionID` column denotes a diseased case.
 * A `0` in the `LesionID` column denotes a non-diseased case.
@@ -124,28 +135,53 @@ ds <- DfReadDataFile(fileName)
 ![](images/ROC-Truth-1.png){width=40%}![](images/ROC-Truth-2.png){width=40%}![](images/ROC-Truth-3.png){width=40%}![](images/ROC-Truth-4.png){width=40%}
 
 
-    + There are 69 non-diseased cases (labeled 1-69) under column `CaseID`.
-    + There are 45 diseased cases (labeled 70-114) under column `CaseID`.  
-    + The `LesionID` field for each non-diseased case (e.g., `CaseID` = 1) is zero. A zero in this field defines a non-diseased case. 
-    + The `LesionID` field for each diseased case (e.g., `CaseID` = 70) is unity. A unit value in this field defines a diseased case. 
-    + The `Weights` field is irrelevant for ROC datasets. For convenience it is filled with zeroes.  
 
-### The FP/NL worksheet organization
-TBA
-![](images/ROI-FP-1.png){width=40%}
-![](images/ROI-FP-2.png){width=40%}
+* There are 69 non-diseased cases (labeled 1-69) under column `CaseID`.
+* There are 45 diseased cases (labeled 70-114) under column `CaseID`.  
+* The `LesionID` field for each non-diseased case (e.g., `CaseID` = 1) is zero. A zero in this field defines a non-diseased case. 
+* The `LesionID` field for each diseased case (e.g., `CaseID` = 70) is unity. A unit value in this field defines a diseased case. 
+* The `Weights` field is irrelevant for ROC datasets. For convenience it is filled with zeroes.  
 
-* The `FP` (or `NL`)  worksheet - this lists the ratings of ROI-level-non-diseased regions.  
-    + For `ReaderID` = 1, `ModalityID` = 1 and `CaseID` = 1 there are 4 rows, corresponding to the 4 ROI-level-non-diseased regions in this case. The corresponding ratings are `r dataset02$NL[1,1,1,1][is.finite(dataset02$NL[1,1,1,1])]`. The pattern repeats for other treatments and readers, but the rating are, of course, different.  
-    + Each `CaseID` is represented in the `FP` worksheet (a rare exception could occur if a case-level abnon-diseased case has 4 abnon-diseased regions).
+#### The FP/NL worksheet organization
+The following screen-shots show different parts of the `FP` worsheet for `dataset02`.
 
-![](images/ROI-TP-1.png){width=40%}
+![](images/ROC-FP-1.png){width=40%}![](images/ROC-FP-2.png){width=40%}![](images/ROC-FP-3.png){width=40%}![](images/ROC-FP-5.png){width=40%}
 
-### The TP/LL worksheet organization
-TBA
-* The `TP` (or `LL`) worksheet - this lists the ratings of ROI-level-abnon-diseased regions.  
-    + Because non-diseased cases generate TPs, one does not find any entry with `CaseID` = 1-50 in the `TP` worksheet.   
-    + The lowest `CaseID` in the `TP` worksheet is 51, which corresponds to the first abnon-diseased case.   
-    + There are two entries for this case, corresponding to the two ROI-level-abnon-diseased regions present in this case. Recall that corresponding to this `CaseID` in the `Truth` worksheet there were two entries with `LesionID` = 2 and 3. These must match the `LesionID`'s listed for this case in the `TP` worksheet. Complementing these two entries, in the `FP` worksheet for `CaseID` = 51, there are 2 entries corresponding to the two ROI-level-non-diseased regions in this case.   
-    + One should be satisfied that for each abnon-diseased case the sum of the number of entries in the `TP` and `FP` worksheets is always 4.  
+* The `FP` (or `NL`)  worksheet lists the ratings of non-diseased cases.
+* The __ModalityID__ values range from `0` to `1`, corresponding to two treatments. 
+* The __ReaderID__ values range from `0` to `4`, corresponding to five readers.
+* The __CaseID__ values range from `1` to `69`, corresponding to non-diseased cases __only__.
+* For each reader and treatment, each non-diseased case gets one rating; therefore the length of the column labeled __FP-Rating__ is __69 x 2 x 5 = 690__.
+* The FP ratings tend to be low, there are a lot of ones, fewer twos, even fewer threes, and an ocassional four and a five rating may be found.  
 
+
+#### The TP/LL worksheet organization
+The following screen-shots show different parts of the `FP` worsheet for `dataset02`.
+
+![](images/ROC-TP-1.png){width=40%}![](images/ROC-TP-2.png){width=40%}![](images/ROC-TP-3.png){width=40%}![](images/ROC-TP-4.png){width=40%}
+* The `TP` (or `LL`)  worksheet lists the ratings of diseased cases.
+* The __ModalityID__ values range from `0` to `1`, corresponding to two treatments. 
+* The __ReaderID__ values range from `0` to `4`, corresponding to five readers.
+* The __CaseID__ values range from `70` to `114`, corresponding to diseased cases __only__.
+* For each reader and treatment, each non-diseased case gets one rating; therefore the length of the column labeled __FP-Rating__ is __45 x 2 x 5 = 450__.
+* The TP ratings tend to be high, there are a lot of fives, fewer fours, even fewer threes, and an ocassional two and a one rating may be found.  
+
+## Summary
+* Since each case gets one rating, the ROC data structure is relatively easy to visualize. For a single treatment and single reader, all of the information in the dataset can be summarize by a two-row five-column table, with one row listing the number of non-diseased cases rated 1, the number rated two, etc., ending with the number rated five, and a corresponding row for diseased cases. These 10 values contain all of the information contained in the Excel file for the specified treatment and reader. The example below is for treatment `0` and reader `0`:
+```{r}
+nl <- dataset02$NL
+binnedFpCounts <- array(5)
+for (b in 1:5) binnedFpCounts[b] <- sum(nl[1,1,1:K1,1] == b)
+ll <- dataset02$LL
+binnedTpCounts <- array(5)
+for (b in 1:5) binnedTpCounts[b] <- sum(ll[1,1,1:K2,1] == b)
+binnedFpCounts
+binnedTpCounts
+sum(binnedFpCounts)
+sum(binnedTpCounts)
+```
+
+* The values in `binnedFpCounts` sum to 69.
+* The values in `binnedTpCounts` sum to 45.
+* A similar table is needed for each treatment-reader combination.
+* The real value of the Excel format is that it allows generalization to other paradigms where the number of ratings per case is variable. 

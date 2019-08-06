@@ -139,8 +139,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="rocdataformat.html"><a href="rocdataformat.html#the-roc-excel-data-file"><i class="fa fa-check"></i><b>3.3</b> The ROC Excel data file</a><ul>
 <li class="chapter" data-level="3.3.1" data-path="rocdataformat.html"><a href="rocdataformat.html#the-roc-excel-file-organization"><i class="fa fa-check"></i><b>3.3.1</b> The ROC Excel file organization</a></li>
-<li class="chapter" data-level="3.3.2" data-path="rocdataformat.html"><a href="rocdataformat.html#the-truth-worksheet-organization"><i class="fa fa-check"></i><b>3.3.2</b> The Truth worksheet organization</a></li>
 </ul></li>
+<li class="chapter" data-level="3.4" data-path="rocdataformat.html"><a href="rocdataformat.html#summary"><i class="fa fa-check"></i><b>3.4</b> Summary</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="frocdataformat.html"><a href="frocdataformat.html"><i class="fa fa-check"></i><b>4</b> FROC data format</a><ul>
 <li class="chapter" data-level="4.1" data-path="frocdataformat.html"><a href="frocdataformat.html#introduction-1"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
@@ -306,11 +306,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="the-roc-excel-data-file" class="section level2">
 <h2><span class="header-section-number">3.3</span> The ROC Excel data file</h2>
 <ul>
-<li>An Excel file in JAFROC format containing ROC data corresponding to <code>dataset02</code>, is included with the <strong>RJafroc</strong> package. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object <code>ds</code>.</li>
+<li>An Excel file in JAFROC format containing ROC data corresponding to <code>dataset02</code> is included with the <strong>RJafroc</strong> package. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object <code>ds</code>.</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">fileName &lt;-<span class="st"> </span><span class="kw">system.file</span>(</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">    <span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;includedRocData.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">ds &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(fileName)</a></code></pre></div>
+<ul>
+<li><code>DfReadDataFile</code> is short for <em>Data File Function to Read a Data File</em>.</li>
+<li>All data file related functions start with <code>Df</code>, and a similar organization applies to other functions. This makes it easier, in my opinion, to find a function in the <code>R</code> help system.</li>
+<li>To see the online help files, use the following command:</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">help</span>(<span class="st">&quot;RJafroc-package&quot;</span>)</a></code></pre></div>
+<ul>
+<li>Click the <code>&quot;Show in new window&quot;</code> button to see it full screen.</li>
+<li>This bit of experiential advice applies, of course, to all help files.</li>
+</ul>
 <div id="the-roc-excel-file-organization" class="section level3">
 <h3><span class="header-section-number">3.3.1</span> The ROC Excel file organization</h3>
 <ul>
@@ -319,9 +329,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>The <code>FP</code> worksheet lists the ratings of non-diseased cases.</li>
 <li>The <code>TP</code> worksheet lists the ratings of diseased cases.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></li>
 </ul>
-</div>
-<div id="the-truth-worksheet-organization" class="section level3">
-<h3><span class="header-section-number">3.3.2</span> The Truth worksheet organization</h3>
+<div id="the-truth-worksheet-organization" class="section level4">
+<h4><span class="header-section-number">3.3.1.1</span> The Truth worksheet organization</h4>
 <ul>
 <li>The <code>CaseID</code> column lists the numeric labels identifying each case. Again, string names are possible, but keep them short.</li>
 <li>A <code>1</code> in the <code>LesionID</code> column denotes a diseased case.</li>
@@ -330,36 +339,67 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>The contents of the <code>Truth</code> worksheet corresponding to <code>dataset02</code> are displayed next:</li>
 </ul>
 <p><img src="images/ROC-Truth-1.png" style="width:40.0%" /><img src="images/ROC-Truth-2.png" style="width:40.0%" /><img src="images/ROC-Truth-3.png" style="width:40.0%" /><img src="images/ROC-Truth-4.png" style="width:40.0%" /></p>
-<pre><code>+ There are 69 non-diseased cases (labeled 1-69) under column `CaseID`.
-+ There are 45 diseased cases (labeled 70-114) under column `CaseID`.  
-+ The `LesionID` field for each non-diseased case (e.g., `CaseID` = 1) is zero. A zero in this field defines a non-diseased case. 
-+ The `LesionID` field for each diseased case (e.g., `CaseID` = 70) is unity. A unit value in this field defines a diseased case. 
-+ The `Weights` field is irrelevant for ROC datasets. For convenience it is filled with zeroes.  </code></pre>
-<p><img src="images/ROI-FP-1.png" style="width:40.0%" />
-<img src="images/ROI-FP-2.png" style="width:40.0%" /></p>
 <ul>
-<li>The <code>FP</code> (or <code>NL</code>) worksheet - this lists the ratings of ROI-level-non-diseased regions.
-<ul>
-<li>For <code>ReaderID</code> = 1, <code>ModalityID</code> = 1 and <code>CaseID</code> = 1 there are 4 rows, corresponding to the 4 ROI-level-non-diseased regions in this case. The corresponding ratings are 1. The pattern repeats for other treatments and readers, but the rating are, of course, different.<br />
+<li>There are 69 non-diseased cases (labeled 1-69) under column <code>CaseID</code>.</li>
+<li>There are 45 diseased cases (labeled 70-114) under column <code>CaseID</code>.<br />
 </li>
-<li>Each <code>CaseID</code> is represented in the <code>FP</code> worksheet (a rare exception could occur if a case-level abnon-diseased case has 4 abnon-diseased regions).</li>
-</ul></li>
+<li>The <code>LesionID</code> field for each non-diseased case (e.g., <code>CaseID</code> = 1) is zero. A zero in this field defines a non-diseased case.</li>
+<li>The <code>LesionID</code> field for each diseased case (e.g., <code>CaseID</code> = 70) is unity. A unit value in this field defines a diseased case.</li>
+<li>The <code>Weights</code> field is irrelevant for ROC datasets. For convenience it is filled with zeroes.</li>
 </ul>
-<p><img src="images/ROI-TP-1.png" style="width:40.0%" /></p>
+</div>
+<div id="the-fpnl-worksheet-organization" class="section level4">
+<h4><span class="header-section-number">3.3.1.2</span> The FP/NL worksheet organization</h4>
+<p>The following screen-shots show different parts of the <code>FP</code> worsheet for <code>dataset02</code>.</p>
+<p><img src="images/ROC-FP-1.png" style="width:40.0%" /><img src="images/ROC-FP-2.png" style="width:40.0%" /><img src="images/ROC-FP-3.png" style="width:40.0%" /><img src="images/ROC-FP-5.png" style="width:40.0%" /></p>
 <ul>
-<li>The <code>TP</code> (or <code>LL</code>) worksheet - this lists the ratings of ROI-level-abnon-diseased regions.
+<li>The <code>FP</code> (or <code>NL</code>) worksheet lists the ratings of non-diseased cases.</li>
+<li>The <strong>ModalityID</strong> values range from <code>0</code> to <code>1</code>, corresponding to two treatments.</li>
+<li>The <strong>ReaderID</strong> values range from <code>0</code> to <code>4</code>, corresponding to five readers.</li>
+<li>The <strong>CaseID</strong> values range from <code>1</code> to <code>69</code>, corresponding to non-diseased cases <strong>only</strong>.</li>
+<li>For each reader and treatment, each non-diseased case gets one rating; therefore the length of the column labeled <strong>FP-Rating</strong> is <strong>69 x 2 x 5 = 690</strong>.</li>
+<li>The FP ratings tend to be low, there are a lot of ones, fewer twos, even fewer threes, and an ocassional four and a five rating may be found.</li>
+</ul>
+</div>
+<div id="the-tpll-worksheet-organization" class="section level4">
+<h4><span class="header-section-number">3.3.1.3</span> The TP/LL worksheet organization</h4>
+<p>The following screen-shots show different parts of the <code>FP</code> worsheet for <code>dataset02</code>.</p>
+<p><img src="images/ROC-TP-1.png" style="width:40.0%" /><img src="images/ROC-TP-2.png" style="width:40.0%" /><img src="images/ROC-TP-3.png" style="width:40.0%" /><img src="images/ROC-TP-4.png" style="width:40.0%" />
+* The <code>TP</code> (or <code>LL</code>) worksheet lists the ratings of diseased cases.
+* The <strong>ModalityID</strong> values range from <code>0</code> to <code>1</code>, corresponding to two treatments.
+* The <strong>ReaderID</strong> values range from <code>0</code> to <code>4</code>, corresponding to five readers.
+* The <strong>CaseID</strong> values range from <code>70</code> to <code>114</code>, corresponding to diseased cases <strong>only</strong>.
+* For each reader and treatment, each non-diseased case gets one rating; therefore the length of the column labeled <strong>FP-Rating</strong> is <strong>45 x 2 x 5 = 450</strong>.
+* The TP ratings tend to be high, there are a lot of fives, fewer fours, even fewer threes, and an ocassional two and a one rating may be found.</p>
+</div>
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2><span class="header-section-number">3.4</span> Summary</h2>
 <ul>
-<li>Because non-diseased cases generate TPs, one does not find any entry with <code>CaseID</code> = 1-50 in the <code>TP</code> worksheet.<br />
-</li>
-<li>The lowest <code>CaseID</code> in the <code>TP</code> worksheet is 51, which corresponds to the first abnon-diseased case.<br />
-</li>
-<li>There are two entries for this case, corresponding to the two ROI-level-abnon-diseased regions present in this case. Recall that corresponding to this <code>CaseID</code> in the <code>Truth</code> worksheet there were two entries with <code>LesionID</code> = 2 and 3. These must match the <code>LesionID</code>’s listed for this case in the <code>TP</code> worksheet. Complementing these two entries, in the <code>FP</code> worksheet for <code>CaseID</code> = 51, there are 2 entries corresponding to the two ROI-level-non-diseased regions in this case.<br />
-</li>
-<li>One should be satisfied that for each abnon-diseased case the sum of the number of entries in the <code>TP</code> and <code>FP</code> worksheets is always 4.</li>
-</ul></li>
+<li>Since each case gets one rating, the ROC data structure is relatively easy to visualize. For a single treatment and single reader, all of the information in the dataset can be summarize by a two-row five-column table, with one row listing the number of non-diseased cases rated 1, the number rated two, etc., ending with the number rated five, and a corresponding row for diseased cases. These 10 values contain all of the information contained in the Excel file for the specified treatment and reader. The example below is for treatment <code>0</code> and reader <code>0</code>:</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">nl &lt;-<span class="st"> </span>dataset02<span class="op">$</span>NL</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">binnedFpCounts &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) binnedFpCounts[b] &lt;-<span class="st"> </span><span class="kw">sum</span>(nl[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span>K1,<span class="dv">1</span>] <span class="op">==</span><span class="st"> </span>b)</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">ll &lt;-<span class="st"> </span>dataset02<span class="op">$</span>LL</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">binnedTpCounts &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) binnedTpCounts[b] &lt;-<span class="st"> </span><span class="kw">sum</span>(ll[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span>K2,<span class="dv">1</span>] <span class="op">==</span><span class="st"> </span>b)</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">binnedFpCounts</a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="co">#&gt; [1] 47  9 10  2  1</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">binnedTpCounts</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">#&gt; [1]  4  1  2 10 28</span></a>
+<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="kw">sum</span>(binnedFpCounts)</a>
+<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="co">#&gt; [1] 69</span></a>
+<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="kw">sum</span>(binnedTpCounts)</a>
+<a class="sourceLine" id="cb9-14" data-line-number="14"><span class="co">#&gt; [1] 45</span></a></code></pre></div>
+<ul>
+<li>The values in <code>binnedFpCounts</code> sum to 69.</li>
+<li>The values in <code>binnedTpCounts</code> sum to 45.</li>
+<li>A similar table is needed for each treatment-reader combination.</li>
+<li>The real value of the Excel format is that it allows generalization to other paradigms where the number of ratings per case is variable.</li>
 </ul>
 
-</div>
 </div>
 </div>
 <h3>References</h3>

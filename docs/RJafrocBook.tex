@@ -219,7 +219,7 @@
 \item
   With algorithmic readers, e.g., computer aided detection algorithms a floating point rating, if possible, should be retained.
 \item
-  In the most common study design, termed multiple-reader multiple-case (\textbf{MRMC}) the rating collection procedure is repeated for all cases, treatments and readers.
+  In the most common study design, termed multiple-reader multiple-case (\textbf{MRMC}), the rating collection procedure is repeated for all cases, treatments and readers.
 \end{itemize}
 
 \hypertarget{an-actual-mrmc-roc-dataset}{%
@@ -412,7 +412,7 @@ For example, the name of the second reader is \texttt{"1"}. A similar caveat reg
 \begin{itemize}
 \tightlist
 \item
-  An Excel file in JAFROC format containing ROC data corresponding to \texttt{dataset02}, is included with the distribution. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object \texttt{ds}.
+  An Excel file in JAFROC format containing ROC data corresponding to \texttt{dataset02} is included with the \textbf{RJafroc} package. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object \texttt{ds}.
 \end{itemize}
 
 \begin{Shaded}
@@ -426,9 +426,47 @@ For example, the name of the second reader is \texttt{"1"}. A similar caveat reg
 \begin{itemize}
 \tightlist
 \item
+  \texttt{DfReadDataFile} is short for \emph{Data File Function to Read a Data File}.
+\item
+  All data file related functions start with \texttt{Df}, and a similar organization applies to other functions. This makes it easier, in my opinion, to find a function in the \texttt{R} help system.
+\item
+  To see the online help files, use the following command:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{help}\NormalTok{(}\StringTok{"RJafroc-package"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Click the \texttt{"Show\ in\ new\ window"} button to see it full screen.
+\item
+  This bit of experiential advice applies, of course, to all help files.
+\end{itemize}
+
+\hypertarget{the-roc-excel-file-organization}{%
+\subsection{The ROC Excel file organization}\label{the-roc-excel-file-organization}}
+
+\begin{itemize}
+\tightlist
+\item
   It contains three worksheets, \texttt{Truth}, \texttt{TP} and \texttt{FP}.
 \item
   The \texttt{Truth} worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased.
+\item
+  The \texttt{FP} worksheet lists the ratings of non-diseased cases.
+\item
+  The \texttt{TP} worksheet lists the ratings of diseased cases \footnote{OK, I am being inconsistent. I am using \texttt{NL}, \texttt{LL} for the ratings and \texttt{FP}, \texttt{TP}j for the worksheets. The worksheet format will accept \texttt{NL} and \texttt{LL} instead of \texttt{FP} and \texttt{TP}. However, for ease of generalization to the FROC pardigm it is necessary to use \texttt{NL} and \texttt{LL} for the list members of the dataset object.}.
+\end{itemize}
+
+\hypertarget{the-truth-worksheet-organization}{%
+\subsubsection{The Truth worksheet organization}\label{the-truth-worksheet-organization}}
+
+\begin{itemize}
+\tightlist
 \item
   The \texttt{CaseID} column lists the numeric labels identifying each case. Again, string names are possible, but keep them short.
 \item
@@ -443,49 +481,63 @@ For example, the name of the second reader is \texttt{"1"}. A similar caveat reg
 
 \includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-Truth-1.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-Truth-2.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-Truth-3.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-Truth-4.png}
 
-\begin{verbatim}
-+ There are 69 non-diseased cases (labeled 1-69) under column `CaseID`.
-+ There are 45 diseased cases (labeled 70-114).  
-+ The `LesionID` field for each non-diseased case (e.g., `CaseID` = 1) is zero. 
-+ The `LesionID` field for each diseased case (e.g., `CaseID` = 70) is unity. 
-+ The `Weights` field is irrelevant for ROC datasets. For convenience it is filled with zeroes.  
-\end{verbatim}
-
-\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROI-FP-1.png}
-\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROI-FP-2.png}
-
 \begin{itemize}
 \tightlist
 \item
-  The \texttt{FP} (or \texttt{NL}) worksheet - this lists the ratings of ROI-level-non-diseased regions.
-
-  \begin{itemize}
-  \tightlist
-  \item
-    For \texttt{ReaderID} = 1, \texttt{ModalityID} = 1 and \texttt{CaseID} = 1 there are 4 rows, corresponding to the 4 ROI-level-non-diseased regions in this case. The corresponding ratings are 1. The pattern repeats for other treatments and readers, but the rating are, of course, different.\\
-  \item
-    Each \texttt{CaseID} is represented in the \texttt{FP} worksheet (a rare exception could occur if a case-level abnon-diseased case has 4 abnon-diseased regions).
-  \end{itemize}
+  There are 69 non-diseased cases (labeled 1-69) under column \texttt{CaseID}.
+\item
+  There are 45 diseased cases (labeled 70-114) under column \texttt{CaseID}.\\
+\item
+  The \texttt{LesionID} field for each non-diseased case (e.g., \texttt{CaseID} = 1) is zero. A zero in this field defines a non-diseased case.
+\item
+  The \texttt{LesionID} field for each diseased case (e.g., \texttt{CaseID} = 70) is unity. A unit value in this field defines a diseased case.
+\item
+  The \texttt{Weights} field is irrelevant for ROC datasets. For convenience it is filled with zeroes.
 \end{itemize}
 
-\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROI-TP-1.png}
+\hypertarget{the-fpnl-worksheet-organization}{%
+\subsubsection{The FP/NL worksheet organization}\label{the-fpnl-worksheet-organization}}
+
+The following screen-shots show different parts of the \texttt{FP} worsheet for \texttt{dataset02}.
+
+\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-FP-1.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-FP-2.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-FP-3.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-FP-5.png}
 
 \begin{itemize}
 \tightlist
 \item
-  The \texttt{TP} (or \texttt{LL}) worksheet - this lists the ratings of ROI-level-abnon-diseased regions.
+  The \texttt{FP} (or \texttt{NL}) worksheet lists the ratings of non-diseased cases.
+\item
+  The \textbf{ModalityID} values range from \texttt{0} to \texttt{1}, corresponding to two treatments.
+\item
+  The \textbf{ReaderID} values range from \texttt{0} to \texttt{4}, corresponding to five readers.
+\item
+  The \textbf{CaseID} values range from \texttt{1} to \texttt{69}, corresponding to non-diseased cases \textbf{only}.
+\item
+  For each reader and treatment, each non-diseased case gets one rating; therefore the length of the column labeled \textbf{FP-Rating} is \textbf{69 x 2 x 5 = 690}.
+\item
+  The FP ratings tend to be low, there are a lot of ones, fewer twos, even fewer threes, and an ocassional four and a five rating may be found.
+\end{itemize}
 
-  \begin{itemize}
-  \tightlist
-  \item
-    Because non-diseased cases generate TPs, one does not find any entry with \texttt{CaseID} = 1-50 in the \texttt{TP} worksheet.\\
-  \item
-    The lowest \texttt{CaseID} in the \texttt{TP} worksheet is 51, which corresponds to the first abnon-diseased case.\\
-  \item
-    There are two entries for this case, corresponding to the two ROI-level-abnon-diseased regions present in this case. Recall that corresponding to this \texttt{CaseID} in the \texttt{Truth} worksheet there were two entries with \texttt{LesionID} = 2 and 3. These must match the \texttt{LesionID}'s listed for this case in the \texttt{TP} worksheet. Complementing these two entries, in the \texttt{FP} worksheet for \texttt{CaseID} = 51, there are 2 entries corresponding to the two ROI-level-non-diseased regions in this case.\\
-  \item
-    One should be satisfied that for each abnon-diseased case the sum of the number of entries in the \texttt{TP} and \texttt{FP} worksheets is always 4.
-  \end{itemize}
+\hypertarget{the-tpll-worksheet-organization}{%
+\subsubsection{The TP/LL worksheet organization}\label{the-tpll-worksheet-organization}}
+
+The following screen-shots show different parts of the \texttt{FP} worsheet for \texttt{dataset02}.
+
+\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-TP-1.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-TP-2.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-TP-3.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/ROC-TP-4.png}
+* The \texttt{TP} (or \texttt{LL}) worksheet lists the ratings of diseased cases.
+* The \textbf{ModalityID} values range from \texttt{0} to \texttt{1}, corresponding to two treatments.
+* The \textbf{ReaderID} values range from \texttt{0} to \texttt{4}, corresponding to five readers.
+* The \textbf{CaseID} values range from \texttt{70} to \texttt{114}, corresponding to diseased cases \textbf{only}.
+* For each reader and treatment, each non-diseased case gets one rating; therefore the length of the column labeled \textbf{FP-Rating} is \textbf{45 x 2 x 5 = 450}.
+* The TP ratings tend to be high, there are a lot of fives, fewer fours, even fewer threes, and an ocassional two and a one rating may be found.
+
+\hypertarget{summary}{%
+\section{Summary}\label{summary}}
+
+\begin{itemize}
+\tightlist
+\item
+  Since each case gets one rating, the ROC data structure is relatively easy to visualize. All of the information in the three Excel worksheets can be summarize by a two-row five column table (with 10 values), with one row listing the number of non-diseased cases rated 1, the number rated two, etc., upto the number rated five, and a corresponding row for diseased cases. These 10 values contain all of the information contained in the Excel file.
 \end{itemize}
 
 \hypertarget{frocdataformat}{%
