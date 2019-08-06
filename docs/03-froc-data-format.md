@@ -3,16 +3,22 @@
 
 
 ## Introduction
-* In the free-response ROC (__FROC__) paradigm [@RN85] the observer's task is to indicate (i.e., __mark__ the location of) and __rate__ (i.e., assign an ordered label - or confidence level - representing the degree of suspicion) regions in the image that are perceived as suspicious for presence of disease. Accordingly, FROC data consists of __mark-rating pairs__, where each mark indicates a region ^[In order to avoid confusion with the ROI-paradigm, I do not like to use the term ROI to describe the marks made by the observer.] that was considered suspicious for presence of a localized lesion and the rating is the corresponding confidence level. The number of mark-rating pairs on any particular case is a-priori unpredictable. It is a non-negative random integer (i.e., 0, 1, 2, ...) that depends on the case, the reader and the modality. The relatively unstructured nature of FROC data makes  FROC paradigm data more difficult to analyze than ROC paradigm data ^[Recall that the ROC paradigm always yields a single rating per case.].
-
+* In the free-response ROC (__FROC__) paradigm [@RN85] the observer's task is to indicate (i.e., __mark__ the location of) and __rate__ (i.e., assign an ordered label representing the degree of suspicion) regions in the image that are perceived as suspicious for presence of disease. Accordingly, FROC data consists of __mark-rating pairs__, where each mark indicates a region ^[In order to avoid confusion with the ROI-paradigm, I do not like to use the term ROI to describe the marks made by the observer.] that was considered suspicious for presence of a localized lesion and the rating is the corresponding confidence level. The number of mark-rating pairs on any particular case is a-priori unpredictable. It is a non-negative random integer (i.e., 0, 1, 2, ...) that depends on the case, the reader and the modality. The relatively unstructured nature of FROC data makes  FROC paradigm data seemingly more difficult to analyze than ROC paradigm data ^[I say "seemingly", because the only real difference between ROC and FROC analyses is in the selection of the figure of merit.].
 * By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (LL) - if it is close to a real lesion - or a non-lesion localization (NL) otherwise. 
-* The rating can be an integer or quasi- continuous (e.g., 0 – 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the ROI  ^[The directionaliy of the rating is not a limitation. If lower values correspond to increased confidence level, it is only necessary to transform the observed rating by subtracting it from a constant value. The constant value can be chosen arbitrarily, typically as the maximum of all observed ratings, thereby ensuring that the transformed value is always non-negative.].
-
-* Region-level-normal ratings are stored in the `NL` field and region-level-abnormal ratings are stored in the `LL` field.  
+* The rating can be an integer or quasi- continuous (e.g., 0 – 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the ROI  ^[As with the ROC paradigm, the directionaliy of the rating is not a limitation.].
+* For human observer studies a 5-point rating scale is recommended:
+    + 1: Very low, but finite possibility that region is diseased. 
+    + 2: Low possibility that region is diseased. 
+    + 3: Moderate possibility that region is diseased. 
+    + 4: High possibility that region is diseased. 
+    + 5: Very high possibility that region is diseased.
+* The actual adjectives used to describe the labels are unimportant. What is important is the ordering of the labels and that the observer keeps them relatively constant during the duration of the study.
+* With algorithmic readers, e.g., computer aided detection (CAD) algorithms, a floating point rating, if possible, should be retained.
+* In the most common study design, termed multiple-reader multiple-case (__MRMC__), the rating collection procedure is repeated for all cases, treatments and readers.
 
 ## An actual FROC dataset
 
-An actual FROC dataset [@RN1882] is included as `dataset04`, which has the following `dataset` structure:
+An actual FROC dataset [@RN1882] is included as `dataset04`, which has the following structure:
   
 
 ```r
@@ -33,6 +39,10 @@ Examination of the output reveals that:
 
 * The `dataset` structure is a list with 8 members.
 * This is a 5-treatment 4-reader dataset (the lengths of the first and second dimensions, respectively, of the `NL` and `LL` arrays). The names of the treatments are in the `modalityID` array:
+* Location-level ratings of non-diseased regions are stored in the `NL` list member of the dataset.
+* Location-level ratings of diseased regions are stored in the `LL` list member of the dataset.  
+
+## Names of treatments and readers
 
 
 ```r
