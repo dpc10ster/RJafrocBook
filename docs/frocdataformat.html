@@ -155,7 +155,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3.1" data-path="frocdataformat.html"><a href="frocdataformat.html#the-froc-excel-file-organization"><i class="fa fa-check"></i><b>4.3.1</b> The FROC Excel file organization</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="split-plot-analysis.html"><a href="split-plot-analysis.html"><i class="fa fa-check"></i><b>5</b> ROC data format</a><ul>
+<li class="chapter" data-level="5" data-path="split-plot-analysis.html"><a href="split-plot-analysis.html"><i class="fa fa-check"></i><b>5</b> Split Plot Analysis</a><ul>
 <li class="chapter" data-level="5.1" data-path="split-plot-analysis.html"><a href="split-plot-analysis.html#introduction-2"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="roidataformat.html"><a href="roidataformat.html"><i class="fa fa-check"></i><b>6</b> ROI data format</a><ul>
@@ -189,14 +189,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>In the free-response ROC (<strong>FROC</strong>) paradigm <span class="citation">(Bunch et al. <a href="#ref-RN85">1978</a>)</span> the observer’s task is to:
 <ul>
-<li>indicate (i.e., <strong>mark</strong> the location of) and</li>
+<li><strong>mark</strong> (i.e., indicate the location of) and</li>
 <li><strong>rate</strong> (i.e., assign an ordered label representing the degree of suspicion) regions in the image that are perceived as suspicious for presence of disease.</li>
-<li>Accordingly, FROC data consists of <strong>mark-rating pairs</strong>, where each mark indicates a region<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> that was considered suspicious for presence of a localized lesion and the rating is the corresponding confidence level.</li>
-<li>The number of mark-rating pairs on any particular case is a-priori unpredictable. It is a non-negative random integer (i.e., 0, 1, 2, …) that depends on the case, the reader and the modality. The relatively unstructured nature of FROC data makes FROC paradigm data seemingly more difficult to analyze than ROC paradigm data.<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a></li>
+<li>Accordingly, FROC data consists of <strong>mark-rating pairs</strong>, where each mark indicates a region<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> that was considered suspicious for presence of a localized lesion and the rating is the corresponding confidence level.</li>
+<li>The number of mark-rating pairs on any particular case is a-priori unpredictable. It is a non-negative random integer (i.e., 0, 1, 2, …) that depends on the case, the reader and the modality. The relatively unstructured nature of FROC data makes FROC paradigm data seemingly more difficult to analyze than ROC paradigm data.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
 </ul></li>
 <li>By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (LL) - if it is close to a real lesion - or a non-lesion localization (NL) otherwise.</li>
-<li>The rating can be an integer or quasi- continuous (e.g., 0 – 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the ROI.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a></li>
-<li>For human observer studies a 5-point rating scale is recommended:
+<li>The rating can be an integer or quasi- continuous (e.g., 0 – 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the ROI.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></li>
+<li>For human observer studies a 4 or 5-point rating scale is recommended:
 <ul>
 <li>1: Very low, but finite possibility that the region is diseased.</li>
 <li>2: Low possibility that the region is diseased.</li>
@@ -204,26 +204,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>4: High possibility that the region is diseased.</li>
 <li>5: Very high possibility that the region is diseased.</li>
 </ul></li>
-<li>The actual adjectives used to describe the labels are unimportant. What is important is the ordering of the labels and that the observer holds them relatively constant for the duration of the study.</li>
+<li>The actual adjectives used to describe the labels are unimportant. What is important is the ordering of the labels and that the observer holds them relatively constant for the duration of the study. More allowed ratings, provided the observer can work with them, leads to greater definition of the relevant empirical operating curves (to be introduced later).</li>
 <li>With algorithmic readers, e.g., computer aided detection (CAD) algorithms, a floating point rating, if possible, should be retained.</li>
 <li>In the most common study design, termed multiple-reader multiple-case (<strong>MRMC</strong>), the rating collection procedure is repeated for all cases, treatments and readers.</li>
 </ul>
 </div>
 <div id="an-actual-mrmc-froc-dataset" class="section level2">
 <h2><span class="header-section-number">4.2</span> An actual MRMC FROC dataset</h2>
-<p>Such a dataset <span class="citation">(Zanca et al. <a href="#ref-RN1882">2009</a>)</span> is included as <code>dataset04</code>. It has the following structure:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">str</span>(dataset04)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#&gt; List of 8</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt;  $ NL          : num [1:5, 1:4, 1:200, 1:7] -Inf -Inf 1 -Inf -Inf ...</span></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#&gt;  $ LL          : num [1:5, 1:4, 1:100, 1:3] 4 5 4 5 4 3 5 4 4 3 ...</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt;  $ lesionNum   : int [1:100] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt;  $ lesionID    : num [1:100, 1:3] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
-<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt;  $ lesionWeight: num [1:100, 1:3] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
-<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt;  $ dataType    : chr &quot;FROC&quot;</span></a>
-<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt;  $ modalityID  : Named chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...</span></a>
-<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...</span></a>
-<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#&gt;  $ readerID    : Named chr [1:4] &quot;1&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot;</span></a>
-<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;1&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot;</span></a></code></pre></div>
+<p>An actual MRMC FROC dataset is included as <code>dataset04</code> <span class="citation">(Zanca et al. <a href="#ref-RN1882">2009</a>)</span>. It has the following structure.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">str</span>(dataset04)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; List of 8</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt;  $ NL          : num [1:5, 1:4, 1:200, 1:7] -Inf -Inf 1 -Inf -Inf ...</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt;  $ LL          : num [1:5, 1:4, 1:100, 1:3] 4 5 4 5 4 3 5 4 4 3 ...</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#&gt;  $ lesionNum   : int [1:100] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#&gt;  $ lesionID    : num [1:100, 1:3] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#&gt;  $ lesionWeight: num [1:100, 1:3] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#&gt;  $ dataType    : chr &quot;FROC&quot;</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#&gt;  $ modalityID  : Named chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...</span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">#&gt;  $ readerID    : Named chr [1:4] &quot;1&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot;</span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;1&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot;</span></a></code></pre></div>
 <div id="overview-of-the-froc-data-structure" class="section level3">
 <h3><span class="header-section-number">4.2.1</span> Overview of the FROC data structure</h3>
 <ul>
@@ -234,18 +234,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="the-lesionnum-list-member" class="section level4">
 <h4><span class="header-section-number">4.2.1.1</span> The <code>lesionNum</code> list member</h4>
 <ul>
-<li>The <code>lesionNum</code> list member is an array of length 100, filled with integers ranging from 1 to 3, the latter being the maximum number of actul lesions (per case) in the dataset. The length of this array equals the number of diseased cases <code>K2</code>, 100 in the current example. For this dataset, the contents of <code>lesionNum</code> are shown below:</li>
+<li>The <code>lesionNum</code> list member is an array of length 100, filled with integers ranging from 1 to 3, the latter being the maximum number of actual lesions per case in <code>dataset04</code>. The length of this array equals the number of diseased cases, 100 in the current example. For this dataset, the contents of <code>lesionNum</code> are shown below:</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">dataset04<span class="op">$</span>lesionNum[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>]</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt;  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">dataset04<span class="op">$</span>lesionNum[<span class="dv">21</span><span class="op">:</span><span class="dv">40</span>]</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co">#&gt;  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">dataset04<span class="op">$</span>lesionNum[<span class="dv">41</span><span class="op">:</span><span class="dv">60</span>]</a>
-<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">#&gt;  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 2</span></a>
-<a class="sourceLine" id="cb11-7" data-line-number="7">dataset04<span class="op">$</span>lesionNum[<span class="dv">61</span><span class="op">:</span><span class="dv">80</span>]</a>
-<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="co">#&gt;  [1] 1 1 1 1 1 1 1 1 2 2 1 1 1 2 2 2 2 2 2 1</span></a>
-<a class="sourceLine" id="cb11-9" data-line-number="9">dataset04<span class="op">$</span>lesionNum[<span class="dv">81</span><span class="op">:</span><span class="dv">100</span>]</a>
-<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#&gt;  [1] 2 2 2 2 3 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">dataset04<span class="op">$</span>lesionNum[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>]</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt;  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">dataset04<span class="op">$</span>lesionNum[<span class="dv">21</span><span class="op">:</span><span class="dv">40</span>]</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt;  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">dataset04<span class="op">$</span>lesionNum[<span class="dv">41</span><span class="op">:</span><span class="dv">60</span>]</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt;  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 2</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">dataset04<span class="op">$</span>lesionNum[<span class="dv">61</span><span class="op">:</span><span class="dv">80</span>]</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt;  [1] 1 1 1 1 1 1 1 1 2 2 1 1 1 2 2 2 2 2 2 1</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">dataset04<span class="op">$</span>lesionNum[<span class="dv">81</span><span class="op">:</span><span class="dv">100</span>]</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt;  [1] 2 2 2 2 3 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3</span></a></code></pre></div>
 <ul>
 <li>The above entries tell us that while most cases contain only one lesion each, some contain 2 or even 3 lesions per case.</li>
 </ul>
@@ -255,167 +255,183 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>The <code>lesionID</code> list member is a <code>[100 x 3]</code> array.</li>
 <li>Essentially it establishes a way of distinguishing between different lesions on a case by naming them, or what amounts to the same thing, by labeling them.</li>
-<li>The problem of distinguishing between different lesions on a case is peculiar to the FROC paradigm.</li>
-<li>With only one conceptual lesion per diseased case, the ROC paradigm does not face this problem.</li>
-<li>The second dimension of this array indicates that there is at least one diseased case that has three lesions.</li>
+<li>The problem of distinguishing between different lesions on a case is peculiar to the FROC paradigm. With only one conceptual lesion per diseased case, the ROC paradigm does not face this problem.</li>
+<li>The second dimension of this array indicates that there is at least one diseased case with three lesions.</li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">dataset04<span class="op">$</span>lesionID[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,]</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co">#&gt;       [,1] [,2] [,3]</span></a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co">#&gt;  [1,]    1 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">#&gt;  [2,]    1 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="co">#&gt;  [3,]    1 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="co">#&gt;  [4,]    1 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="co">#&gt;  [5,]    1 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co">#&gt;  [6,]    1 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="co">#&gt;  [7,]    1 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="co">#&gt;  [8,]    1 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb12-11" data-line-number="11"><span class="co">#&gt;  [9,]    1 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="co">#&gt; [10,]    1 -Inf -Inf</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">dataset04<span class="op">$</span>lesionID[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,]</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt;       [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;  [1,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;  [2,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt;  [3,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt;  [4,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt;  [5,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt;  [6,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt;  [7,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;  [8,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  [9,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; [10,]    1 -Inf -Inf</span></a></code></pre></div>
 <ul>
-<li>This indicates that the first ten diseased cases each contain one lesion.</li>
-<li>The lesion on case 1 is <strong>labeled</strong> by the value 1. The <code>-Inf</code> denote missing values. Since there is only one lesion, the placeholders for possible 2 or 3 lesions (not present on this case, but needed to hold lesion labels in other cases) need to be filled with negative infinites.</li>
-<li>The previous paragraph may appear confusing. The following example may help clarify it.</li>
+<li>This indicates that the first ten diseased cases contain one lesion each.</li>
+<li>The lesion on case 1 is <strong>labeled</strong> by the value 1. The <code>-Inf</code> denote missing values. Since there is only one lesion, the placeholders for the second or third lesion (not present on this case, but needed to hold lesion labels in other cases) need to be filled with negative infinites.</li>
+<li>The following example may help clarify this point.</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">dataset04<span class="op">$</span>lesionID[<span class="dv">90</span><span class="op">:</span><span class="dv">100</span>,]</a>
-<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co">#&gt;       [,1] [,2] [,3]</span></a>
-<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="co">#&gt;  [1,]    1    2 -Inf</span></a>
-<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="co">#&gt;  [2,]    1    2    3</span></a>
-<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="co">#&gt;  [3,]    1    2    3</span></a>
-<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="co">#&gt;  [4,]    1    2    3</span></a>
-<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="co">#&gt;  [5,]    1    2    3</span></a>
-<a class="sourceLine" id="cb13-8" data-line-number="8"><span class="co">#&gt;  [6,]    1    2    3</span></a>
-<a class="sourceLine" id="cb13-9" data-line-number="9"><span class="co">#&gt;  [7,]    1    2    3</span></a>
-<a class="sourceLine" id="cb13-10" data-line-number="10"><span class="co">#&gt;  [8,]    1    2    3</span></a>
-<a class="sourceLine" id="cb13-11" data-line-number="11"><span class="co">#&gt;  [9,]    1    2    3</span></a>
-<a class="sourceLine" id="cb13-12" data-line-number="12"><span class="co">#&gt; [10,]    1    2    3</span></a>
-<a class="sourceLine" id="cb13-13" data-line-number="13"><span class="co">#&gt; [11,]    1    2    3</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">dataset04<span class="op">$</span>lesionID[<span class="dv">90</span><span class="op">:</span><span class="dv">100</span>,]</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt;       [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt;  [1,]    1    2 -Inf</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt;  [2,]    1    2    3</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt;  [3,]    1    2    3</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt;  [4,]    1    2    3</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt;  [5,]    1    2    3</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt;  [6,]    1    2    3</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt;  [7,]    1    2    3</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt;  [8,]    1    2    3</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt;  [9,]    1    2    3</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; [10,]    1    2    3</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; [11,]    1    2    3</span></a></code></pre></div>
 <ul>
-<li>Now we see more interesting values.</li>
-<li>Diseeased case 90 has two lesions.</li>
-<li>These are labeled 1 and 2 respectively.</li>
-<li>The key point is this: each lesion on a case has a <em>name</em>. The names are used in the data file creation process.</li>
+<li>Diseased case 90 has two lesions, labeled 1 and 2 respectively.</li>
+<li>The key point is this: each lesion on a case has a distinct <em>name</em>. Just as each case has to have a distinct name (i.e., label), each lesion within a (diseased) case has to have a distinct name.</li>
 <li>When an observer assigns a rating to a particular lesion on a casee, the experimenter needs to record this information correctly.</li>
-<li>For example, if the lesion named “1” is marked and rated a particular value, this value needs to be entered in the spread-sheet as belonging to the lesion named “1”.</li>
-<li>As we saw for ROC data, the <code>TP/LL</code> worksheet has a <code>lesionID</code> column. Since the ROC paradigm does not allow multiple lesions per case, each diseased case conceptually containing one lesion, so the question of distinct lesion names of the same diseased case does not arise.</li>
-<li>At least one investigator made the mistake of assuming the lesion name, i.e., the <code>lesionID</code> field had no meaning, and randomly assigned the rating to the lesions.</li>
+<li>For example, if the lesion with <code>lesionID = 1</code> is marked and rated a particular value, this value needs to be entered in the spread-sheet as belonging to the lesion named <code>lesionID = 1</code>.</li>
+<li>The <code>TP/LL</code> worksheet has a <code>lesionID</code> column.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></li>
+<li>The distinction implied by different <code>lesionID</code> values is important if the lesion weights are unequal.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></li>
 </ul>
 </div>
 <div id="the-lesionweight-list-member" class="section level4">
 <h4><span class="header-section-number">4.2.1.3</span> The <code>LesionWeight</code> list member</h4>
 <ul>
-<li>The <code>LesionWeight</code> list member is also a <code>[100 x 3]</code> array filled with values that add up to unity for each case.</li>
+<li>The <code>LesionWeight</code> list member is also a <code>[100 x 3]</code> array filled with values that add up to unity for each case. The meaning of lesion weights is dicussed in here: <span class="citation">(Chakraborty and Berbaum <a href="#ref-RN1385">2004</a>; Chakraborty and Yoon <a href="#ref-RN1966">2009</a>; Chakraborty <a href="#ref-RN2680">2017</a>)</span></li>
+<li>Briefly, the lesion weights are the clinical importance of detecting the lesion.</li>
+<li>As an example, a highly visible lesion might have low clinical significance if it is likely to be benign, and it would be characterized by a lower weight than a less visible but more deadly lesion on the same case.</li>
+<li>In order to give each case equal importance, the weights must sum to one.</li>
+<li>In the current example, see below, the lesions are equally weighted.</li>
+<li>The choice of weights is a clinical consideration, determined by the costs and benefits of missing or finding the lesion. Lacking this information, which is the most common scenario, it makes sense to weight the lesions equally.</li>
+<li>On a case one one lesion, <code>lesionWeight = 1</code>, and the other lesionWeights are assigned negative infinity values.</li>
+<li>On a case with two lesions, <code>lesionWeight = 0.5</code> for the first two lesions, and the third weight is assigned the negative infinity value.</li>
+<li>On a case with three lesions, <code>lesionWeight = 0.3333</code> for the lesions.</li>
+<li>Rather than assign these values manually, set the Weight column of the Truth worksheet to zeroes. Then the software automatically assigns equal weights when the Excel sheet is read.</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">dataset04<span class="op">$</span>lesionWeight</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="co">#&gt;             [,1]      [,2]      [,3]</span></a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="co">#&gt;   [1,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-4" data-line-number="4"><span class="co">#&gt;   [2,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-5" data-line-number="5"><span class="co">#&gt;   [3,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-6" data-line-number="6"><span class="co">#&gt;   [4,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-7" data-line-number="7"><span class="co">#&gt;   [5,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-8" data-line-number="8"><span class="co">#&gt;   [6,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-9" data-line-number="9"><span class="co">#&gt;   [7,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-10" data-line-number="10"><span class="co">#&gt;   [8,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-11" data-line-number="11"><span class="co">#&gt;   [9,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-12" data-line-number="12"><span class="co">#&gt;  [10,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-13" data-line-number="13"><span class="co">#&gt;  [11,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-14" data-line-number="14"><span class="co">#&gt;  [12,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-15" data-line-number="15"><span class="co">#&gt;  [13,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-16" data-line-number="16"><span class="co">#&gt;  [14,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-17" data-line-number="17"><span class="co">#&gt;  [15,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-18" data-line-number="18"><span class="co">#&gt;  [16,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-19" data-line-number="19"><span class="co">#&gt;  [17,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-20" data-line-number="20"><span class="co">#&gt;  [18,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-21" data-line-number="21"><span class="co">#&gt;  [19,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-22" data-line-number="22"><span class="co">#&gt;  [20,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-23" data-line-number="23"><span class="co">#&gt;  [21,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-24" data-line-number="24"><span class="co">#&gt;  [22,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-25" data-line-number="25"><span class="co">#&gt;  [23,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-26" data-line-number="26"><span class="co">#&gt;  [24,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-27" data-line-number="27"><span class="co">#&gt;  [25,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-28" data-line-number="28"><span class="co">#&gt;  [26,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-29" data-line-number="29"><span class="co">#&gt;  [27,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-30" data-line-number="30"><span class="co">#&gt;  [28,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-31" data-line-number="31"><span class="co">#&gt;  [29,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-32" data-line-number="32"><span class="co">#&gt;  [30,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-33" data-line-number="33"><span class="co">#&gt;  [31,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-34" data-line-number="34"><span class="co">#&gt;  [32,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-35" data-line-number="35"><span class="co">#&gt;  [33,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-36" data-line-number="36"><span class="co">#&gt;  [34,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-37" data-line-number="37"><span class="co">#&gt;  [35,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-38" data-line-number="38"><span class="co">#&gt;  [36,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-39" data-line-number="39"><span class="co">#&gt;  [37,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-40" data-line-number="40"><span class="co">#&gt;  [38,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-41" data-line-number="41"><span class="co">#&gt;  [39,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-42" data-line-number="42"><span class="co">#&gt;  [40,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-43" data-line-number="43"><span class="co">#&gt;  [41,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-44" data-line-number="44"><span class="co">#&gt;  [42,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-45" data-line-number="45"><span class="co">#&gt;  [43,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-46" data-line-number="46"><span class="co">#&gt;  [44,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-47" data-line-number="47"><span class="co">#&gt;  [45,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-48" data-line-number="48"><span class="co">#&gt;  [46,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-49" data-line-number="49"><span class="co">#&gt;  [47,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-50" data-line-number="50"><span class="co">#&gt;  [48,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-51" data-line-number="51"><span class="co">#&gt;  [49,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-52" data-line-number="52"><span class="co">#&gt;  [50,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-53" data-line-number="53"><span class="co">#&gt;  [51,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-54" data-line-number="54"><span class="co">#&gt;  [52,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-55" data-line-number="55"><span class="co">#&gt;  [53,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-56" data-line-number="56"><span class="co">#&gt;  [54,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-57" data-line-number="57"><span class="co">#&gt;  [55,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-58" data-line-number="58"><span class="co">#&gt;  [56,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-59" data-line-number="59"><span class="co">#&gt;  [57,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-60" data-line-number="60"><span class="co">#&gt;  [58,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-61" data-line-number="61"><span class="co">#&gt;  [59,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-62" data-line-number="62"><span class="co">#&gt;  [60,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-63" data-line-number="63"><span class="co">#&gt;  [61,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-64" data-line-number="64"><span class="co">#&gt;  [62,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-65" data-line-number="65"><span class="co">#&gt;  [63,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-66" data-line-number="66"><span class="co">#&gt;  [64,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-67" data-line-number="67"><span class="co">#&gt;  [65,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-68" data-line-number="68"><span class="co">#&gt;  [66,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-69" data-line-number="69"><span class="co">#&gt;  [67,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-70" data-line-number="70"><span class="co">#&gt;  [68,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-71" data-line-number="71"><span class="co">#&gt;  [69,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-72" data-line-number="72"><span class="co">#&gt;  [70,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-73" data-line-number="73"><span class="co">#&gt;  [71,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-74" data-line-number="74"><span class="co">#&gt;  [72,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-75" data-line-number="75"><span class="co">#&gt;  [73,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-76" data-line-number="76"><span class="co">#&gt;  [74,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-77" data-line-number="77"><span class="co">#&gt;  [75,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-78" data-line-number="78"><span class="co">#&gt;  [76,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-79" data-line-number="79"><span class="co">#&gt;  [77,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-80" data-line-number="80"><span class="co">#&gt;  [78,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-81" data-line-number="81"><span class="co">#&gt;  [79,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-82" data-line-number="82"><span class="co">#&gt;  [80,] 1.0000000      -Inf      -Inf</span></a>
-<a class="sourceLine" id="cb14-83" data-line-number="83"><span class="co">#&gt;  [81,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-84" data-line-number="84"><span class="co">#&gt;  [82,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-85" data-line-number="85"><span class="co">#&gt;  [83,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-86" data-line-number="86"><span class="co">#&gt;  [84,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-87" data-line-number="87"><span class="co">#&gt;  [85,] 0.3333333 0.3333333 0.3333333</span></a>
-<a class="sourceLine" id="cb14-88" data-line-number="88"><span class="co">#&gt;  [86,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-89" data-line-number="89"><span class="co">#&gt;  [87,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-90" data-line-number="90"><span class="co">#&gt;  [88,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-91" data-line-number="91"><span class="co">#&gt;  [89,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-92" data-line-number="92"><span class="co">#&gt;  [90,] 0.5000000 0.5000000      -Inf</span></a>
-<a class="sourceLine" id="cb14-93" data-line-number="93"><span class="co">#&gt;  [91,] 0.3333333 0.3333333 0.3333333</span></a>
-<a class="sourceLine" id="cb14-94" data-line-number="94"><span class="co">#&gt;  [92,] 0.3333333 0.3333333 0.3333333</span></a>
-<a class="sourceLine" id="cb14-95" data-line-number="95"><span class="co">#&gt;  [93,] 0.3333333 0.3333333 0.3333333</span></a>
-<a class="sourceLine" id="cb14-96" data-line-number="96"><span class="co">#&gt;  [94,] 0.3333333 0.3333333 0.3333333</span></a>
-<a class="sourceLine" id="cb14-97" data-line-number="97"><span class="co">#&gt;  [95,] 0.3333333 0.3333333 0.3333333</span></a>
-<a class="sourceLine" id="cb14-98" data-line-number="98"><span class="co">#&gt;  [96,] 0.3333333 0.3333333 0.3333333</span></a>
-<a class="sourceLine" id="cb14-99" data-line-number="99"><span class="co">#&gt;  [97,] 0.3333333 0.3333333 0.3333333</span></a>
-<a class="sourceLine" id="cb14-100" data-line-number="100"><span class="co">#&gt;  [98,] 0.3333333 0.3333333 0.3333333</span></a>
-<a class="sourceLine" id="cb14-101" data-line-number="101"><span class="co">#&gt;  [99,] 0.3333333 0.3333333 0.3333333</span></a>
-<a class="sourceLine" id="cb14-102" data-line-number="102"><span class="co">#&gt; [100,] 0.3333333 0.3333333 0.3333333</span></a></code></pre></div>
-<pre><code>+ The `dataType` list member equals the string `&quot;FROC&quot;`, identifying it as an FROC dataset.
-+ The `modalityID` list member is a string array identifying the names of the treatments (see below).
-+ The `readerID` list member is a string array, identifying the names of the readers  (see below).</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">dataset04<span class="op">$</span>lesionWeight[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>,]</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt;       [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt;  [1,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt;  [2,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt;  [3,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt;  [4,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt;  [5,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt;  [6,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt;  [7,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt;  [8,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt;  [9,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt; [10,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt; [11,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; [12,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt; [13,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt; [14,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; [15,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; [16,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; [17,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt; [18,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; [19,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt; [20,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23">dataset04<span class="op">$</span>lesionWeight[<span class="dv">21</span><span class="op">:</span><span class="dv">40</span>,]</a>
+<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt;       [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt;  [1,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co">#&gt;  [2,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-27" data-line-number="27"><span class="co">#&gt;  [3,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-28" data-line-number="28"><span class="co">#&gt;  [4,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-29" data-line-number="29"><span class="co">#&gt;  [5,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-30" data-line-number="30"><span class="co">#&gt;  [6,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-31" data-line-number="31"><span class="co">#&gt;  [7,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-32" data-line-number="32"><span class="co">#&gt;  [8,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-33" data-line-number="33"><span class="co">#&gt;  [9,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-34" data-line-number="34"><span class="co">#&gt; [10,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-35" data-line-number="35"><span class="co">#&gt; [11,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-36" data-line-number="36"><span class="co">#&gt; [12,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-37" data-line-number="37"><span class="co">#&gt; [13,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-38" data-line-number="38"><span class="co">#&gt; [14,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-39" data-line-number="39"><span class="co">#&gt; [15,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-40" data-line-number="40"><span class="co">#&gt; [16,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-41" data-line-number="41"><span class="co">#&gt; [17,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-42" data-line-number="42"><span class="co">#&gt; [18,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-43" data-line-number="43"><span class="co">#&gt; [19,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-44" data-line-number="44"><span class="co">#&gt; [20,]    1 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-45" data-line-number="45">dataset04<span class="op">$</span>lesionWeight[<span class="dv">41</span><span class="op">:</span><span class="dv">60</span>,]</a>
+<a class="sourceLine" id="cb5-46" data-line-number="46"><span class="co">#&gt;       [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb5-47" data-line-number="47"><span class="co">#&gt;  [1,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-48" data-line-number="48"><span class="co">#&gt;  [2,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-49" data-line-number="49"><span class="co">#&gt;  [3,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-50" data-line-number="50"><span class="co">#&gt;  [4,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-51" data-line-number="51"><span class="co">#&gt;  [5,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-52" data-line-number="52"><span class="co">#&gt;  [6,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-53" data-line-number="53"><span class="co">#&gt;  [7,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-54" data-line-number="54"><span class="co">#&gt;  [8,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-55" data-line-number="55"><span class="co">#&gt;  [9,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-56" data-line-number="56"><span class="co">#&gt; [10,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-57" data-line-number="57"><span class="co">#&gt; [11,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-58" data-line-number="58"><span class="co">#&gt; [12,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-59" data-line-number="59"><span class="co">#&gt; [13,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-60" data-line-number="60"><span class="co">#&gt; [14,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-61" data-line-number="61"><span class="co">#&gt; [15,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-62" data-line-number="62"><span class="co">#&gt; [16,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-63" data-line-number="63"><span class="co">#&gt; [17,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-64" data-line-number="64"><span class="co">#&gt; [18,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-65" data-line-number="65"><span class="co">#&gt; [19,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-66" data-line-number="66"><span class="co">#&gt; [20,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-67" data-line-number="67">dataset04<span class="op">$</span>lesionWeight[<span class="dv">61</span><span class="op">:</span><span class="dv">80</span>,]</a>
+<a class="sourceLine" id="cb5-68" data-line-number="68"><span class="co">#&gt;       [,1] [,2] [,3]</span></a>
+<a class="sourceLine" id="cb5-69" data-line-number="69"><span class="co">#&gt;  [1,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-70" data-line-number="70"><span class="co">#&gt;  [2,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-71" data-line-number="71"><span class="co">#&gt;  [3,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-72" data-line-number="72"><span class="co">#&gt;  [4,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-73" data-line-number="73"><span class="co">#&gt;  [5,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-74" data-line-number="74"><span class="co">#&gt;  [6,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-75" data-line-number="75"><span class="co">#&gt;  [7,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-76" data-line-number="76"><span class="co">#&gt;  [8,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-77" data-line-number="77"><span class="co">#&gt;  [9,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-78" data-line-number="78"><span class="co">#&gt; [10,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-79" data-line-number="79"><span class="co">#&gt; [11,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-80" data-line-number="80"><span class="co">#&gt; [12,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-81" data-line-number="81"><span class="co">#&gt; [13,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-82" data-line-number="82"><span class="co">#&gt; [14,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-83" data-line-number="83"><span class="co">#&gt; [15,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-84" data-line-number="84"><span class="co">#&gt; [16,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-85" data-line-number="85"><span class="co">#&gt; [17,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-86" data-line-number="86"><span class="co">#&gt; [18,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-87" data-line-number="87"><span class="co">#&gt; [19,]  0.5  0.5 -Inf</span></a>
+<a class="sourceLine" id="cb5-88" data-line-number="88"><span class="co">#&gt; [20,]  1.0 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb5-89" data-line-number="89">dataset04<span class="op">$</span>lesionWeight[<span class="dv">81</span><span class="op">:</span><span class="dv">100</span>,]</a>
+<a class="sourceLine" id="cb5-90" data-line-number="90"><span class="co">#&gt;            [,1]      [,2]      [,3]</span></a>
+<a class="sourceLine" id="cb5-91" data-line-number="91"><span class="co">#&gt;  [1,] 0.5000000 0.5000000      -Inf</span></a>
+<a class="sourceLine" id="cb5-92" data-line-number="92"><span class="co">#&gt;  [2,] 0.5000000 0.5000000      -Inf</span></a>
+<a class="sourceLine" id="cb5-93" data-line-number="93"><span class="co">#&gt;  [3,] 0.5000000 0.5000000      -Inf</span></a>
+<a class="sourceLine" id="cb5-94" data-line-number="94"><span class="co">#&gt;  [4,] 0.5000000 0.5000000      -Inf</span></a>
+<a class="sourceLine" id="cb5-95" data-line-number="95"><span class="co">#&gt;  [5,] 0.3333333 0.3333333 0.3333333</span></a>
+<a class="sourceLine" id="cb5-96" data-line-number="96"><span class="co">#&gt;  [6,] 0.5000000 0.5000000      -Inf</span></a>
+<a class="sourceLine" id="cb5-97" data-line-number="97"><span class="co">#&gt;  [7,] 0.5000000 0.5000000      -Inf</span></a>
+<a class="sourceLine" id="cb5-98" data-line-number="98"><span class="co">#&gt;  [8,] 0.5000000 0.5000000      -Inf</span></a>
+<a class="sourceLine" id="cb5-99" data-line-number="99"><span class="co">#&gt;  [9,] 0.5000000 0.5000000      -Inf</span></a>
+<a class="sourceLine" id="cb5-100" data-line-number="100"><span class="co">#&gt; [10,] 0.5000000 0.5000000      -Inf</span></a>
+<a class="sourceLine" id="cb5-101" data-line-number="101"><span class="co">#&gt; [11,] 0.3333333 0.3333333 0.3333333</span></a>
+<a class="sourceLine" id="cb5-102" data-line-number="102"><span class="co">#&gt; [12,] 0.3333333 0.3333333 0.3333333</span></a>
+<a class="sourceLine" id="cb5-103" data-line-number="103"><span class="co">#&gt; [13,] 0.3333333 0.3333333 0.3333333</span></a>
+<a class="sourceLine" id="cb5-104" data-line-number="104"><span class="co">#&gt; [14,] 0.3333333 0.3333333 0.3333333</span></a>
+<a class="sourceLine" id="cb5-105" data-line-number="105"><span class="co">#&gt; [15,] 0.3333333 0.3333333 0.3333333</span></a>
+<a class="sourceLine" id="cb5-106" data-line-number="106"><span class="co">#&gt; [16,] 0.3333333 0.3333333 0.3333333</span></a>
+<a class="sourceLine" id="cb5-107" data-line-number="107"><span class="co">#&gt; [17,] 0.3333333 0.3333333 0.3333333</span></a>
+<a class="sourceLine" id="cb5-108" data-line-number="108"><span class="co">#&gt; [18,] 0.3333333 0.3333333 0.3333333</span></a>
+<a class="sourceLine" id="cb5-109" data-line-number="109"><span class="co">#&gt; [19,] 0.3333333 0.3333333 0.3333333</span></a>
+<a class="sourceLine" id="cb5-110" data-line-number="110"><span class="co">#&gt; [20,] 0.3333333 0.3333333 0.3333333</span></a></code></pre></div>
+<ul>
+<li>The <code>dataType</code> list member equals the string <code>&quot;FROC&quot;</code>, identifying <code>dataset04</code> as an FROC dataset.</li>
+<li>The <code>modalityID</code> list member is a string array identifying the names of the treatments (see below).</li>
+<li>The <code>readerID</code> list member is a string array, identifying the names of the readers (see below).</li>
+</ul>
 <p>Examination of the output reveals that:</p>
 <ul>
 <li>The <code>dataset</code> structure is a list with 8 members.</li>
 <li>This is a 5-treatment 4-reader dataset (the lengths of the first and second dimensions, respectively, of the <code>NL</code> and <code>LL</code> arrays). The names of the treatments are in the <code>modalityID</code> array:</li>
-<li>Location-level ratings of non-diseased regions are stored in the <code>NL</code> list member of the dataset.</li>
-<li>Location-level ratings of diseased regions are stored in the <code>LL</code> list member of the dataset.</li>
+<li>Location-level ratings of non-diseased regions are stored in the <code>NL</code> list member.</li>
+<li>Location-level ratings of diseased regions are stored in the <code>LL</code> list member.</li>
 </ul>
 </div>
 </div>
@@ -424,16 +440,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>The names of the treatments are in the <code>modalityID</code> list member:</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">attributes</span>(dataset04<span class="op">$</span>modalityID)</a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="co">#&gt; $names</span></a>
-<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="co">#&gt; [1] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">attributes</span>(dataset04<span class="op">$</span>modalityID)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#&gt; $names</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt; [1] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot;</span></a></code></pre></div>
 <ul>
 <li><p>For example, the name of the second treatment is <code>&quot;2&quot;</code>. The names can be longer strings, but use of very long string names may mess up the output formats of the analysis report.</p></li>
 <li><p>The names of the readers are in the <code>readerID</code> array:</p></li>
 </ul>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">attributes</span>(dataset04<span class="op">$</span>readerID)</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="co">#&gt; $names</span></a>
-<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="co">#&gt; [1] &quot;1&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">attributes</span>(dataset04<span class="op">$</span>readerID)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; $names</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; [1] &quot;1&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot;</span></a></code></pre></div>
 <p>For example, the name of the second reader is <code>&quot;3&quot;</code>. Apparently reader <code>&quot;2&quot;</code> “dropped out” of the study. A similar caveat regarding long reader names applies.</p>
 </div>
 <div id="details-of-the-nl-and-ll-list-members-1" class="section level3">
@@ -448,10 +464,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>TBA</li>
 </ul>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">length</span>(dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="co">#&gt; [1] 200</span></a>
-<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="kw">length</span>(dataset04<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="co">#&gt; [1] 100</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">length</span>(dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">#&gt; [1] 200</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw">length</span>(dataset04<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">#&gt; [1] 100</span></a></code></pre></div>
 <ul>
 <li><p>The third dimension of the <code>NL</code> array is the total number of <strong>all</strong> cases, i.e., 200, and the third dimension of the <code>LL</code> array, i.e., 100, is the total number of diseased cases.</p></li>
 <li><p>Subtracting the number of diseased cases from the number of all cases yields the number of non-diseased cases.</p></li>
@@ -472,21 +488,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>For treatment 1, reader 1 and case 1 (the first non-diseased case), the NL ratings are:</li>
 </ul>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</a>
-<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="co">#&gt; [1] -Inf -Inf -Inf -Inf -Inf -Inf -Inf</span></a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">#&gt; [1] -Inf -Inf -Inf -Inf -Inf -Inf -Inf</span></a></code></pre></div>
 </div>
 <div id="the-meaning-of-a-negative-infinity-rating" class="section level4">
 <h4><span class="header-section-number">4.2.4.2</span> The meaning of a negative infinity rating</h4>
 <ul>
-<li>Obviously, a real rating cannot be negative infinity.<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a> This value is reserved for <strong>missing ratings</strong>, and more generally, <strong>missing marks</strong>.<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a> For example, since all values in the above code chunk are negative infinities, this means this treatment-reader-case combination did not yield any mark-rating pairs. This possibility, alluded to above, is only possible with FROC data. All other paradigms (ROC, LROC and ROI) yield at least one rating per case.</li>
+<li>Obviously, a real rating cannot be negative infinity.<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> This value is reserved for <strong>missing ratings</strong>, and more generally, <strong>missing marks</strong>.<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> For example, since all values in the above code chunk are negative infinities, this means this treatment-reader-case combination did not yield any mark-rating pairs. This possibility, alluded to above, is only possible with FROC data. All other paradigms (ROC, LROC and ROI) yield at least one rating per case.</li>
 <li>The length of the fourth dimension of the <code>NL</code> array is determined by that treatment-reader-case combination yielding the maximum number of <code>NLs</code>. Consider the following chunk:</li>
 </ul>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) </a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>) </a>
-<a class="sourceLine" id="cb20-3" data-line-number="3">    <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">200</span>) </a>
-<a class="sourceLine" id="cb20-4" data-line-number="4">      <span class="cf">if</span> (<span class="kw">all</span>(dataset04<span class="op">$</span>NL[i,j,k,] <span class="op">!=</span><span class="st"> </span><span class="op">-</span><span class="ot">Inf</span>)) </a>
-<a class="sourceLine" id="cb20-5" data-line-number="5">        <span class="kw">cat</span>(i, j, k, <span class="kw">all</span>(dataset04<span class="op">$</span>NL[i,j,k,] <span class="op">!=</span><span class="st"> </span><span class="op">-</span><span class="ot">Inf</span>),<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</a>
-<a class="sourceLine" id="cb20-6" data-line-number="6"><span class="co">#&gt; 5 4 192 TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) </a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>) </a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">    <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">200</span>) </a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">      <span class="cf">if</span> (<span class="kw">all</span>(dataset04<span class="op">$</span>NL[i,j,k,] <span class="op">!=</span><span class="st"> </span><span class="op">-</span><span class="ot">Inf</span>)) </a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">        <span class="kw">cat</span>(i, j, k, <span class="kw">all</span>(dataset04<span class="op">$</span>NL[i,j,k,] <span class="op">!=</span><span class="st"> </span><span class="op">-</span><span class="ot">Inf</span>),<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; 5 4 192 TRUE</span></a></code></pre></div>
 <ul>
 <li>This shows that the fourth dimension of the <code>NL</code> array has to be of length 7 because <em>one, and only reader</em>, specifically reader “4”, made 7 <code>NL</code> marks on a diseased case in treatment “5”!</li>
 </ul>
@@ -498,94 +514,93 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>For treatment 1, reader 1, case 51 (the 1st diseased case) the NL ratings are:</li>
 </ul>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">51</span>,]</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="co">#&gt; [1] -Inf -Inf -Inf -Inf -Inf -Inf -Inf</span></a>
-<a class="sourceLine" id="cb21-3" data-line-number="3">dataset04<span class="op">$</span>lesionNum[<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="co">#&gt; [1] 1</span></a>
-<a class="sourceLine" id="cb21-5" data-line-number="5">dataset04<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</a>
-<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="co">#&gt; [1]    4 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb21-7" data-line-number="7"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>LL))</a>
-<a class="sourceLine" id="cb21-8" data-line-number="8"><span class="co">#&gt; [1] 0.3043333</span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">51</span>,]</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt; [1] -Inf -Inf -Inf -Inf -Inf -Inf -Inf</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">dataset04<span class="op">$</span>lesionNum[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co">#&gt; [1] 1</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">dataset04<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">#&gt; [1]    4 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>LL))</a>
+<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="co">#&gt; [1] 0.3043333</span></a></code></pre></div>
 <p>. There are only two finite values because this case has two ROI-level-abnormal regions, and 2 plus 2 makes for the assumed 4-regions per case. The corresponding <code>$lesionNum</code> field is 1.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>NL[,,<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,]))</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="co">#&gt; [1] 0.05942857</span></a>
-<a class="sourceLine" id="cb22-3" data-line-number="3">dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">51</span>,]</a>
-<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="co">#&gt; [1] -Inf -Inf -Inf -Inf -Inf -Inf -Inf</span></a>
-<a class="sourceLine" id="cb22-5" data-line-number="5">dataset04<span class="op">$</span>lesionNum[<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb22-6" data-line-number="6"><span class="co">#&gt; [1] 1</span></a>
-<a class="sourceLine" id="cb22-7" data-line-number="7">dataset04<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</a>
-<a class="sourceLine" id="cb22-8" data-line-number="8"><span class="co">#&gt; [1]    4 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb22-9" data-line-number="9"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>LL))</a>
-<a class="sourceLine" id="cb22-10" data-line-number="10"><span class="co">#&gt; [1] 0.3043333</span></a></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>NL[,,<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,]))</a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="co">#&gt; [1] 0.05942857</span></a>
-<a class="sourceLine" id="cb23-3" data-line-number="3">dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">51</span>,]</a>
-<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="co">#&gt; [1] -Inf -Inf -Inf -Inf -Inf -Inf -Inf</span></a>
-<a class="sourceLine" id="cb23-5" data-line-number="5">dataset04<span class="op">$</span>lesionNum[<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="co">#&gt; [1] 1</span></a>
-<a class="sourceLine" id="cb23-7" data-line-number="7">dataset04<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</a>
-<a class="sourceLine" id="cb23-8" data-line-number="8"><span class="co">#&gt; [1]    4 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb23-9" data-line-number="9"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>LL))</a>
-<a class="sourceLine" id="cb23-10" data-line-number="10"><span class="co">#&gt; [1] 0.3043333</span></a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>NL[,,<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,]))</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co">#&gt; [1] 0.05942857</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">51</span>,]</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">#&gt; [1] -Inf -Inf -Inf -Inf -Inf -Inf -Inf</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">dataset04<span class="op">$</span>lesionNum[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="co">#&gt; [1] 1</span></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">dataset04<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co">#&gt; [1]    4 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>LL))</a>
+<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="co">#&gt; [1] 0.3043333</span></a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>NL[,,<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,]))</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co">#&gt; [1] 0.05942857</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">51</span>,]</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="co">#&gt; [1] -Inf -Inf -Inf -Inf -Inf -Inf -Inf</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">dataset04<span class="op">$</span>lesionNum[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="co">#&gt; [1] 1</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">dataset04<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</a>
+<a class="sourceLine" id="cb13-8" data-line-number="8"><span class="co">#&gt; [1]    4 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb13-9" data-line-number="9"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>LL))</a>
+<a class="sourceLine" id="cb13-10" data-line-number="10"><span class="co">#&gt; [1] 0.3043333</span></a></code></pre></div>
 <ul>
 <li>The ratings of the 2 ROI-level-abnormal ROIs on this case are 4. The mean rating over all ROI-level-abnormal ROIs is 3.6785323.</li>
 </ul>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>NL[,,<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,]))</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="co">#&gt; [1] 0.05942857</span></a>
-<a class="sourceLine" id="cb24-3" data-line-number="3">dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">51</span>,]</a>
-<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="co">#&gt; [1] -Inf -Inf -Inf -Inf -Inf -Inf -Inf</span></a>
-<a class="sourceLine" id="cb24-5" data-line-number="5">dataset04<span class="op">$</span>lesionNum[<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb24-6" data-line-number="6"><span class="co">#&gt; [1] 1</span></a>
-<a class="sourceLine" id="cb24-7" data-line-number="7">dataset04<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</a>
-<a class="sourceLine" id="cb24-8" data-line-number="8"><span class="co">#&gt; [1]    4 -Inf -Inf</span></a>
-<a class="sourceLine" id="cb24-9" data-line-number="9"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>LL))</a>
-<a class="sourceLine" id="cb24-10" data-line-number="10"><span class="co">#&gt; [1] 0.3043333</span></a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>NL[,,<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,]))</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="co">#&gt; [1] 0.05942857</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">dataset04<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">51</span>,]</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4"><span class="co">#&gt; [1] -Inf -Inf -Inf -Inf -Inf -Inf -Inf</span></a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">dataset04<span class="op">$</span>lesionNum[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6"><span class="co">#&gt; [1] 1</span></a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">dataset04<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</a>
+<a class="sourceLine" id="cb14-8" data-line-number="8"><span class="co">#&gt; [1]    4 -Inf -Inf</span></a>
+<a class="sourceLine" id="cb14-9" data-line-number="9"><span class="kw">mean</span>(<span class="kw">is.finite</span>(dataset04<span class="op">$</span>LL))</a>
+<a class="sourceLine" id="cb14-10" data-line-number="10"><span class="co">#&gt; [1] 0.3043333</span></a></code></pre></div>
 </div>
 </div>
 <div id="the-froc-excel-data-file" class="section level2">
 <h2><span class="header-section-number">4.3</span> The FROC Excel data file</h2>
-<p>An Excel file in JAFROC format containing simulated ROI data corresponding to <code>dataset04</code>, is included with the distribution. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object <code>ds</code>.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">fileName &lt;-<span class="st"> </span><span class="kw">system.file</span>(</a>
-<a class="sourceLine" id="cb25-2" data-line-number="2">    <span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;includedFrocData.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb25-3" data-line-number="3">ds &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(fileName)</a>
-<a class="sourceLine" id="cb25-4" data-line-number="4">ds<span class="op">$</span>dataType</a>
-<a class="sourceLine" id="cb25-5" data-line-number="5"><span class="co">#&gt; [1] &quot;FROC&quot;</span></a></code></pre></div>
+<ul>
+<li>An Excel file in JAFROC format containing FROC data corresponding to <code>dataset04</code> is included with the <strong>RJafroc</strong> package <span class="citation">(Zanca et al. <a href="#ref-RN1882">2009</a>)</span>. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object <code>ds</code>.</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">fileName &lt;-<span class="st"> </span><span class="kw">system.file</span>(</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">    <span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;includedFrocData.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">ds &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(fileName)</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">ds<span class="op">$</span>dataType</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="co">#&gt; [1] &quot;FROC&quot;</span></a></code></pre></div>
 <div id="the-froc-excel-file-organization" class="section level3">
 <h3><span class="header-section-number">4.3.1</span> The FROC Excel file organization</h3>
-<p>The <code>DfReadDataFile</code> function automatically recognizes that this is an <em>ROI</em> dataset. Its structure is similar to the JAFROC format Excel file, with some important differences, noted below. It contains three worksheets:</p>
+<p>The structure of the Excel file is superficially similar to the ROC Excel file considered in the previous chapter. However, there are several important differences, noted below <strong>in bold</strong>.</p>
+<ul>
+<li>The <code>Truth</code> worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. <strong>For diseased cases, it additionally indicates the number of lesions, and the weight to be assigned to each lesion.</strong></li>
+<li>The <code>FP</code> worksheet lists the <strong>number (zero or more)</strong> and ratings of <code>NLs</code> on non-diseased <strong>and diseased cases</strong>.</li>
+<li>The <code>TP</code> worksheet lists the <strong>number (zero or more)</strong> and ratings of <strong>marked lesions</strong> on diseased cases.</li>
+</ul>
 <div id="the-truth-worksheet-organization-1" class="section level4">
 <h4><span class="header-section-number">4.3.1.1</span> The Truth worksheet organization</h4>
-</div>
-<div id="the-fpnl-worksheet-organization-1" class="section level4">
-<h4><span class="header-section-number">4.3.1.2</span> The FP/NL worksheet organization</h4>
-</div>
-<div id="the-tpll-worksheet-organization-1" class="section level4">
-<h4><span class="header-section-number">4.3.1.3</span> The TP/LL worksheet organization</h4>
-<p><img src="images/FROC-TP-Truth-1.png" style="width:40.0%" /><img src="images/FROC-TP-Truth-2.png" style="width:40.0%" />
-<img src="images/FROC-TP-Truth-3.png" style="width:40.0%" /><img src="images/FROC-TP-Truth-4.png" style="width:40.0%" />
-<img src="images/FROC-TP-Truth-5.png" style="width:40.0%" /></p>
 <ul>
-<li>The <code>Truth</code> worksheet - this indicates which cases are diseased and which are non-diseased and the number of ROI-level-abnormal region on each case.
-<ul>
-<li>There are 50 normal cases (labeled 1-50) under column <code>CaseID</code> and 40 abnormal cases (labeled 51-90).<br />
-</li>
-<li>The <code>LesionID</code> field for each normal case (e.g., <code>CaseID</code> = 1) is zero and there is one row per case. For abnormal cases, this field has a variable number of entries, ranging from 1 to 4. As an example, there are two rows for <code>CaseID</code> = 51 in the Excel file: one with <code>LesionID</code> = 2 and one with <code>LesionID</code> = 3.<br />
-</li>
-<li>The <code>Weights</code> field is always zero (this field is not used in ROI analysis).</li>
-</ul></li>
+<li>The <code>CaseID</code> column lists the numeric labels identifying each case. Again, string names are possible, but keep them short.</li>
+<li>A <code>1</code> in the <code>LesionID</code> column denotes a diseased case.</li>
+<li>A <code>0</code> in the <code>LesionID</code> column denotes a non-diseased case.</li>
+<li>The <code>Weight</code> column is relevant for FROC data.</li>
+<li>The contents of the <code>Truth</code> worksheet corresponding to <code>dataset04</code> are displayed next:</li>
 </ul>
-<p><img src="images/ROI-FP-1.png" style="width:40.0%" />
-<img src="images/ROI-FP-2.png" style="width:40.0%" /></p>
+<p><img src="images/FROC-Truth-1.png" style="width:40.0%" /><img src="images/FROC-Truth-2.png" style="width:40.0%" /><img src="images/FROC-Truth-3.png" style="width:40.0%" /><img src="images/FROC-Truth-4.png" style="width:40.0%" /></p>
 <ul>
+<li>There are 100 diseased cases (labeled 0-99) under column <code>CaseID</code> and 100 non-diseased cases (labeled 109-199).<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a><br />
+</li>
+<li>The <code>LesionID</code> field for each non-diseased case is zero and there is one row per case for such cases. For diseased cases, this field has a variable number of entries, ranging from 1 to 3.</li>
+<li>As an example, there are two rows for <code>CaseID</code> = 77 in the Excel file: one with <code>LesionID</code> = 1 and one with <code>LesionID</code> = 2. The weights of these lesions are explicitly specified to be 0.5 each.<br />
+</li>
+<li>As another example, there are three rows for <code>CaseID</code> = 95: one with <code>LesionID</code> = 1, one with <code>LesionID</code> = 2 and the last with <code>LesionID</code> = 3. The weights of these lesions are explicitly specified to be 0.33 each.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a><br />
+</li>
+<li><p>Alternatively, the <code>Weights</code> field can be set to zeroes (for all cases) to more conveniently ensure equal weighting.</p></li>
 <li>The <code>FP</code> (or <code>NL</code>) worksheet - this lists the ratings of ROI-level-normal regions.
 <ul>
 <li>For <code>ReaderID</code> = 1, <code>ModalityID</code> = 1 and <code>CaseID</code> = 1 there are 4 rows, corresponding to the 4 ROI-level-normal regions in this case. The corresponding ratings are . The pattern repeats for other treatments and readers, but the rating are, of course, different.<br />
 </li>
 <li>Each <code>CaseID</code> is represented in the <code>FP</code> worksheet (a rare exception could occur if a case-level abnormal case has 4 abnormal regions).</li>
 </ul></li>
-</ul>
-<p><img src="images/ROI-TP-1.png" style="width:40.0%" /></p>
-<ul>
 <li>The <code>TP</code> (or <code>LL</code>) worksheet - this lists the ratings of ROI-level-abnormal regions.
 <ul>
 <li>Because normal cases generate TPs, one does not find any entry with <code>CaseID</code> = 1-50 in the <code>TP</code> worksheet.<br />
@@ -607,18 +622,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ref-RN85">
 <p>Bunch, P. C., J. F. Hamilton, G. K. Sanderson, and A. H. Simmons. 1978. “A Free-Response Approach to the Measurement and Characterization of Radiographic-Observer Performance.” Journal Article. <em>J of Appl Photogr. Eng.</em> 4: 166–71.</p>
 </div>
+<div id="ref-RN2680">
+<p>Chakraborty, Dev P. 2017. <em>Observer Performance Methods for Diagnostic Imaging - Foundations, Modeling, and Applications with R-Based Examples</em>. Book. Boca Raton, FL: CRC Press.</p>
+</div>
+<div id="ref-RN1385">
+<p>Chakraborty, D. P., and K. S. Berbaum. 2004. “Observer Studies Involving Detection and Localization: Modeling, Analysis and Validation.” Journal Article. <em>Med Phys</em> 31 (8): 2313–30.</p>
+</div>
+<div id="ref-RN1966">
+<p>Chakraborty, D. P., and H. J. Yoon. 2009. “JAFROC Analysis Revisited: Figure-of-Merit Considerations for Human Observer Studies.” Journal Article. <em>Proc. SPIE Medical Imaging: Image Perception, Observer Performance, and Technology Assessment</em> 7263: 72630T.</p>
+</div>
 <div id="ref-RN1882">
 <p>Zanca, Federica, Jurgen Jacobs, Chantal Van Ongeval, Filip Claus, Valerie Celis, Catherine Geniets, Veerle Provost, Herman Pauwels, Guy Marchal, and Hilde Bosmans. 2009. “Evaluation of Clinical Image Processing Algorithms Used in Digital Mammography.” Journal Article. <em>Medical Physics</em> 36 (3): 765–75.</p>
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="7">
-<li id="fn7"><p>In order to avoid confusion with the ROI-paradigm, I do not like to use the term ROI to describe the marks made by the observer.<a href="frocdataformat.html#fnref7" class="footnote-back">↩</a></p></li>
-<li id="fn8"><p>I say “seemingly”, because the only real difference between ROC and FROC analyses is in the selection of the figure of merit.<a href="frocdataformat.html#fnref8" class="footnote-back">↩</a></p></li>
-<li id="fn9"><p>As with the ROC paradigm, the directionaliy of the rating is not a limitation.<a href="frocdataformat.html#fnref9" class="footnote-back">↩</a></p></li>
-<li id="fn10"><p>If an observer is so highly confident in the <em>absence</em> of a localized lesion, he will simply <em>not mark</em> the location in question; if he did, then, logically, he should mark <em>all</em> areas in the image that are definitely not lesions; in the FROC paradigm only regions with a reasonable degree of suspicion are marked. The radiologist only wishes to draw attention to regions that are reasonably suspicious; the definition of “reasonable” is determined by clinical considerations.<a href="frocdataformat.html#fnref10" class="footnote-back">↩</a></p></li>
-<li id="fn11"><p>Since there is a one-to-one correspondence between marks and ratings.<a href="frocdataformat.html#fnref11" class="footnote-back">↩</a></p></li>
+<ol start="1">
+<li id="fn1"><p>In order to avoid confusion with the region-of-interest or ROI-paradigm, I do not like to use the term ROI to describe the marks made by the observer.<a href="frocdataformat.html#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>I say “seemingly”, because the only real difference between ROC and FROC analyses is in the selection of the figure of merit.<a href="frocdataformat.html#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>As with the ROC paradigm, the directionaliy of the rating is not a limitation.<a href="frocdataformat.html#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>Since the ROC paradigm does not allow multiple lesions per case, each diseased case conceptually containing only one lesion, the distinction between different <code>lesionID</code> values on the same diseased case does not arise.<a href="frocdataformat.html#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>For equally weighted lesions, the name distinction implied by <code>lesionID</code> is not important, but then the analysis would only be valid for equally weighted lesions.<a href="frocdataformat.html#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p>If an observer is so highly confident in the <em>absence</em> of a localized lesion, he will simply <em>not mark</em> the location in question; if he did, then, logically, he should mark <em>all</em> areas in the image that are definitely not lesions; in the FROC paradigm only regions with a reasonable degree of suspicion are marked. The radiologist only wishes to draw attention to regions that are reasonably suspicious; the definition of “reasonable” is determined by clinical considerations.<a href="frocdataformat.html#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p>Since there is a one-to-one correspondence between marks and ratings.<a href="frocdataformat.html#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p>The non-diseased cases numbered 128 - 199 are not shown above.<a href="frocdataformat.html#fnref8" class="footnote-back">↩</a></p></li>
+<li id="fn9"><p>The sofware performs a check to ensure that the weight sum to unity, in this case 1% error is considered close enough.<a href="frocdataformat.html#fnref9" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

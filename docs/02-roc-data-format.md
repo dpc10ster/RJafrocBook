@@ -137,14 +137,14 @@ ds <- DfReadDataFile(fileName)
 help("RJafroc-package")
 ```
 
-* Click the `"Show in new window"` button to see it full screen.
-* This bit of experiential advice applies, of course, to all help files.
+* Click the `"Show in new window"` button to see it full screen (i.e., not constrained to a single quarter panel in __RStudio__).
+* This advice applies, of course, to all help files.
 
 ### The ROC Excel file organization
 * It contains three worksheets, `Truth`, `TP` and `FP`.
 * The `Truth` worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. 
 * The `FP` worksheet lists the ratings of non-diseased cases. 
-* The `TP` worksheet lists the ratings of diseased cases ^[OK, I am being inconsistent. I am using `NL`, `LL` for the ratings and `FP`, `TP`j for the worksheets. The worksheet format will accept `NL` and `LL` instead of `FP` and `TP`. However, for ease of generalization to the FROC pardigm it is necessary to use `NL` and `LL` for the list members of the dataset object.].
+* The `TP` worksheet lists the ratings of diseased cases ^[OK, I am being inconsistent. I am using `NL`, `LL` for the ratings and `FP`, `TP`j for the worksheets. The worksheet format will accept `NL` and `LL` instead of `FP` and `TP`. However, for ease of generalization to the FROC paradigm it is necessary to use `NL` and `LL` for the list members of the dataset object.].
 
 #### The Truth worksheet organization
 * The `CaseID` column lists the numeric labels identifying each case. Again, string names are possible, but keep them short. 

@@ -10,26 +10,25 @@
 
 ## Introduction
 * In the free-response ROC (__FROC__) paradigm [@RN85] the observer's task is to: 
-  + indicate (i.e., __mark__ the location of) and 
+  + __mark__ (i.e., indicate the location of) and 
   +  __rate__ (i.e., assign an ordered label representing the degree of suspicion) regions in the image that are perceived as suspicious for presence of disease. 
-  + Accordingly, FROC data consists of __mark-rating pairs__, where each mark indicates a region ^[In order to avoid confusion with the ROI-paradigm, I do not like to use the term ROI to describe the marks made by the observer.] that was considered suspicious for presence of a localized lesion and the rating is the corresponding confidence level. 
+  + Accordingly, FROC data consists of __mark-rating pairs__, where each mark indicates a region ^[In order to avoid confusion with the region-of-interest or ROI-paradigm, I do not like to use the term ROI to describe the marks made by the observer.] that was considered suspicious for presence of a localized lesion and the rating is the corresponding confidence level. 
   + The number of mark-rating pairs on any particular case is a-priori unpredictable. It is a non-negative random integer (i.e., 0, 1, 2, ...) that depends on the case, the reader and the modality. The relatively unstructured nature of FROC data makes  FROC paradigm data seemingly more difficult to analyze than ROC paradigm data ^[I say "seemingly", because the only real difference between ROC and FROC analyses is in the selection of the figure of merit.].
 * By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (LL) - if it is close to a real lesion - or a non-lesion localization (NL) otherwise. 
 * The rating can be an integer or quasi- continuous (e.g., 0 – 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the ROI  ^[As with the ROC paradigm, the directionaliy of the rating is not a limitation.].
-* For human observer studies a 5-point rating scale is recommended:
+* For human observer studies a 4 or 5-point rating scale is recommended:
     + 1: Very low, but finite possibility that the region is diseased. 
     + 2: Low possibility that the region is diseased. 
     + 3: Moderate possibility that the region is diseased. 
     + 4: High possibility that the region is diseased. 
     + 5: Very high possibility that the region is diseased.
-* The actual adjectives used to describe the labels are unimportant. What is important is the ordering of the labels and that the observer holds them relatively constant for the duration of the study.
+* The actual adjectives used to describe the labels are unimportant. What is important is the ordering of the labels and that the observer holds them relatively constant for the duration of the study. More allowed ratings, provided the observer can work with them, leads to greater definition of the relevant empirical operating curves (to be introduced later).
 * With algorithmic readers, e.g., computer aided detection (CAD) algorithms, a floating point rating, if possible, should be retained.
 * In the most common study design, termed multiple-reader multiple-case (__MRMC__), the rating collection procedure is repeated for all cases, treatments and readers.
 
 ## An actual MRMC FROC dataset
+An actual MRMC FROC dataset is included as `dataset04` [@RN1882]. It has the following structure.
 
-Such a dataset [@RN1882] is included as `dataset04`. It has the following structure:
-  
 ```{r}
 str(dataset04)
 ```             
@@ -42,7 +41,7 @@ str(dataset04)
 
 #### The `lesionNum` list member
 
-* The `lesionNum` list member is an array of length `r length(dataset04$lesionNum)`, filled with integers ranging from 1 to 3, the latter being the maximum number of actul lesions (per case) in the dataset. The length of this array equals the number of diseased cases `K2`, 100 in the current example. For this dataset, the contents of `lesionNum` are shown below:
+* The `lesionNum` list member is an array of length `r length(dataset04$lesionNum)`, filled with integers ranging from 1 to 3, the latter being the maximum number of actual lesions per case in `dataset04`. The length of this array equals the number of diseased cases, 100 in the current example. For this dataset, the contents of `lesionNum` are shown below:
 
 ```{r}
 dataset04$lesionNum[1:20]
@@ -58,49 +57,59 @@ dataset04$lesionNum[81:100]
 
 * The `lesionID` list member is a `[100 x 3]` array. 
 * Essentially it establishes a way of distinguishing between different lesions on a case by naming them, or what amounts to the same thing, by labeling them.
-* The problem of distinguishing between different lesions on a case is peculiar to the FROC paradigm.
-* With only one conceptual lesion per diseased case, the ROC paradigm does not face this problem.
-* The second dimension of this array indicates that there is at least one diseased case that has three lesions.
+* The problem of distinguishing between different lesions on a case is peculiar to the FROC paradigm. With only one conceptual lesion per diseased case, the ROC paradigm does not face this problem.
+* The second dimension of this array indicates that there is at least one diseased case with three lesions.
     
 ```{r}
 dataset04$lesionID[1:10,]
 ```
 
-* This indicates that the first ten diseased cases each contain one lesion.
-* The lesion on case 1 is __labeled__ by the value 1. The `-Inf` denote missing values. Since there is only one lesion, the placeholders for possible 2 or 3 lesions (not present on this case, but needed to hold lesion labels in other cases) need to be filled with negative infinites.
-* The previous paragraph may appear confusing. The following example may help clarify it.
+* This indicates that the first ten diseased cases contain one lesion each.
+* The lesion on case 1 is __labeled__ by the value 1. The `-Inf` denote missing values. Since there is only one lesion, the placeholders for the second or third lesion (not present on this case, but needed to hold lesion labels in other cases) need to be filled with negative infinites.
+* The following example may help clarify this point.
 
 ```{r}
 dataset04$lesionID[90:100,]
 ```
 
-* Now we see more interesting values.
-* Diseeased case 90 has two lesions.
-* These are labeled 1 and 2 respectively. 
-* The key point is this: each lesion on a case has a _name_. The names are used  in the data file creation process.
+* Diseased case 90 has two lesions, labeled 1 and 2 respectively. 
+* The key point is this: each lesion on a case has a distinct _name_. Just as each case has to have a distinct name (i.e., label), each lesion within a (diseased) case has to have a distinct name.
 * When an observer assigns a rating to a particular lesion on a casee, the experimenter needs to record this information correctly. 
-* For example, if the lesion named "1" is marked and rated a particular value, this value needs to be entered in the spread-sheet as belonging to the lesion named "1". 
-* As we saw for ROC data, the `TP/LL` worksheet has a `lesionID` column. Since the ROC paradigm does not allow multiple lesions per case, each diseased case conceptually containing one lesion, so the question of distinct lesion names of the same diseased case does not arise. 
-* At least one investigator made the mistake of assuming the lesion name, i.e., the `lesionID` field had no meaning, and randomly assigned the rating to the lesions.
+* For example, if the lesion with `lesionID = 1` is marked and rated a particular value, this value needs to be entered in the spread-sheet as belonging to the lesion named `lesionID = 1`. 
+* The `TP/LL` worksheet has a `lesionID` column. ^[Since the ROC paradigm does not allow multiple lesions per case, each diseased case conceptually containing only one lesion, the distinction between different `lesionID` values on the same diseased case does not arise.] 
+* The distinction implied by different `lesionID` values is important if the lesion weights are unequal.^[For equally weighted lesions, the name distinction implied by `lesionID` is not important, but then the analysis would only be valid for equally weighted lesions.]
 
 #### The `LesionWeight` list member
     
-* The `LesionWeight` list member is also a `[100 x 3]` array filled with values that add up to unity for each case.
+* The `LesionWeight` list member is also a `[100 x 3]` array filled with values that add up to unity for each case. The meaning of lesion weights is dicussed in here: [@RN1385; @RN1966; @RN2680]
+* Briefly, the lesion weights are the clinical importance of detecting the lesion. 
+* As an example, a highly visible lesion might have low clinical significance if it is likely to be benign, and it would be characterized by a lower weight than a less visible but more deadly lesion on the same case.
+* In order to give each case equal importance, the weights must sum to one.
+* In the current example, see below, the lesions are equally weighted. 
+* The choice of weights is a clinical consideration, determined by the costs and benefits of missing or finding the lesion. Lacking this information, which is the most common scenario, it makes sense to weight the lesions equally.
+* On a case one one lesion, `lesionWeight = 1`, and the other lesionWeights are assigned negative infinity values.
+* On a case with two lesions, `lesionWeight = 0.5` for the first two lesions, and the third weight is assigned the negative infinity value.
+* On a case with three lesions, `lesionWeight = 0.3333` for the lesions.
+* Rather than assign these values manually, set the Weight column of the Truth worksheet to zeroes. Then the software automatically assigns equal weights when the Excel sheet is read.
     
 ```{r}
-dataset04$lesionWeight
+dataset04$lesionWeight[1:20,]
+dataset04$lesionWeight[21:40,]
+dataset04$lesionWeight[41:60,]
+dataset04$lesionWeight[61:80,]
+dataset04$lesionWeight[81:100,]
 ```
     
-    + The `dataType` list member equals the string `"FROC"`, identifying it as an FROC dataset.
-    + The `modalityID` list member is a string array identifying the names of the treatments (see below).
-    + The `readerID` list member is a string array, identifying the names of the readers  (see below).
+* The `dataType` list member equals the string `"FROC"`, identifying `dataset04` as an FROC dataset.
+* The `modalityID` list member is a string array identifying the names of the treatments (see below).
+* The `readerID` list member is a string array, identifying the names of the readers  (see below).
 
 Examination of the output reveals that:
 
 * The `dataset` structure is a list with 8 members.
 * This is a 5-treatment 4-reader dataset (the lengths of the first and second dimensions, respectively, of the `NL` and `LL` arrays). The names of the treatments are in the `modalityID` array:
-* Location-level ratings of non-diseased regions are stored in the `NL` list member of the dataset.
-* Location-level ratings of diseased regions are stored in the `LL` list member of the dataset.  
+* Location-level ratings of non-diseased regions are stored in the `NL` list member.
+* Location-level ratings of diseased regions are stored in the `LL` list member.  
 
 ### Details of the `modalityID` and `readerID` list members
 * The names of the treatments are in the `modalityID` list member:
@@ -207,7 +216,8 @@ mean(is.finite(dataset04$LL))
 ```
 
 ## The FROC  Excel data file
-An Excel file in JAFROC format containing simulated ROI data corresponding to `dataset04`, is included with the distribution. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object `ds`.  
+* An Excel file in JAFROC format containing FROC data corresponding to `dataset04` is included with the __RJafroc__ package [@RN1882].  The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object `ds`. 
+
 ```{r}
 fileName <- system.file(
     "extdata", "includedFrocData.xlsx", package = "RJafroc", mustWork = TRUE)
@@ -218,36 +228,31 @@ ds$dataType
 
 ### The FROC Excel file organization
 
-The `DfReadDataFile` function automatically recognizes that this is an *ROI* dataset. Its structure is similar to the JAFROC format Excel file, with some important differences, noted below. It contains three worksheets: 
+The structure of the Excel file is superficially similar to the ROC Excel file considered in the previous chapter. However, there are several important differences, noted below __in bold__.  
+
+* The `Truth` worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. __For diseased cases, it additionally indicates the number of lesions, and the weight to be assigned to each lesion.__
+* The `FP` worksheet lists the __number (zero or more)__ and ratings of `NLs` on non-diseased __and diseased cases__. 
+* The `TP` worksheet lists the __number (zero or more)__ and ratings of __marked lesions__ on diseased cases.
 
 #### The Truth worksheet organization
+* The `CaseID` column lists the numeric labels identifying each case. Again, string names are possible, but keep them short. 
+* A `1` in the `LesionID` column denotes a diseased case.
+* A `0` in the `LesionID` column denotes a non-diseased case.
+* The `Weight` column is relevant for FROC data.
+* The contents of the `Truth` worksheet corresponding to `dataset04` are displayed next:
+
+![](images/FROC-Truth-1.png){width=40%}![](images/FROC-Truth-2.png){width=40%}![](images/FROC-Truth-3.png){width=40%}![](images/FROC-Truth-4.png){width=40%}
 
 
-#### The FP/NL worksheet organization
-
-
-#### The TP/LL worksheet organization
-
-
-
-![](images/FROC-TP-Truth-1.png){width=40%}![](images/FROC-TP-Truth-2.png){width=40%}
-![](images/FROC-TP-Truth-3.png){width=40%}![](images/FROC-TP-Truth-4.png){width=40%}
-![](images/FROC-TP-Truth-5.png){width=40%}
-
-
-* The `Truth` worksheet - this indicates which cases are diseased and which are non-diseased and the number of ROI-level-abnormal region on each case.  
-    + There are 50 normal cases (labeled 1-50) under column `CaseID` and 40 abnormal cases (labeled 51-90).  
-    + The `LesionID` field for each normal case (e.g., `CaseID` = 1) is zero and there is one row per case. For abnormal cases, this field has a variable number of entries, ranging from 1 to 4. As an example, there are two rows for `CaseID` = 51 in the Excel file: one with `LesionID` = 2 and one with `LesionID` = 3.   
-    + The `Weights` field is always zero (this field is not used in ROI analysis).  
-
-![](images/ROI-FP-1.png){width=40%}
-![](images/ROI-FP-2.png){width=40%}
+* There are 100 diseased cases (labeled 0-99) under column `CaseID` and 100 non-diseased cases (labeled 109-199). ^[The non-diseased cases numbered 128 - 199 are not shown above.]  
+* The `LesionID` field for each non-diseased case is zero and there is one row per case for such cases. For diseased cases, this field has a variable number of entries, ranging from 1 to 3. 
+* As an example, there are two rows for `CaseID` = 77 in the Excel file: one with `LesionID` = 1 and one with `LesionID` = 2. The weights of these lesions are explicitly specified to be 0.5 each.   
+* As another example, there are three rows for `CaseID` = 95: one with `LesionID` = 1, one with `LesionID` = 2 and the last with `LesionID` = 3. The weights of these lesions are explicitly specified to be 0.33 each. ^[The sofware performs a check to ensure that the weight sum to unity, in this case 1% error is considered close enough.]   
+* Alternatively, the `Weights` field can be set to zeroes (for all cases) to more conveniently ensure equal weighting.
 
 * The `FP` (or `NL`)  worksheet - this lists the ratings of ROI-level-normal regions.  
     + For `ReaderID` = 1, `ModalityID` = 1 and `CaseID` = 1 there are 4 rows, corresponding to the 4 ROI-level-normal regions in this case. The corresponding ratings are `r dataset04$NL[1,1,1,][is.finite(dataset04$NL[1,1,1,])]`. The pattern repeats for other treatments and readers, but the rating are, of course, different.  
     + Each `CaseID` is represented in the `FP` worksheet (a rare exception could occur if a case-level abnormal case has 4 abnormal regions).
-
-![](images/ROI-TP-1.png){width=40%}
 
 * The `TP` (or `LL`) worksheet - this lists the ratings of ROI-level-abnormal regions.  
     + Because normal cases generate TPs, one does not find any entry with `CaseID` = 1-50 in the `TP` worksheet.   
