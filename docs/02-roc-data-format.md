@@ -10,7 +10,7 @@
         * Binary response: _Yes_ or _No_.
     + What is your confidence in the preceding decisions? 
         * Three level response: _Low_, _Medium_ or _High_.
-* With algorithmic readers, e.g., computer aided detection algorithms a floating point rating, if possible, should be retained.
+* With algorithmic readers, e.g., computer aided detection (CAD) algorithms, a floating point rating, if possible, should be retained.
 * In the most common study design, termed multiple-reader multiple-case (__MRMC__), the rating collection procedure is repeated for all cases, treatments and readers.
 
 ## An actual MRMC ROC dataset
@@ -55,8 +55,7 @@ attributes(dataset02$modalityID)
 #> [1] "0" "1"
 ```
 
-For example, the name of the first treatment is `"0"`. The names can be longer strings, but use of very long string names may mess up the output formats of the analysis report. As per the __KISS__ principle ^[For those not familiar, KISS stands for Keep It Simple, Stupid.], keep the names short.
-
+* For example, the name of the first treatment is `"0"`. The names can be longer strings, but use of very long string names may mess up the output formats of the analysis report. As per the __KISS__ principle ^[For those not familiar with it, KISS is American for __Keep It Simple, Stupid__.], keep the names short.
 * The names of the readers are in the `readerID` array:
 
 
@@ -121,6 +120,7 @@ mean(dataset02$LL)
 
 ## The ROC  Excel data file
 * An Excel file in JAFROC format containing ROC data corresponding to `dataset02` is included with the __RJafroc__ package.  The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object `ds`.  
+
 
 ```r
 fileName <- system.file(
@@ -189,6 +189,7 @@ The following screen-shots show different parts of the `FP` worsheet for `datase
 
 ## Summary
 * Since each case gets one rating, the ROC data structure is relatively easy to visualize. For a single treatment and single reader, all of the information in the dataset can be summarize by a two-row five-column table, with one row listing the number of non-diseased cases rated 1, the number rated two, etc., ending with the number rated five, and a corresponding row for diseased cases. These 10 values contain all of the information contained in the Excel file for the specified treatment and reader. The example below is for treatment `0` and reader `0`:
+
 
 ```r
 nl <- dataset02$NL

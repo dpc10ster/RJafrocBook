@@ -217,7 +217,7 @@
     \end{itemize}
   \end{itemize}
 \item
-  With algorithmic readers, e.g., computer aided detection algorithms a floating point rating, if possible, should be retained.
+  With algorithmic readers, e.g., computer aided detection (CAD) algorithms, a floating point rating, if possible, should be retained.
 \item
   In the most common study design, termed multiple-reader multiple-case (\textbf{MRMC}), the rating collection procedure is repeated for all cases, treatments and readers.
 \end{itemize}
@@ -290,10 +290,10 @@ An actual MRMC ROC dataset \citep{RN1993} is included as \texttt{dataset02}. It 
 \end{Highlighting}
 \end{Shaded}
 
-For example, the name of the first treatment is \texttt{"0"}. The names can be longer strings, but use of very long string names may mess up the output formats of the analysis report. As per the \textbf{KISS} principle \footnote{For those not familiar, KISS stands for Keep It Simple, Stupid.}, keep the names short.
-
 \begin{itemize}
 \tightlist
+\item
+  For example, the name of the first treatment is \texttt{"0"}. The names can be longer strings, but use of very long string names may mess up the output formats of the analysis report. As per the \textbf{KISS} principle \footnote{For those not familiar with it, KISS is American for \textbf{Keep It Simple, Stupid}.}, keep the names short.
 \item
   The names of the readers are in the \texttt{readerID} array:
 \end{itemize}
@@ -537,7 +537,38 @@ The following screen-shots show different parts of the \texttt{FP} worsheet for 
 \begin{itemize}
 \tightlist
 \item
-  Since each case gets one rating, the ROC data structure is relatively easy to visualize. All of the information in the three Excel worksheets can be summarize by a two-row five column table (with 10 values), with one row listing the number of non-diseased cases rated 1, the number rated two, etc., upto the number rated five, and a corresponding row for diseased cases. These 10 values contain all of the information contained in the Excel file.
+  Since each case gets one rating, the ROC data structure is relatively easy to visualize. For a single treatment and single reader, all of the information in the dataset can be summarize by a two-row five-column table, with one row listing the number of non-diseased cases rated 1, the number rated two, etc., ending with the number rated five, and a corresponding row for diseased cases. These 10 values contain all of the information contained in the Excel file for the specified treatment and reader. The example below is for treatment \texttt{0} and reader \texttt{0}:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nl <-}\StringTok{ }\NormalTok{dataset02}\OperatorTok{$}\NormalTok{NL}
+\NormalTok{binnedFpCounts <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DecValTok{5}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (b }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{) binnedFpCounts[b] <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(nl[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\NormalTok{K1,}\DecValTok{1}\NormalTok{] }\OperatorTok{==}\StringTok{ }\NormalTok{b)}
+\NormalTok{ll <-}\StringTok{ }\NormalTok{dataset02}\OperatorTok{$}\NormalTok{LL}
+\NormalTok{binnedTpCounts <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DecValTok{5}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (b }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{) binnedTpCounts[b] <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(ll[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\NormalTok{K2,}\DecValTok{1}\NormalTok{] }\OperatorTok{==}\StringTok{ }\NormalTok{b)}
+\NormalTok{binnedFpCounts}
+\CommentTok{#> [1] 47  9 10  2  1}
+\NormalTok{binnedTpCounts}
+\CommentTok{#> [1]  4  1  2 10 28}
+\KeywordTok{sum}\NormalTok{(binnedFpCounts)}
+\CommentTok{#> [1] 69}
+\KeywordTok{sum}\NormalTok{(binnedTpCounts)}
+\CommentTok{#> [1] 45}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The values in \texttt{binnedFpCounts} sum to 69.
+\item
+  The values in \texttt{binnedTpCounts} sum to 45.
+\item
+  A similar table is needed for each treatment-reader combination.
+\item
+  The real value of the Excel format is that it allows generalization to other paradigms where the number of ratings per case is variable.
 \end{itemize}
 
 \hypertarget{frocdataformat}{%
@@ -547,20 +578,53 @@ The following screen-shots show different parts of the \texttt{FP} worsheet for 
 \section{Introduction}\label{introduction-1}}
 
 \begin{itemize}
+\tightlist
 \item
-  In the free-response ROC (\textbf{FROC}) paradigm \citep{RN85} the observer's task is to indicate (i.e., \textbf{mark} the location of) and \textbf{rate} (i.e., assign an ordered label - or confidence level - representing the degree of suspicion) regions in the image that are perceived as suspicious for presence of disease. Accordingly, FROC data consists of \textbf{mark-rating pairs}, where each mark indicates a region \footnote{In order to avoid confusion with the ROI-paradigm, I do not like to use the term ROI to describe the marks made by the observer.} that was considered suspicious for presence of a localized lesion and the rating is the corresponding confidence level. The number of mark-rating pairs on any particular case is a-priori unpredictable. It is a non-negative random integer (i.e., 0, 1, 2, \ldots{}) that depends on the case, the reader and the modality. The relatively unstructured nature of FROC data makes FROC paradigm data more difficult to analyze than ROC paradigm data \footnote{Recall that the ROC paradigm always yields a single rating per case.}.
+  In the free-response ROC (\textbf{FROC}) paradigm \citep{RN85} the observer's task is to:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    indicate (i.e., \textbf{mark} the location of) and
+  \item
+    \textbf{rate} (i.e., assign an ordered label representing the degree of suspicion) regions in the image that are perceived as suspicious for presence of disease.
+  \item
+    Accordingly, FROC data consists of \textbf{mark-rating pairs}, where each mark indicates a region \footnote{In order to avoid confusion with the ROI-paradigm, I do not like to use the term ROI to describe the marks made by the observer.} that was considered suspicious for presence of a localized lesion and the rating is the corresponding confidence level.
+  \item
+    The number of mark-rating pairs on any particular case is a-priori unpredictable. It is a non-negative random integer (i.e., 0, 1, 2, \ldots{}) that depends on the case, the reader and the modality. The relatively unstructured nature of FROC data makes FROC paradigm data seemingly more difficult to analyze than ROC paradigm data \footnote{I say ``seemingly'', because the only real difference between ROC and FROC analyses is in the selection of the figure of merit.}.
+  \end{itemize}
 \item
   By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (LL) - if it is close to a real lesion - or a non-lesion localization (NL) otherwise.
 \item
-  The rating can be an integer or quasi- continuous (e.g., 0 -- 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the ROI \footnote{The directionaliy of the rating is not a limitation. If lower values correspond to increased confidence level, it is only necessary to transform the observed rating by subtracting it from a constant value. The constant value can be chosen arbitrarily, typically as the maximum of all observed ratings, thereby ensuring that the transformed value is always non-negative.}.
+  The rating can be an integer or quasi- continuous (e.g., 0 -- 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the ROI \footnote{As with the ROC paradigm, the directionaliy of the rating is not a limitation.}.
 \item
-  Region-level-normal ratings are stored in the \texttt{NL} field and region-level-abnormal ratings are stored in the \texttt{LL} field.
+  For human observer studies a 5-point rating scale is recommended:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    1: Very low, but finite possibility that the region is diseased.
+  \item
+    2: Low possibility that the region is diseased.
+  \item
+    3: Moderate possibility that the region is diseased.
+  \item
+    4: High possibility that the region is diseased.
+  \item
+    5: Very high possibility that the region is diseased.
+  \end{itemize}
+\item
+  The actual adjectives used to describe the labels are unimportant. What is important is the ordering of the labels and that the observer holds them relatively constant for the duration of the study.
+\item
+  With algorithmic readers, e.g., computer aided detection (CAD) algorithms, a floating point rating, if possible, should be retained.
+\item
+  In the most common study design, termed multiple-reader multiple-case (\textbf{MRMC}), the rating collection procedure is repeated for all cases, treatments and readers.
 \end{itemize}
 
-\hypertarget{an-actual-froc-dataset}{%
-\section{An actual FROC dataset}\label{an-actual-froc-dataset}}
+\hypertarget{an-actual-mrmc-froc-dataset}{%
+\section{An actual MRMC FROC dataset}\label{an-actual-mrmc-froc-dataset}}
 
-An actual FROC dataset \citep{RN1882} is included as \texttt{dataset04}, which has the following \texttt{dataset} structure:
+Such a dataset \citep{RN1882} is included as \texttt{dataset04}. It has the following structure:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -579,6 +643,253 @@ An actual FROC dataset \citep{RN1882} is included as \texttt{dataset04}, which h
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{overview-of-the-froc-data-structure}{%
+\subsection{Overview of the FROC data structure}\label{overview-of-the-froc-data-structure}}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{dataset} structure is a \texttt{list} variable with 8 members.
+\item
+  Ratings of actually non-diseased regions are stored in the \texttt{NL} list member.
+\item
+  Ratings of actually diseased regions are stored in the \texttt{LL} list member.
+\end{itemize}
+
+\hypertarget{the-lesionnum-list-member}{%
+\subsubsection{\texorpdfstring{The \texttt{lesionNum} list member}{The lesionNum list member}}\label{the-lesionnum-list-member}}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{lesionNum} list member is an array of length 100, filled with integers ranging from 1 to the maximum number of actul lesions (per case) in the dataset. The length of this array equals the number of diseased cases \texttt{K2}, 100 in the current example. For this dataset, the contents of \texttt{lesionNum} are shown below:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset04}\OperatorTok{$}\NormalTok{lesionNum[}\DecValTok{1}\OperatorTok{:}\DecValTok{20}\NormalTok{]}
+\CommentTok{#>  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1}
+\NormalTok{dataset04}\OperatorTok{$}\NormalTok{lesionNum[}\DecValTok{21}\OperatorTok{:}\DecValTok{40}\NormalTok{]}
+\CommentTok{#>  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1}
+\NormalTok{dataset04}\OperatorTok{$}\NormalTok{lesionNum[}\DecValTok{41}\OperatorTok{:}\DecValTok{60}\NormalTok{]}
+\CommentTok{#>  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 2}
+\NormalTok{dataset04}\OperatorTok{$}\NormalTok{lesionNum[}\DecValTok{61}\OperatorTok{:}\DecValTok{80}\NormalTok{]}
+\CommentTok{#>  [1] 1 1 1 1 1 1 1 1 2 2 1 1 1 2 2 2 2 2 2 1}
+\NormalTok{dataset04}\OperatorTok{$}\NormalTok{lesionNum[}\DecValTok{81}\OperatorTok{:}\DecValTok{100}\NormalTok{]}
+\CommentTok{#>  [1] 2 2 2 2 3 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The above entries tell us that while most cases contain only one lesion each, some contain 2 or even 3 lesions per case.
+\end{itemize}
+
+\hypertarget{the-lesionid-list-member}{%
+\subsubsection{\texorpdfstring{The \texttt{lesionID} list member}{The lesionID list member}}\label{the-lesionid-list-member}}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{lesionID} list member is a \texttt{{[}100\ x\ 3{]}} array.
+\item
+  Essentially it establishes a way of distinguishing between different lesions on a case by naming them.
+\item
+  The problem of distinguishing between different lesions on a case is peculiar to the FROC paradigm.
+\item
+  With only one conceptual lesion per diseased case, the ROC paradigm does not face this problem.
+\item
+  The second dimension of this array indicates that there is at least one diseased case that has three lesions.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset04}\OperatorTok{$}\NormalTok{lesionID[}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{,]}
+\CommentTok{#>       [,1] [,2] [,3]}
+\CommentTok{#>  [1,]    1 -Inf -Inf}
+\CommentTok{#>  [2,]    1 -Inf -Inf}
+\CommentTok{#>  [3,]    1 -Inf -Inf}
+\CommentTok{#>  [4,]    1 -Inf -Inf}
+\CommentTok{#>  [5,]    1 -Inf -Inf}
+\CommentTok{#>  [6,]    1 -Inf -Inf}
+\CommentTok{#>  [7,]    1 -Inf -Inf}
+\CommentTok{#>  [8,]    1 -Inf -Inf}
+\CommentTok{#>  [9,]    1 -Inf -Inf}
+\CommentTok{#> [10,]    1 -Inf -Inf}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  This indicates that the first ten diseased cases each contain one lesion.
+\item
+  The lesion on case 1 is \textbf{labeled} by the value 1. The \texttt{-Inf} denote missing values. Since there is only one lesion, the placeholders for possible 2 or 3 lesions (not present on this case, but needed to hold lesion labels in other cases) need to be filled with negative infinites.
+\item
+  The previous paragraph may appear confusing. The following example may help clarify it.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset04}\OperatorTok{$}\NormalTok{lesionID[}\DecValTok{90}\OperatorTok{:}\DecValTok{100}\NormalTok{,]}
+\CommentTok{#>       [,1] [,2] [,3]}
+\CommentTok{#>  [1,]    1    2 -Inf}
+\CommentTok{#>  [2,]    1    2    3}
+\CommentTok{#>  [3,]    1    2    3}
+\CommentTok{#>  [4,]    1    2    3}
+\CommentTok{#>  [5,]    1    2    3}
+\CommentTok{#>  [6,]    1    2    3}
+\CommentTok{#>  [7,]    1    2    3}
+\CommentTok{#>  [8,]    1    2    3}
+\CommentTok{#>  [9,]    1    2    3}
+\CommentTok{#> [10,]    1    2    3}
+\CommentTok{#> [11,]    1    2    3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Now we see more interesting values.
+\item
+  Diseeased case 90 has two lesions.
+\item
+  These are labeled 1 and 2 respectively.
+\item
+  The key point is this: each lesion on a case has a \emph{name}. The names are used in the data file creation process.
+\item
+  When an observer assigns a rating to a particular lesion on a casee, the experimenter needs to record this information correctly.
+\item
+  For example, if the lesion named ``1'' is marked and rated a particular value, this value needs to be entered in the spread-sheet as belonging to the lesion named ``1''.
+\item
+  As we saw for ROC data, the \texttt{TP/LL} worksheet has a \texttt{lesionID} column. Since the ROC paradigm does not allow multiple lesions per case, each diseased case conceptually containing one lesion, so the question of distinct lesion names of the same diseased case does not arise.
+\item
+  At least one investigator made the mistake of assuming the lesion name, i.e., the \texttt{lesionID} field had no meaning, and randomly assigned the rating to the lesions.
+\end{itemize}
+
+\hypertarget{the-lesionweight-list-member}{%
+\subsubsection{\texorpdfstring{The \texttt{LesionWeight} list member}{The LesionWeight list member}}\label{the-lesionweight-list-member}}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{LesionWeight} list member is also a \texttt{{[}100\ x\ 3{]}} array filled with values that add up to unity for each case.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset04}\OperatorTok{$}\NormalTok{lesionWeight}
+\CommentTok{#>             [,1]      [,2]      [,3]}
+\CommentTok{#>   [1,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>   [2,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>   [3,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>   [4,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>   [5,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>   [6,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>   [7,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>   [8,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>   [9,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [10,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [11,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [12,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [13,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [14,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [15,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [16,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [17,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [18,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [19,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [20,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [21,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [22,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [23,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [24,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [25,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [26,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [27,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [28,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [29,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [30,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [31,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [32,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [33,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [34,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [35,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [36,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [37,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [38,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [39,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [40,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [41,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [42,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [43,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [44,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [45,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [46,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [47,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [48,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [49,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [50,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [51,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [52,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [53,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [54,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [55,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [56,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [57,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [58,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [59,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [60,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [61,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [62,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [63,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [64,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [65,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [66,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [67,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [68,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [69,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [70,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [71,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [72,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [73,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [74,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [75,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [76,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [77,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [78,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [79,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [80,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [81,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [82,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [83,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [84,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [85,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [86,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [87,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [88,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [89,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [90,] 0.5000000 0.5000000      -Inf}
+\CommentTok{#>  [91,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [92,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [93,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [94,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [95,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [96,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [97,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [98,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [99,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#> [100,] 0.3333333 0.3333333 0.3333333}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
++ The `dataType` list member equals the string `"FROC"`, identifying it as an FROC dataset.
++ The `modalityID` list member is a string array identifying the names of the treatments (see below).
++ The `readerID` list member is a string array, identifying the names of the readers  (see below).
+\end{verbatim}
+
 Examination of the output reveals that:
 
 \begin{itemize}
@@ -587,6 +898,19 @@ Examination of the output reveals that:
   The \texttt{dataset} structure is a list with 8 members.
 \item
   This is a 5-treatment 4-reader dataset (the lengths of the first and second dimensions, respectively, of the \texttt{NL} and \texttt{LL} arrays). The names of the treatments are in the \texttt{modalityID} array:
+\item
+  Location-level ratings of non-diseased regions are stored in the \texttt{NL} list member of the dataset.
+\item
+  Location-level ratings of diseased regions are stored in the \texttt{LL} list member of the dataset.
+\end{itemize}
+
+\hypertarget{details-of-the-modalityid-and-readerid-list-members-1}{%
+\subsection{\texorpdfstring{Details of the \texttt{modalityID} and \texttt{readerID} list members}{Details of the modalityID and readerID list members}}\label{details-of-the-modalityid-and-readerid-list-members-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  The names of the treatments are in the \texttt{modalityID} list member:
 \end{itemize}
 
 \begin{Shaded}
@@ -597,10 +921,9 @@ Examination of the output reveals that:
 \end{Highlighting}
 \end{Shaded}
 
-For example, the name of the second treatment is \texttt{"2"}.
-
 \begin{itemize}
-\tightlist
+\item
+  For example, the name of the second treatment is \texttt{"2"}. The names can be longer strings, but use of very long string names may mess up the output formats of the analysis report.
 \item
   The names of the readers are in the \texttt{readerID} array:
 \end{itemize}
@@ -613,10 +936,25 @@ For example, the name of the second treatment is \texttt{"2"}.
 \end{Highlighting}
 \end{Shaded}
 
-For example, the name of the second reader is \texttt{"3"}. Apparently reader \texttt{"2"} ``dropped out'' of the study.
+For example, the name of the second reader is \texttt{"3"}. Apparently reader \texttt{"2"} ``dropped out'' of the study. A similar caveat regarding long reader names applies.
+
+\hypertarget{details-of-the-nl-and-ll-list-members-1}{%
+\subsection{\texorpdfstring{Details of the \texttt{NL} and \texttt{LL} list members}{Details of the NL and LL list members}}\label{details-of-the-nl-and-ll-list-members-1}}
+
+TBA
+* For either \texttt{NL} or \texttt{LL} list members, the fourth dimension can have length greater than unity.
+* For the \texttt{NL} list member this length is determined by the treatment-reader-case combination yielding the most \texttt{NL} marks per case.
+* For the \texttt{LL} list member this length is determined by the case with the most true lesions.
+* \texttt{dataset02} is a 2-treatment 5-reader dataset (the lengths of the first and second dimensions, respectively, of the \texttt{NL} and \texttt{LL} list members).
 
 \hypertarget{numbers-of-non-diseased-and-diseased-cases-1}{%
-\subsection{Numbers of non-diseased and diseased cases}\label{numbers-of-non-diseased-and-diseased-cases-1}}
+\subsubsection{Numbers of non-diseased and diseased cases}\label{numbers-of-non-diseased-and-diseased-cases-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  TBA
+\end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -652,7 +990,7 @@ For example, the name of the second reader is \texttt{"3"}. Apparently reader \t
 \end{itemize}
 
 \hypertarget{ratings-on-a-non-diseased-case-1}{%
-\subsection{Ratings on a non-diseased case}\label{ratings-on-a-non-diseased-case-1}}
+\subsubsection{Ratings on a non-diseased case}\label{ratings-on-a-non-diseased-case-1}}
 
 \begin{itemize}
 \tightlist
@@ -668,7 +1006,7 @@ For example, the name of the second reader is \texttt{"3"}. Apparently reader \t
 \end{Shaded}
 
 \hypertarget{the-meaning-of-a-negative-infinity-rating}{%
-\subsection{The meaning of a negative infinity rating}\label{the-meaning-of-a-negative-infinity-rating}}
+\subsubsection{The meaning of a negative infinity rating}\label{the-meaning-of-a-negative-infinity-rating}}
 
 \begin{itemize}
 \tightlist
@@ -695,8 +1033,8 @@ For example, the name of the second reader is \texttt{"3"}. Apparently reader \t
   This shows that the fourth dimension of the \texttt{NL} array has to be of length 7 because \emph{one, and only reader}, specifically reader ``4'', made 7 \texttt{NL} marks on a diseased case in treatment ``5''!
 \end{itemize}
 
-\hypertarget{ratings-on-a-non-diseased-case-2}{%
-\subsection{Ratings on a non-diseased case}\label{ratings-on-a-non-diseased-case-2}}
+\hypertarget{ratings-on-a-diseased-case-1}{%
+\subsection{Ratings on a diseased case}\label{ratings-on-a-diseased-case-1}}
 
 Unlike non-diseased cases, diseased cases can have both \texttt{NL} and \texttt{LL} ratings.
 
@@ -787,7 +1125,19 @@ An Excel file in JAFROC format containing simulated ROI data corresponding to \t
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{the-froc-excel-file-organization}{%
+\subsection{The FROC Excel file organization}\label{the-froc-excel-file-organization}}
+
 The \texttt{DfReadDataFile} function automatically recognizes that this is an \emph{ROI} dataset. Its structure is similar to the JAFROC format Excel file, with some important differences, noted below. It contains three worksheets:
+
+\hypertarget{the-truth-worksheet-organization-1}{%
+\subsubsection{The Truth worksheet organization}\label{the-truth-worksheet-organization-1}}
+
+\hypertarget{the-fpnl-worksheet-organization-1}{%
+\subsubsection{The FP/NL worksheet organization}\label{the-fpnl-worksheet-organization-1}}
+
+\hypertarget{the-tpll-worksheet-organization-1}{%
+\subsubsection{The TP/LL worksheet organization}\label{the-tpll-worksheet-organization-1}}
 
 \includegraphics[width=0.4\textwidth,height=\textheight]{images/FROC-TP-Truth-1.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/FROC-TP-Truth-2.png}
 \includegraphics[width=0.4\textwidth,height=\textheight]{images/FROC-TP-Truth-3.png}\includegraphics[width=0.4\textwidth,height=\textheight]{images/FROC-TP-Truth-4.png}
