@@ -140,7 +140,7 @@ help("RJafroc-package")
 * Click the `"Show in new window"` button to see it full screen (i.e., not constrained to a single quarter panel in __RStudio__).
 * This advice applies, of course, to all help files.
 
-### The ROC Excel file organization
+### The ROC Excel file
 * It contains three worksheets, `Truth`, `TP` and `FP`.
 * The `Truth` worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. 
 * The `FP` worksheet lists the ratings of non-diseased cases. 
@@ -154,8 +154,6 @@ help("RJafroc-package")
 * The contents of the `Truth` worksheet corresponding to `dataset02` are displayed next:
 
 ![](images/ROC-Truth-1.png){width=40%}![](images/ROC-Truth-2.png){width=40%}![](images/ROC-Truth-3.png){width=40%}![](images/ROC-Truth-4.png){width=40%}
-
-
 
 * There are 69 non-diseased cases (labeled 1-69) under column `CaseID`.
 * There are 45 diseased cases (labeled 70-114) under column `CaseID`.  

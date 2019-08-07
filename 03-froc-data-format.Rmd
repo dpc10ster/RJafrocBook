@@ -27,21 +27,22 @@
 * In the most common study design, termed multiple-reader multiple-case (__MRMC__), the rating collection procedure is repeated for all cases, treatments and readers.
 
 ## An actual MRMC FROC dataset
-An actual MRMC FROC dataset is included as `dataset04` [@RN1882]. It has the following structure.
+An actual MRMC FROC dataset is included as `dataset04` [@RN1882]. It has the following structure:
 
 ```{r}
 str(dataset04)
 ```             
 
-### Overview of the FROC data structure
+The `dataset` structure is a `list` variable with 8 members.
 
-* The `dataset` structure is a `list` variable with 8 members.
+### The `NL` aand `LL` list members
 * Ratings of actually non-diseased regions are stored in the `NL` list member.
 * Ratings of actually diseased regions are stored in the `LL` list member.
+* `dataset04` corresponds to 5-treatments and 4-readers (the lengths of the first and second dimensions, respectively, of the `NL` and `LL` arrays).
 
-#### The `lesionNum` list member
+### The `lesionNum` list member
 
-* The `lesionNum` list member is an array of length `r length(dataset04$lesionNum)`, filled with integers ranging from 1 to 3, the latter being the maximum number of actual lesions per case in `dataset04`. The length of this array equals the number of diseased cases, 100 in the current example. For this dataset, the contents of `lesionNum` are shown below:
+* The `lesionNum` list member is an array of length `r length(dataset04$lesionNum)` filled with integers ranging from 1 to 3, the latter being the maximum number of actual lesions per case in `dataset04`. The length of this array equals the number of diseased cases, 100 in the current example. The contents of `lesionNum` are shown below:
 
 ```{r}
 dataset04$lesionNum[1:20]
@@ -53,7 +54,7 @@ dataset04$lesionNum[81:100]
 
 * The above entries tell us that while most cases contain only one lesion each, some contain 2 or even 3 lesions per case.
 
-#### The `lesionID` list member
+### The `lesionID` list member
 
 * The `lesionID` list member is a `[100 x 3]` array. 
 * Essentially it establishes a way of distinguishing between different lesions on a case by naming them, or what amounts to the same thing, by labeling them.
@@ -79,7 +80,7 @@ dataset04$lesionID[90:100,]
 * The `TP/LL` worksheet has a `lesionID` column. ^[Since the ROC paradigm does not allow multiple lesions per case, each diseased case conceptually containing only one lesion, the distinction between different `lesionID` values on the same diseased case does not arise.] 
 * The distinction implied by different `lesionID` values is important if the lesion weights are unequal.^[For equally weighted lesions, the name distinction implied by `lesionID` is not important, but then the analysis would only be valid for equally weighted lesions.]
 
-#### The `LesionWeight` list member
+### The `LesionWeight` list member
     
 * The `LesionWeight` list member is also a `[100 x 3]` array filled with values that add up to unity for each case. The meaning of lesion weights is dicussed in here: [@RN1385; @RN1966; @RN2680]
 * Briefly, the lesion weights are the clinical importance of detecting the lesion. 
@@ -99,15 +100,13 @@ dataset04$lesionWeight[41:60,]
 dataset04$lesionWeight[61:80,]
 dataset04$lesionWeight[81:100,]
 ```
+
+### The `dataType` list member
     
 * The `dataType` list member equals the string `"FROC"`, identifying `dataset04` as an FROC dataset.
-* The `modalityID` list member is a string array identifying the names of the treatments (see below).
-* The `readerID` list member is a string array, identifying the names of the readers  (see below).
 
 Examination of the output reveals that:
 
-* The `dataset` structure is a list with 8 members.
-* This is a 5-treatment 4-reader dataset (the lengths of the first and second dimensions, respectively, of the `NL` and `LL` arrays). The names of the treatments are in the `modalityID` array:
 * Location-level ratings of non-diseased regions are stored in the `NL` list member.
 * Location-level ratings of diseased regions are stored in the `LL` list member.  
 
@@ -134,7 +133,7 @@ For example, the name of the second reader is `"3"`. Apparently reader `"2"` "dr
 * `dataset02` is a 2-treatment 5-reader dataset (the lengths of the first and second dimensions, respectively, of the `NL` and `LL` list members).
 
 
-#### Numbers of non-diseased and diseased cases
+### Numbers of non-diseased and diseased cases
 ```{r}
 length(dataset04$NL[1,1,,1])
 length(dataset04$LL[1,1,,1])
@@ -150,7 +149,7 @@ length(dataset04$LL[1,1,,1])
 * Only `NLs` are possible on non-diseased cases.
 * The missing values are filled in with `-Inf`.
 
-#### Ratings on a non-diseased case
+### Ratings on a non-diseased case
 
 * For treatment 1, reader 1 and case 1 (the first non-diseased case), the NL ratings are: 
 ```{r}
@@ -171,7 +170,7 @@ for (i in 1:5)
 
 * This shows that the fourth dimension of the `NL` array has to be of length 7 because _one, and only reader_, specifically reader "4", made 7 `NL` marks on a diseased case in treatment "5"!
 
-### Ratings on a diseased case
+#### Ratings on a diseased case
 Unlike non-diseased cases, diseased cases can have both `NL` and `LL` ratings.
 
 * For treatment 1, reader 1, case 51 (the 1st diseased case) the NL ratings are: 
@@ -201,8 +200,7 @@ dataset04$LL[1,1,1,]
 mean(is.finite(dataset04$LL))
 ```
 
-
-* The ratings of the 2 ROI-level-abnormal ROIs on this case are `r dataset04$LL[1,1,1,][is.finite(dataset04$LL[1,1,1,])]`. The mean rating over all ROI-level-abnormal ROIs is `r mean(dataset04$LL[is.finite(dataset04$LL)])`.  
+* The ratings of the 2 `LLs` on this case are `r dataset04$LL[1,1,1,][is.finite(dataset04$LL[1,1,1,])]`. The mean rating over all `LLs` (in all treatments and readers) is `r mean(dataset04$LL[is.finite(dataset04$LL)])`.  
 ```{r}
 mean(is.finite(dataset04$NL[,,1:50,]))
 dataset04$NL[1,1,51,]
@@ -221,44 +219,70 @@ ds <- DfReadDataFile(fileName)
 ds$dataType
 ```
 
+* On my Mac, the file name is huge: 
+* `r fileName`.
+* Use the following code to make a duplicate of the Excel file in a more convenient location.
 
-### The FROC Excel file organization
+```{r}
+DfSaveDataFile(dataset04, "MyDataset04.xlsx", format = "JAFROC")
+```
 
-The structure of the Excel file is superficially similar to the ROC Excel file considered in the previous chapter. However, there are several important differences, noted below __in bold__.  
+* The structure of the Excel file is superficially similar to the ROC Excel file considered in the previous chapter. However, there are several important differences noted below __in bold__.  
 
-* The `Truth` worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. __For diseased cases, it additionally indicates the number of lesions, and the weight to be assigned to each lesion.__
-* The `FP` worksheet lists the __number (zero or more)__ and ratings of `NLs` on non-diseased __and diseased cases__. 
-* The `TP` worksheet lists the __number (zero or more)__ and ratings of __marked lesions__ on diseased cases.
+   + The `Truth` worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. __For diseased cases, it additionally indicates the number of lesions, and the weight to be assigned to each lesion.__
+   + The `FP` worksheet lists the __number (zero or more)__ and ratings of `NL` marks on non-diseased __and diseased cases__. 
+   + The `TP` worksheet lists the __number (zero or more)__ and ratings of `LL` marks, i.e., __marked lesions__, on diseased cases. Obviously, `LL` marks cannot occcur on non-diseased cases.
 
-#### The Truth worksheet organization
+### The Truth worksheet
 * The `CaseID` column lists the numeric labels identifying each case. Again, string names are possible, but keep them short. 
-* A `1` in the `LesionID` column denotes a diseased case.
+* A `1`, or more, in the `LesionID` column denotes a diseased case.
 * A `0` in the `LesionID` column denotes a non-diseased case.
 * The `Weight` column is relevant for FROC data.
 * The contents of the `Truth` worksheet corresponding to `dataset04` are displayed next:
 
 ![](images/FROC-Truth-1.png){width=40%}![](images/FROC-Truth-2.png){width=40%}![](images/FROC-Truth-3.png){width=40%}![](images/FROC-Truth-4.png){width=40%}
 
-* There are 100 diseased cases (labeled 0-99) under column `CaseID` and 100 non-diseased cases (labeled 109-199). ^[The non-diseased cases numbered 128 - 199 are not shown above. They are similar to the ones that are shown - one row per case with a zero under the lesionID column and a zero under the Weights column.]  
+* There are 100 diseased cases (labeled 0-99) under column `CaseID` and 100 non-diseased cases (labeled 100-199). ^[The non-diseased cases numbered 128 - 199 are not shown above. They are similar to the ones that are shown - one row per case with a zero under the lesionID column and a zero under the Weights column.]  
 * The `LesionID` field for each non-diseased case is zero and there is one row per case for such cases. __For diseased cases, this field has one or more entries, ranging from 1 to 3 for this particular dataset.__ In other words, for each diseased case, the number of rows equals the number of lesion on the case.
-* As an example, there are two rows for `CaseID` = 77: one with `LesionID` = 1 (labeling the first lesion on this case) and one with `LesionID` = 2 (labeling the second and last lesion on this case). The weights of these lesions are explicitly specified to 0.5 each.
-* As another example, there are three rows for `CaseID` = 95: one with `LesionID` = 1, one with `LesionID` = 2 and the last with `LesionID` = 3. The weights of these lesions are explicitly specified to be 0.33 each. ^[The sofware performs a check to ensure that the weight sum to unity, in this case 1% error is considered close enough for "government work"!]   
+* As an example, cases labeled `0 - 54` (and other cases like `60 - 67`, etc.) have single lesions each, with `LesionID` = 1 and `Weight` = 1 have one row per case in the worksheet.
+* As another example, there are two rows for `CaseID` = 77: one with `LesionID` = 1 (labeling the first lesion on this case) and one with `LesionID` = 2 (labeling the second and last lesion on this case). The weights of these lesions are explicitly specified as 0.5 each.
+* As a final example, there are three rows for `CaseID` = 95: one with `LesionID` = 1, one with `LesionID` = 2 and the last with `LesionID` = 3. The weights of these lesions are explicitly specified to be 0.33 each. ^[The sofware performs a check to ensure that the weight sum to unity, in this case 1% error is considered close enough for "government work"!]   
 * Alternatively, the `Weights` field can be set to zeroes (for all cases) to more conveniently ensure equal weighting to much higher precision.
 * Important: every case must have at least one row describing it in the __Truth__ worksheet.
+* The Excel files should be "robust" with respect to sorting on different columns. By "robust" I mean the resulting `R` dataset object, resulting from `DfReadDataFile`, should be unchanged. I have not tested this on all files, but if someone brings deviations from this statement to my attention, I will look into it. As a simple example of "robustness", notice that in the __Truth__ worksheet being currently explained, the diseased cases come before the non-diseased ones.
 
-#### The `FP/NL` worksheet organization
+### The `FP/NL` worksheet
 The following screen-shots show different parts of the `FP` worsheet for `dataset04`.
 
 ![](images/FROC-FP-1.png){width=40%}![](images/FROC-FP-2.png){width=40%}![](images/FROC-FP-3.png){width=40%}![](images/FROC-FP-4.png){width=40%}
 
-* The `FP` worksheet lists the ratings of `NLs` on both non-diseased and diseased cases. __Unlike the ROC paradigm, `NLs` can occur on diseased cases. Additionally, the number of rows per case cannot be predicted apriori. It could be 0, 1, 2, etc. __
-* It is possible that the `FP` worsheet is blank. See [@RN2680] for how the FROC paradigm correctly interprets this situation as indicative of good performance.
-* 
+* The `FP` worksheet lists the ratings of `NLs` on both non-diseased and diseased cases. __Unlike the ROC paradigm, `NLs` can occur on diseased cases. Additionally, for a given treatment and reader, the number of rows per case cannot be predicted apriori. It could be 0, 1, 2, etc. __ While there is in principle no upper limit to the number of `NLs` per case, radiologists seldom make more than one or two `NLs` on any case.
+* Note the _absence_ of the `LesionID` field. The `NL` marks do not correspond to real lesions, which by definition, can only occur on diseased cases. 
+* It is possible (in principle) that the `FP` worsheet is blank. The observer simplyh does not mark any `NLs`. See [@RN2680] for how the FROC paradigm correctly interprets this situation as indicative of good performance.
   
-#### The `TP/LL` worksheet organization
+### The `TP/LL` worksheet
+
 The following screen-shots show different parts of the `TP` worsheet for `dataset04`.
 
 ![](images/FROC-TP-1.png){width=40%}![](images/FROC-TP-2.png){width=40%}![](images/FROC-TP-3.png){width=40%}![](images/FROC-TP-4.png){width=40%}
 
-* The `TP`  worksheet lists the ratings of `LLs` on diseased cases. __Unlike the ROC paradigm, `NLs` can occur on diseased cases. Additionally, the number of rows per case cannot be predicted apriori. It could be 0, 1, 2, etc. __
-* It is possible (but unlikely) that the `TP` worsheet is blank. See [@RN2680] for how the FROC paradigm correctly interprets this situation as indicative of poor performance.
+* The `TP`  worksheet lists the ratings of `LLs` on diseased cases. __Only diseased cases can appear on this worksheet. Additionally, for a given treatment and reader, the number of rows per case cannot be predicted apriori. It could be 0, 1, 2, 3__ (the upper limit comes from the maximum number of lesions per case in this dataset).
+* Note the _presence_ of the `LesionID` field, which essentially names the different lesions on each diseased case.
+* As an example, for reader 1, treatment 4, case 99, all three lesions (labeled 1, 2 and 3) are marked and rated 4, 5 and 5, respectively.
+
+```{r}
+dataset04$lesionID[100]
+dataset04$LL[4, 1, 100, ]
+```
+* The diseased case labeled `99` in the Excel Truth sheet is actually diseased case number 100 in the `dataset04$LL` array.
+* Remember that the diseased cases are labeled "0" thru "99", but the array index in the dataset object runs from 1 to 100.
+* As another example, for reader 1, treatment 4, case 3, there are no LL marks. The one lesion on this case went unmarked.
+```{r}
+dataset04$lesionID[4]
+dataset04$LL[4, 1, 4, ]
+```
+* Unmarked lesions are indicated by `-Inf`.
+* It is possible (in principle) that the `TP` worsheet is blank. See [@RN2680] for how the FROC paradigm correctly interprets this situation as indicative of poor performance.
+
+## Summary
+TBA
