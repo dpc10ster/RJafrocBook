@@ -118,7 +118,7 @@ mean(dataset02$LL)
 * As noted previously, this study utilized a 5-point rating scale, 1 thru 5, so diseased cases are expected to have high ratings; in this case the highest rating was observed.
 * The mean rating over all diseased cases, treatments and readers, is 4.2977778.
 
-## The ROC  Excel data file
+## The ROC Excel data input file
 * An Excel file in JAFROC format containing ROC data corresponding to `dataset02` is included with the __RJafroc__ package.  The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object `ds`.  
 
 
@@ -138,7 +138,6 @@ DfSaveDataFile(dataset02, "MyDataset02.xlsx", format = "JAFROC")
 #> Note: zip::zip() is deprecated, please use zip::zipr() instead
 ```
 
-
 * `DfReadDataFile` is short for _Data File Function to Read a Data File_. 
 * All data file related functions start with `Df`, and a similar organization applies to other functions. This makes it easier, in my opinion, to find a function in the `R` help system.
 * To see the online help files, use the following command:
@@ -151,13 +150,14 @@ help("RJafroc-package")
 * Click the `"Show in new window"` button to see it full screen (i.e., not constrained to a single quarter panel in __RStudio__).
 * This advice applies, of course, to all help files.
 
-### The ROC Excel data input file
+### The Excel file organization
+
 * It contains three worksheets, `Truth`, `TP` and `FP`.
 * The `Truth` worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. 
 * The `FP` worksheet lists the ratings of non-diseased cases. 
 * The `TP` worksheet lists the ratings of diseased cases ^[OK, I am being inconsistent. I am using `NL`, `LL` for the ratings and `FP`, `TP`j for the worksheets. The worksheet format will accept `NL` and `LL` instead of `FP` and `TP`. However, for ease of generalization to the FROC paradigm it is necessary to use `NL` and `LL` for the list members of the dataset object.].
 
-#### The Truth worksheet organization
+### The Truth worksheet organization
 * The `CaseID` column lists the numeric labels identifying each case. Again, string names are possible, but keep them short. 
 * A `1` in the `LesionID` column denotes a diseased case.
 * A `0` in the `LesionID` column denotes a non-diseased case.
@@ -172,7 +172,7 @@ help("RJafroc-package")
 * The `LesionID` field for each diseased case (e.g., `CaseID` = 70) is unity. A unit value in this field defines a diseased case. 
 * The `Weights` field is irrelevant for ROC datasets. For convenience it is filled with zeroes.  
 
-#### The FP/NL worksheet organization
+### The FP/NL worksheet organization
 The following screen-shots show different parts of the `FP` worsheet for `dataset02`.
 
 ![](images/ROC-FP-1.png){width=40%}![](images/ROC-FP-2.png){width=40%}![](images/ROC-FP-3.png){width=40%}![](images/ROC-FP-5.png){width=40%}
@@ -185,10 +185,11 @@ The following screen-shots show different parts of the `FP` worsheet for `datase
 * The FP ratings tend to be low, there are a lot of ones, fewer twos, even fewer threes, and an ocassional four and a five rating may be found.  
 
 
-#### The TP/LL worksheet organization
+### The TP/LL worksheet organization
 The following screen-shots show different parts of the `FP` worsheet for `dataset02`.
 
 ![](images/ROC-TP-1.png){width=40%}![](images/ROC-TP-2.png){width=40%}![](images/ROC-TP-3.png){width=40%}![](images/ROC-TP-4.png){width=40%}
+
 * The `TP` (or `LL`)  worksheet lists the ratings of diseased cases.
 * The __ModalityID__ values range from `0` to `1`, corresponding to two treatments. 
 * The __ReaderID__ values range from `0` to `4`, corresponding to five readers.
