@@ -1,6 +1,6 @@
 --- 
-title: "RJafroc documentation"
-author: "Dev P. Chakraborty"
+title: "RJafroc Documentation"
+author: "Dev P. Chakraborty, PhD"
 date: "2019-08-06"
 site: bookdown::bookdown_site
 output: bookdown::gitbook

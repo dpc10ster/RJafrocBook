@@ -277,15 +277,13 @@ attributes(dataset04$readerID)
 For example, the name of the second reader is `"3"`. Apparently reader `"2"` "dropped out" of the study. A similar caveat regarding long reader names applies.
 
 ### Details of the `NL` and `LL` list members
-TBA
 * For either `NL` or `LL` list members, the fourth dimension can have length greater than unity.
-* For the `NL` list member this length is determined by the treatment-reader-case combination yielding the most `NL` marks per case.
-* For the `LL` list member this length is determined by the case with the most true lesions.
+* For the `NL` list member __this length is determined by the treatment-reader-case combination yielding the most `NL` marks per case__.
+* For the `LL` list member __this length is determined by the case with the most true lesions__.
 * `dataset02` is a 2-treatment 5-reader dataset (the lengths of the first and second dimensions, respectively, of the `NL` and `LL` list members).
 
 
 #### Numbers of non-diseased and diseased cases
-* TBA
 
 ```r
 length(dataset04$NL[1,1,,1])
@@ -295,9 +293,7 @@ length(dataset04$LL[1,1,,1])
 ```
 
 * The third dimension of the `NL` array is the total number of __all__ cases, i.e., 200, and the third dimension of the `LL` array,  i.e., 100, is the total number of diseased cases.
-
 * Subtracting the number of diseased cases from the number of all cases yields the number of non-diseased cases.
-
 * Therefore, in this dataset, there are 100 diseased cases and 100 non-diseased cases.
 
 ### Why dimension the `NL` array for the total number of cases?
@@ -424,19 +420,26 @@ The structure of the Excel file is superficially similar to the ROC Excel file c
 
 ![](images/FROC-Truth-1.png){width=40%}![](images/FROC-Truth-2.png){width=40%}![](images/FROC-Truth-3.png){width=40%}![](images/FROC-Truth-4.png){width=40%}
 
-
 * There are 100 diseased cases (labeled 0-99) under column `CaseID` and 100 non-diseased cases (labeled 109-199). ^[The non-diseased cases numbered 128 - 199 are not shown above. They are similar to the ones that are shown - one row per case with a zero under the lesionID column and a zero under the Weights column.]  
 * The `LesionID` field for each non-diseased case is zero and there is one row per case for such cases. __For diseased cases, this field has one or more entries, ranging from 1 to 3 for this particular dataset.__ In other words, for each diseased case, the number of rows equals the number of lesion on the case.
 * As an example, there are two rows for `CaseID` = 77: one with `LesionID` = 1 (labeling the first lesion on this case) and one with `LesionID` = 2 (labeling the second and last lesion on this case). The weights of these lesions are explicitly specified to 0.5 each.
 * As another example, there are three rows for `CaseID` = 95: one with `LesionID` = 1, one with `LesionID` = 2 and the last with `LesionID` = 3. The weights of these lesions are explicitly specified to be 0.33 each. ^[The sofware performs a check to ensure that the weight sum to unity, in this case 1% error is considered close enough for "government work"!]   
 * Alternatively, the `Weights` field can be set to zeroes (for all cases) to more conveniently ensure equal weighting to much higher precision.
+* Important: every case must have at least one row describing it in the __Truth__ worksheet.
 
-* The `FP` (or `NL`)  worksheet - this lists the ratings of ROI-level-normal regions.  
-    + For `ReaderID` = 1, `ModalityID` = 1 and `CaseID` = 1 there are 4 rows, corresponding to the 4 ROI-level-normal regions in this case. The corresponding ratings are . The pattern repeats for other treatments and readers, but the rating are, of course, different.  
-    + Each `CaseID` is represented in the `FP` worksheet (a rare exception could occur if a case-level abnormal case has 4 abnormal regions).
+#### The `FP/NL` worksheet organization
+The following screen-shots show different parts of the `FP` worsheet for `dataset04`.
 
-* The `TP` (or `LL`) worksheet - this lists the ratings of ROI-level-abnormal regions.  
-    + Because normal cases generate TPs, one does not find any entry with `CaseID` = 1-50 in the `TP` worksheet.   
-    + The lowest `CaseID` in the `TP` worksheet is 51, which corresponds to the first abnormal case.   
-    + There are two entries for this case, corresponding to the two ROI-level-abnormal regions present in this case. Recall that corresponding to this `CaseID` in the `Truth` worksheet there were two entries with `LesionID` = 2 and 3. These must match the `LesionID`'s listed for this case in the `TP` worksheet. Complementing these two entries, in the `FP` worksheet for `CaseID` = 51, there are 2 entries corresponding to the two ROI-level-normal regions in this case.   
-    + One should be satisfied that for each abnormal case the sum of the number of entries in the `TP` and `FP` worksheets is always 4.  
+![](images/FROC-FP-1.png){width=40%}![](images/FROC-FP-2.png){width=40%}![](images/FROC-FP-3.png){width=40%}![](images/FROC-FP-4.png){width=40%}
+
+* The `FP` worksheet lists the ratings of `NLs` on both non-diseased and diseased cases. __Unlike the ROC paradigm, `NLs` can occur on diseased cases. Additionally, the number of rows per case cannot be predicted apriori. It could be 0, 1, 2, etc. __
+* It is possible that the `FP` worsheet is blank. See [@RN2680] for how the FROC paradigm correctly interprets this situation as indicative of good performance.
+* 
+  
+#### The `TP/LL` worksheet organization
+The following screen-shots show different parts of the `TP` worsheet for `dataset04`.
+
+![](images/FROC-TP-1.png){width=40%}![](images/FROC-TP-2.png){width=40%}![](images/FROC-TP-3.png){width=40%}![](images/FROC-TP-4.png){width=40%}
+
+* The `TP`  worksheet lists the ratings of `LLs` on diseased cases. __Unlike the ROC paradigm, `NLs` can occur on diseased cases. Additionally, the number of rows per case cannot be predicted apriori. It could be 0, 1, 2, etc. __
+* It is possible (but unlikely) that the `TP` worsheet is blank. See [@RN2680] for how the FROC paradigm correctly interprets this situation as indicative of poor performance.
