@@ -128,6 +128,17 @@ fileName <- system.file(
 ds <- DfReadDataFile(fileName)
 ```
 
+* On my Mac, the file name is huge: 
+* /Library/Frameworks/R.framework/Versions/3.6/Resources/library/RJafroc/extdata/includedRocData.xlsx.
+* Use the following code to make a duplicate of the Excel file in a more convenient location.
+
+
+```r
+DfSaveDataFile(dataset02, "MyDataset02.xlsx", format = "JAFROC")
+#> Note: zip::zip() is deprecated, please use zip::zipr() instead
+```
+
+
 * `DfReadDataFile` is short for _Data File Function to Read a Data File_. 
 * All data file related functions start with `Df`, and a similar organization applies to other functions. This makes it easier, in my opinion, to find a function in the `R` help system.
 * To see the online help files, use the following command:
@@ -140,7 +151,7 @@ help("RJafroc-package")
 * Click the `"Show in new window"` button to see it full screen (i.e., not constrained to a single quarter panel in __RStudio__).
 * This advice applies, of course, to all help files.
 
-### The ROC Excel file
+### The ROC Excel data input file
 * It contains three worksheets, `Truth`, `TP` and `FP`.
 * The `Truth` worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. 
 * The `FP` worksheet lists the ratings of non-diseased cases. 

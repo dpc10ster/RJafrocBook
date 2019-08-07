@@ -426,6 +426,23 @@ For example, the name of the second reader is \texttt{"1"}. A similar caveat reg
 \begin{itemize}
 \tightlist
 \item
+  On my Mac, the file name is huge:
+\item
+  /Library/Frameworks/R.framework/Versions/3.6/Resources/library/RJafroc/extdata/includedRocData.xlsx.
+\item
+  Use the following code to make a duplicate of the Excel file in a more convenient location.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{DfSaveDataFile}\NormalTok{(dataset02, }\StringTok{"MyDataset02.xlsx"}\NormalTok{, }\DataTypeTok{format =} \StringTok{"JAFROC"}\NormalTok{)}
+\CommentTok{#> Note: zip::zip() is deprecated, please use zip::zipr() instead}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
   \texttt{DfReadDataFile} is short for \emph{Data File Function to Read a Data File}.
 \item
   All data file related functions start with \texttt{Df}, and a similar organization applies to other functions. This makes it easier, in my opinion, to find a function in the \texttt{R} help system.
@@ -447,8 +464,8 @@ For example, the name of the second reader is \texttt{"1"}. A similar caveat reg
   This advice applies, of course, to all help files.
 \end{itemize}
 
-\hypertarget{the-roc-excel-file}{%
-\subsection{The ROC Excel file}\label{the-roc-excel-file}}
+\hypertarget{the-roc-excel-data-input-file}{%
+\subsection{The ROC Excel data input file}\label{the-roc-excel-data-input-file}}
 
 \begin{itemize}
 \tightlist
@@ -1132,8 +1149,8 @@ Unlike non-diseased cases, diseased cases can have both \texttt{NL} and \texttt{
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{the-froc-excel-data-file}{%
-\section{The FROC Excel data file}\label{the-froc-excel-data-file}}
+\hypertarget{the-froc-excel-data-input-file}{%
+\section{The FROC Excel data input file}\label{the-froc-excel-data-input-file}}
 
 \begin{itemize}
 \tightlist
@@ -1151,23 +1168,40 @@ Unlike non-diseased cases, diseased cases can have both \texttt{NL} and \texttt{
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{the-froc-excel-file}{%
-\subsection{The FROC Excel file}\label{the-froc-excel-file}}
-
-The structure of the Excel file is superficially similar to the ROC Excel file considered in the previous chapter. However, there are several important differences noted below \textbf{in bold}.
-
 \begin{itemize}
 \tightlist
 \item
-  The \texttt{Truth} worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. \textbf{For diseased cases, it additionally indicates the number of lesions, and the weight to be assigned to each lesion.}
+  On my Mac, the file name is huge:
 \item
-  The \texttt{FP} worksheet lists the \textbf{number (zero or more)} and ratings of \texttt{NL} marks on non-diseased \textbf{and diseased cases}.
+  /Library/Frameworks/R.framework/Versions/3.6/Resources/library/RJafroc/extdata/includedFrocData.xlsx.
 \item
-  The \texttt{TP} worksheet lists the \textbf{number (zero or more)} and ratings of \texttt{LL} marks, i.e., \textbf{marked lesions}, on diseased cases. Obviously, \texttt{LL} marks cannot occcur on non-diseased cases.
+  Use the following code to make a duplicate of the Excel file in a more convenient location.
 \end{itemize}
 
-\hypertarget{the-truth-worksheet-organization-1}{%
-\subsubsection{The Truth worksheet organization}\label{the-truth-worksheet-organization-1}}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{DfSaveDataFile}\NormalTok{(dataset04, }\StringTok{"MyDataset04.xlsx"}\NormalTok{, }\DataTypeTok{format =} \StringTok{"JAFROC"}\NormalTok{)}
+\CommentTok{#> Note: zip::zip() is deprecated, please use zip::zipr() instead}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  The structure of the Excel file is superficially similar to the ROC Excel file considered in the previous chapter. However, there are several important differences noted below \textbf{in bold}.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The \texttt{Truth} worksheet defines the ground-truth of each case. It indicates which cases are diseased and which are non-diseased. \textbf{For diseased cases, it additionally indicates the number of lesions, and the weight to be assigned to each lesion.}
+  \item
+    The \texttt{FP} worksheet lists the \textbf{number (zero or more)} and ratings of \texttt{NL} marks on non-diseased \textbf{and diseased cases}.
+  \item
+    The \texttt{TP} worksheet lists the \textbf{number (zero or more)} and ratings of \texttt{LL} marks, i.e., \textbf{marked lesions}, on diseased cases. Obviously, \texttt{LL} marks cannot occcur on non-diseased cases.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{the-truth-worksheet}{%
+\subsection{The Truth worksheet}\label{the-truth-worksheet}}
 
 \begin{itemize}
 \tightlist
@@ -1203,19 +1237,10 @@ The structure of the Excel file is superficially similar to the ROC Excel file c
   Important: every case must have at least one row describing it in the \textbf{Truth} worksheet.
 \item
   The Excel files should be ``robust'' with respect to sorting on different columns. By ``robust'' I mean the resulting \texttt{R} dataset object, resulting from \texttt{DfReadDataFile}, should be unchanged. I have not tested this on all files, but if someone brings deviations from this statement to my attention, I will look into it. As a simple example of ``robustness'', notice that in the \textbf{Truth} worksheet being currently explained, the diseased cases come before the non-diseased ones.
-\item
-  Use the following code to make a duplicate of the Excel file in a more convenient location.
 \end{itemize}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{DfSaveDataFile}\NormalTok{(dataset04, }\StringTok{"MyDataset04.xlsx"}\NormalTok{, }\DataTypeTok{format =} \StringTok{"JAFROC"}\NormalTok{)}
-\CommentTok{#> Note: zip::zip() is deprecated, please use zip::zipr() instead}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{the-fpnl-worksheet-organization-1}{%
-\subsubsection{\texorpdfstring{The \texttt{FP/NL} worksheet organization}{The FP/NL worksheet organization}}\label{the-fpnl-worksheet-organization-1}}
+\hypertarget{the-fpnl-worksheet}{%
+\subsection{\texorpdfstring{The \texttt{FP/NL} worksheet}{The FP/NL worksheet}}\label{the-fpnl-worksheet}}
 
 The following screen-shots show different parts of the \texttt{FP} worsheet for \texttt{dataset04}.
 
@@ -1231,8 +1256,8 @@ The following screen-shots show different parts of the \texttt{FP} worsheet for 
   It is possible (in principle) that the \texttt{FP} worsheet is blank. The observer simplyh does not mark any \texttt{NLs}. See \citep{RN2680} for how the FROC paradigm correctly interprets this situation as indicative of good performance.
 \end{itemize}
 
-\hypertarget{the-tpll-worksheet-organization-1}{%
-\subsubsection{\texorpdfstring{The \texttt{TP/LL} worksheet organization}{The TP/LL worksheet organization}}\label{the-tpll-worksheet-organization-1}}
+\hypertarget{the-tpll-worksheet}{%
+\subsection{\texorpdfstring{The \texttt{TP/LL} worksheet}{The TP/LL worksheet}}\label{the-tpll-worksheet}}
 
 The following screen-shots show different parts of the \texttt{TP} worsheet for \texttt{dataset04}.
 
@@ -1283,6 +1308,11 @@ The following screen-shots show different parts of the \texttt{TP} worsheet for 
 \item
   It is possible (in principle) that the \texttt{TP} worsheet is blank. See \citep{RN2680} for how the FROC paradigm correctly interprets this situation as indicative of poor performance.
 \end{itemize}
+
+\hypertarget{summary-1}{%
+\section{Summary}\label{summary-1}}
+
+TBA
 
 \hypertarget{split-plot-analysis}{%
 \chapter{Split Plot Analysis}\label{split-plot-analysis}}

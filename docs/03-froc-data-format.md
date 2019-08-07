@@ -388,7 +388,7 @@ mean(is.finite(dataset04$LL))
 #> [1] 0.3043333
 ```
 
-## The FROC Excel data file
+## The FROC Excel data input file
 * An Excel file in JAFROC format containing FROC data corresponding to `dataset04` is included with the __RJafroc__ package [@RN1882]. 
 
 
