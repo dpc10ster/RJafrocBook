@@ -561,7 +561,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="the-froc-excel-data-file" class="section level2">
 <h2><span class="header-section-number">4.3</span> The FROC Excel data file</h2>
 <ul>
-<li>An Excel file in JAFROC format containing FROC data corresponding to <code>dataset04</code> is included with the <strong>RJafroc</strong> package <span class="citation">(Zanca et al. <a href="#ref-RN1882">2009</a>)</span>. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object <code>ds</code>.</li>
+<li>An Excel file in JAFROC format containing FROC data corresponding to <code>dataset04</code> is included with the <strong>RJafroc</strong> package <span class="citation">(Zanca et al. <a href="#ref-RN1882">2009</a>)</span>.</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">fileName &lt;-<span class="st"> </span><span class="kw">system.file</span>(</a>
 <a class="sourceLine" id="cb15-2" data-line-number="2">    <span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;includedFrocData.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
@@ -589,12 +589,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>There are 100 diseased cases (labeled 0-99) under column <code>CaseID</code> and 100 non-diseased cases (labeled 109-199).<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a><br />
 </li>
-<li>The <code>LesionID</code> field for each non-diseased case is zero and there is one row per case for such cases. For diseased cases, this field has a variable number of entries, ranging from 1 to 3.</li>
-<li>As an example, there are two rows for <code>CaseID</code> = 77 in the Excel file: one with <code>LesionID</code> = 1 and one with <code>LesionID</code> = 2. The weights of these lesions are explicitly specified to be 0.5 each.<br />
-</li>
+<li>The <code>LesionID</code> field for each non-diseased case is zero and there is one row per case for such cases. <strong>For diseased cases, this field has one or more entries, ranging from 1 to 3 for this particular dataset.</strong> In other words, for each diseased case, the number of rows equals the number of lesion on the case.</li>
+<li>As an example, there are two rows for <code>CaseID</code> = 77: one with <code>LesionID</code> = 1 (labeling the first lesion on this case) and one with <code>LesionID</code> = 2 (labeling the second and last lesion on this case). The weights of these lesions are explicitly specified to 0.5 each.</li>
 <li>As another example, there are three rows for <code>CaseID</code> = 95: one with <code>LesionID</code> = 1, one with <code>LesionID</code> = 2 and the last with <code>LesionID</code> = 3. The weights of these lesions are explicitly specified to be 0.33 each.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a><br />
 </li>
-<li><p>Alternatively, the <code>Weights</code> field can be set to zeroes (for all cases) to more conveniently ensure equal weighting.</p></li>
+<li><p>Alternatively, the <code>Weights</code> field can be set to zeroes (for all cases) to more conveniently ensure equal weighting to much higher precision.</p></li>
 <li>The <code>FP</code> (or <code>NL</code>) worksheet - this lists the ratings of ROI-level-normal regions.
 <ul>
 <li>For <code>ReaderID</code> = 1, <code>ModalityID</code> = 1 and <code>CaseID</code> = 1 there are 4 rows, corresponding to the 4 ROI-level-normal regions in this case. The corresponding ratings are . The pattern repeats for other treatments and readers, but the rating are, of course, different.<br />
@@ -645,8 +644,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li id="fn5"><p>For equally weighted lesions, the name distinction implied by <code>lesionID</code> is not important, but then the analysis would only be valid for equally weighted lesions.<a href="frocdataformat.html#fnref5" class="footnote-back">↩</a></p></li>
 <li id="fn6"><p>If an observer is so highly confident in the <em>absence</em> of a localized lesion, he will simply <em>not mark</em> the location in question; if he did, then, logically, he should mark <em>all</em> areas in the image that are definitely not lesions; in the FROC paradigm only regions with a reasonable degree of suspicion are marked. The radiologist only wishes to draw attention to regions that are reasonably suspicious; the definition of “reasonable” is determined by clinical considerations.<a href="frocdataformat.html#fnref6" class="footnote-back">↩</a></p></li>
 <li id="fn7"><p>Since there is a one-to-one correspondence between marks and ratings.<a href="frocdataformat.html#fnref7" class="footnote-back">↩</a></p></li>
-<li id="fn8"><p>The non-diseased cases numbered 128 - 199 are not shown above.<a href="frocdataformat.html#fnref8" class="footnote-back">↩</a></p></li>
-<li id="fn9"><p>The sofware performs a check to ensure that the weight sum to unity, in this case 1% error is considered close enough.<a href="frocdataformat.html#fnref9" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p>The non-diseased cases numbered 128 - 199 are not shown above. They are similar to the ones that are shown - one row per case with a zero under the lesionID column and a zero under the Weights column.<a href="frocdataformat.html#fnref8" class="footnote-back">↩</a></p></li>
+<li id="fn9"><p>The sofware performs a check to ensure that the weight sum to unity, in this case 1% error is considered close enough for “government work”!<a href="frocdataformat.html#fnref9" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

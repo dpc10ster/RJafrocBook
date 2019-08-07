@@ -394,8 +394,8 @@ mean(is.finite(dataset04$LL))
 #> [1] 0.3043333
 ```
 
-## The FROC  Excel data file
-* An Excel file in JAFROC format containing FROC data corresponding to `dataset04` is included with the __RJafroc__ package [@RN1882].  The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object `ds`. 
+## The FROC Excel data file
+* An Excel file in JAFROC format containing FROC data corresponding to `dataset04` is included with the __RJafroc__ package [@RN1882]. 
 
 
 ```r
@@ -425,11 +425,11 @@ The structure of the Excel file is superficially similar to the ROC Excel file c
 ![](images/FROC-Truth-1.png){width=40%}![](images/FROC-Truth-2.png){width=40%}![](images/FROC-Truth-3.png){width=40%}![](images/FROC-Truth-4.png){width=40%}
 
 
-* There are 100 diseased cases (labeled 0-99) under column `CaseID` and 100 non-diseased cases (labeled 109-199). ^[The non-diseased cases numbered 128 - 199 are not shown above.]  
-* The `LesionID` field for each non-diseased case is zero and there is one row per case for such cases. For diseased cases, this field has a variable number of entries, ranging from 1 to 3. 
-* As an example, there are two rows for `CaseID` = 77 in the Excel file: one with `LesionID` = 1 and one with `LesionID` = 2. The weights of these lesions are explicitly specified to be 0.5 each.   
-* As another example, there are three rows for `CaseID` = 95: one with `LesionID` = 1, one with `LesionID` = 2 and the last with `LesionID` = 3. The weights of these lesions are explicitly specified to be 0.33 each. ^[The sofware performs a check to ensure that the weight sum to unity, in this case 1% error is considered close enough.]   
-* Alternatively, the `Weights` field can be set to zeroes (for all cases) to more conveniently ensure equal weighting.
+* There are 100 diseased cases (labeled 0-99) under column `CaseID` and 100 non-diseased cases (labeled 109-199). ^[The non-diseased cases numbered 128 - 199 are not shown above. They are similar to the ones that are shown - one row per case with a zero under the lesionID column and a zero under the Weights column.]  
+* The `LesionID` field for each non-diseased case is zero and there is one row per case for such cases. __For diseased cases, this field has one or more entries, ranging from 1 to 3 for this particular dataset.__ In other words, for each diseased case, the number of rows equals the number of lesion on the case.
+* As an example, there are two rows for `CaseID` = 77: one with `LesionID` = 1 (labeling the first lesion on this case) and one with `LesionID` = 2 (labeling the second and last lesion on this case). The weights of these lesions are explicitly specified to 0.5 each.
+* As another example, there are three rows for `CaseID` = 95: one with `LesionID` = 1, one with `LesionID` = 2 and the last with `LesionID` = 3. The weights of these lesions are explicitly specified to be 0.33 each. ^[The sofware performs a check to ensure that the weight sum to unity, in this case 1% error is considered close enough for "government work"!]   
+* Alternatively, the `Weights` field can be set to zeroes (for all cases) to more conveniently ensure equal weighting to much higher precision.
 
 * The `FP` (or `NL`)  worksheet - this lists the ratings of ROI-level-normal regions.  
     + For `ReaderID` = 1, `ModalityID` = 1 and `CaseID` = 1 there are 4 rows, corresponding to the 4 ROI-level-normal regions in this case. The corresponding ratings are . The pattern repeats for other treatments and readers, but the rating are, of course, different.  
