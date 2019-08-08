@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 ROC data format | RJafroc Documentation</title>
   <meta name="description" content="Extended RJafroc documentation." />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.12.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 ROC data format | RJafroc Documentation" />
   <meta property="og:type" content="book" />
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="intro.html">
-<link rel="next" href="frocdataformat.html">
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="frocdataformat.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -66,7 +66,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -198,7 +198,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="introduction" class="section level2">
 <h2><span class="header-section-number">3.1</span> Introduction</h2>
 <ul>
-<li>In the receiver operating characteristic (<strong>ROC</strong>) paradigm <span class="citation">(Metz <a href="#ref-RN1766">1978</a>)</span> the observer’s task is to <strong>rate</strong> (i.e., assign an ordered label representing the degree of suspicion) each case for confidence in presence of disease. The rating is frequently called a <em>confidence level</em>.</li>
+<li>In the receiver operating characteristic (__ROC__) paradigm <span class="citation">(Metz <a href="#ref-RN1766">1978</a>)</span> the observer’s task is to <strong>rate</strong> (i.e., assign an ordered label representing the degree of suspicion) each case for confidence in presence of disease. The rating is frequently called a <em>confidence level</em>.</li>
 <li>The rating can be an integer or quasi- continuous (e.g., 0 – 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the case.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></li>
 <li>For human observer studies a 6-point rating scale is recommended, collected via two questions <span class="citation">(Chakraborty <a href="#ref-RN2680">2017</a>)</span>:
 <ul>
@@ -212,24 +212,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li>With algorithmic readers, e.g., computer aided detection (CAD) algorithms, a floating point rating, if possible, should be retained.</li>
-<li>In the most common study design, termed multiple-reader multiple-case (<strong>MRMC</strong>), the rating collection procedure is repeated for all cases, treatments and readers.</li>
+<li>In the most common study design, termed multiple-reader multiple-case (__MRMC__), the rating collection procedure is repeated for all cases, treatments and readers.</li>
 </ul>
 </div>
 <div id="an-actual-mrmc-roc-dataset" class="section level2">
 <h2><span class="header-section-number">3.2</span> An actual MRMC ROC dataset</h2>
 <p>An actual MRMC ROC dataset <span class="citation">(Van Dyke et al. <a href="#ref-RN1993">1993</a>)</span> is included as <code>dataset02</code>. It has the following structure:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">str</span>(dataset02)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; List of 8</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt;  $ NL          : num [1:2, 1:5, 1:114, 1] 1 3 2 3 2 2 1 2 3 2 ...</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt;  $ LL          : num [1:2, 1:5, 1:45, 1] 5 5 5 5 5 5 5 5 5 5 ...</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#&gt;  $ lesionNum   : int [1:45] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#&gt;  $ lesionID    : num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#&gt;  $ lesionWeight: num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#&gt;  $ dataType    : chr &quot;ROC&quot;</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#&gt;  $ modalityID  : Named chr [1:2] &quot;0&quot; &quot;1&quot;</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;0&quot; &quot;1&quot;</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">#&gt;  $ readerID    : Named chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">str</span>(dataset02)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="co">#&gt; List of 8</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co">#&gt;  $ NL          : num [1:2, 1:5, 1:114, 1] 1 3 2 3 2 2 1 2 3 2 ...</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="co">#&gt;  $ LL          : num [1:2, 1:5, 1:45, 1] 5 5 5 5 5 5 5 5 5 5 ...</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="co">#&gt;  $ lesionNum   : int [1:45] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co">#&gt;  $ lesionID    : num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="co">#&gt;  $ lesionWeight: num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co">#&gt;  $ dataType    : chr &quot;ROC&quot;</span></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="co">#&gt;  $ modalityID  : Named chr [1:2] &quot;0&quot; &quot;1&quot;</span></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;0&quot; &quot;1&quot;</span></a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="co">#&gt;  $ readerID    : Named chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></a></code></pre></div>
 <div id="overview-of-the-data-structure" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Overview of the data structure</h3>
 <ul>
@@ -251,16 +251,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>The names of the treatments are in the <code>modalityID</code> list member:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">attributes</span>(dataset02<span class="op">$</span>modalityID)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; $names</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt; [1] &quot;0&quot; &quot;1&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">attributes</span>(dataset02<span class="op">$</span>modalityID)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co">#&gt; $names</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt; [1] &quot;0&quot; &quot;1&quot;</span></a></code></pre></div>
 <ul>
 <li>For example, the name of the first treatment is <code>&quot;0&quot;</code>. The names can be longer strings, but use of very long string names may mess up the output formats of the analysis report. As per the <strong>KISS</strong> principle,<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> keep the names short.</li>
 <li>The names of the readers are in the <code>readerID</code> array:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">attributes</span>(dataset02<span class="op">$</span>readerID)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; $names</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; [1] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">attributes</span>(dataset02<span class="op">$</span>readerID)</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#&gt; $names</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#&gt; [1] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot;</span></a></code></pre></div>
 <p>For example, the name of the second reader is <code>&quot;1&quot;</code>. A similar caveat regarding long reader names applies.</p>
 </div>
 <div id="details-of-the-nl-and-ll-list-members" class="section level3">
@@ -271,9 +271,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div id="numbers-of-non-diseased-and-diseased-cases" class="section level4">
 <h4><span class="header-section-number">3.2.3.1</span> Numbers of non-diseased and diseased cases</h4>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">K &lt;-<span class="st"> </span><span class="kw">length</span>(dataset02<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">K2 &lt;-<span class="st"> </span><span class="kw">length</span>(dataset02<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">K1 &lt;-<span class="st"> </span>K <span class="op">-</span><span class="st"> </span>K2</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">K &lt;-<span class="st"> </span><span class="kw">length</span>(dataset02<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb4-2" title="2">K2 &lt;-<span class="st"> </span><span class="kw">length</span>(dataset02<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb4-3" title="3">K1 &lt;-<span class="st"> </span>K <span class="op">-</span><span class="st"> </span>K2</a></code></pre></div>
 <ul>
 <li><code>K1</code> is the number of non-diseased cases, while <code>K2</code> is the number of diseased cases.</li>
 <li><p>The third dimension of the <code>NL</code> array is the total number of <strong>all</strong> cases, i.e., <code>K</code> = 114, and the third dimension of the <code>LL</code> array, i.e., <code>K2</code> = 45, is the total number of diseased cases.</p></li>
@@ -293,10 +293,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>For ROC data a non-diseased case can have only one, and exactly one, <code>NL</code> rating.</li>
 <li>For treatment 1, reader 1 and case 1 (the first non-diseased case), the NL rating is <code>&quot;1&quot;</code>:</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">dataset02<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt; [1] 1</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">mean</span>(dataset02<span class="op">$</span>NL[,,<span class="dv">1</span><span class="op">:</span>K1,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&gt; [1] 1.784058</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">dataset02<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co">#&gt; [1] 1</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="kw">mean</span>(dataset02<span class="op">$</span>NL[,,<span class="dv">1</span><span class="op">:</span>K1,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt; [1] 1.784058</span></a></code></pre></div>
 <ul>
 <li>This study utilized a 5-point rating scale, 1 thru 5, so non-diseased cases are expected to have low ratings; in this case the lowest rating was observed.</li>
 <li>The mean rating over all non-diseased cases, treatments and readers, is 1.784058.</li>
@@ -308,10 +308,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>For ROC data a diseased case can have only one, and exactly one, <code>LL</code> rating.</li>
 <li>For treatment 1, reader 1, case 1 (the first diseased case) the LL rating is:</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">dataset02<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#&gt; [1] 5</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw">mean</span>(dataset02<span class="op">$</span>LL)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt; [1] 4.297778</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">dataset02<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="co">#&gt; [1] 5</span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="kw">mean</span>(dataset02<span class="op">$</span>LL)</a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="co">#&gt; [1] 4.297778</span></a></code></pre></div>
 <ul>
 <li>As noted previously, this study utilized a 5-point rating scale, 1 thru 5, so diseased cases are expected to have high ratings; in this case the highest rating was observed.</li>
 <li>The mean rating over all diseased cases, treatments and readers, is 4.2977778.</li>
@@ -324,22 +324,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>An Excel file in JAFROC format containing ROC data corresponding to <code>dataset02</code> is included with the <strong>RJafroc</strong> package. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object <code>ds</code>.</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">fileName &lt;-<span class="st"> </span><span class="kw">system.file</span>(</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">    <span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;includedRocData.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">ds &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(fileName)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">fileName &lt;-<span class="st"> </span><span class="kw">system.file</span>(</a>
+<a class="sourceLine" id="cb7-2" title="2">    <span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;includedRocData.xlsx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb7-3" title="3">ds &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(fileName)</a></code></pre></div>
 <ul>
 <li>On my Mac, the file name is huge:</li>
 <li>/Library/Frameworks/R.framework/Versions/3.6/Resources/library/RJafroc/extdata/includedRocData.xlsx.</li>
 <li>Use the following code to make a duplicate of the Excel file in a more convenient location.</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">DfSaveDataFile</span>(dataset02, <span class="st">&quot;MyDataset02.xlsx&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;JAFROC&quot;</span>)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">#&gt; Note: zip::zip() is deprecated, please use zip::zipr() instead</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">DfSaveDataFile</span>(dataset02, <span class="st">&quot;MyDataset02.xlsx&quot;</span>, <span class="dt">format =</span> <span class="st">&quot;JAFROC&quot;</span>)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co">#&gt; Note: zip::zip() is deprecated, please use zip::zipr() instead</span></a></code></pre></div>
 <ul>
 <li><code>DfReadDataFile</code> is short for <em>Data File Function to Read a Data File</em>.</li>
 <li>All data file related functions start with <code>Df</code>, and a similar organization applies to other functions. This makes it easier, in my opinion, to find a function in the <code>R</code> help system.</li>
 <li>To see the online help files, use the following command:</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">help</span>(<span class="st">&quot;RJafroc-package&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">help</span>(<span class="st">&quot;RJafroc-package&quot;</span>)</a></code></pre></div>
 <ul>
 <li>Click the <code>&quot;Show in new window&quot;</code> button to see it full screen (i.e., not constrained to a single quarter panel in <strong>RStudio</strong>).</li>
 <li>This advice applies, of course, to all help files.</li>
@@ -404,20 +404,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>Since each case gets one rating, the ROC data structure is relatively easy to visualize. For a single treatment and single reader, all of the information in the dataset can be summarize by a two-row five-column table, with one row listing the number of non-diseased cases rated 1, the number rated two, etc., ending with the number rated five, and a corresponding row for diseased cases. These 10 values contain all of the information contained in the Excel file for the specified treatment and reader. The example below is for treatment <code>0</code> and reader <code>0</code>:</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">nl &lt;-<span class="st"> </span>dataset02<span class="op">$</span>NL</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">binnedFpCounts &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) binnedFpCounts[b] &lt;-<span class="st"> </span><span class="kw">sum</span>(nl[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span>K1,<span class="dv">1</span>] <span class="op">==</span><span class="st"> </span>b)</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">ll &lt;-<span class="st"> </span>dataset02<span class="op">$</span>LL</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">binnedTpCounts &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) binnedTpCounts[b] &lt;-<span class="st"> </span><span class="kw">sum</span>(ll[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span>K2,<span class="dv">1</span>] <span class="op">==</span><span class="st"> </span>b)</a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">binnedFpCounts</a>
-<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt; [1] 47  9 10  2  1</span></a>
-<a class="sourceLine" id="cb10-9" data-line-number="9">binnedTpCounts</a>
-<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#&gt; [1]  4  1  2 10 28</span></a>
-<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="kw">sum</span>(binnedFpCounts)</a>
-<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#&gt; [1] 69</span></a>
-<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="kw">sum</span>(binnedTpCounts)</a>
-<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#&gt; [1] 45</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">nl &lt;-<span class="st"> </span>dataset02<span class="op">$</span>NL</a>
+<a class="sourceLine" id="cb10-2" title="2">binnedFpCounts &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) binnedFpCounts[b] &lt;-<span class="st"> </span><span class="kw">sum</span>(nl[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span>K1,<span class="dv">1</span>] <span class="op">==</span><span class="st"> </span>b)</a>
+<a class="sourceLine" id="cb10-4" title="4">ll &lt;-<span class="st"> </span>dataset02<span class="op">$</span>LL</a>
+<a class="sourceLine" id="cb10-5" title="5">binnedTpCounts &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) binnedTpCounts[b] &lt;-<span class="st"> </span><span class="kw">sum</span>(ll[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span>K2,<span class="dv">1</span>] <span class="op">==</span><span class="st"> </span>b)</a>
+<a class="sourceLine" id="cb10-7" title="7">binnedFpCounts</a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="co">#&gt; [1] 47  9 10  2  1</span></a>
+<a class="sourceLine" id="cb10-9" title="9">binnedTpCounts</a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="co">#&gt; [1]  4  1  2 10 28</span></a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="kw">sum</span>(binnedFpCounts)</a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="co">#&gt; [1] 69</span></a>
+<a class="sourceLine" id="cb10-13" title="13"><span class="kw">sum</span>(binnedTpCounts)</a>
+<a class="sourceLine" id="cb10-14" title="14"><span class="co">#&gt; [1] 45</span></a></code></pre></div>
 <ul>
 <li>The values in <code>binnedFpCounts</code> sum to 69.</li>
 <li>The values in <code>binnedTpCounts</code> sum to 45.</li>
