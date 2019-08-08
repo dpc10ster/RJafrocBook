@@ -21,6 +21,7 @@ ds <- dataset02
 * LL[i,j, 800, maxL] for FROC 
 * Likewise for NL arrays 
 * Work next on FOM 
+* git commit -m 'documentation update [ci skip]'
 
 ## Introduction
 Jason:
