@@ -191,7 +191,7 @@
 \begin{itemize}
 \tightlist
 \item
-  In the receiver operating characteristic (\_\_ROC\_\_) paradigm \citep{RN1766} the observer's task is to \textbf{rate} (i.e., assign an ordered label representing the degree of suspicion) each case for confidence in presence of disease. The rating is frequently called a \emph{confidence level}.
+  In the receiver operating characteristic (\textbf{ROC}) paradigm \citep{RN1766} the observer's task is to \textbf{rate} (i.e., assign an ordered label representing the degree of suspicion) each case for confidence in presence of disease. The rating is frequently called a \emph{confidence level}.
 \item
   The rating can be an integer or quasi- continuous (e.g., 0 -- 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the case \footnote{The directionaliy of the rating is not a limitation. If lower values correspond to increased confidence level, it is only necessary to transform the observed rating by subtracting it from a constant value. The constant value can be chosen arbitrarily, typically as the maximum of all observed ratings, thereby ensuring that the transformed value is always non-negative.}.
 \item
@@ -219,7 +219,7 @@
 \item
   With algorithmic readers, e.g., computer aided detection (CAD) algorithms, a floating point rating, if possible, should be retained.
 \item
-  In the most common study design, termed multiple-reader multiple-case (\_\_MRMC\_\_), the rating collection procedure is repeated for all cases, treatments and readers.
+  In the most common study design, termed multiple-reader multiple-case (\textbf{MRMC}), the rating collection procedure is repeated for all cases, treatments and readers.
 \end{itemize}
 
 \hypertarget{an-actual-mrmc-roc-dataset}{%
@@ -607,7 +607,7 @@ The following screen-shots show different parts of the \texttt{FP} worsheet for 
 \begin{itemize}
 \tightlist
 \item
-  In the free-response ROC (\_\_FROC\_\_) paradigm \citep{RN85} the observer's task is to:
+  In the free-response ROC (\textbf{FROC}) paradigm \citep{RN85} the observer's task is to:
 
   \begin{itemize}
   \tightlist
@@ -645,7 +645,7 @@ The following screen-shots show different parts of the \texttt{FP} worsheet for 
 \item
   With algorithmic readers, e.g., computer aided detection (CAD) algorithms, a floating point rating, if possible, should be retained.
 \item
-  In the most common study design, termed multiple-reader multiple-case (\_\_MRMC\_\_), the rating collection procedure is repeated for all cases, treatments and readers.
+  In the most common study design, termed multiple-reader multiple-case (\textbf{MRMC}), the rating collection procedure is repeated for all cases, treatments and readers.
 \end{itemize}
 
 \hypertarget{an-actual-mrmc-froc-dataset}{%
@@ -1326,6 +1326,45 @@ TBA
 
 \hypertarget{split-plot-analysis}{%
 \chapter{Split Plot Analysis}\label{split-plot-analysis}}
+
+\hypertarget{extending-the-dataset-to-accommodate-split-plot-designs}{%
+\section{Extending the dataset to accommodate split-plot designs}\label{extending-the-dataset-to-accommodate-split-plot-designs}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ds <-}\StringTok{ }\NormalTok{dataset02}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Need modality index as before.
+\item
+  Each reader interprets a subset of the cases in both modalities.
+\item
+  Assume reader \texttt{j} interprets \(K_j\) cases, where K = \(\sum_{i=1}^{J} K_j\) is the total number of cases imaged in both treatments.
+\item
+  What is the structure of the dataset?
+\item
+  LL{[}i,j, \(k_j\), 1{]};
+\item
+  Existing structure should suffice as each case is interpreted twice, once in each treatment, by \emph{only} one reader.
+\item
+  Assume \texttt{K/J} = integer, 100 in the planned study; \texttt{J} = 8, \texttt{K} = 800
+\item
+  Modification is needed only in FOM; also dataType needs to be changed to ``SplitPlotRoc'' or ``SplitPlotFroc''
+\item
+  ROC\_SP or FROC\_SP
+\item
+  LL{[}i,j, 800, 1{]} for ROC
+\item
+  LL{[}i,j, 800, maxL{]} for FROC
+\item
+  Likewise for NL arrays
+\item
+  Work next on FOM
+\end{itemize}
 
 \hypertarget{introduction-2}{%
 \section{Introduction}\label{introduction-2}}

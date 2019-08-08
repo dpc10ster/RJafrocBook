@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 5 Split Plot Analysis | RJafroc Documentation</title>
   <meta name="description" content="Extended RJafroc documentation." />
-  <meta name="generator" content="bookdown 0.12.1 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 5 Split Plot Analysis | RJafroc Documentation" />
   <meta property="og:type" content="book" />
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="frocdataformat.html"/>
-<link rel="next" href="roidataformat.html"/>
+<link rel="prev" href="frocdataformat.html">
+<link rel="next" href="roidataformat.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -66,7 +66,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -198,13 +198,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 5</span> Split Plot Analysis</h1>
 <div id="extending-the-dataset-to-accommodate-split-plot-designs" class="section level2">
 <h2><span class="header-section-number">5.1</span> Extending the dataset to accommodate split-plot designs</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">ds &lt;-<span class="st"> </span>dataset02</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">ds &lt;-<span class="st"> </span>dataset02</a></code></pre></div>
 <ul>
 <li>Need modality index as before.</li>
 <li>Each reader interprets a subset of the cases in both modalities.</li>
 <li>Assume reader <code>j</code> interprets <span class="math inline">\(K_j\)</span> cases, where K = <span class="math inline">\(\sum_{i=1}^{J} K_j\)</span> is the total number of cases imaged in both treatments.</li>
 <li>What is the structure of the dataset?</li>
-<li>LL[i,j, <span class="math inline">\(k_j\)</span>, 1]</li>
+<li>LL[i,j, <span class="math inline">\(k_j\)</span>, 1];</li>
+<li>Existing structure should suffice as each case is interpreted twice, once in each treatment, by <em>only</em> one reader.</li>
+<li>Assume <code>K/J</code> = integer, 100 in the planned study; <code>J</code> = 8, <code>K</code> = 800</li>
+<li>Modification is needed only in FOM; also dataType needs to be changed to “SplitPlotRoc” or “SplitPlotFroc”</li>
+<li>ROC_SP or FROC_SP</li>
+<li>LL[i,j, 800, 1] for ROC</li>
+<li>LL[i,j, 800, maxL] for FROC</li>
+<li>Likewise for NL arrays</li>
+<li>Work next on FOM</li>
 </ul>
 </div>
 <div id="introduction-2" class="section level2">
@@ -276,9 +284,8 @@ gitbook.start({
     script.type = "text/javascript";
     var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:")
-      if (/^https?:/.test(src))
-        src = src.replace(/^https?:/, '');
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
