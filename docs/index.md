@@ -5,8 +5,7 @@ date: "2020-03-10"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
-# bibliography: [packages.bib, myRefs.bib]
-# bibliography: [myRefs.bib]
+bibliography: [packages.bib, myRefs.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: dpc10ster/RJafrocBook
@@ -20,3 +19,7 @@ description: "Extended RJafroc documentation."
 * I welcome corrections and comments by the not-so-casual-user.
 * Please use the GitHub website to raise issues and comments: 
     + https://github.com/dpc10ster/RJafrocBook
+    
+    
+
+    

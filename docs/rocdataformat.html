@@ -69,7 +69,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -187,8 +187,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="introduction" class="section level2">
 <h2><span class="header-section-number">3.1</span> Introduction</h2>
 <ul>
-<li>The purpose of this vignette is to explain the data format of the input Excel file and to introduce the capabilities of the function <code>DfReadDataFile()</code>. Background on observer performance methods are in my book.</li>
-<li>I will start with Receiver Operating Characteristic (ROC) data as this is by far the simplest paradigm.</li>
+<li>The purpose of this vignette is to explain the data format of the input Excel file and to introduce the capabilities of the function <code>DfReadDataFile()</code>. Background on observer performance methods are in my book <span class="citation">(Chakraborty <a href="#ref-RN2680">2017</a>)</span>.</li>
+<li>I will start with Receiver Operating Characteristic (ROC) data <span class="citation">(Metz <a href="#ref-RN1766">1978</a>)</span>, as this is by far the simplest paradigm.</li>
 <li>In the ROC paradigm the observer assigns a rating to each image. A rating is an ordered numeric label, and, in our convention, higher values represent greater certainty or <strong>confidence level</strong> for presence of disease. With human observers, a 5 (or 6) point rating scale is typically used, with 1 representing highest confidence for <em>absence</em> of disease and 5 (or 6) representing highest confidence for <em>presence</em> of disease. Intermediate values represent intermediate confidence levels for presence or absence of disease.</li>
 <li>Note that location information associated with the disease, if applicable, is not collected.</li>
 <li>There is no restriction to 5 or 6 ratings. With algorithmic observers, e.g., computer aided detection (CAD) algorithms, the rating could be a floating point number and have infinite precision. All that is required is that higher values correspond to greater confidence in presence of disease.</li>
@@ -244,35 +244,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>There are 5 readers in the dataset (each cell in the <code>ReaderID</code> column contains the string <code>0, 1, 2, 3, 4</code>).</li>
 <li>There are 2 modalities in the dataset (each cell in the <code>ModalityID</code> column contains the string <code>0, 1</code>).</li>
 </ul>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-1"></span>
-<img src="images/rocCrTruth.png" alt="Fig. 1 Truth worksheet for file rocCr.xlsx" width="50%" height="20%" />
+<div class="figure" style="text-align: center"><span id="fig:showRocCrTruthSheet"></span>
+<img src="images/rocCrTruth.png" alt="Truth worksheet for file rocCr.xlsx" width="50%" height="20%" />
 <p class="caption">
-FIGURE 3.1: Fig. 1 Truth worksheet for file rocCr.xlsx
+FIGURE 3.1: Truth worksheet for file rocCr.xlsx
 </p>
 </div>
 </div>
 <div id="the-structure-of-an-roc-dataset" class="section level2">
 <h2><span class="header-section-number">3.6</span> The structure of an ROC dataset</h2>
 <p>In the following code chunk the first statement retrieves the name of the data file, located in a hidden directory that one need not be concerned with. The second statement reads the file using the function <code>DfReadDataFile()</code> and saves it to object <code>x</code>. The third statement shows the structure of the dataset object <code>x</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">rocCr &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;toyFiles/ROC/rocCr.xlsx&quot;</span>,</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">                        <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">x &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(rocCr, <span class="dt">newExcelFileFormat =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">str</span>(x)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#&gt; List of 12</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#&gt;  $ NL           : num [1:2, 1:5, 1:8, 1] 1 3 2 3 2 2 1 2 3 2 ...</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#&gt;  $ LL           : num [1:2, 1:5, 1:5, 1] 5 5 5 5 5 5 5 5 5 5 ...</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#&gt;  $ lesionVector : int [1:5] 1 1 1 1 1</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#&gt;  $ lesionID     : num [1:5, 1] 1 1 1 1 1</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#&gt;  $ lesionWeight : num [1:5, 1] 1 1 1 1 1</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">#&gt;  $ dataType     : chr &quot;ROC&quot;</span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#&gt;  $ modalityID   : Named chr [1:2] &quot;0&quot; &quot;1&quot;</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;0&quot; &quot;1&quot;</span></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#&gt;  $ readerID     : Named chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#&gt;  $ design       : chr &quot;CROSSED&quot;</span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">#&gt;  $ normalCases  : int [1:3] 1 2 3</span></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">#&gt;  $ abnormalCases: int [1:5] 70 71 72 73 74</span></a>
-<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="co">#&gt;  $ truthTableStr: num [1:2, 1:5, 1:8, 1:2] 1 1 1 1 1 1 1 1 1 1 ...</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">rocCr &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;toyFiles/ROC/rocCr.xlsx&quot;</span>,</a>
+<a class="sourceLine" id="cb1-2" title="2">                        <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3">x &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(rocCr, <span class="dt">newExcelFileFormat =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">str</span>(x)</a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="co">#&gt; List of 12</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co">#&gt;  $ NL           : num [1:2, 1:5, 1:8, 1] 1 3 2 3 2 2 1 2 3 2 ...</span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="co">#&gt;  $ LL           : num [1:2, 1:5, 1:5, 1] 5 5 5 5 5 5 5 5 5 5 ...</span></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co">#&gt;  $ lesionVector : int [1:5] 1 1 1 1 1</span></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="co">#&gt;  $ lesionID     : num [1:5, 1] 1 1 1 1 1</span></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="co">#&gt;  $ lesionWeight : num [1:5, 1] 1 1 1 1 1</span></a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="co">#&gt;  $ dataType     : chr &quot;ROC&quot;</span></a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt;  $ modalityID   : Named chr [1:2] &quot;0&quot; &quot;1&quot;</span></a>
+<a class="sourceLine" id="cb1-13" title="13"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;0&quot; &quot;1&quot;</span></a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="co">#&gt;  $ readerID     : Named chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></a>
+<a class="sourceLine" id="cb1-15" title="15"><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></a>
+<a class="sourceLine" id="cb1-16" title="16"><span class="co">#&gt;  $ design       : chr &quot;CROSSED&quot;</span></a>
+<a class="sourceLine" id="cb1-17" title="17"><span class="co">#&gt;  $ normalCases  : int [1:3] 1 2 3</span></a>
+<a class="sourceLine" id="cb1-18" title="18"><span class="co">#&gt;  $ abnormalCases: int [1:5] 70 71 72 73 74</span></a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="co">#&gt;  $ truthTableStr: num [1:2, 1:5, 1:8, 1:2] 1 1 1 1 1 1 1 1 1 1 ...</span></a></code></pre></div>
 <ul>
 <li>In the above code chunk flag <code>newExcelFileFormat</code> is set to <code>TRUE</code> as otherwise columns D - F in the <code>Truth</code> worksheet are ignored and the dataset is assumed to be crossed, with <code>dataType</code> automatically determined from the contents of the FP and TP worksheets.</li>
 <li>Flag <code>newExcelFileFormat = FALSE</code> is for compatibility with older JAFROC format Excel files, which did not have these columns in the <code>Truth</code> worksheet. Its usage is deprecated.</li>
@@ -295,10 +295,10 @@ FIGURE 3.1: Fig. 1 Truth worksheet for file rocCr.xlsx
 <div id="the-false-positive-fp-ratings" class="section level2">
 <h2><span class="header-section-number">3.7</span> The false positive (FP) ratings</h2>
 <p>These are found in the <code>FP</code> or <code>NL</code> worksheet, see below.</p>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-3"></span>
-<img src="images/rocCrFp.png" alt="Fig. 1 FP worksheet for file rocCr.xlsx" width="50%" height="20%" />
+<div class="figure" style="text-align: center"><span id="fig:showRocCrFpSheet"></span>
+<img src="images/rocCrFp.png" alt="FP worksheet for file rocCr.xlsx" width="50%" height="20%" />
 <p class="caption">
-FIGURE 3.2: Fig. 1 FP worksheet for file rocCr.xlsx
+FIGURE 3.2: FP worksheet for file rocCr.xlsx
 </p>
 </div>
 <ul>
@@ -313,10 +313,10 @@ FIGURE 3.2: Fig. 1 FP worksheet for file rocCr.xlsx
 <div id="the-true-positive-tp-ratings" class="section level2">
 <h2><span class="header-section-number">3.8</span> The true positive (TP) ratings</h2>
 <p>These are found in the <code>TP</code> or <code>LL</code> worksheet, see below.</p>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-4"></span>
-<img src="images/rocCrTp.png" alt="Fig. 1 TP worksheet for file rocCr.xlsx" width="50%" height="20%" />
+<div class="figure" style="text-align: center"><span id="fig:showRocCrTpSheet"></span>
+<img src="images/rocCrTp.png" alt="TP worksheet for file rocCr.xlsx" width="50%" height="20%" />
 <p class="caption">
-FIGURE 3.3: Fig. 1 TP worksheet for file rocCr.xlsx
+FIGURE 3.3: TP worksheet for file rocCr.xlsx
 </p>
 </div>
 <ul>
@@ -370,18 +370,27 @@ FIGURE 3.3: Fig. 1 TP worksheet for file rocCr.xlsx
 <li>Note that in each of these examples, the last dimension is 1 because we are dealing with an ROC dataset.</li>
 <li>The reader is encouraged to examine the correspondence between the NL and LL ratings and the Excel file using this method.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">which</span>(x<span class="op">$</span>abnormalCases <span class="op">==</span><span class="st"> </span><span class="dv">70</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; [1] 1</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">x<span class="op">$</span>NL[<span class="kw">which</span>(x<span class="op">$</span>modalityID <span class="op">==</span><span class="st"> &quot;0&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>readerID <span class="op">==</span><span class="st"> &quot;1&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>normalCases <span class="op">==</span><span class="st"> </span><span class="dv">1</span>),<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; [1] 2</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">x<span class="op">$</span>LL[<span class="kw">which</span>(x<span class="op">$</span>modalityID <span class="op">==</span><span class="st"> &quot;0&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>readerID <span class="op">==</span><span class="st"> &quot;1&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>abnormalCases <span class="op">==</span><span class="st"> </span><span class="dv">70</span>),<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; [1] 5</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">x<span class="op">$</span>LL[<span class="kw">which</span>(x<span class="op">$</span>modalityID <span class="op">==</span><span class="st"> &quot;a&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>readerID <span class="op">==</span><span class="st"> &quot;1&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>abnormalCases <span class="op">==</span><span class="st"> </span><span class="dv">70</span>),<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; numeric(0)</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">which</span>(x<span class="op">$</span>abnormalCases <span class="op">==</span><span class="st"> </span><span class="dv">70</span>)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co">#&gt; [1] 1</span></a>
+<a class="sourceLine" id="cb2-3" title="3">x<span class="op">$</span>NL[<span class="kw">which</span>(x<span class="op">$</span>modalityID <span class="op">==</span><span class="st"> &quot;0&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>readerID <span class="op">==</span><span class="st"> &quot;1&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>normalCases <span class="op">==</span><span class="st"> </span><span class="dv">1</span>),<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co">#&gt; [1] 2</span></a>
+<a class="sourceLine" id="cb2-5" title="5">x<span class="op">$</span>LL[<span class="kw">which</span>(x<span class="op">$</span>modalityID <span class="op">==</span><span class="st"> &quot;0&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>readerID <span class="op">==</span><span class="st"> &quot;1&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>abnormalCases <span class="op">==</span><span class="st"> </span><span class="dv">70</span>),<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; [1] 5</span></a>
+<a class="sourceLine" id="cb2-7" title="7">x<span class="op">$</span>LL[<span class="kw">which</span>(x<span class="op">$</span>modalityID <span class="op">==</span><span class="st"> &quot;a&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>readerID <span class="op">==</span><span class="st"> &quot;1&quot;</span>),<span class="kw">which</span>(x<span class="op">$</span>abnormalCases <span class="op">==</span><span class="st"> </span><span class="dv">70</span>),<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; numeric(0)</span></a></code></pre></div>
 </div>
 <div id="references" class="section level2">
 <h2><span class="header-section-number">3.12</span> References</h2>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-RN2680">
+<p>Chakraborty, Dev P. 2017. <em>Observer Performance Methods for Diagnostic Imaging - Foundations, Modeling, and Applications with R-Based Examples</em>. Book. Boca Raton, FL: CRC Press.</p>
+</div>
+<div id="ref-RN1766">
+<p>Metz, C.E. 1978. “Basic Principles of Roc Analysis.” Journal Article. <em>Seminars in Nuclear Medicine</em> 8 (4): 283–98.</p>
 </div>
 </div>
             </section>

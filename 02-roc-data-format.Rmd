@@ -9,8 +9,8 @@
 ```
 
 ## Introduction
-* The purpose of this vignette is to explain the data format of the input Excel file and to introduce the capabilities of the function `DfReadDataFile()`. Background on observer performance methods are in my book.
-* I will start with Receiver Operating Characteristic (ROC) data as this is by far the simplest paradigm.
+* The purpose of this vignette is to explain the data format of the input Excel file and to introduce the capabilities of the function `DfReadDataFile()`. Background on observer performance methods are in my book  [@RN2680].
+* I will start with Receiver Operating Characteristic (ROC) data [@RN1766],  as this is by far the simplest paradigm.
 * In the ROC paradigm the observer assigns a rating to each image. A rating is an ordered numeric label, and, in our convention, higher values represent greater certainty or **confidence level** for presence of disease. With human observers, a 5 (or 6) point rating scale is typically used, with 1 representing highest confidence for *absence* of disease and 5 (or 6) representing highest confidence for *presence* of disease. Intermediate values represent intermediate confidence levels for presence or absence of disease. 
 * Note that location information associated with the disease, if applicable, is not collected. 
 * There is no restriction to 5 or 6 ratings. With algorithmic observers, e.g., computer aided detection (CAD) algorithms, the rating could be a floating point number and have infinite precision. All that is required is that higher values correspond to greater confidence in presence of disease.
@@ -52,14 +52,14 @@
 * There are 5 readers in the dataset (each cell in the `ReaderID` column contains the string `0, 1, 2, 3, 4`).
 * There are 2 modalities in the dataset (each cell in the `ModalityID` column contains the string `0, 1`).
 
-```{r, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Fig. 1 Truth worksheet for file rocCr.xlsx",fig.show='hold',fig.align='center'}
+```{r showRocCrTruthSheet, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Truth worksheet for file rocCr.xlsx",fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/rocCrTruth.png")
 ``` 
 
 ## The structure of an ROC dataset
 In the following code chunk the first statement retrieves the name of the data file, located in a hidden directory that one need not be concerned with. The second statement reads the file using the function `DfReadDataFile()` and saves it to object `x`. The third statement shows the structure of the dataset object `x`.
 
-```{r}
+```{r readRocCrExcelFile}
 rocCr <- system.file("extdata", "toyFiles/ROC/rocCr.xlsx",
                         package = "RJafroc", mustWork = TRUE)
 x <- DfReadDataFile(rocCr, newExcelFileFormat = TRUE)
@@ -86,7 +86,7 @@ str(x)
 ## The false positive (FP) ratings
 These are found in the `FP` or `NL` worksheet, see below.
 
-```{r, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Fig. 1 FP worksheet for file rocCr.xlsx",fig.show='hold',fig.align='center'}
+```{r showRocCrFpSheet, echo=FALSE,out.width="50%",out.height="20%",fig.cap="FP worksheet for file rocCr.xlsx",fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/rocCrFp.png")
 ``` 
 
@@ -100,7 +100,7 @@ knitr::include_graphics("images/rocCrFp.png")
 ## The true positive (TP) ratings
 These are found in the `TP` or `LL` worksheet, see below.
 
-```{r, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Fig. 1 TP worksheet for file rocCr.xlsx",fig.show='hold',fig.align='center'}
+```{r showRocCrTpSheet, echo=FALSE,out.width="50%",out.height="20%",fig.cap="TP worksheet for file rocCr.xlsx",fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/rocCrTp.png")
 ``` 
 
@@ -142,7 +142,7 @@ knitr::include_graphics("images/rocCrTp.png")
 * Note that in each of these examples, the last dimension is 1 because we are dealing with an ROC dataset. 
 * The reader is encouraged to examine the correspondence between the NL and LL ratings and the Excel file using this method.
 
-```{r}
+```{r datasetStr}
 which(x$abnormalCases == 70)
 x$NL[which(x$modalityID == "0"),which(x$readerID == "1"),which(x$normalCases == 1),1]
 x$LL[which(x$modalityID == "0"),which(x$readerID == "1"),which(x$abnormalCases == 70),1]
