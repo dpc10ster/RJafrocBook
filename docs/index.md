@@ -1,11 +1,12 @@
 --- 
 title: "RJafroc Documentation"
 author: "Dev P. Chakraborty, PhD"
-date: "2019-08-08"
+date: "2020-03-10"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
-bibliography: [packages.bib, myRefs.bib]
+# bibliography: [packages.bib, myRefs.bib]
+# bibliography: [myRefs.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: dpc10ster/RJafrocBook
