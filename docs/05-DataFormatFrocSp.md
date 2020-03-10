@@ -2,6 +2,7 @@
 
 
 
+
 ## Introduction
 * The purpose of this vignette is to explain the data format of the input Excel file for an FROC *split-plot* dataset.
 * In a split-plot dataset each reader interprets a sub-set of cases in all modalities.
