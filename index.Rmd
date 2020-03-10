@@ -12,7 +12,7 @@ github-repo: dpc10ster/RJafrocBook
 description: "Extended RJafroc documentation."
 ---
 
-# Preface
+# Preface {-}
 * This book, an extended documentation of the __RJafroc__ package, is undergoing extensive edits. 
 * It should not be used by the casual user until I give the go ahead.
 * It bypasses the file size limits of __CRAN__, currently 5 MB, which severely limits the extent of the documentation that can be included with the CRAN version of the package.

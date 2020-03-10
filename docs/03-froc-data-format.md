@@ -10,7 +10,8 @@
 * Details on the FROC paradigm are in my book.
 
 ## Introduction
-* In the Free-response Receiver Operating Characteristic (FROC) paradigm the observer searches each case for signs of **localized disease** and marks and rates localized regions that are sufficiently suspicious for disease presence. 
+* See my book @RN2680 for full details.
+* In the Free-response Receiver Operating Characteristic (FROC) paradigm [@RN761] the observer searches each case for signs of **localized disease** and marks and rates localized regions that are sufficiently suspicious for disease presence. 
 * FROC data consists of **mark-rating pairs**, where each mark is a localized-region that was considered sufficiently suspicious for presence of a localized lesion and the rating is the corresponding confidence level. 
 * By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (`LL`) - if it is close to a real lesion - or a non-lesion localization (`NL`) otherwise. 
 * The observer assigns a rating to each region. The rating, as in the ROC paradigm, can be an integer or quasi-continuous (e.g., 0 – 100), or a floating point value, as long as higher numbers represent greater confidence in presence of a lesion at the indicated region.
@@ -37,8 +38,8 @@ The `Truth` worksheet contains 6 columns: `CaseID`, `LesionID`, `Weight`, `Reade
 * `Paradigm`: In the example shown below, the contents are `FROC` and `crossed`. It informs the software that this is an `FROC` dataset and the design is "crossed", as in **Vignette #1**.
 
 <div class="figure" style="text-align: center">
-<img src="images/frocCrTruth.png" alt="Fig. 1: Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx" width="50%" height="20%" />
-<p class="caption">(\#fig:unnamed-chunk-1)Fig. 1: Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx</p>
+<img src="images/frocCrTruth.png" alt="Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:frocCrTruth)Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx</p>
 </div>
 
 
@@ -104,7 +105,7 @@ x$lesionWeight
 These are found in the `FP` or `NL` worksheet, see below.
 <div class="figure" style="text-align: center">
 <img src="images/frocCrNL.png" alt="Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx" width="50%" height="20%" />
-<p class="caption">(\#fig:unnamed-chunk-5)Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx</p>
+<p class="caption">(\#fig:frocCrNL)Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx</p>
 </div>
 
 * It consists of 4 columns, of equal length. **The common length is unpredictable.** It could be zero if the dataset has no NL marks (a distinct possibility if the lesions are very easy to find and the modality and/or observer has high performance). All one knows is that the common length is an integer greater than or equal to zero.
@@ -125,7 +126,7 @@ These are found in the `TP` or `LL` worksheet, see below.
 
 <div class="figure" style="text-align: center">
 <img src="images/frocCrLL.png" alt="Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx" width="50%" height="20%" />
-<p class="caption">(\#fig:unnamed-chunk-6)Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx</p>
+<p class="caption">(\#fig:frocCrLL)Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx</p>
 </div>
 
 * This worksheet can only have diseased cases. The presence of a non-diseased case in this worksheet will generate an error.
@@ -357,4 +358,4 @@ lesWghtDistr
 * The length of the fourth dimension of `x$NL` is determined by the case (diseased or non-diseased) with the most `NL` marks, 2 in the current example.
 * The length of the fourth dimension of `x$LL` is determined by the diseased case with the most lesions, 3 in the current example.
 
-## References  
+

@@ -16,7 +16,8 @@
 * Details on the FROC paradigm are in my book.
 
 ## Introduction
-* In the Free-response Receiver Operating Characteristic (FROC) paradigm the observer searches each case for signs of **localized disease** and marks and rates localized regions that are sufficiently suspicious for disease presence. 
+* See my book @RN2680 for full details.
+* In the Free-response Receiver Operating Characteristic (FROC) paradigm [@RN761] the observer searches each case for signs of **localized disease** and marks and rates localized regions that are sufficiently suspicious for disease presence. 
 * FROC data consists of **mark-rating pairs**, where each mark is a localized-region that was considered sufficiently suspicious for presence of a localized lesion and the rating is the corresponding confidence level. 
 * By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (`LL`) - if it is close to a real lesion - or a non-lesion localization (`NL`) otherwise. 
 * The observer assigns a rating to each region. The rating, as in the ROC paradigm, can be an integer or quasi-continuous (e.g., 0 – 100), or a floating point value, as long as higher numbers represent greater confidence in presence of a lesion at the indicated region.
@@ -42,7 +43,7 @@ The `Truth` worksheet contains 6 columns: `CaseID`, `LesionID`, `Weight`, `Reade
 * `ModalityID`: a comma-separated listing of modalities (or treatments), each represented by a unique **integer**, that apply to each case. In the example each cell has the value `0, 1`. **Each cell has to be text formatted.**
 * `Paradigm`: In the example shown below, the contents are `FROC` and `crossed`. It informs the software that this is an `FROC` dataset and the design is "crossed", as in **Vignette #1**.
 
-```{r, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Fig. 1: Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx",fig.show='hold',fig.align='center'}
+```{r frocCrTruth, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx",fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/frocCrTruth.png")
 ``` 
 
@@ -50,7 +51,7 @@ knitr::include_graphics("images/frocCrTruth.png")
 ## The structure of an FROC dataset
 The example shown above corresponds to Excel file `inst/extdata/toyFiles/FROC/frocCr.xlsx` in the project directory. 
 
-```{r}
+```{r frocCr}
 frocCr <- system.file("extdata", "toyFiles/FROC/frocCr.xlsx",
                         package = "RJafroc", mustWork = TRUE)
 x <- DfReadDataFile(frocCr, newExcelFileFormat = TRUE)
@@ -62,14 +63,14 @@ str(x)
 * The `x$lesionVector` member is a vector whose contents reflect the number of lesions in each diseased case, i.e., `r x$lesionVector` in the current example.
 * The `x$lesionID` member indicates the labeling of the lesions in each diseased case.
 
-```{r}
+```{r showlesionID}
 x$lesionID
 ```             
 
 * This shows that the lesions on the first diseased case are labeled 1 and 2. The `-Inf` is a filler used to denote a missing value. The second diseased case has one lesion labeled 1. The third diseased case has three lesions labeled 1, 2 and 3, etc.
 * The `lesionWeight` member is the clinical importance of each lesion. Lacking specific clinical reasons, the lesions should be equally weighted; this is *not* true for this toy dataset.
 
-```{r}
+```{r showlesionWeight}
 x$lesionWeight
 ```             
 
@@ -77,7 +78,7 @@ x$lesionWeight
 
 ## The false positive (FP) ratings
 These are found in the `FP` or `NL` worksheet, see below.
-```{r, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx",fig.show='hold',fig.align='center'}
+```{r frocCrNL, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx",fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/frocCrNL.png")
 ``` 
 
@@ -97,7 +98,7 @@ knitr::include_graphics("images/frocCrNL.png")
 ## The true positive (TP) ratings
 These are found in the `TP` or `LL` worksheet, see below.
 
-```{r, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx",fig.show='hold',fig.align='center'}
+```{r frocCrLL, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx",fig.show='hold',fig.align='center'}
 knitr::include_graphics("images/frocCrLL.png")
 ``` 
 
@@ -111,7 +112,7 @@ knitr::include_graphics("images/frocCrLL.png")
 ## On the distribution of numbers of lesions in abnormal cases  
 * Consider a much larger dataset, `dataset11`, with structure as shown below:
 
-```{r}
+```{r showStrdataset11}
 x <- dataset11
 str(x)
 ```
@@ -119,14 +120,14 @@ str(x)
 * Focus for now in the 115 abnormal cases. 
 * The numbers of lesions in these cases is contained in `x$lesionVector`.
 
-```{r}
+```{r lesionVector}
 x$lesionVector
 ```
 
 * For example, the first abnormal case contains 6 lesions, the second contains 4 lesions, the third contains 7 lesions, etc. and the last abnormal case contains 1 lesion.
 * To get an idea of the distribution of the numbers of lesions per abnormal cases, one could interrogate this vector as shown below using the `which()` function:
 
-```{r}
+```{r lesionVector2}
 for (el in 1:max(x$lesionVector)) cat(
   "abnormal cases with", el, "lesions = ", 
   length(which(x$lesionVector == el)), "\n")
@@ -139,7 +140,7 @@ for (el in 1:max(x$lesionVector)) cat(
 ### Definition of `lesDistr` array
 * Let us ask what is the fraction of (abnormal) cases with 1 lesion, 2 lesions etc.
 
-```{r}
+```{r lesionVector3}
 for (el in 1:max(x$lesionVector)) cat("fraction of abnormal cases with", el, "lesions = ", 
                                               length(which(x$lesionVector == el))/length(x$LL[1,1,,1]), "\n")
 ```
@@ -150,7 +151,7 @@ for (el in 1:max(x$lesionVector)) cat("fraction of abnormal cases with", el, "le
 * This information is contained the the `lesDistr` array
 * It is coded in the `Utility` function `UtilLesionDistr()` 
 
-```{r}
+```{r lesDistr}
 lesDistr <- UtilLesionDistr(x)
 lesDistr
 ```
@@ -160,7 +161,7 @@ lesDistr
 * The second column contains the fraction of diseased cases with the number of lesions indicated in the first column.
 * The second column must sum to unity
 
-```{r}
+```{r UtilLesionDistr}
 sum(UtilLesionDistr(x)[,2])
 ```
 
@@ -177,7 +178,7 @@ sum(UtilLesionDistr(x)[,2])
 * Etc.
 * Missing values are filled with `-Inf`.
 
-```{r}
+```{r lesWghtDistr}
 lesWghtDistr <- UtilLesionWeightsDistr(x)
 cat("dim(lesDistr) =", dim(lesDistr),"\n")
 cat("dim(lesWghtDistr) =", dim(lesWghtDistr),"\n")
@@ -199,4 +200,4 @@ lesWghtDistr
 * The length of the fourth dimension of `x$NL` is determined by the case (diseased or non-diseased) with the most `NL` marks, 2 in the current example.
 * The length of the fourth dimension of `x$LL` is determined by the diseased case with the most lesions, 3 in the current example.
 
-## References  
+

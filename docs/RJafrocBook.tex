@@ -128,7 +128,8 @@
 \tableofcontents
 }
 \hypertarget{preface}{%
-\chapter{Preface}\label{preface}}
+\chapter*{Preface}\label{preface}}
+\addcontentsline{toc}{chapter}{Preface}
 
 \begin{itemize}
 \tightlist
@@ -156,7 +157,7 @@
 \begin{itemize}
 \tightlist
 \item
-  This is the book desribing the \textbf{RJafroc} packages.
+  This is the book desribing the \textbf{RJafroc} package.
 \item
   The name of the book is RJafrocBook
 \item
@@ -178,7 +179,7 @@
 \item
   The purpose of this vignette is to explain the data format of the input Excel file and to introduce the capabilities of the function \texttt{DfReadDataFile()}. Background on observer performance methods are in my book \citep{RN2680}.
 \item
-  I will start with Receiver Operating Characteristic (ROC) data as this is by far the simplest paradigm.
+  I will start with Receiver Operating Characteristic (ROC) data \citep{RN1766}, as this is by far the simplest paradigm.
 \item
   In the ROC paradigm the observer assigns a rating to each image. A rating is an ordered numeric label, and, in our convention, higher values represent greater certainty or \textbf{confidence level} for presence of disease. With human observers, a 5 (or 6) point rating scale is typically used, with 1 representing highest confidence for \emph{absence} of disease and 5 (or 6) representing highest confidence for \emph{presence} of disease. Intermediate values represent intermediate confidence levels for presence or absence of disease.
 \item
@@ -499,9 +500,6 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{references}{%
-\section{References}\label{references}}
-
 \hypertarget{frocdataformat}{%
 \chapter{FROC data format}\label{frocdataformat}}
 
@@ -528,7 +526,9 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 \begin{itemize}
 \tightlist
 \item
-  In the Free-response Receiver Operating Characteristic (FROC) paradigm the observer searches each case for signs of \textbf{localized disease} and marks and rates localized regions that are sufficiently suspicious for disease presence.
+  See my book \citet{RN2680} for full details.
+\item
+  In the Free-response Receiver Operating Characteristic (FROC) paradigm \citep{RN761} the observer searches each case for signs of \textbf{localized disease} and marks and rates localized regions that are sufficiently suspicious for disease presence.
 \item
   FROC data consists of \textbf{mark-rating pairs}, where each mark is a localized-region that was considered sufficiently suspicious for presence of a localized lesion and the rating is the corresponding confidence level.
 \item
@@ -583,7 +583,7 @@ The \texttt{Truth} worksheet contains 6 columns: \texttt{CaseID}, \texttt{Lesion
 
 }
 
-\caption{Fig. 1: Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:unnamed-chunk-1}
+\caption{Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:frocCrTruth}
 \end{figure}
 
 \hypertarget{the-structure-of-an-froc-dataset}{%
@@ -676,7 +676,7 @@ These are found in the \texttt{FP} or \texttt{NL} worksheet, see below.
 
 }
 
-\caption{Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:unnamed-chunk-5}
+\caption{Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:frocCrNL}
 \end{figure}
 
 \begin{itemize}
@@ -718,7 +718,7 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 
 }
 
-\caption{Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:unnamed-chunk-6}
+\caption{Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:frocCrLL}
 \end{figure}
 
 \begin{itemize}
@@ -1044,8 +1044,692 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
   The length of the fourth dimension of \texttt{x\$LL} is determined by the diseased case with the most lesions, 3 in the current example.
 \end{itemize}
 
-\hypertarget{references-1}{%
-\section{References}\label{references-1}}
+\hypertarget{rocSpdataformat}{%
+\chapter{ROC split plot data format}\label{rocSpdataformat}}
+
+\hypertarget{introduction-2}{%
+\section{Introduction}\label{introduction-2}}
+
+\begin{itemize}
+\tightlist
+\item
+  The purpose of this vignette is to explain the data format of the input Excel file for an ROC \emph{split-plot} dataset.
+\item
+  In a split-plot dataset each reader interprets a \emph{different} sub-set of cases in all modalities, i.e., the cases interpreted by different readers have no overlap.
+\item
+  Each sub-set of cases can have different numbers of non-diseased and diseased cases.
+\item
+  The example below assumes the same numbers of non-diseased and diseased cases.
+\item
+  The data format has been extended to \texttt{NewFormat} to allow such datasets.
+\end{itemize}
+
+\hypertarget{the-excel-data-format-2}{%
+\section{The Excel data format}\label{the-excel-data-format-2}}
+
+As before,the Excel file has three worsheets named \texttt{Truth}, \texttt{NL} or \texttt{FP} and \texttt{LL} or \texttt{TP}. The Excel file corresponding to the example that follows is \texttt{inst/extdata/toyFiles/ROC/rocSp.xlsx}.
+
+\hypertarget{the-truth-worksheet-2}{%
+\section{\texorpdfstring{The \texttt{Truth} worksheet}{The Truth worksheet}}\label{the-truth-worksheet-2}}
+
+The \texttt{Truth} worksheet contains 6 columns: \texttt{CaseID}, \texttt{LesionID}, \texttt{Weight}, \texttt{ReaderID}, \texttt{ModalityID} and \texttt{Paradigm}.
+
+\begin{itemize}
+\tightlist
+\item
+  The first five columns contain as many rows as there are cases in the dataset.
+\item
+  \texttt{CaseID}: unique \textbf{integers}, one per case, representing the cases in the dataset.
+\item
+  \texttt{LesionID}: integers 0, representing non-diseased cases and 1 representing the diseased cases.
+\item
+  The \texttt{ReaderID} column is a listing of readers each represented by a \textbf{unique string}. Note that, unlike the crossed design, the \texttt{ReaderID} column has \emph{single values}. \textbf{Each cell has to be text formatted.}
+\item
+  The non-diseased cases interpreted by reader with \texttt{ReaderID} value \texttt{1} are labeled \texttt{6}, \texttt{7}, \texttt{8}, \texttt{9} and \texttt{10}, each with \texttt{LesionID} value \texttt{0}.
+\item
+  The diseased cases interpreted by this reader are labeled \texttt{16}, \texttt{17}, \texttt{18}, \texttt{19} and \texttt{20}, each with \texttt{LesionID} value \texttt{1}.\\
+\item
+  The second reader, with \texttt{ReaderID} value \texttt{4}, interprets five non-diseased cases labeled \texttt{21}, \texttt{22}, \texttt{23}, \texttt{24} and \texttt{25}, each with \texttt{LesionID} value \texttt{0}, and five diseased cases labeled \texttt{36}, \texttt{37}, \texttt{38}, \texttt{39} and \texttt{40}, each with \texttt{LesionID} value \texttt{1}.\\
+\item
+  The third reader, with ReaderID value \texttt{5}, interprets five non-diseased cases labeled \texttt{46}, \texttt{47}, \texttt{48}, \texttt{49} and \texttt{50}, each with \texttt{LesionID} value \texttt{0} and five diseased cases labeled \texttt{51}, \texttt{52}, \texttt{53}, \texttt{54} and \texttt{55}, each with \texttt{LesionID} value \texttt{1}.\\
+\item
+  \texttt{Weight}: floating point value 0 - this is not used for ROC data.\\
+\item
+  \texttt{ModalityID}: a comma-separated listing of modalities, each represented by a \textbf{unique string}. In the example shown below each cell has the value \texttt{1,\ 2}. \textbf{Each cell has to be text formatted.}
+\item
+  \texttt{Paradigm}: In the example shown in this vignette, the contents are \texttt{ROC} and \texttt{split-plot}.
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocSpTruth} 
+
+}
+
+\caption{Fig. 1: Truth worksheet for file inst/extdata/toyFiles/ROC/rocSp.xlsx}\label{fig:unnamed-chunk-1}
+\end{figure}
+
+\hypertarget{the-structure-of-the-roc-split-plot-dataset}{%
+\section{The structure of the ROC split plot dataset}\label{the-structure-of-the-roc-split-plot-dataset}}
+
+\begin{itemize}
+\tightlist
+\item
+  The example shown in Fig. 1 corresponds to Excel file \texttt{inst/extdata/toyFiles/ROC/rocSp.xlsx} in the project directory.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rocSp <-}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\StringTok{"extdata"}\NormalTok{, }\StringTok{"toyFiles/ROC/rocSp.xlsx"}\NormalTok{,}
+                        \DataTypeTok{package =} \StringTok{"RJafroc"}\NormalTok{, }\DataTypeTok{mustWork =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(rocSp, }\DataTypeTok{newExcelFileFormat =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(x)}
+\CommentTok{#> List of 12}
+\CommentTok{#>  $ NL           : num [1:2, 1:3, 1:30, 1] 1 1 -Inf -Inf -Inf ...}
+\CommentTok{#>  $ LL           : num [1:2, 1:3, 1:15, 1] 5 2.3 -Inf -Inf -Inf ...}
+\CommentTok{#>  $ lesionVector : int [1:15] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ lesionID     : num [1:15, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ lesionWeight : num [1:15, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ dataType     : chr "ROC"}
+\CommentTok{#>  $ modalityID   : Named chr [1:2] "1" "2"}
+\CommentTok{#>   ..- attr(*, "names")= chr [1:2] "1" "2"}
+\CommentTok{#>  $ readerID     : Named chr [1:3] "1" "4" "5"}
+\CommentTok{#>   ..- attr(*, "names")= chr [1:3] "1" "4" "5"}
+\CommentTok{#>  $ design       : chr "SPLIT-PLOT"}
+\CommentTok{#>  $ normalCases  : int [1:15] 6 7 8 9 10 21 22 23 24 25 ...}
+\CommentTok{#>  $ abnormalCases: int [1:15] 16 17 18 19 20 36 37 38 39 40 ...}
+\CommentTok{#>  $ truthTableStr: num [1:2, 1:3, 1:30, 1:2] 1 1 NA NA NA NA 1 1 NA NA ...}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{DfReadDataFile()} flag \texttt{newExcelFileFormat} \textbf{must} be set to \texttt{TRUE} for split plot data.
+\item
+  The dataset object \texttt{x} is a \texttt{list} variable with 12 members.
+\item
+  There are 15 diseased cases in the dataset (the number of 1's in the \texttt{LesionID} column of the \texttt{Truth} worksheet) and 15 non-diseased cases (the number of 0's in the \texttt{LesionID} column).
+\item
+  \texttt{x\$NL}, with dimension {[}2, 3, 30, 1{]}, contains the ratings of normal cases. The extra values in the third dimension, filled with \texttt{NAs}, are needed for compatibility with FROC datasets.
+\item
+  \texttt{x\$LL}, with dimension {[}2, 3, 15, 1{]}, contains the ratings of abnormal cases.
+\item
+  The \texttt{x\$lesionVector} member is a vector with 15 ones representing the 15 diseased cases in the dataset.
+\item
+  The \texttt{x\$lesionID} member is an array with 15 ones (this member is needed for compatibility with FROC datasets).
+\item
+  The \texttt{x\$lesionWeight} member is an array with 15 ones (this member is needed for compatibility with FROC datasets).
+\item
+  The \texttt{dataType} member is ROC which specifies the data collection method (``ROC'', ``FROC'', ``LROC'' or ``ROI'').
+\item
+  The \texttt{x\$modalityID} member is a vector with two elements \texttt{"1"} and \texttt{"2"}, naming the two modalities.
+\item
+  The \texttt{x\$readerID} member is a vector with three elements \texttt{"1"}, \texttt{"4"} and \texttt{"5"}, naming the three modalities.
+\item
+  The \texttt{x\$design} member is SPLIT-PLOT; specifies the dataset design, which can be either ``CROSSED'' or ``SPLIT-PLOT''.
+\item
+  The \texttt{x\$normalCases} member lists the names of the normal cases, 6, 7, 8, 9, 10, 21, 22, 23, 24, 25, 46, 47, 48, 49, 50.
+\item
+  The \texttt{x\$abnormalCases} member lists the names of the abnormal cases, 16, 17, 18, 19, 20, 36, 37, 38, 39, 40, 51, 52, 53, 54, 55.
+\item
+  The \texttt{x\$truthTableStr} member quantifies the structure of the dataset, as explained next. \textbf{It is used in the \texttt{DfReadDataFile()} function to check for data entry errors.}
+\end{itemize}
+
+\hypertarget{the-truthtablestr-member}{%
+\section{\texorpdfstring{The \texttt{truthTableStr} member}{The truthTableStr member}}\label{the-truthtablestr-member}}
+
+\begin{itemize}
+\tightlist
+\item
+  This is a \texttt{2\ x\ 3\ x\ 30\ x\ 2} array, i.e., I x J x K x (maximum number of lesions per case plus 1). The \texttt{plus\ 1} is needed to accommodate normal cases with \texttt{lesionID} = 0. {[}Zero is not a valid array subscript in \texttt{R}.{]}
+\item
+  Each entry in this array is either \texttt{1}, meaning the corresponding interpretation exists, or \texttt{NA}, meaning the corresponding interpretation does not exist.
+\item
+  For example, \texttt{x\$truthTableStr{[}1,1,1,1{]}} is 1. This means that an interpretation exists for the first treatment (\texttt{modalityID} = 1), first reader (\texttt{readerID} = 1) and first (normal) case (\texttt{caseID} = 6 and \texttt{lesionID} = 0). This example corresponds to row 2 in the \texttt{TRUTH} worksheet.
+\item
+  The following shows that the first reader interprets the first five normal cases in both modalities.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{truthTableStr[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,]    1    1    1    1    1   NA   NA   NA   NA    NA    NA    NA    NA    NA}
+\CommentTok{#> [2,]    1    1    1    1    1   NA   NA   NA   NA    NA    NA    NA    NA    NA}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]    NA}
+\CommentTok{#> [2,]    NA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  In the following all elements are \texttt{NA} because normal cases correspond to lesionID = 1.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{truthTableStr[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{2}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA    NA    NA}
+\CommentTok{#> [2,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA    NA    NA}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]    NA}
+\CommentTok{#> [2,]    NA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following shows that the second reader interprets the next group of five normal cases, indexed 6 through 10, in both modalities.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{truthTableStr[,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,]   NA   NA   NA   NA   NA    1    1    1    1     1    NA    NA    NA    NA}
+\CommentTok{#> [2,]   NA   NA   NA   NA   NA    1    1    1    1     1    NA    NA    NA    NA}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]    NA}
+\CommentTok{#> [2,]    NA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following shows that the third reader interprets the next group of five normal cases, indexed 11 through 15, in both modalities.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{truthTableStr[,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA     1     1     1     1}
+\CommentTok{#> [2,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA     1     1     1     1}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]     1}
+\CommentTok{#> [2,]     1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following shows that the first reader interprets the first group of five abnormal cases, indexed 16 through 20, in both modalities.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{truthTableStr[,}\DecValTok{1}\NormalTok{,}\DecValTok{16}\OperatorTok{:}\DecValTok{30}\NormalTok{,}\DecValTok{2}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,]    1    1    1    1    1   NA   NA   NA   NA    NA    NA    NA    NA    NA}
+\CommentTok{#> [2,]    1    1    1    1    1   NA   NA   NA   NA    NA    NA    NA    NA    NA}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]    NA}
+\CommentTok{#> [2,]    NA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  In the following all elements are \texttt{NA} because abnormal cases correspond to \texttt{lesionID} = 2.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{truthTableStr[,}\DecValTok{1}\NormalTok{,}\DecValTok{16}\OperatorTok{:}\DecValTok{30}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA    NA    NA}
+\CommentTok{#> [2,]   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA    NA    NA}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]    NA}
+\CommentTok{#> [2,]    NA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocSpFp} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocSpTp} 
+
+}
+
+\caption{Fig. 2 FP/TP worksheets; LEFT=FP, (b) RIGHT=TP}\label{fig:unnamed-chunk-9}
+\end{figure}
+
+\hypertarget{the-false-positive-fp-ratings-2}{%
+\section{The false positive (FP) ratings}\label{the-false-positive-fp-ratings-2}}
+
+\begin{itemize}
+\tightlist
+\item
+  These are found in the \texttt{FP} or \texttt{NL} worksheet, see Fig. 2, left panel.
+\item
+  This worksheet has the ratings of non-diseased cases.
+\item
+  The common vertical length is 30 in this example (2 modalities times 3 readers times 5 non-diseased cases per reader).
+\item
+  \texttt{ReaderID}: the reader labels: these must be from \texttt{1}, \texttt{4} or \texttt{5}, as declared in the \texttt{Truth} worksheet.
+\item
+  \texttt{ModalityID}: the modality labels: \texttt{1} or \texttt{2}, as declared in the \texttt{Truth} worksheet.
+\item
+  \texttt{CaseID}: the labels of non-diseased cases. Each \texttt{CaseID} - \texttt{ReaderID} combination must be consistent with that declared in the \texttt{Truth} worsheet.\\
+\item
+  \texttt{NL\_Rating}: the floating point ratings of non-diseased cases. Each row of this worksheet yields a rating corresponding to the values of \texttt{ReaderID}, \texttt{ModalityID} and \texttt{CaseID} for that row.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,]    1    2  0.1    1    1 -Inf -Inf -Inf -Inf  -Inf  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#> [2,]    1    2  0.3    1    1 -Inf -Inf -Inf -Inf  -Inf  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]  -Inf}
+\CommentTok{#> [2,]  -Inf}
+\NormalTok{x}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,] -Inf -Inf -Inf -Inf -Inf  0.2  0.2    1    3     3  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#> [2,] -Inf -Inf -Inf -Inf -Inf  2.0  1.0    1    1     2  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]  -Inf}
+\CommentTok{#> [2,]  -Inf}
+\NormalTok{x}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,] -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf  -Inf 0.234     5     2     2}
+\CommentTok{#> [2,] -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf  -Inf 3.000     2     2     2}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]  2.00}
+\CommentTok{#> [2,]  0.33}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The first line of the above code shows the ratings, in both modalities, of the first five non-diseased cases with \texttt{CaseID}s \texttt{6,7,8,9,10} (indexed 1, 2, 3, 4, 5 and appearing in the first five columns) interpreted by the first reader (\texttt{ReaderID} 1).
+\item
+  The second line shows the ratings, in both modalities, of the next five non-diseased cases with \texttt{CaseID}s \texttt{21,22,23,24,25} (indexed 6, 7, 8, 9, 10and appearing in the next five columns) interpreted by the second reader (\texttt{ReaderID} 4).
+\item
+  The third line shows the ratings, in both modalities, of the final five non-diseased cases with \texttt{CaseID}s \texttt{46,47,48,49,50} (indexed 11, 12, 13, 14, 15and appearing in the final five columns) interpreted by the third reader (\texttt{ReaderID} 5).
+\item
+  Values such as \texttt{x\$NL{[},,16:30,1{]}}, which are there for compatibility with FROC data, are all filled with \texttt{-Inf}.
+\end{itemize}
+
+\hypertarget{the-true-positive-tp-ratings-2}{%
+\section{The true positive (TP) ratings}\label{the-true-positive-tp-ratings-2}}
+
+\begin{itemize}
+\tightlist
+\item
+  These are found in the \texttt{TP} or \texttt{LL} worksheet, see Fig. 2, right panel.
+\item
+  This worksheet has the ratings of diseased cases.
+\item
+  The common vertical length is 30 in this example (2 modalities times 3 readers times 5 diseased cases per reader).
+\item
+  \texttt{ReaderID}: the reader labels: these must be from \texttt{1}, \texttt{4} or \texttt{5}, as declared in the \texttt{Truth} worksheet.
+\item
+  \texttt{ModalityID}: the modality labels: \texttt{1} or \texttt{2}, as declared in the \texttt{Truth} worksheet.
+\item
+  \texttt{CaseID}: the labels of diseased cases. Each \texttt{CaseID} - \texttt{ReaderID} combination must be consistent with that declared in the \texttt{Truth} worsheet.\\
+\item
+  \texttt{LL\_Rating}: the floating point ratings of diseased cases. Each row of this worksheet yields a rating corresponding to the values of \texttt{ReaderID}, \texttt{ModalityID} and \texttt{CaseID} for that row.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{LL[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,]  5.0  5.5  4.9    4  3.7 -Inf -Inf -Inf -Inf  -Inf  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#> [2,]  2.3  4.1  5.7    5  6.0 -Inf -Inf -Inf -Inf  -Inf  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]  -Inf}
+\CommentTok{#> [2,]  -Inf}
+\NormalTok{x}\OperatorTok{$}\NormalTok{LL[,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,] -Inf -Inf -Inf -Inf -Inf 2.70 2.90 5.10 4.90 4.990  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#> [2,] -Inf -Inf -Inf -Inf -Inf 5.22 4.77 5.33 4.99 1.999  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]  -Inf}
+\CommentTok{#> [2,]  -Inf}
+\NormalTok{x}\OperatorTok{$}\NormalTok{LL[,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,] -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf  -Inf   5.4   2.7   5.8   4.7}
+\CommentTok{#> [2,] -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf  -Inf   5.4   2.7   5.8   4.7}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]     5}
+\CommentTok{#> [2,]     5}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The first line of code shows the ratings, in both modalities, of the first five diseased cases with \texttt{CaseID}s \texttt{16,17,18,19,20} (indexed 1, 2, 3, 4, 5and appearing in the first five columns) interpreted by the first reader (\texttt{ReaderID} 1).
+\item
+  The second line shows the ratings, in both modalities, of the next five diseased cases with \texttt{CaseID}s \texttt{36,37,38,39,40} (indexed 6, 7, 8, 9, 10and appearing in the next five columns) interpreted by the second reader (\texttt{ReaderID} 4).
+\item
+  The third line shows the ratings, in both modalities, of the final five non-diseased cases with \texttt{CaseID}s \texttt{51,52,53,54,55} (indexed 11, 12, 13, 14, 15and appearing in the final five columns) interpreted by the third reader (\texttt{ReaderID} 5).
+\end{itemize}
+
+\hypertarget{summary-1}{%
+\section{Summary}\label{summary-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  The FROC dataset has far less regularity in structure as compared to an ROC dataset.
+\item
+  The length of the first dimension of either \texttt{x\$NL} or \texttt{x\$LL} list members is the total number of modalities, 2 in the current example.
+\item
+  The length of the second dimension of either \texttt{x\$NL} or \texttt{x\$LL} list members is the total number of readers, 3 in the current example.
+\item
+  The length of the third dimension of \texttt{x\$NL} is the total number of cases, 8 in the current example. The first three positions account for \texttt{NL} marks on non-diseased cases and the remaining 5 positions account for \texttt{NL} marks on diseased cases.
+\item
+  The length of the third dimension of \texttt{x\$LL} is the total number of diseased cases, 5 in the current example.
+\item
+  The length of the fourth dimension of \texttt{x\$NL} is determined by the case (diseased or non-diseased) with the most \texttt{NL} marks, 2 in the current example.
+\item
+  The length of the fourth dimension of \texttt{x\$LL} is determined by the diseased case with the most lesions, 3 in the current example.
+\end{itemize}
+
+\hypertarget{frocSpdataformat}{%
+\chapter{FROC split plot data format}\label{frocSpdataformat}}
+
+\hypertarget{introduction-3}{%
+\section{Introduction}\label{introduction-3}}
+
+\begin{itemize}
+\tightlist
+\item
+  The purpose of this vignette is to explain the data format of the input Excel file for an FROC \emph{split-plot} dataset.
+\item
+  In a split-plot dataset each reader interprets a sub-set of cases in all modalities.
+\item
+  The cases interpreted by different readers have no overlap.
+\item
+  It is assumed, for now, that each sub-set of cases has the same numbers of non-diseased and diseased cases.
+\end{itemize}
+
+\hypertarget{the-excel-data-format-3}{%
+\section{The Excel data format}\label{the-excel-data-format-3}}
+
+The Excel file has three worsheets named \texttt{Truth}, \texttt{NL} or \texttt{FP} and \texttt{LL} or \texttt{TP}.
+
+\hypertarget{the-truth-worksheet-3}{%
+\section{\texorpdfstring{The \texttt{Truth} worksheet}{The Truth worksheet}}\label{the-truth-worksheet-3}}
+
+The \texttt{Truth} worksheet contains 6 columns: \texttt{CaseID}, \texttt{LesionID}, \texttt{Weight}, \texttt{ReaderID}, \texttt{ModalityID} and \texttt{Paradigm}.
+
+\begin{itemize}
+\tightlist
+\item
+  The first five columns contain as many rows as there are non-diseased cases (9) plus total number of lesions (27) in the dataset (each row with a non-zero \texttt{LesionID} corresponds to a lesion).
+\item
+  \texttt{CaseID}: unique \textbf{integers}, one per case, representing the cases in the dataset.
+\item
+  \texttt{LesionID}: integers 0, 1, 2, etc., with each 0 representing a non-diseased case, 1 representing the \emph{first} lesion on a diseased case, 2 representing the second lesion on a diseased case, if present, and so on.
+\item
+  The three non-diseased cases interpreted by reader with \texttt{ReaderID} value \texttt{0} are labeled \texttt{1}, \texttt{2}, \texttt{3}, while the diseased cases interpreted by this reader are labeled \texttt{70}, \texttt{71}, \texttt{72}, \texttt{73} and \texttt{74}, with \texttt{LesionID} values ranging from 1 to 3.\\
+\item
+  The second reader, with \texttt{ReaderID} value \texttt{1}, interprets three non-diseased cases labeled \texttt{4}, \texttt{5} and \texttt{6}, each with \texttt{LesionID} value \texttt{0}, and five diseased cases labeled \texttt{80}, \texttt{81}, \texttt{82}, \texttt{83} and \texttt{84}, with \texttt{LesionID} values ranging from 1 to 3.\\
+\item
+  The third reader, with \texttt{ReaderID} value \texttt{2}, interprets three non-diseased cases labeled \texttt{7}, \texttt{8} and \texttt{9}, each with \texttt{LesionID} value \texttt{0} and five diseased cases labeled \texttt{90}, \texttt{91}, \texttt{92}, \texttt{93} and \texttt{94}, with \texttt{LesionID} values ranging from 1 to 3.\\
+\item
+  \texttt{Weight}: floating point value adding upto unity for diseased cases as required for FROC data.
+\item
+  \texttt{ModalityID}: a comma-separated listing of modalities, each represented by a unique \textbf{integer}. In the example shown below each cell has the value \texttt{0,\ 1}. \textbf{Each cell has to be text formatted.}
+\item
+  \texttt{Paradigm}: In the example shown below, the contents are \texttt{FROC} and \texttt{split-plot}.
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocSpTruth} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocSpTruth2} 
+
+}
+
+\caption{Two views of Truth worksheet for file frocSp.xlsx}\label{fig:frocSpTruth2}
+\end{figure}
+
+\hypertarget{the-structure-of-the-froc-split-plot-dataset}{%
+\section{The structure of the FROC split plot dataset}\label{the-structure-of-the-froc-split-plot-dataset}}
+
+The example shown in Fig. 1 corresponds to Excel file \texttt{inst/extdata/toyFiles/FROC/frocSp.xlsx} in the project directory.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{frocSp <-}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\StringTok{"extdata"}\NormalTok{, }\StringTok{"toyFiles/FROC/frocSp.xlsx"}\NormalTok{,}
+                        \DataTypeTok{package =} \StringTok{"RJafroc"}\NormalTok{, }\DataTypeTok{mustWork =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(frocSp, }\DataTypeTok{newExcelFileFormat =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(x)}
+\CommentTok{#> List of 12}
+\CommentTok{#>  $ NL           : num [1:2, 1:3, 1:24, 1:3] 1.02 2.89 -Inf -Inf -Inf ...}
+\CommentTok{#>  $ LL           : num [1:2, 1:3, 1:15, 1:3] 5.28 5.2 -Inf -Inf -Inf ...}
+\CommentTok{#>  $ lesionVector : int [1:15] 2 1 3 2 1 2 1 3 2 1 ...}
+\CommentTok{#>  $ lesionID     : num [1:15, 1:3] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ lesionWeight : num [1:15, 1:3] 0.3 1 0.333 0.1 1 ...}
+\CommentTok{#>  $ dataType     : chr "FROC"}
+\CommentTok{#>  $ modalityID   : Named chr [1:2] "0" "1"}
+\CommentTok{#>   ..- attr(*, "names")= chr [1:2] "0" "1"}
+\CommentTok{#>  $ readerID     : Named chr [1:3] "0" "1" "2"}
+\CommentTok{#>   ..- attr(*, "names")= chr [1:3] "0" "1" "2"}
+\CommentTok{#>  $ design       : chr "SPLIT-PLOT"}
+\CommentTok{#>  $ normalCases  : int [1:9] 1 2 3 4 5 6 7 8 9}
+\CommentTok{#>  $ abnormalCases: int [1:15] 70 71 72 73 74 80 81 82 83 84 ...}
+\CommentTok{#>  $ truthTableStr: num [1:2, 1:3, 1:24, 1:4] 1 1 NA NA NA NA 1 1 NA NA ...}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Flag \texttt{newExcelFileFormat} \textbf{must} be set to \texttt{TRUE} for split plot data.
+\item
+  The dataset object \texttt{x} is a \texttt{list} variable with 12 members.
+\item
+  Note that the \texttt{dataType} member is FROC and the \texttt{design} member is SPLIT-PLOT.
+\item
+  There are 15 diseased cases in the dataset (the number of 1's in the \texttt{LesionID} column of the \texttt{Truth} worksheet) and 9 non-diseased cases (the number of 0's in the \texttt{LesionID} column).
+\item
+  The \texttt{x\$lesionVector} member is a vector with 15 ones representing the 15 diseased cases in the dataset.
+\item
+  The \texttt{x\$lesionID} member is a 15 x 3 array labeling the lesions in the dataset.
+\item
+  The \texttt{x\$lesionWeight} member is a 15 x 3 array.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{lesionVector}
+\CommentTok{#>  [1] 2 1 3 2 1 2 1 3 2 1 2 1 3 2 1}
+\NormalTok{x}\OperatorTok{$}\NormalTok{lesionID}
+\CommentTok{#>       [,1] [,2] [,3]}
+\CommentTok{#>  [1,]    1    2 -Inf}
+\CommentTok{#>  [2,]    1 -Inf -Inf}
+\CommentTok{#>  [3,]    1    2    3}
+\CommentTok{#>  [4,]    1    2 -Inf}
+\CommentTok{#>  [5,]    1 -Inf -Inf}
+\CommentTok{#>  [6,]    1    2 -Inf}
+\CommentTok{#>  [7,]    1 -Inf -Inf}
+\CommentTok{#>  [8,]    1    2    3}
+\CommentTok{#>  [9,]    1    2 -Inf}
+\CommentTok{#> [10,]    1 -Inf -Inf}
+\CommentTok{#> [11,]    1    2 -Inf}
+\CommentTok{#> [12,]    1 -Inf -Inf}
+\CommentTok{#> [13,]    1    2    3}
+\CommentTok{#> [14,]    1    2 -Inf}
+\CommentTok{#> [15,]    1 -Inf -Inf}
+\NormalTok{x}\OperatorTok{$}\NormalTok{lesionWeight}
+\CommentTok{#>            [,1]      [,2]      [,3]}
+\CommentTok{#>  [1,] 0.3000000 0.7000000      -Inf}
+\CommentTok{#>  [2,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [3,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [4,] 0.1000000 0.9000000      -Inf}
+\CommentTok{#>  [5,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [6,] 0.3000000 0.7000000      -Inf}
+\CommentTok{#>  [7,] 1.0000000      -Inf      -Inf}
+\CommentTok{#>  [8,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#>  [9,] 0.1000000 0.9000000      -Inf}
+\CommentTok{#> [10,] 1.0000000      -Inf      -Inf}
+\CommentTok{#> [11,] 0.3000000 0.7000000      -Inf}
+\CommentTok{#> [12,] 1.0000000      -Inf      -Inf}
+\CommentTok{#> [13,] 0.3333333 0.3333333 0.3333333}
+\CommentTok{#> [14,] 0.1000000 0.9000000      -Inf}
+\CommentTok{#> [15,] 1.0000000      -Inf      -Inf}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{x\$truthTableStr} member is a \texttt{2\ x\ 3\ x\ 24\ x\ 4} array, i.e., I x J x K x (maximum number of lesions per case plus 1). The \texttt{plus\ 1} is needed to accommodate normal cases with \texttt{lesionID} = 0.
+\item
+  Each entry in this array is either \texttt{1}, meaning the corresponding interpretation exists, or \texttt{NA}, meaning the corresponding interpretation does not exist.
+\item
+  For example, \texttt{x\$truthTableStr{[}1,1,1,1{]}} is 1. This means that an interpretation exists for the first treatment (\texttt{modalityID} = 0), first reader (\texttt{readerID} = 0) and first (normal) case \texttt{caseID} = 1 and \texttt{lesionID} = 0. This example corresponds to row 2 in the \texttt{TRUTH} worksheet.
+\item
+  \texttt{x\$truthTableStr{[}1,1,4,1{]}} is NA, which means an interpretation does not exist for the first treatment, first reader and fourth (normal) case.
+\item
+  However, \texttt{x\$truthTableStr{[}1,2,4,1{]}} is 1, which means an interpretation does exist for the first treatment, second reader and fourth (normal) case. This example corresponds to row 5 in the \texttt{TRUTH} worksheet.
+\item
+  Likewise, \texttt{x\$truthTableStr{[}1,1,10,3{]}} is 1, which means an interpretation does exist for the first treatment, first reader, tenth (abnormal) case and \texttt{lesionID} = 2. This example corresponds to row 12 in the \texttt{TRUTH} worksheet.
+\item
+  As an aside, in the FROC paradigm an interpretation need not yield a mark-rating pair. An interpretation means the reader was ``exposed to'' and had the opportunity to mark the corresponding treatment-reader-case-lesion combination.
+\item
+  The reader should confirm that the contents of \texttt{x\$truthTableStr} summarizes the structure of the data in the \texttt{TRUTH} worksheet.
+\end{itemize}
+
+\hypertarget{the-false-positive-fp-ratings-3}{%
+\section{The false positive (FP) ratings}\label{the-false-positive-fp-ratings-3}}
+
+These are found in the \texttt{FP} or \texttt{NL} worksheet, see Fig. 2.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocSpNL} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocSpLL} 
+
+}
+
+\caption{NL/FP worksheet, left, and LL/TP worksheet, right, for file frocSp.xlsx}\label{fig:frocSpLL}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  This worksheet has the ratings of non-diseased cases.
+\item
+  The common vertical length is 30 in this example (2 modalities times 3 readers times 5 non-diseased cases per reader).
+\item
+  \texttt{ReaderID}: the reader labels: these must be from \texttt{0}, \texttt{1} or \texttt{2}, as declared in the \texttt{Truth} worksheet.
+\item
+  \texttt{ModalityID}: the modality labels: \texttt{0} or \texttt{1}, as declared in the \texttt{Truth} worksheet.
+\item
+  \texttt{CaseID}: the labels of non-diseased cases. Each \texttt{CaseID}, \texttt{ModalityID}, \texttt{ReaderID} combination must be consistent with that declared in the \texttt{Truth} worsheet.\\
+\item
+  \texttt{FP\_Rating}: the floating point ratings of non-diseased cases. Each row of this worksheet yields a rating corresponding to the values of \texttt{ReaderID}, \texttt{ModalityID} and \texttt{CaseID} for that row. Each \texttt{CaseID}, \texttt{ModalityID}, \texttt{ReaderID} combination must be consistent with that declared in the \texttt{Truth} worsheet.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]}
+\CommentTok{#> [1,] 1.02 2.22 1.90 -Inf -Inf -Inf -Inf -Inf -Inf}
+\CommentTok{#> [2,] 2.89 0.84 1.85 -Inf -Inf -Inf -Inf -Inf -Inf}
+\NormalTok{x}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]}
+\CommentTok{#> [1,] -Inf -Inf -Inf 2.21 3.10 2.21 -Inf -Inf -Inf}
+\CommentTok{#> [2,] -Inf -Inf -Inf 3.22 3.01 1.96 -Inf -Inf -Inf}
+\NormalTok{x}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]}
+\CommentTok{#> [1,] -Inf -Inf -Inf -Inf -Inf -Inf 2.14 1.98 1.95}
+\CommentTok{#> [2,] -Inf -Inf -Inf -Inf -Inf -Inf 2.24 4.01 1.65}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The first line of the above code shows the ratings, in both modalities, of the first three non-diseased cases with \texttt{CaseID}s \texttt{1,3,3} (indexed 1, 2, 3 and appearing in the first three columns) interpreted by the first reader (\texttt{ReaderID} \texttt{0}).
+\item
+  The second line shows the ratings, in both modalities, of the next three non-diseased cases with \texttt{CaseID}s \texttt{4,5,6} (indexed 4, 5, 6and appearing in the next three columns) interpreted by the second reader (\texttt{ReaderID} \texttt{1}).
+\item
+  The third line shows the ratings, in both modalities, of the final three non-diseased cases with \texttt{CaseID}s \texttt{7,8,9} (indexed 7, 8, 9and appearing in the final three columns) interpreted by the third reader (\texttt{ReaderID} \texttt{2}).
+\item
+  Values such as \texttt{x\$NL{[},,16:30,1{]}}, which are there for compatibility with FROC data, are all filled with \texttt{-Inf}.
+\end{itemize}
+
+\hypertarget{the-true-positive-tp-ratings-3}{%
+\section{The true positive (TP) ratings}\label{the-true-positive-tp-ratings-3}}
+
+These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
+
+\begin{itemize}
+\tightlist
+\item
+  This worksheet has the ratings of diseased cases.
+\item
+  The common vertical length is 30 in this example (2 modalities times 3 readers times 5 diseased cases per reader).
+\item
+  \texttt{ReaderID}: the reader labels: these must be from \texttt{0}, \texttt{1} or \texttt{2}, as declared in the \texttt{Truth} worksheet.
+\item
+  \texttt{ModalityID}: the modality labels: \texttt{0} or \texttt{1}, as declared in the \texttt{Truth} worksheet.
+\item
+  \texttt{CaseID}: the labels of diseased cases. Each \texttt{CaseID}, \texttt{ModalityID}, \texttt{ReaderID} combination must be consistent with that declared in the \texttt{Truth} worsheet.\\
+\item
+  \texttt{TP\_Rating}: the floating point ratings of diseased cases. Each row of this worksheet yields a rating corresponding to the values of \texttt{ReaderID}, \texttt{ModalityID} and \texttt{CaseID} for that row. Each \texttt{CaseID}, \texttt{ModalityID}, \texttt{ReaderID} combination must be consistent with that declared in the \texttt{Truth} worsheet.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{LL[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,] 5.28 3.01 5.98 5.00 4.26 -Inf -Inf -Inf -Inf  -Inf  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#> [2,] 5.20 3.27 4.61 5.18 4.72 -Inf -Inf -Inf -Inf  -Inf  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]  -Inf}
+\CommentTok{#> [2,]  -Inf}
+\NormalTok{x}\OperatorTok{$}\NormalTok{LL[,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,] -Inf -Inf -Inf -Inf -Inf 5.14 3.31 4.92 4.95  5.30  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#> [2,] -Inf -Inf -Inf -Inf -Inf 4.77 3.19 5.20 5.39  5.01  -Inf  -Inf  -Inf  -Inf}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]  -Inf}
+\CommentTok{#> [2,]  -Inf}
+\NormalTok{x}\OperatorTok{$}\NormalTok{LL[,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{15}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]}
+\CommentTok{#> [1,] -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf  -Inf  4.66  4.03  5.22  4.94}
+\CommentTok{#> [2,] -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf  -Inf  4.87  1.94  -Inf  -Inf}
+\CommentTok{#>      [,15]}
+\CommentTok{#> [1,]  5.27}
+\CommentTok{#> [2,]  4.78}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The first line of code shows the ratings, in both modalities, of the first five diseased cases with \texttt{CaseID}s \texttt{70,71,72,73,74} (indexed 1, 2, 3, 4, 5 and appearing in the first five columns) interpreted by the first reader (\texttt{ReaderID} \texttt{0}).
+\item
+  The second line shows the ratings, in both modalities, of the next five diseased cases with \texttt{CaseID}s \texttt{80,81,82,83,84} (indexed 6, 7, 8, 9, 10 and appearing in the next five columns) interpreted by the second reader (\texttt{ReaderID} \texttt{1}).
+\item
+  The third line shows the ratings, in both modalities, of the final five non-diseased cases with \texttt{CaseID}s \texttt{90,91,92,93,94} (indexed 11, 12, 13, 14, 15 and appearing in the final five columns) interpreted by the third reader (\texttt{ReaderID} \texttt{2}).
+\end{itemize}
+
+\hypertarget{summary-2}{%
+\section{Summary}\label{summary-2}}
+
+\begin{itemize}
+\tightlist
+\item
+  TBA
+\end{itemize}
 
 \bibliography{packages.bib,myRefs.bib}
 
