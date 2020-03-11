@@ -113,12 +113,26 @@
   \thm@postskip=\thm@preskip
 }
 \makeatother
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
 \usepackage[]{natbib}
 \bibliographystyle{apalike}
 
 \title{RJafroc Documentation}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-03-10}
+\date{2020-03-11}
 
 \begin{document}
 \maketitle
@@ -171,8 +185,12 @@
 \hypertarget{references}{%
 \section{References}\label{references}}
 
+\hypertarget{part-data-formats}{%
+\part*{DATA FORMATS}\label{part-data-formats}}
+\addcontentsline{toc}{part}{DATA FORMATS}
+
 \hypertarget{rocdataformat}{%
-\chapter{ROC data format}\label{rocdataformat}}
+\chapter{ROC DATA FORMAT}\label{rocdataformat}}
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -1053,6 +1071,10 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 \hypertarget{references-2}{%
 \section{References}\label{references-2}}
 
+\hypertarget{part-roc-split-plot}{%
+\part*{ROC SPLIT PLOT}\label{part-roc-split-plot}}
+\addcontentsline{toc}{part}{ROC SPLIT PLOT}
+
 \hypertarget{rocSpdataformat}{%
 \chapter{ROC split plot data format}\label{rocSpdataformat}}
 
@@ -1451,8 +1473,12 @@ The \texttt{Truth} worksheet contains 6 columns: \texttt{CaseID}, \texttt{Lesion
 \hypertarget{references-3}{%
 \section{References}\label{references-3}}
 
+\hypertarget{part-split-plot-datasets}{%
+\part*{SPLIT-PLOT DATASETS}\label{part-split-plot-datasets}}
+\addcontentsline{toc}{part}{SPLIT-PLOT DATASETS}
+
 \hypertarget{frocSpdataformat}{%
-\chapter{FROC split plot data format}\label{frocSpdataformat}}
+\chapter{FROC ROC DATA FORMAT SPLIT PLOT}\label{frocSpdataformat}}
 
 \hypertarget{introduction-3}{%
 \section{Introduction}\label{introduction-3}}
@@ -1745,6 +1771,1977 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 
 \hypertarget{references-4}{%
 \section{References}\label{references-4}}
+
+\hypertarget{part-quick-start}{%
+\part*{QUICK START}\label{part-quick-start}}
+\addcontentsline{toc}{part}{QUICK START}
+
+\hypertarget{QuickStartDBM1}{%
+\chapter{QUICK START DBM1}\label{QuickStartDBM1}}
+
+\hypertarget{introduction-4}{%
+\section{Introduction}\label{introduction-4}}
+
+\begin{itemize}
+\tightlist
+\item
+  This vignette is intended for those seeking a quick transition from Windows \textbf{JAFROC} to \texttt{RJafroc}.
+\item
+  Described first is the structure of an \texttt{RJafroc} dataset followed by how to read
+  a \emph{JAFROC} format Excel file to create an \texttt{RJafroc} dataset.
+\end{itemize}
+
+\hypertarget{an-roc-dataset}{%
+\section{An ROC dataset}\label{an-roc-dataset}}
+
+Dataset \texttt{dataset03} corresponding to the Franken ROC data \citep{RN1995} is predefined. The following code shows the structure of this dataset.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(dataset03)}
+\CommentTok{#> List of 12}
+\CommentTok{#>  $ NL           : num [1:2, 1:4, 1:100, 1] 3 3 4 3 3 3 4 1 1 3 ...}
+\CommentTok{#>  $ LL           : num [1:2, 1:4, 1:67, 1] 5 5 4 4 5 4 4 5 2 2 ...}
+\CommentTok{#>  $ lesionVector : num [1:67] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ lesionID     : num [1:67, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ lesionWeight : num [1:67, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ dataType     : chr "ROC"}
+\CommentTok{#>  $ modalityID   : Named chr [1:2] "TREAT1" "TREAT2"}
+\CommentTok{#>   ..- attr(*, "names")= chr [1:2] "TREAT1" "TREAT2"}
+\CommentTok{#>  $ readerID     : Named chr [1:4] "READER_1" "READER_2" "READER_3" "READER_4"}
+\CommentTok{#>   ..- attr(*, "names")= chr [1:4] "READER_1" "READER_2" "READER_3" "READER_4"}
+\CommentTok{#>  $ design       : chr "CROSSED"}
+\CommentTok{#>  $ normalCases  : int [1:33] 1 2 3 4 5 6 7 8 9 10 ...}
+\CommentTok{#>  $ abnormalCases: int [1:67] 34 35 36 37 38 39 40 41 42 43 ...}
+\CommentTok{#>  $ truthTableStr: num [1:2, 1:4, 1:100, 1:2] 1 1 1 1 1 1 1 1 1 1 ...}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  It is a list with 8 members. The false positive ratings are contained in \texttt{\{NL\}}, an array
+  with dimensions \texttt{{[}1:2,1:4,1:100,1{]}}. The first index corresponds to treatments, and since the
+  dataset has 2 treatments, the corresponding dimension is 2. The second index corresponds to
+  readers, and since the dataset has 4 readers, the corresponding dimension is 4. The third index
+  corresponds to the total number of cases. Since the dataset has 100 cases, the corresponding
+  dimension is 100. But, as you can see from the code below, the entries in this array for cases 34
+  through 100 are \texttt{-Inf}: i.e., \texttt{all(dataset03\$NL{[}1,1,34:100,1{]}\ ==\ -Inf)} = TRUE.
+\item
+  This is because in the ROC paradigm false positive are not possible on diseased cases. So the actual FP ratings are contained in the first 33 elements of the array. How did I know that there are 33 non-diseased cases? This can be understood in several ways.
+\item
+  \texttt{LL} is an array with dimensions \texttt{{[}1:2,1:4,1:67,1{]}}. This implies 67 diseased cases, and by subtraction from 100, there must be 33 non-diseased cases.
+\item
+  The list member \texttt{lesionVector} is a vector with length 67, implying 33 non-diseased cases.
+\item
+  The list members \texttt{lesionID} and \texttt{lesionWeight} are arrays with dimensions \texttt{{[}1:67,1{]}} containing ones. Again, these imply 67 diseased cases.
+\item
+  The fields \texttt{lesionVector}, \texttt{lesionID} and \texttt{lesionWeight}, while not needed for ROC data, are needed for the FROC paradigm.
+\end{itemize}
+
+The \texttt{dataType} list member is the character string \texttt{"ROC"}, characterizing the ROC dataset.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset03}\OperatorTok{$}\NormalTok{dataType}
+\CommentTok{#> [1] "ROC"}
+\end{Highlighting}
+\end{Shaded}
+
+The \texttt{modalityID} list member is a character string with two entries, \texttt{"TREAT1"} and \texttt{"TREAT2"}, corresponding to the two modalities.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset03}\OperatorTok{$}\NormalTok{modalityID}
+\CommentTok{#>   TREAT1   TREAT2 }
+\CommentTok{#> "TREAT1" "TREAT2"}
+\end{Highlighting}
+\end{Shaded}
+
+The \texttt{readerID} list member is a character string with four entries, \texttt{"READER\_1"}, \texttt{"READER\_2"}, \texttt{"READER\_3"} and \texttt{"READER\_4"} corresponding to the four readers.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset03}\OperatorTok{$}\NormalTok{readerID}
+\CommentTok{#>   READER_1   READER_2   READER_3   READER_4 }
+\CommentTok{#> "READER_1" "READER_2" "READER_3" "READER_4"}
+\end{Highlighting}
+\end{Shaded}
+
+Here are the actual ratings for cases 1:34.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset03}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{33}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>  [1] 3 1 2 2 2 2 2 4 1 1 4 2 1 2 4 2 1 2 1 2 4 2 3 2 2 2 4 3 2 2 2 5 3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  This says that for treatment 1 and reader 1, (non-diseased) case 1 was rated 3, case 2 was rated 1, cases 3-7 were rated 2, case 8 was rated 4, etc.
+\item
+  As another example, for treatment 2 and reader 3, the FP ratings are:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dataset03}\OperatorTok{$}\NormalTok{NL[}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{33}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>  [1] 3 1 2 2 2 2 4 4 2 3 2 2 1 3 2 4 2 3 2 2 2 2 2 4 2 2 1 2 2 2 2 4 2}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{creating-a-dataset-from-a-jafroc-format-file}{%
+\section{Creating a dataset from a JAFROC format file}\label{creating-a-dataset-from-a-jafroc-format-file}}
+
+There is a file \texttt{RocData.xlsx} that is part of the package installation. Since it is a system
+file one must get its name as follows.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fileName <-}\StringTok{ "RocData.xlsx"}
+\NormalTok{sysFileName <-}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\StringTok{"extdata/"}\NormalTok{,fileName), }\DataTypeTok{package =} \StringTok{"RJafroc"}\NormalTok{, }\DataTypeTok{mustWork =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Next, one uses \texttt{DfReadDataFile()} as follows, assuming it is a JAFROC format file.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ds <-}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(sysFileName, }\DataTypeTok{newExcelFileFormat =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(ds)}
+\CommentTok{#> List of 12}
+\CommentTok{#>  $ NL           : num [1:2, 1:5, 1:114, 1] 1 3 2 3 2 2 1 2 3 2 ...}
+\CommentTok{#>  $ LL           : num [1:2, 1:5, 1:45, 1] 5 5 5 5 5 5 5 5 5 5 ...}
+\CommentTok{#>  $ lesionVector : int [1:45] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ lesionID     : num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ lesionWeight : num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ dataType     : chr "ROC"}
+\CommentTok{#>  $ modalityID   : Named chr [1:2] "0" "1"}
+\CommentTok{#>   ..- attr(*, "names")= chr [1:2] "0" "1"}
+\CommentTok{#>  $ readerID     : Named chr [1:5] "0" "1" "2" "3" ...}
+\CommentTok{#>   ..- attr(*, "names")= chr [1:5] "0" "1" "2" "3" ...}
+\CommentTok{#>  $ design       : chr "CROSSED"}
+\CommentTok{#>  $ normalCases  : int [1:69] 1 2 3 4 5 6 7 8 9 10 ...}
+\CommentTok{#>  $ abnormalCases: int [1:45] 70 71 72 73 74 75 76 77 78 79 ...}
+\CommentTok{#>  $ truthTableStr: num [1:2, 1:5, 1:114, 1:2] 1 1 1 1 1 1 1 1 1 1 ...}
+\end{Highlighting}
+\end{Shaded}
+
+Analysis is illustrated for \texttt{dataset03}, but one could have used the newly created dataset \texttt{ds}.
+
+\hypertarget{analyzing-the-roc-dataset}{%
+\section{Analyzing the ROC dataset}\label{analyzing-the-roc-dataset}}
+
+This illustrates the \texttt{StSignificanceTesting()} function. The significance testing method is specified as \texttt{"DBMH"} and the figure of merit \texttt{FOM} is specified as ``Wilcoxon''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(dataset03, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(ret)}
+\CommentTok{#> $fomArray}
+\CommentTok{#>           RdrREADER_1 RdrREADER_2 RdrREADER_3 RdrREADER_4}
+\CommentTok{#> TrtTREAT1   0.8534600   0.8649932   0.8573044   0.8152420}
+\CommentTok{#> TrtTREAT2   0.8496156   0.8435097   0.8401176   0.8143374}
+\CommentTok{#> }
+\CommentTok{#> $anovaY}
+\CommentTok{#>       Source           SS  DF          MS}
+\CommentTok{#> 1     Row1_T   0.02356541   1 0.023565410}
+\CommentTok{#> 2     Row2_R   0.20521800   3 0.068406000}
+\CommentTok{#> 3     Row3_C  52.52839868  99 0.530589886}
+\CommentTok{#> 4    Row4_TR   0.01506079   3 0.005020264}
+\CommentTok{#> 5    Row5_TC   6.41004881  99 0.064747968}
+\CommentTok{#> 6    Row6_RC  39.24295381 297 0.132131158}
+\CommentTok{#> 7   Row7_TRC  22.66007764 297 0.076296558}
+\CommentTok{#> 8 Row8_Total 121.08532315 799          NA}
+\CommentTok{#> }
+\CommentTok{#> $anovaYi}
+\CommentTok{#>   Source  DF  TrtTREAT1  TrtTREAT2}
+\CommentTok{#> 1      R   3 0.04926635 0.02415991}
+\CommentTok{#> 2      C  99 0.29396753 0.30137032}
+\CommentTok{#> 3     RC 297 0.10504787 0.10337984}
+\CommentTok{#> }
+\CommentTok{#> $varComp}
+\CommentTok{#>           varR       varC         varTR        varTC     varRC     varErr}
+\CommentTok{#> 1 3.775568e-05 0.05125091 -0.0007127629 -0.002887147 0.0279173 0.07629656}
+\CommentTok{#> }
+\CommentTok{#> $FTestStatsRRRC}
+\CommentTok{#>      fRRRC ndfRRRC ddfRRRC     pRRRC}
+\CommentTok{#> 1 4.694058       1       3 0.1188379}
+\CommentTok{#> }
+\CommentTok{#> $ciDiffTrtRRRC}
+\CommentTok{#>               TrtDiff   Estimate      StdErr DF        t     PrGTt      CILower}
+\CommentTok{#> 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627}
+\CommentTok{#>      CIUpper}
+\CommentTok{#> 1 0.02679926}
+\CommentTok{#> }
+\CommentTok{#> $ciAvgRdrEachTrtRRRC}
+\CommentTok{#>   Treatment      Area     StdErr        DF   CILower   CIUpper}
+\CommentTok{#> 1 TrtTREAT1 0.8477499 0.02440215  70.12179 0.7990828 0.8964170}
+\CommentTok{#> 2 TrtTREAT2 0.8368951 0.02356642 253.64403 0.7904843 0.8833058}
+\CommentTok{#> }
+\CommentTok{#> $FTestStatsFRRC}
+\CommentTok{#>      fFRRC ndfFRRC ddfFRRC    pFRRC}
+\CommentTok{#> 1 0.363956       1      99 0.547697}
+\CommentTok{#> }
+\CommentTok{#> $ciDiffTrtFRRC}
+\CommentTok{#>             Treatment   Estimate     StdErr DF         t    PrGTt     CILower}
+\CommentTok{#> 1 TrtTREAT1-TrtTREAT2 0.01085482 0.01799277 99 0.6032876 0.547697 -0.02484675}
+\CommentTok{#>      CIUpper}
+\CommentTok{#> 1 0.04655638}
+\CommentTok{#> }
+\CommentTok{#> $ciAvgRdrEachTrtFRRC}
+\CommentTok{#>   Treatment      Area     StdErr DF   CILower   CIUpper}
+\CommentTok{#> 1 TrtTREAT1 0.8477499 0.02710939 99 0.7939590 0.9015408}
+\CommentTok{#> 2 TrtTREAT2 0.8368951 0.02744860 99 0.7824311 0.8913591}
+\CommentTok{#> }
+\CommentTok{#> $msAnovaEachRdrFRRC}
+\CommentTok{#>   Source DF  RdrREADER_1 RdrREADER_2 RdrREADER_3  RdrREADER_4}
+\CommentTok{#> 1      T  1 0.0007389761  0.02307702  0.01476929 4.091217e-05}
+\CommentTok{#> 2      C 99 0.2038747746  0.22344191  0.21424677 2.854199e-01}
+\CommentTok{#> 3     TC 99 0.0915587344  0.08027926  0.06122898 6.057067e-02}
+\CommentTok{#> }
+\CommentTok{#> $ciDiffTrtEachRdrFRRC}
+\CommentTok{#>        Reader           Treatment     Estimate     StdErr DF          t}
+\CommentTok{#> 1 RdrREADER_1 TrtTREAT1-TrtTREAT2 0.0038444143 0.04279223 99 0.08983908}
+\CommentTok{#> 2 RdrREADER_2 TrtTREAT1-TrtTREAT2 0.0214834916 0.04006975 99 0.53615233}
+\CommentTok{#> 3 RdrREADER_3 TrtTREAT1-TrtTREAT2 0.0171867933 0.03499399 99 0.49113552}
+\CommentTok{#> 4 RdrREADER_4 TrtTREAT1-TrtTREAT2 0.0009045681 0.03480536 99 0.02598933}
+\CommentTok{#>       PrGTt     CILower    CIUpper}
+\CommentTok{#> 1 0.9285966 -0.08106465 0.08875348}
+\CommentTok{#> 2 0.5930559 -0.05802359 0.10099057}
+\CommentTok{#> 3 0.6244176 -0.05224888 0.08662247}
+\CommentTok{#> 4 0.9793182 -0.06815683 0.06996596}
+\CommentTok{#> }
+\CommentTok{#> $FTestStatsRRFC}
+\CommentTok{#>      fRRFC ndfRRFC ddfRRFC     pRRFC}
+\CommentTok{#> 1 4.694058       1       3 0.1188379}
+\CommentTok{#> }
+\CommentTok{#> $ciDiffTrtRRFC}
+\CommentTok{#>             Treatment   Estimate      StdErr DF        t     PrGTt      CILower}
+\CommentTok{#> 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627}
+\CommentTok{#>      CIUpper}
+\CommentTok{#> 1 0.02679926}
+\CommentTok{#> }
+\CommentTok{#> $ciAvgRdrEachTrtRRFC}
+\CommentTok{#>   Treatment      Area     StdErr DF   CILower   CIUpper}
+\CommentTok{#> 1 TrtTREAT1 0.8477499 0.01109801  3 0.8124311 0.8830687}
+\CommentTok{#> 2 TrtTREAT2 0.8368951 0.00777173  3 0.8121620 0.8616282}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{explanation-of-the-output}{%
+\section{Explanation of the output}\label{explanation-of-the-output}}
+
+The function returns a long unwieldy list. Let us consider them one by one. The function \texttt{UtilOutputReport()}, which can generate an Excel file report, making it much easier to visualize the results, is described in another vignette.
+
+\hypertarget{foms}{%
+\subsection{FOMs}\label{foms}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{fomArray} contains the \texttt{{[}1:2,1:4{]}} FOM values.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{fomArray}
+\CommentTok{#>           RdrREADER_1 RdrREADER_2 RdrREADER_3 RdrREADER_4}
+\CommentTok{#> TrtTREAT1   0.8534600   0.8649932   0.8573044   0.8152420}
+\CommentTok{#> TrtTREAT2   0.8496156   0.8435097   0.8401176   0.8143374}
+\end{Highlighting}
+\end{Shaded}
+
+This shows the 2 x 4 array of FOM values.
+
+\hypertarget{pseudovalue-anova-table}{%
+\subsection{Pseudovalue ANOVA table}\label{pseudovalue-anova-table}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{anovaY}, where the Y denotes that these are pseudovalue based, is the ANOVA table.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{anovaY}
+\CommentTok{#>       Source           SS  DF          MS}
+\CommentTok{#> 1     Row1_T   0.02356541   1 0.023565410}
+\CommentTok{#> 2     Row2_R   0.20521800   3 0.068406000}
+\CommentTok{#> 3     Row3_C  52.52839868  99 0.530589886}
+\CommentTok{#> 4    Row4_TR   0.01506079   3 0.005020264}
+\CommentTok{#> 5    Row5_TC   6.41004881  99 0.064747968}
+\CommentTok{#> 6    Row6_RC  39.24295381 297 0.132131158}
+\CommentTok{#> 7   Row7_TRC  22.66007764 297 0.076296558}
+\CommentTok{#> 8 Row8_Total 121.08532315 799          NA}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{pseudovalue-anova-table-each-treatment}{%
+\subsection{Pseudovalue ANOVA table, each treatment}\label{pseudovalue-anova-table-each-treatment}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{anovaYi} is the ANOVA table for individual treatments.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{anovaYi}
+\CommentTok{#>   Source  DF  TrtTREAT1  TrtTREAT2}
+\CommentTok{#> 1      R   3 0.04926635 0.02415991}
+\CommentTok{#> 2      C  99 0.29396753 0.30137032}
+\CommentTok{#> 3     RC 297 0.10504787 0.10337984}
+\end{Highlighting}
+\end{Shaded}
+
+The \texttt{0} and \texttt{1} headers come from the treatment names.
+
+\hypertarget{pseudovalue-variance-components}{%
+\subsection{Pseudovalue Variance Components}\label{pseudovalue-variance-components}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{varComp} is the variance components (needed for sample size estimation).
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{varComp}
+\CommentTok{#>           varR       varC         varTR        varTC     varRC     varErr}
+\CommentTok{#> 1 3.775568e-05 0.05125091 -0.0007127629 -0.002887147 0.0279173 0.07629656}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{random-reader-random-case-rrrc-analysis}{%
+\subsection{Random-reader random-case (RRRC) analysis}\label{random-reader-random-case-rrrc-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$FTestStatsRRRC\$fRRRC} is the F-statistic for testing the NH that the
+  treatments have identical FOMs. RRRC means random-reader random-case generalization.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRRC}\OperatorTok{$}\NormalTok{fRRRC}
+\CommentTok{#> [1] 4.694058}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{f-statistic-and-p-value-for-rrrc-analysis}{%
+\subsubsection{F-statistic and p-value for RRRC analysis}\label{f-statistic-and-p-value-for-rrrc-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$FTestStatsRRRC\$ddfRRRC} is the denominator degrees of freedom of the F-statistic.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRRC}\OperatorTok{$}\NormalTok{ddfRRRC}
+\CommentTok{#> [1] 3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$FTestStatsRRRC\$pRRRC} is the p-value of the test.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRRC}\OperatorTok{$}\NormalTok{pRRRC}
+\CommentTok{#> [1] 0.1188379}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{confidence-intervals-for-rrrc-analysis}{%
+\subsubsection{Confidence Intervals for RRRC analysis}\label{confidence-intervals-for-rrrc-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ciDiffTrtRRRC} is the 95\% confidence interval of reader-averaged differences between treatments.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ciDiffTrtRRRC}
+\CommentTok{#>               TrtDiff   Estimate      StdErr DF        t     PrGTt      CILower}
+\CommentTok{#> 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627}
+\CommentTok{#>      CIUpper}
+\CommentTok{#> 1 0.02679926}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ciAvgRdrEachTrtRRRC} is the 95\% confidence interval of reader-averaged FOMs for each treatments.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrtRRRC}
+\CommentTok{#>   Treatment      Area     StdErr        DF   CILower   CIUpper}
+\CommentTok{#> 1 TrtTREAT1 0.8477499 0.02440215  70.12179 0.7990828 0.8964170}
+\CommentTok{#> 2 TrtTREAT2 0.8368951 0.02356642 253.64403 0.7904843 0.8833058}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{fixed-reader-random-case-frrc-analysis}{%
+\subsection{Fixed-reader random-case (FRRC) analysis}\label{fixed-reader-random-case-frrc-analysis}}
+
+\hypertarget{f-statistic-and-p-value-for-frrc-analysis}{%
+\subsubsection{F-statistic and p-value for FRRC analysis}\label{f-statistic-and-p-value-for-frrc-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$FTestStatsFRRC\$fFRRC} is the F-statistic for fixed-reader random-case analysis.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC}
+\CommentTok{#> [1] 0.363956}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$FTestStatsFRRC\$ndfFRRC} is the numerator degrees of freedom of the F-statistic, always one less than the number of treatments.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ndfFRRC}
+\CommentTok{#> [1] 1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$FTestStatsFRRC\$ddfFRRC} is the denominator degreesof freedom of the F-statistic, for fixed-reader random-case analysis.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ddfFRRC}
+\CommentTok{#> [1] 99}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$FTestStatsFRRC\$pFRRC} is the p-value for fixed-reader random-case analysis.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC}
+\CommentTok{#> [1] 0.547697}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{confidence-intervals-for-frrc-analysis}{%
+\subsubsection{Confidence Intervals for FRRC analysis}\label{confidence-intervals-for-frrc-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ciDiffTrtFRRC} is the 95\% CI of reader-average differences between treatments for fixed-reader random-case analysis
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}
+\CommentTok{#>             Treatment   Estimate     StdErr DF         t    PrGTt     CILower}
+\CommentTok{#> 1 TrtTREAT1-TrtTREAT2 0.01085482 0.01799277 99 0.6032876 0.547697 -0.02484675}
+\CommentTok{#>      CIUpper}
+\CommentTok{#> 1 0.04655638}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$ciAvgRdrEachTrtFRRC} is the 95\% CI of reader-average FOMs of each treatment for fixed-reader random-case analysis
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrtFRRC}
+\CommentTok{#>   Treatment      Area     StdErr DF   CILower   CIUpper}
+\CommentTok{#> 1 TrtTREAT1 0.8477499 0.02710939 99 0.7939590 0.9015408}
+\CommentTok{#> 2 TrtTREAT2 0.8368951 0.02744860 99 0.7824311 0.8913591}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{anova-for-frrc-analysis}{%
+\subsubsection{ANOVA for FRRC analysis}\label{anova-for-frrc-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$msAnovaEachRdrFRRC} is the mean-squares ANOVA for each reader
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{msAnovaEachRdrFRRC}
+\CommentTok{#>   Source DF  RdrREADER_1 RdrREADER_2 RdrREADER_3  RdrREADER_4}
+\CommentTok{#> 1      T  1 0.0007389761  0.02307702  0.01476929 4.091217e-05}
+\CommentTok{#> 2      C 99 0.2038747746  0.22344191  0.21424677 2.854199e-01}
+\CommentTok{#> 3     TC 99 0.0915587344  0.08027926  0.06122898 6.057067e-02}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{confidence-intervals-for-frrc-analysis-1}{%
+\subsubsection{Confidence Intervals for FRRC analysis}\label{confidence-intervals-for-frrc-analysis-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ciDiffTrtFRRC} is the CI for reader-averaged treatment differences, for fixed-reader random-case analysis
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}
+\CommentTok{#>             Treatment   Estimate     StdErr DF         t    PrGTt     CILower}
+\CommentTok{#> 1 TrtTREAT1-TrtTREAT2 0.01085482 0.01799277 99 0.6032876 0.547697 -0.02484675}
+\CommentTok{#>      CIUpper}
+\CommentTok{#> 1 0.04655638}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{random-reader-fixed-case-rrfc-analysis}{%
+\subsection{Random-reader fixed-case (RRFC) analysis}\label{random-reader-fixed-case-rrfc-analysis}}
+
+\hypertarget{f-statistic-and-p-value-for-rrfc-analysis}{%
+\subsubsection{F-statistic and p-value for RRFC analysis}\label{f-statistic-and-p-value-for-rrfc-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$FTestStatsRRFC\$fRRFC} is the F-statistic for for random-reader fixed-case analysis
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRFC}\OperatorTok{$}\NormalTok{fRRFC}
+\CommentTok{#> [1] 4.694058}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$FTestStatsRRFC\$ddfRRFC} is the ddf for for random-reader fixed-case analysis
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRFC}\OperatorTok{$}\NormalTok{ddfRRFC}
+\CommentTok{#> [1] 3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ret\$FTestStatsRRFC\$pRRFC} is the p-value for for random-reader fixed-case analysis
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRFC}\OperatorTok{$}\NormalTok{pRRFC}
+\CommentTok{#> [1] 0.1188379}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{confidence-intervals-for-rrfc-analysis}{%
+\subsubsection{Confidence Intervals for RRFC analysis}\label{confidence-intervals-for-rrfc-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ciDiffTrtRRFC} is the CI for reader-averaged inter-treatment FOM differences for random-reader fixed-case analysis
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ciDiffTrtRRFC}
+\CommentTok{#>             Treatment   Estimate      StdErr DF        t     PrGTt      CILower}
+\CommentTok{#> 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627}
+\CommentTok{#>      CIUpper}
+\CommentTok{#> 1 0.02679926}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ciAvgRdrEachTrtRRFC} is the CI for treatment FOMs for each reader for random-reader fixed-case analysis
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrtRRFC}
+\CommentTok{#>   Treatment      Area     StdErr DF   CILower   CIUpper}
+\CommentTok{#> 1 TrtTREAT1 0.8477499 0.01109801  3 0.8124311 0.8830687}
+\CommentTok{#> 2 TrtTREAT2 0.8368951 0.00777173  3 0.8121620 0.8616282}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{orh-significance-testing}{%
+\section{ORH significance testing}\label{orh-significance-testing}}
+
+Simply change \texttt{method\ =\ "DBMH"} to \texttt{method\ =\ "ORH"}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(dataset03, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(ret)}
+\CommentTok{#> List of 14}
+\CommentTok{#>  $ fomArray            : num [1:2, 1:4] 0.853 0.85 0.865 0.844 0.857 ...}
+\CommentTok{#>   ..- attr(*, "dimnames")=List of 2}
+\CommentTok{#>   .. ..$ : chr [1:2] "TrtTREAT1" "TrtTREAT2"}
+\CommentTok{#>   .. ..$ : chr [1:4] "RdrREADER_1" "RdrREADER_2" "RdrREADER_3" "RdrREADER_4"}
+\CommentTok{#>  $ meanSquares         :'data.frame':    1 obs. of  3 variables:}
+\CommentTok{#>   ..$ msT : num 0.000236}
+\CommentTok{#>   ..$ msR : num 0.000684}
+\CommentTok{#>   ..$ msTR: num 5.02e-05}
+\CommentTok{#>  $ varComp             :'data.frame':    1 obs. of  6 variables:}
+\CommentTok{#>   ..$ varR : num 2.33e-05}
+\CommentTok{#>   ..$ varTR: num -0.000684}
+\CommentTok{#>   ..$ cov1 : num 0.000792}
+\CommentTok{#>   ..$ cov2 : num 0.000484}
+\CommentTok{#>   ..$ cov3 : num 0.000513}
+\CommentTok{#>   ..$ var  : num 0.00153}
+\CommentTok{#>  $ FTestStatsRRRC      :'data.frame':    1 obs. of  4 variables:}
+\CommentTok{#>   ..$ fRRRC  : num 4.69}
+\CommentTok{#>   ..$ ndfRRRC: num 1}
+\CommentTok{#>   ..$ ddfRRRC: num 3}
+\CommentTok{#>   ..$ pRRRC  : num 0.119}
+\CommentTok{#>  $ ciDiffTrtRRRC       :'data.frame':    1 obs. of  8 variables:}
+\CommentTok{#>   ..$ Treatment: chr "TrtTREAT1-TrtTREAT2"}
+\CommentTok{#>   ..$ Estimate : num 0.0109}
+\CommentTok{#>   ..$ StdErr   : num 0.00501}
+\CommentTok{#>   ..$ DF       : num 3}
+\CommentTok{#>   ..$ t        : num 2.17}
+\CommentTok{#>   ..$ PrGTt    : num 0.119}
+\CommentTok{#>   ..$ CILower  : num -0.00509}
+\CommentTok{#>   ..$ CIUpper  : num 0.0268}
+\CommentTok{#>  $ ciAvgRdrEachTrtRRRC :'data.frame':    2 obs. of  6 variables:}
+\CommentTok{#>   ..$ Treatment: Factor w/ 2 levels "TrtTREAT1","TrtTREAT2": 1 2}
+\CommentTok{#>   ..$ Area     : num [1:2] 0.848 0.837}
+\CommentTok{#>   ..$ StdErr   : num [1:2] 0.0244 0.0236}
+\CommentTok{#>   ..$ DF       : num [1:2] 70.1 253.6}
+\CommentTok{#>   ..$ CILower  : num [1:2] 0.799 0.79}
+\CommentTok{#>   ..$ CIUpper  : num [1:2] 0.896 0.883}
+\CommentTok{#>  $ FTestStatsFRRC      :'data.frame':    1 obs. of  4 variables:}
+\CommentTok{#>   ..$ fFRRC  : num 0.364}
+\CommentTok{#>   ..$ ndfFRRC: num 1}
+\CommentTok{#>   ..$ ddfFRRC: num Inf}
+\CommentTok{#>   ..$ pFRRC  : num 0.546}
+\CommentTok{#>  $ ciDiffTrtFRRC       :'data.frame':    1 obs. of  8 variables:}
+\CommentTok{#>   ..$ Treatment: chr "TrtTREAT1-TrtTREAT2"}
+\CommentTok{#>   ..$ Estimate : num 0.0109}
+\CommentTok{#>   ..$ StdErr   : num 0.018}
+\CommentTok{#>   ..$ DF       : num Inf}
+\CommentTok{#>   ..$ t        : num 0.603}
+\CommentTok{#>   ..$ PrGTt    : num 0.546}
+\CommentTok{#>   ..$ CILower  : num -0.0244}
+\CommentTok{#>   ..$ CIUpper  : num 0.0461}
+\CommentTok{#>  $ ciAvgRdrEachTrtFRRC :'data.frame':    2 obs. of  6 variables:}
+\CommentTok{#>   ..$ Treatment: Factor w/ 2 levels "TrtTREAT1","TrtTREAT2": 1 2}
+\CommentTok{#>   ..$ Area     : num [1:2] 0.848 0.837}
+\CommentTok{#>   ..$ StdErr   : num [1:2] 0.0271 0.0274}
+\CommentTok{#>   ..$ DF       : num [1:2] Inf Inf}
+\CommentTok{#>   ..$ CILower  : num [1:2] 0.795 0.783}
+\CommentTok{#>   ..$ CIUpper  : num [1:2] 0.901 0.891}
+\CommentTok{#>  $ ciDiffTrtEachRdrFRRC:'data.frame':    4 obs. of  9 variables:}
+\CommentTok{#>   ..$ Reader   : Factor w/ 4 levels "RdrREADER_1",..: 1 2 3 4}
+\CommentTok{#>   ..$ Treatment: Factor w/ 1 level "TrtTREAT1-TrtTREAT2": 1 1 1 1}
+\CommentTok{#>   ..$ Estimate : num [1:4] 0.003844 0.021483 0.017187 0.000905}
+\CommentTok{#>   ..$ StdErr   : num [1:4] 0.0428 0.0401 0.035 0.0348}
+\CommentTok{#>   ..$ DF       : num [1:4] Inf Inf Inf Inf}
+\CommentTok{#>   ..$ t        : num [1:4] 0.0898 0.5362 0.4911 0.026}
+\CommentTok{#>   ..$ PrGTt    : num [1:4] 0.928 0.592 0.623 0.979}
+\CommentTok{#>   ..$ CILower  : num [1:4] -0.08 -0.0571 -0.0514 -0.0673}
+\CommentTok{#>   ..$ CIUpper  : num [1:4] 0.0877 0.1 0.0858 0.0691}
+\CommentTok{#>  $ varCovEachRdr       :'data.frame':    4 obs. of  3 variables:}
+\CommentTok{#>   ..$ Reader: Factor w/ 4 levels "RdrREADER_1",..: 1 2 3 4}
+\CommentTok{#>   ..$ Var   : num [1:4] 0.00148 0.00152 0.00138 0.00173}
+\CommentTok{#>   ..$ Cov1  : num [1:4] 0.000562 0.000716 0.000765 0.001124}
+\CommentTok{#>  $ FTestStatsRRFC      :'data.frame':    1 obs. of  4 variables:}
+\CommentTok{#>   ..$ fRRFC  : num 4.69}
+\CommentTok{#>   ..$ ndfRRFC: num 1}
+\CommentTok{#>   ..$ ddfRRFC: num 3}
+\CommentTok{#>   ..$ pRRFC  : num 0.119}
+\CommentTok{#>  $ ciDiffTrtRRFC       :'data.frame':    1 obs. of  8 variables:}
+\CommentTok{#>   ..$ Treatment: chr "TrtTREAT1-TrtTREAT2"}
+\CommentTok{#>   ..$ Estimate : num 0.0109}
+\CommentTok{#>   ..$ StdErr   : num 0.00501}
+\CommentTok{#>   ..$ DF       : num 3}
+\CommentTok{#>   ..$ t        : num 2.17}
+\CommentTok{#>   ..$ PrGTt    : num 0.119}
+\CommentTok{#>   ..$ CILower  : num -0.00509}
+\CommentTok{#>   ..$ CIUpper  : num 0.0268}
+\CommentTok{#>  $ ciAvgRdrEachTrtRRFC :'data.frame':    2 obs. of  6 variables:}
+\CommentTok{#>   ..$ Treatment: Factor w/ 2 levels "TrtTREAT1","TrtTREAT2": 1 2}
+\CommentTok{#>   ..$ Area     : num [1:2] 0.848 0.837}
+\CommentTok{#>   ..$ StdErr   : num [1:2] 0.0111 0.00777}
+\CommentTok{#>   ..$ DF       : num [1:2] 3 3}
+\CommentTok{#>   ..$ CILower  : num [1:2] 0.812 0.812}
+\CommentTok{#>   ..$ CIUpper  : num [1:2] 0.883 0.862}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{references-5}{%
+\section{References}\label{references-5}}
+
+\hypertarget{QuickStartDBM2}{%
+\chapter{QUICK START DBM2}\label{QuickStartDBM2}}
+
+\hypertarget{introduction-5}{%
+\section{Introduction}\label{introduction-5}}
+
+This vignette illustrates significance testing using the DBMH method. But, instead of the unwieldy output in \emph{QuickStartDBMH.html}, it generates an Excel output file containing the following worksheets:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{Summary}
+\item
+  \texttt{FOMs}
+\item
+  \texttt{RRRC}
+\item
+  \texttt{FRRC}
+\item
+  \texttt{RRFC}
+\item
+  \texttt{ANOVA}
+\end{itemize}
+
+\hypertarget{generating-the-excel-output-file}{%
+\section{Generating the Excel output file}\label{generating-the-excel-output-file}}
+
+This illustrates the \texttt{UtilOutputReport()} function. The significance testing \texttt{method} is ``DBMH'', the default, and the figure of merit \texttt{FOM} is ``Wilcoxon''. Note \texttt{ReportFileExt} = ``xlsx''` telling
+the function to create an Excel output file. The Excel output is created in a temporary file.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(dataset03, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
+\CommentTok{#> }
+\CommentTok{#> Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpydZU59/RJafrocUtilOutputReport755839a5b263.xlsx}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{orh-significance-testing-1}{%
+\section{ORH significance testing}\label{orh-significance-testing-1}}
+
+Simply change \texttt{method\ =\ "DBMH"} (the default) to \texttt{method\ =\ "ORH"}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(dataset03, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
+\CommentTok{#> }
+\CommentTok{#> Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpydZU59/RJafrocUtilOutputReport755861fb86db.xlsx}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{part-sample-size}{%
+\part*{SAMPLE SIZE}\label{part-sample-size}}
+\addcontentsline{toc}{part}{SAMPLE SIZE}
+
+\hypertarget{SSFDistr}{%
+\chapter{BACKGROUND ON THE F-DISTRIBUTION}\label{SSFDistr}}
+
+\hypertarget{introduction-6}{%
+\section{Introduction}\label{introduction-6}}
+
+Since it plays an important role in sample size estimation, it is helpful to examine the behavior of the F-distribution. In the following \texttt{ndf} = numerator degrees of freedom, \texttt{ddf} = denominator degrees of freedom and \texttt{ncp} = non-centrality parameter (i.e., the \(\Delta\) appearing in Eqn. (11.6) of \citep{RN2680}).
+
+The use of three \texttt{R} functions is demonstrated.
+
+\begin{itemize}
+\item
+  \texttt{qf(p,ndf,ddf)} is the \emph{quantile} function of the F-distribution for specified values of \texttt{p}, \texttt{ndf} and \texttt{ddf}, i.e., the value \texttt{x} such that fraction \texttt{p} of the area under the F-distribution lies to the right of \texttt{x}. Since \texttt{ncp} is not included as a parameter, the default value, i.e., zero, is used. This is called the \emph{central} F-distribution.
+\item
+  \texttt{df(x,ndf,ddf,ncp)} is the probability density function (\emph{pdf}) of the F-distribution, as a function of \texttt{x}, for specified values of \texttt{ndf}, \texttt{ddf} and \texttt{ncp}.
+\item
+  \texttt{pf(x,ndf,ddf,ncp)} is the probability (or cumulative) distribution function of the F-distribution for specified values of \texttt{ndf}, \texttt{ddf} and \texttt{ncp}.
+\end{itemize}
+
+\hypertarget{effect-of-ncp-for-ndf-2-and-ddf-10}{%
+\section{\texorpdfstring{Effect of \texttt{ncp} for \texttt{ndf} = 2 and \texttt{ddf} = 10}{Effect of ncp for ndf = 2 and ddf = 10}}\label{effect-of-ncp-for-ndf-2-and-ddf-10}}
+
+\begin{itemize}
+\tightlist
+\item
+  Four values of \texttt{ncp} are considered (0, 2, 5, 10) for \texttt{ddf} = 10.
+\item
+  \texttt{fCrit} is the critical value of the F distribution, i.e., that value such that fraction \(\alpha\) of the area is to the right of the critical value, i.e., \texttt{fCrit} is identical in statistical notation to \({{F}_{1-\alpha ,ndf,ddf}}\).
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ndf <-}\StringTok{ }\DecValTok{2}\NormalTok{;ddf <-}\StringTok{ }\DecValTok{10}\NormalTok{;ncp <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{10}\NormalTok{)}
+\NormalTok{alpha <-}\StringTok{ }\FloatTok{0.05}
+\NormalTok{fCrit <-}\StringTok{ }\KeywordTok{qf}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{alpha, ndf,ddf)}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{20}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
+\NormalTok{myLabel <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"A"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"D"}\NormalTok{)}
+\NormalTok{myLabelIndx <-}\StringTok{ }\DecValTok{1}
+\NormalTok{pFgtFCrit <-}\StringTok{ }\OtherTok{NULL}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(ncp))}
+\NormalTok{\{}
+\NormalTok{  y <-}\StringTok{ }\KeywordTok{df}\NormalTok{(x,ndf,ddf,}\DataTypeTok{ncp=}\NormalTok{ncp[i])}
+\NormalTok{  pFgtFCrit <-}\StringTok{ }\KeywordTok{c}\NormalTok{(pFgtFCrit, }\DecValTok{1}\OperatorTok{-}\KeywordTok{pf}\NormalTok{(fCrit, ndf, ddf, }\DataTypeTok{ncp =}\NormalTok{ ncp[i]))}
+\NormalTok{\}  }
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(ncp))}
+\NormalTok{\{}
+\NormalTok{  y <-}\StringTok{ }\KeywordTok{df}\NormalTok{(x,ndf,ddf,}\DataTypeTok{ncp=}\NormalTok{ncp[i])}
+\NormalTok{  curveData <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{pdf =}\NormalTok{ y)}
+\NormalTok{  curvePlot <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ pdf)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(myLabel[myLabelIndx]);myLabelIndx <-}\StringTok{ }\NormalTok{myLabelIndx }\OperatorTok{+}\StringTok{ }\DecValTok{1}
+  \KeywordTok{print}\NormalTok{(curvePlot)}
+\NormalTok{\}}
+\NormalTok{fCrit_}\DecValTok{2}\NormalTok{_}\DecValTok{10}\NormalTok{ <-}\StringTok{ }\NormalTok{fCrit }\CommentTok{# convention fCrit_ndf_ddf}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-2-1.pdf} \includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-2-2.pdf} \includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-2-3.pdf} \includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-2-4.pdf}
+
+\begin{tabular}{l|r|r|r|r|r}
+\hline
+  & ndf & ddf & fCrit & ncp & pFgtFCrit\\
+\hline
+A & 2 & 10 & 4.102821 & 0 & 0.0500000\\
+\hline
+B & 2 & 10 & 4.102821 & 2 & 0.1775840\\
+\hline
+C & 2 & 10 & 4.102821 & 5 & 0.3876841\\
+\hline
+D & 2 & 10 & 4.102821 & 10 & 0.6769776\\
+\hline
+\end{tabular}
+
+\hypertarget{comments}{%
+\section{Comments}\label{comments}}
+
+\hypertarget{fig.-a}{%
+\subsection{Fig. A}\label{fig.-a}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp\ =\ 0}, i.e., the \emph{central} F-distribution.
+\item
+  The integral under this distribution is unity (this is also true for all plots in this vignette).
+\item
+  The critical value, \texttt{fCrit} in the above code block, is the value of \texttt{x} such that the probability of exceeding \texttt{x} is \(\alpha\). The corresponding parameter \texttt{alpha} is defined above as 0.05.
+\item
+  In the current example \texttt{fCrit} = 4.102821. Notice the use of the quantile function \texttt{qf()} to determine this value, and the default value of \texttt{ncp}, namely zero, is used; specifically, one does not pass a 4th argument to \texttt{qf()}.
+\item
+  \textbf{The decision rule for rejecting the NH uses the NH distribution of the F-statistic}, i.e., reject the NH if F \textgreater{}= \texttt{fCrit}. As expected, \texttt{prob\ \textgreater{}\ fCrit} = 0.05 because this is how \texttt{fCrit} was defined.
+\end{itemize}
+
+\hypertarget{fig.-b}{%
+\subsection{Fig. B}\label{fig.-b}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp\ =\ 2}, \texttt{ndf} = 2 and \texttt{ddf} = 10.
+\item
+  The distribution is slightly shifted to the right as compared to Fig. A, thereby making it more likely that the observed value of the F-statistic will exceed the critical value determined for the NH distribution.
+\item
+  In fact, \texttt{prob\ \textgreater{}\ fCrit} = 0.177584, i.e., the \emph{statistical power} (compare this to Fig. A where \texttt{prob\ \textgreater{}\ fCrit} was 0.05).
+\end{itemize}
+
+\hypertarget{fig.-c}{%
+\subsection{Fig. C}\label{fig.-c}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp\ =\ 5}, \texttt{ndf} = 2 and \texttt{ddf} = 10.
+\item
+  Now \texttt{prob\ \textgreater{}\ fCrit} = 0.3876841.
+\item
+  Power has increased compared to Fig. B.
+\end{itemize}
+
+\hypertarget{fig.-d}{%
+\subsection{Fig. D}\label{fig.-d}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp\ =\ 10}, \texttt{ndf} = 2 and \texttt{ddf} = 10.
+\item
+  Now \texttt{prob\ \textgreater{}\ fCrit} is 0.6769776.
+\item
+  Power has increased compared to Fig. C.
+\item
+  The effect of the shift is most obvious in Fig. C and Fig. D.
+\item
+  Considering a vertical line at \texttt{x} = 4.102821, fraction 0.6769776 of the probability distribution in Fig. D lies to the right of this line
+\item
+  Therefore the NH is likely to be rejected with probability 0.6769776.
+\end{itemize}
+
+\hypertarget{summary-3}{%
+\subsection{Summary}\label{summary-3}}
+
+The larger that non-centrality parameter, the greater the shift to the right of the F-distribution, and the greater the statistical power.
+
+\hypertarget{effect-of-ncp-for-ndf-2-and-ddf-100}{%
+\section{\texorpdfstring{Effect of \texttt{ncp} for \texttt{ndf} = 2 and \texttt{ddf} = 100}{Effect of ncp for ndf = 2 and ddf = 100}}\label{effect-of-ncp-for-ndf-2-and-ddf-100}}
+
+\includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-4-1.pdf} \includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-4-2.pdf} \includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-4-3.pdf} \includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-4-4.pdf}
+
+\begin{tabular}{l|r|r|r|r|r}
+\hline
+  & ndf & ddf & fCrit & ncp & pFgtFCrit\\
+\hline
+A & 2 & 10 & 4.102821 & 0 & 0.0500000\\
+\hline
+B & 2 & 10 & 4.102821 & 2 & 0.1775840\\
+\hline
+C & 2 & 10 & 4.102821 & 5 & 0.3876841\\
+\hline
+D & 2 & 10 & 4.102821 & 10 & 0.6769776\\
+\hline
+E & 2 & 100 & 3.087296 & 0 & 0.0500000\\
+\hline
+F & 2 & 100 & 3.087296 & 2 & 0.2199264\\
+\hline
+G & 2 & 100 & 3.087296 & 5 & 0.4910802\\
+\hline
+H & 2 & 100 & 3.087296 & 10 & 0.8029764\\
+\hline
+\end{tabular}
+
+\hypertarget{comments-1}{%
+\section{Comments}\label{comments-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  All comparisons in this sections are at the same values of \texttt{ncp} defined above.
+\item
+  And between \texttt{ddf} = 100 and \texttt{ddf} = 10.
+\end{itemize}
+
+\hypertarget{fig.-e}{%
+\subsection{Fig. E}\label{fig.-e}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp} = 0, \texttt{ndf} = 2 and \texttt{ddf} = 100.
+\item
+  The critical value is \texttt{fCrit\_2\_100} = 3.0872959. Notice the decrease compared to the previous value for \texttt{ncp} = 0, i.e., 4.102821, for \texttt{ddf} = 10.
+\item
+  One expects that increasing \texttt{ddf} will make it more likely that the NH will be rejected, and this is confirmed below.
+\item
+  All else equal, statistical power increases with increasing \texttt{ddf}.
+\end{itemize}
+
+\hypertarget{fig.-f}{%
+\subsection{Fig. F}\label{fig.-f}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp} = 2, \texttt{ndf} = 2 and \texttt{ddf} = 100.
+\item
+  The probability of exceeding the critical value is \texttt{prob\ \textgreater{}\ fCrit\_2\_100} = 0.2199264, greater than the previous value, i.e., 0.177584 for \texttt{ddf} = 10.
+\end{itemize}
+
+\hypertarget{fig.-g}{%
+\subsection{Fig. G}\label{fig.-g}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp\ =\ 5}, \texttt{ndf} = 2 and \texttt{ddf} = 100.
+\item
+  The probability of exceeding the critical value is \texttt{prob\ \textgreater{}\ fCrit\_2\_100} = 0.4910802.
+\item
+  This is greater than the previous value, i.e., 0.3876841 for \texttt{ddf} = 10.
+\end{itemize}
+
+\hypertarget{fig.-h}{%
+\subsection{Fig. H}\label{fig.-h}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp\ =\ 10}, \texttt{ndf} = 2 and \texttt{ddf} = 100.
+\item
+  The probability of exceeding the critical value is \texttt{prob\ \textgreater{}\ fCrit\_2\_100} is 0.8029764.
+\item
+  This is greater than the previous value, i.e., 0.6769776 for \texttt{ddf} = 10.
+\end{itemize}
+
+\hypertarget{effect-of-ncp-for-ndf-1-ddf-100}{%
+\section{\texorpdfstring{Effect of \texttt{ncp} for \texttt{ndf} = 1, \texttt{ddf} = 100}{Effect of ncp for ndf = 1, ddf = 100}}\label{effect-of-ncp-for-ndf-1-ddf-100}}
+
+\includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-6-1.pdf} \includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-6-2.pdf} \includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-6-3.pdf} \includegraphics{11-SampleSize1_files/figure-latex/unnamed-chunk-6-4.pdf}
+
+\begin{tabular}{l|r|r|r|r|r}
+\hline
+  & ndf & ddf & fCrit & ncp & pFgtFCrit\\
+\hline
+A & 2 & 10 & 4.102821 & 0 & 0.0500000\\
+\hline
+B & 2 & 10 & 4.102821 & 2 & 0.1775840\\
+\hline
+C & 2 & 10 & 4.102821 & 5 & 0.3876841\\
+\hline
+D & 2 & 10 & 4.102821 & 10 & 0.6769776\\
+\hline
+E & 2 & 100 & 3.087296 & 0 & 0.0500000\\
+\hline
+F & 2 & 100 & 3.087296 & 2 & 0.2199264\\
+\hline
+G & 2 & 100 & 3.087296 & 5 & 0.4910802\\
+\hline
+H & 2 & 100 & 3.087296 & 10 & 0.8029764\\
+\hline
+I & 1 & 100 & 3.936143 & 0 & 0.0500000\\
+\hline
+J & 1 & 100 & 3.936143 & 2 & 0.2883607\\
+\hline
+K & 1 & 100 & 3.936143 & 5 & 0.6004962\\
+\hline
+L & 1 & 100 & 3.936143 & 10 & 0.8793619\\
+\hline
+\end{tabular}
+
+\hypertarget{comments-2}{%
+\section{Comments}\label{comments-2}}
+
+\begin{itemize}
+\tightlist
+\item
+  All comparisons in this sections are at the same values of \texttt{ncp} defined above and at \texttt{ddf} = 100.
+\item
+  And between \texttt{ndf} = 1 and \texttt{ndf} = 2.
+\end{itemize}
+
+\hypertarget{fig.-i}{%
+\subsection{Fig. I}\label{fig.-i}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp} = 0, \texttt{ndf} = 1 and \texttt{ddf} = 100.
+\item
+  The critical value is \texttt{fCrit\_1\_100} = 3.936143.
+\item
+  Notice the increase in the critical value as compared to the corresponding value for \texttt{ndf\ =\ 2}, i.e., 3.0872959.
+\item
+  One might expect power to decrease, \textbf{but see below}.
+\end{itemize}
+
+\hypertarget{fig.-j}{%
+\subsection{Fig. J}\label{fig.-j}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp} = 2, \texttt{ndf} = 1 and \texttt{ddf} = 100.
+\item
+  Now \texttt{prob\ \textgreater{}\ fCrit\_1\_100} = 0.2883607, larger than the previous value 0.2199264.
+\item
+  The power has actually increased.
+\end{itemize}
+
+\hypertarget{fig.-k}{%
+\subsection{Fig. K}\label{fig.-k}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp} = 5, \texttt{ndf} = 1 and \texttt{ddf} = 100`',
+\item
+  Now \texttt{prob\ \textgreater{}\ fCrit\_1\_100} = 0.6004962, larger than the previous value 0.4910802.
+\item
+  Again, the power has actually increased.
+\end{itemize}
+
+\hypertarget{fig.-l}{%
+\subsection{Fig. L}\label{fig.-l}}
+
+\begin{itemize}
+\tightlist
+\item
+  This corresponds to \texttt{ncp} = 10, \texttt{ndf} = 1 and \texttt{ddf} = 100
+\item
+  Now \texttt{prob\ \textgreater{}\ fCrit\_1\_100} is 0.8793619, larger than the previous value 0.8029764.
+\item
+  The power has actually increased.
+\end{itemize}
+
+\hypertarget{summary-4}{%
+\section{Summary}\label{summary-4}}
+
+\begin{itemize}
+\tightlist
+\item
+  Power increases with increasing \texttt{ddf} and \texttt{ncp}.
+\item
+  The effect of increasing \texttt{ncp} is quite dramatic. This is because power depends on the square of \texttt{ncp}.
+\item
+  Decreasing \texttt{ndf} also \textbf{increases} power. At first glance this may seem counterintuitive, as \texttt{fCrit} has gone up, but is explained by the differing shapes of the two distributions: the pdf is broader for \texttt{ndf} = 1 as compared to \texttt{ndf} = 2 (compare Fig. L to H).
+\end{itemize}
+
+\hypertarget{references-6}{%
+\section{References}\label{references-6}}
+
+\hypertarget{SSRocFirstPrinciples}{%
+\chapter{ROC-DBMH sample size from first principles}\label{SSRocFirstPrinciples}}
+
+\hypertarget{introduction-7}{%
+\section{Introduction}\label{introduction-7}}
+
+The starting point is a \textbf{pilot} study. The variability in this dataset (specifically the variance components, subsequently converted to mean squares), obtained by running the significance testing function \texttt{StSignificanceTesting()}, is used to extrapolate to the necessary numbers of readers and cases, in the \textbf{pivotal} study, to achieve the desired power. In this example, the observed effect size in the pilot study is used as the anticipated effect size for the pivotal study -- this is generally not a good idea as discussed in \textbf{Chapter 11} under ``Cautionary notes''. Shown below, and the reader should confirm, is a first principles implementation of the relevant formulae in \textbf{Chapter 11}.
+
+\hypertarget{sample-size-estimation-using-the-dbmh-method}{%
+\section{Sample size estimation using the DBMH method}\label{sample-size-estimation-using-the-dbmh-method}}
+
+The Van Dyke dataset in file \texttt{VanDyke.lrc}, in \texttt{"MRMC"} format, is regarded as a pilot study. The command \texttt{rocData\ \textless{}-\ DfReadDataFile(fileName,\ format\ =\ "MRMC")} reads the data and saves it to a \texttt{dataset} object \texttt{rocData}. \href{https://dpc10ster.github.io/RJafroc/reference/RJafroc-package.html}{For more on data formats click here}. The next line uses the function \texttt{StSignificanceTesting()} to apply \texttt{method\ =\ "DBMH"} analysis, the default, using the \texttt{FOM\ =\ "Wilcoxon"} figure of merit. The next line extracts the variance components \texttt{varYTR}, \texttt{varYTC} and \texttt{varYEps} (the Y's denote pseudovalue based values). The next line extracts the effect size.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alpha <-}\StringTok{ }\FloatTok{0.05}
+\NormalTok{rocData <-}\StringTok{ }\NormalTok{dataset02 }\CommentTok{##"VanDyke.lrc"}
+\CommentTok{#fileName <- dataset03 ## "Franken1.lrc"}
+\NormalTok{retDbm <-}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(}\DataTypeTok{dataset =}\NormalTok{ rocData, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{) }
+\NormalTok{varYTR <-}\StringTok{ }\NormalTok{retDbm}\OperatorTok{$}\NormalTok{varComp}\OperatorTok{$}\NormalTok{varTR;varYTC <-}\StringTok{ }\NormalTok{retDbm}\OperatorTok{$}\NormalTok{varComp}\OperatorTok{$}\NormalTok{varTC;varYEps <-}\StringTok{ }\NormalTok{retDbm}\OperatorTok{$}\NormalTok{varComp}\OperatorTok{$}\NormalTok{varErr}
+\NormalTok{effectSize <-}\StringTok{ }\NormalTok{retDbm}\OperatorTok{$}\NormalTok{ciDiffTrtRRRC}\OperatorTok{$}\NormalTok{Estimate}
+\end{Highlighting}
+\end{Shaded}
+
+The \emph{observed} effect size is \texttt{effectSize} = -0.0438003, which, in this example, is used as the \emph{anticipated} effect size, generally not a good idea. \textbf{See Chapter 11 for nuances regarding the choice of this all important value.} The following code snippet reveals the names and array indexing of the pseudovalue variance components.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{retDbm}\OperatorTok{$}\NormalTok{varComp}
+\CommentTok{#>          varR       varC        varTR     varTC      varRC    varErr}
+\CommentTok{#> 1 0.001534999 0.02724923 0.0002004025 0.0119753 0.01226473 0.0399716}
+\end{Highlighting}
+\end{Shaded}
+
+For example, the treatment-reader pseudovalue variance component is the third element of \texttt{retDbm\$varComp}.
+
+\hypertarget{random-reader-random-case-rrrc}{%
+\subsection{Random reader random case (RRRC)}\label{random-reader-random-case-rrrc}}
+
+This illustrates random reader random case sample size estimation. Assumed are 10 readers and 163 cases in the pivotal study. The non-centrality parameter is defined by:
+
+\[\Delta =\frac{JK\sigma _{Y;\tau }^{2}}{\left( \sigma _{Y;\varepsilon }^{2}+\sigma _{Y;\tau RC}^{2} \right)+K\sigma _{Y;\tau R}^{2}+J\max \left( \sigma _{Y;\tau C}^{2},0 \right)}\]
+
+The sampling distribution of the F-statistic under the AH is:
+
+\[{{F}_{\left. AH \right|R}}\equiv \frac{MST}{MSTC}\tilde{\ }{{F}_{I-1,\left( I-1 \right)\left( K-1 \right),\Delta }}\]
+Also,
+
+\[\sigma _{Y;\tau }^{2}={{d}^{2}}/2\]
+
+where \texttt{d} is the observed effect size, i.e., \texttt{effectSize}. The formulae for calculating the mean-squares are in \citep{RN1476}, implemented in \texttt{UtilMeanSquares()}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#RRRC}
+\NormalTok{J <-}\StringTok{ }\DecValTok{10}\NormalTok{;K <-}\StringTok{ }\DecValTok{163}
+\NormalTok{ncp <-}\StringTok{ }\NormalTok{(}\FloatTok{0.5}\OperatorTok{*}\NormalTok{J}\OperatorTok{*}\NormalTok{K}\OperatorTok{*}\NormalTok{(effectSize)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{/}\NormalTok{(K}\OperatorTok{*}\NormalTok{varYTR}\OperatorTok{+}\KeywordTok{max}\NormalTok{(J}\OperatorTok{*}\NormalTok{varYTC,}\DecValTok{0}\NormalTok{)}\OperatorTok{+}\NormalTok{varYEps)}
+\NormalTok{MS <-}\StringTok{ }\KeywordTok{UtilMeanSquares}\NormalTok{(rocData, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{)}
+\NormalTok{ddf <-}\StringTok{ }\NormalTok{(MS}\OperatorTok{$}\NormalTok{msTR}\OperatorTok{+}\KeywordTok{max}\NormalTok{(MS}\OperatorTok{$}\NormalTok{msTC}\OperatorTok{-}\NormalTok{MS}\OperatorTok{$}\NormalTok{msTRC,}\DecValTok{0}\NormalTok{))}\OperatorTok{^}\DecValTok{2}\OperatorTok{/}\NormalTok{(MS}\OperatorTok{$}\NormalTok{msTR}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{*}\NormalTok{(J}\DecValTok{-1}\NormalTok{)}
+\NormalTok{FCrit <-}\StringTok{ }\KeywordTok{qf}\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{alpha, }\DecValTok{1}\NormalTok{, ddf)}
+\NormalTok{Power1 <-}\StringTok{ }\DecValTok{1}\OperatorTok{-}\KeywordTok{pf}\NormalTok{(FCrit, }\DecValTok{1}\NormalTok{, ddf, }\DataTypeTok{ncp =}\NormalTok{ ncp)}
+\end{Highlighting}
+\end{Shaded}
+
+The next line calculates the non centrality parameter, \texttt{ncp} = 8.1269825. Note that \texttt{effectSize} enters as the \textbf{square}. The \texttt{UtilMeanSquares()} function returns the mean-squares as a \texttt{list} (ignore the last two rows of output for now).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(MS)}
+\CommentTok{#> List of 9}
+\CommentTok{#>  $ msT       : num 0.547}
+\CommentTok{#>  $ msR       : num 0.437}
+\CommentTok{#>  $ msC       : num 0.397}
+\CommentTok{#>  $ msTR      : num 0.0628}
+\CommentTok{#>  $ msTC      : num 0.0521}
+\CommentTok{#>  $ msRC      : num 0.0645}
+\CommentTok{#>  $ msTRC     : num 0.04}
+\CommentTok{#>  $ msCSingleT: num [1:2] 0.336 0.16}
+\CommentTok{#>  $ msCSingleR: num [1:5] 0.1222 0.2127 0.1365 0.0173 0.1661}
+\end{Highlighting}
+\end{Shaded}
+
+The next line calculates \texttt{ddf} = 12.822129. The remaining lines calculate the critical value of the F-distribution, \texttt{FCrit} = 4.680382 and statistical power = 0.7494133, which by design is close to 80\%, i.e., the numbers of readers and cases were chosen to achieve this value.
+
+\hypertarget{fixed-reader-random-case-frrc}{%
+\subsection{Fixed reader random case (FRRC)}\label{fixed-reader-random-case-frrc}}
+
+This code illustrates fixed reader random case sample size estimation. Assumed are 10 readers and 133 cases in the pivotal study. The formulae are:
+
+\[\Delta =\frac{JK\sigma _{Y;\tau }^{2}}{\sigma _{Y;\varepsilon }^{2}+\sigma _{Y;\tau RC}^{2}+J\sigma _{Y;\tau C}^{2}}\]
+
+The sampling distribution of the F-statistic under the AH is:
+
+\[{{F}_{\left. AH \right|R}}\equiv \frac{MST}{MSTC}\tilde{\ }{{F}_{I-1,\left( I-1 \right)\left( K-1 \right),\Delta }}\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#FRRC}
+\NormalTok{ncp <-}\StringTok{ }\NormalTok{(}\FloatTok{0.5}\OperatorTok{*}\NormalTok{J}\OperatorTok{*}\NormalTok{K}\OperatorTok{*}\NormalTok{(effectSize)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{/}\NormalTok{(}\KeywordTok{max}\NormalTok{(J}\OperatorTok{*}\NormalTok{varYTC,}\DecValTok{0}\NormalTok{)}\OperatorTok{+}\NormalTok{varYEps)}
+\NormalTok{ddf <-}\StringTok{ }\NormalTok{(K}\DecValTok{-1}\NormalTok{)}
+\NormalTok{FCrit <-}\StringTok{ }\KeywordTok{qf}\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{alpha, }\DecValTok{1}\NormalTok{, ddf)}
+\NormalTok{Power2 <-}\StringTok{ }\DecValTok{1}\OperatorTok{-}\KeywordTok{pf}\NormalTok{(FCrit, }\DecValTok{1}\NormalTok{, ddf, }\DataTypeTok{ncp =}\NormalTok{ ncp)}
+\end{Highlighting}
+\end{Shaded}
+
+This time non centrality parameter, \texttt{ncp} = 7.9873835, \texttt{ddf} = 132, \texttt{FCrit} = 3.912875 and statistical power = 0.8011167. Again, be design, this is close to 80\%. Note that when readers are regarded as a fixed effect, fewer cases are needed to achieve the desired power. Freezing out a source of variability results in a more stable measurement and hence fewer cases are needed to achieve the desired power.
+
+\hypertarget{random-reader-fixed-case-rrfc}{%
+\subsection{Random reader fixed case (RRFC)}\label{random-reader-fixed-case-rrfc}}
+
+This code illustrates random reader random case sample size estimation. Assumed are 10 readers and 53 cases in the pivotal study. The formulae are:
+
+\[\Delta =\frac{JK\sigma _{Y;\tau }^{2}}{\sigma _{Y;\varepsilon }^{2}+\sigma _{Y;\tau RC}^{2}+K\sigma _{Y;\tau R}^{2}}\]
+
+The sampling distribution of the F-statistic under the AH is:
+
+\[{{F}_{\left. AH \right|C}}\equiv \frac{MST}{MSTR}\tilde{\ }{{F}_{I-1,\left( I-1 \right)\left( J-1 \right),\Delta }}\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#RRFC}
+\NormalTok{ncp <-}\StringTok{ }\NormalTok{(}\FloatTok{0.5}\OperatorTok{*}\NormalTok{J}\OperatorTok{*}\NormalTok{K}\OperatorTok{*}\NormalTok{(effectSize)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}\OperatorTok{/}\NormalTok{(K}\OperatorTok{*}\NormalTok{varYTR}\OperatorTok{+}\NormalTok{varYEps)}
+\NormalTok{ddf <-}\StringTok{ }\NormalTok{(J}\DecValTok{-1}\NormalTok{)}
+\NormalTok{FCrit <-}\StringTok{ }\KeywordTok{qf}\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{alpha, }\DecValTok{1}\NormalTok{, ddf)}
+\NormalTok{Power3 <-}\StringTok{ }\DecValTok{1}\OperatorTok{-}\KeywordTok{pf}\NormalTok{(FCrit, }\DecValTok{1}\NormalTok{, ddf, }\DataTypeTok{ncp =}\NormalTok{ ncp)}
+\end{Highlighting}
+\end{Shaded}
+
+This time non centrality parameter, \texttt{ncp} = 10.0487164, \texttt{ddf} = 9, \texttt{FCrit} = 5.117355 and statistical power = 0.8049666. Again, be design, this is close to 80\%.
+
+\hypertarget{summary-5}{%
+\section{Summary}\label{summary-5}}
+
+For 10 readers, the numbers of cases needed for 80\% power is largest (163) for RRRC, intermediate (133) for FRRC and least for RRFC (53). For all three analyses, the expectation of 80\% power is met.
+
+\hypertarget{references-7}{%
+\section{References}\label{references-7}}
+
+\hypertarget{SSRocDBMHRJafroc}{%
+\chapter{ROC-DBMH sample size using RJafroc}\label{SSRocDBMHRJafroc}}
+
+\hypertarget{introduction-8}{%
+\section{Introduction}\label{introduction-8}}
+
+This illustrates the \texttt{RJafroc} implementation of sample-size estimation. Default \(\alpha\) is 0.05 and default power (1-\(\beta\)) is 0.8. Three functions are provided. Each of these functions can be used with \texttt{method\ "DBMH"} (illustrated here, the default) or \texttt{method\ =\ "ORH"} (next vignette). Illustrated below, for the most part, is the random-reader random-case (RRRC) option, i.e., \texttt{option\ =\ "RRRC"}. The last two examples illustrate fixed-reader random-case (FRRC) \texttt{option\ =\ "FRRC"} and random-reader fixed-case (RRFC) \texttt{option\ =\ "RRFC"} options.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{SsPowerGivenJK()}
+  Statistical power for specified numbers of readers and cases in an ROC study.
+\item
+  \texttt{SsPowerTable()}
+  Generate a power table, i.e., combinations of numbers of readers and cases yielding the desired power.
+\item
+  \texttt{SsSampleSizeKGivenJ}
+  Number of cases, for specified number of readers, to achieve desired power.
+\end{itemize}
+
+\hypertarget{illustration-of-sspowergivenjk-using-method-dbmh}{%
+\section{\texorpdfstring{Illustration of \texttt{SsPowerGivenJK()} using \texttt{method\ =\ "DBMH"}}{Illustration of SsPowerGivenJK() using method = "DBMH"}}\label{illustration-of-sspowergivenjk-using-method-dbmh}}
+
+The selected dataset corresponds to the Van Dyke data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{power <-}\StringTok{ }\KeywordTok{SsPowerGivenJK}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{6}\NormalTok{, }\DataTypeTok{K =} \DecValTok{112}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The returned value is a list containing the expected power \texttt{power}, the non-centrality parameter \texttt{ncp}, the denominator degrees of freedom \texttt{ddf} and the F-statistic \texttt{f}. The numerator degrees of freedom \texttt{ndf} is always \texttt{I\ -\ 1}, i.e., unity for this dataset.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(power)}
+\CommentTok{#> 'data.frame':    1 obs. of  4 variables:}
+\CommentTok{#>  $ powerRRRC: num 0.556}
+\CommentTok{#>  $ ncpRRRC  : num 4.8}
+\CommentTok{#>  $ ddfHRRRC : num 23.1}
+\CommentTok{#>  $ fRRRC    : num 4.28}
+\end{Highlighting}
+\end{Shaded}
+
+Expected power is 0.5555789.
+
+\hypertarget{illustration-of-sspowertable-using-method-dbmh}{%
+\section{\texorpdfstring{Illustration of \texttt{SsPowerTable()} using \texttt{method\ =\ "DBMH"}}{Illustration of SsPowerTable() using method = "DBMH"}}\label{illustration-of-sspowertable-using-method-dbmh}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{powTab <-}\StringTok{ }\KeywordTok{SsPowerTable}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Now show the power table \texttt{powTab}. Note that the last column is always close to 0.8, the desired power. The 2nd and 3rd columns show the number of readers and number of cases to achieve the desired power.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{powTab}
+\CommentTok{#>     numReaders numCases power}
+\CommentTok{#> 1            3    >2000  <NA>}
+\CommentTok{#> 2            3    >2000  <NA>}
+\CommentTok{#> 3            4     1089   0.8}
+\CommentTok{#> 4            4     1089   0.8}
+\CommentTok{#> 5            5      344 0.801}
+\CommentTok{#> 6            5      344 0.801}
+\CommentTok{#> 7            6      251 0.801}
+\CommentTok{#> 8            6      251 0.801}
+\CommentTok{#> 9            7      211 0.801}
+\CommentTok{#> 10           7      211 0.801}
+\CommentTok{#> 11           8      188 0.801}
+\CommentTok{#> 12           8      188 0.801}
+\CommentTok{#> 13           9      173 0.801}
+\CommentTok{#> 14           9      173 0.801}
+\CommentTok{#> 15          10      163 0.802}
+\CommentTok{#> 16          10      163 0.802}
+\CommentTok{#> 17          11      155 0.801}
+\CommentTok{#> 18          11      155 0.801}
+\CommentTok{#> 19          12      149 0.802}
+\CommentTok{#> 20          12      149 0.802}
+\CommentTok{#> 21          13      144 0.801}
+\CommentTok{#> 22          13      144 0.801}
+\CommentTok{#> 23          14      140 0.802}
+\CommentTok{#> 24          14      140 0.802}
+\CommentTok{#> 25          15      137 0.802}
+\CommentTok{#> 26          15      137 0.802}
+\CommentTok{#> 27          16      134 0.802}
+\CommentTok{#> 28          16      134 0.802}
+\CommentTok{#> 29          17      131 0.801}
+\CommentTok{#> 30          17      131 0.801}
+\CommentTok{#> 31          18      129 0.801}
+\CommentTok{#> 32          18      129 0.801}
+\CommentTok{#> 33          19      127 0.801}
+\CommentTok{#> 34          19      127 0.801}
+\CommentTok{#> 35          20      126 0.802}
+\CommentTok{#> 36          20      126 0.802}
+\CommentTok{#> 37          21      124 0.801}
+\CommentTok{#> 38          21      124 0.801}
+\CommentTok{#> 39          22      123 0.802}
+\CommentTok{#> 40          22      123 0.802}
+\CommentTok{#> 41          23      122 0.802}
+\CommentTok{#> 42          23      122 0.802}
+\CommentTok{#> 43          24      121 0.803}
+\CommentTok{#> 44          24      121 0.803}
+\CommentTok{#> 45          25      120 0.802}
+\CommentTok{#> 46          25      120 0.802}
+\CommentTok{#> 47          26      119 0.802}
+\CommentTok{#> 48          26      119 0.802}
+\CommentTok{#> 49          27      118 0.802}
+\CommentTok{#> 50          27      118 0.802}
+\CommentTok{#> 51          28      117 0.801}
+\CommentTok{#> 52          28      117 0.801}
+\CommentTok{#> 53          29      117 0.803}
+\CommentTok{#> 54          29      117 0.803}
+\CommentTok{#> 55          30      116 0.802}
+\CommentTok{#> 56          30      116 0.802}
+\CommentTok{#> 57          31      115 0.801}
+\CommentTok{#> 58          31      115 0.801}
+\CommentTok{#> 59          32      115 0.803}
+\CommentTok{#> 60          32      115 0.803}
+\CommentTok{#> 61          33      114 0.801}
+\CommentTok{#> 62          33      114 0.801}
+\CommentTok{#> 63          34      114 0.803}
+\CommentTok{#> 64          34      114 0.803}
+\CommentTok{#> 65          35      113 0.801}
+\CommentTok{#> 66          35      113 0.801}
+\CommentTok{#> 67          36      113 0.802}
+\CommentTok{#> 68          36      113 0.802}
+\CommentTok{#> 69          37      112   0.8}
+\CommentTok{#> 70          37      112   0.8}
+\CommentTok{#> 71          38      112 0.802}
+\CommentTok{#> 72          38      112 0.802}
+\CommentTok{#> 73          39      112 0.803}
+\CommentTok{#> 74          39      112 0.803}
+\CommentTok{#> 75          40      111 0.801}
+\CommentTok{#> 76          40      111 0.801}
+\CommentTok{#> 77          41      111 0.802}
+\CommentTok{#> 78          41      111 0.802}
+\CommentTok{#> 79          42      111 0.803}
+\CommentTok{#> 80          42      111 0.803}
+\CommentTok{#> 81          43      110 0.801}
+\CommentTok{#> 82          43      110 0.801}
+\CommentTok{#> 83          44      110 0.802}
+\CommentTok{#> 84          44      110 0.802}
+\CommentTok{#> 85          45      110 0.802}
+\CommentTok{#> 86          45      110 0.802}
+\CommentTok{#> 87          46      110 0.803}
+\CommentTok{#> 88          46      110 0.803}
+\CommentTok{#> 89          47      109 0.801}
+\CommentTok{#> 90          47      109 0.801}
+\CommentTok{#> 91          48      109 0.802}
+\CommentTok{#> 92          48      109 0.802}
+\CommentTok{#> 93          49      109 0.802}
+\CommentTok{#> 94          49      109 0.802}
+\CommentTok{#> 95          50      109 0.803}
+\CommentTok{#> 96          50      109 0.803}
+\CommentTok{#> 97          51      108   0.8}
+\CommentTok{#> 98          51      108   0.8}
+\CommentTok{#> 99          52      108 0.801}
+\CommentTok{#> 100         52      108 0.801}
+\CommentTok{#> 101         53      108 0.802}
+\CommentTok{#> 102         53      108 0.802}
+\CommentTok{#> 103         54      108 0.802}
+\CommentTok{#> 104         54      108 0.802}
+\CommentTok{#> 105         55      108 0.803}
+\CommentTok{#> 106         55      108 0.803}
+\CommentTok{#> 107         56      107   0.8}
+\CommentTok{#> 108         56      107   0.8}
+\CommentTok{#> 109         57      107 0.801}
+\CommentTok{#> 110         57      107 0.801}
+\CommentTok{#> 111         58      107 0.801}
+\CommentTok{#> 112         58      107 0.801}
+\CommentTok{#> 113         59      107 0.802}
+\CommentTok{#> 114         59      107 0.802}
+\CommentTok{#> 115         60      107 0.802}
+\CommentTok{#> 116         60      107 0.802}
+\CommentTok{#> 117         61      107 0.803}
+\CommentTok{#> 118         61      107 0.803}
+\CommentTok{#> 119         62      107 0.803}
+\CommentTok{#> 120         62      107 0.803}
+\CommentTok{#> 121         63      106   0.8}
+\CommentTok{#> 122         63      106   0.8}
+\CommentTok{#> 123         64      106 0.801}
+\CommentTok{#> 124         64      106 0.801}
+\CommentTok{#> 125         65      106 0.801}
+\CommentTok{#> 126         65      106 0.801}
+\CommentTok{#> 127         66      106 0.802}
+\CommentTok{#> 128         66      106 0.802}
+\CommentTok{#> 129         67      106 0.802}
+\CommentTok{#> 130         67      106 0.802}
+\CommentTok{#> 131         68      106 0.802}
+\CommentTok{#> 132         68      106 0.802}
+\CommentTok{#> 133         69      106 0.803}
+\CommentTok{#> 134         69      106 0.803}
+\CommentTok{#> 135         70      106 0.803}
+\CommentTok{#> 136         70      106 0.803}
+\CommentTok{#> 137         71      106 0.804}
+\CommentTok{#> 138         71      106 0.804}
+\CommentTok{#> 139         72      105   0.8}
+\CommentTok{#> 140         72      105   0.8}
+\CommentTok{#> 141         73      105 0.801}
+\CommentTok{#> 142         73      105 0.801}
+\CommentTok{#> 143         74      105 0.801}
+\CommentTok{#> 144         74      105 0.801}
+\CommentTok{#> 145         75      105 0.801}
+\CommentTok{#> 146         75      105 0.801}
+\CommentTok{#> 147         76      105 0.802}
+\CommentTok{#> 148         76      105 0.802}
+\CommentTok{#> 149         77      105 0.802}
+\CommentTok{#> 150         77      105 0.802}
+\CommentTok{#> 151         78      105 0.802}
+\CommentTok{#> 152         78      105 0.802}
+\CommentTok{#> 153         79      105 0.803}
+\CommentTok{#> 154         79      105 0.803}
+\CommentTok{#> 155         80      105 0.803}
+\CommentTok{#> 156         80      105 0.803}
+\CommentTok{#> 157         81      105 0.803}
+\CommentTok{#> 158         81      105 0.803}
+\CommentTok{#> 159         82      105 0.803}
+\CommentTok{#> 160         82      105 0.803}
+\CommentTok{#> 161         83      104   0.8}
+\CommentTok{#> 162         83      104   0.8}
+\CommentTok{#> 163         84      104   0.8}
+\CommentTok{#> 164         84      104   0.8}
+\CommentTok{#> 165         85      104 0.801}
+\CommentTok{#> 166         85      104 0.801}
+\CommentTok{#> 167         86      104 0.801}
+\CommentTok{#> 168         86      104 0.801}
+\CommentTok{#> 169         87      104 0.801}
+\CommentTok{#> 170         87      104 0.801}
+\CommentTok{#> 171         88      104 0.801}
+\CommentTok{#> 172         88      104 0.801}
+\CommentTok{#> 173         89      104 0.802}
+\CommentTok{#> 174         89      104 0.802}
+\CommentTok{#> 175         90      104 0.802}
+\CommentTok{#> 176         90      104 0.802}
+\CommentTok{#> 177         91      104 0.802}
+\CommentTok{#> 178         91      104 0.802}
+\CommentTok{#> 179         92      104 0.802}
+\CommentTok{#> 180         92      104 0.802}
+\CommentTok{#> 181         93      104 0.802}
+\CommentTok{#> 182         93      104 0.802}
+\CommentTok{#> 183         94      104 0.803}
+\CommentTok{#> 184         94      104 0.803}
+\CommentTok{#> 185         95      104 0.803}
+\CommentTok{#> 186         95      104 0.803}
+\CommentTok{#> 187         96      104 0.803}
+\CommentTok{#> 188         96      104 0.803}
+\CommentTok{#> 189         97      104 0.803}
+\CommentTok{#> 190         97      104 0.803}
+\CommentTok{#> 191         98      104 0.804}
+\CommentTok{#> 192         98      104 0.804}
+\CommentTok{#> 193         99      104 0.804}
+\CommentTok{#> 194         99      104 0.804}
+\CommentTok{#> 195        100      103   0.8}
+\CommentTok{#> 196        100      103   0.8}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{illustration-of-sssamplesizekgivenj-using-method-dbmh}{%
+\section{\texorpdfstring{Illustration of \texttt{SsSampleSizeKGivenJ()} using \texttt{method\ =\ "DBMH"}}{Illustration of SsSampleSizeKGivenJ() using method = "DBMH"}}\label{illustration-of-sssamplesizekgivenj-using-method-dbmh}}
+
+This function illustrates how the number of cases for 10 readers, used in Vignette 2, were chosen. In all but one example the default value of the \texttt{desiredPower} argument is used, namely 0.8 (if the argument is absent, its default value is used).
+
+\hypertarget{rrrc}{%
+\subsection{RRRC}\label{rrrc}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases <-}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(ncases)}
+\CommentTok{#> 'data.frame':    1 obs. of  2 variables:}
+\CommentTok{#>  $ KRRRC    : num 163}
+\CommentTok{#>  $ powerRRRC: num 0.802}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{ncases} is a list containing the number of cases 163 and expected power 0.8015625. Compare the number of cases to the RRRC value used in vignette 2.
+
+\hypertarget{non-default-value-of-desiredpower}{%
+\subsubsection{\texorpdfstring{Non default value of \texttt{desiredPower}}{Non default value of desiredPower}}\label{non-default-value-of-desiredpower}}
+
+This is illustrated below for 90\% desired power.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases <-}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{, }\DataTypeTok{desiredPower =} \FloatTok{0.9}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(ncases)}
+\CommentTok{#> 'data.frame':    1 obs. of  2 variables:}
+\CommentTok{#>  $ KRRRC    : num 236}
+\CommentTok{#>  $ powerRRRC: num 0.9}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 236 and expected power is 0.9003501.
+
+\hypertarget{frrc}{%
+\subsection{FRRC}\label{frrc}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases <-}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"FRRC"}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(ncases)}
+\CommentTok{#> 'data.frame':    1 obs. of  2 variables:}
+\CommentTok{#>  $ KFRRC    : num 133}
+\CommentTok{#>  $ powerFRRC: num 0.801}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 133 and expected power is 0.8011167. Compare the number of cases to the FRRC value used in vignette 2.
+
+\hypertarget{rrfc}{%
+\subsection{RRFC}\label{rrfc}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases <-}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRFC"}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(ncases)}
+\CommentTok{#> 'data.frame':    1 obs. of  2 variables:}
+\CommentTok{#>  $ KRRFC    : num 53}
+\CommentTok{#>  $ powerRRFC: num 0.805}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 53 and expected power is 0.8049666. Compare the number of cases to the RRFC value used in vignette 2.
+
+\hypertarget{SSRocORHRJafroc}{%
+\chapter{ROC-ORH sample size using RJafroc}\label{SSRocORHRJafroc}}
+
+\hypertarget{introduction-9}{%
+\section{Introduction}\label{introduction-9}}
+
+The use of the functions introduced in vignette 3, but this time using the ORH method to estimate the variance components, is illustrated here. The reader should confirm that these give the same results as the corresponding ones obtained using the DBMH method. When the figure of merit is the empirical AUC, the two methods can be shown to be identical.
+
+\hypertarget{illustration-of-sspowergivenjk-using-method-orh}{%
+\section{\texorpdfstring{Illustration of \texttt{SsPowerGivenJK()} using \texttt{method\ =\ "ORH"}}{Illustration of SsPowerGivenJK() using method = "ORH"}}\label{illustration-of-sspowergivenjk-using-method-orh}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{power <-}\StringTok{ }\KeywordTok{SsPowerGivenJK}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{6}\NormalTok{, }\DataTypeTok{K =} \DecValTok{251}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The returned value is a \texttt{list} containing the expected power, the non-centrality parameter, the denominator degrees of freedom and the F-statistic (the numerator degrees of freedom is always one less than the number of treatments, i.e., unity in this example).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(power)}
+\CommentTok{#> 'data.frame':    1 obs. of  4 variables:}
+\CommentTok{#>  $ powerRRRC: num 0.801}
+\CommentTok{#>  $ ncpRRRC  : num 8.91}
+\CommentTok{#>  $ ddfHRRRC : num 16.1}
+\CommentTok{#>  $ fRRRC    : num 4.49}
+\end{Highlighting}
+\end{Shaded}
+
+Expected power is 0.8005403.
+
+\hypertarget{illustration-of-sspowertable-using-method-orh}{%
+\section{\texorpdfstring{Illustration of \texttt{SsPowerTable()} using \texttt{method\ =\ "ORH"}}{Illustration of SsPowerTable() using method = "ORH"}}\label{illustration-of-sspowertable-using-method-orh}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{powTab <-}\StringTok{ }\KeywordTok{SsPowerTable}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Now show the power table \texttt{powTab}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{powTab}
+\CommentTok{#>     numReaders numCases power}
+\CommentTok{#> 1            3    >2000  <NA>}
+\CommentTok{#> 2            3    >2000  <NA>}
+\CommentTok{#> 3            4     1089   0.8}
+\CommentTok{#> 4            4     1089   0.8}
+\CommentTok{#> 5            5      344 0.801}
+\CommentTok{#> 6            5      344 0.801}
+\CommentTok{#> 7            6      251 0.801}
+\CommentTok{#> 8            6      251 0.801}
+\CommentTok{#> 9            7      211 0.801}
+\CommentTok{#> 10           7      211 0.801}
+\CommentTok{#> 11           8      188 0.801}
+\CommentTok{#> 12           8      188 0.801}
+\CommentTok{#> 13           9      173 0.801}
+\CommentTok{#> 14           9      173 0.801}
+\CommentTok{#> 15          10      163 0.802}
+\CommentTok{#> 16          10      163 0.802}
+\CommentTok{#> 17          11      155 0.801}
+\CommentTok{#> 18          11      155 0.801}
+\CommentTok{#> 19          12      149 0.802}
+\CommentTok{#> 20          12      149 0.802}
+\CommentTok{#> 21          13      144 0.801}
+\CommentTok{#> 22          13      144 0.801}
+\CommentTok{#> 23          14      140 0.802}
+\CommentTok{#> 24          14      140 0.802}
+\CommentTok{#> 25          15      137 0.802}
+\CommentTok{#> 26          15      137 0.802}
+\CommentTok{#> 27          16      134 0.802}
+\CommentTok{#> 28          16      134 0.802}
+\CommentTok{#> 29          17      131 0.801}
+\CommentTok{#> 30          17      131 0.801}
+\CommentTok{#> 31          18      129 0.801}
+\CommentTok{#> 32          18      129 0.801}
+\CommentTok{#> 33          19      127 0.801}
+\CommentTok{#> 34          19      127 0.801}
+\CommentTok{#> 35          20      126 0.802}
+\CommentTok{#> 36          20      126 0.802}
+\CommentTok{#> 37          21      124 0.801}
+\CommentTok{#> 38          21      124 0.801}
+\CommentTok{#> 39          22      123 0.802}
+\CommentTok{#> 40          22      123 0.802}
+\CommentTok{#> 41          23      122 0.802}
+\CommentTok{#> 42          23      122 0.802}
+\CommentTok{#> 43          24      121 0.803}
+\CommentTok{#> 44          24      121 0.803}
+\CommentTok{#> 45          25      120 0.802}
+\CommentTok{#> 46          25      120 0.802}
+\CommentTok{#> 47          26      119 0.802}
+\CommentTok{#> 48          26      119 0.802}
+\CommentTok{#> 49          27      118 0.802}
+\CommentTok{#> 50          27      118 0.802}
+\CommentTok{#> 51          28      117 0.801}
+\CommentTok{#> 52          28      117 0.801}
+\CommentTok{#> 53          29      117 0.803}
+\CommentTok{#> 54          29      117 0.803}
+\CommentTok{#> 55          30      116 0.802}
+\CommentTok{#> 56          30      116 0.802}
+\CommentTok{#> 57          31      115 0.801}
+\CommentTok{#> 58          31      115 0.801}
+\CommentTok{#> 59          32      115 0.803}
+\CommentTok{#> 60          32      115 0.803}
+\CommentTok{#> 61          33      114 0.801}
+\CommentTok{#> 62          33      114 0.801}
+\CommentTok{#> 63          34      114 0.803}
+\CommentTok{#> 64          34      114 0.803}
+\CommentTok{#> 65          35      113 0.801}
+\CommentTok{#> 66          35      113 0.801}
+\CommentTok{#> 67          36      113 0.802}
+\CommentTok{#> 68          36      113 0.802}
+\CommentTok{#> 69          37      112   0.8}
+\CommentTok{#> 70          37      112   0.8}
+\CommentTok{#> 71          38      112 0.802}
+\CommentTok{#> 72          38      112 0.802}
+\CommentTok{#> 73          39      112 0.803}
+\CommentTok{#> 74          39      112 0.803}
+\CommentTok{#> 75          40      111 0.801}
+\CommentTok{#> 76          40      111 0.801}
+\CommentTok{#> 77          41      111 0.802}
+\CommentTok{#> 78          41      111 0.802}
+\CommentTok{#> 79          42      111 0.803}
+\CommentTok{#> 80          42      111 0.803}
+\CommentTok{#> 81          43      110 0.801}
+\CommentTok{#> 82          43      110 0.801}
+\CommentTok{#> 83          44      110 0.802}
+\CommentTok{#> 84          44      110 0.802}
+\CommentTok{#> 85          45      110 0.802}
+\CommentTok{#> 86          45      110 0.802}
+\CommentTok{#> 87          46      110 0.803}
+\CommentTok{#> 88          46      110 0.803}
+\CommentTok{#> 89          47      109 0.801}
+\CommentTok{#> 90          47      109 0.801}
+\CommentTok{#> 91          48      109 0.802}
+\CommentTok{#> 92          48      109 0.802}
+\CommentTok{#> 93          49      109 0.802}
+\CommentTok{#> 94          49      109 0.802}
+\CommentTok{#> 95          50      109 0.803}
+\CommentTok{#> 96          50      109 0.803}
+\CommentTok{#> 97          51      108   0.8}
+\CommentTok{#> 98          51      108   0.8}
+\CommentTok{#> 99          52      108 0.801}
+\CommentTok{#> 100         52      108 0.801}
+\CommentTok{#> 101         53      108 0.802}
+\CommentTok{#> 102         53      108 0.802}
+\CommentTok{#> 103         54      108 0.802}
+\CommentTok{#> 104         54      108 0.802}
+\CommentTok{#> 105         55      108 0.803}
+\CommentTok{#> 106         55      108 0.803}
+\CommentTok{#> 107         56      107   0.8}
+\CommentTok{#> 108         56      107   0.8}
+\CommentTok{#> 109         57      107 0.801}
+\CommentTok{#> 110         57      107 0.801}
+\CommentTok{#> 111         58      107 0.801}
+\CommentTok{#> 112         58      107 0.801}
+\CommentTok{#> 113         59      107 0.802}
+\CommentTok{#> 114         59      107 0.802}
+\CommentTok{#> 115         60      107 0.802}
+\CommentTok{#> 116         60      107 0.802}
+\CommentTok{#> 117         61      107 0.803}
+\CommentTok{#> 118         61      107 0.803}
+\CommentTok{#> 119         62      107 0.803}
+\CommentTok{#> 120         62      107 0.803}
+\CommentTok{#> 121         63      106   0.8}
+\CommentTok{#> 122         63      106   0.8}
+\CommentTok{#> 123         64      106 0.801}
+\CommentTok{#> 124         64      106 0.801}
+\CommentTok{#> 125         65      106 0.801}
+\CommentTok{#> 126         65      106 0.801}
+\CommentTok{#> 127         66      106 0.802}
+\CommentTok{#> 128         66      106 0.802}
+\CommentTok{#> 129         67      106 0.802}
+\CommentTok{#> 130         67      106 0.802}
+\CommentTok{#> 131         68      106 0.802}
+\CommentTok{#> 132         68      106 0.802}
+\CommentTok{#> 133         69      106 0.803}
+\CommentTok{#> 134         69      106 0.803}
+\CommentTok{#> 135         70      106 0.803}
+\CommentTok{#> 136         70      106 0.803}
+\CommentTok{#> 137         71      106 0.804}
+\CommentTok{#> 138         71      106 0.804}
+\CommentTok{#> 139         72      105   0.8}
+\CommentTok{#> 140         72      105   0.8}
+\CommentTok{#> 141         73      105 0.801}
+\CommentTok{#> 142         73      105 0.801}
+\CommentTok{#> 143         74      105 0.801}
+\CommentTok{#> 144         74      105 0.801}
+\CommentTok{#> 145         75      105 0.801}
+\CommentTok{#> 146         75      105 0.801}
+\CommentTok{#> 147         76      105 0.802}
+\CommentTok{#> 148         76      105 0.802}
+\CommentTok{#> 149         77      105 0.802}
+\CommentTok{#> 150         77      105 0.802}
+\CommentTok{#> 151         78      105 0.802}
+\CommentTok{#> 152         78      105 0.802}
+\CommentTok{#> 153         79      105 0.803}
+\CommentTok{#> 154         79      105 0.803}
+\CommentTok{#> 155         80      105 0.803}
+\CommentTok{#> 156         80      105 0.803}
+\CommentTok{#> 157         81      105 0.803}
+\CommentTok{#> 158         81      105 0.803}
+\CommentTok{#> 159         82      105 0.803}
+\CommentTok{#> 160         82      105 0.803}
+\CommentTok{#> 161         83      104   0.8}
+\CommentTok{#> 162         83      104   0.8}
+\CommentTok{#> 163         84      104   0.8}
+\CommentTok{#> 164         84      104   0.8}
+\CommentTok{#> 165         85      104 0.801}
+\CommentTok{#> 166         85      104 0.801}
+\CommentTok{#> 167         86      104 0.801}
+\CommentTok{#> 168         86      104 0.801}
+\CommentTok{#> 169         87      104 0.801}
+\CommentTok{#> 170         87      104 0.801}
+\CommentTok{#> 171         88      104 0.801}
+\CommentTok{#> 172         88      104 0.801}
+\CommentTok{#> 173         89      104 0.802}
+\CommentTok{#> 174         89      104 0.802}
+\CommentTok{#> 175         90      104 0.802}
+\CommentTok{#> 176         90      104 0.802}
+\CommentTok{#> 177         91      104 0.802}
+\CommentTok{#> 178         91      104 0.802}
+\CommentTok{#> 179         92      104 0.802}
+\CommentTok{#> 180         92      104 0.802}
+\CommentTok{#> 181         93      104 0.802}
+\CommentTok{#> 182         93      104 0.802}
+\CommentTok{#> 183         94      104 0.803}
+\CommentTok{#> 184         94      104 0.803}
+\CommentTok{#> 185         95      104 0.803}
+\CommentTok{#> 186         95      104 0.803}
+\CommentTok{#> 187         96      104 0.803}
+\CommentTok{#> 188         96      104 0.803}
+\CommentTok{#> 189         97      104 0.803}
+\CommentTok{#> 190         97      104 0.803}
+\CommentTok{#> 191         98      104 0.804}
+\CommentTok{#> 192         98      104 0.804}
+\CommentTok{#> 193         99      104 0.804}
+\CommentTok{#> 194         99      104 0.804}
+\CommentTok{#> 195        100      103   0.8}
+\CommentTok{#> 196        100      103   0.8}
+\end{Highlighting}
+\end{Shaded}
+
+Since the default \texttt{FOM\ =\ "Wilcoxon"}, the table is identical to that generated in vignette 3, which used \texttt{method\ =\ "DBMH"}.
+
+\hypertarget{illustrations-of-sssamplesizekgivenj-using-method-orh}{%
+\section{\texorpdfstring{Illustrations of \texttt{SsSampleSizeKGivenJ()} using \texttt{method\ =\ "ORH"}}{Illustrations of SsSampleSizeKGivenJ() using method = "ORH"}}\label{illustrations-of-sssamplesizekgivenj-using-method-orh}}
+
+\hypertarget{for-rrrc-generalization}{%
+\subsection{For RRRC generalization}\label{for-rrrc-generalization}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases <-}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{ncases} is a list containing the number of cases \texttt{ncases\$KRRRC} and expected power \texttt{ncases\$powerRRRC}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(ncases)}
+\CommentTok{#> 'data.frame':    1 obs. of  2 variables:}
+\CommentTok{#>  $ KRRRC    : num 163}
+\CommentTok{#>  $ powerRRRC: num 0.802}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 163 and expected power is 0.8015625.
+
+\hypertarget{for-frrc-generalization}{%
+\subsection{For FRRC generalization}\label{for-frrc-generalization}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases <-}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"FRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 133 and expected power is 0.8011167.
+
+\hypertarget{for-rrfc-generalization}{%
+\subsection{For RRFC generalization}\label{for-rrfc-generalization}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases <-}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRFC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 53 and expected power is 0.8049666.
+
+\hypertarget{SSJafrocEffectSize}{%
+\chapter{Choosing a realistic effect size}\label{SSJafrocEffectSize}}
+
+\hypertarget{introduction-10}{%
+\section{Introduction}\label{introduction-10}}
+
+\begin{itemize}
+\item
+  The value of the true \texttt{FOM} difference between the treatments, i.e., the true effect-size (ES) is, of course, unknown. If it were known, there would be no need to conduct an ROC study. One would simply adopt the treatment with the higher \texttt{FOM}. Sample-size estimation involves making an educated guess regarding the ES, called the \emph{anticipated} ES, and denoted by \texttt{d}. To quote \citep{RN1983}: ``any calculation of power amounts to specification of the anticipated effect-size''. Increasing the anticipated ES will increase statistical power but may represent an unrealistic expectation of the true difference between the treatments, in the sense that it overestimates the ability of technology to achieve this much improvement. An unduly small might be clinically insignificant, besides requiring a very large sample-size to achieve sufficient power.
+\item
+  There is a key difference between \emph{statistical} significance and \emph{clinical} significance. An effect-size in AUC units could be so small, e.g., 0.001, as to be clinically insignificant, but by employing a sufficiently large sample size one could design a study to detect this small and clinically meaningless difference with high probability, i.e., high statistical power.
+\item
+  What determines clinical significance? A small effect-size, e.g., 0.01 AUC units, could be clinically significant if it applies to a large population, where the small benefit in detection rate is amplified by the number of patients benefiting from the new treatment. In contrast, for an ``orphan'' disease, i.e., one with very low prevalence, an effect-size of 0.05 might not be enough to justify the additional cost of the new treatment. The improvement might have to be 0.1 before it is worth it for a new treatment to be brought to market. One hates to monetize life and death issues, but there is no getting away from it, as cost/benefit issues determine clinical significance. The arbiters of clinical significance are engineers, imaging scientists, clinicians, epidemiologists, insurance companies and those who set government health care policies. The engineers and imaging scientists determine whether the effect-size the clinicians would like is feasible from technical and scientific viewpoints. The clinician determines, based on incidence of disease and other considerations, e.g., altruistic, malpractice, cost of the new device and insurance reimbursement, what effect-size is justifiable. Cohen has suggested that d values of 0.2, 0.5, and 0.8 be considered small, medium, and large, respectively, but he has also argued against their indiscriminate usage. However, after a study is completed, clinicians often find that an effect-size that biostatisticians label as small may, in certain circumstances, be clinically significant and an effect-size that they label as large may in other circumstances be clinically insignificant. Clearly, this is a complex issue. Some suggestions on choosing a clinically significant effect size are made in \textbf{Chapter 11}.
+\item
+  Does one even need to perform a pivotal study? If the pilot study returns a significant difference, one has rejected the NH and that is all there is to it. There is no need to perform the pivotal study, unless one ``tweaks'' the new treatment and/or casts a wider sampling net to make a stronger argument, perhaps to the FDA, that the treatments are indeed generalizable, and that the difference is in the right direction (new treatment FOM \textgreater{} conventional treatment FOM). If a significant difference is observed in the opposite direction (e.g., new treatment FOM \textless{} conventional treatment FOM) one cannot justify a pivotal study with an expected effect-size in the ``other or favored'' direction; see example below. Since the Van Dyke pilot study came close to rejecting the NH and the observed effect size, see below, is not too small, a pivotal study is justified.
+\item
+  This vignette discusses choosing a realistic effect size based on the pilot study. Illustrated first is using Van Dyke dataset, regarded as the pilot study.
+\end{itemize}
+
+\hypertarget{illustration-of-sspowergivenjk-using-method-orh-1}{%
+\section{\texorpdfstring{Illustration of \texttt{SsPowerGivenJK()} using \texttt{method\ =\ "ORH"}}{Illustration of SsPowerGivenJK() using method = "ORH"}}\label{illustration-of-sspowergivenjk-using-method-orh-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rocData <-}\StringTok{ }\NormalTok{dataset02 }\CommentTok{##"VanDyke.lrc"}
+\CommentTok{#fileName <- dataset03 ## "Franken1.lrc"}
+\NormalTok{retDbm <-}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(}\DataTypeTok{dataset =}\NormalTok{ rocData, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(retDbm}\OperatorTok{$}\NormalTok{ciDiffTrtRRRC)}
+\CommentTok{#> 'data.frame':    1 obs. of  8 variables:}
+\CommentTok{#>  $ TrtDiff : chr "Trt0-Trt1"}
+\CommentTok{#>  $ Estimate: num -0.0438}
+\CommentTok{#>  $ StdErr  : num 0.0207}
+\CommentTok{#>  $ DF      : num 15.3}
+\CommentTok{#>  $ t       : num -2.11}
+\CommentTok{#>  $ PrGTt   : num 0.0517}
+\CommentTok{#>  $ CILower : num -0.088}
+\CommentTok{#>  $ CIUpper : num 0.000359}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  Lacking any other information, the observed effect-size is the best estimate of the effect-size to be anticipated. The output shows that the FOM difference, for treatment 0 minus treatment 1, is -0.0438003. In the actual study treatment \texttt{1} is the new modality which hopes to improve upon \texttt{0}, the conventional modality. Since the sign is negative, the difference is going the right way and is justified in moving forward with planning a pivotal study. {[}If the difference went the other way, there is little justification for a pivotal study{]}.
+\item
+  The standard error of the difference is 0.0207486.
+\item
+  An optimistic, but not unduly so, effect size is given by:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{effectSizeOpt <-}\StringTok{ }\KeywordTok{abs}\NormalTok{(retDbm}\OperatorTok{$}\NormalTok{ciDiffTrtRRRC}\OperatorTok{$}\NormalTok{Estimate) }\OperatorTok{+}\StringTok{ }\DecValTok{2}\OperatorTok{*}\NormalTok{retDbm}\OperatorTok{$}\NormalTok{ciDiffTrtRRRC}\OperatorTok{$}\NormalTok{StdErr}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  The observed effect-size is a realization of a random variable. The lower limit of the 95\% confidence interval is given by -0.0879595 and the upper limit by \ensuremath{3.5885444\times 10^{-4}}. CI's generated like this, with independent sets of data, are expected to encompass the true value with 95\% probability. The lower end (greatest magnitude of the difference) of the confidence interval is -0.0852976, and this is the optimistic estimate. Since the sign is immaterial, one uses as the optimistic estimate the value 0.0852976.
+\item
+  \textbf{While the sign is immaterial for sample size estimates, the decision to conduct the pivotal most certainly is material. If the sign went the other way, with the new modality lower than the conventional modality, one would be unjustified in conducting a pivotal study.}
+\end{itemize}
+
+\hypertarget{references-8}{%
+\section{References}\label{references-8}}
 
 \hypertarget{SimufrocSpdataset}{%
 \chapter{Simulate an FROC split plot dataset}\label{SimufrocSpdataset}}
@@ -2041,8 +4038,8 @@ The example shown below begins with the Excel file \texttt{inst/extdata/FrocData
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{references-5}{%
-\section{References}\label{references-5}}
+\hypertarget{references-9}{%
+\section{References}\label{references-9}}
 
 \bibliography{packages.bib,myRefs.bib}
 
