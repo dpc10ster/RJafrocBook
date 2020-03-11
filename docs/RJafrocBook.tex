@@ -168,6 +168,9 @@
   TBA
 \end{itemize}
 
+\hypertarget{references}{%
+\section{References}\label{references}}
+
 \hypertarget{rocdataformat}{%
 \chapter{ROC data format}\label{rocdataformat}}
 
@@ -499,6 +502,9 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 \CommentTok{#> numeric(0)}
 \end{Highlighting}
 \end{Shaded}
+
+\hypertarget{references-1}{%
+\section{References}\label{references-1}}
 
 \hypertarget{frocdataformat}{%
 \chapter{FROC data format}\label{frocdataformat}}
@@ -1044,6 +1050,9 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
   The length of the fourth dimension of \texttt{x\$LL} is determined by the diseased case with the most lesions, 3 in the current example.
 \end{itemize}
 
+\hypertarget{references-2}{%
+\section{References}\label{references-2}}
+
 \hypertarget{rocSpdataformat}{%
 \chapter{ROC split plot data format}\label{rocSpdataformat}}
 
@@ -1439,6 +1448,9 @@ The \texttt{Truth} worksheet contains 6 columns: \texttt{CaseID}, \texttt{Lesion
   The length of the fourth dimension of \texttt{x\$LL} is determined by the diseased case with the most lesions, 3 in the current example.
 \end{itemize}
 
+\hypertarget{references-3}{%
+\section{References}\label{references-3}}
+
 \hypertarget{frocSpdataformat}{%
 \chapter{FROC split plot data format}\label{frocSpdataformat}}
 
@@ -1730,6 +1742,307 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 \item
   TBA
 \end{itemize}
+
+\hypertarget{references-4}{%
+\section{References}\label{references-4}}
+
+\hypertarget{SimufrocSpdataset}{%
+\chapter{Simulate an FROC split plot dataset}\label{SimufrocSpdataset}}
+
+\hypertarget{this-vignette-is-under-construction}{%
+\section{This vignette is under construction!!}\label{this-vignette-is-under-construction}}
+
+\begin{itemize}
+\tightlist
+\item
+  This is a follow-up on the recently added (v1.3.1) capability to read a split-plot dataset.
+\item
+  Lacking an actual split-plot dataset to test the routines, I decided to simulate one.
+\item
+  The simulated dataset is of dataType FROC and the number of cases interpreted by each reader is reader-dependent.
+\item
+  This makes it \emph{really} exercise the validity of the \texttt{DfReadDataFile} function.
+\item
+  In my experience, the \texttt{dataset\$truthTableStr} member is invaluable in catching data entry errors so much of this vignette focuses on it.
+\end{itemize}
+
+\hypertarget{the-starting-point-is-an-actual-crossed-froc-dataset}{%
+\section{The starting point is an actual crossed FROC dataset}\label{the-starting-point-is-an-actual-crossed-froc-dataset}}
+
+The example shown below begins with the Excel file \texttt{inst/extdata/FrocData.xlsx} in the project directory (this corresponds to the 5-modality FED dataset \texttt{dataseet04} \citep{RN1882} with modalities 1, 2 and 3 removed). The first statement retrieves the name of the data file, located in a hidden directory that one need not be concerned with. The second statement reads the file using \texttt{DfReadDataFile()} and saves it to object \texttt{x1}. The next statement extracts the \texttt{truthTableStr} list member, saves it to \texttt{t1} and shows its structure.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fed <-}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\StringTok{"extdata"}\NormalTok{, }\StringTok{"FrocData.xlsx"}\NormalTok{,}
+                       \DataTypeTok{package =} \StringTok{"RJafroc"}\NormalTok{, }\DataTypeTok{mustWork =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{x1 <-}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(fed, }\DataTypeTok{newExcelFileFormat =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{t1 <-}\StringTok{ }\NormalTok{x1}\OperatorTok{$}\NormalTok{truthTableStr}
+\KeywordTok{str}\NormalTok{(t1)}
+\CommentTok{#>  num [1:2, 1:4, 1:200, 1:4] 1 1 1 1 1 1 1 1 1 1 ...}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  There are 100 normal and 100 abnormal cases in this two-modality four-reader crossed dataset.
+\item
+  Note that \texttt{t1} is the original crossed dataset \texttt{truthTableStr}.
+\item
+  Recall from earlier vignette that for the fourth subscript of \texttt{t1} the value 1 applies to cases with no lesions (normals), value 2 applies to cases with one lesion, value 3 applies to cases with two lesions and 4 applies to cases with three lesions.
+\item
+  The value for any allowed interpretation is 1 and otherwise it is \texttt{NA}.
+\end{itemize}
+
+\hypertarget{understanding-truthtablestr-object-t1}{%
+\section{\texorpdfstring{Understanding \texttt{truthTableStr} object \texttt{t1}}{Understanding truthTableStr object t1}}\label{understanding-truthtablestr-object-t1}}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line yields 200 (=2*100) as reader 1 (second subscript) provides interpretations in both modalities (first subscript is blank meaning both modalities) for all 100 normal cases (third subscript is 1:100 and fourth subscript is 1) and therefore each of these interpretations yields a \texttt{TRUE} (i.e., 1).
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t1[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{100}\NormalTok{,}\DecValTok{1}\NormalTok{]))}
+\CommentTok{#> [1] 200}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line yields 0 as the third subscript is 1:100, implying normal cases, but the fourth subscript is 2:4, implyng abnormal cases and therefore each of these interpretations yields an NA and \texttt{!is.na(NA)} equals \texttt{FALSE} (i.e., zero).
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t1[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{100}\NormalTok{,}\DecValTok{2}\OperatorTok{:}\DecValTok{4}\NormalTok{]))}
+\CommentTok{#> [1] 0}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line also yields 800 (=2x4x100) as readers 1:4 provide interpretations in both modalities for all normal cases and each interpretation yields a 1.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t1[,,}\DecValTok{1}\OperatorTok{:}\DecValTok{100}\NormalTok{,}\DecValTok{1}\NormalTok{]))}
+\CommentTok{#> [1] 800}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line yields 200 (=2*100) because the fourth subscript (2) applies to abnormal cases with at least one lesion, and each abnormal case is guaranteed to have at least one lesion (i.e., a 1 entry in the \texttt{LesionID} column of the Excel Truth worksheet) and each of these interpretations yields a 1.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t1[,}\DecValTok{1}\NormalTok{,}\DecValTok{101}\OperatorTok{:}\DecValTok{200}\NormalTok{,}\DecValTok{2}\NormalTok{]))}
+\CommentTok{#> [1] 200}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line yields 62 (=2x31) because the fourth subscript (3) applies to abnormal cases with at least two lesions, and inspection of the \texttt{LesionID} column in the original Excel file reveals that 31 abnormal cases have two lesions.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t1[,}\DecValTok{1}\NormalTok{,}\DecValTok{101}\OperatorTok{:}\DecValTok{200}\NormalTok{,}\DecValTok{3}\NormalTok{]))}
+\CommentTok{#> [1] 62}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line yields 22 (=2x11) because the fourth subscript (4) applies to abnormal cases with three lesions. Inspection of the \texttt{LesionID} column reveals that 11 abnormal cases have three lesions.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t1[,}\DecValTok{1}\NormalTok{,}\DecValTok{101}\OperatorTok{:}\DecValTok{200}\NormalTok{,}\DecValTok{4}\NormalTok{]))}
+\CommentTok{#> [1] 22}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line yields 242 (=200+31+11), the number of rows in the \texttt{Truth} worksheet.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t1[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,]))}
+\CommentTok{#> [1] 242}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{modify-a-crossed-froc-workbook-to-simulate-a-split-plot-froc-design}{%
+\section{Modify a crossed FROC workbook to simulate a split-plot FROC design}\label{modify-a-crossed-froc-workbook-to-simulate-a-split-plot-froc-design}}
+
+\begin{itemize}
+\tightlist
+\item
+  We create a simulated split-plot FROC dataset starting from a crossed FROC dataset.
+\item
+  The basic idea is to modify interpretations that do not belong to a specified split-plot design.
+\item
+  This was done (one could say the ``hard way'') by manually making apppropriate changes to \texttt{inst/extdata/FrocData.xlsx} and saving the results to \texttt{inst/extdata/toyFiles/FROC/FrocDataSpVaryK1K2.xlsx}. The filename is intended to emphasize that the numbers of normal and abnormal cases can be reader-dependent, as long as they individually add up to 100.
+\item
+  We divided the 100 normal and 100 abnormal cases into 4 groups of normal and abnormal cases, where each group is interpreted by one reader only.
+\item
+  The first groups of cases, interpreted by reader 1 (label ``1''), consists of 23 normal (case labels ``100:122'') and 24 abnormal (case labels ``0:23'') cases.
+\item
+  The second groups of cases, interpreted by reader 2 (label ``3''), consists of 27 normal (case labels ``123:149'') and 26 abnormal (case labels ``24:49'') cases.
+\item
+  The third groups of cases, interpreted by reader 3 (label ``4''), consists of 22 normal (case labels ``150:171'') and 23 abnormal (case labels ``51:73'') cases.
+\item
+  The fourth groups of cases, interpreted by reader 4 (label ``5''), consists of 28 normal (case labels ``172:199'') and 27 abnormal (case labels c(``50,74:99'')) cases.
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocData} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocDataSpVaryK1K2} 
+
+}
+
+\caption{Truth worksheets; (a) LEFT=FrocData.xlsx, original crossed dataset; (b) RIGHT=FrocDataSpVaryK1K2.xlsx, modified split-plot dataset}\label{fig:frocDataSpVaryK1K2}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  The above figure shows that the \texttt{ReaderID} column for cases \texttt{0:23} has been replaced with a 1, meaning that only reader 1 interprets these cases in both modalities. This yields 24 abnormal cases for reader 1 in each modality. Normal cases for this reader are \texttt{100:122}.
+\item
+  Not shown above: \textbf{all interpretations by reader 1 occurring for cases outside of \texttt{0:23} and \texttt{100:122} in the other two worksheets (\texttt{TP} and \texttt{FP}) are deleted}.
+\item
+  The \texttt{ReaderID} column for cases \texttt{24:49} are replaced by 3, corresponding to the second reader. All interpretations by this reader for cases outside of \texttt{24:49} in the other two worksheets are deleted. Normal cases for this reader are \texttt{123:149} and observations outside of this range in the \texttt{TP} and \texttt{FP} worsheets are deleted.
+\item
+  The \texttt{ReaderID} column for cases \texttt{51:73} are replaced by 4, corresponding to the third reader. All interpretations by this reader for cases outside of \texttt{51:73} in the other two worksheets are deleted. Normal cases for this reader are \texttt{150:171} and observations outside of this range in the \texttt{TP} and \texttt{FP} worsheets are deleted.
+\item
+  The \texttt{ReaderID} column for cases \texttt{50} and \texttt{74:79} are replaced by 5, corresponding to the fourth reader. All interpretations by this reader for cases outside of the specified range in the other two worksheets are deleted. Normal cases for this reader are \texttt{172:199} and observations outside of this range in the \texttt{TP} and \texttt{FP} worsheets are deleted.
+\item
+  The modified file is read by the code chunk below. The read function explicitly tests that observations outside of the specified ranges in the \texttt{Truth} sheet are not present in the other two worksheets.
+\end{itemize}
+
+\hypertarget{example-of-deletion-of-interpretations}{%
+\section{Example of deletion of interpretations}\label{example-of-deletion-of-interpretations}}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocDataFP} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocDataSpVaryK1K2FP} 
+
+}
+
+\caption{FP worksheets; (a) LEFT=FrocDataFP.xlsx, original crossed dataset; (b) RIGHT=FrocDataSpVaryK1K2FP.xlsx, modified split-plot dataset}\label{fig:frocDataSpVaryK1K2FP}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  The two figures above illustrate deletion of interpretations.
+\item
+  The left panel shows the \texttt{FP} worksheet for the original crossed data.
+\item
+  For reader 1 and modality 4 it contains cases 29, 30, 44, \ldots{}, 91, 96 that do not belong to the split-plot dataset for this reader.
+\item
+  Specifically, they are outside of \texttt{0:23} and \texttt{100:122}, the allowed ranges for this reader.
+\item
+  These are deleted, see right panel of above figure. The next allowed cases for this reader are \texttt{107,\ 109,....,\ 122}.
+\item
+  The procedure is repeated for all readers and both \texttt{TP} and \texttt{FP} sheets.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fedsp <-}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\StringTok{"extdata"}\NormalTok{, }\StringTok{"toyFiles/FROC/FrocDataSpVaryK1K2.xlsx"}\NormalTok{,}
+                       \DataTypeTok{package =} \StringTok{"RJafroc"}\NormalTok{, }\DataTypeTok{mustWork =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{x2 <-}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(fedsp, }\DataTypeTok{newExcelFileFormat =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{t2 <-}\StringTok{ }\NormalTok{x2}\OperatorTok{$}\NormalTok{truthTableStr}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{understanding-truthtablestr-object-t2}{%
+\section{\texorpdfstring{Understanding \texttt{truthTableStr} object \texttt{t2}}{Understanding truthTableStr object t2}}\label{understanding-truthtablestr-object-t2}}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line below yields 46 (= 2x23) as reader 1 (second subscript) provides interpretations in both modalities (first subscript is blank) for all normal cases (third subscript is 1:100 and fourth subscript is 1) and there are 23 normal cases interpreted by reader 1.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t2[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{100}\NormalTok{,}\DecValTok{1}\NormalTok{]))}
+\CommentTok{#> [1] 46}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line confirms the first line, with a 1 contribution coming from each case in range 1:23.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t2[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{23}\NormalTok{,}\DecValTok{1}\NormalTok{]))}
+\CommentTok{#> [1] 46}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line yields 48 (= 2x24) because the fourth subscript (2) applies to abnormal cases with at least one lesion, and we know that this reader has interpreted 24 abnormal cases.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t2[,}\DecValTok{1}\NormalTok{,}\DecValTok{101}\OperatorTok{:}\DecValTok{124}\NormalTok{,}\DecValTok{2}\NormalTok{]))}
+\CommentTok{#> [1] 48}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line yields 54 (= 2x27) because the fourth subscript (1) applies to normal cases and we know that reader 2 has interpreted 27 normal cases.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t2[,}\DecValTok{2}\NormalTok{,,}\DecValTok{1}\NormalTok{]))}
+\CommentTok{#> [1] 54}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The following line yields 52 (= 2x26) because the fourth subscript (2:4) applies to abnormal cases with at least one lesion, and we know that reader 2 has interpreted 26 abnormal cases.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(t2[,}\DecValTok{2}\NormalTok{,,}\DecValTok{2}\OperatorTok{:}\DecValTok{4}\NormalTok{]))}
+\CommentTok{#> [1] 52}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{references-5}{%
+\section{References}\label{references-5}}
 
 \bibliography{packages.bib,myRefs.bib}
 
