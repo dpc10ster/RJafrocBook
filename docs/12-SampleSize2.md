@@ -42,7 +42,7 @@ The sampling distribution of the F-statistic under the AH is:
 
 Also, 
 
-\[\sigma _{Y;\tau }^{2}={{d}^{2}}/2\]
+TBA
 
 where `d` is the observed effect size, i.e., `effectSize`. The formulae for calculating the mean-squares are in [@RN1476], implemented in `UtilMeanSquares()`.
 
