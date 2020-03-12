@@ -1,5 +1,3 @@
-# (PART\*) ROC SPLIT PLOT {-}
-
 # ROC split plot data format {#rocSpdataformat}
 
 

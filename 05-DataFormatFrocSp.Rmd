@@ -1,5 +1,3 @@
-# (PART\*) SPLIT-PLOT DATASETS {-}
-
 # FROC ROC DATA FORMAT SPLIT PLOT {#frocSpdataformat}
 
 

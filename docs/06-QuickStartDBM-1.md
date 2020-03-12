@@ -1,5 +1,3 @@
-# (PART\*) QUICK START {-}
-
 # QUICK START DBM1 {#QuickStartDBM1}
 
 

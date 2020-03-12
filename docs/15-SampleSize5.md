@@ -2,6 +2,8 @@
 
 
 
+
+
 ## Introduction
 * The value of the true `FOM` difference between the treatments, i.e., the true effect-size (ES) is, of course, unknown. If it were known, there would be no need to conduct an ROC study. One would simply adopt the treatment with the higher `FOM`. Sample-size estimation involves making an educated guess regarding the ES, called the *anticipated* ES, and denoted by `d`. To quote [@RN1983]: "any calculation of power amounts to specification of the anticipated effect-size". Increasing the anticipated ES  will increase statistical power but may represent an unrealistic expectation of the true difference between the treatments, in the sense that it overestimates the ability of technology to achieve this much improvement. An unduly small  might be clinically insignificant, besides requiring a very large sample-size to achieve sufficient power.
 
