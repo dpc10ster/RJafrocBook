@@ -21,7 +21,7 @@ The use of three `R` functions is demonstrated.
 
 ## Effect of `ncp` for `ndf` = 2 and `ddf` = 10
 * Four values of `ncp` are considered  (0, 2, 5, 10) for `ddf` = 10. 
-* `fCrit` is the critical value of the F distribution, i.e., that value such that fraction $\alpha$ of the area is to the right of the critical value, i.e., `fCrit` is identical in statistical notation to  ${{F}_{1-\alpha ,ndf,ddf}}$.
+* `fCrit` is the critical value of the F distribution, i.e., that value such that fraction $\alpha$ of the area is to the right of the critical value.
 
 
 ```r
@@ -49,7 +49,7 @@ for (i in 1:length(ncp))
 fCrit_2_10 <- fCrit # convention fCrit_ndf_ddf
 ```
 
-<img src="11-SampleSize1_files/figure-html/unnamed-chunk-2-1.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-2-2.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-2-3.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-2-4.png" width="672" />
+![](11-SampleSize1_files/figure-epub3/unnamed-chunk-2-1.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-2-2.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-2-3.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-2-4.png)
 
 
 <table>
@@ -131,7 +131,7 @@ The larger that non-centrality parameter, the greater the shift to the right of 
 
 ## Effect of `ncp` for `ndf` = 2 and `ddf` = 100
 
-<img src="11-SampleSize1_files/figure-html/unnamed-chunk-4-1.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-4-2.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-4-3.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-4-4.png" width="672" />
+![](11-SampleSize1_files/figure-epub3/unnamed-chunk-4-1.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-4-2.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-4-3.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-4-4.png)
 
 
 <table>
@@ -240,7 +240,7 @@ The larger that non-centrality parameter, the greater the shift to the right of 
 
 ## Effect of `ncp` for `ndf` = 1, `ddf` = 100
 
-<img src="11-SampleSize1_files/figure-html/unnamed-chunk-6-1.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-6-2.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-6-3.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-6-4.png" width="672" />
+![](11-SampleSize1_files/figure-epub3/unnamed-chunk-6-1.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-6-2.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-6-3.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-6-4.png)
 
 
 <table>
