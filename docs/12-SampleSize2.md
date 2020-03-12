@@ -83,8 +83,7 @@ This code illustrates fixed reader random case sample size estimation. Assumed a
 
 The sampling distribution of the F-statistic under the AH is:
 
-\[{{F}_{\left. AH \right|R}}\equiv \frac{MST}{MSTC}\tilde{\ }{{F}_{I-1,\left( I-1 \right)\left( K-1 \right),\Delta }}\] 
-
+TBA
 
 ```r
 #FRRC
