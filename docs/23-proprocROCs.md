@@ -10,8 +10,7 @@
 ## Definitions of PROPROC parameters in terms of binormal model parameters
   
 $c=\frac{b-1}{b+1}$
-${{d}_{a}}=\frac{\sqrt{2}a}{\sqrt{1+{{b}^{2}}}}$ 
-
+${d_a}=\frac{\sqrt{2}a}{\sqrt{1+{b^{2}}}}$ 
 
 ## Main code and output
   
