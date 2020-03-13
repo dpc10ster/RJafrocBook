@@ -39,6 +39,7 @@ For example, the treatment-reader pseudovalue variance component is the third el
 
 The sampling distribution of the F-statistic under the AH is:
 
+TBA
 
 Also, 
 
@@ -85,6 +86,7 @@ The sampling distribution of the F-statistic under the AH is:
 
 TBA
 
+
 ```r
 #FRRC
 ncp <- (0.5*J*K*(effectSize)^2)/(max(J*varYTC,0)+varYEps)
@@ -103,6 +105,7 @@ This code illustrates random reader random case sample size estimation. Assumed 
 The sampling distribution of the F-statistic under the AH is:
 
 TBA
+
 
 ```r
 #RRFC

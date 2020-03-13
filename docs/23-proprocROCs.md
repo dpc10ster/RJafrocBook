@@ -9,6 +9,7 @@
 
 ## Definitions of PROPROC parameters in terms of binormal model parameters
   
+$c=\frac{b-1}{b+1};{{d}_{a}}=\frac{\sqrt{2}a}{\sqrt{1+{{b}^{2}}}}$ 
 
 
 ## Main code and output
@@ -49,7 +50,7 @@ for (i in 1:2)
 }
 ```
 
-<img src="23-proprocROCs_files/figure-html/unnamed-chunk-2-1.png" width="672" /><img src="23-proprocROCs_files/figure-html/unnamed-chunk-2-2.png" width="672" /><img src="23-proprocROCs_files/figure-html/unnamed-chunk-2-3.png" width="672" /><img src="23-proprocROCs_files/figure-html/unnamed-chunk-2-4.png" width="672" />
+![](23-proprocROCs_files/figure-epub3/unnamed-chunk-2-1.png)<!-- -->![](23-proprocROCs_files/figure-epub3/unnamed-chunk-2-2.png)<!-- -->![](23-proprocROCs_files/figure-epub3/unnamed-chunk-2-3.png)<!-- -->![](23-proprocROCs_files/figure-epub3/unnamed-chunk-2-4.png)<!-- -->
 
 
 ## Discussion
