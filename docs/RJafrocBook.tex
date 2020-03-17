@@ -2545,7 +2545,7 @@ the function to create an Excel output file. The Excel output is created in a te
 \begin{Highlighting}[]
 \NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(dataset03, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
 \CommentTok{\#\textgreater{} }
-\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpkRxBJc/RJafrocUtilOutputReport48e3335feaa8.xlsx}
+\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpugyZds/RJafrocUtilOutputReport4de14d3627ed.xlsx}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2558,7 +2558,7 @@ Simply change \texttt{method\ =\ "DBMH"} (the default) to \texttt{method\ =\ "OR
 \begin{Highlighting}[]
 \NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(dataset03, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
 \CommentTok{\#\textgreater{} }
-\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpkRxBJc/RJafrocUtilOutputReport48e37d148067.xlsx}
+\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpugyZds/RJafrocUtilOutputReport4de144bc68e4.xlsx}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3061,6 +3061,629 @@ For 10 readers, the numbers of cases needed for 80\% power is largest (163) for 
 \hypertarget{references-7}{%
 \section{References}\label{references-7}}
 
+\hypertarget{SSRocDBMHRJafroc}{%
+\chapter{ROC-DBMH sample size using RJafroc}\label{SSRocDBMHRJafroc}}
+
+\hypertarget{introduction-8}{%
+\section{Introduction}\label{introduction-8}}
+
+This illustrates the \texttt{RJafroc} implementation of sample-size estimation. Default \(\alpha\) is 0.05 and default power (1-\(\beta\)) is 0.8. Three functions are provided. Each of these functions can be used with \texttt{method\ "DBMH"} (illustrated here, the default) or \texttt{method\ =\ "ORH"} (next vignette). Illustrated below, for the most part, is the random-reader random-case (RRRC) option, i.e., \texttt{option\ =\ "RRRC"}. The last two examples illustrate fixed-reader random-case (FRRC) \texttt{option\ =\ "FRRC"} and random-reader fixed-case (RRFC) \texttt{option\ =\ "RRFC"} options.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{SsPowerGivenJK()}
+  Statistical power for specified numbers of readers and cases in an ROC study.
+\item
+  \texttt{SsPowerTable()}
+  Generate a power table, i.e., combinations of numbers of readers and cases yielding the desired power.
+\item
+  \texttt{SsSampleSizeKGivenJ}
+  Number of cases, for specified number of readers, to achieve desired power.
+\end{itemize}
+
+\hypertarget{illustration-of-sspowergivenjk-using-method-dbmh}{%
+\section{\texorpdfstring{Illustration of \texttt{SsPowerGivenJK()} using \texttt{method\ =\ "DBMH"}}{Illustration of SsPowerGivenJK() using method = "DBMH"}}\label{illustration-of-sspowergivenjk-using-method-dbmh}}
+
+The selected dataset corresponds to the Van Dyke data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{power \textless{}{-}}\StringTok{ }\KeywordTok{SsPowerGivenJK}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{6}\NormalTok{, }\DataTypeTok{K =} \DecValTok{112}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The returned value is a list containing the expected power \texttt{power}, the non-centrality parameter \texttt{ncp}, the denominator degrees of freedom \texttt{ddf} and the F-statistic \texttt{f}. The numerator degrees of freedom \texttt{ndf} is always \texttt{I\ -\ 1}, i.e., unity for this dataset.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(power)}
+\CommentTok{\#\textgreater{} \textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  4 variables:}
+\CommentTok{\#\textgreater{}  $ powerRRRC: num 0.556}
+\CommentTok{\#\textgreater{}  $ ncpRRRC  : num 4.8}
+\CommentTok{\#\textgreater{}  $ ddfHRRRC : num 23.1}
+\CommentTok{\#\textgreater{}  $ fRRRC    : num 4.28}
+\end{Highlighting}
+\end{Shaded}
+
+Expected power is 0.5555789.
+
+\hypertarget{illustration-of-sspowertable-using-method-dbmh}{%
+\section{\texorpdfstring{Illustration of \texttt{SsPowerTable()} using \texttt{method\ =\ "DBMH"}}{Illustration of SsPowerTable() using method = "DBMH"}}\label{illustration-of-sspowertable-using-method-dbmh}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{powTab \textless{}{-}}\StringTok{ }\KeywordTok{SsPowerTable}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Now show the power table \texttt{powTab}. Note that the last column is always close to 0.8, the desired power. The 2nd and 3rd columns show the number of readers and number of cases to achieve the desired power.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{powTab}
+\CommentTok{\#\textgreater{}     numReaders numCases power}
+\CommentTok{\#\textgreater{} 1            3    \textgreater{}2000  \textless{}NA\textgreater{}}
+\CommentTok{\#\textgreater{} 2            3    \textgreater{}2000  \textless{}NA\textgreater{}}
+\CommentTok{\#\textgreater{} 3            4     1089   0.8}
+\CommentTok{\#\textgreater{} 4            4     1089   0.8}
+\CommentTok{\#\textgreater{} 5            5      344 0.801}
+\CommentTok{\#\textgreater{} 6            5      344 0.801}
+\CommentTok{\#\textgreater{} 7            6      251 0.801}
+\CommentTok{\#\textgreater{} 8            6      251 0.801}
+\CommentTok{\#\textgreater{} 9            7      211 0.801}
+\CommentTok{\#\textgreater{} 10           7      211 0.801}
+\CommentTok{\#\textgreater{} 11           8      188 0.801}
+\CommentTok{\#\textgreater{} 12           8      188 0.801}
+\CommentTok{\#\textgreater{} 13           9      173 0.801}
+\CommentTok{\#\textgreater{} 14           9      173 0.801}
+\CommentTok{\#\textgreater{} 15          10      163 0.802}
+\CommentTok{\#\textgreater{} 16          10      163 0.802}
+\CommentTok{\#\textgreater{} 17          11      155 0.801}
+\CommentTok{\#\textgreater{} 18          11      155 0.801}
+\CommentTok{\#\textgreater{} 19          12      149 0.802}
+\CommentTok{\#\textgreater{} 20          12      149 0.802}
+\CommentTok{\#\textgreater{} 21          13      144 0.801}
+\CommentTok{\#\textgreater{} 22          13      144 0.801}
+\CommentTok{\#\textgreater{} 23          14      140 0.802}
+\CommentTok{\#\textgreater{} 24          14      140 0.802}
+\CommentTok{\#\textgreater{} 25          15      137 0.802}
+\CommentTok{\#\textgreater{} 26          15      137 0.802}
+\CommentTok{\#\textgreater{} 27          16      134 0.802}
+\CommentTok{\#\textgreater{} 28          16      134 0.802}
+\CommentTok{\#\textgreater{} 29          17      131 0.801}
+\CommentTok{\#\textgreater{} 30          17      131 0.801}
+\CommentTok{\#\textgreater{} 31          18      129 0.801}
+\CommentTok{\#\textgreater{} 32          18      129 0.801}
+\CommentTok{\#\textgreater{} 33          19      127 0.801}
+\CommentTok{\#\textgreater{} 34          19      127 0.801}
+\CommentTok{\#\textgreater{} 35          20      126 0.802}
+\CommentTok{\#\textgreater{} 36          20      126 0.802}
+\CommentTok{\#\textgreater{} 37          21      124 0.801}
+\CommentTok{\#\textgreater{} 38          21      124 0.801}
+\CommentTok{\#\textgreater{} 39          22      123 0.802}
+\CommentTok{\#\textgreater{} 40          22      123 0.802}
+\CommentTok{\#\textgreater{} 41          23      122 0.802}
+\CommentTok{\#\textgreater{} 42          23      122 0.802}
+\CommentTok{\#\textgreater{} 43          24      121 0.803}
+\CommentTok{\#\textgreater{} 44          24      121 0.803}
+\CommentTok{\#\textgreater{} 45          25      120 0.802}
+\CommentTok{\#\textgreater{} 46          25      120 0.802}
+\CommentTok{\#\textgreater{} 47          26      119 0.802}
+\CommentTok{\#\textgreater{} 48          26      119 0.802}
+\CommentTok{\#\textgreater{} 49          27      118 0.802}
+\CommentTok{\#\textgreater{} 50          27      118 0.802}
+\CommentTok{\#\textgreater{} 51          28      117 0.801}
+\CommentTok{\#\textgreater{} 52          28      117 0.801}
+\CommentTok{\#\textgreater{} 53          29      117 0.803}
+\CommentTok{\#\textgreater{} 54          29      117 0.803}
+\CommentTok{\#\textgreater{} 55          30      116 0.802}
+\CommentTok{\#\textgreater{} 56          30      116 0.802}
+\CommentTok{\#\textgreater{} 57          31      115 0.801}
+\CommentTok{\#\textgreater{} 58          31      115 0.801}
+\CommentTok{\#\textgreater{} 59          32      115 0.803}
+\CommentTok{\#\textgreater{} 60          32      115 0.803}
+\CommentTok{\#\textgreater{} 61          33      114 0.801}
+\CommentTok{\#\textgreater{} 62          33      114 0.801}
+\CommentTok{\#\textgreater{} 63          34      114 0.803}
+\CommentTok{\#\textgreater{} 64          34      114 0.803}
+\CommentTok{\#\textgreater{} 65          35      113 0.801}
+\CommentTok{\#\textgreater{} 66          35      113 0.801}
+\CommentTok{\#\textgreater{} 67          36      113 0.802}
+\CommentTok{\#\textgreater{} 68          36      113 0.802}
+\CommentTok{\#\textgreater{} 69          37      112   0.8}
+\CommentTok{\#\textgreater{} 70          37      112   0.8}
+\CommentTok{\#\textgreater{} 71          38      112 0.802}
+\CommentTok{\#\textgreater{} 72          38      112 0.802}
+\CommentTok{\#\textgreater{} 73          39      112 0.803}
+\CommentTok{\#\textgreater{} 74          39      112 0.803}
+\CommentTok{\#\textgreater{} 75          40      111 0.801}
+\CommentTok{\#\textgreater{} 76          40      111 0.801}
+\CommentTok{\#\textgreater{} 77          41      111 0.802}
+\CommentTok{\#\textgreater{} 78          41      111 0.802}
+\CommentTok{\#\textgreater{} 79          42      111 0.803}
+\CommentTok{\#\textgreater{} 80          42      111 0.803}
+\CommentTok{\#\textgreater{} 81          43      110 0.801}
+\CommentTok{\#\textgreater{} 82          43      110 0.801}
+\CommentTok{\#\textgreater{} 83          44      110 0.802}
+\CommentTok{\#\textgreater{} 84          44      110 0.802}
+\CommentTok{\#\textgreater{} 85          45      110 0.802}
+\CommentTok{\#\textgreater{} 86          45      110 0.802}
+\CommentTok{\#\textgreater{} 87          46      110 0.803}
+\CommentTok{\#\textgreater{} 88          46      110 0.803}
+\CommentTok{\#\textgreater{} 89          47      109 0.801}
+\CommentTok{\#\textgreater{} 90          47      109 0.801}
+\CommentTok{\#\textgreater{} 91          48      109 0.802}
+\CommentTok{\#\textgreater{} 92          48      109 0.802}
+\CommentTok{\#\textgreater{} 93          49      109 0.802}
+\CommentTok{\#\textgreater{} 94          49      109 0.802}
+\CommentTok{\#\textgreater{} 95          50      109 0.803}
+\CommentTok{\#\textgreater{} 96          50      109 0.803}
+\CommentTok{\#\textgreater{} 97          51      108   0.8}
+\CommentTok{\#\textgreater{} 98          51      108   0.8}
+\CommentTok{\#\textgreater{} 99          52      108 0.801}
+\CommentTok{\#\textgreater{} 100         52      108 0.801}
+\CommentTok{\#\textgreater{} 101         53      108 0.802}
+\CommentTok{\#\textgreater{} 102         53      108 0.802}
+\CommentTok{\#\textgreater{} 103         54      108 0.802}
+\CommentTok{\#\textgreater{} 104         54      108 0.802}
+\CommentTok{\#\textgreater{} 105         55      108 0.803}
+\CommentTok{\#\textgreater{} 106         55      108 0.803}
+\CommentTok{\#\textgreater{} 107         56      107   0.8}
+\CommentTok{\#\textgreater{} 108         56      107   0.8}
+\CommentTok{\#\textgreater{} 109         57      107 0.801}
+\CommentTok{\#\textgreater{} 110         57      107 0.801}
+\CommentTok{\#\textgreater{} 111         58      107 0.801}
+\CommentTok{\#\textgreater{} 112         58      107 0.801}
+\CommentTok{\#\textgreater{} 113         59      107 0.802}
+\CommentTok{\#\textgreater{} 114         59      107 0.802}
+\CommentTok{\#\textgreater{} 115         60      107 0.802}
+\CommentTok{\#\textgreater{} 116         60      107 0.802}
+\CommentTok{\#\textgreater{} 117         61      107 0.803}
+\CommentTok{\#\textgreater{} 118         61      107 0.803}
+\CommentTok{\#\textgreater{} 119         62      107 0.803}
+\CommentTok{\#\textgreater{} 120         62      107 0.803}
+\CommentTok{\#\textgreater{} 121         63      106   0.8}
+\CommentTok{\#\textgreater{} 122         63      106   0.8}
+\CommentTok{\#\textgreater{} 123         64      106 0.801}
+\CommentTok{\#\textgreater{} 124         64      106 0.801}
+\CommentTok{\#\textgreater{} 125         65      106 0.801}
+\CommentTok{\#\textgreater{} 126         65      106 0.801}
+\CommentTok{\#\textgreater{} 127         66      106 0.802}
+\CommentTok{\#\textgreater{} 128         66      106 0.802}
+\CommentTok{\#\textgreater{} 129         67      106 0.802}
+\CommentTok{\#\textgreater{} 130         67      106 0.802}
+\CommentTok{\#\textgreater{} 131         68      106 0.802}
+\CommentTok{\#\textgreater{} 132         68      106 0.802}
+\CommentTok{\#\textgreater{} 133         69      106 0.803}
+\CommentTok{\#\textgreater{} 134         69      106 0.803}
+\CommentTok{\#\textgreater{} 135         70      106 0.803}
+\CommentTok{\#\textgreater{} 136         70      106 0.803}
+\CommentTok{\#\textgreater{} 137         71      106 0.804}
+\CommentTok{\#\textgreater{} 138         71      106 0.804}
+\CommentTok{\#\textgreater{} 139         72      105   0.8}
+\CommentTok{\#\textgreater{} 140         72      105   0.8}
+\CommentTok{\#\textgreater{} 141         73      105 0.801}
+\CommentTok{\#\textgreater{} 142         73      105 0.801}
+\CommentTok{\#\textgreater{} 143         74      105 0.801}
+\CommentTok{\#\textgreater{} 144         74      105 0.801}
+\CommentTok{\#\textgreater{} 145         75      105 0.801}
+\CommentTok{\#\textgreater{} 146         75      105 0.801}
+\CommentTok{\#\textgreater{} 147         76      105 0.802}
+\CommentTok{\#\textgreater{} 148         76      105 0.802}
+\CommentTok{\#\textgreater{} 149         77      105 0.802}
+\CommentTok{\#\textgreater{} 150         77      105 0.802}
+\CommentTok{\#\textgreater{} 151         78      105 0.802}
+\CommentTok{\#\textgreater{} 152         78      105 0.802}
+\CommentTok{\#\textgreater{} 153         79      105 0.803}
+\CommentTok{\#\textgreater{} 154         79      105 0.803}
+\CommentTok{\#\textgreater{} 155         80      105 0.803}
+\CommentTok{\#\textgreater{} 156         80      105 0.803}
+\CommentTok{\#\textgreater{} 157         81      105 0.803}
+\CommentTok{\#\textgreater{} 158         81      105 0.803}
+\CommentTok{\#\textgreater{} 159         82      105 0.803}
+\CommentTok{\#\textgreater{} 160         82      105 0.803}
+\CommentTok{\#\textgreater{} 161         83      104   0.8}
+\CommentTok{\#\textgreater{} 162         83      104   0.8}
+\CommentTok{\#\textgreater{} 163         84      104   0.8}
+\CommentTok{\#\textgreater{} 164         84      104   0.8}
+\CommentTok{\#\textgreater{} 165         85      104 0.801}
+\CommentTok{\#\textgreater{} 166         85      104 0.801}
+\CommentTok{\#\textgreater{} 167         86      104 0.801}
+\CommentTok{\#\textgreater{} 168         86      104 0.801}
+\CommentTok{\#\textgreater{} 169         87      104 0.801}
+\CommentTok{\#\textgreater{} 170         87      104 0.801}
+\CommentTok{\#\textgreater{} 171         88      104 0.801}
+\CommentTok{\#\textgreater{} 172         88      104 0.801}
+\CommentTok{\#\textgreater{} 173         89      104 0.802}
+\CommentTok{\#\textgreater{} 174         89      104 0.802}
+\CommentTok{\#\textgreater{} 175         90      104 0.802}
+\CommentTok{\#\textgreater{} 176         90      104 0.802}
+\CommentTok{\#\textgreater{} 177         91      104 0.802}
+\CommentTok{\#\textgreater{} 178         91      104 0.802}
+\CommentTok{\#\textgreater{} 179         92      104 0.802}
+\CommentTok{\#\textgreater{} 180         92      104 0.802}
+\CommentTok{\#\textgreater{} 181         93      104 0.802}
+\CommentTok{\#\textgreater{} 182         93      104 0.802}
+\CommentTok{\#\textgreater{} 183         94      104 0.803}
+\CommentTok{\#\textgreater{} 184         94      104 0.803}
+\CommentTok{\#\textgreater{} 185         95      104 0.803}
+\CommentTok{\#\textgreater{} 186         95      104 0.803}
+\CommentTok{\#\textgreater{} 187         96      104 0.803}
+\CommentTok{\#\textgreater{} 188         96      104 0.803}
+\CommentTok{\#\textgreater{} 189         97      104 0.803}
+\CommentTok{\#\textgreater{} 190         97      104 0.803}
+\CommentTok{\#\textgreater{} 191         98      104 0.804}
+\CommentTok{\#\textgreater{} 192         98      104 0.804}
+\CommentTok{\#\textgreater{} 193         99      104 0.804}
+\CommentTok{\#\textgreater{} 194         99      104 0.804}
+\CommentTok{\#\textgreater{} 195        100      103   0.8}
+\CommentTok{\#\textgreater{} 196        100      103   0.8}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{illustration-of-sssamplesizekgivenj-using-method-dbmh}{%
+\section{\texorpdfstring{Illustration of \texttt{SsSampleSizeKGivenJ()} using \texttt{method\ =\ "DBMH"}}{Illustration of SsSampleSizeKGivenJ() using method = "DBMH"}}\label{illustration-of-sssamplesizekgivenj-using-method-dbmh}}
+
+This function illustrates how the number of cases for 10 readers, used in Vignette 2, were chosen. In all but one example the default value of the \texttt{desiredPower} argument is used, namely 0.8 (if the argument is absent, its default value is used).
+
+\hypertarget{rrrc}{%
+\subsection{RRRC}\label{rrrc}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases \textless{}{-}}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(ncases)}
+\CommentTok{\#\textgreater{} \textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  2 variables:}
+\CommentTok{\#\textgreater{}  $ KRRRC    : num 163}
+\CommentTok{\#\textgreater{}  $ powerRRRC: num 0.802}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{ncases} is a list containing the number of cases 163 and expected power 0.8015625. Compare the number of cases to the RRRC value used in vignette 2.
+
+\hypertarget{non-default-value-of-desiredpower}{%
+\subsubsection{\texorpdfstring{Non default value of \texttt{desiredPower}}{Non default value of desiredPower}}\label{non-default-value-of-desiredpower}}
+
+This is illustrated below for 90\% desired power.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases \textless{}{-}}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{, }\DataTypeTok{desiredPower =} \FloatTok{0.9}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(ncases)}
+\CommentTok{\#\textgreater{} \textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  2 variables:}
+\CommentTok{\#\textgreater{}  $ KRRRC    : num 236}
+\CommentTok{\#\textgreater{}  $ powerRRRC: num 0.9}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 236 and expected power is 0.9003501.
+
+\hypertarget{frrc}{%
+\subsection{FRRC}\label{frrc}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases \textless{}{-}}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"FRRC"}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(ncases)}
+\CommentTok{\#\textgreater{} \textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  2 variables:}
+\CommentTok{\#\textgreater{}  $ KFRRC    : num 133}
+\CommentTok{\#\textgreater{}  $ powerFRRC: num 0.801}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 133 and expected power is 0.8011167. Compare the number of cases to the FRRC value used in vignette 2.
+
+\hypertarget{rrfc}{%
+\subsection{RRFC}\label{rrfc}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases \textless{}{-}}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRFC"}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(ncases)}
+\CommentTok{\#\textgreater{} \textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  2 variables:}
+\CommentTok{\#\textgreater{}  $ KRRFC    : num 53}
+\CommentTok{\#\textgreater{}  $ powerRRFC: num 0.805}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 53 and expected power is 0.8049666. Compare the number of cases to the RRFC value used in vignette 2.
+
+\hypertarget{SSRocORHRJafroc}{%
+\chapter{ROC-ORH sample size using RJafroc}\label{SSRocORHRJafroc}}
+
+\hypertarget{introduction-9}{%
+\section{Introduction}\label{introduction-9}}
+
+The use of the functions introduced in vignette 3, but this time using the ORH method to estimate the variance components, is illustrated here. The reader should confirm that these give the same results as the corresponding ones obtained using the DBMH method. When the figure of merit is the empirical AUC, the two methods can be shown to be identical.
+
+\hypertarget{illustration-of-sspowergivenjk-using-method-orh}{%
+\section{\texorpdfstring{Illustration of \texttt{SsPowerGivenJK()} using \texttt{method\ =\ "ORH"}}{Illustration of SsPowerGivenJK() using method = "ORH"}}\label{illustration-of-sspowergivenjk-using-method-orh}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{power \textless{}{-}}\StringTok{ }\KeywordTok{SsPowerGivenJK}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{6}\NormalTok{, }\DataTypeTok{K =} \DecValTok{251}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The returned value is a \texttt{list} containing the expected power, the non-centrality parameter, the denominator degrees of freedom and the F-statistic (the numerator degrees of freedom is always one less than the number of treatments, i.e., unity in this example).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(power)}
+\CommentTok{\#\textgreater{} \textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  4 variables:}
+\CommentTok{\#\textgreater{}  $ powerRRRC: num 0.801}
+\CommentTok{\#\textgreater{}  $ ncpRRRC  : num 8.91}
+\CommentTok{\#\textgreater{}  $ ddfHRRRC : num 16.1}
+\CommentTok{\#\textgreater{}  $ fRRRC    : num 4.49}
+\end{Highlighting}
+\end{Shaded}
+
+Expected power is 0.8005403.
+
+\hypertarget{illustration-of-sspowertable-using-method-orh}{%
+\section{\texorpdfstring{Illustration of \texttt{SsPowerTable()} using \texttt{method\ =\ "ORH"}}{Illustration of SsPowerTable() using method = "ORH"}}\label{illustration-of-sspowertable-using-method-orh}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{powTab \textless{}{-}}\StringTok{ }\KeywordTok{SsPowerTable}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Now show the power table \texttt{powTab}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{powTab}
+\CommentTok{\#\textgreater{}     numReaders numCases power}
+\CommentTok{\#\textgreater{} 1            3    \textgreater{}2000  \textless{}NA\textgreater{}}
+\CommentTok{\#\textgreater{} 2            3    \textgreater{}2000  \textless{}NA\textgreater{}}
+\CommentTok{\#\textgreater{} 3            4     1089   0.8}
+\CommentTok{\#\textgreater{} 4            4     1089   0.8}
+\CommentTok{\#\textgreater{} 5            5      344 0.801}
+\CommentTok{\#\textgreater{} 6            5      344 0.801}
+\CommentTok{\#\textgreater{} 7            6      251 0.801}
+\CommentTok{\#\textgreater{} 8            6      251 0.801}
+\CommentTok{\#\textgreater{} 9            7      211 0.801}
+\CommentTok{\#\textgreater{} 10           7      211 0.801}
+\CommentTok{\#\textgreater{} 11           8      188 0.801}
+\CommentTok{\#\textgreater{} 12           8      188 0.801}
+\CommentTok{\#\textgreater{} 13           9      173 0.801}
+\CommentTok{\#\textgreater{} 14           9      173 0.801}
+\CommentTok{\#\textgreater{} 15          10      163 0.802}
+\CommentTok{\#\textgreater{} 16          10      163 0.802}
+\CommentTok{\#\textgreater{} 17          11      155 0.801}
+\CommentTok{\#\textgreater{} 18          11      155 0.801}
+\CommentTok{\#\textgreater{} 19          12      149 0.802}
+\CommentTok{\#\textgreater{} 20          12      149 0.802}
+\CommentTok{\#\textgreater{} 21          13      144 0.801}
+\CommentTok{\#\textgreater{} 22          13      144 0.801}
+\CommentTok{\#\textgreater{} 23          14      140 0.802}
+\CommentTok{\#\textgreater{} 24          14      140 0.802}
+\CommentTok{\#\textgreater{} 25          15      137 0.802}
+\CommentTok{\#\textgreater{} 26          15      137 0.802}
+\CommentTok{\#\textgreater{} 27          16      134 0.802}
+\CommentTok{\#\textgreater{} 28          16      134 0.802}
+\CommentTok{\#\textgreater{} 29          17      131 0.801}
+\CommentTok{\#\textgreater{} 30          17      131 0.801}
+\CommentTok{\#\textgreater{} 31          18      129 0.801}
+\CommentTok{\#\textgreater{} 32          18      129 0.801}
+\CommentTok{\#\textgreater{} 33          19      127 0.801}
+\CommentTok{\#\textgreater{} 34          19      127 0.801}
+\CommentTok{\#\textgreater{} 35          20      126 0.802}
+\CommentTok{\#\textgreater{} 36          20      126 0.802}
+\CommentTok{\#\textgreater{} 37          21      124 0.801}
+\CommentTok{\#\textgreater{} 38          21      124 0.801}
+\CommentTok{\#\textgreater{} 39          22      123 0.802}
+\CommentTok{\#\textgreater{} 40          22      123 0.802}
+\CommentTok{\#\textgreater{} 41          23      122 0.802}
+\CommentTok{\#\textgreater{} 42          23      122 0.802}
+\CommentTok{\#\textgreater{} 43          24      121 0.803}
+\CommentTok{\#\textgreater{} 44          24      121 0.803}
+\CommentTok{\#\textgreater{} 45          25      120 0.802}
+\CommentTok{\#\textgreater{} 46          25      120 0.802}
+\CommentTok{\#\textgreater{} 47          26      119 0.802}
+\CommentTok{\#\textgreater{} 48          26      119 0.802}
+\CommentTok{\#\textgreater{} 49          27      118 0.802}
+\CommentTok{\#\textgreater{} 50          27      118 0.802}
+\CommentTok{\#\textgreater{} 51          28      117 0.801}
+\CommentTok{\#\textgreater{} 52          28      117 0.801}
+\CommentTok{\#\textgreater{} 53          29      117 0.803}
+\CommentTok{\#\textgreater{} 54          29      117 0.803}
+\CommentTok{\#\textgreater{} 55          30      116 0.802}
+\CommentTok{\#\textgreater{} 56          30      116 0.802}
+\CommentTok{\#\textgreater{} 57          31      115 0.801}
+\CommentTok{\#\textgreater{} 58          31      115 0.801}
+\CommentTok{\#\textgreater{} 59          32      115 0.803}
+\CommentTok{\#\textgreater{} 60          32      115 0.803}
+\CommentTok{\#\textgreater{} 61          33      114 0.801}
+\CommentTok{\#\textgreater{} 62          33      114 0.801}
+\CommentTok{\#\textgreater{} 63          34      114 0.803}
+\CommentTok{\#\textgreater{} 64          34      114 0.803}
+\CommentTok{\#\textgreater{} 65          35      113 0.801}
+\CommentTok{\#\textgreater{} 66          35      113 0.801}
+\CommentTok{\#\textgreater{} 67          36      113 0.802}
+\CommentTok{\#\textgreater{} 68          36      113 0.802}
+\CommentTok{\#\textgreater{} 69          37      112   0.8}
+\CommentTok{\#\textgreater{} 70          37      112   0.8}
+\CommentTok{\#\textgreater{} 71          38      112 0.802}
+\CommentTok{\#\textgreater{} 72          38      112 0.802}
+\CommentTok{\#\textgreater{} 73          39      112 0.803}
+\CommentTok{\#\textgreater{} 74          39      112 0.803}
+\CommentTok{\#\textgreater{} 75          40      111 0.801}
+\CommentTok{\#\textgreater{} 76          40      111 0.801}
+\CommentTok{\#\textgreater{} 77          41      111 0.802}
+\CommentTok{\#\textgreater{} 78          41      111 0.802}
+\CommentTok{\#\textgreater{} 79          42      111 0.803}
+\CommentTok{\#\textgreater{} 80          42      111 0.803}
+\CommentTok{\#\textgreater{} 81          43      110 0.801}
+\CommentTok{\#\textgreater{} 82          43      110 0.801}
+\CommentTok{\#\textgreater{} 83          44      110 0.802}
+\CommentTok{\#\textgreater{} 84          44      110 0.802}
+\CommentTok{\#\textgreater{} 85          45      110 0.802}
+\CommentTok{\#\textgreater{} 86          45      110 0.802}
+\CommentTok{\#\textgreater{} 87          46      110 0.803}
+\CommentTok{\#\textgreater{} 88          46      110 0.803}
+\CommentTok{\#\textgreater{} 89          47      109 0.801}
+\CommentTok{\#\textgreater{} 90          47      109 0.801}
+\CommentTok{\#\textgreater{} 91          48      109 0.802}
+\CommentTok{\#\textgreater{} 92          48      109 0.802}
+\CommentTok{\#\textgreater{} 93          49      109 0.802}
+\CommentTok{\#\textgreater{} 94          49      109 0.802}
+\CommentTok{\#\textgreater{} 95          50      109 0.803}
+\CommentTok{\#\textgreater{} 96          50      109 0.803}
+\CommentTok{\#\textgreater{} 97          51      108   0.8}
+\CommentTok{\#\textgreater{} 98          51      108   0.8}
+\CommentTok{\#\textgreater{} 99          52      108 0.801}
+\CommentTok{\#\textgreater{} 100         52      108 0.801}
+\CommentTok{\#\textgreater{} 101         53      108 0.802}
+\CommentTok{\#\textgreater{} 102         53      108 0.802}
+\CommentTok{\#\textgreater{} 103         54      108 0.802}
+\CommentTok{\#\textgreater{} 104         54      108 0.802}
+\CommentTok{\#\textgreater{} 105         55      108 0.803}
+\CommentTok{\#\textgreater{} 106         55      108 0.803}
+\CommentTok{\#\textgreater{} 107         56      107   0.8}
+\CommentTok{\#\textgreater{} 108         56      107   0.8}
+\CommentTok{\#\textgreater{} 109         57      107 0.801}
+\CommentTok{\#\textgreater{} 110         57      107 0.801}
+\CommentTok{\#\textgreater{} 111         58      107 0.801}
+\CommentTok{\#\textgreater{} 112         58      107 0.801}
+\CommentTok{\#\textgreater{} 113         59      107 0.802}
+\CommentTok{\#\textgreater{} 114         59      107 0.802}
+\CommentTok{\#\textgreater{} 115         60      107 0.802}
+\CommentTok{\#\textgreater{} 116         60      107 0.802}
+\CommentTok{\#\textgreater{} 117         61      107 0.803}
+\CommentTok{\#\textgreater{} 118         61      107 0.803}
+\CommentTok{\#\textgreater{} 119         62      107 0.803}
+\CommentTok{\#\textgreater{} 120         62      107 0.803}
+\CommentTok{\#\textgreater{} 121         63      106   0.8}
+\CommentTok{\#\textgreater{} 122         63      106   0.8}
+\CommentTok{\#\textgreater{} 123         64      106 0.801}
+\CommentTok{\#\textgreater{} 124         64      106 0.801}
+\CommentTok{\#\textgreater{} 125         65      106 0.801}
+\CommentTok{\#\textgreater{} 126         65      106 0.801}
+\CommentTok{\#\textgreater{} 127         66      106 0.802}
+\CommentTok{\#\textgreater{} 128         66      106 0.802}
+\CommentTok{\#\textgreater{} 129         67      106 0.802}
+\CommentTok{\#\textgreater{} 130         67      106 0.802}
+\CommentTok{\#\textgreater{} 131         68      106 0.802}
+\CommentTok{\#\textgreater{} 132         68      106 0.802}
+\CommentTok{\#\textgreater{} 133         69      106 0.803}
+\CommentTok{\#\textgreater{} 134         69      106 0.803}
+\CommentTok{\#\textgreater{} 135         70      106 0.803}
+\CommentTok{\#\textgreater{} 136         70      106 0.803}
+\CommentTok{\#\textgreater{} 137         71      106 0.804}
+\CommentTok{\#\textgreater{} 138         71      106 0.804}
+\CommentTok{\#\textgreater{} 139         72      105   0.8}
+\CommentTok{\#\textgreater{} 140         72      105   0.8}
+\CommentTok{\#\textgreater{} 141         73      105 0.801}
+\CommentTok{\#\textgreater{} 142         73      105 0.801}
+\CommentTok{\#\textgreater{} 143         74      105 0.801}
+\CommentTok{\#\textgreater{} 144         74      105 0.801}
+\CommentTok{\#\textgreater{} 145         75      105 0.801}
+\CommentTok{\#\textgreater{} 146         75      105 0.801}
+\CommentTok{\#\textgreater{} 147         76      105 0.802}
+\CommentTok{\#\textgreater{} 148         76      105 0.802}
+\CommentTok{\#\textgreater{} 149         77      105 0.802}
+\CommentTok{\#\textgreater{} 150         77      105 0.802}
+\CommentTok{\#\textgreater{} 151         78      105 0.802}
+\CommentTok{\#\textgreater{} 152         78      105 0.802}
+\CommentTok{\#\textgreater{} 153         79      105 0.803}
+\CommentTok{\#\textgreater{} 154         79      105 0.803}
+\CommentTok{\#\textgreater{} 155         80      105 0.803}
+\CommentTok{\#\textgreater{} 156         80      105 0.803}
+\CommentTok{\#\textgreater{} 157         81      105 0.803}
+\CommentTok{\#\textgreater{} 158         81      105 0.803}
+\CommentTok{\#\textgreater{} 159         82      105 0.803}
+\CommentTok{\#\textgreater{} 160         82      105 0.803}
+\CommentTok{\#\textgreater{} 161         83      104   0.8}
+\CommentTok{\#\textgreater{} 162         83      104   0.8}
+\CommentTok{\#\textgreater{} 163         84      104   0.8}
+\CommentTok{\#\textgreater{} 164         84      104   0.8}
+\CommentTok{\#\textgreater{} 165         85      104 0.801}
+\CommentTok{\#\textgreater{} 166         85      104 0.801}
+\CommentTok{\#\textgreater{} 167         86      104 0.801}
+\CommentTok{\#\textgreater{} 168         86      104 0.801}
+\CommentTok{\#\textgreater{} 169         87      104 0.801}
+\CommentTok{\#\textgreater{} 170         87      104 0.801}
+\CommentTok{\#\textgreater{} 171         88      104 0.801}
+\CommentTok{\#\textgreater{} 172         88      104 0.801}
+\CommentTok{\#\textgreater{} 173         89      104 0.802}
+\CommentTok{\#\textgreater{} 174         89      104 0.802}
+\CommentTok{\#\textgreater{} 175         90      104 0.802}
+\CommentTok{\#\textgreater{} 176         90      104 0.802}
+\CommentTok{\#\textgreater{} 177         91      104 0.802}
+\CommentTok{\#\textgreater{} 178         91      104 0.802}
+\CommentTok{\#\textgreater{} 179         92      104 0.802}
+\CommentTok{\#\textgreater{} 180         92      104 0.802}
+\CommentTok{\#\textgreater{} 181         93      104 0.802}
+\CommentTok{\#\textgreater{} 182         93      104 0.802}
+\CommentTok{\#\textgreater{} 183         94      104 0.803}
+\CommentTok{\#\textgreater{} 184         94      104 0.803}
+\CommentTok{\#\textgreater{} 185         95      104 0.803}
+\CommentTok{\#\textgreater{} 186         95      104 0.803}
+\CommentTok{\#\textgreater{} 187         96      104 0.803}
+\CommentTok{\#\textgreater{} 188         96      104 0.803}
+\CommentTok{\#\textgreater{} 189         97      104 0.803}
+\CommentTok{\#\textgreater{} 190         97      104 0.803}
+\CommentTok{\#\textgreater{} 191         98      104 0.804}
+\CommentTok{\#\textgreater{} 192         98      104 0.804}
+\CommentTok{\#\textgreater{} 193         99      104 0.804}
+\CommentTok{\#\textgreater{} 194         99      104 0.804}
+\CommentTok{\#\textgreater{} 195        100      103   0.8}
+\CommentTok{\#\textgreater{} 196        100      103   0.8}
+\end{Highlighting}
+\end{Shaded}
+
+Since the default \texttt{FOM\ =\ "Wilcoxon"}, the table is identical to that generated in vignette 3, which used \texttt{method\ =\ "DBMH"}.
+
+\hypertarget{illustrations-of-sssamplesizekgivenj-using-method-orh}{%
+\section{\texorpdfstring{Illustrations of \texttt{SsSampleSizeKGivenJ()} using \texttt{method\ =\ "ORH"}}{Illustrations of SsSampleSizeKGivenJ() using method = "ORH"}}\label{illustrations-of-sssamplesizekgivenj-using-method-orh}}
+
+\hypertarget{for-rrrc-generalization}{%
+\subsection{For RRRC generalization}\label{for-rrrc-generalization}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases \textless{}{-}}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{ncases} is a list containing the number of cases \texttt{ncases\$KRRRC} and expected power \texttt{ncases\$powerRRRC}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(ncases)}
+\CommentTok{\#\textgreater{} \textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  2 variables:}
+\CommentTok{\#\textgreater{}  $ KRRRC    : num 163}
+\CommentTok{\#\textgreater{}  $ powerRRRC: num 0.802}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 163 and expected power is 0.8015625.
+
+\hypertarget{for-frrc-generalization}{%
+\subsection{For FRRC generalization}\label{for-frrc-generalization}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases \textless{}{-}}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"FRRC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 133 and expected power is 0.8011167.
+
+\hypertarget{for-rrfc-generalization}{%
+\subsection{For RRFC generalization}\label{for-rrfc-generalization}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ncases \textless{}{-}}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{J =} \DecValTok{10}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRFC"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The required number of cases is 53 and expected power is 0.8049666.
+
 \hypertarget{ProperROCs}{%
 \chapter{Proper ROCs}\label{ProperROCs}}
 
@@ -3420,8 +4043,8 @@ The next vignette illustrates significance testing for this paradigm.
 
 The FOM and DeLong method implementations need checking with a toy dataset.
 
-\hypertarget{introduction-8}{%
-\section{Introduction}\label{introduction-8}}
+\hypertarget{introduction-10}{%
+\section{Introduction}\label{introduction-10}}
 
 \begin{itemize}
 \item

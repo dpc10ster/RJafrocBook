@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 16 Analyzing data acquired according to the ROI paradigm | RJafroc Documentation</title>
+  <title>Chapter 11 ROC-ORH sample size using RJafroc | RJafroc Documentation</title>
   <meta name="description" content="Extended RJafroc documentation." />
   <meta name="generator" content="bookdown 0.18.1 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 16 Analyzing data acquired according to the ROI paradigm | RJafroc Documentation" />
+  <meta property="og:title" content="Chapter 11 ROC-ORH sample size using RJafroc | RJafroc Documentation" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 16 Analyzing data acquired according to the ROI paradigm | RJafroc Documentation" />
+  <meta name="twitter:title" content="Chapter 11 ROC-ORH sample size using RJafroc | RJafroc Documentation" />
   
   <meta name="twitter:description" content="Extended RJafroc documentation." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="ROIDataStr.html"/>
-
+<link rel="prev" href="SSRocDBMHRJafroc.html"/>
+<link rel="next" href="ProperROCs.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -352,281 +352,251 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ROIDataAnalysis" class="section level1" number="16">
-<h1><span class="header-section-number">Chapter 16</span> Analyzing data acquired according to the ROI paradigm</h1>
-<div id="introduction-this-vignette-is-under-construction-1" class="section level2" number="16.1">
-<h2><span class="header-section-number">16.1</span> Introduction; this vignette is under construction!</h2>
+<div id="SSRocORHRJafroc" class="section level1" number="11">
+<h1><span class="header-section-number">Chapter 11</span> ROC-ORH sample size using RJafroc</h1>
+<div id="introduction-9" class="section level2" number="11.1">
+<h2><span class="header-section-number">11.1</span> Introduction</h2>
+<p>The use of the functions introduced in vignette 3, but this time using the ORH method to estimate the variance components, is illustrated here. The reader should confirm that these give the same results as the corresponding ones obtained using the DBMH method. When the figure of merit is the empirical AUC, the two methods can be shown to be identical.</p>
 </div>
-<div id="note-to-self-102919-dpc" class="section level2" number="16.2">
-<h2><span class="header-section-number">16.2</span> Note to self (10/29/19) !!!DPC!!!</h2>
-<p>The FOM and DeLong method implementations need checking with a toy dataset.</p>
+<div id="illustration-of-sspowergivenjk-using-method-orh" class="section level2" number="11.2">
+<h2><span class="header-section-number">11.2</span> Illustration of <code>SsPowerGivenJK()</code> using <code>method = "ORH"</code></h2>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="SSRocORHRJafroc.html#cb75-1"></a>power &lt;-<span class="st"> </span><span class="kw">SsPowerGivenJK</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">J =</span> <span class="dv">6</span>, <span class="dt">K =</span> <span class="dv">251</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>, <span class="dt">option =</span> <span class="st">&quot;RRRC&quot;</span>)</span></code></pre></div>
+<p>The returned value is a <code>list</code> containing the expected power, the non-centrality parameter, the denominator degrees of freedom and the F-statistic (the numerator degrees of freedom is always one less than the number of treatments, i.e., unity in this example).</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="SSRocORHRJafroc.html#cb76-1"></a><span class="kw">str</span>(power)</span>
+<span id="cb76-2"><a href="SSRocORHRJafroc.html#cb76-2"></a><span class="co">#&gt; &#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
+<span id="cb76-3"><a href="SSRocORHRJafroc.html#cb76-3"></a><span class="co">#&gt;  $ powerRRRC: num 0.801</span></span>
+<span id="cb76-4"><a href="SSRocORHRJafroc.html#cb76-4"></a><span class="co">#&gt;  $ ncpRRRC  : num 8.91</span></span>
+<span id="cb76-5"><a href="SSRocORHRJafroc.html#cb76-5"></a><span class="co">#&gt;  $ ddfHRRRC : num 16.1</span></span>
+<span id="cb76-6"><a href="SSRocORHRJafroc.html#cb76-6"></a><span class="co">#&gt;  $ fRRRC    : num 4.49</span></span></code></pre></div>
+<p>Expected power is 0.8005403.</p>
 </div>
-<div id="introduction-10" class="section level2" number="16.3">
-<h2><span class="header-section-number">16.3</span> Introduction</h2>
-<ul>
-<li><p>For an ROI dataset <code>StSignificanceTesting()</code> automatically defaults to <code>method = "ORH"</code>, <code>covEstMethod = "DeLong"</code> and <code>FOM = "ROI"</code>.</p></li>
-<li><p>The covariance estimation method is based on the original DeLong method <span class="citation">(DeLong, DeLong, and Clarke-Pearson <a href="#ref-RN112" role="doc-biblioref">1988</a>)</span>, which is valid only for the trapezoidal AUC, i.e. ROC data, as extended by <span class="citation">(Obuchowski <a href="#ref-RN1233" role="doc-biblioref">1997</a>)</span> to ROI data, see formula below.</p></li>
-<li><p>The essential differences from conventional ROC analyses are in the definition of the ROI figure of merit, see below, and the procedure developed by <span class="citation">(Obuchowski <a href="#ref-RN1233" role="doc-biblioref">1997</a>)</span> for estimating the covariance matrix. Once the covariances are known, <code>method = "ORH"</code> can be applied to perform significance testing, as described in <span class="citation">(Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span> and <span class="citation">(Chakraborty <a href="#ref-RN2680" role="doc-biblioref">2017</a>, Chapter 10)</span>.</p></li>
-</ul>
+<div id="illustration-of-sspowertable-using-method-orh" class="section level2" number="11.3">
+<h2><span class="header-section-number">11.3</span> Illustration of <code>SsPowerTable()</code> using <code>method = "ORH"</code></h2>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="SSRocORHRJafroc.html#cb77-1"></a>powTab &lt;-<span class="st"> </span><span class="kw">SsPowerTable</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>, <span class="dt">option =</span> <span class="st">&quot;RRRC&quot;</span>)</span></code></pre></div>
+<p>Now show the power table <code>powTab</code>.</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="SSRocORHRJafroc.html#cb78-1"></a>powTab</span>
+<span id="cb78-2"><a href="SSRocORHRJafroc.html#cb78-2"></a><span class="co">#&gt;     numReaders numCases power</span></span>
+<span id="cb78-3"><a href="SSRocORHRJafroc.html#cb78-3"></a><span class="co">#&gt; 1            3    &gt;2000  &lt;NA&gt;</span></span>
+<span id="cb78-4"><a href="SSRocORHRJafroc.html#cb78-4"></a><span class="co">#&gt; 2            3    &gt;2000  &lt;NA&gt;</span></span>
+<span id="cb78-5"><a href="SSRocORHRJafroc.html#cb78-5"></a><span class="co">#&gt; 3            4     1089   0.8</span></span>
+<span id="cb78-6"><a href="SSRocORHRJafroc.html#cb78-6"></a><span class="co">#&gt; 4            4     1089   0.8</span></span>
+<span id="cb78-7"><a href="SSRocORHRJafroc.html#cb78-7"></a><span class="co">#&gt; 5            5      344 0.801</span></span>
+<span id="cb78-8"><a href="SSRocORHRJafroc.html#cb78-8"></a><span class="co">#&gt; 6            5      344 0.801</span></span>
+<span id="cb78-9"><a href="SSRocORHRJafroc.html#cb78-9"></a><span class="co">#&gt; 7            6      251 0.801</span></span>
+<span id="cb78-10"><a href="SSRocORHRJafroc.html#cb78-10"></a><span class="co">#&gt; 8            6      251 0.801</span></span>
+<span id="cb78-11"><a href="SSRocORHRJafroc.html#cb78-11"></a><span class="co">#&gt; 9            7      211 0.801</span></span>
+<span id="cb78-12"><a href="SSRocORHRJafroc.html#cb78-12"></a><span class="co">#&gt; 10           7      211 0.801</span></span>
+<span id="cb78-13"><a href="SSRocORHRJafroc.html#cb78-13"></a><span class="co">#&gt; 11           8      188 0.801</span></span>
+<span id="cb78-14"><a href="SSRocORHRJafroc.html#cb78-14"></a><span class="co">#&gt; 12           8      188 0.801</span></span>
+<span id="cb78-15"><a href="SSRocORHRJafroc.html#cb78-15"></a><span class="co">#&gt; 13           9      173 0.801</span></span>
+<span id="cb78-16"><a href="SSRocORHRJafroc.html#cb78-16"></a><span class="co">#&gt; 14           9      173 0.801</span></span>
+<span id="cb78-17"><a href="SSRocORHRJafroc.html#cb78-17"></a><span class="co">#&gt; 15          10      163 0.802</span></span>
+<span id="cb78-18"><a href="SSRocORHRJafroc.html#cb78-18"></a><span class="co">#&gt; 16          10      163 0.802</span></span>
+<span id="cb78-19"><a href="SSRocORHRJafroc.html#cb78-19"></a><span class="co">#&gt; 17          11      155 0.801</span></span>
+<span id="cb78-20"><a href="SSRocORHRJafroc.html#cb78-20"></a><span class="co">#&gt; 18          11      155 0.801</span></span>
+<span id="cb78-21"><a href="SSRocORHRJafroc.html#cb78-21"></a><span class="co">#&gt; 19          12      149 0.802</span></span>
+<span id="cb78-22"><a href="SSRocORHRJafroc.html#cb78-22"></a><span class="co">#&gt; 20          12      149 0.802</span></span>
+<span id="cb78-23"><a href="SSRocORHRJafroc.html#cb78-23"></a><span class="co">#&gt; 21          13      144 0.801</span></span>
+<span id="cb78-24"><a href="SSRocORHRJafroc.html#cb78-24"></a><span class="co">#&gt; 22          13      144 0.801</span></span>
+<span id="cb78-25"><a href="SSRocORHRJafroc.html#cb78-25"></a><span class="co">#&gt; 23          14      140 0.802</span></span>
+<span id="cb78-26"><a href="SSRocORHRJafroc.html#cb78-26"></a><span class="co">#&gt; 24          14      140 0.802</span></span>
+<span id="cb78-27"><a href="SSRocORHRJafroc.html#cb78-27"></a><span class="co">#&gt; 25          15      137 0.802</span></span>
+<span id="cb78-28"><a href="SSRocORHRJafroc.html#cb78-28"></a><span class="co">#&gt; 26          15      137 0.802</span></span>
+<span id="cb78-29"><a href="SSRocORHRJafroc.html#cb78-29"></a><span class="co">#&gt; 27          16      134 0.802</span></span>
+<span id="cb78-30"><a href="SSRocORHRJafroc.html#cb78-30"></a><span class="co">#&gt; 28          16      134 0.802</span></span>
+<span id="cb78-31"><a href="SSRocORHRJafroc.html#cb78-31"></a><span class="co">#&gt; 29          17      131 0.801</span></span>
+<span id="cb78-32"><a href="SSRocORHRJafroc.html#cb78-32"></a><span class="co">#&gt; 30          17      131 0.801</span></span>
+<span id="cb78-33"><a href="SSRocORHRJafroc.html#cb78-33"></a><span class="co">#&gt; 31          18      129 0.801</span></span>
+<span id="cb78-34"><a href="SSRocORHRJafroc.html#cb78-34"></a><span class="co">#&gt; 32          18      129 0.801</span></span>
+<span id="cb78-35"><a href="SSRocORHRJafroc.html#cb78-35"></a><span class="co">#&gt; 33          19      127 0.801</span></span>
+<span id="cb78-36"><a href="SSRocORHRJafroc.html#cb78-36"></a><span class="co">#&gt; 34          19      127 0.801</span></span>
+<span id="cb78-37"><a href="SSRocORHRJafroc.html#cb78-37"></a><span class="co">#&gt; 35          20      126 0.802</span></span>
+<span id="cb78-38"><a href="SSRocORHRJafroc.html#cb78-38"></a><span class="co">#&gt; 36          20      126 0.802</span></span>
+<span id="cb78-39"><a href="SSRocORHRJafroc.html#cb78-39"></a><span class="co">#&gt; 37          21      124 0.801</span></span>
+<span id="cb78-40"><a href="SSRocORHRJafroc.html#cb78-40"></a><span class="co">#&gt; 38          21      124 0.801</span></span>
+<span id="cb78-41"><a href="SSRocORHRJafroc.html#cb78-41"></a><span class="co">#&gt; 39          22      123 0.802</span></span>
+<span id="cb78-42"><a href="SSRocORHRJafroc.html#cb78-42"></a><span class="co">#&gt; 40          22      123 0.802</span></span>
+<span id="cb78-43"><a href="SSRocORHRJafroc.html#cb78-43"></a><span class="co">#&gt; 41          23      122 0.802</span></span>
+<span id="cb78-44"><a href="SSRocORHRJafroc.html#cb78-44"></a><span class="co">#&gt; 42          23      122 0.802</span></span>
+<span id="cb78-45"><a href="SSRocORHRJafroc.html#cb78-45"></a><span class="co">#&gt; 43          24      121 0.803</span></span>
+<span id="cb78-46"><a href="SSRocORHRJafroc.html#cb78-46"></a><span class="co">#&gt; 44          24      121 0.803</span></span>
+<span id="cb78-47"><a href="SSRocORHRJafroc.html#cb78-47"></a><span class="co">#&gt; 45          25      120 0.802</span></span>
+<span id="cb78-48"><a href="SSRocORHRJafroc.html#cb78-48"></a><span class="co">#&gt; 46          25      120 0.802</span></span>
+<span id="cb78-49"><a href="SSRocORHRJafroc.html#cb78-49"></a><span class="co">#&gt; 47          26      119 0.802</span></span>
+<span id="cb78-50"><a href="SSRocORHRJafroc.html#cb78-50"></a><span class="co">#&gt; 48          26      119 0.802</span></span>
+<span id="cb78-51"><a href="SSRocORHRJafroc.html#cb78-51"></a><span class="co">#&gt; 49          27      118 0.802</span></span>
+<span id="cb78-52"><a href="SSRocORHRJafroc.html#cb78-52"></a><span class="co">#&gt; 50          27      118 0.802</span></span>
+<span id="cb78-53"><a href="SSRocORHRJafroc.html#cb78-53"></a><span class="co">#&gt; 51          28      117 0.801</span></span>
+<span id="cb78-54"><a href="SSRocORHRJafroc.html#cb78-54"></a><span class="co">#&gt; 52          28      117 0.801</span></span>
+<span id="cb78-55"><a href="SSRocORHRJafroc.html#cb78-55"></a><span class="co">#&gt; 53          29      117 0.803</span></span>
+<span id="cb78-56"><a href="SSRocORHRJafroc.html#cb78-56"></a><span class="co">#&gt; 54          29      117 0.803</span></span>
+<span id="cb78-57"><a href="SSRocORHRJafroc.html#cb78-57"></a><span class="co">#&gt; 55          30      116 0.802</span></span>
+<span id="cb78-58"><a href="SSRocORHRJafroc.html#cb78-58"></a><span class="co">#&gt; 56          30      116 0.802</span></span>
+<span id="cb78-59"><a href="SSRocORHRJafroc.html#cb78-59"></a><span class="co">#&gt; 57          31      115 0.801</span></span>
+<span id="cb78-60"><a href="SSRocORHRJafroc.html#cb78-60"></a><span class="co">#&gt; 58          31      115 0.801</span></span>
+<span id="cb78-61"><a href="SSRocORHRJafroc.html#cb78-61"></a><span class="co">#&gt; 59          32      115 0.803</span></span>
+<span id="cb78-62"><a href="SSRocORHRJafroc.html#cb78-62"></a><span class="co">#&gt; 60          32      115 0.803</span></span>
+<span id="cb78-63"><a href="SSRocORHRJafroc.html#cb78-63"></a><span class="co">#&gt; 61          33      114 0.801</span></span>
+<span id="cb78-64"><a href="SSRocORHRJafroc.html#cb78-64"></a><span class="co">#&gt; 62          33      114 0.801</span></span>
+<span id="cb78-65"><a href="SSRocORHRJafroc.html#cb78-65"></a><span class="co">#&gt; 63          34      114 0.803</span></span>
+<span id="cb78-66"><a href="SSRocORHRJafroc.html#cb78-66"></a><span class="co">#&gt; 64          34      114 0.803</span></span>
+<span id="cb78-67"><a href="SSRocORHRJafroc.html#cb78-67"></a><span class="co">#&gt; 65          35      113 0.801</span></span>
+<span id="cb78-68"><a href="SSRocORHRJafroc.html#cb78-68"></a><span class="co">#&gt; 66          35      113 0.801</span></span>
+<span id="cb78-69"><a href="SSRocORHRJafroc.html#cb78-69"></a><span class="co">#&gt; 67          36      113 0.802</span></span>
+<span id="cb78-70"><a href="SSRocORHRJafroc.html#cb78-70"></a><span class="co">#&gt; 68          36      113 0.802</span></span>
+<span id="cb78-71"><a href="SSRocORHRJafroc.html#cb78-71"></a><span class="co">#&gt; 69          37      112   0.8</span></span>
+<span id="cb78-72"><a href="SSRocORHRJafroc.html#cb78-72"></a><span class="co">#&gt; 70          37      112   0.8</span></span>
+<span id="cb78-73"><a href="SSRocORHRJafroc.html#cb78-73"></a><span class="co">#&gt; 71          38      112 0.802</span></span>
+<span id="cb78-74"><a href="SSRocORHRJafroc.html#cb78-74"></a><span class="co">#&gt; 72          38      112 0.802</span></span>
+<span id="cb78-75"><a href="SSRocORHRJafroc.html#cb78-75"></a><span class="co">#&gt; 73          39      112 0.803</span></span>
+<span id="cb78-76"><a href="SSRocORHRJafroc.html#cb78-76"></a><span class="co">#&gt; 74          39      112 0.803</span></span>
+<span id="cb78-77"><a href="SSRocORHRJafroc.html#cb78-77"></a><span class="co">#&gt; 75          40      111 0.801</span></span>
+<span id="cb78-78"><a href="SSRocORHRJafroc.html#cb78-78"></a><span class="co">#&gt; 76          40      111 0.801</span></span>
+<span id="cb78-79"><a href="SSRocORHRJafroc.html#cb78-79"></a><span class="co">#&gt; 77          41      111 0.802</span></span>
+<span id="cb78-80"><a href="SSRocORHRJafroc.html#cb78-80"></a><span class="co">#&gt; 78          41      111 0.802</span></span>
+<span id="cb78-81"><a href="SSRocORHRJafroc.html#cb78-81"></a><span class="co">#&gt; 79          42      111 0.803</span></span>
+<span id="cb78-82"><a href="SSRocORHRJafroc.html#cb78-82"></a><span class="co">#&gt; 80          42      111 0.803</span></span>
+<span id="cb78-83"><a href="SSRocORHRJafroc.html#cb78-83"></a><span class="co">#&gt; 81          43      110 0.801</span></span>
+<span id="cb78-84"><a href="SSRocORHRJafroc.html#cb78-84"></a><span class="co">#&gt; 82          43      110 0.801</span></span>
+<span id="cb78-85"><a href="SSRocORHRJafroc.html#cb78-85"></a><span class="co">#&gt; 83          44      110 0.802</span></span>
+<span id="cb78-86"><a href="SSRocORHRJafroc.html#cb78-86"></a><span class="co">#&gt; 84          44      110 0.802</span></span>
+<span id="cb78-87"><a href="SSRocORHRJafroc.html#cb78-87"></a><span class="co">#&gt; 85          45      110 0.802</span></span>
+<span id="cb78-88"><a href="SSRocORHRJafroc.html#cb78-88"></a><span class="co">#&gt; 86          45      110 0.802</span></span>
+<span id="cb78-89"><a href="SSRocORHRJafroc.html#cb78-89"></a><span class="co">#&gt; 87          46      110 0.803</span></span>
+<span id="cb78-90"><a href="SSRocORHRJafroc.html#cb78-90"></a><span class="co">#&gt; 88          46      110 0.803</span></span>
+<span id="cb78-91"><a href="SSRocORHRJafroc.html#cb78-91"></a><span class="co">#&gt; 89          47      109 0.801</span></span>
+<span id="cb78-92"><a href="SSRocORHRJafroc.html#cb78-92"></a><span class="co">#&gt; 90          47      109 0.801</span></span>
+<span id="cb78-93"><a href="SSRocORHRJafroc.html#cb78-93"></a><span class="co">#&gt; 91          48      109 0.802</span></span>
+<span id="cb78-94"><a href="SSRocORHRJafroc.html#cb78-94"></a><span class="co">#&gt; 92          48      109 0.802</span></span>
+<span id="cb78-95"><a href="SSRocORHRJafroc.html#cb78-95"></a><span class="co">#&gt; 93          49      109 0.802</span></span>
+<span id="cb78-96"><a href="SSRocORHRJafroc.html#cb78-96"></a><span class="co">#&gt; 94          49      109 0.802</span></span>
+<span id="cb78-97"><a href="SSRocORHRJafroc.html#cb78-97"></a><span class="co">#&gt; 95          50      109 0.803</span></span>
+<span id="cb78-98"><a href="SSRocORHRJafroc.html#cb78-98"></a><span class="co">#&gt; 96          50      109 0.803</span></span>
+<span id="cb78-99"><a href="SSRocORHRJafroc.html#cb78-99"></a><span class="co">#&gt; 97          51      108   0.8</span></span>
+<span id="cb78-100"><a href="SSRocORHRJafroc.html#cb78-100"></a><span class="co">#&gt; 98          51      108   0.8</span></span>
+<span id="cb78-101"><a href="SSRocORHRJafroc.html#cb78-101"></a><span class="co">#&gt; 99          52      108 0.801</span></span>
+<span id="cb78-102"><a href="SSRocORHRJafroc.html#cb78-102"></a><span class="co">#&gt; 100         52      108 0.801</span></span>
+<span id="cb78-103"><a href="SSRocORHRJafroc.html#cb78-103"></a><span class="co">#&gt; 101         53      108 0.802</span></span>
+<span id="cb78-104"><a href="SSRocORHRJafroc.html#cb78-104"></a><span class="co">#&gt; 102         53      108 0.802</span></span>
+<span id="cb78-105"><a href="SSRocORHRJafroc.html#cb78-105"></a><span class="co">#&gt; 103         54      108 0.802</span></span>
+<span id="cb78-106"><a href="SSRocORHRJafroc.html#cb78-106"></a><span class="co">#&gt; 104         54      108 0.802</span></span>
+<span id="cb78-107"><a href="SSRocORHRJafroc.html#cb78-107"></a><span class="co">#&gt; 105         55      108 0.803</span></span>
+<span id="cb78-108"><a href="SSRocORHRJafroc.html#cb78-108"></a><span class="co">#&gt; 106         55      108 0.803</span></span>
+<span id="cb78-109"><a href="SSRocORHRJafroc.html#cb78-109"></a><span class="co">#&gt; 107         56      107   0.8</span></span>
+<span id="cb78-110"><a href="SSRocORHRJafroc.html#cb78-110"></a><span class="co">#&gt; 108         56      107   0.8</span></span>
+<span id="cb78-111"><a href="SSRocORHRJafroc.html#cb78-111"></a><span class="co">#&gt; 109         57      107 0.801</span></span>
+<span id="cb78-112"><a href="SSRocORHRJafroc.html#cb78-112"></a><span class="co">#&gt; 110         57      107 0.801</span></span>
+<span id="cb78-113"><a href="SSRocORHRJafroc.html#cb78-113"></a><span class="co">#&gt; 111         58      107 0.801</span></span>
+<span id="cb78-114"><a href="SSRocORHRJafroc.html#cb78-114"></a><span class="co">#&gt; 112         58      107 0.801</span></span>
+<span id="cb78-115"><a href="SSRocORHRJafroc.html#cb78-115"></a><span class="co">#&gt; 113         59      107 0.802</span></span>
+<span id="cb78-116"><a href="SSRocORHRJafroc.html#cb78-116"></a><span class="co">#&gt; 114         59      107 0.802</span></span>
+<span id="cb78-117"><a href="SSRocORHRJafroc.html#cb78-117"></a><span class="co">#&gt; 115         60      107 0.802</span></span>
+<span id="cb78-118"><a href="SSRocORHRJafroc.html#cb78-118"></a><span class="co">#&gt; 116         60      107 0.802</span></span>
+<span id="cb78-119"><a href="SSRocORHRJafroc.html#cb78-119"></a><span class="co">#&gt; 117         61      107 0.803</span></span>
+<span id="cb78-120"><a href="SSRocORHRJafroc.html#cb78-120"></a><span class="co">#&gt; 118         61      107 0.803</span></span>
+<span id="cb78-121"><a href="SSRocORHRJafroc.html#cb78-121"></a><span class="co">#&gt; 119         62      107 0.803</span></span>
+<span id="cb78-122"><a href="SSRocORHRJafroc.html#cb78-122"></a><span class="co">#&gt; 120         62      107 0.803</span></span>
+<span id="cb78-123"><a href="SSRocORHRJafroc.html#cb78-123"></a><span class="co">#&gt; 121         63      106   0.8</span></span>
+<span id="cb78-124"><a href="SSRocORHRJafroc.html#cb78-124"></a><span class="co">#&gt; 122         63      106   0.8</span></span>
+<span id="cb78-125"><a href="SSRocORHRJafroc.html#cb78-125"></a><span class="co">#&gt; 123         64      106 0.801</span></span>
+<span id="cb78-126"><a href="SSRocORHRJafroc.html#cb78-126"></a><span class="co">#&gt; 124         64      106 0.801</span></span>
+<span id="cb78-127"><a href="SSRocORHRJafroc.html#cb78-127"></a><span class="co">#&gt; 125         65      106 0.801</span></span>
+<span id="cb78-128"><a href="SSRocORHRJafroc.html#cb78-128"></a><span class="co">#&gt; 126         65      106 0.801</span></span>
+<span id="cb78-129"><a href="SSRocORHRJafroc.html#cb78-129"></a><span class="co">#&gt; 127         66      106 0.802</span></span>
+<span id="cb78-130"><a href="SSRocORHRJafroc.html#cb78-130"></a><span class="co">#&gt; 128         66      106 0.802</span></span>
+<span id="cb78-131"><a href="SSRocORHRJafroc.html#cb78-131"></a><span class="co">#&gt; 129         67      106 0.802</span></span>
+<span id="cb78-132"><a href="SSRocORHRJafroc.html#cb78-132"></a><span class="co">#&gt; 130         67      106 0.802</span></span>
+<span id="cb78-133"><a href="SSRocORHRJafroc.html#cb78-133"></a><span class="co">#&gt; 131         68      106 0.802</span></span>
+<span id="cb78-134"><a href="SSRocORHRJafroc.html#cb78-134"></a><span class="co">#&gt; 132         68      106 0.802</span></span>
+<span id="cb78-135"><a href="SSRocORHRJafroc.html#cb78-135"></a><span class="co">#&gt; 133         69      106 0.803</span></span>
+<span id="cb78-136"><a href="SSRocORHRJafroc.html#cb78-136"></a><span class="co">#&gt; 134         69      106 0.803</span></span>
+<span id="cb78-137"><a href="SSRocORHRJafroc.html#cb78-137"></a><span class="co">#&gt; 135         70      106 0.803</span></span>
+<span id="cb78-138"><a href="SSRocORHRJafroc.html#cb78-138"></a><span class="co">#&gt; 136         70      106 0.803</span></span>
+<span id="cb78-139"><a href="SSRocORHRJafroc.html#cb78-139"></a><span class="co">#&gt; 137         71      106 0.804</span></span>
+<span id="cb78-140"><a href="SSRocORHRJafroc.html#cb78-140"></a><span class="co">#&gt; 138         71      106 0.804</span></span>
+<span id="cb78-141"><a href="SSRocORHRJafroc.html#cb78-141"></a><span class="co">#&gt; 139         72      105   0.8</span></span>
+<span id="cb78-142"><a href="SSRocORHRJafroc.html#cb78-142"></a><span class="co">#&gt; 140         72      105   0.8</span></span>
+<span id="cb78-143"><a href="SSRocORHRJafroc.html#cb78-143"></a><span class="co">#&gt; 141         73      105 0.801</span></span>
+<span id="cb78-144"><a href="SSRocORHRJafroc.html#cb78-144"></a><span class="co">#&gt; 142         73      105 0.801</span></span>
+<span id="cb78-145"><a href="SSRocORHRJafroc.html#cb78-145"></a><span class="co">#&gt; 143         74      105 0.801</span></span>
+<span id="cb78-146"><a href="SSRocORHRJafroc.html#cb78-146"></a><span class="co">#&gt; 144         74      105 0.801</span></span>
+<span id="cb78-147"><a href="SSRocORHRJafroc.html#cb78-147"></a><span class="co">#&gt; 145         75      105 0.801</span></span>
+<span id="cb78-148"><a href="SSRocORHRJafroc.html#cb78-148"></a><span class="co">#&gt; 146         75      105 0.801</span></span>
+<span id="cb78-149"><a href="SSRocORHRJafroc.html#cb78-149"></a><span class="co">#&gt; 147         76      105 0.802</span></span>
+<span id="cb78-150"><a href="SSRocORHRJafroc.html#cb78-150"></a><span class="co">#&gt; 148         76      105 0.802</span></span>
+<span id="cb78-151"><a href="SSRocORHRJafroc.html#cb78-151"></a><span class="co">#&gt; 149         77      105 0.802</span></span>
+<span id="cb78-152"><a href="SSRocORHRJafroc.html#cb78-152"></a><span class="co">#&gt; 150         77      105 0.802</span></span>
+<span id="cb78-153"><a href="SSRocORHRJafroc.html#cb78-153"></a><span class="co">#&gt; 151         78      105 0.802</span></span>
+<span id="cb78-154"><a href="SSRocORHRJafroc.html#cb78-154"></a><span class="co">#&gt; 152         78      105 0.802</span></span>
+<span id="cb78-155"><a href="SSRocORHRJafroc.html#cb78-155"></a><span class="co">#&gt; 153         79      105 0.803</span></span>
+<span id="cb78-156"><a href="SSRocORHRJafroc.html#cb78-156"></a><span class="co">#&gt; 154         79      105 0.803</span></span>
+<span id="cb78-157"><a href="SSRocORHRJafroc.html#cb78-157"></a><span class="co">#&gt; 155         80      105 0.803</span></span>
+<span id="cb78-158"><a href="SSRocORHRJafroc.html#cb78-158"></a><span class="co">#&gt; 156         80      105 0.803</span></span>
+<span id="cb78-159"><a href="SSRocORHRJafroc.html#cb78-159"></a><span class="co">#&gt; 157         81      105 0.803</span></span>
+<span id="cb78-160"><a href="SSRocORHRJafroc.html#cb78-160"></a><span class="co">#&gt; 158         81      105 0.803</span></span>
+<span id="cb78-161"><a href="SSRocORHRJafroc.html#cb78-161"></a><span class="co">#&gt; 159         82      105 0.803</span></span>
+<span id="cb78-162"><a href="SSRocORHRJafroc.html#cb78-162"></a><span class="co">#&gt; 160         82      105 0.803</span></span>
+<span id="cb78-163"><a href="SSRocORHRJafroc.html#cb78-163"></a><span class="co">#&gt; 161         83      104   0.8</span></span>
+<span id="cb78-164"><a href="SSRocORHRJafroc.html#cb78-164"></a><span class="co">#&gt; 162         83      104   0.8</span></span>
+<span id="cb78-165"><a href="SSRocORHRJafroc.html#cb78-165"></a><span class="co">#&gt; 163         84      104   0.8</span></span>
+<span id="cb78-166"><a href="SSRocORHRJafroc.html#cb78-166"></a><span class="co">#&gt; 164         84      104   0.8</span></span>
+<span id="cb78-167"><a href="SSRocORHRJafroc.html#cb78-167"></a><span class="co">#&gt; 165         85      104 0.801</span></span>
+<span id="cb78-168"><a href="SSRocORHRJafroc.html#cb78-168"></a><span class="co">#&gt; 166         85      104 0.801</span></span>
+<span id="cb78-169"><a href="SSRocORHRJafroc.html#cb78-169"></a><span class="co">#&gt; 167         86      104 0.801</span></span>
+<span id="cb78-170"><a href="SSRocORHRJafroc.html#cb78-170"></a><span class="co">#&gt; 168         86      104 0.801</span></span>
+<span id="cb78-171"><a href="SSRocORHRJafroc.html#cb78-171"></a><span class="co">#&gt; 169         87      104 0.801</span></span>
+<span id="cb78-172"><a href="SSRocORHRJafroc.html#cb78-172"></a><span class="co">#&gt; 170         87      104 0.801</span></span>
+<span id="cb78-173"><a href="SSRocORHRJafroc.html#cb78-173"></a><span class="co">#&gt; 171         88      104 0.801</span></span>
+<span id="cb78-174"><a href="SSRocORHRJafroc.html#cb78-174"></a><span class="co">#&gt; 172         88      104 0.801</span></span>
+<span id="cb78-175"><a href="SSRocORHRJafroc.html#cb78-175"></a><span class="co">#&gt; 173         89      104 0.802</span></span>
+<span id="cb78-176"><a href="SSRocORHRJafroc.html#cb78-176"></a><span class="co">#&gt; 174         89      104 0.802</span></span>
+<span id="cb78-177"><a href="SSRocORHRJafroc.html#cb78-177"></a><span class="co">#&gt; 175         90      104 0.802</span></span>
+<span id="cb78-178"><a href="SSRocORHRJafroc.html#cb78-178"></a><span class="co">#&gt; 176         90      104 0.802</span></span>
+<span id="cb78-179"><a href="SSRocORHRJafroc.html#cb78-179"></a><span class="co">#&gt; 177         91      104 0.802</span></span>
+<span id="cb78-180"><a href="SSRocORHRJafroc.html#cb78-180"></a><span class="co">#&gt; 178         91      104 0.802</span></span>
+<span id="cb78-181"><a href="SSRocORHRJafroc.html#cb78-181"></a><span class="co">#&gt; 179         92      104 0.802</span></span>
+<span id="cb78-182"><a href="SSRocORHRJafroc.html#cb78-182"></a><span class="co">#&gt; 180         92      104 0.802</span></span>
+<span id="cb78-183"><a href="SSRocORHRJafroc.html#cb78-183"></a><span class="co">#&gt; 181         93      104 0.802</span></span>
+<span id="cb78-184"><a href="SSRocORHRJafroc.html#cb78-184"></a><span class="co">#&gt; 182         93      104 0.802</span></span>
+<span id="cb78-185"><a href="SSRocORHRJafroc.html#cb78-185"></a><span class="co">#&gt; 183         94      104 0.803</span></span>
+<span id="cb78-186"><a href="SSRocORHRJafroc.html#cb78-186"></a><span class="co">#&gt; 184         94      104 0.803</span></span>
+<span id="cb78-187"><a href="SSRocORHRJafroc.html#cb78-187"></a><span class="co">#&gt; 185         95      104 0.803</span></span>
+<span id="cb78-188"><a href="SSRocORHRJafroc.html#cb78-188"></a><span class="co">#&gt; 186         95      104 0.803</span></span>
+<span id="cb78-189"><a href="SSRocORHRJafroc.html#cb78-189"></a><span class="co">#&gt; 187         96      104 0.803</span></span>
+<span id="cb78-190"><a href="SSRocORHRJafroc.html#cb78-190"></a><span class="co">#&gt; 188         96      104 0.803</span></span>
+<span id="cb78-191"><a href="SSRocORHRJafroc.html#cb78-191"></a><span class="co">#&gt; 189         97      104 0.803</span></span>
+<span id="cb78-192"><a href="SSRocORHRJafroc.html#cb78-192"></a><span class="co">#&gt; 190         97      104 0.803</span></span>
+<span id="cb78-193"><a href="SSRocORHRJafroc.html#cb78-193"></a><span class="co">#&gt; 191         98      104 0.804</span></span>
+<span id="cb78-194"><a href="SSRocORHRJafroc.html#cb78-194"></a><span class="co">#&gt; 192         98      104 0.804</span></span>
+<span id="cb78-195"><a href="SSRocORHRJafroc.html#cb78-195"></a><span class="co">#&gt; 193         99      104 0.804</span></span>
+<span id="cb78-196"><a href="SSRocORHRJafroc.html#cb78-196"></a><span class="co">#&gt; 194         99      104 0.804</span></span>
+<span id="cb78-197"><a href="SSRocORHRJafroc.html#cb78-197"></a><span class="co">#&gt; 195        100      103   0.8</span></span>
+<span id="cb78-198"><a href="SSRocORHRJafroc.html#cb78-198"></a><span class="co">#&gt; 196        100      103   0.8</span></span></code></pre></div>
+<p>Since the default <code>FOM = "Wilcoxon"</code>, the table is identical to that generated in vignette 3, which used <code>method = "DBMH"</code>.</p>
 </div>
-<div id="the-roi-figure-of-merit" class="section level2" number="16.4">
-<h2><span class="header-section-number">16.4</span> The ROI figure of merit</h2>
-<p>Let <span class="math inline">\({X_{kr}}\)</span> denote the rating for the r<sup>th</sup> <strong>lesion-containing</strong> ROI in the k<sup>th</sup> case and let <span class="math inline">\(n_{k}^L\)</span> be the total number of lesion-containing ROIs in the k<sup>th</sup> case. Similarly, let <span class="math inline">\({Y_{kr}}\)</span> denote the rating for the r<sup>th</sup> <strong>lesion-free</strong> ROI in the k<sup>th</sup> case and <span class="math inline">\(n_{k}^N\)</span> denote the total number of lesion-free ROIs in the k<sup>th</sup> case. Let <span class="math inline">\({N_L}\)</span> denote the total number of lesion-containing ROIs in the image set and <span class="math inline">\(N_N\)</span> denote the total number of lesion-free ROIs. These are given by:
-<span class="math display">\[N_L=\sum\nolimits_{k}{n_{k}^L}\]</span> and <span class="math display">\[N_N=\sum\nolimits_{k}{n_{k}^N}\]</span>
-The ROI figure of merit <span class="math inline">\(\theta\)</span> is defined by:</p>
-<p><span class="math display">\[\begin{equation*} 
-\theta =\frac{1}{N_LN_N}\sum\nolimits_k{\sum\nolimits_{k&#39;}{\sum\limits_{r=1}^{n_{k}^{L}}{\sum\limits_{r&#39;=1}^{n_{k&#39;}^{N}}{\psi (X_{kr},{Y_{k&#39;r&#39;}})}}}}
-\end{equation*}\]</span></p>
-<p>The kernel function <span class="math inline">\(\Psi(X,Y)\)</span> is defined by:</p>
-<p><span class="math display">\[\begin{equation*} 
-\psi\left ( X,Y \right ) =\begin{bmatrix}
-1 &amp;    \text{if}&amp; {X &lt; Y}\\ 
-0.5 &amp;  \text{if}&amp; {X = Y}\\ 
- 0 &amp;   \text{if}&amp; {X &gt; Y} 
-\end{bmatrix}
-\end{equation*}\]</span></p>
-<p>The ROIs are <em>effectively regarded as mini-cases</em> and one calculates the FOM as the Wilcoxon statistic considering the mini-cases as actual cases. The correlations between the ratings of ROIs on the same case are accounted for in the analysis.</p>
+<div id="illustrations-of-sssamplesizekgivenj-using-method-orh" class="section level2" number="11.4">
+<h2><span class="header-section-number">11.4</span> Illustrations of <code>SsSampleSizeKGivenJ()</code> using <code>method = "ORH"</code></h2>
+<div id="for-rrrc-generalization" class="section level3" number="11.4.1">
+<h3><span class="header-section-number">11.4.1</span> For RRRC generalization</h3>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="SSRocORHRJafroc.html#cb79-1"></a>ncases &lt;-<span class="st"> </span><span class="kw">SsSampleSizeKGivenJ</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">J =</span> <span class="dv">10</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>, <span class="dt">option =</span> <span class="st">&quot;RRRC&quot;</span>)</span></code></pre></div>
+<p><code>ncases</code> is a list containing the number of cases <code>ncases$KRRRC</code> and expected power <code>ncases$powerRRRC</code>.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="SSRocORHRJafroc.html#cb80-1"></a><span class="kw">str</span>(ncases)</span>
+<span id="cb80-2"><a href="SSRocORHRJafroc.html#cb80-2"></a><span class="co">#&gt; &#39;data.frame&#39;:    1 obs. of  2 variables:</span></span>
+<span id="cb80-3"><a href="SSRocORHRJafroc.html#cb80-3"></a><span class="co">#&gt;  $ KRRRC    : num 163</span></span>
+<span id="cb80-4"><a href="SSRocORHRJafroc.html#cb80-4"></a><span class="co">#&gt;  $ powerRRRC: num 0.802</span></span></code></pre></div>
+<p>The required number of cases is 163 and expected power is 0.8015625.</p>
 </div>
-<div id="calculation-of-the-roi-figure-of-merit." class="section level2" number="16.5">
-<h2><span class="header-section-number">16.5</span> Calculation of the ROI figure of merit.</h2>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="ROIDataAnalysis.html#cb90-1"></a><span class="kw">UtilFigureOfMerit</span>(datasetROI, <span class="dt">FOM =</span> <span class="st">&quot;ROI&quot;</span>)</span>
-<span id="cb90-2"><a href="ROIDataAnalysis.html#cb90-2"></a><span class="co">#&gt;           Rdr1      Rdr2      Rdr3      Rdr4      Rdr5</span></span>
-<span id="cb90-3"><a href="ROIDataAnalysis.html#cb90-3"></a><span class="co">#&gt; Trt1 0.9057239 0.8842834 0.8579279 0.9350207 0.8352103</span></span>
-<span id="cb90-4"><a href="ROIDataAnalysis.html#cb90-4"></a><span class="co">#&gt; Trt2 0.9297186 0.9546035 0.8937652 0.9531716 0.8770076</span></span>
-<span id="cb90-5"><a href="ROIDataAnalysis.html#cb90-5"></a>fom &lt;-<span class="st"> </span><span class="kw">UtilFigureOfMerit</span>(datasetROI, <span class="dt">FOM =</span> <span class="st">&quot;ROI&quot;</span>)</span></code></pre></div>
-<ul>
-<li>If the correct <code>FOM</code> is not supplied, it defaults to <code>FOM = ROI</code>.<br />
-</li>
-<li>This is a 2-treatment 5-reader dataset.<br />
-</li>
-<li>For treatment 1, reader 1 the figure of merit is 0.9057239.<br />
-</li>
-<li>For treatment 2, reader 5 the figure of merit is 0.8770076.<br />
-</li>
-<li>Etc.</li>
-</ul>
+<div id="for-frrc-generalization" class="section level3" number="11.4.2">
+<h3><span class="header-section-number">11.4.2</span> For FRRC generalization</h3>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="SSRocORHRJafroc.html#cb81-1"></a>ncases &lt;-<span class="st"> </span><span class="kw">SsSampleSizeKGivenJ</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">J =</span> <span class="dv">10</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>, <span class="dt">option =</span> <span class="st">&quot;FRRC&quot;</span>)</span></code></pre></div>
+<p>The required number of cases is 133 and expected power is 0.8011167.</p>
 </div>
-<div id="significance-testing" class="section level2" number="16.6">
-<h2><span class="header-section-number">16.6</span> Significance testing</h2>
-<p>When <code>dataset$dataType == "ROI"</code> the FOM defaults to “ROI” (meaning the above formula) and the covariance estimation method defaults to <code>covEstMethod = "DeLong"</code>.</p>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="ROIDataAnalysis.html#cb91-1"></a>ret &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(datasetROI, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>)</span>
-<span id="cb91-2"><a href="ROIDataAnalysis.html#cb91-2"></a><span class="co">#&gt; ROI dataset: forcing method = `ORH`, covEstMethod = `DeLong` and FOM = `ROI`.</span></span>
-<span id="cb91-3"><a href="ROIDataAnalysis.html#cb91-3"></a><span class="kw">str</span>(ret)</span>
-<span id="cb91-4"><a href="ROIDataAnalysis.html#cb91-4"></a><span class="co">#&gt; List of 14</span></span>
-<span id="cb91-5"><a href="ROIDataAnalysis.html#cb91-5"></a><span class="co">#&gt;  $ fomArray            : num [1:2, 1:5] 0.906 0.93 0.884 0.955 0.858 ...</span></span>
-<span id="cb91-6"><a href="ROIDataAnalysis.html#cb91-6"></a><span class="co">#&gt;   ..- attr(*, &quot;dimnames&quot;)=List of 2</span></span>
-<span id="cb91-7"><a href="ROIDataAnalysis.html#cb91-7"></a><span class="co">#&gt;   .. ..$ : chr [1:2] &quot;Trt1&quot; &quot;Trt2&quot;</span></span>
-<span id="cb91-8"><a href="ROIDataAnalysis.html#cb91-8"></a><span class="co">#&gt;   .. ..$ : chr [1:5] &quot;Rdr1&quot; &quot;Rdr2&quot; &quot;Rdr3&quot; &quot;Rdr4&quot; ...</span></span>
-<span id="cb91-9"><a href="ROIDataAnalysis.html#cb91-9"></a><span class="co">#&gt;  $ meanSquares         :&#39;data.frame&#39;:    1 obs. of  3 variables:</span></span>
-<span id="cb91-10"><a href="ROIDataAnalysis.html#cb91-10"></a><span class="co">#&gt;   ..$ msT : num 0.00361</span></span>
-<span id="cb91-11"><a href="ROIDataAnalysis.html#cb91-11"></a><span class="co">#&gt;   ..$ msR : num 0.00256</span></span>
-<span id="cb91-12"><a href="ROIDataAnalysis.html#cb91-12"></a><span class="co">#&gt;   ..$ msTR: num 0.000207</span></span>
-<span id="cb91-13"><a href="ROIDataAnalysis.html#cb91-13"></a><span class="co">#&gt;  $ varComp             :&#39;data.frame&#39;:    1 obs. of  6 variables:</span></span>
-<span id="cb91-14"><a href="ROIDataAnalysis.html#cb91-14"></a><span class="co">#&gt;   ..$ varR : num 0.00108</span></span>
-<span id="cb91-15"><a href="ROIDataAnalysis.html#cb91-15"></a><span class="co">#&gt;   ..$ varTR: num 0.000153</span></span>
-<span id="cb91-16"><a href="ROIDataAnalysis.html#cb91-16"></a><span class="co">#&gt;   ..$ cov1 : num 0.000247</span></span>
-<span id="cb91-17"><a href="ROIDataAnalysis.html#cb91-17"></a><span class="co">#&gt;   ..$ cov2 : num 0.000187</span></span>
-<span id="cb91-18"><a href="ROIDataAnalysis.html#cb91-18"></a><span class="co">#&gt;   ..$ cov3 : num 0.000154</span></span>
-<span id="cb91-19"><a href="ROIDataAnalysis.html#cb91-19"></a><span class="co">#&gt;   ..$ var  : num 0.000333</span></span>
-<span id="cb91-20"><a href="ROIDataAnalysis.html#cb91-20"></a><span class="co">#&gt;  $ FTestStatsRRRC      :&#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
-<span id="cb91-21"><a href="ROIDataAnalysis.html#cb91-21"></a><span class="co">#&gt;   ..$ fRRRC  : num 9.76</span></span>
-<span id="cb91-22"><a href="ROIDataAnalysis.html#cb91-22"></a><span class="co">#&gt;   ..$ ndfRRRC: num 1</span></span>
-<span id="cb91-23"><a href="ROIDataAnalysis.html#cb91-23"></a><span class="co">#&gt;   ..$ ddfRRRC: num 12.8</span></span>
-<span id="cb91-24"><a href="ROIDataAnalysis.html#cb91-24"></a><span class="co">#&gt;   ..$ pRRRC  : num 0.00817</span></span>
-<span id="cb91-25"><a href="ROIDataAnalysis.html#cb91-25"></a><span class="co">#&gt;  $ ciDiffTrtRRRC       :&#39;data.frame&#39;:    1 obs. of  8 variables:</span></span>
-<span id="cb91-26"><a href="ROIDataAnalysis.html#cb91-26"></a><span class="co">#&gt;   ..$ Treatment: chr &quot;Trt1-Trt2&quot;</span></span>
-<span id="cb91-27"><a href="ROIDataAnalysis.html#cb91-27"></a><span class="co">#&gt;   ..$ Estimate : num -0.038</span></span>
-<span id="cb91-28"><a href="ROIDataAnalysis.html#cb91-28"></a><span class="co">#&gt;   ..$ StdErr   : num 0.0122</span></span>
-<span id="cb91-29"><a href="ROIDataAnalysis.html#cb91-29"></a><span class="co">#&gt;   ..$ DF       : num 12.8</span></span>
-<span id="cb91-30"><a href="ROIDataAnalysis.html#cb91-30"></a><span class="co">#&gt;   ..$ t        : num -3.12</span></span>
-<span id="cb91-31"><a href="ROIDataAnalysis.html#cb91-31"></a><span class="co">#&gt;   ..$ PrGTt    : num 0.00817</span></span>
-<span id="cb91-32"><a href="ROIDataAnalysis.html#cb91-32"></a><span class="co">#&gt;   ..$ CILower  : num -0.0643</span></span>
-<span id="cb91-33"><a href="ROIDataAnalysis.html#cb91-33"></a><span class="co">#&gt;   ..$ CIUpper  : num -0.0117</span></span>
-<span id="cb91-34"><a href="ROIDataAnalysis.html#cb91-34"></a><span class="co">#&gt;  $ ciAvgRdrEachTrtRRRC :&#39;data.frame&#39;:    2 obs. of  6 variables:</span></span>
-<span id="cb91-35"><a href="ROIDataAnalysis.html#cb91-35"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 2 levels &quot;Trt1&quot;,&quot;Trt2&quot;: 1 2</span></span>
-<span id="cb91-36"><a href="ROIDataAnalysis.html#cb91-36"></a><span class="co">#&gt;   ..$ Area     : num [1:2] 0.884 0.922</span></span>
-<span id="cb91-37"><a href="ROIDataAnalysis.html#cb91-37"></a><span class="co">#&gt;   ..$ StdErr   : num [1:2] 0.0232 0.0197</span></span>
-<span id="cb91-38"><a href="ROIDataAnalysis.html#cb91-38"></a><span class="co">#&gt;   ..$ DF       : num [1:2] 12.2 10.1</span></span>
-<span id="cb91-39"><a href="ROIDataAnalysis.html#cb91-39"></a><span class="co">#&gt;   ..$ CILower  : num [1:2] 0.833 0.878</span></span>
-<span id="cb91-40"><a href="ROIDataAnalysis.html#cb91-40"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:2] 0.934 0.966</span></span>
-<span id="cb91-41"><a href="ROIDataAnalysis.html#cb91-41"></a><span class="co">#&gt;  $ FTestStatsFRRC      :&#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
-<span id="cb91-42"><a href="ROIDataAnalysis.html#cb91-42"></a><span class="co">#&gt;   ..$ fFRRC  : num 16.6</span></span>
-<span id="cb91-43"><a href="ROIDataAnalysis.html#cb91-43"></a><span class="co">#&gt;   ..$ ndfFRRC: num 1</span></span>
-<span id="cb91-44"><a href="ROIDataAnalysis.html#cb91-44"></a><span class="co">#&gt;   ..$ ddfFRRC: num Inf</span></span>
-<span id="cb91-45"><a href="ROIDataAnalysis.html#cb91-45"></a><span class="co">#&gt;   ..$ pFRRC  : num 4.58e-05</span></span>
-<span id="cb91-46"><a href="ROIDataAnalysis.html#cb91-46"></a><span class="co">#&gt;  $ ciDiffTrtFRRC       :&#39;data.frame&#39;:    1 obs. of  8 variables:</span></span>
-<span id="cb91-47"><a href="ROIDataAnalysis.html#cb91-47"></a><span class="co">#&gt;   ..$ Treatment: chr &quot;Trt1-Trt2&quot;</span></span>
-<span id="cb91-48"><a href="ROIDataAnalysis.html#cb91-48"></a><span class="co">#&gt;   ..$ Estimate : num -0.038</span></span>
-<span id="cb91-49"><a href="ROIDataAnalysis.html#cb91-49"></a><span class="co">#&gt;   ..$ StdErr   : num 0.00933</span></span>
-<span id="cb91-50"><a href="ROIDataAnalysis.html#cb91-50"></a><span class="co">#&gt;   ..$ DF       : num Inf</span></span>
-<span id="cb91-51"><a href="ROIDataAnalysis.html#cb91-51"></a><span class="co">#&gt;   ..$ t        : num -4.08</span></span>
-<span id="cb91-52"><a href="ROIDataAnalysis.html#cb91-52"></a><span class="co">#&gt;   ..$ PrGTt    : num 4.58e-05</span></span>
-<span id="cb91-53"><a href="ROIDataAnalysis.html#cb91-53"></a><span class="co">#&gt;   ..$ CILower  : num -0.0563</span></span>
-<span id="cb91-54"><a href="ROIDataAnalysis.html#cb91-54"></a><span class="co">#&gt;   ..$ CIUpper  : num -0.0197</span></span>
-<span id="cb91-55"><a href="ROIDataAnalysis.html#cb91-55"></a><span class="co">#&gt;  $ ciAvgRdrEachTrtFRRC :&#39;data.frame&#39;:    2 obs. of  6 variables:</span></span>
-<span id="cb91-56"><a href="ROIDataAnalysis.html#cb91-56"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 2 levels &quot;Trt1&quot;,&quot;Trt2&quot;: 1 2</span></span>
-<span id="cb91-57"><a href="ROIDataAnalysis.html#cb91-57"></a><span class="co">#&gt;   ..$ Area     : num [1:2] 0.884 0.922</span></span>
-<span id="cb91-58"><a href="ROIDataAnalysis.html#cb91-58"></a><span class="co">#&gt;   ..$ StdErr   : num [1:2] 0.0163 0.0129</span></span>
-<span id="cb91-59"><a href="ROIDataAnalysis.html#cb91-59"></a><span class="co">#&gt;   ..$ DF       : num [1:2] Inf Inf</span></span>
-<span id="cb91-60"><a href="ROIDataAnalysis.html#cb91-60"></a><span class="co">#&gt;   ..$ CILower  : num [1:2] 0.852 0.896</span></span>
-<span id="cb91-61"><a href="ROIDataAnalysis.html#cb91-61"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:2] 0.916 0.947</span></span>
-<span id="cb91-62"><a href="ROIDataAnalysis.html#cb91-62"></a><span class="co">#&gt;  $ ciDiffTrtEachRdrFRRC:&#39;data.frame&#39;:    5 obs. of  9 variables:</span></span>
-<span id="cb91-63"><a href="ROIDataAnalysis.html#cb91-63"></a><span class="co">#&gt;   ..$ Reader   : Factor w/ 5 levels &quot;Rdr1&quot;,&quot;Rdr2&quot;,..: 1 2 3 4 5</span></span>
-<span id="cb91-64"><a href="ROIDataAnalysis.html#cb91-64"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 1 level &quot;Trt1-Trt2&quot;: 1 1 1 1 1</span></span>
-<span id="cb91-65"><a href="ROIDataAnalysis.html#cb91-65"></a><span class="co">#&gt;   ..$ Estimate : num [1:5] -0.024 -0.0703 -0.0358 -0.0182 -0.0418</span></span>
-<span id="cb91-66"><a href="ROIDataAnalysis.html#cb91-66"></a><span class="co">#&gt;   ..$ StdErr   : num [1:5] 0.01025 0.01448 0.01648 0.00928 0.01398</span></span>
-<span id="cb91-67"><a href="ROIDataAnalysis.html#cb91-67"></a><span class="co">#&gt;   ..$ DF       : num [1:5] Inf Inf Inf Inf Inf</span></span>
-<span id="cb91-68"><a href="ROIDataAnalysis.html#cb91-68"></a><span class="co">#&gt;   ..$ t        : num [1:5] -2.34 -4.86 -2.17 -1.96 -2.99</span></span>
-<span id="cb91-69"><a href="ROIDataAnalysis.html#cb91-69"></a><span class="co">#&gt;   ..$ PrGTt    : num [1:5] 1.93e-02 1.20e-06 2.97e-02 5.05e-02 2.79e-03</span></span>
-<span id="cb91-70"><a href="ROIDataAnalysis.html#cb91-70"></a><span class="co">#&gt;   ..$ CILower  : num [1:5] -0.0441 -0.0987 -0.0681 -0.0363 -0.0692</span></span>
-<span id="cb91-71"><a href="ROIDataAnalysis.html#cb91-71"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:5] -3.90e-03 -4.19e-02 -3.53e-03 3.88e-05 -1.44e-02</span></span>
-<span id="cb91-72"><a href="ROIDataAnalysis.html#cb91-72"></a><span class="co">#&gt;  $ varCovEachRdr       :&#39;data.frame&#39;:    5 obs. of  3 variables:</span></span>
-<span id="cb91-73"><a href="ROIDataAnalysis.html#cb91-73"></a><span class="co">#&gt;   ..$ Reader: Factor w/ 5 levels &quot;Rdr1&quot;,&quot;Rdr2&quot;,..: 1 2 3 4 5</span></span>
-<span id="cb91-74"><a href="ROIDataAnalysis.html#cb91-74"></a><span class="co">#&gt;   ..$ Var   : num [1:5] 0.000269 0.000227 0.000481 0.000168 0.000522</span></span>
-<span id="cb91-75"><a href="ROIDataAnalysis.html#cb91-75"></a><span class="co">#&gt;   ..$ Cov1  : num [1:5] 0.000216 0.000122 0.000345 0.000125 0.000424</span></span>
-<span id="cb91-76"><a href="ROIDataAnalysis.html#cb91-76"></a><span class="co">#&gt;  $ FTestStatsRRFC      :&#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
-<span id="cb91-77"><a href="ROIDataAnalysis.html#cb91-77"></a><span class="co">#&gt;   ..$ fRRFC  : num 17.5</span></span>
-<span id="cb91-78"><a href="ROIDataAnalysis.html#cb91-78"></a><span class="co">#&gt;   ..$ ndfRRFC: num 1</span></span>
-<span id="cb91-79"><a href="ROIDataAnalysis.html#cb91-79"></a><span class="co">#&gt;   ..$ ddfRRFC: num 4</span></span>
-<span id="cb91-80"><a href="ROIDataAnalysis.html#cb91-80"></a><span class="co">#&gt;   ..$ pRRFC  : num 0.0139</span></span>
-<span id="cb91-81"><a href="ROIDataAnalysis.html#cb91-81"></a><span class="co">#&gt;  $ ciDiffTrtRRFC       :&#39;data.frame&#39;:    1 obs. of  8 variables:</span></span>
-<span id="cb91-82"><a href="ROIDataAnalysis.html#cb91-82"></a><span class="co">#&gt;   ..$ Treatment: chr &quot;Trt1-Trt2&quot;</span></span>
-<span id="cb91-83"><a href="ROIDataAnalysis.html#cb91-83"></a><span class="co">#&gt;   ..$ Estimate : num -0.038</span></span>
-<span id="cb91-84"><a href="ROIDataAnalysis.html#cb91-84"></a><span class="co">#&gt;   ..$ StdErr   : num 0.00909</span></span>
-<span id="cb91-85"><a href="ROIDataAnalysis.html#cb91-85"></a><span class="co">#&gt;   ..$ DF       : num 4</span></span>
-<span id="cb91-86"><a href="ROIDataAnalysis.html#cb91-86"></a><span class="co">#&gt;   ..$ t        : num -4.18</span></span>
-<span id="cb91-87"><a href="ROIDataAnalysis.html#cb91-87"></a><span class="co">#&gt;   ..$ PrGTt    : num 0.0139</span></span>
-<span id="cb91-88"><a href="ROIDataAnalysis.html#cb91-88"></a><span class="co">#&gt;   ..$ CILower  : num -0.0633</span></span>
-<span id="cb91-89"><a href="ROIDataAnalysis.html#cb91-89"></a><span class="co">#&gt;   ..$ CIUpper  : num -0.0128</span></span>
-<span id="cb91-90"><a href="ROIDataAnalysis.html#cb91-90"></a><span class="co">#&gt;  $ ciAvgRdrEachTrtRRFC :&#39;data.frame&#39;:    2 obs. of  6 variables:</span></span>
-<span id="cb91-91"><a href="ROIDataAnalysis.html#cb91-91"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 2 levels &quot;Trt1&quot;,&quot;Trt2&quot;: 1 2</span></span>
-<span id="cb91-92"><a href="ROIDataAnalysis.html#cb91-92"></a><span class="co">#&gt;   ..$ Area     : num [1:2] 0.884 0.922</span></span>
-<span id="cb91-93"><a href="ROIDataAnalysis.html#cb91-93"></a><span class="co">#&gt;   ..$ StdErr   : num [1:2] 0.0175 0.0157</span></span>
-<span id="cb91-94"><a href="ROIDataAnalysis.html#cb91-94"></a><span class="co">#&gt;   ..$ DF       : num [1:2] 4 4</span></span>
-<span id="cb91-95"><a href="ROIDataAnalysis.html#cb91-95"></a><span class="co">#&gt;   ..$ CILower  : num [1:2] 0.835 0.878</span></span>
-<span id="cb91-96"><a href="ROIDataAnalysis.html#cb91-96"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:2] 0.932 0.965</span></span></code></pre></div>
-<ul>
-<li><p>While <code>ret</code> is a list with many (22) members, their meanings should be clear from the notation. As an example:</p></li>
-<li><p>The variance components are given by:</p></li>
-</ul>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="ROIDataAnalysis.html#cb92-1"></a>ret<span class="op">$</span>varComp</span>
-<span id="cb92-2"><a href="ROIDataAnalysis.html#cb92-2"></a><span class="co">#&gt;          varR        varTR         cov1         cov2         cov3          var</span></span>
-<span id="cb92-3"><a href="ROIDataAnalysis.html#cb92-3"></a><span class="co">#&gt; 1 0.001082359 0.0001526084 0.0002465125 0.0001870571 0.0001543764 0.0003333119</span></span></code></pre></div>
-<div id="rrrc-analysis" class="section level3" number="16.6.1">
-<h3><span class="header-section-number">16.6.1</span> RRRC analysis</h3>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="ROIDataAnalysis.html#cb93-1"></a>ret<span class="op">$</span>FTestStatsRRRC<span class="op">$</span>fRRRC</span>
-<span id="cb93-2"><a href="ROIDataAnalysis.html#cb93-2"></a><span class="co">#&gt; [1] 9.763602</span></span>
-<span id="cb93-3"><a href="ROIDataAnalysis.html#cb93-3"></a>ret<span class="op">$</span>FTestStatsRRRC<span class="op">$</span>ndfRRRC</span>
-<span id="cb93-4"><a href="ROIDataAnalysis.html#cb93-4"></a><span class="co">#&gt; [1] 1</span></span>
-<span id="cb93-5"><a href="ROIDataAnalysis.html#cb93-5"></a>ret<span class="op">$</span>FTestStatsRRRC<span class="op">$</span>ddfRRRC</span>
-<span id="cb93-6"><a href="ROIDataAnalysis.html#cb93-6"></a><span class="co">#&gt; [1] 12.82259</span></span>
-<span id="cb93-7"><a href="ROIDataAnalysis.html#cb93-7"></a>ret<span class="op">$</span>FTestStatsRRRC<span class="op">$</span>pRRRC</span>
-<span id="cb93-8"><a href="ROIDataAnalysis.html#cb93-8"></a><span class="co">#&gt; [1] 0.008173042</span></span></code></pre></div>
-<ul>
-<li><p>The F-statistic is , with <code>ndf = 1</code> and <code>ddf</code> = , which yields a p-value of .</p></li>
-<li><p>The confidence interval for the reader averaged difference between the two treatments is given by:</p></li>
-</ul>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="ROIDataAnalysis.html#cb94-1"></a>ret<span class="op">$</span>ciDiffTrtRRRC</span>
-<span id="cb94-2"><a href="ROIDataAnalysis.html#cb94-2"></a><span class="co">#&gt;   Treatment    Estimate     StdErr       DF         t       PrGTt     CILower</span></span>
-<span id="cb94-3"><a href="ROIDataAnalysis.html#cb94-3"></a><span class="co">#&gt; 1 Trt1-Trt2 -0.03802005 0.01216768 12.82259 -3.124676 0.008173042 -0.06434373</span></span>
-<span id="cb94-4"><a href="ROIDataAnalysis.html#cb94-4"></a><span class="co">#&gt;       CIUpper</span></span>
-<span id="cb94-5"><a href="ROIDataAnalysis.html#cb94-5"></a><span class="co">#&gt; 1 -0.01169636</span></span></code></pre></div>
-<ul>
-<li>The FOM difference (treatment 1 minus 2) is -0.03802, which is significant, p-value = 0.008173, F-statistic = 9.7636016, ddf = 12.8225898. The confidence interval is (-0.0643437, -0.0116964).</li>
-</ul>
-</div>
-<div id="frrc-analysis" class="section level3" number="16.6.2">
-<h3><span class="header-section-number">16.6.2</span> FRRC analysis</h3>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="ROIDataAnalysis.html#cb95-1"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>fFRRC</span>
-<span id="cb95-2"><a href="ROIDataAnalysis.html#cb95-2"></a><span class="co">#&gt; [1] 16.6135</span></span>
-<span id="cb95-3"><a href="ROIDataAnalysis.html#cb95-3"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>ndfFRRC</span>
-<span id="cb95-4"><a href="ROIDataAnalysis.html#cb95-4"></a><span class="co">#&gt; [1] 1</span></span>
-<span id="cb95-5"><a href="ROIDataAnalysis.html#cb95-5"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>ddfFRRC</span>
-<span id="cb95-6"><a href="ROIDataAnalysis.html#cb95-6"></a><span class="co">#&gt; [1] Inf</span></span>
-<span id="cb95-7"><a href="ROIDataAnalysis.html#cb95-7"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>pFRRC</span>
-<span id="cb95-8"><a href="ROIDataAnalysis.html#cb95-8"></a><span class="co">#&gt; [1] 4.582365e-05</span></span></code></pre></div>
-<ul>
-<li><p>The F-statistic is 16.6135014, with <code>ndf = 1</code> and <code>ddf</code> = <code>Inf</code>, which yields a p-value of 4.5823651^{-5}.</p></li>
-<li><p>The confidence interval for the reader averaged difference between the two treatments is given by:</p></li>
-</ul>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="ROIDataAnalysis.html#cb96-1"></a>ret<span class="op">$</span>ciDiffTrtFRRC</span>
-<span id="cb96-2"><a href="ROIDataAnalysis.html#cb96-2"></a><span class="co">#&gt;   Treatment    Estimate      StdErr  DF         t        PrGTt     CILower</span></span>
-<span id="cb96-3"><a href="ROIDataAnalysis.html#cb96-3"></a><span class="co">#&gt; 1 Trt1-Trt2 -0.03802005 0.009327861 Inf -4.075966 4.582365e-05 -0.05630232</span></span>
-<span id="cb96-4"><a href="ROIDataAnalysis.html#cb96-4"></a><span class="co">#&gt;       CIUpper</span></span>
-<span id="cb96-5"><a href="ROIDataAnalysis.html#cb96-5"></a><span class="co">#&gt; 1 -0.01973778</span></span></code></pre></div>
-</div>
-<div id="rrfc-analysis" class="section level3" number="16.6.3">
-<h3><span class="header-section-number">16.6.3</span> RRFC analysis</h3>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="ROIDataAnalysis.html#cb97-1"></a>ret<span class="op">$</span>FTestStatsRRFC<span class="op">$</span>fRRFC</span>
-<span id="cb97-2"><a href="ROIDataAnalysis.html#cb97-2"></a><span class="co">#&gt; [1] 17.48107</span></span>
-<span id="cb97-3"><a href="ROIDataAnalysis.html#cb97-3"></a>ret<span class="op">$</span>FTestStatsRRFC<span class="op">$</span>ndfRRFC</span>
-<span id="cb97-4"><a href="ROIDataAnalysis.html#cb97-4"></a><span class="co">#&gt; [1] 1</span></span>
-<span id="cb97-5"><a href="ROIDataAnalysis.html#cb97-5"></a>ret<span class="op">$</span>FTestStatsRRFC<span class="op">$</span>ddfRRFC</span>
-<span id="cb97-6"><a href="ROIDataAnalysis.html#cb97-6"></a><span class="co">#&gt; [1] 4</span></span>
-<span id="cb97-7"><a href="ROIDataAnalysis.html#cb97-7"></a>ret<span class="op">$</span>FTestStatsRRFC<span class="op">$</span>pRRFC</span>
-<span id="cb97-8"><a href="ROIDataAnalysis.html#cb97-8"></a><span class="co">#&gt; [1] 0.01390667</span></span></code></pre></div>
-<ul>
-<li><p>The F-statistic is 17.4810666, with <code>ndf = 1</code> and <code>ddf</code> = 4, which yields a p-value of 0.0139067.</p></li>
-<li><p>The confidence interval for the reader averaged difference between the two treatments is given by:</p></li>
-</ul>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="ROIDataAnalysis.html#cb98-1"></a>ret<span class="op">$</span>ciDiffTrtRRFC</span>
-<span id="cb98-2"><a href="ROIDataAnalysis.html#cb98-2"></a><span class="co">#&gt;   Treatment    Estimate     StdErr DF         t      PrGTt     CILower</span></span>
-<span id="cb98-3"><a href="ROIDataAnalysis.html#cb98-3"></a><span class="co">#&gt; 1 Trt1-Trt2 -0.03802005 0.00909345  4 -4.181037 0.01390667 -0.06326751</span></span>
-<span id="cb98-4"><a href="ROIDataAnalysis.html#cb98-4"></a><span class="co">#&gt;       CIUpper</span></span>
-<span id="cb98-5"><a href="ROIDataAnalysis.html#cb98-5"></a><span class="co">#&gt; 1 -0.01277258</span></span></code></pre></div>
-</div>
-</div>
-<div id="summary-6" class="section level2" number="16.7">
-<h2><span class="header-section-number">16.7</span> Summary</h2>
-<p>TBA</p>
-</div>
-<div id="references-9" class="section level2" number="16.8">
-<h2><span class="header-section-number">16.8</span> References</h2>
+<div id="for-rrfc-generalization" class="section level3" number="11.4.3">
+<h3><span class="header-section-number">11.4.3</span> For RRFC generalization</h3>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="SSRocORHRJafroc.html#cb82-1"></a>ncases &lt;-<span class="st"> </span><span class="kw">SsSampleSizeKGivenJ</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">J =</span> <span class="dv">10</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>, <span class="dt">option =</span> <span class="st">&quot;RRFC&quot;</span>)</span></code></pre></div>
+<p>The required number of cases is 53 and expected power is 0.8049666.</p>
 
-<div id="refs" class="references hanging-indent">
-<div>
-<p>Chakraborty, Dev P. 1989. “Maximum Likelihood Analysis of Free-Response Receiver Operating Characteristic (Froc) Data.” Journal Article. <em>Medical Physics</em> 16 (4): 561–68.</p>
 </div>
-<div>
-<p>———. 2017. <em>Observer Performance Methods for Diagnostic Imaging - Foundations, Modeling, and Applications with R-Based Examples</em>. Book. Boca Raton, FL: CRC Press.</p>
-</div>
-<div>
-<p>DeLong, E. R., D. M. DeLong, and D. L. Clarke-Pearson. 1988. “Comparing the Areas Under Two or More Correlated Receiver Operating Characteristic Curves: A Nonparametric Approach.” Journal Article. <em>Biometrics</em> 44: 837–45.</p>
-</div>
-<div>
-<p>Franken, Jr., Edmund A., Kevin S. Berbaum, Susan M. Marley, Wilbur L. Smith, Yutaka Sato, Simon C. S. Kao, and Steven G. Milam. 1992. “Evaluation of a Digital Workstation for Interpreting Neonatal Examinations: A Receiver Operating Characteristic Study.” Journal Article. <em>Investigative Radiology</em> 27 (9): 732–37. <a href="http://journals.lww.com/investigativeradiology/Fulltext/1992/09000/Evaluation_of_a_Digital_Workstation_for.16.aspx">http://journals.lww.com/investigativeradiology/Fulltext/1992/09000/Evaluation_of_a_Digital_Workstation_for.16.aspx</a>.</p>
-</div>
-<div>
-<p>Hillis, Stephen L., and K. S. Berbaum. 2004. “Power Estimation for the Dorfman-Berbaum-Metz Method.” Journal Article. <em>Acad. Radiol.</em> 11 (11): 1260–73.</p>
-</div>
-<div>
-<p>Metz, C. E. 1978. “Basic Principles of Roc Analysis.” Journal Article. <em>Seminars in Nuclear Medicine</em> 8 (4): 283–98.</p>
-</div>
-<div>
-<p>Obuchowski, Nancy A. 1997. “Nonparametric Analysis of Clustered Roc Curve Data.” Journal Article. <em>Biometrics</em> 53: 567–78.</p>
-</div>
-<div>
-<p>Obuchowski, Nancy A., Michael L. Lieber, and Kimerly A. Powell. 2000. “Data Analysis for Detection and Localization of Multiple Abnormalities with Application to Mammography.” Journal Article. <em>Acad. Radiol.</em> 7 (7): 516–25.</p>
-</div>
-<div>
-<p>Obuchowski, N. A., and H. E. Rockette. 1995. “Hypothesis Testing of the Diagnostic Accuracy for Multiple Diagnostic Tests: An Anova Approach with Dependent Observations.” Journal Article. <em>Communications in Statistics: Simulation and Computation</em> 24: 285–308.</p>
-</div>
-</div>
-</div>
-</div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-RN2680">
-<p>Chakraborty, Dev P. 2017. <em>Observer Performance Methods for Diagnostic Imaging - Foundations, Modeling, and Applications with R-Based Examples</em>. Book. Boca Raton, FL: CRC Press.</p>
-</div>
-<div id="ref-RN112">
-<p>DeLong, E. R., D. M. DeLong, and D. L. Clarke-Pearson. 1988. “Comparing the Areas Under Two or More Correlated Receiver Operating Characteristic Curves: A Nonparametric Approach.” Journal Article. <em>Biometrics</em> 44: 837–45.</p>
-</div>
-<div id="ref-RN1233">
-<p>Obuchowski, Nancy A. 1997. “Nonparametric Analysis of Clustered Roc Curve Data.” Journal Article. <em>Biometrics</em> 53: 567–78.</p>
-</div>
-<div id="ref-RN1450">
-<p>Obuchowski, N. A., and H. E. Rockette. 1995. “Hypothesis Testing of the Diagnostic Accuracy for Multiple Diagnostic Tests: An Anova Approach with Dependent Observations.” Journal Article. <em>Communications in Statistics: Simulation and Computation</em> 24: 285–308.</p>
 </div>
 </div>
             </section>
@@ -634,8 +604,8 @@ The ROI figure of merit <span class="math inline">\(\theta\)</span> is defined b
           </div>
         </div>
       </div>
-<a href="ROIDataStr.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="SSRocDBMHRJafroc.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ProperROCs.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
