@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Introduction | RJafroc Documentation</title>
+  <title>Chapter 4 ROI paradigm data | RJafroc Documentation</title>
   <meta name="description" content="Extended RJafroc documentation." />
   <meta name="generator" content="bookdown 0.18.1 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Introduction | RJafroc Documentation" />
+  <meta property="og:title" content="Chapter 4 ROI paradigm data | RJafroc Documentation" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Introduction | RJafroc Documentation" />
+  <meta name="twitter:title" content="Chapter 4 ROI paradigm data | RJafroc Documentation" />
   
   <meta name="twitter:description" content="Extended RJafroc documentation." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="rocdataformat.html"/>
+<link rel="prev" href="MetzEqn36.html"/>
+<link rel="next" href="ROIDataAnalysis.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -203,18 +203,130 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="intro" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
+<div id="ROIDataStr" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> ROI paradigm data</h1>
+<div id="introduction-this-vignette-is-under-construction" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Introduction; this vignette is under construction!</h2>
 <ul>
-<li>This is the book desribing the <strong>RJafroc</strong> package.</li>
-<li>The name of the book is RJafrocBook</li>
-<li>Modality and treatment are used interchangeably.</li>
-<li>Reader is a generic radiologist, or a computer aided detection algorithm, or any algorithmic “reader”</li>
-<li>TBA</li>
+<li>In the region-of-interest (ROI) paradigm <span class="citation">(Obuchowski <a href="#ref-RN1233" role="doc-biblioref">1997</a>, @RN55)</span> each case is regarded as consisting of <span class="math inline">\({Q_{k}}\)</span> (<span class="math inline">\({Q_{k}}\ge 1\)</span>) “quadrants” or “regions-of-interest” or ROIs, where <em>k</em> is the case index (<span class="math inline">\(k=1,2,...,K\)</span>) and <span class="math inline">\(K\)</span> is the total number of cases (i.e., case-level non-diseased plus case-level diseased cases). Each ROI needs to be classified, by the investigator, as either ROI-level-non-diseased (i.e., it has no lesions) or ROI-level-diseased (i.e., it has at least one lesion). <strong>Note the distinction between case-level and ROI-level truth states.</strong> One can have ROI-level non-diseased regions in a case-level diseased case. A case-level diseased case must contain at least one ROI-level diseased region and a case-level non-diseased case cannot have any ROI-level diseased regions.</li>
+<li>The observer gives a single rating (in fact an ordered label) to each ROI, denoted <span class="math inline">\({R_{kr}}\)</span> (<span class="math inline">\(r\)</span> = 1, 2, …, <span class="math inline">\({Q_k}\)</span>). Here <span class="math inline">\(r\)</span> is the ROI index and <span class="math inline">\(k\)</span> is the case index. The rating can be an integer or quasi- continuous (e.g., 0 – 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the ROI.</li>
+<li>The ROI paradigm is not restricted to 4 or even a constant number of ROIs per case. That is the reason for the <em>k</em> subscript in <span class="math inline">\({Q_k}\)</span>.</li>
+<li>The ROI data structure is a special case of the FROC data structure, the essential difference being that the number of ratings per case is an a-priori known value, equal to <span class="math inline">\({Q_{k}}\)</span>.</li>
+<li>ROI-level non-diseased region ratings are stored in the <code>NL</code> field and ROI-level diseased region ratings are stored in the <code>LL</code> field.<br />
+</li>
+<li>One can think of the ROI paradigm as similar to the FROC paradigm, but with localization accuracy restricted to belonging to a region (one cannot distinguish multiple lesions within a region). Unlike the FROC paradigm, a rating <em>is required</em> for every ROI.</li>
 </ul>
-<div id="references" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> References</h2>
+</div>
+<div id="an-example-roi-dataset" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> An example ROI dataset</h2>
+<p>An example simulated ROI dataset is included as <code>datasetROI</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="ROIDataStr.html#cb4-1"></a><span class="kw">str</span>(datasetROI)</span>
+<span id="cb4-2"><a href="ROIDataStr.html#cb4-2"></a><span class="co">#&gt; List of 8</span></span>
+<span id="cb4-3"><a href="ROIDataStr.html#cb4-3"></a><span class="co">#&gt;  $ NL          : num [1:2, 1:5, 1:90, 1:4] 0.95 0.927 0.556 0.805 1.421 ...</span></span>
+<span id="cb4-4"><a href="ROIDataStr.html#cb4-4"></a><span class="co">#&gt;  $ LL          : num [1:2, 1:5, 1:40, 1:4] 1.57 2.31 2.3 2.34 2.34 ...</span></span>
+<span id="cb4-5"><a href="ROIDataStr.html#cb4-5"></a><span class="co">#&gt;  $ lesionVector: int [1:40] 2 3 2 2 3 3 1 2 3 3 ...</span></span>
+<span id="cb4-6"><a href="ROIDataStr.html#cb4-6"></a><span class="co">#&gt;  $ lesionID    : num [1:40, 1:4] 2 1 1 1 1 2 4 1 1 1 ...</span></span>
+<span id="cb4-7"><a href="ROIDataStr.html#cb4-7"></a><span class="co">#&gt;  $ lesionWeight: num [1:40, 1:4] 0.5 0.333 0.5 0.5 0.333 ...</span></span>
+<span id="cb4-8"><a href="ROIDataStr.html#cb4-8"></a><span class="co">#&gt;  $ dataType    : chr &quot;ROI&quot;</span></span>
+<span id="cb4-9"><a href="ROIDataStr.html#cb4-9"></a><span class="co">#&gt;  $ modalityID  : Named chr [1:2] &quot;1&quot; &quot;2&quot;</span></span>
+<span id="cb4-10"><a href="ROIDataStr.html#cb4-10"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;1&quot; &quot;2&quot;</span></span>
+<span id="cb4-11"><a href="ROIDataStr.html#cb4-11"></a><span class="co">#&gt;  $ readerID    : Named chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...</span></span>
+<span id="cb4-12"><a href="ROIDataStr.html#cb4-12"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...</span></span>
+<span id="cb4-13"><a href="ROIDataStr.html#cb4-13"></a>datasetROI<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</span>
+<span id="cb4-14"><a href="ROIDataStr.html#cb4-14"></a><span class="co">#&gt; [1]  0.9498680 -0.0582497 -0.7763780  0.0120730</span></span>
+<span id="cb4-15"><a href="ROIDataStr.html#cb4-15"></a><span class="kw">mean</span>(datasetROI<span class="op">$</span>NL[,,<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,])</span>
+<span id="cb4-16"><a href="ROIDataStr.html#cb4-16"></a><span class="co">#&gt; [1] 0.1014348</span></span>
+<span id="cb4-17"><a href="ROIDataStr.html#cb4-17"></a>datasetROI<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">51</span>,]</span>
+<span id="cb4-18"><a href="ROIDataStr.html#cb4-18"></a><span class="co">#&gt; [1] 1.01867 0.34710    -Inf    -Inf</span></span>
+<span id="cb4-19"><a href="ROIDataStr.html#cb4-19"></a>datasetROI<span class="op">$</span>lesionVector[<span class="dv">1</span>]</span>
+<span id="cb4-20"><a href="ROIDataStr.html#cb4-20"></a><span class="co">#&gt; [1] 2</span></span>
+<span id="cb4-21"><a href="ROIDataStr.html#cb4-21"></a>datasetROI<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,]</span>
+<span id="cb4-22"><a href="ROIDataStr.html#cb4-22"></a><span class="co">#&gt; [1] 1.56928 2.05945    -Inf    -Inf</span></span>
+<span id="cb4-23"><a href="ROIDataStr.html#cb4-23"></a>x &lt;-<span class="st"> </span>datasetROI<span class="op">$</span>LL;<span class="kw">mean</span>(x[<span class="kw">is.finite</span>(x)])</span>
+<span id="cb4-24"><a href="ROIDataStr.html#cb4-24"></a><span class="co">#&gt; [1] 1.815513</span></span></code></pre></div>
+<p>Examination of the output reveals that:</p>
+<ul>
+<li>This is a 2-treatment 5-reader dataset, with 50 non-diseased cases and 40 diseased cases, and <span class="math inline">\({Q_k}=4\)</span> for all <em>k</em>.<br />
+</li>
+<li>For treatment 1, reader 1, case 1 (the 1st non-diseased case) the 4 ratings are 0.949868, -0.0582497, -0.776378, 0.012073. The mean of all ratings on non-diseased cases is 0.1014348.<br />
+</li>
+<li>For treatment 1, reader 1, case 51 (the 1st diseased case) the NL ratings are 1.01867, 0.3471. There are only two finite values because this case has two ROI-level-diseased regions, and 2 plus 2 makes for the assumed 4-regions per case. The corresponding <code>$lesionVector</code> field is 2.<br />
+</li>
+<li>The ratings of the 2 ROI-level-diseased ROIs on this case are 1.56928, 2.05945. The mean rating over all ROI-level-diseased ROIs is 1.8155127.</li>
+</ul>
+</div>
+<div id="the-roi-excel-data-file" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> The ROI Excel data file</h2>
+<ul>
+<li>An Excel file in JAFROC format containing simulated ROI data corresponding to <code>datasetROI</code>, is included with the distribution. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object <code>ds</code>. !!!DPC!!!</li>
+<li>The <code>DfReadDataFile</code> function automatically recognizes that this is an <em>ROI</em> dataset. Its structure is similar to the JAFROC format Excel file, with some important differences, noted below. It contains three worksheets:</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="ROIDataStr.html#cb5-1"></a><span class="co">## fileName &lt;- system.file(</span></span>
+<span id="cb5-2"><a href="ROIDataStr.html#cb5-2"></a><span class="co">##     &quot;extdata&quot;, &quot;RoiData.xlsx&quot;, package = &quot;RJafroc&quot;, mustWork = TRUE)</span></span>
+<span id="cb5-3"><a href="ROIDataStr.html#cb5-3"></a><span class="co">## ds &lt;- DfReadDataFile(fileName)</span></span>
+<span id="cb5-4"><a href="ROIDataStr.html#cb5-4"></a><span class="co">## ds$dataType</span></span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-3"></span>
+<img src="images/ROI-Truth-1.png" alt="Fig. 1 two views of Truth worksheet" width="50%" height="20%" /><img src="images/ROI-Truth-2.png" alt="Fig. 1 two views of Truth worksheet" width="50%" height="20%" />
+<p class="caption">
+FIGURE 4.1: Fig. 1 two views of Truth worksheet
+</p>
+</div>
+<ul>
+<li>The <code>Truth</code> worksheet, Fig. 1, indicates which cases are diseased and which are non-diseased and the number of ROI-level-diseased region on each case.
+<ul>
+<li>There are 50 non-diseased cases (labeled 1-50) under column <code>CaseID</code> and 40 diseased cases (labeled 51-90).<br />
+</li>
+<li>The <code>LesionID</code> field for each non-diseased case (e.g., <code>CaseID</code> = 1) is zero and there is one row per case. For diseased cases, this field has a variable number of entries, ranging from 1 to 4. As an example, there are two rows for <code>CaseID</code> = 51 in the Excel file: one with <code>LesionID</code> = 2 and one with <code>LesionID</code> = 3.<br />
+</li>
+<li>The <code>Weights</code> field is always zero (this field is not used in ROI analysis).</li>
+</ul></li>
+</ul>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-4"></span>
+<img src="images/ROI-FP-1.png" alt="Fig. 2 two views of FP worksheet" width="50%" height="20%" /><img src="images/ROI-FP-2.png" alt="Fig. 2 two views of FP worksheet" width="50%" height="20%" />
+<p class="caption">
+FIGURE 4.2: Fig. 2 two views of FP worksheet
+</p>
+</div>
+<ul>
+<li>The <code>FP</code> (or <code>NL</code>) worksheet - this lists the ratings of ROI-level-non-diseased regions.
+<ul>
+<li>For <code>ReaderID</code> = 1, <code>ModalityID</code> = 1 and <code>CaseID</code> = 1 there are 4 rows, corresponding to the 4 ROI-level-non-diseased regions in this case. The corresponding ratings are 0.949868, -0.0582497, -0.776378, 0.012073. The pattern repeats for other treatments and readers, but the rating are, of course, different.<br />
+</li>
+<li>Each <code>CaseID</code> is represented in the <code>FP</code> worksheet (a rare exception could occur if a case-level diseased case has 4 diseased regions).</li>
+</ul></li>
+</ul>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-5"></span>
+<img src="images/ROI-TP-1.png" alt="Fig. 2 TP worksheet" width="50%" height="20%" />
+<p class="caption">
+FIGURE 4.3: Fig. 2 TP worksheet
+</p>
+</div>
+<ul>
+<li>The <code>TP</code> (or <code>LL</code>) worksheet - this lists the ratings of ROI-level-diseased regions.
+<ul>
+<li>Because non-diseased cases generate TPs, one does not find any entry with <code>CaseID</code> = 1-50 in the <code>TP</code> worksheet.<br />
+</li>
+<li>The lowest <code>CaseID</code> in the <code>TP</code> worksheet is 51, which corresponds to the first diseased case.<br />
+</li>
+<li>There are two entries for this case, corresponding to the two ROI-level-diseased regions present in this case. Recall that corresponding to this <code>CaseID</code> in the <code>Truth</code> worksheet there were two entries with <code>LesionID</code> = 2 and 3. These must match the <code>LesionID</code>’s listed for this case in the <code>TP</code> worksheet. Complementing these two entries, in the <code>FP</code> worksheet for <code>CaseID</code> = 51, there are 2 entries corresponding to the two ROI-level-non-diseased regions in this case.<br />
+</li>
+<li>One should confirm that for each diseased case the sum of the number of entries in the <code>TP</code> and <code>FP</code> worksheets is always 4.</li>
+</ul></li>
+</ul>
+</div>
+<div id="next-tba" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Next, TBA</h2>
+<p>The next vignette illustrates significance testing for this paradigm.</p>
+</div>
+<div id="references-2" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> References</h2>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-RN1233">
+<p>Obuchowski, Nancy A. 1997. “Nonparametric Analysis of Clustered Roc Curve Data.” Journal Article. <em>Biometrics</em> 53: 567–78.</p>
 </div>
 </div>
             </section>
@@ -222,8 +334,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="rocdataformat.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="MetzEqn36.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ROIDataAnalysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

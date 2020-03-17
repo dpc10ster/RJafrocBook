@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Introduction | RJafroc Documentation</title>
+  <title>Chapter 3 Metz Eqn36 numerical check | RJafroc Documentation</title>
   <meta name="description" content="Extended RJafroc documentation." />
   <meta name="generator" content="bookdown 0.18.1 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Introduction | RJafroc Documentation" />
+  <meta property="og:title" content="Chapter 3 Metz Eqn36 numerical check | RJafroc Documentation" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Introduction | RJafroc Documentation" />
+  <meta name="twitter:title" content="Chapter 3 Metz Eqn36 numerical check | RJafroc Documentation" />
   
   <meta name="twitter:description" content="Extended RJafroc documentation." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="rocdataformat.html"/>
+<link rel="prev" href="rocdataformat.html"/>
+<link rel="next" href="ROIDataStr.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -203,17 +203,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="intro" class="section level1" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
-<ul>
-<li>This is the book desribing the <strong>RJafroc</strong> package.</li>
-<li>The name of the book is RJafrocBook</li>
-<li>Modality and treatment are used interchangeably.</li>
-<li>Reader is a generic radiologist, or a computer aided detection algorithm, or any algorithmic “reader”</li>
-<li>TBA</li>
-</ul>
-<div id="references" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> References</h2>
+<div id="MetzEqn36" class="section level1" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Metz Eqn36 numerical check</h1>
+<div id="helper-functions" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Helper functions</h2>
+</div>
+<div id="main-code-and-output" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Main code and output</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="MetzEqn36.html#cb3-1"></a>npts &lt;-<span class="st">  </span><span class="dv">10000</span></span>
+<span id="cb3-2"><a href="MetzEqn36.html#cb3-2"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) {</span>
+<span id="cb3-3"><a href="MetzEqn36.html#cb3-3"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) {</span>
+<span id="cb3-4"><a href="MetzEqn36.html#cb3-4"></a>    C  &lt;-<span class="st">  </span>c1[i,j]</span>
+<span id="cb3-5"><a href="MetzEqn36.html#cb3-5"></a>    da  &lt;-<span class="st">  </span>d_a1[i,j]</span>
+<span id="cb3-6"><a href="MetzEqn36.html#cb3-6"></a>    ret &lt;-<span class="st"> </span><span class="kw">GetLimits</span>(da,C)</span>
+<span id="cb3-7"><a href="MetzEqn36.html#cb3-7"></a>    LL &lt;-<span class="st"> </span>ret<span class="op">$</span>LL;UL &lt;-<span class="st"> </span>ret<span class="op">$</span>UL</span>
+<span id="cb3-8"><a href="MetzEqn36.html#cb3-8"></a>    vc  &lt;-<span class="st">  </span><span class="kw">seq</span> (LL, UL, <span class="dt">length.out =</span> npts)</span>
+<span id="cb3-9"><a href="MetzEqn36.html#cb3-9"></a>    TPF  &lt;-<span class="st">  </span><span class="kw">TruePositiveFraction</span> (vc, da, C)</span>
+<span id="cb3-10"><a href="MetzEqn36.html#cb3-10"></a>    FPF &lt;-<span class="st"> </span><span class="kw">FalsePositiveFraction</span> (vc, da, C)</span>
+<span id="cb3-11"><a href="MetzEqn36.html#cb3-11"></a>    FPF &lt;-<span class="st"> </span><span class="kw">rev</span>(FPF);TPF &lt;-<span class="st"> </span><span class="kw">rev</span>(TPF)</span>
+<span id="cb3-12"><a href="MetzEqn36.html#cb3-12"></a>    df2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">FPF =</span> FPF, <span class="dt">TPF =</span> TPF)</span>
+<span id="cb3-13"><a href="MetzEqn36.html#cb3-13"></a>    <span class="co"># do integral numerically</span></span>
+<span id="cb3-14"><a href="MetzEqn36.html#cb3-14"></a>    numAuc &lt;-<span class="st"> </span><span class="kw">trapz</span>(FPF, TPF)</span>
+<span id="cb3-15"><a href="MetzEqn36.html#cb3-15"></a>    <span class="co"># Implement Eqn. 36 from Metz-Pan paper </span></span>
+<span id="cb3-16"><a href="MetzEqn36.html#cb3-16"></a>    rho &lt;-<span class="st"> </span><span class="op">-</span>(<span class="dv">1</span><span class="op">-</span>C<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span>C<span class="op">^</span><span class="dv">2</span>);sigma &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">1</span>, rho), <span class="kw">c</span>(rho, <span class="dv">1</span>))</span>
+<span id="cb3-17"><a href="MetzEqn36.html#cb3-17"></a>    lower &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="op">-</span><span class="ot">Inf</span>,<span class="dv">2</span>);upper &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span>da<span class="op">/</span><span class="kw">sqrt</span>(<span class="dv">2</span>),<span class="dv">0</span>)</span>
+<span id="cb3-18"><a href="MetzEqn36.html#cb3-18"></a>    aucProproc &lt;-<span class="st"> </span><span class="kw">pnorm</span>(da<span class="op">/</span><span class="kw">sqrt</span>(<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pmvnorm</span>(lower, upper, <span class="dt">sigma =</span> sigma)</span>
+<span id="cb3-19"><a href="MetzEqn36.html#cb3-19"></a>    aucProproc &lt;-<span class="st">  </span><span class="kw">as.numeric</span>(aucProproc)</span>
+<span id="cb3-20"><a href="MetzEqn36.html#cb3-20"></a>    <span class="kw">cat</span>(<span class="st">&quot;i = &quot;</span>, i,<span class="st">&quot;j = &quot;</span>, j,<span class="st">&quot;C = &quot;</span>, C, <span class="st">&quot;, da = &quot;</span>, da, <span class="st">&quot;aucProproc =&quot;</span>, aucProproc, <span class="st">&quot;Norm. Diff. = &quot;</span>, (aucProproc<span class="op">-</span>numAuc)<span class="op">/</span>aucProproc,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb3-21"><a href="MetzEqn36.html#cb3-21"></a>  }</span>
+<span id="cb3-22"><a href="MetzEqn36.html#cb3-22"></a>}</span>
+<span id="cb3-23"><a href="MetzEqn36.html#cb3-23"></a><span class="co">#&gt; i =  1 j =  1 C =  -0.1322804 , da =  1.197239 aucProproc = 0.8014164 Norm. Diff. =  3.520017e-08 </span></span>
+<span id="cb3-24"><a href="MetzEqn36.html#cb3-24"></a><span class="co">#&gt; i =  1 j =  2 C =  -0.08696513 , da =  1.771176 aucProproc = 0.8947898 Norm. Diff. =  4.741875e-08 </span></span>
+<span id="cb3-25"><a href="MetzEqn36.html#cb3-25"></a><span class="co">#&gt; i =  1 j =  3 C =  -0.1444419 , da =  1.481935 aucProproc = 0.8526605 Norm. Diff. =  3.515431e-08 </span></span>
+<span id="cb3-26"><a href="MetzEqn36.html#cb3-26"></a><span class="co">#&gt; i =  1 j =  4 C =  0.08046016 , da =  1.513757 aucProproc = 0.8577776 Norm. Diff. =  4.971428e-08 </span></span>
+<span id="cb3-27"><a href="MetzEqn36.html#cb3-27"></a><span class="co">#&gt; i =  1 j =  5 C =  0.2225588 , da =  1.740157 aucProproc = 0.8909392 Norm. Diff. =  2.699855e-08 </span></span>
+<span id="cb3-28"><a href="MetzEqn36.html#cb3-28"></a><span class="co">#&gt; i =  2 j =  1 C =  -0.08174248 , da =  0.6281251 aucProproc = 0.6716574 Norm. Diff. =  2.801793e-08 </span></span>
+<span id="cb3-29"><a href="MetzEqn36.html#cb3-29"></a><span class="co">#&gt; i =  2 j =  2 C =  0.04976448 , da =  0.9738786 aucProproc = 0.7544739 Norm. Diff. =  5.275242e-08 </span></span>
+<span id="cb3-30"><a href="MetzEqn36.html#cb3-30"></a><span class="co">#&gt; i =  2 j =  3 C =  -0.1326126 , da =  1.155871 aucProproc = 0.7931787 Norm. Diff. =  3.472577e-08 </span></span>
+<span id="cb3-31"><a href="MetzEqn36.html#cb3-31"></a><span class="co">#&gt; i =  2 j =  4 C =  0.1182226 , da =  1.620176 aucProproc = 0.8740274 Norm. Diff. =  3.922161e-08 </span></span>
+<span id="cb3-32"><a href="MetzEqn36.html#cb3-32"></a><span class="co">#&gt; i =  2 j =  5 C =  0.0781033 , da =  0.8928816 aucProproc = 0.7360989 Norm. Diff. =  3.798459e-08</span></span></code></pre></div>
+</div>
+<div id="discussion" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Discussion</h2>
+<p>Note the close correspondence between the formula, Eqn. 36 in the Metz-Pan paper and the numerical estimate. As a historical note, Eqn. 31 and Eqn. 36 (they differ only in parameterizations) in the referenced publication are provided without proof – it was probably obvious to Prof Metz or he wanted to leave it to us “mere mortals” to figure it out, as a final parting gesture of his legacy. The author once put a significant effort into proving it and even had a bright graduate student from the biostatistics department work on it to no avail. The author has observed that these equations always yield very close to the numerical estimates, to within numerical precisions, so the theorem is correct empirically, but he has been unable to prove it analytically. It is left as an exercise for a gifted reader to prove/disprove these equations.</p>
 
 </div>
 </div>
@@ -222,8 +254,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="rocdataformat.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="rocdataformat.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ROIDataStr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

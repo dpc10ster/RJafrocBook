@@ -120,7 +120,7 @@
 
 \title{RJafroc Documentation}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-03-13}
+\date{2020-03-17}
 
 \begin{document}
 \maketitle
@@ -515,6 +515,536 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 
 \hypertarget{references-1}{%
 \section{References}\label{references-1}}
+
+\hypertarget{MetzEqn36}{%
+\chapter{Metz Eqn36 numerical check}\label{MetzEqn36}}
+
+\hypertarget{helper-functions}{%
+\section{Helper functions}\label{helper-functions}}
+
+\hypertarget{main-code-and-output}{%
+\section{Main code and output}\label{main-code-and-output}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{npts \textless{}{-}}\StringTok{  }\DecValTok{10000}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{) \{}
+  \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{) \{}
+\NormalTok{    C  \textless{}{-}}\StringTok{  }\NormalTok{c1[i,j]}
+\NormalTok{    da  \textless{}{-}}\StringTok{  }\NormalTok{d\_a1[i,j]}
+\NormalTok{    ret \textless{}{-}}\StringTok{ }\KeywordTok{GetLimits}\NormalTok{(da,C)}
+\NormalTok{    LL \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{LL;UL \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{UL}
+\NormalTok{    vc  \textless{}{-}}\StringTok{  }\KeywordTok{seq}\NormalTok{ (LL, UL, }\DataTypeTok{length.out =}\NormalTok{ npts)}
+\NormalTok{    TPF  \textless{}{-}}\StringTok{  }\KeywordTok{TruePositiveFraction}\NormalTok{ (vc, da, C)}
+\NormalTok{    FPF \textless{}{-}}\StringTok{ }\KeywordTok{FalsePositiveFraction}\NormalTok{ (vc, da, C)}
+\NormalTok{    FPF \textless{}{-}}\StringTok{ }\KeywordTok{rev}\NormalTok{(FPF);TPF \textless{}{-}}\StringTok{ }\KeywordTok{rev}\NormalTok{(TPF)}
+\NormalTok{    df2 \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{FPF =}\NormalTok{ FPF, }\DataTypeTok{TPF =}\NormalTok{ TPF)}
+    \CommentTok{\# do integral numerically}
+\NormalTok{    numAuc \textless{}{-}}\StringTok{ }\KeywordTok{trapz}\NormalTok{(FPF, TPF)}
+    \CommentTok{\# Implement Eqn. 36 from Metz{-}Pan paper }
+\NormalTok{    rho \textless{}{-}}\StringTok{ }\OperatorTok{{-}}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{C}\OperatorTok{\^{}}\DecValTok{2}\NormalTok{)}\OperatorTok{/}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{C}\OperatorTok{\^{}}\DecValTok{2}\NormalTok{);sigma \textless{}{-}}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, rho), }\KeywordTok{c}\NormalTok{(rho, }\DecValTok{1}\NormalTok{))}
+\NormalTok{    lower \textless{}{-}}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OperatorTok{{-}}\OtherTok{Inf}\NormalTok{,}\DecValTok{2}\NormalTok{);upper \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\OperatorTok{{-}}\NormalTok{da}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\NormalTok{),}\DecValTok{0}\NormalTok{)}
+\NormalTok{    aucProproc \textless{}{-}}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(da}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\NormalTok{)) }\OperatorTok{+}\StringTok{ }\DecValTok{2} \OperatorTok{*}\StringTok{ }\KeywordTok{pmvnorm}\NormalTok{(lower, upper, }\DataTypeTok{sigma =}\NormalTok{ sigma)}
+\NormalTok{    aucProproc \textless{}{-}}\StringTok{  }\KeywordTok{as.numeric}\NormalTok{(aucProproc)}
+    \KeywordTok{cat}\NormalTok{(}\StringTok{"i = "}\NormalTok{, i,}\StringTok{"j = "}\NormalTok{, j,}\StringTok{"C = "}\NormalTok{, C, }\StringTok{", da = "}\NormalTok{, da, }\StringTok{"aucProproc ="}\NormalTok{, aucProproc, }\StringTok{"Norm. Diff. = "}\NormalTok{, (aucProproc}\OperatorTok{{-}}\NormalTok{numAuc)}\OperatorTok{/}\NormalTok{aucProproc,}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\CommentTok{\#\textgreater{} i =  1 j =  1 C =  {-}0.1322804 , da =  1.197239 aucProproc = 0.8014164 Norm. Diff. =  3.520017e{-}08 }
+\CommentTok{\#\textgreater{} i =  1 j =  2 C =  {-}0.08696513 , da =  1.771176 aucProproc = 0.8947898 Norm. Diff. =  4.741875e{-}08 }
+\CommentTok{\#\textgreater{} i =  1 j =  3 C =  {-}0.1444419 , da =  1.481935 aucProproc = 0.8526605 Norm. Diff. =  3.515431e{-}08 }
+\CommentTok{\#\textgreater{} i =  1 j =  4 C =  0.08046016 , da =  1.513757 aucProproc = 0.8577776 Norm. Diff. =  4.971428e{-}08 }
+\CommentTok{\#\textgreater{} i =  1 j =  5 C =  0.2225588 , da =  1.740157 aucProproc = 0.8909392 Norm. Diff. =  2.699855e{-}08 }
+\CommentTok{\#\textgreater{} i =  2 j =  1 C =  {-}0.08174248 , da =  0.6281251 aucProproc = 0.6716574 Norm. Diff. =  2.801793e{-}08 }
+\CommentTok{\#\textgreater{} i =  2 j =  2 C =  0.04976448 , da =  0.9738786 aucProproc = 0.7544739 Norm. Diff. =  5.275242e{-}08 }
+\CommentTok{\#\textgreater{} i =  2 j =  3 C =  {-}0.1326126 , da =  1.155871 aucProproc = 0.7931787 Norm. Diff. =  3.472577e{-}08 }
+\CommentTok{\#\textgreater{} i =  2 j =  4 C =  0.1182226 , da =  1.620176 aucProproc = 0.8740274 Norm. Diff. =  3.922161e{-}08 }
+\CommentTok{\#\textgreater{} i =  2 j =  5 C =  0.0781033 , da =  0.8928816 aucProproc = 0.7360989 Norm. Diff. =  3.798459e{-}08}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
+
+Note the close correspondence between the formula, Eqn. 36 in the Metz-Pan paper and the numerical estimate. As a historical note, Eqn. 31 and Eqn. 36 (they differ only in parameterizations) in the referenced publication are provided without proof -- it was probably obvious to Prof Metz or he wanted to leave it to us ``mere mortals'' to figure it out, as a final parting gesture of his legacy. The author once put a significant effort into proving it and even had a bright graduate student from the biostatistics department work on it to no avail. The author has observed that these equations always yield very close to the numerical estimates, to within numerical precisions, so the theorem is correct empirically, but he has been unable to prove it analytically. It is left as an exercise for a gifted reader to prove/disprove these equations.
+
+\hypertarget{ROIDataStr}{%
+\chapter{ROI paradigm data}\label{ROIDataStr}}
+
+\hypertarget{introduction-this-vignette-is-under-construction}{%
+\section{Introduction; this vignette is under construction!}\label{introduction-this-vignette-is-under-construction}}
+
+\begin{itemize}
+\tightlist
+\item
+  In the region-of-interest (ROI) paradigm \citep[\citet{RN55}]{RN1233} each case is regarded as consisting of \({Q_{k}}\) (\({Q_{k}}\ge 1\)) ``quadrants'' or ``regions-of-interest'' or ROIs, where \emph{k} is the case index (\(k=1,2,...,K\)) and \(K\) is the total number of cases (i.e., case-level non-diseased plus case-level diseased cases). Each ROI needs to be classified, by the investigator, as either ROI-level-non-diseased (i.e., it has no lesions) or ROI-level-diseased (i.e., it has at least one lesion). \textbf{Note the distinction between case-level and ROI-level truth states.} One can have ROI-level non-diseased regions in a case-level diseased case. A case-level diseased case must contain at least one ROI-level diseased region and a case-level non-diseased case cannot have any ROI-level diseased regions.
+\item
+  The observer gives a single rating (in fact an ordered label) to each ROI, denoted \({R_{kr}}\) (\(r\) = 1, 2, \ldots, \({Q_k}\)). Here \(r\) is the ROI index and \(k\) is the case index. The rating can be an integer or quasi- continuous (e.g., 0 -- 100), or a floating point value, as long as higher numbers represent greater confidence in presence of one or more lesions in the ROI.
+\item
+  The ROI paradigm is not restricted to 4 or even a constant number of ROIs per case. That is the reason for the \emph{k} subscript in \({Q_k}\).
+\item
+  The ROI data structure is a special case of the FROC data structure, the essential difference being that the number of ratings per case is an a-priori known value, equal to \({Q_{k}}\).
+\item
+  ROI-level non-diseased region ratings are stored in the \texttt{NL} field and ROI-level diseased region ratings are stored in the \texttt{LL} field.\\
+\item
+  One can think of the ROI paradigm as similar to the FROC paradigm, but with localization accuracy restricted to belonging to a region (one cannot distinguish multiple lesions within a region). Unlike the FROC paradigm, a rating \emph{is required} for every ROI.
+\end{itemize}
+
+\hypertarget{an-example-roi-dataset}{%
+\section{An example ROI dataset}\label{an-example-roi-dataset}}
+
+An example simulated ROI dataset is included as \texttt{datasetROI}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(datasetROI)}
+\CommentTok{\#\textgreater{} List of 8}
+\CommentTok{\#\textgreater{}  $ NL          : num [1:2, 1:5, 1:90, 1:4] 0.95 0.927 0.556 0.805 1.421 ...}
+\CommentTok{\#\textgreater{}  $ LL          : num [1:2, 1:5, 1:40, 1:4] 1.57 2.31 2.3 2.34 2.34 ...}
+\CommentTok{\#\textgreater{}  $ lesionVector: int [1:40] 2 3 2 2 3 3 1 2 3 3 ...}
+\CommentTok{\#\textgreater{}  $ lesionID    : num [1:40, 1:4] 2 1 1 1 1 2 4 1 1 1 ...}
+\CommentTok{\#\textgreater{}  $ lesionWeight: num [1:40, 1:4] 0.5 0.333 0.5 0.5 0.333 ...}
+\CommentTok{\#\textgreater{}  $ dataType    : chr "ROI"}
+\CommentTok{\#\textgreater{}  $ modalityID  : Named chr [1:2] "1" "2"}
+\CommentTok{\#\textgreater{}   ..{-} attr(*, "names")= chr [1:2] "1" "2"}
+\CommentTok{\#\textgreater{}  $ readerID    : Named chr [1:5] "1" "2" "3" "4" ...}
+\CommentTok{\#\textgreater{}   ..{-} attr(*, "names")= chr [1:5] "1" "2" "3" "4" ...}
+\NormalTok{datasetROI}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,]}
+\CommentTok{\#\textgreater{} [1]  0.9498680 {-}0.0582497 {-}0.7763780  0.0120730}
+\KeywordTok{mean}\NormalTok{(datasetROI}\OperatorTok{$}\NormalTok{NL[,,}\DecValTok{1}\OperatorTok{:}\DecValTok{50}\NormalTok{,])}
+\CommentTok{\#\textgreater{} [1] 0.1014348}
+\NormalTok{datasetROI}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{51}\NormalTok{,]}
+\CommentTok{\#\textgreater{} [1] 1.01867 0.34710    {-}Inf    {-}Inf}
+\NormalTok{datasetROI}\OperatorTok{$}\NormalTok{lesionVector[}\DecValTok{1}\NormalTok{]}
+\CommentTok{\#\textgreater{} [1] 2}
+\NormalTok{datasetROI}\OperatorTok{$}\NormalTok{LL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,]}
+\CommentTok{\#\textgreater{} [1] 1.56928 2.05945    {-}Inf    {-}Inf}
+\NormalTok{x \textless{}{-}}\StringTok{ }\NormalTok{datasetROI}\OperatorTok{$}\NormalTok{LL;}\KeywordTok{mean}\NormalTok{(x[}\KeywordTok{is.finite}\NormalTok{(x)])}
+\CommentTok{\#\textgreater{} [1] 1.815513}
+\end{Highlighting}
+\end{Shaded}
+
+Examination of the output reveals that:
+
+\begin{itemize}
+\tightlist
+\item
+  This is a 2-treatment 5-reader dataset, with 50 non-diseased cases and 40 diseased cases, and \({Q_k}=4\) for all \emph{k}.\\
+\item
+  For treatment 1, reader 1, case 1 (the 1st non-diseased case) the 4 ratings are 0.949868, -0.0582497, -0.776378, 0.012073. The mean of all ratings on non-diseased cases is 0.1014348.\\
+\item
+  For treatment 1, reader 1, case 51 (the 1st diseased case) the NL ratings are 1.01867, 0.3471. There are only two finite values because this case has two ROI-level-diseased regions, and 2 plus 2 makes for the assumed 4-regions per case. The corresponding \texttt{\$lesionVector} field is 2.\\
+\item
+  The ratings of the 2 ROI-level-diseased ROIs on this case are 1.56928, 2.05945. The mean rating over all ROI-level-diseased ROIs is 1.8155127.
+\end{itemize}
+
+\hypertarget{the-roi-excel-data-file}{%
+\section{The ROI Excel data file}\label{the-roi-excel-data-file}}
+
+\begin{itemize}
+\tightlist
+\item
+  An Excel file in JAFROC format containing simulated ROI data corresponding to \texttt{datasetROI}, is included with the distribution. The first command (below) finds the location of the file and the second command reads it and saves it to a dataset object \texttt{ds}. !!!DPC!!!
+\item
+  The \texttt{DfReadDataFile} function automatically recognizes that this is an \emph{ROI} dataset. Its structure is similar to the JAFROC format Excel file, with some important differences, noted below. It contains three worksheets:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#\# fileName \textless{}{-} system.file(}
+\CommentTok{\#\#     "extdata", "RoiData.xlsx", package = "RJafroc", mustWork = TRUE)}
+\CommentTok{\#\# ds \textless{}{-} DfReadDataFile(fileName)}
+\CommentTok{\#\# ds$dataType}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/ROI-Truth-1} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/ROI-Truth-2} 
+
+}
+
+\caption{Fig. 1 two views of Truth worksheet}\label{fig:unnamed-chunk-3}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{Truth} worksheet, Fig. 1, indicates which cases are diseased and which are non-diseased and the number of ROI-level-diseased region on each case.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    There are 50 non-diseased cases (labeled 1-50) under column \texttt{CaseID} and 40 diseased cases (labeled 51-90).\\
+  \item
+    The \texttt{LesionID} field for each non-diseased case (e.g., \texttt{CaseID} = 1) is zero and there is one row per case. For diseased cases, this field has a variable number of entries, ranging from 1 to 4. As an example, there are two rows for \texttt{CaseID} = 51 in the Excel file: one with \texttt{LesionID} = 2 and one with \texttt{LesionID} = 3.\\
+  \item
+    The \texttt{Weights} field is always zero (this field is not used in ROI analysis).
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/ROI-FP-1} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/ROI-FP-2} 
+
+}
+
+\caption{Fig. 2 two views of FP worksheet}\label{fig:unnamed-chunk-4}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{FP} (or \texttt{NL}) worksheet - this lists the ratings of ROI-level-non-diseased regions.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    For \texttt{ReaderID} = 1, \texttt{ModalityID} = 1 and \texttt{CaseID} = 1 there are 4 rows, corresponding to the 4 ROI-level-non-diseased regions in this case. The corresponding ratings are 0.949868, -0.0582497, -0.776378, 0.012073. The pattern repeats for other treatments and readers, but the rating are, of course, different.\\
+  \item
+    Each \texttt{CaseID} is represented in the \texttt{FP} worksheet (a rare exception could occur if a case-level diseased case has 4 diseased regions).
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/ROI-TP-1} 
+
+}
+
+\caption{Fig. 2 TP worksheet}\label{fig:unnamed-chunk-5}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{TP} (or \texttt{LL}) worksheet - this lists the ratings of ROI-level-diseased regions.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Because non-diseased cases generate TPs, one does not find any entry with \texttt{CaseID} = 1-50 in the \texttt{TP} worksheet.\\
+  \item
+    The lowest \texttt{CaseID} in the \texttt{TP} worksheet is 51, which corresponds to the first diseased case.\\
+  \item
+    There are two entries for this case, corresponding to the two ROI-level-diseased regions present in this case. Recall that corresponding to this \texttt{CaseID} in the \texttt{Truth} worksheet there were two entries with \texttt{LesionID} = 2 and 3. These must match the \texttt{LesionID}'s listed for this case in the \texttt{TP} worksheet. Complementing these two entries, in the \texttt{FP} worksheet for \texttt{CaseID} = 51, there are 2 entries corresponding to the two ROI-level-non-diseased regions in this case.\\
+  \item
+    One should confirm that for each diseased case the sum of the number of entries in the \texttt{TP} and \texttt{FP} worksheets is always 4.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{next-tba}{%
+\section{Next, TBA}\label{next-tba}}
+
+The next vignette illustrates significance testing for this paradigm.
+
+\hypertarget{references-2}{%
+\section{References}\label{references-2}}
+
+\hypertarget{ROIDataAnalysis}{%
+\chapter{Analyzing data acquired according to the ROI paradigm}\label{ROIDataAnalysis}}
+
+\hypertarget{introduction-this-vignette-is-under-construction-1}{%
+\section{Introduction; this vignette is under construction!}\label{introduction-this-vignette-is-under-construction-1}}
+
+\hypertarget{note-to-self-102919-dpc}{%
+\section{Note to self (10/29/19) !!!DPC!!!}\label{note-to-self-102919-dpc}}
+
+The FOM and DeLong method implementations need checking with a toy dataset.
+
+\hypertarget{introduction-1}{%
+\section{Introduction}\label{introduction-1}}
+
+\begin{itemize}
+\item
+  For an ROI dataset \texttt{StSignificanceTesting()} automatically defaults to \texttt{method\ =\ "ORH"}, \texttt{covEstMethod\ =\ "DeLong"} and \texttt{FOM\ =\ "ROI"}.
+\item
+  The covariance estimation method is based on the original DeLong method \citep{RN112}, which is valid only for the trapezoidal AUC, i.e.~ROC data, as extended by \citep{RN1233} to ROI data, see formula below.
+\item
+  The essential differences from conventional ROC analyses are in the definition of the ROI figure of merit, see below, and the procedure developed by \citep{RN1233} for estimating the covariance matrix. Once the covariances are known, \texttt{method\ =\ "ORH"} can be applied to perform significance testing, as described in \citep{RN1450} and \citep[Chapter 10]{RN2680}.
+\end{itemize}
+
+\hypertarget{the-roi-figure-of-merit}{%
+\section{The ROI figure of merit}\label{the-roi-figure-of-merit}}
+
+Let \({X_{kr}}\) denote the rating for the r\textsuperscript{th} \textbf{lesion-containing} ROI in the k\textsuperscript{th} case and let \(n_{k}^L\) be the total number of lesion-containing ROIs in the k\textsuperscript{th} case. Similarly, let \({Y_{kr}}\) denote the rating for the r\textsuperscript{th} \textbf{lesion-free} ROI in the k\textsuperscript{th} case and \(n_{k}^N\) denote the total number of lesion-free ROIs in the k\textsuperscript{th} case. Let \({N_L}\) denote the total number of lesion-containing ROIs in the image set and \(N_N\) denote the total number of lesion-free ROIs. These are given by:
+\[N_L=\sum\nolimits_{k}{n_{k}^L}\] and \[N_N=\sum\nolimits_{k}{n_{k}^N}\].
+The ROI figure of merit \(\theta\) is defined by:
+\begin{equation*} 
+\theta =\frac{1}{{{N}_{L}}{{N}_{N}}}\sum\nolimits_{k}{\sum\nolimits_{{{k}'}}{\sum\limits_{r=1}^{n_{k}^{L}}{\sum\limits_{{r}'=1}^{n_{k'}^{N}}{\psi ({{X}_{kr}},{{Y}_{{k}'{r}'}})}}}}
+\end{equation*}
+
+The kernel function \(\Psi(X,Y)\) is defined by:
+
+\begin{equation*} 
+\psi\left ( X,Y \right ) =\begin{bmatrix}
+1 &    \text{if}& {X < Y}\\ 
+0.5 &  \text{if}& {X = Y}\\ 
+ 0 &   \text{if}& {X > Y} 
+\end{bmatrix}
+\end{equation*}
+
+The ROIs are \emph{effectively regarded as mini-cases} and one calculates the FOM as the Wilcoxon statistic considering the mini-cases as actual cases. The correlations between the ratings of ROIs on the same case are accounted for in the analysis.
+
+\hypertarget{calculation-of-the-roi-figure-of-merit.}{%
+\section{Calculation of the ROI figure of merit.}\label{calculation-of-the-roi-figure-of-merit.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{UtilFigureOfMerit}\NormalTok{(datasetROI, }\DataTypeTok{FOM =} \StringTok{"ROI"}\NormalTok{)}
+\CommentTok{\#\textgreater{}           Rdr1      Rdr2      Rdr3      Rdr4      Rdr5}
+\CommentTok{\#\textgreater{} Trt1 0.9057239 0.8842834 0.8579279 0.9350207 0.8352103}
+\CommentTok{\#\textgreater{} Trt2 0.9297186 0.9546035 0.8937652 0.9531716 0.8770076}
+\NormalTok{fom \textless{}{-}}\StringTok{ }\KeywordTok{UtilFigureOfMerit}\NormalTok{(datasetROI, }\DataTypeTok{FOM =} \StringTok{"ROI"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  If the correct \texttt{FOM} is not supplied, it defaults to \texttt{FOM\ =\ ROI}.\\
+\item
+  This is a 2-treatment 5-reader dataset.\\
+\item
+  For treatment 1, reader 1 the figure of merit is 0.9057239.\\
+\item
+  For treatment 2, reader 5 the figure of merit is 0.8770076.\\
+\item
+  Etc.
+\end{itemize}
+
+\hypertarget{significance-testing}{%
+\section{Significance testing}\label{significance-testing}}
+
+When \texttt{dataset\$dataType\ ==\ "ROI"} the FOM defaults to ``ROI'' (meaning the above formula) and the covariance estimation method defaults to \texttt{covEstMethod\ =\ "DeLong"}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(datasetROI, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}
+\CommentTok{\#\textgreater{} ROI dataset: forcing method = \textasciigrave{}ORH\textasciigrave{}, covEstMethod = \textasciigrave{}DeLong\textasciigrave{} and FOM = \textasciigrave{}ROI\textasciigrave{}.}
+\KeywordTok{str}\NormalTok{(ret)}
+\CommentTok{\#\textgreater{} List of 14}
+\CommentTok{\#\textgreater{}  $ fomArray            : num [1:2, 1:5] 0.906 0.93 0.884 0.955 0.858 ...}
+\CommentTok{\#\textgreater{}   ..{-} attr(*, "dimnames")=List of 2}
+\CommentTok{\#\textgreater{}   .. ..$ : chr [1:2] "Trt1" "Trt2"}
+\CommentTok{\#\textgreater{}   .. ..$ : chr [1:5] "Rdr1" "Rdr2" "Rdr3" "Rdr4" ...}
+\CommentTok{\#\textgreater{}  $ meanSquares         :\textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  3 variables:}
+\CommentTok{\#\textgreater{}   ..$ msT : num 0.00361}
+\CommentTok{\#\textgreater{}   ..$ msR : num 0.00256}
+\CommentTok{\#\textgreater{}   ..$ msTR: num 0.000207}
+\CommentTok{\#\textgreater{}  $ varComp             :\textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  6 variables:}
+\CommentTok{\#\textgreater{}   ..$ varR : num 0.00108}
+\CommentTok{\#\textgreater{}   ..$ varTR: num 0.000153}
+\CommentTok{\#\textgreater{}   ..$ cov1 : num 0.000247}
+\CommentTok{\#\textgreater{}   ..$ cov2 : num 0.000187}
+\CommentTok{\#\textgreater{}   ..$ cov3 : num 0.000154}
+\CommentTok{\#\textgreater{}   ..$ var  : num 0.000333}
+\CommentTok{\#\textgreater{}  $ FTestStatsRRRC      :\textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  4 variables:}
+\CommentTok{\#\textgreater{}   ..$ fRRRC  : num 9.76}
+\CommentTok{\#\textgreater{}   ..$ ndfRRRC: num 1}
+\CommentTok{\#\textgreater{}   ..$ ddfRRRC: num 12.8}
+\CommentTok{\#\textgreater{}   ..$ pRRRC  : num 0.00817}
+\CommentTok{\#\textgreater{}  $ ciDiffTrtRRRC       :\textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  8 variables:}
+\CommentTok{\#\textgreater{}   ..$ Treatment: chr "Trt1{-}Trt2"}
+\CommentTok{\#\textgreater{}   ..$ Estimate : num {-}0.038}
+\CommentTok{\#\textgreater{}   ..$ StdErr   : num 0.0122}
+\CommentTok{\#\textgreater{}   ..$ DF       : num 12.8}
+\CommentTok{\#\textgreater{}   ..$ t        : num {-}3.12}
+\CommentTok{\#\textgreater{}   ..$ PrGTt    : num 0.00817}
+\CommentTok{\#\textgreater{}   ..$ CILower  : num {-}0.0643}
+\CommentTok{\#\textgreater{}   ..$ CIUpper  : num {-}0.0117}
+\CommentTok{\#\textgreater{}  $ ciAvgRdrEachTrtRRRC :\textquotesingle{}data.frame\textquotesingle{}:    2 obs. of  6 variables:}
+\CommentTok{\#\textgreater{}   ..$ Treatment: Factor w/ 2 levels "Trt1","Trt2": 1 2}
+\CommentTok{\#\textgreater{}   ..$ Area     : num [1:2] 0.884 0.922}
+\CommentTok{\#\textgreater{}   ..$ StdErr   : num [1:2] 0.0232 0.0197}
+\CommentTok{\#\textgreater{}   ..$ DF       : num [1:2] 12.2 10.1}
+\CommentTok{\#\textgreater{}   ..$ CILower  : num [1:2] 0.833 0.878}
+\CommentTok{\#\textgreater{}   ..$ CIUpper  : num [1:2] 0.934 0.966}
+\CommentTok{\#\textgreater{}  $ FTestStatsFRRC      :\textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  4 variables:}
+\CommentTok{\#\textgreater{}   ..$ fFRRC  : num 16.6}
+\CommentTok{\#\textgreater{}   ..$ ndfFRRC: num 1}
+\CommentTok{\#\textgreater{}   ..$ ddfFRRC: num Inf}
+\CommentTok{\#\textgreater{}   ..$ pFRRC  : num 4.58e{-}05}
+\CommentTok{\#\textgreater{}  $ ciDiffTrtFRRC       :\textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  8 variables:}
+\CommentTok{\#\textgreater{}   ..$ Treatment: chr "Trt1{-}Trt2"}
+\CommentTok{\#\textgreater{}   ..$ Estimate : num {-}0.038}
+\CommentTok{\#\textgreater{}   ..$ StdErr   : num 0.00933}
+\CommentTok{\#\textgreater{}   ..$ DF       : num Inf}
+\CommentTok{\#\textgreater{}   ..$ t        : num {-}4.08}
+\CommentTok{\#\textgreater{}   ..$ PrGTt    : num 4.58e{-}05}
+\CommentTok{\#\textgreater{}   ..$ CILower  : num {-}0.0563}
+\CommentTok{\#\textgreater{}   ..$ CIUpper  : num {-}0.0197}
+\CommentTok{\#\textgreater{}  $ ciAvgRdrEachTrtFRRC :\textquotesingle{}data.frame\textquotesingle{}:    2 obs. of  6 variables:}
+\CommentTok{\#\textgreater{}   ..$ Treatment: Factor w/ 2 levels "Trt1","Trt2": 1 2}
+\CommentTok{\#\textgreater{}   ..$ Area     : num [1:2] 0.884 0.922}
+\CommentTok{\#\textgreater{}   ..$ StdErr   : num [1:2] 0.0163 0.0129}
+\CommentTok{\#\textgreater{}   ..$ DF       : num [1:2] Inf Inf}
+\CommentTok{\#\textgreater{}   ..$ CILower  : num [1:2] 0.852 0.896}
+\CommentTok{\#\textgreater{}   ..$ CIUpper  : num [1:2] 0.916 0.947}
+\CommentTok{\#\textgreater{}  $ ciDiffTrtEachRdrFRRC:\textquotesingle{}data.frame\textquotesingle{}:    5 obs. of  9 variables:}
+\CommentTok{\#\textgreater{}   ..$ Reader   : Factor w/ 5 levels "Rdr1","Rdr2",..: 1 2 3 4 5}
+\CommentTok{\#\textgreater{}   ..$ Treatment: Factor w/ 1 level "Trt1{-}Trt2": 1 1 1 1 1}
+\CommentTok{\#\textgreater{}   ..$ Estimate : num [1:5] {-}0.024 {-}0.0703 {-}0.0358 {-}0.0182 {-}0.0418}
+\CommentTok{\#\textgreater{}   ..$ StdErr   : num [1:5] 0.01025 0.01448 0.01648 0.00928 0.01398}
+\CommentTok{\#\textgreater{}   ..$ DF       : num [1:5] Inf Inf Inf Inf Inf}
+\CommentTok{\#\textgreater{}   ..$ t        : num [1:5] {-}2.34 {-}4.86 {-}2.17 {-}1.96 {-}2.99}
+\CommentTok{\#\textgreater{}   ..$ PrGTt    : num [1:5] 1.93e{-}02 1.20e{-}06 2.97e{-}02 5.05e{-}02 2.79e{-}03}
+\CommentTok{\#\textgreater{}   ..$ CILower  : num [1:5] {-}0.0441 {-}0.0987 {-}0.0681 {-}0.0363 {-}0.0692}
+\CommentTok{\#\textgreater{}   ..$ CIUpper  : num [1:5] {-}3.90e{-}03 {-}4.19e{-}02 {-}3.53e{-}03 3.88e{-}05 {-}1.44e{-}02}
+\CommentTok{\#\textgreater{}  $ varCovEachRdr       :\textquotesingle{}data.frame\textquotesingle{}:    5 obs. of  3 variables:}
+\CommentTok{\#\textgreater{}   ..$ Reader: Factor w/ 5 levels "Rdr1","Rdr2",..: 1 2 3 4 5}
+\CommentTok{\#\textgreater{}   ..$ Var   : num [1:5] 0.000269 0.000227 0.000481 0.000168 0.000522}
+\CommentTok{\#\textgreater{}   ..$ Cov1  : num [1:5] 0.000216 0.000122 0.000345 0.000125 0.000424}
+\CommentTok{\#\textgreater{}  $ FTestStatsRRFC      :\textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  4 variables:}
+\CommentTok{\#\textgreater{}   ..$ fRRFC  : num 17.5}
+\CommentTok{\#\textgreater{}   ..$ ndfRRFC: num 1}
+\CommentTok{\#\textgreater{}   ..$ ddfRRFC: num 4}
+\CommentTok{\#\textgreater{}   ..$ pRRFC  : num 0.0139}
+\CommentTok{\#\textgreater{}  $ ciDiffTrtRRFC       :\textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  8 variables:}
+\CommentTok{\#\textgreater{}   ..$ Treatment: chr "Trt1{-}Trt2"}
+\CommentTok{\#\textgreater{}   ..$ Estimate : num {-}0.038}
+\CommentTok{\#\textgreater{}   ..$ StdErr   : num 0.00909}
+\CommentTok{\#\textgreater{}   ..$ DF       : num 4}
+\CommentTok{\#\textgreater{}   ..$ t        : num {-}4.18}
+\CommentTok{\#\textgreater{}   ..$ PrGTt    : num 0.0139}
+\CommentTok{\#\textgreater{}   ..$ CILower  : num {-}0.0633}
+\CommentTok{\#\textgreater{}   ..$ CIUpper  : num {-}0.0128}
+\CommentTok{\#\textgreater{}  $ ciAvgRdrEachTrtRRFC :\textquotesingle{}data.frame\textquotesingle{}:    2 obs. of  6 variables:}
+\CommentTok{\#\textgreater{}   ..$ Treatment: Factor w/ 2 levels "Trt1","Trt2": 1 2}
+\CommentTok{\#\textgreater{}   ..$ Area     : num [1:2] 0.884 0.922}
+\CommentTok{\#\textgreater{}   ..$ StdErr   : num [1:2] 0.0175 0.0157}
+\CommentTok{\#\textgreater{}   ..$ DF       : num [1:2] 4 4}
+\CommentTok{\#\textgreater{}   ..$ CILower  : num [1:2] 0.835 0.878}
+\CommentTok{\#\textgreater{}   ..$ CIUpper  : num [1:2] 0.932 0.965}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  While \texttt{ret} is a list with many (22) members, their meanings should be clear from the notation. As an example:
+\item
+  The variance components are given by:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{varComp}
+\CommentTok{\#\textgreater{}          varR        varTR         cov1         cov2         cov3          var}
+\CommentTok{\#\textgreater{} 1 0.001082359 0.0001526084 0.0002465125 0.0001870571 0.0001543764 0.0003333119}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{rrrc-analysis}{%
+\subsection{RRRC analysis}\label{rrrc-analysis}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRRC}\OperatorTok{$}\NormalTok{fRRRC}
+\CommentTok{\#\textgreater{} [1] 9.763602}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRRC}\OperatorTok{$}\NormalTok{ndfRRRC}
+\CommentTok{\#\textgreater{} [1] 1}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRRC}\OperatorTok{$}\NormalTok{ddfRRRC}
+\CommentTok{\#\textgreater{} [1] 12.82259}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRRC}\OperatorTok{$}\NormalTok{pRRRC}
+\CommentTok{\#\textgreater{} [1] 0.008173042}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  The F-statistic is , with \texttt{ndf\ =\ 1} and \texttt{ddf} = , which yields a p-value of .
+\item
+  The confidence interval for the reader averaged difference between the two treatments is given by:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ciDiffTrtRRRC}
+\CommentTok{\#\textgreater{}   Treatment    Estimate     StdErr       DF         t       PrGTt     CILower}
+\CommentTok{\#\textgreater{} 1 Trt1{-}Trt2 {-}0.03802005 0.01216768 12.82259 {-}3.124676 0.008173042 {-}0.06434373}
+\CommentTok{\#\textgreater{}       CIUpper}
+\CommentTok{\#\textgreater{} 1 {-}0.01169636}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The FOM difference (treatment 1 minus 2) is -0.03802, which is significant, p-value = 0.008173, F-statistic = 9.7636016, ddf = 12.8225898. The confidence interval is (-0.0643437, -0.0116964).
+\end{itemize}
+
+\hypertarget{frrc-analysis}{%
+\subsection{FRRC analysis}\label{frrc-analysis}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC}
+\CommentTok{\#\textgreater{} [1] 16.6135}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ndfFRRC}
+\CommentTok{\#\textgreater{} [1] 1}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ddfFRRC}
+\CommentTok{\#\textgreater{} [1] Inf}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC}
+\CommentTok{\#\textgreater{} [1] 4.582365e{-}05}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  The F-statistic is 16.6135014, with \texttt{ndf\ =\ 1} and \texttt{ddf} = \texttt{Inf}, which yields a p-value of \ensuremath{4.5823651\times 10^{-5}}.
+\item
+  The confidence interval for the reader averaged difference between the two treatments is given by:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}
+\CommentTok{\#\textgreater{}   Treatment    Estimate      StdErr  DF         t        PrGTt     CILower}
+\CommentTok{\#\textgreater{} 1 Trt1{-}Trt2 {-}0.03802005 0.009327861 Inf {-}4.075966 4.582365e{-}05 {-}0.05630232}
+\CommentTok{\#\textgreater{}       CIUpper}
+\CommentTok{\#\textgreater{} 1 {-}0.01973778}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{rrfc-analysis}{%
+\subsection{RRFC analysis}\label{rrfc-analysis}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRFC}\OperatorTok{$}\NormalTok{fRRFC}
+\CommentTok{\#\textgreater{} [1] 17.48107}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRFC}\OperatorTok{$}\NormalTok{ndfRRFC}
+\CommentTok{\#\textgreater{} [1] 1}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRFC}\OperatorTok{$}\NormalTok{ddfRRFC}
+\CommentTok{\#\textgreater{} [1] 4}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FTestStatsRRFC}\OperatorTok{$}\NormalTok{pRRFC}
+\CommentTok{\#\textgreater{} [1] 0.01390667}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  The F-statistic is 17.4810666, with \texttt{ndf\ =\ 1} and \texttt{ddf} = 4, which yields a p-value of 0.0139067.
+\item
+  The confidence interval for the reader averaged difference between the two treatments is given by:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ciDiffTrtRRFC}
+\CommentTok{\#\textgreater{}   Treatment    Estimate     StdErr DF         t      PrGTt     CILower}
+\CommentTok{\#\textgreater{} 1 Trt1{-}Trt2 {-}0.03802005 0.00909345  4 {-}4.181037 0.01390667 {-}0.06326751}
+\CommentTok{\#\textgreater{}       CIUpper}
+\CommentTok{\#\textgreater{} 1 {-}0.01277258}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{summary}{%
+\section{Summary}\label{summary}}
+
+TBA
+
+\hypertarget{references-3}{%
+\section{References}\label{references-3}}
 
   \bibliography{packages.bib,myRefs.bib}
 

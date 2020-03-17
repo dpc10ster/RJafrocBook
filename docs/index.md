@@ -1,7 +1,7 @@
 --- 
 title: "RJafroc Documentation"
 author: "Dev P. Chakraborty, PhD"
-date: "2020-03-13"
+date: "2020-03-17"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
