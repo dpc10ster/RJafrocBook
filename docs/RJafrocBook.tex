@@ -2545,7 +2545,7 @@ the function to create an Excel output file. The Excel output is created in a te
 \begin{Highlighting}[]
 \NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(dataset03, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
 \CommentTok{\#\textgreater{} }
-\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpugyZds/RJafrocUtilOutputReport4de14d3627ed.xlsx}
+\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpkqP1cY/RJafrocUtilOutputReport52013f871a72.xlsx}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2558,7 +2558,7 @@ Simply change \texttt{method\ =\ "DBMH"} (the default) to \texttt{method\ =\ "OR
 \begin{Highlighting}[]
 \NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(dataset03, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
 \CommentTok{\#\textgreater{} }
-\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpugyZds/RJafrocUtilOutputReport4de144bc68e4.xlsx}
+\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpkqP1cY/RJafrocUtilOutputReport52016524c1c4.xlsx}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3684,6 +3684,486 @@ The required number of cases is 133 and expected power is 0.8011167.
 
 The required number of cases is 53 and expected power is 0.8049666.
 
+\hypertarget{SSJafrocEffectSize}{%
+\chapter{Choosing a realistic effect size}\label{SSJafrocEffectSize}}
+
+\hypertarget{introduction-10}{%
+\section{Introduction}\label{introduction-10}}
+
+\begin{itemize}
+\item
+  The value of the true \texttt{FOM} difference between the treatments, i.e., the true effect-size (ES) is, of course, unknown. If it were known, there would be no need to conduct an ROC study. One would simply adopt the treatment with the higher \texttt{FOM}. Sample-size estimation involves making an educated guess regarding the ES, called the \emph{anticipated} ES, and denoted by \texttt{d}. To quote \citep{RN1983}: ``any calculation of power amounts to specification of the anticipated effect-size''. Increasing the anticipated ES will increase statistical power but may represent an unrealistic expectation of the true difference between the treatments, in the sense that it overestimates the ability of technology to achieve this much improvement. An unduly small might be clinically insignificant, besides requiring a very large sample-size to achieve sufficient power.
+\item
+  There is a key difference between \emph{statistical} significance and \emph{clinical} significance. An effect-size in AUC units could be so small, e.g., 0.001, as to be clinically insignificant, but by employing a sufficiently large sample size one could design a study to detect this small and clinically meaningless difference with high probability, i.e., high statistical power.
+\item
+  What determines clinical significance? A small effect-size, e.g., 0.01 AUC units, could be clinically significant if it applies to a large population, where the small benefit in detection rate is amplified by the number of patients benefiting from the new treatment. In contrast, for an ``orphan'' disease, i.e., one with very low prevalence, an effect-size of 0.05 might not be enough to justify the additional cost of the new treatment. The improvement might have to be 0.1 before it is worth it for a new treatment to be brought to market. One hates to monetize life and death issues, but there is no getting away from it, as cost/benefit issues determine clinical significance. The arbiters of clinical significance are engineers, imaging scientists, clinicians, epidemiologists, insurance companies and those who set government health care policies. The engineers and imaging scientists determine whether the effect-size the clinicians would like is feasible from technical and scientific viewpoints. The clinician determines, based on incidence of disease and other considerations, e.g., altruistic, malpractice, cost of the new device and insurance reimbursement, what effect-size is justifiable. Cohen has suggested that d values of 0.2, 0.5, and 0.8 be considered small, medium, and large, respectively, but he has also argued against their indiscriminate usage. However, after a study is completed, clinicians often find that an effect-size that biostatisticians label as small may, in certain circumstances, be clinically significant and an effect-size that they label as large may in other circumstances be clinically insignificant. Clearly, this is a complex issue. Some suggestions on choosing a clinically significant effect size are made in \textbf{Chapter 11}.
+\item
+  Does one even need to perform a pivotal study? If the pilot study returns a significant difference, one has rejected the NH and that is all there is to it. There is no need to perform the pivotal study, unless one ``tweaks'' the new treatment and/or casts a wider sampling net to make a stronger argument, perhaps to the FDA, that the treatments are indeed generalizable, and that the difference is in the right direction (new treatment FOM \textgreater{} conventional treatment FOM). If a significant difference is observed in the opposite direction (e.g., new treatment FOM \textless{} conventional treatment FOM) one cannot justify a pivotal study with an expected effect-size in the ``other or favored'' direction; see example below. Since the Van Dyke pilot study came close to rejecting the NH and the observed effect size, see below, is not too small, a pivotal study is justified.
+\item
+  This vignette discusses choosing a realistic effect size based on the pilot study. Illustrated first is using Van Dyke dataset, regarded as the pilot study.
+\end{itemize}
+
+\hypertarget{illustration-of-sspowergivenjk-using-method-orh-1}{%
+\section{\texorpdfstring{Illustration of \texttt{SsPowerGivenJK()} using \texttt{method\ =\ "ORH"}}{Illustration of SsPowerGivenJK() using method = "ORH"}}\label{illustration-of-sspowergivenjk-using-method-orh-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rocData \textless{}{-}}\StringTok{ }\NormalTok{dataset02 }\CommentTok{\#\#"VanDyke.lrc"}
+\CommentTok{\#fileName \textless{}{-} dataset03 \#\# "Franken1.lrc"}
+\NormalTok{retDbm \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(}\DataTypeTok{dataset =}\NormalTok{ rocData, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(retDbm}\OperatorTok{$}\NormalTok{ciDiffTrtRRRC)}
+\CommentTok{\#\textgreater{} \textquotesingle{}data.frame\textquotesingle{}:    1 obs. of  8 variables:}
+\CommentTok{\#\textgreater{}  $ TrtDiff : chr "Trt0{-}Trt1"}
+\CommentTok{\#\textgreater{}  $ Estimate: num {-}0.0438}
+\CommentTok{\#\textgreater{}  $ StdErr  : num 0.0207}
+\CommentTok{\#\textgreater{}  $ DF      : num 15.3}
+\CommentTok{\#\textgreater{}  $ t       : num {-}2.11}
+\CommentTok{\#\textgreater{}  $ PrGTt   : num 0.0517}
+\CommentTok{\#\textgreater{}  $ CILower : num {-}0.088}
+\CommentTok{\#\textgreater{}  $ CIUpper : num 0.000359}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  Lacking any other information, the observed effect-size is the best estimate of the effect-size to be anticipated. The output shows that the FOM difference, for treatment 0 minus treatment 1, is -0.0438003. In the actual study treatment \texttt{1} is the new modality which hopes to improve upon \texttt{0}, the conventional modality. Since the sign is negative, the difference is going the right way and is justified in moving forward with planning a pivotal study. {[}If the difference went the other way, there is little justification for a pivotal study{]}.
+\item
+  The standard error of the difference is 0.0207486.
+\item
+  An optimistic (but not unduly so) effect size is given by:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{effectSizeOpt \textless{}{-}}\StringTok{ }\KeywordTok{abs}\NormalTok{(retDbm}\OperatorTok{$}\NormalTok{ciDiffTrtRRRC}\OperatorTok{$}\NormalTok{Estimate) }\OperatorTok{+}\StringTok{ }\DecValTok{2}\OperatorTok{*}\NormalTok{retDbm}\OperatorTok{$}\NormalTok{ciDiffTrtRRRC}\OperatorTok{$}\NormalTok{StdErr}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  The observed effect-size is a realization of a random variable. The lower limit of the 95\% confidence interval is given by -0.0879595 and the upper limit by \ensuremath{3.5885444\times 10^{-4}}. CI's generated like this, with independent sets of data, are expected to encompass the true value with 95\% probability. The lower end (greatest magnitude of the difference) of the confidence interval is -0.0852976, and this is the optimistic estimate. Since the sign is immaterial, one uses as the optimistic estimate the value 0.0852976.
+\item
+  \textbf{While the sign is immaterial for sample size estimates, the decision to conduct the pivotal most certainly is material. If the sign went the other way, with the new modality lower than the conventional modality, one would be unjustified in conducting a pivotal study.}
+\end{itemize}
+
+\hypertarget{references-8}{%
+\section{References}\label{references-8}}
+
+\hypertarget{SSFroc1}{%
+\chapter{FROC sample size estimation and comparison to ROC}\label{SSFroc1}}
+
+\hypertarget{introduction-11}{%
+\section{Introduction}\label{introduction-11}}
+
+\begin{itemize}
+\item
+  FROC sample size estimation is not fundamentally different from the previously outlined procedure (see vignettes corresponding to Chapter 11) for the ROC paradigm. To recapitulate, based on analysis of a pilot ROC dataset and using a specified FOM, e.g., \texttt{FOM\ =\ Wilcoxon}, and either \texttt{method\ =\ "DBMH"} or \texttt{method\ =\ "ORH"} for significance testing, one estimates the intrinsic variability of the data expressed in terms of variance components or the covariance matrix. The second step is to postulate a clinically realistic effect-size, e.g., the anticipated AUC difference between the two treatments. Given these values, the sample size functions implemented in \texttt{RJafroc} (beginning with \texttt{Ss}) allow one to estimate the number of readers and cases necessary to detect (i.e., reject the null hypothesis) the specified effect size at specified Type II error rate, typically chosen to be 20\% (corresponding to 80\% statistical power) and specified Type I error rate, typically chosen to be 5\%.
+\item
+  In FROC analysis the only difference, \textbf{indeed the critical difference}, is the choice of FOM; e.g., \texttt{FOM\ =\ "wAFROC"} instead of the inferred ROC-AUC, \texttt{FOM\ =\ "HrAuc"}. The FROC dataset is analyzed using either the DBMH or the ORH method. This yields the necessary variance components or the covariance matrix corresponding to the wAFROC-AUC. The next step is to specify the effect-size \textbf{in wAFROC-AUC units}, and therein lies the rub. What value does one use? The ROC-AUC has a historically well-known interpretation: the classification ability at separating diseased patients from non-diseased patients, while the wAFROC-AUC does not. Needed is a way of relating the effect-size in ROC-AUC units to one in wAFROC-AUC units: as should be obvious this requires a physical model, e.g., the RSM, that predicts both ROC and wAFROC curves and the respective AUCs.
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  One chooses an ROC-AUC effect-size that is realistic, one that clinicians understand and can therefore participate in, in the effect-size postulation process.
+\item
+  One converts the ROC effect-size to a wAFROC-AUC effect-size. The method for this is described in the next section.
+\item
+  One uses the sample size tools in in \texttt{RJafroc} to determine sample size or power.
+\end{enumerate}
+
+\begin{itemize}
+\item
+  \textbf{It is important to recognize is that all quantities have to be in the same units}. When performing ROC analysis, everything (variance components and effect-size) has to be in units of the selected FOM, e.g., \texttt{FOM\ =\ "Wilcoxon"} which is identical to the empirical ROC-AUC. When doing wAFROC analysis, everything has to be in units of the wAFROC-AUC. The variance components and effect-size in wAFROC-AUC units will be different from their corresponding ROC counterparts. In particular, as shown next, an ROC-AUC effect-size of 0.05 generally corresponds to a larger effect-size in wAFROC-AUC units. The reason for this is that the range over which wAFROC-AUC can vary, namely 0 to 1, is twice the corresponding ROC-AUC range.
+\item
+  The next section explains the steps used to implement step \#2 above.
+\end{itemize}
+
+\hypertarget{relating-an-roc-effect-size-to-a-wafroc-effect-size}{%
+\section{Relating an ROC effect-size to a wAFROC effect-size}\label{relating-an-roc-effect-size-to-a-wafroc-effect-size}}
+
+\begin{itemize}
+\item
+  If the original data is FROC, one needs to first convert it to ROC, using \texttt{DfFroc2Roc()}: \textbf{the RSM fits ROC data}.
+\item
+  For each treatment and reader the inferred ROC data is fitted by \texttt{FitRsmRoc()}, yielding estimates of the RSM \emph{physical} (or primed) parameters (not the \emph{intrinsic} values).
+\item
+  The following example uses the \emph{first two} treatments of the ``FED'' dataset, \texttt{dataset04}, which is a 5 treatment 4 radiologist FROC dataset acquired by Dr.~Federica Zanca et. al.~\citep{RN1882}. The dataset has 5 treatments and 4 readers and 200 cases and was acquired on a 5-point integer scale, i.e., it is already binned. If not one needs to bin the dataset using \texttt{DfBinDataset()}. I need to emphasize this point: \textbf{if the dataset represents continuous ratings, as with a CAD algorithm, one must bin the dataset to (ideally) about 5 bins}. The number of parameters that must be estimated increases with the number of bins (for each bin one needs to estimate a cutoff parameter).
+\item
+  The reason for using RSM parameter values only for the first two treatments is that these were found \citep{RN1882} to be almost equivalent (more precisely, the NH could not be rejected for the first two treatments, so it makes sense to regard them as ``almost'' NH treatments.
+\item
+  The following code block defines the pilot FROC data \texttt{frocData} (corresponding to \texttt{dataset04}, which is the ``FED'' dataset, but with only treatments 1 and 2 extracted, using \texttt{DfExtractDataset()}) and \texttt{rocData}, i.e., the highest-rating ROC dataset inferred from the FROC dataset using \texttt{DfFroc2Roc()}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{frocData \textless{}{-}}\StringTok{ }\KeywordTok{DfExtractDataset}\NormalTok{(dataset04, }\DataTypeTok{trts =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\NormalTok{rocData \textless{}{-}}\StringTok{ }\KeywordTok{DfFroc2Roc}\NormalTok{(frocData)}
+\end{Highlighting}
+\end{Shaded}
+
+The next code block determines \texttt{lesDist}, the lesion distribution array, which has \texttt{Lmax} (maximum number of lesions per diseased case over the dataset) rows and two columns. The first column contains the integers 1, 2, \ldots, \texttt{Lmax} and the second column contains the fraction of diseased cases with the number of lesions per case specified in the first column. The second column will sum to unity. The RSM fitting algorithm needs to know how lesion-rich the dataset is, as the RSM predicted ROC-AUC depends on the lesion-richness of the dataset. For reasons that will become clear below, one also needs \texttt{lesWghts}, the distribution of the lesion weights.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lesDistr \textless{}{-}}\StringTok{ }\KeywordTok{UtilLesionDistr}\NormalTok{(frocData)}
+\NormalTok{lesWghts \textless{}{-}}\StringTok{ }\KeywordTok{UtilLesionWeightsDistr}\NormalTok{(frocData) }\CommentTok{\# this is needed later}
+\end{Highlighting}
+\end{Shaded}
+
+The meanings of \texttt{lesDistr} and \texttt{lesWghts} is clear from examining their values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(lesDistr)}
+\CommentTok{\#\textgreater{}      [,1] [,2]}
+\CommentTok{\#\textgreater{} [1,]    1 0.69}
+\CommentTok{\#\textgreater{} [2,]    2 0.20}
+\CommentTok{\#\textgreater{} [3,]    3 0.11}
+\KeywordTok{print}\NormalTok{(lesWghts)}
+\CommentTok{\#\textgreater{}      [,1]      [,2]      [,3]      [,4]}
+\CommentTok{\#\textgreater{} [1,]    1 1.0000000      {-}Inf      {-}Inf}
+\CommentTok{\#\textgreater{} [2,]    2 0.5000000 0.5000000      {-}Inf}
+\CommentTok{\#\textgreater{} [3,]    3 0.3333333 0.3333333 0.3333333}
+\end{Highlighting}
+\end{Shaded}
+
+For this dataset \texttt{Lmax} is 3, and 69 percent of the diseased cases have one lesion, 20 percent have two lesions and 11 percent have three lesions. Since the lesions are equally weighted, on cases with one lesion the weight of the lesion is unity, on cases with two lesions the weights of each lesion is 0.5 and on cases with three lesions the weight of each lesion is 1/3.
+
+The next code block determines the number of treatments and readers (\texttt{I} and \texttt{J}) from the dimensions of the \texttt{frocData\$NL} array. It creates an array \texttt{RsmParms} to hold the RSM fitted parameter values. For each treatment and reader it applies the fitting algorithm \texttt{FitRsmRoc()}. The first three returned values are \texttt{mu}, \texttt{lambdaP} and \texttt{nuP}, corresponding to RSM parameters \({\mu}\), \({\lambda^{'}}\) and \({\nu^{'}}\) .
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{I \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(frocData}\OperatorTok{$}\NormalTok{NL)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{J \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(frocData}\OperatorTok{$}\NormalTok{NL)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{RsmParms \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(I,J,}\DecValTok{3}\NormalTok{))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{I) \{}
+  \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{J)  \{}
+\NormalTok{    x1 \textless{}{-}}\StringTok{ }\KeywordTok{FitRsmRoc}\NormalTok{(rocData, }\DataTypeTok{trt =}\NormalTok{ i, }\DataTypeTok{rdr =}\NormalTok{ j, lesDistr)}
+\NormalTok{    RsmParms[i,j,}\DecValTok{1}\NormalTok{] \textless{}{-}}\StringTok{ }\NormalTok{x1[[}\DecValTok{1}\NormalTok{]] }\CommentTok{\# mu}
+\NormalTok{    RsmParms[i,j,}\DecValTok{2}\NormalTok{] \textless{}{-}}\StringTok{ }\NormalTok{x1[[}\DecValTok{2}\NormalTok{]] }\CommentTok{\# lambdaP}
+\NormalTok{    RsmParms[i,j,}\DecValTok{3}\NormalTok{] \textless{}{-}}\StringTok{ }\NormalTok{x1[[}\DecValTok{3}\NormalTok{]] }\CommentTok{\# nuP}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+I recommend taking the median of each of the parameters, over all treatment-reader indices, as representing the average NH dataset. The median is less sensitive to outliers than the mean.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{muMed \textless{}{-}}\StringTok{ }\KeywordTok{median}\NormalTok{(RsmParms[,,}\DecValTok{1}\NormalTok{]) }
+\NormalTok{lambdaPMed \textless{}{-}}\StringTok{ }\KeywordTok{median}\NormalTok{(RsmParms[,,}\DecValTok{2}\NormalTok{])}
+\NormalTok{nuPMed \textless{}{-}}\StringTok{ }\KeywordTok{median}\NormalTok{(RsmParms[,,}\DecValTok{3}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+The defining values of the fitting model are \texttt{muMed} = 3.3105557, \texttt{lambdaPMed} = 1.714368 and \texttt{nuPMed} = 0.7036567. Note that these obey the constraints \texttt{lambdaPMed\ \textgreater{}\ 0} and \texttt{0\ \textless{}\ nuP\ \textless{}\ 1}. One then converts the physical parameters to the intrinsic values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{temp \textless{}{-}}\StringTok{ }\KeywordTok{UtilPhysical2IntrinsicRSM}\NormalTok{(muMed, lambdaPMed, nuPMed)}
+\NormalTok{lambdaMed \textless{}{-}}\StringTok{ }\NormalTok{temp}\OperatorTok{$}\NormalTok{lambda}
+\NormalTok{nuMed \textless{}{-}}\StringTok{ }\NormalTok{temp}\OperatorTok{$}\NormalTok{nu}
+\end{Highlighting}
+\end{Shaded}
+
+In terms of intrinsic parameters, the defining values of the fitting model are \texttt{muMed} = 3.3105557, \texttt{lambdaMed} = 5.6755108 and \texttt{nuMed} = 0.3673814. We are now ready to calcuate the expected NH FOMs using the ROC -AUC and the wAFROC FOM.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aucRocNH \textless{}{-}}\StringTok{ }\KeywordTok{PlotRsmOperatingCharacteristics}\NormalTok{(muMed, lambdaMed, nuMed, }
+                                            \DataTypeTok{lesDistr =}\NormalTok{ lesDistr, }
+                                            \DataTypeTok{lesWghtDistr =}\NormalTok{ lesWghts, }\DataTypeTok{OpChType =} \StringTok{"ROC"}\NormalTok{)}\OperatorTok{$}\NormalTok{aucROC}
+\NormalTok{aucwAfrocNH \textless{}{-}}\StringTok{ }\KeywordTok{PlotRsmOperatingCharacteristics}\NormalTok{(muMed, lambdaMed, nuMed, }
+                                              \DataTypeTok{lesDistr =}\NormalTok{ lesDistr, }
+                                              \DataTypeTok{lesWghtDistr =}\NormalTok{ lesWghts, }\DataTypeTok{OpChType =} \StringTok{"wAFROC"}\NormalTok{)}\OperatorTok{$}\NormalTok{aucwAFROC}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  The plotting function \texttt{PlotRsmOperatingCharacteristics()} returns a number of other objects, most importantly the plot, but here we use only the AUC, which is obtained by numerical integration of the predicted operating characteristics. However, it calls for the \textbf{intrinsic} RSM parameters, which is why we had to convert the \textbf{physical} to the \textbf{intrinsic} values.
+\item
+  One has \texttt{aucRocNH\ =\ 0.8791301} and \texttt{aucwAfrocNH\ =\ 0.7198311}. Note that the wAFROC-FOM is smaller than the ROC-FOM as it includes the localization constraint.
+\item
+  To induce the alternative hypothesis condition, one increments \(\mu_{NH}\) by \(\Delta_{\mu}\). The resulting ROC-AUC and wAFROC-AUC are calculated, again by numerical integration of the RSM predicted ROC and wAFROC curves, leading to the corresponding effect-sizes (note that in each equation below one takes the difference between the AH value minus the NH value):
+\item
+  The next step is to calculate the effect size (new value minus the NH value) using ROC and wAFROC FOMs for a series of specifed \texttt{deltaMu} values. This generates values that can be used to interpolate a wAFROC effect size for a specified ROC effect size.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{deltaMu \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.01}\NormalTok{) }\CommentTok{\# values of deltaMu to scan below}
+\NormalTok{esRoc \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{length}\NormalTok{(deltaMu));eswAfroc \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{length}\NormalTok{(deltaMu))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(deltaMu)) \{}
+\NormalTok{  esRoc[i] \textless{}{-}}\StringTok{ }\KeywordTok{PlotRsmOperatingCharacteristics}\NormalTok{(}
+\NormalTok{    muMed }\OperatorTok{+}\StringTok{ }\NormalTok{deltaMu[i], lambdaMed, nuMed, }\DataTypeTok{lesDistr =}\NormalTok{ lesDistr, }
+    \DataTypeTok{lesWghtDistr =}\NormalTok{ lesWghts, }\DataTypeTok{OpChType =} \StringTok{"ROC"}\NormalTok{)}\OperatorTok{$}\NormalTok{aucROC }\OperatorTok{{-}}\StringTok{ }\NormalTok{aucRocNH}
+\NormalTok{  eswAfroc[i] \textless{}{-}}\StringTok{ }\KeywordTok{PlotRsmOperatingCharacteristics}\NormalTok{(}
+\NormalTok{    muMed}\OperatorTok{+}\StringTok{ }\NormalTok{deltaMu[i], lambdaMed, nuMed, }\DataTypeTok{lesDistr =}\NormalTok{ lesDistr, }
+    \DataTypeTok{lesWghtDistr =}\NormalTok{ lesWghts, }\DataTypeTok{OpChType =} \StringTok{"wAFROC"}\NormalTok{)}\OperatorTok{$}\NormalTok{aucwAFROC }\OperatorTok{{-}}\StringTok{ }\NormalTok{aucwAfrocNH}
+  \KeywordTok{cat}\NormalTok{(}\StringTok{"ES\_ROC = "}\NormalTok{, esRoc[i], }\StringTok{", ES\_wAFROC = "}\NormalTok{, eswAfroc[i],}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\}}
+\CommentTok{\#\textgreater{} ES\_ROC =  0.0006197813 , ES\_wAFROC =  0.001329066 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.001234752 , ES\_wAFROC =  0.002650005 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.00184496 , ES\_wAFROC =  0.003962878 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.002450451 , ES\_wAFROC =  0.005267748 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.003051273 , ES\_wAFROC =  0.006564677 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.003647472 , ES\_wAFROC =  0.007853725 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.004239094 , ES\_wAFROC =  0.009134954 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.004826184 , ES\_wAFROC =  0.01040842 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.005408788 , ES\_wAFROC =  0.0116742 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.00598695 , ES\_wAFROC =  0.01293233 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.006560717 , ES\_wAFROC =  0.01418289 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.007130131 , ES\_wAFROC =  0.01542592 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.007695238 , ES\_wAFROC =  0.0166615 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.00825608 , ES\_wAFROC =  0.01788967 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.008812702 , ES\_wAFROC =  0.0191105 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.009365145 , ES\_wAFROC =  0.02032404 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.009913453 , ES\_wAFROC =  0.02153036 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.01045767 , ES\_wAFROC =  0.0227295 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.01099783 , ES\_wAFROC =  0.02392152 }
+\CommentTok{\#\textgreater{} ES\_ROC =  0.01153399 , ES\_wAFROC =  0.02510649}
+\end{Highlighting}
+\end{Shaded}
+
+Here is a plot of wAFROC effect size (y-axis) vs.~ROC effect size.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{es\_ROC =}\NormalTok{ esRoc, }\DataTypeTok{es\_wAFROC =}\NormalTok{ eswAfroc)}
+\NormalTok{p \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ df, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ es\_ROC, }\DataTypeTok{y =}\NormalTok{ es\_wAFROC)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom\_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{, }\DataTypeTok{se =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{formula =}\NormalTok{ y }\OperatorTok{\textasciitilde{}}\StringTok{ }\NormalTok{x) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom\_point}\NormalTok{(}\DataTypeTok{size =} \DecValTok{4}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale\_color\_manual}\NormalTok{(}\DataTypeTok{values =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.title.y =} \KeywordTok{element\_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{face=}\StringTok{"bold"}\NormalTok{),}
+        \DataTypeTok{axis.title.x =} \KeywordTok{element\_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{face=}\StringTok{"bold"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale\_y\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }
+\KeywordTok{print}\NormalTok{(p)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{17-FrocSampleSize1_files/figure-latex/unnamed-chunk-9-1} \end{center}
+
+The plot is very close to linear. This makes it easy to design an interpolation function. In the following code block the first line fits \texttt{eswAfroc} vs.~\texttt{esRoc} using the linear model \texttt{lm()} function constrained to pass through the origin (the minus one): \texttt{scaleFactor\ \textless{}-\ lm(eswAfroc\ \textasciitilde{}\ -1\ +\ esRoc)}. One expects this constraint since for \texttt{deltaMu\ =\ 0} the effect size must be zero no matter how it is measured.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{scaleFactor\textless{}{-}}\KeywordTok{lm}\NormalTok{(eswAfroc}\OperatorTok{\textasciitilde{}{-}}\DecValTok{1}\OperatorTok{+}\NormalTok{esRoc) }\CommentTok{\# fit values to straight line thru origin}
+\NormalTok{effectSizeROC \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.01}\NormalTok{)}
+\NormalTok{effectSizewAFROC \textless{}{-}}\StringTok{ }\NormalTok{effectSizeROC}\OperatorTok{*}\NormalTok{scaleFactor}\OperatorTok{$}\NormalTok{coefficients[}\DecValTok{1}\NormalTok{] }\CommentTok{\# r2 = summary(scaleFactor)$r.squared}
+\end{Highlighting}
+\end{Shaded}
+
+The scaleFactor of the straight line fit is \texttt{scaleFactor}, where scaleFactor = 2.1688609 and \texttt{R2} = 0.9999904. Therefore, the conversion from ROC to wAFROC effect size is: \texttt{effectSizewAFROC\ =\ scaleFactor\ *\ effectSizeROC}. \textbf{The wAFROC effect size is twice the ROC effect size.} All that remains is to calculate the variance componenents using the two FOMs:
+
+\hypertarget{computing-the-respective-variance-components}{%
+\section{Computing the respective variance components}\label{computing-the-respective-variance-components}}
+
+The code block applies \texttt{StSignificanceTesting()} to \texttt{rocData} and \texttt{frocData}, using the appropriate FOM, and extracts the variance components.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{temp1 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\NormalTok{temp2 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(frocData, }\DataTypeTok{FOM =} \StringTok{"wAFROC"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\NormalTok{varCompROC \textless{}{-}}\StringTok{ }\NormalTok{temp1}\OperatorTok{$}\NormalTok{varComp}
+\NormalTok{varCompwAFROC \textless{}{-}}\StringTok{ }\NormalTok{temp2}\OperatorTok{$}\NormalTok{varComp}
+\end{Highlighting}
+\end{Shaded}
+
+The observed wAFROC effect-size is -0.0068562. This is a very small effect size; the corresponding ROC effect-size is -0.0051; the sign does not affect the calculations, which is too small to reach 80\% power. It is not surprising that the study \citep{RN1882} did not find a significant difference between these two treatments
+
+The respective variance components are:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(varCompROC)}
+\CommentTok{\#\textgreater{}          varR       varC        varTR       varTC       varRC     varErr}
+\CommentTok{\#\textgreater{} 1 0.000827738 0.03812335 0.0001526507 0.009644327 0.003544196 0.09484637}
+\KeywordTok{print}\NormalTok{(varCompwAFROC)}
+\CommentTok{\#\textgreater{}          varR       varC         varTR      varTC      varRC    varErr}
+\CommentTok{\#\textgreater{} 1 0.001854229 0.06117805 {-}0.0004439279 0.01016519 0.01355883 0.0967256}
+\end{Highlighting}
+\end{Shaded}
+
+Only terms involving treatment are relevant to sample size. The wAFROC \texttt{varTC} and \texttt{varError} values are slightly larger than the ROC ones - as expected because, again, the range of the wAFROC FOM is twice that of the ROC FOM.
+
+\hypertarget{comparing-roc-power-to-wafroc-power-for-equivalent-effect-sizes}{%
+\section{Comparing ROC power to wAFROC power for equivalent effect-sizes}\label{comparing-roc-power-to-wafroc-power-for-equivalent-effect-sizes}}
+
+We are now ready to compare ROC and wAFROC powers for equivalent effect sizes. The following example is for 5 readers (\texttt{JTest}) and 100 cases (\texttt{KTest}) in the \textbf{pivotal study}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{powerROC \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{length}\NormalTok{(effectSizeROC));powerwAFROC \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{length}\NormalTok{(effectSizeROC))}
+
+\NormalTok{JTest \textless{}{-}}\StringTok{ }\DecValTok{5}\NormalTok{;KTest \textless{}{-}}\StringTok{ }\DecValTok{100}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(effectSizeROC)) \{}
+\NormalTok{  varYTR \textless{}{-}}\StringTok{ }\NormalTok{varCompROC}\OperatorTok{$}\NormalTok{varTR }\CommentTok{\# these are pseudovalue based variance components assuming FOM = "Wilcoxon"}
+\NormalTok{  varYTC \textless{}{-}}\StringTok{ }\NormalTok{varCompROC}\OperatorTok{$}\NormalTok{varTC}
+\NormalTok{  varYEps \textless{}{-}}\StringTok{ }\NormalTok{varCompROC}\OperatorTok{$}\NormalTok{varErr}
+\NormalTok{  ret \textless{}{-}}\StringTok{ }\KeywordTok{SsPowerGivenJKDbmVarComp}\NormalTok{ (}\DataTypeTok{J =}\NormalTok{ JTest, }\DataTypeTok{K =}\NormalTok{ KTest, }\DataTypeTok{effectSize =}\NormalTok{ effectSizeROC[i], varYTR, varYTC, varYEps, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\NormalTok{  powerROC[i] \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{powerRRRC}
+  
+\NormalTok{  varYTR \textless{}{-}}\StringTok{ }\NormalTok{varCompwAFROC}\OperatorTok{$}\NormalTok{varTR }\CommentTok{\# these are pseudovalue based variance components assuming FOM = "wAFROC"}
+\NormalTok{  varYTC \textless{}{-}}\StringTok{ }\NormalTok{varCompwAFROC}\OperatorTok{$}\NormalTok{varTC}
+\NormalTok{  varYEps \textless{}{-}}\StringTok{ }\NormalTok{varCompwAFROC}\OperatorTok{$}\NormalTok{varErr}
+\NormalTok{  ret \textless{}{-}}\StringTok{ }\KeywordTok{SsPowerGivenJKDbmVarComp}\NormalTok{ (}\DataTypeTok{J =}\NormalTok{ JTest, }\DataTypeTok{K =}\NormalTok{ KTest, }\DataTypeTok{effectSize =}\NormalTok{ effectSizewAFROC[i], varYTR, varYTC, varYEps, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\NormalTok{  powerwAFROC[i] \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{powerRRRC}
+  
+  \KeywordTok{cat}\NormalTok{(}\StringTok{"ROC{-}ES = "}\NormalTok{, effectSizeROC[i], }\StringTok{", wAFROC{-}ES = "}\NormalTok{, effectSizewAFROC[i], }
+      \StringTok{", Power{-}ROC = "}\NormalTok{, powerROC[i], }\StringTok{", Power{-}wAFROC = "}\NormalTok{, powerwAFROC[i], }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\}}
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.01 , wAFROC{-}ES =  0.02168861 , Power{-}ROC =  0.06443046 , Power{-}wAFROC =  0.1266316 }
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.02 , wAFROC{-}ES =  0.04337722 , Power{-}ROC =  0.108789 , Power{-}wAFROC =  0.3605744 }
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.03 , wAFROC{-}ES =  0.06506583 , Power{-}ROC =  0.1847115 , Power{-}wAFROC =  0.6686874 }
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.04 , wAFROC{-}ES =  0.08675444 , Power{-}ROC =  0.2907927 , Power{-}wAFROC =  0.8897125 }
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.05 , wAFROC{-}ES =  0.108443 , Power{-}ROC =  0.4195443 , Power{-}wAFROC =  0.9777308 }
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.06 , wAFROC{-}ES =  0.1301317 , Power{-}ROC =  0.5573812 , Power{-}wAFROC =  0.9973522 }
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.07 , wAFROC{-}ES =  0.1518203 , Power{-}ROC =  0.6881601 , Power{-}wAFROC =  0.9998172 }
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.08 , wAFROC{-}ES =  0.1735089 , Power{-}ROC =  0.7983611 , Power{-}wAFROC =  0.9999927 }
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.09 , wAFROC{-}ES =  0.1951975 , Power{-}ROC =  0.8809508 , Power{-}wAFROC =  0.9999998 }
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.1 , wAFROC{-}ES =  0.2168861 , Power{-}ROC =  0.936068 , Power{-}wAFROC =  1}
+\end{Highlighting}
+\end{Shaded}
+
+Since the wAFROC effect size is about a factor of two larger than the ROC effect size, wAFROC power is larger than that for ROC. The effect is magnified as the effect size enters as the square in the formula for the power (this overwhelms the slight increase in variability of wAFROC-FOM relative to ROC-FOM noted previously). The following is a plot of the respective powers.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{power\_ROC =}\NormalTok{ powerROC, }\DataTypeTok{power\_wAFROC =}\NormalTok{ powerwAFROC)}
+\NormalTok{p \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ power\_ROC, }\DataTypeTok{y =}\NormalTok{ power\_wAFROC)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ df, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale\_color\_manual}\NormalTok{(}\DataTypeTok{values =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.title.y =} \KeywordTok{element\_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{face=}\StringTok{"bold"}\NormalTok{),}
+        \DataTypeTok{axis.title.x =} \KeywordTok{element\_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{10}\NormalTok{,}\DataTypeTok{face=}\StringTok{"bold"}\NormalTok{))  }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale\_y\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\KeywordTok{print}\NormalTok{(p)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{17-FrocSampleSize1_files/figure-latex/unnamed-chunk-14-1} \end{center}
+
+\hypertarget{references-9}{%
+\section{References}\label{references-9}}
+
+\hypertarget{SSFroc2}{%
+\chapter{FROC sample size estimation using specified ROC effect}\label{SSFroc2}}
+
+\hypertarget{introduction-12}{%
+\section{Introduction}\label{introduction-12}}
+
+This example uses the FED dataset as a pilot FROC study and function \texttt{SsFrocNhRsmModel()} to construct the NH model (encapsulating some of the code in the previous vignette).
+
+\hypertarget{constructing-the-nh-model-for-the-dataset}{%
+\section{Constructing the NH model for the dataset}\label{constructing-the-nh-model-for-the-dataset}}
+
+One starts by extracting the first two treatments from \texttt{dataset04}, which represent the NH dataset, see previous vignette. Next one constructs the NH model - note that the lesion distribution \texttt{lesionPmf} can be specified here independently of that in the pilot dataset. This allows some control over selection of the diseased cases in the pivotal study.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{frocNhData \textless{}{-}}\StringTok{ }\KeywordTok{DfExtractDataset}\NormalTok{(dataset04, }\DataTypeTok{trts =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{SsFrocNhRsmModel}\NormalTok{(frocNhData, }\DataTypeTok{lesionPmf =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.1}\NormalTok{))}
+\NormalTok{muMed \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{muMed}
+\NormalTok{lambdaMed \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{lambdaMed}
+\NormalTok{nuMed \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{nuMed}
+\NormalTok{lesDistr \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{lesDistr}
+\NormalTok{lesWghtDistr \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{lesWghtDistr}
+\NormalTok{scaleFactor \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{scaleFactor}
+\end{Highlighting}
+\end{Shaded}
+
+The fitting model is defined by \texttt{muMed\ =\ r\ muMed}, \texttt{lambdaMed\ =\ 5.6140942} and \texttt{nuMed\ =\ 0.3696988} and \texttt{lesionPmf}. The effect size scale factor is 2.1542102.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aucRocNH \textless{}{-}}\StringTok{ }\KeywordTok{PlotRsmOperatingCharacteristics}\NormalTok{(muMed, lambdaMed, nuMed, }
+                                            \DataTypeTok{lesDistr =}\NormalTok{ lesDistr, }
+                                            \DataTypeTok{lesWghtDistr =}\NormalTok{ lesWghtDistr, }\DataTypeTok{OpChType =} \StringTok{"ROC"}\NormalTok{)}\OperatorTok{$}\NormalTok{aucROC}
+\NormalTok{aucwAfrocNH \textless{}{-}}\StringTok{ }\KeywordTok{PlotRsmOperatingCharacteristics}\NormalTok{(muMed, lambdaMed, nuMed, }
+                                               \DataTypeTok{lesDistr =}\NormalTok{ lesDistr, }
+                                               \DataTypeTok{lesWghtDistr =}\NormalTok{ lesWghtDistr, }\DataTypeTok{OpChType =} \StringTok{"wAFROC"}\NormalTok{)}\OperatorTok{$}\NormalTok{aucwAFROC}
+\end{Highlighting}
+\end{Shaded}
+
+The null hypothesis ROC AUC is 0.8790725 and the corresponding NH wAFROC AUC is 0.7231709.
+
+\hypertarget{extracting-the-wafroc-variance-components}{%
+\section{Extracting the wAFROC variance components}\label{extracting-the-wafroc-variance-components}}
+
+The next code block applies \texttt{StSignificanceTesting()} to \texttt{frocNhData}, using \texttt{FOM\ =\ "wAFROC"} and extracts the variance components.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{varCompwAFROC  \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(frocNhData, }\DataTypeTok{FOM =} \StringTok{"wAFROC"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{wafroc-power-for-specified-roc-effect-size-number-of-readers-j-and-number-of-cases-k}{%
+\section{wAFROC power for specified ROC effect size, number of readers J and number of cases K}\label{wafroc-power-for-specified-roc-effect-size-number-of-readers-j-and-number-of-cases-k}}
+
+The following example is for ROC effect size = 0.05, 5 readers (\texttt{J}) and 100 cases (\texttt{K}) in the \textbf{pivotal study}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ROC\_ES \textless{}{-}}\StringTok{ }\FloatTok{0.05}
+\NormalTok{effectSizewAFROC \textless{}{-}}\StringTok{ }\NormalTok{scaleFactor }\OperatorTok{*}\StringTok{ }\NormalTok{ROC\_ES}
+\NormalTok{J \textless{}{-}}\StringTok{ }\DecValTok{5}\NormalTok{;K \textless{}{-}}\StringTok{ }\DecValTok{100}
+
+\NormalTok{varYTR \textless{}{-}}\StringTok{ }\NormalTok{varCompwAFROC}\OperatorTok{$}\NormalTok{varTR }
+\NormalTok{varYTC \textless{}{-}}\StringTok{ }\NormalTok{varCompwAFROC}\OperatorTok{$}\NormalTok{varTC}
+\NormalTok{varYEps \textless{}{-}}\StringTok{ }\NormalTok{varCompwAFROC}\OperatorTok{$}\NormalTok{varErr}
+\NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{SsPowerGivenJKDbmVarComp}\NormalTok{ (}\DataTypeTok{J =}\NormalTok{ J, }\DataTypeTok{K =}\NormalTok{ K, }\DataTypeTok{effectSize =}\NormalTok{ effectSizewAFROC, }
+\NormalTok{                                 varYTR, varYTC, varYEps, }\DataTypeTok{option =} \StringTok{"RRRC"}\NormalTok{)}
+\NormalTok{powerwAFROC \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{powerRRRC}
+  
+\KeywordTok{cat}\NormalTok{(}\StringTok{"ROC{-}ES = "}\NormalTok{, ROC\_ES, }\StringTok{", wAFROC{-}ES = "}\NormalTok{, ROC\_ES }\OperatorTok{*}\StringTok{ }\NormalTok{scaleFactor, }\StringTok{", Power{-}wAFROC = "}\NormalTok{, powerwAFROC, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.05 , wAFROC{-}ES =  0.1077105 , Power{-}wAFROC =  0.976293}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{wafroc-number-of-cases-for-80-power-for-a-given-number-of-readers-j}{%
+\section{wAFROC number of cases for 80\% power for a given number of readers J}\label{wafroc-number-of-cases-for-80-power-for-a-given-number-of-readers-j}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\NormalTok{varYTR \textless{}{-}}\StringTok{ }\NormalTok{varCompwAFROC}\OperatorTok{$}\NormalTok{varTR }
+\NormalTok{varYTC \textless{}{-}}\StringTok{ }\NormalTok{varCompwAFROC}\OperatorTok{$}\NormalTok{varTC}
+\NormalTok{varYEps \textless{}{-}}\StringTok{ }\NormalTok{varCompwAFROC}\OperatorTok{$}\NormalTok{varErr}
+\NormalTok{ret2 \textless{}{-}}\StringTok{ }\KeywordTok{SsSampleSizeKGivenJ}\NormalTok{(}\DataTypeTok{dataset =} \OtherTok{NULL}\NormalTok{, }\DataTypeTok{J =} \DecValTok{6}\NormalTok{, }\DataTypeTok{effectSize =}\NormalTok{ effectSizewAFROC, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }
+                      \KeywordTok{list}\NormalTok{(}\DataTypeTok{varYTR =}\NormalTok{ varYTR, }\DataTypeTok{varYTC =}\NormalTok{ varYTC, }\DataTypeTok{varYEps =}\NormalTok{ varYEps))}
+
+\KeywordTok{cat}\NormalTok{(}\StringTok{"ROC{-}ES = "}\NormalTok{, ROC\_ES, }\StringTok{", wAFROC{-}ES = "}\NormalTok{, ROC\_ES }\OperatorTok{*}\StringTok{ }\NormalTok{scaleFactor, }
+    \StringTok{", K80RRRC = "}\NormalTok{, ret2}\OperatorTok{$}\NormalTok{KRRRC, }\StringTok{", Power{-}wAFROC = "}\NormalTok{, ret2}\OperatorTok{$}\NormalTok{powerRRRC, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.05 , wAFROC{-}ES =  0.1077105 , K80RRRC =  42 , Power{-}wAFROC =  0.804794}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{wafroc-power-for-a-given-number-of-readers-j-and-cases-k}{%
+\section{wAFROC Power for a given number of readers J and cases K}\label{wafroc-power-for-a-given-number-of-readers-j-and-cases-k}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+\NormalTok{ret3 \textless{}{-}}\StringTok{ }\KeywordTok{SsPowerGivenJK}\NormalTok{(}\DataTypeTok{dataset =} \OtherTok{NULL}\NormalTok{, }\DataTypeTok{J =} \DecValTok{6}\NormalTok{, }\DataTypeTok{K =}\NormalTok{ ret2}\OperatorTok{$}\NormalTok{KRRRC, }\DataTypeTok{effectSize =}\NormalTok{ effectSizewAFROC, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }
+                    \KeywordTok{list}\NormalTok{(}\DataTypeTok{varYTR =}\NormalTok{ varYTR, }\DataTypeTok{varYTC =}\NormalTok{ varYTC, }\DataTypeTok{varYEps =}\NormalTok{ varYEps))}
+
+\KeywordTok{cat}\NormalTok{(}\StringTok{"ROC{-}ES = "}\NormalTok{, ROC\_ES, }\StringTok{", wAFROC{-}ES = "}\NormalTok{, ROC\_ES }\OperatorTok{*}\StringTok{ }\NormalTok{scaleFactor, }
+    \StringTok{", powerRRRC = "}\NormalTok{, ret3}\OperatorTok{$}\NormalTok{powerRRRC, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} ROC{-}ES =  0.05 , wAFROC{-}ES =  0.1077105 , powerRRRC =  0.804794}
+\end{Highlighting}
+\end{Shaded}
+
+The estimated power is close to 80\% as the number of cases (\texttt{ret2\$KRRRC\ =\ 42}) was chosen deliberately from the previous code block.
+
+\hypertarget{references-10}{%
+\section{References}\label{references-10}}
+
 \hypertarget{ProperROCs}{%
 \chapter{Proper ROCs}\label{ProperROCs}}
 
@@ -4029,8 +4509,8 @@ Examination of the output reveals that:
 
 The next vignette illustrates significance testing for this paradigm.
 
-\hypertarget{references-8}{%
-\section{References}\label{references-8}}
+\hypertarget{references-11}{%
+\section{References}\label{references-11}}
 
 \hypertarget{ROIDataAnalysis}{%
 \chapter{Analyzing data acquired according to the ROI paradigm}\label{ROIDataAnalysis}}
@@ -4043,8 +4523,8 @@ The next vignette illustrates significance testing for this paradigm.
 
 The FOM and DeLong method implementations need checking with a toy dataset.
 
-\hypertarget{introduction-10}{%
-\section{Introduction}\label{introduction-10}}
+\hypertarget{introduction-13}{%
+\section{Introduction}\label{introduction-13}}
 
 \begin{itemize}
 \item
@@ -4336,8 +4816,8 @@ When \texttt{dataset\$dataType\ ==\ "ROI"} the FOM defaults to ``ROI'' (meaning 
 
 TBA
 
-\hypertarget{references-9}{%
-\section{References}\label{references-9}}
+\hypertarget{references-12}{%
+\section{References}\label{references-12}}
 
   \bibliography{packages.bib,myRefs.bib}
 

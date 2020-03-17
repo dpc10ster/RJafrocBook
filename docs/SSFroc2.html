@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 5 FROC ROC DATA FORMAT SPLIT PLOT | RJafroc Documentation</title>
+  <title>Chapter 14 FROC sample size estimation using specified ROC effect | RJafroc Documentation</title>
   <meta name="description" content="Extended RJafroc documentation." />
   <meta name="generator" content="bookdown 0.18.1 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 5 FROC ROC DATA FORMAT SPLIT PLOT | RJafroc Documentation" />
+  <meta property="og:title" content="Chapter 14 FROC sample size estimation using specified ROC effect | RJafroc Documentation" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 5 FROC ROC DATA FORMAT SPLIT PLOT | RJafroc Documentation" />
+  <meta name="twitter:title" content="Chapter 14 FROC sample size estimation using specified ROC effect | RJafroc Documentation" />
   
   <meta name="twitter:description" content="Extended RJafroc documentation." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="rocSpdataformat.html"/>
-<link rel="next" href="QuickStartDBM1.html"/>
+<link rel="prev" href="SSFroc1.html"/>
+<link rel="next" href="ProperROCs.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -376,207 +376,80 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="frocSpdataformat" class="section level1" number="5">
-<h1><span class="header-section-number">Chapter 5</span> FROC ROC DATA FORMAT SPLIT PLOT</h1>
-<div id="introduction-3" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> Introduction</h2>
-<ul>
-<li>The purpose of this vignette is to explain the data format of the input Excel file for an FROC <em>split-plot</em> dataset.</li>
-<li>In a split-plot dataset each reader interprets a sub-set of cases in all modalities.</li>
-<li>The cases interpreted by different readers have no overlap.</li>
-<li>It is assumed, for now, that each sub-set of cases has the same numbers of non-diseased and diseased cases.</li>
-</ul>
+<div id="SSFroc2" class="section level1" number="14">
+<h1><span class="header-section-number">Chapter 14</span> FROC sample size estimation using specified ROC effect</h1>
+<div id="introduction-12" class="section level2" number="14.1">
+<h2><span class="header-section-number">14.1</span> Introduction</h2>
+<p>This example uses the FED dataset as a pilot FROC study and function <code>SsFrocNhRsmModel()</code> to construct the NH model (encapsulating some of the code in the previous vignette).</p>
 </div>
-<div id="the-excel-data-format-3" class="section level2" number="5.2">
-<h2><span class="header-section-number">5.2</span> The Excel data format</h2>
-<p>The Excel file has three worsheets named <code>Truth</code>, <code>NL</code> or <code>FP</code> and <code>LL</code> or <code>TP</code>.</p>
+<div id="constructing-the-nh-model-for-the-dataset" class="section level2" number="14.2">
+<h2><span class="header-section-number">14.2</span> Constructing the NH model for the dataset</h2>
+<p>One starts by extracting the first two treatments from <code>dataset04</code>, which represent the NH dataset, see previous vignette. Next one constructs the NH model - note that the lesion distribution <code>lesionPmf</code> can be specified here independently of that in the pilot dataset. This allows some control over selection of the diseased cases in the pivotal study.</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="SSFroc2.html#cb99-1"></a>frocNhData &lt;-<span class="st"> </span><span class="kw">DfExtractDataset</span>(dataset04, <span class="dt">trts =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb99-2"><a href="SSFroc2.html#cb99-2"></a>ret &lt;-<span class="st"> </span><span class="kw">SsFrocNhRsmModel</span>(frocNhData, <span class="dt">lesionPmf =</span> <span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>))</span>
+<span id="cb99-3"><a href="SSFroc2.html#cb99-3"></a>muMed &lt;-<span class="st"> </span>ret<span class="op">$</span>muMed</span>
+<span id="cb99-4"><a href="SSFroc2.html#cb99-4"></a>lambdaMed &lt;-<span class="st"> </span>ret<span class="op">$</span>lambdaMed</span>
+<span id="cb99-5"><a href="SSFroc2.html#cb99-5"></a>nuMed &lt;-<span class="st"> </span>ret<span class="op">$</span>nuMed</span>
+<span id="cb99-6"><a href="SSFroc2.html#cb99-6"></a>lesDistr &lt;-<span class="st"> </span>ret<span class="op">$</span>lesDistr</span>
+<span id="cb99-7"><a href="SSFroc2.html#cb99-7"></a>lesWghtDistr &lt;-<span class="st"> </span>ret<span class="op">$</span>lesWghtDistr</span>
+<span id="cb99-8"><a href="SSFroc2.html#cb99-8"></a>scaleFactor &lt;-<span class="st"> </span>ret<span class="op">$</span>scaleFactor</span></code></pre></div>
+<p>The fitting model is defined by <code>muMed = r muMed</code>, <code>lambdaMed = 5.6140942</code> and <code>nuMed = 0.3696988</code> and <code>lesionPmf</code>. The effect size scale factor is 2.1542102.</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="SSFroc2.html#cb100-1"></a>aucRocNH &lt;-<span class="st"> </span><span class="kw">PlotRsmOperatingCharacteristics</span>(muMed, lambdaMed, nuMed, </span>
+<span id="cb100-2"><a href="SSFroc2.html#cb100-2"></a>                                            <span class="dt">lesDistr =</span> lesDistr, </span>
+<span id="cb100-3"><a href="SSFroc2.html#cb100-3"></a>                                            <span class="dt">lesWghtDistr =</span> lesWghtDistr, <span class="dt">OpChType =</span> <span class="st">&quot;ROC&quot;</span>)<span class="op">$</span>aucROC</span>
+<span id="cb100-4"><a href="SSFroc2.html#cb100-4"></a>aucwAfrocNH &lt;-<span class="st"> </span><span class="kw">PlotRsmOperatingCharacteristics</span>(muMed, lambdaMed, nuMed, </span>
+<span id="cb100-5"><a href="SSFroc2.html#cb100-5"></a>                                               <span class="dt">lesDistr =</span> lesDistr, </span>
+<span id="cb100-6"><a href="SSFroc2.html#cb100-6"></a>                                               <span class="dt">lesWghtDistr =</span> lesWghtDistr, <span class="dt">OpChType =</span> <span class="st">&quot;wAFROC&quot;</span>)<span class="op">$</span>aucwAFROC</span></code></pre></div>
+<p>The null hypothesis ROC AUC is 0.8790725 and the corresponding NH wAFROC AUC is 0.7231709.</p>
 </div>
-<div id="the-truth-worksheet-3" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> The <code>Truth</code> worksheet</h2>
-<p>The <code>Truth</code> worksheet contains 6 columns: <code>CaseID</code>, <code>LesionID</code>, <code>Weight</code>, <code>ReaderID</code>, <code>ModalityID</code> and <code>Paradigm</code>.</p>
-<ul>
-<li>The first five columns contain as many rows as there are non-diseased cases (9) plus total number of lesions (27) in the dataset (each row with a non-zero <code>LesionID</code> corresponds to a lesion).</li>
-<li><code>CaseID</code>: unique <strong>integers</strong>, one per case, representing the cases in the dataset.</li>
-<li><code>LesionID</code>: integers 0, 1, 2, etc., with each 0 representing a non-diseased case, 1 representing the <em>first</em> lesion on a diseased case, 2 representing the second lesion on a diseased case, if present, and so on.</li>
-<li>The three non-diseased cases interpreted by reader with <code>ReaderID</code> value <code>0</code> are labeled <code>1</code>, <code>2</code>, <code>3</code>, while the diseased cases interpreted by this reader are labeled <code>70</code>, <code>71</code>, <code>72</code>, <code>73</code> and <code>74</code>, with <code>LesionID</code> values ranging from 1 to 3.<br />
-</li>
-<li>The second reader, with <code>ReaderID</code> value <code>1</code>, interprets three non-diseased cases labeled <code>4</code>, <code>5</code> and <code>6</code>, each with <code>LesionID</code> value <code>0</code>, and five diseased cases labeled <code>80</code>, <code>81</code>, <code>82</code>, <code>83</code> and <code>84</code>, with <code>LesionID</code> values ranging from 1 to 3.<br />
-</li>
-<li>The third reader, with <code>ReaderID</code> value <code>2</code>, interprets three non-diseased cases labeled <code>7</code>, <code>8</code> and <code>9</code>, each with <code>LesionID</code> value <code>0</code> and five diseased cases labeled <code>90</code>, <code>91</code>, <code>92</code>, <code>93</code> and <code>94</code>, with <code>LesionID</code> values ranging from 1 to 3.<br />
-</li>
-<li><code>Weight</code>: floating point value adding upto unity for diseased cases as required for FROC data.</li>
-<li><code>ModalityID</code>: a comma-separated listing of modalities, each represented by a unique <strong>integer</strong>. In the example shown below each cell has the value <code>0, 1</code>. <strong>Each cell has to be text formatted.</strong></li>
-<li><code>Paradigm</code>: In the example shown below, the contents are <code>FROC</code> and <code>split-plot</code>.</li>
-</ul>
-<div class="figure" style="text-align: center"><span id="fig:frocSpTruth2"></span>
-<img src="images/frocSpTruth.png" alt="Two views of Truth worksheet for file frocSp.xlsx" width="50%" height="20%" /><img src="images/frocSpTruth2.png" alt="Two views of Truth worksheet for file frocSp.xlsx" width="50%" height="20%" />
-<p class="caption">
-FIGURE 5.1: Two views of Truth worksheet for file frocSp.xlsx
-</p>
+<div id="extracting-the-wafroc-variance-components" class="section level2" number="14.3">
+<h2><span class="header-section-number">14.3</span> Extracting the wAFROC variance components</h2>
+<p>The next code block applies <code>StSignificanceTesting()</code> to <code>frocNhData</code>, using <code>FOM = "wAFROC"</code> and extracts the variance components.</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="SSFroc2.html#cb101-1"></a>varCompwAFROC  &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(frocNhData, <span class="dt">FOM =</span> <span class="st">&quot;wAFROC&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;DBMH&quot;</span>, <span class="dt">option =</span> <span class="st">&quot;RRRC&quot;</span>)<span class="op">$</span>varComp</span></code></pre></div>
 </div>
+<div id="wafroc-power-for-specified-roc-effect-size-number-of-readers-j-and-number-of-cases-k" class="section level2" number="14.4">
+<h2><span class="header-section-number">14.4</span> wAFROC power for specified ROC effect size, number of readers J and number of cases K</h2>
+<p>The following example is for ROC effect size = 0.05, 5 readers (<code>J</code>) and 100 cases (<code>K</code>) in the <strong>pivotal study</strong>.</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="SSFroc2.html#cb102-1"></a>ROC_ES &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
+<span id="cb102-2"><a href="SSFroc2.html#cb102-2"></a>effectSizewAFROC &lt;-<span class="st"> </span>scaleFactor <span class="op">*</span><span class="st"> </span>ROC_ES</span>
+<span id="cb102-3"><a href="SSFroc2.html#cb102-3"></a>J &lt;-<span class="st"> </span><span class="dv">5</span>;K &lt;-<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb102-4"><a href="SSFroc2.html#cb102-4"></a></span>
+<span id="cb102-5"><a href="SSFroc2.html#cb102-5"></a>varYTR &lt;-<span class="st"> </span>varCompwAFROC<span class="op">$</span>varTR </span>
+<span id="cb102-6"><a href="SSFroc2.html#cb102-6"></a>varYTC &lt;-<span class="st"> </span>varCompwAFROC<span class="op">$</span>varTC</span>
+<span id="cb102-7"><a href="SSFroc2.html#cb102-7"></a>varYEps &lt;-<span class="st"> </span>varCompwAFROC<span class="op">$</span>varErr</span>
+<span id="cb102-8"><a href="SSFroc2.html#cb102-8"></a>ret &lt;-<span class="st"> </span><span class="kw">SsPowerGivenJKDbmVarComp</span> (<span class="dt">J =</span> J, <span class="dt">K =</span> K, <span class="dt">effectSize =</span> effectSizewAFROC, </span>
+<span id="cb102-9"><a href="SSFroc2.html#cb102-9"></a>                                 varYTR, varYTC, varYEps, <span class="dt">option =</span> <span class="st">&quot;RRRC&quot;</span>)</span>
+<span id="cb102-10"><a href="SSFroc2.html#cb102-10"></a>powerwAFROC &lt;-<span class="st"> </span>ret<span class="op">$</span>powerRRRC</span>
+<span id="cb102-11"><a href="SSFroc2.html#cb102-11"></a>  </span>
+<span id="cb102-12"><a href="SSFroc2.html#cb102-12"></a><span class="kw">cat</span>(<span class="st">&quot;ROC-ES = &quot;</span>, ROC_ES, <span class="st">&quot;, wAFROC-ES = &quot;</span>, ROC_ES <span class="op">*</span><span class="st"> </span>scaleFactor, <span class="st">&quot;, Power-wAFROC = &quot;</span>, powerwAFROC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb102-13"><a href="SSFroc2.html#cb102-13"></a><span class="co">#&gt; ROC-ES =  0.05 , wAFROC-ES =  0.1077105 , Power-wAFROC =  0.976293</span></span></code></pre></div>
 </div>
-<div id="the-structure-of-the-froc-split-plot-dataset" class="section level2" number="5.4">
-<h2><span class="header-section-number">5.4</span> The structure of the FROC split plot dataset</h2>
-<p>The example shown in Fig. 1 corresponds to Excel file <code>inst/extdata/toyFiles/FROC/frocSp.xlsx</code> in the project directory.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="frocSpdataformat.html#cb22-1"></a>frocSp &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;toyFiles/FROC/frocSp.xlsx&quot;</span>,</span>
-<span id="cb22-2"><a href="frocSpdataformat.html#cb22-2"></a>                        <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb22-3"><a href="frocSpdataformat.html#cb22-3"></a>x &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(frocSp, <span class="dt">newExcelFileFormat =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb22-4"><a href="frocSpdataformat.html#cb22-4"></a><span class="kw">str</span>(x)</span>
-<span id="cb22-5"><a href="frocSpdataformat.html#cb22-5"></a><span class="co">#&gt; List of 12</span></span>
-<span id="cb22-6"><a href="frocSpdataformat.html#cb22-6"></a><span class="co">#&gt;  $ NL           : num [1:2, 1:3, 1:24, 1:3] 1.02 2.89 -Inf -Inf -Inf ...</span></span>
-<span id="cb22-7"><a href="frocSpdataformat.html#cb22-7"></a><span class="co">#&gt;  $ LL           : num [1:2, 1:3, 1:15, 1:3] 5.28 5.2 -Inf -Inf -Inf ...</span></span>
-<span id="cb22-8"><a href="frocSpdataformat.html#cb22-8"></a><span class="co">#&gt;  $ lesionVector : int [1:15] 2 1 3 2 1 2 1 3 2 1 ...</span></span>
-<span id="cb22-9"><a href="frocSpdataformat.html#cb22-9"></a><span class="co">#&gt;  $ lesionID     : num [1:15, 1:3] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb22-10"><a href="frocSpdataformat.html#cb22-10"></a><span class="co">#&gt;  $ lesionWeight : num [1:15, 1:3] 0.3 1 0.333 0.1 1 ...</span></span>
-<span id="cb22-11"><a href="frocSpdataformat.html#cb22-11"></a><span class="co">#&gt;  $ dataType     : chr &quot;FROC&quot;</span></span>
-<span id="cb22-12"><a href="frocSpdataformat.html#cb22-12"></a><span class="co">#&gt;  $ modalityID   : Named chr [1:2] &quot;0&quot; &quot;1&quot;</span></span>
-<span id="cb22-13"><a href="frocSpdataformat.html#cb22-13"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;0&quot; &quot;1&quot;</span></span>
-<span id="cb22-14"><a href="frocSpdataformat.html#cb22-14"></a><span class="co">#&gt;  $ readerID     : Named chr [1:3] &quot;0&quot; &quot;1&quot; &quot;2&quot;</span></span>
-<span id="cb22-15"><a href="frocSpdataformat.html#cb22-15"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:3] &quot;0&quot; &quot;1&quot; &quot;2&quot;</span></span>
-<span id="cb22-16"><a href="frocSpdataformat.html#cb22-16"></a><span class="co">#&gt;  $ design       : chr &quot;SPLIT-PLOT&quot;</span></span>
-<span id="cb22-17"><a href="frocSpdataformat.html#cb22-17"></a><span class="co">#&gt;  $ normalCases  : int [1:9] 1 2 3 4 5 6 7 8 9</span></span>
-<span id="cb22-18"><a href="frocSpdataformat.html#cb22-18"></a><span class="co">#&gt;  $ abnormalCases: int [1:15] 70 71 72 73 74 80 81 82 83 84 ...</span></span>
-<span id="cb22-19"><a href="frocSpdataformat.html#cb22-19"></a><span class="co">#&gt;  $ truthTableStr: num [1:2, 1:3, 1:24, 1:4] 1 1 NA NA NA NA 1 1 NA NA ...</span></span></code></pre></div>
-<ul>
-<li>Flag <code>newExcelFileFormat</code> <strong>must</strong> be set to <code>TRUE</code> for split plot data.</li>
-<li>The dataset object <code>x</code> is a <code>list</code> variable with 12 members.</li>
-<li>Note that the <code>dataType</code> member is FROC and the <code>design</code> member is SPLIT-PLOT.</li>
-<li>There are 15 diseased cases in the dataset (the number of 1’s in the <code>LesionID</code> column of the <code>Truth</code> worksheet) and 9 non-diseased cases (the number of 0’s in the <code>LesionID</code> column).</li>
-<li>The <code>x$lesionVector</code> member is a vector with 15 ones representing the 15 diseased cases in the dataset.</li>
-<li>The <code>x$lesionID</code> member is a 15 x 3 array labeling the lesions in the dataset.</li>
-<li>The <code>x$lesionWeight</code> member is a 15 x 3 array.</li>
-</ul>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="frocSpdataformat.html#cb23-1"></a>x<span class="op">$</span>lesionVector</span>
-<span id="cb23-2"><a href="frocSpdataformat.html#cb23-2"></a><span class="co">#&gt;  [1] 2 1 3 2 1 2 1 3 2 1 2 1 3 2 1</span></span>
-<span id="cb23-3"><a href="frocSpdataformat.html#cb23-3"></a>x<span class="op">$</span>lesionID</span>
-<span id="cb23-4"><a href="frocSpdataformat.html#cb23-4"></a><span class="co">#&gt;       [,1] [,2] [,3]</span></span>
-<span id="cb23-5"><a href="frocSpdataformat.html#cb23-5"></a><span class="co">#&gt;  [1,]    1    2 -Inf</span></span>
-<span id="cb23-6"><a href="frocSpdataformat.html#cb23-6"></a><span class="co">#&gt;  [2,]    1 -Inf -Inf</span></span>
-<span id="cb23-7"><a href="frocSpdataformat.html#cb23-7"></a><span class="co">#&gt;  [3,]    1    2    3</span></span>
-<span id="cb23-8"><a href="frocSpdataformat.html#cb23-8"></a><span class="co">#&gt;  [4,]    1    2 -Inf</span></span>
-<span id="cb23-9"><a href="frocSpdataformat.html#cb23-9"></a><span class="co">#&gt;  [5,]    1 -Inf -Inf</span></span>
-<span id="cb23-10"><a href="frocSpdataformat.html#cb23-10"></a><span class="co">#&gt;  [6,]    1    2 -Inf</span></span>
-<span id="cb23-11"><a href="frocSpdataformat.html#cb23-11"></a><span class="co">#&gt;  [7,]    1 -Inf -Inf</span></span>
-<span id="cb23-12"><a href="frocSpdataformat.html#cb23-12"></a><span class="co">#&gt;  [8,]    1    2    3</span></span>
-<span id="cb23-13"><a href="frocSpdataformat.html#cb23-13"></a><span class="co">#&gt;  [9,]    1    2 -Inf</span></span>
-<span id="cb23-14"><a href="frocSpdataformat.html#cb23-14"></a><span class="co">#&gt; [10,]    1 -Inf -Inf</span></span>
-<span id="cb23-15"><a href="frocSpdataformat.html#cb23-15"></a><span class="co">#&gt; [11,]    1    2 -Inf</span></span>
-<span id="cb23-16"><a href="frocSpdataformat.html#cb23-16"></a><span class="co">#&gt; [12,]    1 -Inf -Inf</span></span>
-<span id="cb23-17"><a href="frocSpdataformat.html#cb23-17"></a><span class="co">#&gt; [13,]    1    2    3</span></span>
-<span id="cb23-18"><a href="frocSpdataformat.html#cb23-18"></a><span class="co">#&gt; [14,]    1    2 -Inf</span></span>
-<span id="cb23-19"><a href="frocSpdataformat.html#cb23-19"></a><span class="co">#&gt; [15,]    1 -Inf -Inf</span></span>
-<span id="cb23-20"><a href="frocSpdataformat.html#cb23-20"></a>x<span class="op">$</span>lesionWeight</span>
-<span id="cb23-21"><a href="frocSpdataformat.html#cb23-21"></a><span class="co">#&gt;            [,1]      [,2]      [,3]</span></span>
-<span id="cb23-22"><a href="frocSpdataformat.html#cb23-22"></a><span class="co">#&gt;  [1,] 0.3000000 0.7000000      -Inf</span></span>
-<span id="cb23-23"><a href="frocSpdataformat.html#cb23-23"></a><span class="co">#&gt;  [2,] 1.0000000      -Inf      -Inf</span></span>
-<span id="cb23-24"><a href="frocSpdataformat.html#cb23-24"></a><span class="co">#&gt;  [3,] 0.3333333 0.3333333 0.3333333</span></span>
-<span id="cb23-25"><a href="frocSpdataformat.html#cb23-25"></a><span class="co">#&gt;  [4,] 0.1000000 0.9000000      -Inf</span></span>
-<span id="cb23-26"><a href="frocSpdataformat.html#cb23-26"></a><span class="co">#&gt;  [5,] 1.0000000      -Inf      -Inf</span></span>
-<span id="cb23-27"><a href="frocSpdataformat.html#cb23-27"></a><span class="co">#&gt;  [6,] 0.3000000 0.7000000      -Inf</span></span>
-<span id="cb23-28"><a href="frocSpdataformat.html#cb23-28"></a><span class="co">#&gt;  [7,] 1.0000000      -Inf      -Inf</span></span>
-<span id="cb23-29"><a href="frocSpdataformat.html#cb23-29"></a><span class="co">#&gt;  [8,] 0.3333333 0.3333333 0.3333333</span></span>
-<span id="cb23-30"><a href="frocSpdataformat.html#cb23-30"></a><span class="co">#&gt;  [9,] 0.1000000 0.9000000      -Inf</span></span>
-<span id="cb23-31"><a href="frocSpdataformat.html#cb23-31"></a><span class="co">#&gt; [10,] 1.0000000      -Inf      -Inf</span></span>
-<span id="cb23-32"><a href="frocSpdataformat.html#cb23-32"></a><span class="co">#&gt; [11,] 0.3000000 0.7000000      -Inf</span></span>
-<span id="cb23-33"><a href="frocSpdataformat.html#cb23-33"></a><span class="co">#&gt; [12,] 1.0000000      -Inf      -Inf</span></span>
-<span id="cb23-34"><a href="frocSpdataformat.html#cb23-34"></a><span class="co">#&gt; [13,] 0.3333333 0.3333333 0.3333333</span></span>
-<span id="cb23-35"><a href="frocSpdataformat.html#cb23-35"></a><span class="co">#&gt; [14,] 0.1000000 0.9000000      -Inf</span></span>
-<span id="cb23-36"><a href="frocSpdataformat.html#cb23-36"></a><span class="co">#&gt; [15,] 1.0000000      -Inf      -Inf</span></span></code></pre></div>
-<ul>
-<li>The <code>x$truthTableStr</code> member is a <code>2 x 3 x 24 x 4</code> array, i.e., I x J x K x (maximum number of lesions per case plus 1). The <code>plus 1</code> is needed to accommodate normal cases with <code>lesionID</code> = 0.</li>
-<li>Each entry in this array is either <code>1</code>, meaning the corresponding interpretation exists, or <code>NA</code>, meaning the corresponding interpretation does not exist.</li>
-<li>For example, <code>x$truthTableStr[1,1,1,1]</code> is 1. This means that an interpretation exists for the first treatment (<code>modalityID</code> = 0), first reader (<code>readerID</code> = 0) and first (normal) case <code>caseID</code> = 1 and <code>lesionID</code> = 0. This example corresponds to row 2 in the <code>TRUTH</code> worksheet.</li>
-<li><code>x$truthTableStr[1,1,4,1]</code> is NA, which means an interpretation does not exist for the first treatment, first reader and fourth (normal) case.</li>
-<li>However, <code>x$truthTableStr[1,2,4,1]</code> is 1, which means an interpretation does exist for the first treatment, second reader and fourth (normal) case. This example corresponds to row 5 in the <code>TRUTH</code> worksheet.</li>
-<li>Likewise, <code>x$truthTableStr[1,1,10,3]</code> is 1, which means an interpretation does exist for the first treatment, first reader, tenth (abnormal) case and <code>lesionID</code> = 2. This example corresponds to row 12 in the <code>TRUTH</code> worksheet.</li>
-<li>As an aside, in the FROC paradigm an interpretation need not yield a mark-rating pair. An interpretation means the reader was “exposed to” and had the opportunity to mark the corresponding treatment-reader-case-lesion combination.</li>
-<li>The reader should confirm that the contents of <code>x$truthTableStr</code> summarizes the structure of the data in the <code>TRUTH</code> worksheet.</li>
-</ul>
+<div id="wafroc-number-of-cases-for-80-power-for-a-given-number-of-readers-j" class="section level2" number="14.5">
+<h2><span class="header-section-number">14.5</span> wAFROC number of cases for 80% power for a given number of readers J</h2>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="SSFroc2.html#cb103-1"></a></span>
+<span id="cb103-2"><a href="SSFroc2.html#cb103-2"></a>varYTR &lt;-<span class="st"> </span>varCompwAFROC<span class="op">$</span>varTR </span>
+<span id="cb103-3"><a href="SSFroc2.html#cb103-3"></a>varYTC &lt;-<span class="st"> </span>varCompwAFROC<span class="op">$</span>varTC</span>
+<span id="cb103-4"><a href="SSFroc2.html#cb103-4"></a>varYEps &lt;-<span class="st"> </span>varCompwAFROC<span class="op">$</span>varErr</span>
+<span id="cb103-5"><a href="SSFroc2.html#cb103-5"></a>ret2 &lt;-<span class="st"> </span><span class="kw">SsSampleSizeKGivenJ</span>(<span class="dt">dataset =</span> <span class="ot">NULL</span>, <span class="dt">J =</span> <span class="dv">6</span>, <span class="dt">effectSize =</span> effectSizewAFROC, <span class="dt">method =</span> <span class="st">&quot;DBMH&quot;</span>, </span>
+<span id="cb103-6"><a href="SSFroc2.html#cb103-6"></a>                      <span class="kw">list</span>(<span class="dt">varYTR =</span> varYTR, <span class="dt">varYTC =</span> varYTC, <span class="dt">varYEps =</span> varYEps))</span>
+<span id="cb103-7"><a href="SSFroc2.html#cb103-7"></a></span>
+<span id="cb103-8"><a href="SSFroc2.html#cb103-8"></a><span class="kw">cat</span>(<span class="st">&quot;ROC-ES = &quot;</span>, ROC_ES, <span class="st">&quot;, wAFROC-ES = &quot;</span>, ROC_ES <span class="op">*</span><span class="st"> </span>scaleFactor, </span>
+<span id="cb103-9"><a href="SSFroc2.html#cb103-9"></a>    <span class="st">&quot;, K80RRRC = &quot;</span>, ret2<span class="op">$</span>KRRRC, <span class="st">&quot;, Power-wAFROC = &quot;</span>, ret2<span class="op">$</span>powerRRRC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb103-10"><a href="SSFroc2.html#cb103-10"></a><span class="co">#&gt; ROC-ES =  0.05 , wAFROC-ES =  0.1077105 , K80RRRC =  42 , Power-wAFROC =  0.804794</span></span></code></pre></div>
 </div>
-<div id="the-false-positive-fp-ratings-3" class="section level2" number="5.5">
-<h2><span class="header-section-number">5.5</span> The false positive (FP) ratings</h2>
-<p>These are found in the <code>FP</code> or <code>NL</code> worksheet, see Fig. 2.</p>
-<div class="figure" style="text-align: center"><span id="fig:frocSpLL"></span>
-<img src="images/frocSpNL.png" alt="NL/FP worksheet, left, and LL/TP worksheet, right, for file frocSp.xlsx" width="50%" height="20%" /><img src="images/frocSpLL.png" alt="NL/FP worksheet, left, and LL/TP worksheet, right, for file frocSp.xlsx" width="50%" height="20%" />
-<p class="caption">
-FIGURE 5.2: NL/FP worksheet, left, and LL/TP worksheet, right, for file frocSp.xlsx
-</p>
+<div id="wafroc-power-for-a-given-number-of-readers-j-and-cases-k" class="section level2" number="14.6">
+<h2><span class="header-section-number">14.6</span> wAFROC Power for a given number of readers J and cases K</h2>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="SSFroc2.html#cb104-1"></a></span>
+<span id="cb104-2"><a href="SSFroc2.html#cb104-2"></a>ret3 &lt;-<span class="st"> </span><span class="kw">SsPowerGivenJK</span>(<span class="dt">dataset =</span> <span class="ot">NULL</span>, <span class="dt">J =</span> <span class="dv">6</span>, <span class="dt">K =</span> ret2<span class="op">$</span>KRRRC, <span class="dt">effectSize =</span> effectSizewAFROC, <span class="dt">method =</span> <span class="st">&quot;DBMH&quot;</span>, </span>
+<span id="cb104-3"><a href="SSFroc2.html#cb104-3"></a>                    <span class="kw">list</span>(<span class="dt">varYTR =</span> varYTR, <span class="dt">varYTC =</span> varYTC, <span class="dt">varYEps =</span> varYEps))</span>
+<span id="cb104-4"><a href="SSFroc2.html#cb104-4"></a></span>
+<span id="cb104-5"><a href="SSFroc2.html#cb104-5"></a><span class="kw">cat</span>(<span class="st">&quot;ROC-ES = &quot;</span>, ROC_ES, <span class="st">&quot;, wAFROC-ES = &quot;</span>, ROC_ES <span class="op">*</span><span class="st"> </span>scaleFactor, </span>
+<span id="cb104-6"><a href="SSFroc2.html#cb104-6"></a>    <span class="st">&quot;, powerRRRC = &quot;</span>, ret3<span class="op">$</span>powerRRRC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb104-7"><a href="SSFroc2.html#cb104-7"></a><span class="co">#&gt; ROC-ES =  0.05 , wAFROC-ES =  0.1077105 , powerRRRC =  0.804794</span></span></code></pre></div>
+<p>The estimated power is close to 80% as the number of cases (<code>ret2$KRRRC = 42</code>) was chosen deliberately from the previous code block.</p>
 </div>
-<ul>
-<li>This worksheet has the ratings of non-diseased cases.</li>
-<li>The common vertical length is 30 in this example (2 modalities times 3 readers times 5 non-diseased cases per reader).</li>
-<li><code>ReaderID</code>: the reader labels: these must be from <code>0</code>, <code>1</code> or <code>2</code>, as declared in the <code>Truth</code> worksheet.</li>
-<li><code>ModalityID</code>: the modality labels: <code>0</code> or <code>1</code>, as declared in the <code>Truth</code> worksheet.</li>
-<li><code>CaseID</code>: the labels of non-diseased cases. Each <code>CaseID</code>, <code>ModalityID</code>, <code>ReaderID</code> combination must be consistent with that declared in the <code>Truth</code> worsheet.<br />
-</li>
-<li><code>FP_Rating</code>: the floating point ratings of non-diseased cases. Each row of this worksheet yields a rating corresponding to the values of <code>ReaderID</code>, <code>ModalityID</code> and <code>CaseID</code> for that row. Each <code>CaseID</code>, <code>ModalityID</code>, <code>ReaderID</code> combination must be consistent with that declared in the <code>Truth</code> worsheet.</li>
-</ul>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="frocSpdataformat.html#cb24-1"></a>x<span class="op">$</span>NL[,<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">9</span>,<span class="dv">1</span>]</span>
-<span id="cb24-2"><a href="frocSpdataformat.html#cb24-2"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]</span></span>
-<span id="cb24-3"><a href="frocSpdataformat.html#cb24-3"></a><span class="co">#&gt; [1,] 1.02 2.22 1.90 -Inf -Inf -Inf -Inf -Inf -Inf</span></span>
-<span id="cb24-4"><a href="frocSpdataformat.html#cb24-4"></a><span class="co">#&gt; [2,] 2.89 0.84 1.85 -Inf -Inf -Inf -Inf -Inf -Inf</span></span>
-<span id="cb24-5"><a href="frocSpdataformat.html#cb24-5"></a>x<span class="op">$</span>NL[,<span class="dv">2</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">9</span>,<span class="dv">1</span>]</span>
-<span id="cb24-6"><a href="frocSpdataformat.html#cb24-6"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]</span></span>
-<span id="cb24-7"><a href="frocSpdataformat.html#cb24-7"></a><span class="co">#&gt; [1,] -Inf -Inf -Inf 2.21 3.10 2.21 -Inf -Inf -Inf</span></span>
-<span id="cb24-8"><a href="frocSpdataformat.html#cb24-8"></a><span class="co">#&gt; [2,] -Inf -Inf -Inf 3.22 3.01 1.96 -Inf -Inf -Inf</span></span>
-<span id="cb24-9"><a href="frocSpdataformat.html#cb24-9"></a>x<span class="op">$</span>NL[,<span class="dv">3</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">9</span>,<span class="dv">1</span>]</span>
-<span id="cb24-10"><a href="frocSpdataformat.html#cb24-10"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]</span></span>
-<span id="cb24-11"><a href="frocSpdataformat.html#cb24-11"></a><span class="co">#&gt; [1,] -Inf -Inf -Inf -Inf -Inf -Inf 2.14 1.98 1.95</span></span>
-<span id="cb24-12"><a href="frocSpdataformat.html#cb24-12"></a><span class="co">#&gt; [2,] -Inf -Inf -Inf -Inf -Inf -Inf 2.24 4.01 1.65</span></span></code></pre></div>
-<ul>
-<li>The first line of the above code shows the ratings, in both modalities, of the first three non-diseased cases with <code>CaseID</code>s <code>1,3,3</code> (indexed 1, 2, 3 and appearing in the first three columns) interpreted by the first reader (<code>ReaderID</code> <code>0</code>).</li>
-<li>The second line shows the ratings, in both modalities, of the next three non-diseased cases with <code>CaseID</code>s <code>4,5,6</code> (indexed 4, 5, 6and appearing in the next three columns) interpreted by the second reader (<code>ReaderID</code> <code>1</code>).</li>
-<li>The third line shows the ratings, in both modalities, of the final three non-diseased cases with <code>CaseID</code>s <code>7,8,9</code> (indexed 7, 8, 9and appearing in the final three columns) interpreted by the third reader (<code>ReaderID</code> <code>2</code>).</li>
-<li>Values such as <code>x$NL[,,16:30,1]</code>, which are there for compatibility with FROC data, are all filled with <code>-Inf</code>.</li>
-</ul>
-</div>
-<div id="the-true-positive-tp-ratings-3" class="section level2" number="5.6">
-<h2><span class="header-section-number">5.6</span> The true positive (TP) ratings</h2>
-<p>These are found in the <code>TP</code> or <code>LL</code> worksheet, see below.</p>
-<ul>
-<li>This worksheet has the ratings of diseased cases.</li>
-<li>The common vertical length is 30 in this example (2 modalities times 3 readers times 5 diseased cases per reader).</li>
-<li><code>ReaderID</code>: the reader labels: these must be from <code>0</code>, <code>1</code> or <code>2</code>, as declared in the <code>Truth</code> worksheet.</li>
-<li><code>ModalityID</code>: the modality labels: <code>0</code> or <code>1</code>, as declared in the <code>Truth</code> worksheet.</li>
-<li><code>CaseID</code>: the labels of diseased cases. Each <code>CaseID</code>, <code>ModalityID</code>, <code>ReaderID</code> combination must be consistent with that declared in the <code>Truth</code> worsheet.<br />
-</li>
-<li><code>TP_Rating</code>: the floating point ratings of diseased cases. Each row of this worksheet yields a rating corresponding to the values of <code>ReaderID</code>, <code>ModalityID</code> and <code>CaseID</code> for that row. Each <code>CaseID</code>, <code>ModalityID</code>, <code>ReaderID</code> combination must be consistent with that declared in the <code>Truth</code> worsheet.</li>
-</ul>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="frocSpdataformat.html#cb25-1"></a>x<span class="op">$</span>LL[,<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>,<span class="dv">1</span>]</span>
-<span id="cb25-2"><a href="frocSpdataformat.html#cb25-2"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]</span></span>
-<span id="cb25-3"><a href="frocSpdataformat.html#cb25-3"></a><span class="co">#&gt; [1,] 5.28 3.01 5.98 5.00 4.26 -Inf -Inf -Inf -Inf  -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb25-4"><a href="frocSpdataformat.html#cb25-4"></a><span class="co">#&gt; [2,] 5.20 3.27 4.61 5.18 4.72 -Inf -Inf -Inf -Inf  -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb25-5"><a href="frocSpdataformat.html#cb25-5"></a><span class="co">#&gt;      [,15]</span></span>
-<span id="cb25-6"><a href="frocSpdataformat.html#cb25-6"></a><span class="co">#&gt; [1,]  -Inf</span></span>
-<span id="cb25-7"><a href="frocSpdataformat.html#cb25-7"></a><span class="co">#&gt; [2,]  -Inf</span></span>
-<span id="cb25-8"><a href="frocSpdataformat.html#cb25-8"></a>x<span class="op">$</span>LL[,<span class="dv">2</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>,<span class="dv">1</span>]</span>
-<span id="cb25-9"><a href="frocSpdataformat.html#cb25-9"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]</span></span>
-<span id="cb25-10"><a href="frocSpdataformat.html#cb25-10"></a><span class="co">#&gt; [1,] -Inf -Inf -Inf -Inf -Inf 5.14 3.31 4.92 4.95  5.30  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb25-11"><a href="frocSpdataformat.html#cb25-11"></a><span class="co">#&gt; [2,] -Inf -Inf -Inf -Inf -Inf 4.77 3.19 5.20 5.39  5.01  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb25-12"><a href="frocSpdataformat.html#cb25-12"></a><span class="co">#&gt;      [,15]</span></span>
-<span id="cb25-13"><a href="frocSpdataformat.html#cb25-13"></a><span class="co">#&gt; [1,]  -Inf</span></span>
-<span id="cb25-14"><a href="frocSpdataformat.html#cb25-14"></a><span class="co">#&gt; [2,]  -Inf</span></span>
-<span id="cb25-15"><a href="frocSpdataformat.html#cb25-15"></a>x<span class="op">$</span>LL[,<span class="dv">3</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">15</span>,<span class="dv">1</span>]</span>
-<span id="cb25-16"><a href="frocSpdataformat.html#cb25-16"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]</span></span>
-<span id="cb25-17"><a href="frocSpdataformat.html#cb25-17"></a><span class="co">#&gt; [1,] -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf  -Inf  4.66  4.03  5.22  4.94</span></span>
-<span id="cb25-18"><a href="frocSpdataformat.html#cb25-18"></a><span class="co">#&gt; [2,] -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf  -Inf  4.87  1.94  -Inf  -Inf</span></span>
-<span id="cb25-19"><a href="frocSpdataformat.html#cb25-19"></a><span class="co">#&gt;      [,15]</span></span>
-<span id="cb25-20"><a href="frocSpdataformat.html#cb25-20"></a><span class="co">#&gt; [1,]  5.27</span></span>
-<span id="cb25-21"><a href="frocSpdataformat.html#cb25-21"></a><span class="co">#&gt; [2,]  4.78</span></span></code></pre></div>
-<ul>
-<li>The first line of code shows the ratings, in both modalities, of the first five diseased cases with <code>CaseID</code>s <code>70,71,72,73,74</code> (indexed 1, 2, 3, 4, 5 and appearing in the first five columns) interpreted by the first reader (<code>ReaderID</code> <code>0</code>).</li>
-<li>The second line shows the ratings, in both modalities, of the next five diseased cases with <code>CaseID</code>s <code>80,81,82,83,84</code> (indexed 6, 7, 8, 9, 10 and appearing in the next five columns) interpreted by the second reader (<code>ReaderID</code> <code>1</code>).</li>
-<li>The third line shows the ratings, in both modalities, of the final five non-diseased cases with <code>CaseID</code>s <code>90,91,92,93,94</code> (indexed 11, 12, 13, 14, 15 and appearing in the final five columns) interpreted by the third reader (<code>ReaderID</code> <code>2</code>).</li>
-</ul>
-</div>
-<div id="summary-2" class="section level2" number="5.7">
-<h2><span class="header-section-number">5.7</span> Summary</h2>
-<ul>
-<li>TBA</li>
-</ul>
-</div>
-<div id="references-4" class="section level2" number="5.8">
-<h2><span class="header-section-number">5.8</span> References</h2>
+<div id="references-10" class="section level2" number="14.7">
+<h2><span class="header-section-number">14.7</span> References</h2>
 
 </div>
 </div>
@@ -585,8 +458,8 @@ FIGURE 5.2: NL/FP worksheet, left, and LL/TP worksheet, right, for file frocSp.x
           </div>
         </div>
       </div>
-<a href="rocSpdataformat.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="QuickStartDBM1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="SSFroc1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ProperROCs.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
