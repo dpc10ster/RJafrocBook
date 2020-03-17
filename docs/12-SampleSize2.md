@@ -35,17 +35,18 @@ For example, the treatment-reader pseudovalue variance component is the third el
 ### Random reader random case (RRRC)
  This illustrates random reader random case sample size estimation. Assumed are 10 readers and 163 cases in the pivotal study. The non-centrality parameter is defined by:
 
-TBA
+\begin{equation*} 
+\Delta =\frac{JK\sigma _{Y;\tau }^{2}}{\left( \sigma _{Y;\varepsilon }^{2}+\sigma _{Y;\tau RC}^{2} \right)+K\sigma _{Y;\tau R}^{2}+J\max \left( \sigma _{Y;\tau C}^{2},0 \right)}
+\end{equation*} 
  
 The sampling distribution of the F-statistic under the AH is:
 
-TBA
+\begin{equation*} 
+{F_{\left. AH \right|R}}\equiv \frac{MST}{MSTC}\sim{F_{I-1,\left( I-1 \right)\left(K-1 \right),\Delta}}
+\end{equation*} 
 
-Also, 
+Also, $\sigma _{Y;\tau }^{2}={{d}^{2}}/2$, where `d` is the observed effect size, i.e., `effectSize`. The formulae for calculating the mean-squares are in [@RN1476], implemented in `UtilMeanSquares()`.
 
-TBA
-
-where `d` is the observed effect size, i.e., `effectSize`. The formulae for calculating the mean-squares are in [@RN1476], implemented in `UtilMeanSquares()`.
 
 
 ```r
@@ -80,11 +81,15 @@ The next line calculates `ddf` = 12.822129. The remaining lines calculate the cr
 ### Fixed reader random case (FRRC)
 This code illustrates fixed reader random case sample size estimation. Assumed are 10 readers and 133 cases  in the pivotal study. The formulae are:
 
-TBA
+\begin{equation*} 
+\Delta =\frac{JK\sigma _{Y;\tau }^{2}}{\sigma _{Y;\varepsilon }^{2}+\sigma _{Y;\tau RC}^{2}+J\sigma _{Y;\tau C}^{2}}
+\end{equation*} 
 
 The sampling distribution of the F-statistic under the AH is:
 
-TBA
+\begin{equation*} 
+{F_{\left. AH \right|R}}\equiv \frac{MST}{MSTC}\sim{F_{I-1,\left( I-1 \right)\left( K-1 \right),\Delta }} 
+\end{equation*} 
 
 
 ```r
@@ -100,11 +105,15 @@ This time non centrality parameter, `ncp` = 7.9873835, `ddf` = 132, `FCrit` = 3.
 ### Random reader fixed case (RRFC)
 This code illustrates random reader random case sample size estimation. Assumed are 10 readers and 53 cases  in the pivotal study. The formulae are:
 
-TBA
+\begin{equation*} 
+\Delta =\frac{JK\sigma _{Y;\tau }^{2}}{\sigma _{Y;\varepsilon }^{2}+\sigma _{Y;\tau RC}^{2}+K\sigma _{Y;\tau R}^{2}}
+\end{equation*} 
 
 The sampling distribution of the F-statistic under the AH is:
 
-TBA
+\begin{equation*} 
+{{F}_{\left. AH \right|C}}\equiv \frac{MST}{MSTR}\sim{{F}_{I-1,\left( I-1 \right)\left( J-1 \right),\Delta }}
+\end{equation*} 
 
 
 ```r
