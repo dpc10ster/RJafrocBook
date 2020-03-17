@@ -520,14 +520,81 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 \hypertarget{references-1}{%
 \section{References}\label{references-1}}
 
-\hypertarget{MetzEqn36}{%
-\chapter{Metz Eqn36 numerical check}\label{MetzEqn36}}
+\hypertarget{ProperROCs}{%
+\chapter{Proper ROCs}\label{ProperROCs}}
 
 \hypertarget{helper-functions}{%
 \section{Helper functions}\label{helper-functions}}
 
+\hypertarget{definitions-of-proproc-parameters-in-terms-of-binormal-model-parameters}{%
+\section{Definitions of PROPROC parameters in terms of binormal model parameters}\label{definitions-of-proproc-parameters-in-terms-of-binormal-model-parameters}}
+
+\begin{eqnarray*}
+c & = & \frac{b-1}{b+1}\\
+d_a & = & \frac{\sqrt{2}a}{\sqrt{1+{b^{2}}}} 
+\end{eqnarray*}
+
 \hypertarget{main-code-and-output}{%
 \section{Main code and output}\label{main-code-and-output}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c1Arr \textless{}{-}}\StringTok{   }\KeywordTok{c}\NormalTok{(}\OperatorTok{{-}}\FloatTok{0.1322804}\NormalTok{, }\FloatTok{0.2225588}\NormalTok{); daArr  \textless{}{-}}\StringTok{  }\KeywordTok{c}\NormalTok{(}\FloatTok{1.197239}\NormalTok{, }\FloatTok{1.740157}\NormalTok{)}
+\NormalTok{myLabel \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"A"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"C"}\NormalTok{, }\StringTok{"D"}\NormalTok{)}
+\NormalTok{myLabelIndx \textless{}{-}}\StringTok{ }\DecValTok{1}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{)}
+\NormalTok{\{}
+\NormalTok{  c1 \textless{}{-}}\StringTok{ }\NormalTok{c1Arr[i]}
+\NormalTok{  da \textless{}{-}}\StringTok{ }\NormalTok{daArr[i]}
+\NormalTok{  ret \textless{}{-}}\StringTok{ }\KeywordTok{Transform2ab}\NormalTok{(da, c1)}
+\NormalTok{  a \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{a;b \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{b}
+  \ControlFlowTok{if}\NormalTok{ (i }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) z \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DataTypeTok{by =} \FloatTok{0.01}\NormalTok{) }\CommentTok{\# may need to adjust limits to view detail of slope plot}
+  \ControlFlowTok{if}\NormalTok{ (i }\OperatorTok{==}\StringTok{ }\DecValTok{2}\NormalTok{) z \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DataTypeTok{by =} \FloatTok{0.01}\NormalTok{) }\CommentTok{\# may need to adjust limits to view detail of slope plot}
+  
+\NormalTok{  FPF \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{0.001}\NormalTok{)}
+\NormalTok{  TPF \textless{}{-}}\StringTok{ }\KeywordTok{rocY}\NormalTok{(FPF, a, b)}
+  
+\NormalTok{  rocPlot \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{FPF =}\NormalTok{ FPF, }\DataTypeTok{TPF =}\NormalTok{ TPF)}
+\NormalTok{  plotRoc \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(rocPlot, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ FPF, }\DataTypeTok{y =}\NormalTok{ TPF)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom\_line}\NormalTok{()  }\OperatorTok{+}\StringTok{ }
+\StringTok{   }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale\_y\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{))   }\OperatorTok{+}
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(myLabel[myLabelIndx]);myLabelIndx \textless{}{-}}\StringTok{ }\NormalTok{myLabelIndx }\OperatorTok{+}\StringTok{ }\DecValTok{1}
+
+\NormalTok{  slope \textless{}{-}b}\OperatorTok{*}\KeywordTok{dnorm}\NormalTok{(a}\OperatorTok{{-}}\NormalTok{b}\OperatorTok{*}\NormalTok{z)}\OperatorTok{/}\KeywordTok{dnorm}\NormalTok{(}\OperatorTok{{-}}\NormalTok{z) }\CommentTok{\# same as likelihood ratio}
+  
+\NormalTok{  slopePlot \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{slope =}\NormalTok{ slope)}
+\NormalTok{  p \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(slopePlot, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ z, }\DataTypeTok{y =}\NormalTok{ slope)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom\_line}\NormalTok{()  }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale\_y\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{))  }\OperatorTok{+}
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(myLabel[myLabelIndx]);myLabelIndx \textless{}{-}}\StringTok{ }\NormalTok{myLabelIndx }\OperatorTok{+}\StringTok{ }\DecValTok{1}
+  \KeywordTok{print}\NormalTok{(plotRoc);}\KeywordTok{print}\NormalTok{(p)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{23-proprocROCs_files/figure-latex/unnamed-chunk-2-1.pdf} \includegraphics{23-proprocROCs_files/figure-latex/unnamed-chunk-2-2.pdf} \includegraphics{23-proprocROCs_files/figure-latex/unnamed-chunk-2-3.pdf} \includegraphics{23-proprocROCs_files/figure-latex/unnamed-chunk-2-4.pdf}
+
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
+
+Plot A is for \texttt{c1} = -0.1322804, \texttt{da} = 1.197239 while plot C is for \texttt{c1} = 0.2225588, \texttt{da} = 1.740157. Plots B and D are the corresponding slope plots as functions of the binormal model z-sample. In plot A, the slope is infinite near the origin and the curve approaches the upper-right corner with finite slope. The situation is reversed in plot C where the slope is finite near the origin and the curve approaches the upper-right corner with zero slope.
+
+These two readers are from a clinical dataset, \texttt{dataset01}. Highest rating inferred ROC data from original FROC data, were analyzed by PROPROC and the resulting parameter values are coded here. They were chosen as they demonstrate key differences in the shapes of proper ROC plots. Plot A corresponds to a negative value of \texttt{c1}, which implies \texttt{b\ \textless{}\ 1}. The slope of the proper ROC is infinite near the origin and approaches a positive constant near the upper right corner of the ROC. Plot C is for a positive value of \texttt{c1}, i.e., for \texttt{b\ \textgreater{}\ 1}. Now the slope of the proper ROC is finite near the origin and approaches zero near the upper right corner.
+
+Considering plot D, as one ``cuts'' the slope axis horizontally with a sliding threshold, starting with very high values and moving downwards, the slope of the ROC curve starts at the origin with a large but finite value. This corresponds to the peak in plot D. Above the peak, there are no solutions for \texttt{z}. The slope decreases monotonically to zero, corresponding to the flattening out of the slope at zero for \texttt{z\ \textasciitilde{}\ \ -2}.
+
+The two values of \texttt{z} corresponding to each cut implies, of course, that the binormal model based proper algorithm has to do a lot of bookkeeping, since each horizontal cut splits the decision axis into 3 regions. One can think of shrinking each of plots B \& D horizontally to zero width, and all that remains is the slope axis with a thick vertical line superimposed on it, corresponding to the horizontally collapsed curves. In plot B the vertical line extends from positive infinity down to about 0.1, and represents the range of decision variable samples encountered by the observer on the likelihood ratio scale. In plot D the vertical line extends from a finite value (\textasciitilde9.4) to zero. For the stated binormal model parameters values outside of these ranges are not possible.
+
+\hypertarget{MetzEqn36}{%
+\chapter{Metz Eqn36 numerical check}\label{MetzEqn36}}
+
+\hypertarget{helper-functions-1}{%
+\section{Helper functions}\label{helper-functions-1}}
+
+\hypertarget{main-code-and-output-1}{%
+\section{Main code and output}\label{main-code-and-output-1}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -566,10 +633,67 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{discussion}{%
-\section{Discussion}\label{discussion}}
+\hypertarget{discussion-1}{%
+\section{Discussion}\label{discussion-1}}
 
 Note the close correspondence between the formula, Eqn. 36 in the Metz-Pan paper and the numerical estimate. As a historical note, Eqn. 31 and Eqn. 36 (they differ only in parameterizations) in the referenced publication are provided without proof -- it was probably obvious to Prof Metz or he wanted to leave it to us ``mere mortals'' to figure it out, as a final parting gesture of his legacy. The author once put a significant effort into proving it and even had a bright graduate student from the biostatistics department work on it to no avail. The author has observed that these equations always yield very close to the numerical estimates, to within numerical precisions, so the theorem is correct empirically, but he has been unable to prove it analytically. It is left as an exercise for a gifted reader to prove/disprove these equations.
+
+\hypertarget{CbmPlots}{%
+\chapter{CBM Plots}\label{CbmPlots}}
+
+\hypertarget{helper-functions-2}{%
+\section{Helper functions}\label{helper-functions-2}}
+
+\hypertarget{main-code-and-output-2}{%
+\section{Main code and output}\label{main-code-and-output-2}}
+
+\begin{verbatim}
+#> Fig. A : mu =  1 , alpha =  0.2
+#> Fig. B : mu =  3 , alpha =  0.2
+#> Fig. C : mu =  1 , alpha =  0.8
+#> Fig. D : mu =  3 , alpha =  0.8
+\end{verbatim}
+
+\includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-2-1.pdf} \includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-2-2.pdf} \includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-2-3.pdf} \includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-2-4.pdf}
+
+\hypertarget{comments}{%
+\section{Comments}\label{comments}}
+
+Plots A - D show ROC curves predicted by the CBM model; the corresponding values of the \(mu\) and \(alpha\) parameters are indicated above the plots. For small \(mu\) and/or \(alpha\) the curve approaches the chance diagonal, consistent with the notion that if the lesion is not visible, performance can be no better than chance level.
+
+\hypertarget{pdf-plots}{%
+\section{pdf plots}\label{pdf-plots}}
+
+\begin{verbatim}
+#> Fig. E : mu =  1 , alpha =  0.2
+#> Fig. F : mu =  3 , alpha =  0.2
+#> Fig. G : mu =  1 , alpha =  0.8
+#> Fig. H : mu =  3 , alpha =  0.8
+\end{verbatim}
+
+\includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-3-1.pdf} \includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-3-2.pdf} \includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-3-3.pdf} \includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-3-4.pdf}
+
+\hypertarget{comments-1}{%
+\section{Comments}\label{comments-1}}
+
+The dark line is the diseased distribution. The grey line is the non-diseased distribution. The bimodal diseased distribution is clearly evident in plots F and H.
+
+\hypertarget{likelihood-ratio-plots}{%
+\section{likelihood ratio plots}\label{likelihood-ratio-plots}}
+
+\begin{verbatim}
+#> Fig. I : mu =  1 , alpha =  0.2
+#> Fig. J : mu =  3 , alpha =  0.2
+#> Fig. K : mu =  1 , alpha =  0.8
+#> Fig. L : mu =  3 , alpha =  0.8
+\end{verbatim}
+
+\includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-4-1.pdf} \includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-4-2.pdf} \includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-4-3.pdf} \includegraphics{31-cbmPlots_files/figure-latex/unnamed-chunk-4-4.pdf}
+
+\hypertarget{comments-2}{%
+\section{Comments}\label{comments-2}}
+
+Close examination of the region near the flat part shows it does not plateau at zero; rather the minimum is at 1 - \(alpha\), explaining the non-zero limiting slope of the predicted curve near (1, 1).
 
 \hypertarget{ROIDataStr}{%
 \chapter{ROI paradigm data}\label{ROIDataStr}}
