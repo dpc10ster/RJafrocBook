@@ -112,7 +112,7 @@ This code illustrates random reader random case sample size estimation. Assumed 
 The sampling distribution of the F-statistic under the AH is:
 
 \begin{equation*} 
-{F_{\left. AH \right|C}}\equiv \frac{MST}{MSTR}\sim{{F}_{I-1,\left( I-1 \right)\left( J-1 \right),\Delta }}
+{F_{\left. AH \right|C}}\equiv \frac{MST}{MSTR}\sim{F_{I-1,\left( I-1 \right)\left( J-1 \right),\Delta }}
 \end{equation*} 
 
 
