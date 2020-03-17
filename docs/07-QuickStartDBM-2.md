@@ -22,7 +22,7 @@ the function to create an Excel output file. The Excel output is created in a te
 ```r
 ret <- UtilOutputReport(dataset03, FOM = "Wilcoxon", overWrite = TRUE, ReportFileExt = "xlsx")
 #> 
-#> Output file name is: 	 /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpXpyN8E/RJafrocUtilOutputReport537045807519.xlsx
+#> Output file name is: 	 /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpiP1yLt/RJafrocUtilOutputReport584712f56289.xlsx
 ```
 
 
@@ -34,7 +34,7 @@ Simply change `method = "DBMH"` (the default) to `method = "ORH"`.
 ```r
 ret <- UtilOutputReport(dataset03, FOM = "Wilcoxon", method = "ORH", overWrite = TRUE, ReportFileExt = "xlsx")
 #> 
-#> Output file name is: 	 /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpXpyN8E/RJafrocUtilOutputReport537011de56a.xlsx
+#> Output file name is: 	 /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpiP1yLt/RJafrocUtilOutputReport58475a6f97ea.xlsx
 ```
 
 

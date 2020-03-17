@@ -2545,7 +2545,7 @@ the function to create an Excel output file. The Excel output is created in a te
 \begin{Highlighting}[]
 \NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(dataset03, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
 \CommentTok{\#\textgreater{} }
-\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpkqP1cY/RJafrocUtilOutputReport52013f871a72.xlsx}
+\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//Rtmpx9QO3J/RJafrocUtilOutputReport569d21ead328.xlsx}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2558,7 +2558,7 @@ Simply change \texttt{method\ =\ "DBMH"} (the default) to \texttt{method\ =\ "OR
 \begin{Highlighting}[]
 \NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(dataset03, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
 \CommentTok{\#\textgreater{} }
-\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpkqP1cY/RJafrocUtilOutputReport52016524c1c4.xlsx}
+\CommentTok{\#\textgreater{} Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//Rtmpx9QO3J/RJafrocUtilOutputReport569d7d42e585.xlsx}
 \end{Highlighting}
 \end{Shaded}
 
@@ -4164,6 +4164,325 @@ The estimated power is close to 80\% as the number of cases (\texttt{ret2\$KRRRC
 \hypertarget{references-10}{%
 \section{References}\label{references-10}}
 
+\hypertarget{RsmOpCh}{%
+\chapter{RSM predicted operating characteristics}\label{RsmOpCh}}
+
+\hypertarget{introduction-13}{%
+\section{Introduction}\label{introduction-13}}
+
+\begin{itemize}
+\tightlist
+\item
+  The purpose of this vignette is to explain the operating characteristics predicted by the RSM. It relates to Chapter 17 in my book \citep{RN2680}.
+\item
+  This vignette is under development \ldots{}
+\item
+  Also to explain the difference between \texttt{dataset} members (\texttt{lesionID}, \texttt{lesionWeight}) and (\texttt{lesDist}, \texttt{lesWghtDistr}), which are RSM model parameters.
+\end{itemize}
+
+\hypertarget{the-distinction-between-predicted-curves-and-empirical-curves}{%
+\section{The distinction between predicted curves and empirical curves}\label{the-distinction-between-predicted-curves-and-empirical-curves}}
+
+\begin{itemize}
+\tightlist
+\item
+  Operating characteristics predicted by a model have zero sampling variability.\\
+\item
+  Empirical operating characteristics, which apply to datasets, have non-zero sampling variability.
+\item
+  If the model is corect, as the numbers of cases in the dataset increases, the empirical operating characteristic asymptotically approaches the predicted curve.
+\end{itemize}
+
+\hypertarget{the-rsm-model}{%
+\section{The RSM model}\label{the-rsm-model}}
+
+\begin{itemize}
+\tightlist
+\item
+  The 3 RSM parameters and two additional parameters characterizing the dataset determine the wAFROC curve.
+\item
+  The 3 RSM parameters are \(\mu\), \(\lambda\) and \(\nu\).
+\item
+  The two dataset parameters are:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The distribution of number of lesions per diseased case, \texttt{lesDist}.
+  \item
+    The distribution of lesion weights, \texttt{lesWghtDistr}.
+  \end{itemize}
+\item
+  These parameters do not apply to individual cases; rather they refer to a large population (asymptotically infinite in size) of cases.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(dataset04}\OperatorTok{$}\NormalTok{lesionID)}
+\CommentTok{\#\textgreater{}  num [1:100, 1:3] 1 1 1 1 1 1 1 1 1 1 ...}
+\KeywordTok{str}\NormalTok{(dataset04}\OperatorTok{$}\NormalTok{lesionWeight)}
+\CommentTok{\#\textgreater{}  num [1:100, 1:3] 1 1 1 1 1 1 1 1 1 1 ...}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Note that the first index of both arrays is the case index for the 100 abnormal cases in this dataset.
+\item
+  With finite number of cases the empirical operating characteristic (or for that matter any fitted operating characteristic) will have sampling variability as in the following example.
+\end{itemize}
+
+\hypertarget{the-empirical-wafroc}{%
+\section{The empirical wAFROC}\label{the-empirical-wafroc}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p \textless{}{-}}\StringTok{ }\KeywordTok{PlotEmpiricalOperatingCharacteristics}\NormalTok{(dataset04, }\DataTypeTok{opChType =} \StringTok{"wAFROC"}\NormalTok{)}
+\NormalTok{p}\OperatorTok{$}\NormalTok{Plot}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{19-PlotRsmOpCh_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  The piecewise linear nature of the plot, with sharp breaks, indicates that this is due to a finite dataset.
+\item
+  In contrast the following code shows a smooth plot, because it is a model \emph{predicted} plot.
+\end{itemize}
+
+\hypertarget{the-predicted-wafroc}{%
+\section{The predicted wAFROC}\label{the-predicted-wafroc}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#\# Following example is for mu = 2, lambda = 1, nu = 0.6. 20\% of the diseased }
+\CommentTok{\#\# cases have a single lesion, 40\% have two lesions, 10\% have 3 lesions, }
+\CommentTok{\#\# and 30\% have 4 lesions.  }
+\NormalTok{lesDistr \textless{}{-}}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FloatTok{0.2}\NormalTok{), }\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\FloatTok{0.4}\NormalTok{), }\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\FloatTok{0.1}\NormalTok{), }\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\FloatTok{0.3}\NormalTok{))}
+
+\CommentTok{\#\# On cases with one lesion the weights are 1, on cases with 2 lesions the weights}
+\CommentTok{\#\# are 0.4 and 0.6, on cases with three lesions the weights are 0.2, 0.3 and 0.5, and}
+\CommentTok{\#\# on cases with 4 lesions the weights are 0.3, 0.4, 0.2 and 0.1: }
+\NormalTok{lesWghtDistr \textless{}{-}}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FloatTok{1.0}\NormalTok{, }\OperatorTok{{-}}\OtherTok{Inf}\NormalTok{, }\OperatorTok{{-}}\OtherTok{Inf}\NormalTok{, }\OperatorTok{{-}}\OtherTok{Inf}\NormalTok{), }
+                      \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\FloatTok{0.4}\NormalTok{,  }\FloatTok{0.6}\NormalTok{, }\OperatorTok{{-}}\OtherTok{Inf}\NormalTok{, }\OperatorTok{{-}}\OtherTok{Inf}\NormalTok{), }
+                      \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\FloatTok{0.2}\NormalTok{,  }\FloatTok{0.3}\NormalTok{,  }\FloatTok{0.5}\NormalTok{, }\OperatorTok{{-}}\OtherTok{Inf}\NormalTok{), }
+                      \KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\FloatTok{0.3}\NormalTok{,  }\FloatTok{0.4}\NormalTok{, }\FloatTok{0.2}\NormalTok{,  }\FloatTok{0.1}\NormalTok{))}
+\NormalTok{p \textless{}{-}}\StringTok{ }\KeywordTok{PlotRsmOperatingCharacteristics}\NormalTok{(}\DataTypeTok{mu =} \DecValTok{2}\NormalTok{, }\DataTypeTok{lambda =} \DecValTok{1}\NormalTok{, }\DataTypeTok{nu =} \FloatTok{0.6}\NormalTok{, }\DataTypeTok{OpChType =} \StringTok{"wAFROC"}\NormalTok{,}
+                                       \DataTypeTok{lesDistr =}\NormalTok{ lesDistr, }\DataTypeTok{lesWghtDistr =}\NormalTok{ lesWghtDistr, }
+                                       \DataTypeTok{legendPosition =} \StringTok{"bottom"}\NormalTok{, }\DataTypeTok{nlfRange =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{llfRange =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\NormalTok{p}\OperatorTok{$}\NormalTok{wAFROCPlot}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{19-PlotRsmOpCh_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\hypertarget{the-distribution-of-number-of-lesions-and-weights}{%
+\section{The distribution of number of lesions and weights}\label{the-distribution-of-number-of-lesions-and-weights}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lesDistr}
+\CommentTok{\#\textgreater{}      [,1] [,2]}
+\CommentTok{\#\textgreater{} [1,]    1  0.2}
+\CommentTok{\#\textgreater{} [2,]    2  0.4}
+\CommentTok{\#\textgreater{} [3,]    3  0.1}
+\CommentTok{\#\textgreater{} [4,]    4  0.3}
+\NormalTok{lesWghtDistr}
+\CommentTok{\#\textgreater{}      [,1] [,2] [,3] [,4] [,5]}
+\CommentTok{\#\textgreater{} [1,]    1  1.0 {-}Inf {-}Inf {-}Inf}
+\CommentTok{\#\textgreater{} [2,]    2  0.4  0.6 {-}Inf {-}Inf}
+\CommentTok{\#\textgreater{} [3,]    3  0.2  0.3  0.5 {-}Inf}
+\CommentTok{\#\textgreater{} [4,]    4  0.3  0.4  0.2  0.1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The second column of \texttt{lesDistr} specifies the fraction of diseased cases with the number of lesions specified in the first column.
+\item
+  The first column of \texttt{lesWghtDistr} is a copy of the first column of \texttt{lesDistr}. The remaining non-\texttt{-Inf} entries are the weights.
+\item
+  For cases with 1 lesion, the weight is 1.
+\item
+  For cases with 2 lesions, the first lesion has weight 0.4 and the second lesion has weight 0.6, which sum to unity.
+\item
+  For cases with 3 lesions, the respective weights are 0.2, 0.3 and 0.5, which sum to unity.
+\item
+  For cases with 4 lesions, the respective weights are 0.3, 0.4, 0.2 and 0.1, which sum to unity.
+\end{itemize}
+
+\hypertarget{other-operating-characteristics}{%
+\section{Other operating characteristics}\label{other-operating-characteristics}}
+
+\begin{itemize}
+\tightlist
+\item
+  By changing \texttt{OpChType} one can generate other operating characteristics.
+\item
+  Note that lesiion weights argument is not needed for ROC curves. It is only needed for \texttt{wAFROC} and \texttt{wAFROC1} curves.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lesDistr \textless{}{-}}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FloatTok{0.2}\NormalTok{), }\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\FloatTok{0.4}\NormalTok{), }\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\FloatTok{0.1}\NormalTok{), }\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\FloatTok{0.3}\NormalTok{))}
+\NormalTok{p \textless{}{-}}\StringTok{ }\KeywordTok{PlotRsmOperatingCharacteristics}\NormalTok{(}\DataTypeTok{mu =} \DecValTok{2}\NormalTok{, }\DataTypeTok{lambda =} \DecValTok{1}\NormalTok{, }\DataTypeTok{nu =} \FloatTok{0.6}\NormalTok{, }\DataTypeTok{OpChType =} \StringTok{"ROC"}\NormalTok{,}
+                                       \DataTypeTok{lesDistr =}\NormalTok{ lesDistr,  }
+                                       \DataTypeTok{legendPosition =} \StringTok{"bottom"}\NormalTok{)}
+\NormalTok{p}\OperatorTok{$}\NormalTok{ROCPlot}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{19-PlotRsmOpCh_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\hypertarget{summary-6}{%
+\section{Summary}\label{summary-6}}
+
+\hypertarget{references-11}{%
+\section{References}\label{references-11}}
+
+\hypertarget{ImproperROCs}{%
+\chapter{Improper ROCs}\label{ImproperROCs}}
+
+\hypertarget{the-binormal-model}{%
+\section{The binormal model}\label{the-binormal-model}}
+
+The binormal model has two parameters, \texttt{a} and \texttt{b}. The signal (or diseased cases) distribution has unit standard deviation.
+The noise (or non-diseased cases) distribution has standard deviation \texttt{b}. The \texttt{a} parameter is the separation of the two distributions.
+
+\hypertarget{improper-rocs}{%
+\section{Improper ROCs}\label{improper-rocs}}
+
+Binormal model fits invariably lead to ROC curves that inappropriately cross the chance diagonal, leading to a prediction of a region of the ROC curve where performance is worse than chance, even for expert observers. By convention, such curves are termed \emph{improper}. This vignette illustrates improper ROCs predicted by the binormal model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{  aArray \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{, }\FloatTok{0.7}\NormalTok{, }\FloatTok{1.5}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+\NormalTok{  bArray \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{1.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{)}
+\NormalTok{  chance\_diag \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DataTypeTok{y =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+\NormalTok{  p \textless{}{-}}\StringTok{ }\KeywordTok{PlotBinormalFit}\NormalTok{(aArray, bArray) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale\_y\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.85}\NormalTok{, }\FloatTok{0.2}\NormalTok{))}
+\NormalTok{p \textless{}{-}}\StringTok{ }\NormalTok{p }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ chance\_diag, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ y), }\DataTypeTok{linetype=}\StringTok{"dotted"}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(p)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{21-improperROCs_files/figure-latex/unnamed-chunk-1-1} \end{center}
+
+The red plot is the clearest example of an improper ROC. This type of curve occurs whenever \texttt{b\ \textless{}\ 1}. The chance line crossing near the upper right corner, around (0.919,0.919), and the fact that the ROC curve must eventually reach (1, 1) implies the curve must turn upwards as one approaches (1, 1), thereby displaying a ``hook''. Whenever \texttt{b\ !=\ 1} the hook is there, regardless of whether it is easily visible or not. If \texttt{b\ \textless{}\ 1} the hook is near the upper right corner. If \texttt{b\ \textgreater{}\ 1} the hook is near the origin (see green line, corresponding to \texttt{b\ =\ 1.5}). With increasing \texttt{a} the hook is less prominent (blue line corresponding to \texttt{a\ =\ 1.5,\ b\ =\ 0.5} and purple line corresponding to \texttt{a\ =\ 2,\ b\ =\ 0.5}). But it is there.
+
+\hypertarget{reason-for-improper-rocs}{%
+\section{Reason for improper ROCs}\label{reason-for-improper-rocs}}
+
+The reason for the ``hook''" becomes apparent upon examination of the pdfs.
+\includegraphics{21-improperROCs_files/figure-latex/unnamed-chunk-2-1.pdf} \includegraphics{21-improperROCs_files/figure-latex/unnamed-chunk-2-2.pdf}
+
+\begin{verbatim}
+#> a =  0.7 , b =  0.5
+\end{verbatim}
+
+Since \texttt{b\ \textless{}\ 1}, the diseased \emph{pdf} is broader and has a lower peak (since the integral under each distribution is unity) than the non-diseased pdf. Sliding an imaginary threshold to the left, starting from the extreme right, one sees that initially, just below \texttt{z\ =\ 7}, the diseased distribution starts being \emph{``picked up''} while the non-diseased distribution is not \emph{``picked up''}, causing the ROC to start with infinite slope near the origin (because TPF is increasing while FPF is not). Around \texttt{z\ =\ 2.5} the non-diseased distribution starts being \emph{``picked up''}, causing the ROC slope to decrease. Around \texttt{z\ =\ -3}, almost all of the non-diseased distribution has been \emph{``picked up''} which means FPF is near unity, but since not all of the broader diseased distribution has been \emph{``picked up''}, TPF is less than unity. Here is a region where \texttt{TPF\ \textless{}\ FPF}, meaning \emph{the operating point is below the chance diagonal}. As the threshold is lowered further, TPF continues to increase, as the rest of the diseased distribution is \emph{``picked up''} while FPF stays almost constant at unity. In this region, the ROC curve is approaching the upper right corner with almost infinite slope (because TPF is increasing but FPF is not).
+
+\hypertarget{DegenerateDatasetsBinormalModel}{%
+\chapter{Degenerate datasets in the binormal model}\label{DegenerateDatasetsBinormalModel}}
+
+\hypertarget{two-helper-functions}{%
+\section{Two helper functions}\label{two-helper-functions}}
+
+\hypertarget{degenerate-datasets}{%
+\section{Degenerate datasets}\label{degenerate-datasets}}
+
+Metz defined binormal degenerate data sets as those that result in exact-fit binormal ROC curves of inappropriate shape consisting of a series of horizontal and/or vertical line segments in which the ROC ``curve'' crosses the chance line. The crossing of the chance line occurs because the degenerate data sets can be fitted exactly by infinite or zero values for the model slope parameter \texttt{b}, and infinite values for the decision thresholds, or both.
+
+\hypertarget{understanding-degenerate-datasets}{%
+\section{Understanding degenerate datasets}\label{understanding-degenerate-datasets}}
+
+To understand this, consider that the non-diseased distribution is a Dirac delta function centered at zero (by definition such a function integrates to unity) and the unit variance diseased distribution is centered at 0.6744898. In other words this binormal model is characterized by \texttt{a\ =\ 0.6744898} and \texttt{b\ =\ 0}. What is the expected ROC curve? As the threshold \(\zeta\) is moved from the far right, gradually to the left, TPF will increase but FPF is stuck at zero until the threshold reaches zero. Just before reaching this point, the coordinates of the ROC operating point are (0, 0.75). The 0.75 is due to the fact that \texttt{z\ =\ 0} is -0.6744898 units relative to the center of the diseased distribution, so the area under the diseased distribution below \texttt{z\ =\ 0} is 0.25. Since \texttt{pnorm} is the probability \emph{below} the threshold, TPF must be its complement, namely 0.75. This explains the operating point (0,0.75), which lies on the y-axis. As the threshold crosses the zero-width delta function, FPF shoots up from 0 to 1, but TPF stays constant. Therefore, the operating point has jumped from (0, 0.75) to (1, 0.75). When the threshold is reduced further, the operating point moves up vertically, along the right side of the ROC plot, until the threshold is so small that virtually all of diseased distribution exceeds it and the operating point reaches (1, 1). The ROC curve is illustrated in plot A.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plotOP \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{FPF =} \DecValTok{0}\NormalTok{, }\DataTypeTok{TPF =} \FloatTok{0.75}\NormalTok{)}
+\NormalTok{a \textless{}{-}}\StringTok{ }\FloatTok{0.6744898}\NormalTok{; b \textless{}{-}}\StringTok{ }\DecValTok{0}
+\NormalTok{plotCurve \textless{}{-}}\StringTok{ }\KeywordTok{BMPoints}\NormalTok{(a, b)}
+\NormalTok{figA \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ FPF, }\DataTypeTok{y =}\NormalTok{ TPF)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ plotCurve) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ plotOP)  }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale\_y\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"A"}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(figA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{22-DegenerateROCs_files/figure-latex/unnamed-chunk-2-1} \end{center}
+
+This is an extreme example of an ROC curve with a ``hook''. If the data is such that the only operating point provided by the observer is (0,0.75) then this curve will be an exact fit to the operating point.
+
+\hypertarget{the-exact-fit-is-not-unique}{%
+\section{The exact fit is not unique}\label{the-exact-fit-is-not-unique}}
+
+Actually, given one operating point (0, 0.75) the preceding fit is not even unique. If the diseased distribution is shifted appropriately to the right of its previous position, and one can determine the necessary value of a, then the ROC curve will shoot upwards through the operating point (0, 0.75) to (0, 0.9), as in plot B, before proceeding horizontally to (1, 0.9) and then completing the curve to (1, 1). If the diseased distribution is shifted well to the right, i.e., a is very large, then the ROC curve will shoot upwards past the operating point, as in plot C, all the way to (0,1) before proceeding horizontally to (1, 1).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a \textless{}{-}}\StringTok{ }\FloatTok{1.281552}\NormalTok{; b \textless{}{-}}\StringTok{ }\DecValTok{0}
+\NormalTok{plotCurve \textless{}{-}}\StringTok{ }\KeywordTok{BMPoints}\NormalTok{(a, b)}
+\NormalTok{figB \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ FPF, }\DataTypeTok{y =}\NormalTok{ TPF)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ plotCurve) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ plotOP)  }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale\_y\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"B"}\NormalTok{)}
+
+\NormalTok{a \textless{}{-}}\StringTok{ }\OtherTok{Inf}\NormalTok{; b \textless{}{-}}\StringTok{ }\DecValTok{0}
+\NormalTok{plotCurve \textless{}{-}}\StringTok{ }\KeywordTok{BMPoints}\NormalTok{(a, b)}
+\NormalTok{figC \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ FPF, }\DataTypeTok{y =}\NormalTok{ TPF)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ plotCurve) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ plotOP)  }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale\_y\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"C"}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(figB);}\KeywordTok{print}\NormalTok{(figC)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{22-DegenerateROCs_files/figure-latex/unnamed-chunk-3-1.pdf} \includegraphics{22-DegenerateROCs_files/figure-latex/unnamed-chunk-3-2.pdf}
+
+All of these represent exact fits to the observed operating point, with \texttt{b\ =\ 0} and different values of \texttt{a}. Not one of them is reasonable.
+
+\hypertarget{comments-on-degeneracy}{%
+\section{Comments on degeneracy}\label{comments-on-degeneracy}}
+
+Degeneracy occurs if the observer does not provide any interior operating points. So why worry about it? Perhaps one has a non-cooperating observer, who is not heeding the instructions to \emph{spread the ratings, use all the bins}. A simple example shows that the observer could if fact be cooperating fully and is still unable to provide any interior data points. Consider 100 diseased cases consisting of 75 easy cases and 25 difficult ones and 100 easy non-diseased cases. The observer is expected to rate the 75 easy diseased cases as \emph{fives}, the difficult ones as \emph{ones} and the 100 non-diseased cases are rated \emph{ones}. No amount of coaxing \emph{please, please spread your ratings} is going to convince this observer to rate with twos, threes and fours any of the 75 easy diseased cases. If the cases are obviously diseased, and that is what is meant by \emph{easy cases}, they are supposed to be rated fives: \emph{definitely diseased}. Forcing them to rate some of them as \emph{probably diseased} or \emph{possibly diseased} would be irrational and guilty of bending the reading paradigm to fit the convenience of the researcher (early in his research career, the author used to believe in the existence of non-cooperating observers, so Metz's advice to \emph{spread the ratings} did not seem unreasonable at that time).
+
+\hypertarget{a-reasonable-fit-to-the-degenerate-dataset}{%
+\section{A reasonable fit to the degenerate dataset}\label{a-reasonable-fit-to-the-degenerate-dataset}}
+
+If the dataset yields a single operating point (0, 0.75), what is a reasonable ROC plot? There is a theorem that given an observed operating point, the line connecting that point to (1, 1) represents a lower bound on achievable performance by the observer. The observer using a guessing mechanism to classify the remaining cases achieves the lower bound. Here is an explanation of this theorem. Having rated the 75 easy diseased cases as fives, the observer is left with 25 diseased cases and 100 non-diseased cases, all of which appear definitely non-diseased to the observer. Suppose the observer randomly rates 20\% of the remaining cases as fours. This would pick up five of the actually diseased cases and 20 non-diseased ones. Therefore, the total number of diseased cases rated four or higher is 80, and the corresponding number of non-diseased cases is 20. The new operating point of the observer is (0.20, 0.80). Now, one has two operating points, the original one on the y-axis at (0, 0.75) and an interior point (0.20, 0.80). Next, instead of randomly rating 20\% of the remaining cases as fours, the observer rates 40\% of them as fours, then the interior point would have been (0.40, 0.85). The reader can appreciate that simply by increasing the fraction of remaining cases that are randomly rated fours, the observer can move the operating point along the straight line connecting (0, 0.75) and (1, 1), as in plot D. Since a guessing mechanism is being used, this must represent a lower bound on performance. The resulting ROC curve is proper and the net AUC = 0.875.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mu \textless{}{-}}\StringTok{ }\OtherTok{Inf}\NormalTok{; alpha \textless{}{-}}\StringTok{ }\FloatTok{0.75}
+\NormalTok{plotCurve \textless{}{-}}\StringTok{ }\KeywordTok{CBMPoints}\NormalTok{(mu, alpha)}
+\NormalTok{figD \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ FPF, }\DataTypeTok{y =}\NormalTok{ TPF)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ plotCurve) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ plotOP)  }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{scale\_y\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"D"}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(figD)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{22-DegenerateROCs_files/figure-latex/unnamed-chunk-4-1} \end{center}
+
+For this dataset this is in fact the fit yielded by the contaminated binormal model (CBM) and the radiological search model (RSM). Why should one select the lowest possible performance consistent with the data? Because it yields a \emph{unique} value for performance: any higher performance would not be unique.
+
 \hypertarget{ProperROCs}{%
 \chapter{Proper ROCs}\label{ProperROCs}}
 
@@ -4509,8 +4828,8 @@ Examination of the output reveals that:
 
 The next vignette illustrates significance testing for this paradigm.
 
-\hypertarget{references-11}{%
-\section{References}\label{references-11}}
+\hypertarget{references-12}{%
+\section{References}\label{references-12}}
 
 \hypertarget{ROIDataAnalysis}{%
 \chapter{Analyzing data acquired according to the ROI paradigm}\label{ROIDataAnalysis}}
@@ -4523,8 +4842,8 @@ The next vignette illustrates significance testing for this paradigm.
 
 The FOM and DeLong method implementations need checking with a toy dataset.
 
-\hypertarget{introduction-13}{%
-\section{Introduction}\label{introduction-13}}
+\hypertarget{introduction-14}{%
+\section{Introduction}\label{introduction-14}}
 
 \begin{itemize}
 \item
@@ -4811,13 +5130,13 @@ When \texttt{dataset\$dataType\ ==\ "ROI"} the FOM defaults to ``ROI'' (meaning 
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{summary-6}{%
-\section{Summary}\label{summary-6}}
+\hypertarget{summary-7}{%
+\section{Summary}\label{summary-7}}
 
 TBA
 
-\hypertarget{references-12}{%
-\section{References}\label{references-12}}
+\hypertarget{references-13}{%
+\section{References}\label{references-13}}
 
   \bibliography{packages.bib,myRefs.bib}
 
