@@ -17,7 +17,10 @@ The use of three `R` functions is demonstrated.
 
 ## Effect of `ncp` for `ndf` = 2 and `ddf` = 10
 * Four values of `ncp` are considered  (0, 2, 5, 10) for `ddf` = 10. 
-* `fCrit` is the critical value of the F distribution, i.e., that value such that fraction $\alpha$ of the area is to the right of the critical value.
+* `fCrit` is the critical value of the F distribution, i.e., that value such that fraction $\alpha$ of the area is to the right of the critical value, i.e., `fCrit` is identical to:
+\begin{equation*} 
+F_{1-\alpha ,ndf,ddf}
+\end{equation*} 
 
 
 ```r

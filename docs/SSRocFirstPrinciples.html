@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 Metz Eqn36 numerical check | RJafroc Documentation</title>
+  <title>Chapter 4 ROC-DBMH sample size from first principles | RJafroc Documentation</title>
   <meta name="description" content="Extended RJafroc documentation." />
   <meta name="generator" content="bookdown 0.18.1 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 Metz Eqn36 numerical check | RJafroc Documentation" />
+  <meta property="og:title" content="Chapter 4 ROC-DBMH sample size from first principles | RJafroc Documentation" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Metz Eqn36 numerical check | RJafroc Documentation" />
+  <meta name="twitter:title" content="Chapter 4 ROC-DBMH sample size from first principles | RJafroc Documentation" />
   
   <meta name="twitter:description" content="Extended RJafroc documentation." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="ProperROCs.html"/>
-<link rel="next" href="CbmPlots.html"/>
+<link rel="prev" href="SSFDistr.html"/>
+<link rel="next" href="ProperROCs.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -263,50 +263,96 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="MetzEqn36" class="section level1" number="6">
-<h1><span class="header-section-number">Chapter 6</span> Metz Eqn36 numerical check</h1>
-<div id="helper-functions-1" class="section level2" number="6.1">
-<h2><span class="header-section-number">6.1</span> Helper functions</h2>
+<div id="SSRocFirstPrinciples" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> ROC-DBMH sample size from first principles</h1>
+<div id="introduction-2" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Introduction</h2>
+<p>The starting point is a <strong>pilot</strong> study. The variability in this dataset (specifically the variance components, subsequently converted to mean squares), obtained by running the significance testing function <code>StSignificanceTesting()</code>, is used to extrapolate to the necessary numbers of readers and cases, in the <strong>pivotal</strong> study, to achieve the desired power. In this example, the observed effect size in the pilot study is used as the anticipated effect size for the pivotal study – this is generally not a good idea as discussed in <strong>Chapter 11</strong> under “Cautionary notes”. Shown below, and the reader should confirm, is a first principles implementation of the relevant formulae in <strong>Chapter 11</strong>.</p>
 </div>
-<div id="main-code-and-output-1" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> Main code and output</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="MetzEqn36.html#cb11-1"></a>npts &lt;-<span class="st">  </span><span class="dv">10000</span></span>
-<span id="cb11-2"><a href="MetzEqn36.html#cb11-2"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) {</span>
-<span id="cb11-3"><a href="MetzEqn36.html#cb11-3"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) {</span>
-<span id="cb11-4"><a href="MetzEqn36.html#cb11-4"></a>    C  &lt;-<span class="st">  </span>c1[i,j]</span>
-<span id="cb11-5"><a href="MetzEqn36.html#cb11-5"></a>    da  &lt;-<span class="st">  </span>d_a1[i,j]</span>
-<span id="cb11-6"><a href="MetzEqn36.html#cb11-6"></a>    ret &lt;-<span class="st"> </span><span class="kw">GetLimits</span>(da,C)</span>
-<span id="cb11-7"><a href="MetzEqn36.html#cb11-7"></a>    LL &lt;-<span class="st"> </span>ret<span class="op">$</span>LL;UL &lt;-<span class="st"> </span>ret<span class="op">$</span>UL</span>
-<span id="cb11-8"><a href="MetzEqn36.html#cb11-8"></a>    vc  &lt;-<span class="st">  </span><span class="kw">seq</span> (LL, UL, <span class="dt">length.out =</span> npts)</span>
-<span id="cb11-9"><a href="MetzEqn36.html#cb11-9"></a>    TPF  &lt;-<span class="st">  </span><span class="kw">TruePositiveFraction</span> (vc, da, C)</span>
-<span id="cb11-10"><a href="MetzEqn36.html#cb11-10"></a>    FPF &lt;-<span class="st"> </span><span class="kw">FalsePositiveFraction</span> (vc, da, C)</span>
-<span id="cb11-11"><a href="MetzEqn36.html#cb11-11"></a>    FPF &lt;-<span class="st"> </span><span class="kw">rev</span>(FPF);TPF &lt;-<span class="st"> </span><span class="kw">rev</span>(TPF)</span>
-<span id="cb11-12"><a href="MetzEqn36.html#cb11-12"></a>    df2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">FPF =</span> FPF, <span class="dt">TPF =</span> TPF)</span>
-<span id="cb11-13"><a href="MetzEqn36.html#cb11-13"></a>    <span class="co"># do integral numerically</span></span>
-<span id="cb11-14"><a href="MetzEqn36.html#cb11-14"></a>    numAuc &lt;-<span class="st"> </span><span class="kw">trapz</span>(FPF, TPF)</span>
-<span id="cb11-15"><a href="MetzEqn36.html#cb11-15"></a>    <span class="co"># Implement Eqn. 36 from Metz-Pan paper </span></span>
-<span id="cb11-16"><a href="MetzEqn36.html#cb11-16"></a>    rho &lt;-<span class="st"> </span><span class="op">-</span>(<span class="dv">1</span><span class="op">-</span>C<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span>C<span class="op">^</span><span class="dv">2</span>);sigma &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">1</span>, rho), <span class="kw">c</span>(rho, <span class="dv">1</span>))</span>
-<span id="cb11-17"><a href="MetzEqn36.html#cb11-17"></a>    lower &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="op">-</span><span class="ot">Inf</span>,<span class="dv">2</span>);upper &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span>da<span class="op">/</span><span class="kw">sqrt</span>(<span class="dv">2</span>),<span class="dv">0</span>)</span>
-<span id="cb11-18"><a href="MetzEqn36.html#cb11-18"></a>    aucProproc &lt;-<span class="st"> </span><span class="kw">pnorm</span>(da<span class="op">/</span><span class="kw">sqrt</span>(<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">pmvnorm</span>(lower, upper, <span class="dt">sigma =</span> sigma)</span>
-<span id="cb11-19"><a href="MetzEqn36.html#cb11-19"></a>    aucProproc &lt;-<span class="st">  </span><span class="kw">as.numeric</span>(aucProproc)</span>
-<span id="cb11-20"><a href="MetzEqn36.html#cb11-20"></a>    <span class="kw">cat</span>(<span class="st">&quot;i = &quot;</span>, i,<span class="st">&quot;j = &quot;</span>, j,<span class="st">&quot;C = &quot;</span>, C, <span class="st">&quot;, da = &quot;</span>, da, <span class="st">&quot;aucProproc =&quot;</span>, aucProproc, <span class="st">&quot;Norm. Diff. = &quot;</span>, (aucProproc<span class="op">-</span>numAuc)<span class="op">/</span>aucProproc,<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb11-21"><a href="MetzEqn36.html#cb11-21"></a>  }</span>
-<span id="cb11-22"><a href="MetzEqn36.html#cb11-22"></a>}</span>
-<span id="cb11-23"><a href="MetzEqn36.html#cb11-23"></a><span class="co">#&gt; i =  1 j =  1 C =  -0.1322804 , da =  1.197239 aucProproc = 0.8014164 Norm. Diff. =  3.520017e-08 </span></span>
-<span id="cb11-24"><a href="MetzEqn36.html#cb11-24"></a><span class="co">#&gt; i =  1 j =  2 C =  -0.08696513 , da =  1.771176 aucProproc = 0.8947898 Norm. Diff. =  4.741875e-08 </span></span>
-<span id="cb11-25"><a href="MetzEqn36.html#cb11-25"></a><span class="co">#&gt; i =  1 j =  3 C =  -0.1444419 , da =  1.481935 aucProproc = 0.8526605 Norm. Diff. =  3.515431e-08 </span></span>
-<span id="cb11-26"><a href="MetzEqn36.html#cb11-26"></a><span class="co">#&gt; i =  1 j =  4 C =  0.08046016 , da =  1.513757 aucProproc = 0.8577776 Norm. Diff. =  4.971428e-08 </span></span>
-<span id="cb11-27"><a href="MetzEqn36.html#cb11-27"></a><span class="co">#&gt; i =  1 j =  5 C =  0.2225588 , da =  1.740157 aucProproc = 0.8909392 Norm. Diff. =  2.699855e-08 </span></span>
-<span id="cb11-28"><a href="MetzEqn36.html#cb11-28"></a><span class="co">#&gt; i =  2 j =  1 C =  -0.08174248 , da =  0.6281251 aucProproc = 0.6716574 Norm. Diff. =  2.801793e-08 </span></span>
-<span id="cb11-29"><a href="MetzEqn36.html#cb11-29"></a><span class="co">#&gt; i =  2 j =  2 C =  0.04976448 , da =  0.9738786 aucProproc = 0.7544739 Norm. Diff. =  5.275242e-08 </span></span>
-<span id="cb11-30"><a href="MetzEqn36.html#cb11-30"></a><span class="co">#&gt; i =  2 j =  3 C =  -0.1326126 , da =  1.155871 aucProproc = 0.7931787 Norm. Diff. =  3.472577e-08 </span></span>
-<span id="cb11-31"><a href="MetzEqn36.html#cb11-31"></a><span class="co">#&gt; i =  2 j =  4 C =  0.1182226 , da =  1.620176 aucProproc = 0.8740274 Norm. Diff. =  3.922161e-08 </span></span>
-<span id="cb11-32"><a href="MetzEqn36.html#cb11-32"></a><span class="co">#&gt; i =  2 j =  5 C =  0.0781033 , da =  0.8928816 aucProproc = 0.7360989 Norm. Diff. =  3.798459e-08</span></span></code></pre></div>
+<div id="sample-size-estimation-using-the-dbmh-method" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Sample size estimation using the DBMH method</h2>
+<p>The Van Dyke dataset in file <code>VanDyke.lrc</code>, in <code>"MRMC"</code> format, is regarded as a pilot study. The command <code>rocData &lt;- DfReadDataFile(fileName, format = "MRMC")</code> reads the data and saves it to a <code>dataset</code> object <code>rocData</code>. <a href="https://dpc10ster.github.io/RJafroc/reference/RJafroc-package.html">For more on data formats click here</a>. The next line uses the function <code>StSignificanceTesting()</code> to apply <code>method = "DBMH"</code> analysis, the default, using the <code>FOM = "Wilcoxon"</code> figure of merit. The next line extracts the variance components <code>varYTR</code>, <code>varYTC</code> and <code>varYEps</code> (the Y’s denote pseudovalue based values). The next line extracts the effect size.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="SSRocFirstPrinciples.html#cb4-1"></a> alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
+<span id="cb4-2"><a href="SSRocFirstPrinciples.html#cb4-2"></a> rocData &lt;-<span class="st"> </span>dataset02 <span class="co">##&quot;VanDyke.lrc&quot;</span></span>
+<span id="cb4-3"><a href="SSRocFirstPrinciples.html#cb4-3"></a> <span class="co">#fileName &lt;- dataset03 ## &quot;Franken1.lrc&quot;</span></span>
+<span id="cb4-4"><a href="SSRocFirstPrinciples.html#cb4-4"></a> retDbm &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(<span class="dt">dataset =</span> rocData, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;DBMH&quot;</span>) </span>
+<span id="cb4-5"><a href="SSRocFirstPrinciples.html#cb4-5"></a> varYTR &lt;-<span class="st"> </span>retDbm<span class="op">$</span>varComp<span class="op">$</span>varTR;varYTC &lt;-<span class="st"> </span>retDbm<span class="op">$</span>varComp<span class="op">$</span>varTC;varYEps &lt;-<span class="st"> </span>retDbm<span class="op">$</span>varComp<span class="op">$</span>varErr</span>
+<span id="cb4-6"><a href="SSRocFirstPrinciples.html#cb4-6"></a> effectSize &lt;-<span class="st"> </span>retDbm<span class="op">$</span>ciDiffTrtRRRC<span class="op">$</span>Estimate</span></code></pre></div>
+<p>The <em>observed</em> effect size is <code>effectSize</code> = -0.0438003, which, in this example, is used as the <em>anticipated</em> effect size, generally not a good idea. <strong>See Chapter 11 for nuances regarding the choice of this all important value.</strong> The following code snippet reveals the names and array indexing of the pseudovalue variance components.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="SSRocFirstPrinciples.html#cb5-1"></a> retDbm<span class="op">$</span>varComp</span>
+<span id="cb5-2"><a href="SSRocFirstPrinciples.html#cb5-2"></a><span class="co">#&gt;          varR       varC        varTR     varTC      varRC    varErr</span></span>
+<span id="cb5-3"><a href="SSRocFirstPrinciples.html#cb5-3"></a><span class="co">#&gt; 1 0.001534999 0.02724923 0.0002004025 0.0119753 0.01226473 0.0399716</span></span></code></pre></div>
+<p>For example, the treatment-reader pseudovalue variance component is the third element of <code>retDbm$varComp</code>.</p>
+<div id="random-reader-random-case-rrrc" class="section level3" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Random reader random case (RRRC)</h3>
+<p>This illustrates random reader random case sample size estimation. Assumed are 10 readers and 163 cases in the pivotal study. The non-centrality parameter is defined by:</p>
+<p>TBA</p>
+<p>The sampling distribution of the F-statistic under the AH is:</p>
+<p>TBA</p>
+<p>Also,</p>
+<p>TBA</p>
+<p>where <code>d</code> is the observed effect size, i.e., <code>effectSize</code>. The formulae for calculating the mean-squares are in <span class="citation">(Hillis and Berbaum <a href="#ref-RN1476" role="doc-biblioref">2004</a>)</span>, implemented in <code>UtilMeanSquares()</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="SSRocFirstPrinciples.html#cb6-1"></a><span class="co">#RRRC</span></span>
+<span id="cb6-2"><a href="SSRocFirstPrinciples.html#cb6-2"></a>J &lt;-<span class="st"> </span><span class="dv">10</span>;K &lt;-<span class="st"> </span><span class="dv">163</span></span>
+<span id="cb6-3"><a href="SSRocFirstPrinciples.html#cb6-3"></a>ncp &lt;-<span class="st"> </span>(<span class="fl">0.5</span><span class="op">*</span>J<span class="op">*</span>K<span class="op">*</span>(effectSize)<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(K<span class="op">*</span>varYTR<span class="op">+</span><span class="kw">max</span>(J<span class="op">*</span>varYTC,<span class="dv">0</span>)<span class="op">+</span>varYEps)</span>
+<span id="cb6-4"><a href="SSRocFirstPrinciples.html#cb6-4"></a>MS &lt;-<span class="st"> </span><span class="kw">UtilMeanSquares</span>(rocData, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;DBMH&quot;</span>)</span>
+<span id="cb6-5"><a href="SSRocFirstPrinciples.html#cb6-5"></a>ddf &lt;-<span class="st"> </span>(MS<span class="op">$</span>msTR<span class="op">+</span><span class="kw">max</span>(MS<span class="op">$</span>msTC<span class="op">-</span>MS<span class="op">$</span>msTRC,<span class="dv">0</span>))<span class="op">^</span><span class="dv">2</span><span class="op">/</span>(MS<span class="op">$</span>msTR<span class="op">^</span><span class="dv">2</span>)<span class="op">*</span>(J<span class="dv">-1</span>)</span>
+<span id="cb6-6"><a href="SSRocFirstPrinciples.html#cb6-6"></a>FCrit &lt;-<span class="st"> </span><span class="kw">qf</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha, <span class="dv">1</span>, ddf)</span>
+<span id="cb6-7"><a href="SSRocFirstPrinciples.html#cb6-7"></a>Power1 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span><span class="kw">pf</span>(FCrit, <span class="dv">1</span>, ddf, <span class="dt">ncp =</span> ncp)</span></code></pre></div>
+<p>The next line calculates the non centrality parameter, <code>ncp</code> = 8.1269825. Note that <code>effectSize</code> enters as the <strong>square</strong>. The <code>UtilMeanSquares()</code> function returns the mean-squares as a <code>list</code> (ignore the last two rows of output for now).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="SSRocFirstPrinciples.html#cb7-1"></a><span class="kw">str</span>(MS)</span>
+<span id="cb7-2"><a href="SSRocFirstPrinciples.html#cb7-2"></a><span class="co">#&gt; List of 9</span></span>
+<span id="cb7-3"><a href="SSRocFirstPrinciples.html#cb7-3"></a><span class="co">#&gt;  $ msT       : num 0.547</span></span>
+<span id="cb7-4"><a href="SSRocFirstPrinciples.html#cb7-4"></a><span class="co">#&gt;  $ msR       : num 0.437</span></span>
+<span id="cb7-5"><a href="SSRocFirstPrinciples.html#cb7-5"></a><span class="co">#&gt;  $ msC       : num 0.397</span></span>
+<span id="cb7-6"><a href="SSRocFirstPrinciples.html#cb7-6"></a><span class="co">#&gt;  $ msTR      : num 0.0628</span></span>
+<span id="cb7-7"><a href="SSRocFirstPrinciples.html#cb7-7"></a><span class="co">#&gt;  $ msTC      : num 0.0521</span></span>
+<span id="cb7-8"><a href="SSRocFirstPrinciples.html#cb7-8"></a><span class="co">#&gt;  $ msRC      : num 0.0645</span></span>
+<span id="cb7-9"><a href="SSRocFirstPrinciples.html#cb7-9"></a><span class="co">#&gt;  $ msTRC     : num 0.04</span></span>
+<span id="cb7-10"><a href="SSRocFirstPrinciples.html#cb7-10"></a><span class="co">#&gt;  $ msCSingleT: num [1:2] 0.336 0.16</span></span>
+<span id="cb7-11"><a href="SSRocFirstPrinciples.html#cb7-11"></a><span class="co">#&gt;  $ msCSingleR: num [1:5] 0.1222 0.2127 0.1365 0.0173 0.1661</span></span></code></pre></div>
+<p>The next line calculates <code>ddf</code> = 12.822129. The remaining lines calculate the critical value of the F-distribution, <code>FCrit</code> = 4.680382 and statistical power = 0.7494133, which by design is close to 80%, i.e., the numbers of readers and cases were chosen to achieve this value.</p>
 </div>
-<div id="discussion-1" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> Discussion</h2>
-<p>Note the close correspondence between the formula, Eqn. 36 in the Metz-Pan paper and the numerical estimate. As a historical note, Eqn. 31 and Eqn. 36 (they differ only in parameterizations) in the referenced publication are provided without proof – it was probably obvious to Prof Metz or he wanted to leave it to us “mere mortals” to figure it out, as a final parting gesture of his legacy. The author once put a significant effort into proving it and even had a bright graduate student from the biostatistics department work on it to no avail. The author has observed that these equations always yield very close to the numerical estimates, to within numerical precisions, so the theorem is correct empirically, but he has been unable to prove it analytically. It is left as an exercise for a gifted reader to prove/disprove these equations.</p>
+<div id="fixed-reader-random-case-frrc" class="section level3" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> Fixed reader random case (FRRC)</h3>
+<p>This code illustrates fixed reader random case sample size estimation. Assumed are 10 readers and 133 cases in the pivotal study. The formulae are:</p>
+<p>TBA</p>
+<p>The sampling distribution of the F-statistic under the AH is:</p>
+<p>TBA</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="SSRocFirstPrinciples.html#cb8-1"></a><span class="co">#FRRC</span></span>
+<span id="cb8-2"><a href="SSRocFirstPrinciples.html#cb8-2"></a>ncp &lt;-<span class="st"> </span>(<span class="fl">0.5</span><span class="op">*</span>J<span class="op">*</span>K<span class="op">*</span>(effectSize)<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(<span class="kw">max</span>(J<span class="op">*</span>varYTC,<span class="dv">0</span>)<span class="op">+</span>varYEps)</span>
+<span id="cb8-3"><a href="SSRocFirstPrinciples.html#cb8-3"></a>ddf &lt;-<span class="st"> </span>(K<span class="dv">-1</span>)</span>
+<span id="cb8-4"><a href="SSRocFirstPrinciples.html#cb8-4"></a>FCrit &lt;-<span class="st"> </span><span class="kw">qf</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha, <span class="dv">1</span>, ddf)</span>
+<span id="cb8-5"><a href="SSRocFirstPrinciples.html#cb8-5"></a>Power2 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span><span class="kw">pf</span>(FCrit, <span class="dv">1</span>, ddf, <span class="dt">ncp =</span> ncp)</span></code></pre></div>
+<p>This time non centrality parameter, <code>ncp</code> = 7.9873835, <code>ddf</code> = 132, <code>FCrit</code> = 3.912875 and statistical power = 0.8011167. Again, be design, this is close to 80%. Note that when readers are regarded as a fixed effect, fewer cases are needed to achieve the desired power. Freezing out a source of variability results in a more stable measurement and hence fewer cases are needed to achieve the desired power.</p>
+</div>
+<div id="random-reader-fixed-case-rrfc" class="section level3" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> Random reader fixed case (RRFC)</h3>
+<p>This code illustrates random reader random case sample size estimation. Assumed are 10 readers and 53 cases in the pivotal study. The formulae are:</p>
+<p>TBA</p>
+<p>The sampling distribution of the F-statistic under the AH is:</p>
+<p>TBA</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="SSRocFirstPrinciples.html#cb9-1"></a><span class="co">#RRFC</span></span>
+<span id="cb9-2"><a href="SSRocFirstPrinciples.html#cb9-2"></a>ncp &lt;-<span class="st"> </span>(<span class="fl">0.5</span><span class="op">*</span>J<span class="op">*</span>K<span class="op">*</span>(effectSize)<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>(K<span class="op">*</span>varYTR<span class="op">+</span>varYEps)</span>
+<span id="cb9-3"><a href="SSRocFirstPrinciples.html#cb9-3"></a>ddf &lt;-<span class="st"> </span>(J<span class="dv">-1</span>)</span>
+<span id="cb9-4"><a href="SSRocFirstPrinciples.html#cb9-4"></a>FCrit &lt;-<span class="st"> </span><span class="kw">qf</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha, <span class="dv">1</span>, ddf)</span>
+<span id="cb9-5"><a href="SSRocFirstPrinciples.html#cb9-5"></a>Power3 &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span><span class="kw">pf</span>(FCrit, <span class="dv">1</span>, ddf, <span class="dt">ncp =</span> ncp)</span></code></pre></div>
+<p>This time non centrality parameter, <code>ncp</code> = 10.0487164, <code>ddf</code> = 9, <code>FCrit</code> = 5.117355 and statistical power = 0.8049666. Again, be design, this is close to 80%.</p>
+</div>
+</div>
+<div id="summary-2" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Summary</h2>
+<p>For 10 readers, the numbers of cases needed for 80% power is largest (163) for RRRC, intermediate (133) for FRRC and least for RRFC (53). For all three analyses, the expectation of 80% power is met.</p>
+</div>
+<div id="references-3" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> References</h2>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-RN1476">
+<p>Hillis, Stephen L., and K. S. Berbaum. 2004. “Power Estimation for the Dorfman-Berbaum-Metz Method.” Journal Article. <em>Acad. Radiol.</em> 11 (11): 1260–73.</p>
 </div>
 </div>
             </section>
@@ -314,8 +360,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="ProperROCs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="CbmPlots.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="SSFDistr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ProperROCs.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
