@@ -3,18 +3,6 @@
 
 
 
-\begin{equation*} 
-\theta =\frac{1}{N_LN_N}\sum\nolimits_k{\sum\nolimits_{k'}{\sum\limits_{r=1}^{n_{k}^{L}}{\sum\limits_{r'=1}^{n_{k'}^{N}}{\psi (X_{kr},{Y_{k'r'}})}}}}
-\end{equation*}
-
-\begin{equation*} 
-\frac{d}{dx}\left( \int_{a}^{x} f(u)\,du\right)=f(x)
-\end{equation*}
-
-\begin{equation*} 
-\theta =\frac{1}{N_L N_N}
-\end{equation*}
-
 ## Introduction
 * The purpose of this vignette is to explain the data format of the input Excel file and to introduce the capabilities of the function `DfReadDataFile()`. Background on observer performance methods are in my book  [@RN2680].
 * I will start with Receiver Operating Characteristic (ROC) data [@RN1766],  as this is by far the simplest paradigm.
