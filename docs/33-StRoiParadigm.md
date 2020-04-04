@@ -4,7 +4,7 @@
 
 
 
-## Introduction; this vignette is under construction!
+## Introduction; this chapter is under construction!
 
 ## Note to self (10/29/19) !!!DPC!!!
 The FOM and DeLong method implementations need checking with a toy dataset.

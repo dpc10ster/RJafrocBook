@@ -18,7 +18,7 @@
 #> Fig. D : mu =  3 , alpha =  0.8
 ```
 
-![](31-cbmPlots_files/figure-epub3/unnamed-chunk-2-1.png)![](31-cbmPlots_files/figure-epub3/unnamed-chunk-2-2.png)![](31-cbmPlots_files/figure-epub3/unnamed-chunk-2-3.png)![](31-cbmPlots_files/figure-epub3/unnamed-chunk-2-4.png)
+<img src="31-cbmPlots_files/figure-html/unnamed-chunk-2-1.png" width="672" /><img src="31-cbmPlots_files/figure-html/unnamed-chunk-2-2.png" width="672" /><img src="31-cbmPlots_files/figure-html/unnamed-chunk-2-3.png" width="672" /><img src="31-cbmPlots_files/figure-html/unnamed-chunk-2-4.png" width="672" />
 
 
 ## Comments
@@ -33,7 +33,7 @@ Plots A - D show ROC curves predicted by the CBM model; the corresponding values
 #> Fig. H : mu =  3 , alpha =  0.8
 ```
 
-![](31-cbmPlots_files/figure-epub3/unnamed-chunk-3-1.png)![](31-cbmPlots_files/figure-epub3/unnamed-chunk-3-2.png)![](31-cbmPlots_files/figure-epub3/unnamed-chunk-3-3.png)![](31-cbmPlots_files/figure-epub3/unnamed-chunk-3-4.png)
+<img src="31-cbmPlots_files/figure-html/unnamed-chunk-3-1.png" width="672" /><img src="31-cbmPlots_files/figure-html/unnamed-chunk-3-2.png" width="672" /><img src="31-cbmPlots_files/figure-html/unnamed-chunk-3-3.png" width="672" /><img src="31-cbmPlots_files/figure-html/unnamed-chunk-3-4.png" width="672" />
 
 ## Comments
 The dark line is the diseased distribution. The grey line is the non-diseased distribution. The bimodal diseased distribution is clearly evident in plots F and H. 
@@ -47,7 +47,7 @@ The dark line is the diseased distribution. The grey line is the non-diseased di
 #> Fig. L : mu =  3 , alpha =  0.8
 ```
 
-![](31-cbmPlots_files/figure-epub3/unnamed-chunk-4-1.png)![](31-cbmPlots_files/figure-epub3/unnamed-chunk-4-2.png)![](31-cbmPlots_files/figure-epub3/unnamed-chunk-4-3.png)![](31-cbmPlots_files/figure-epub3/unnamed-chunk-4-4.png)
+<img src="31-cbmPlots_files/figure-html/unnamed-chunk-4-1.png" width="672" /><img src="31-cbmPlots_files/figure-html/unnamed-chunk-4-2.png" width="672" /><img src="31-cbmPlots_files/figure-html/unnamed-chunk-4-3.png" width="672" /><img src="31-cbmPlots_files/figure-html/unnamed-chunk-4-4.png" width="672" />
 
 ## Comments
 Close examination of the region near the flat part shows it does not plateau at zero; rather the minimum is at 1 - $alpha$, explaining the non-zero limiting slope of the predicted curve near (1, 1).

@@ -3,7 +3,7 @@
 
 
 ## Introduction
-* The purpose of this vignette is to explain the data format of the input Excel file for an ROC *split-plot* dataset.
+* The purpose of this chapter is to explain the data format of the input Excel file for an ROC *split-plot* dataset.
 * In a split-plot dataset each reader interprets a *different* sub-set of cases in all modalities, i.e., the cases interpreted by different readers have no overlap.
 * Each sub-set of cases can have different numbers of non-diseased and diseased cases.
 * The example below assumes the same numbers of non-diseased and diseased cases.
@@ -25,7 +25,7 @@ The `Truth` worksheet contains 6 columns: `CaseID`, `LesionID`, `Weight`, `Reade
 * The third reader, with ReaderID value `5`, interprets five non-diseased cases labeled `46`, `47`, `48`, `49` and `50`, each with `LesionID` value `0` and five diseased cases labeled `51`, `52`, `53`, `54` and `55`, each with `LesionID` value `1`.  
 * `Weight`: floating point value 0 - this is not used for ROC data.  
 * `ModalityID`: a comma-separated listing of modalities, each represented by a **unique string**. In the example shown below each cell has the value `1, 2`. **Each cell has to be text formatted.**
-* `Paradigm`: In the example shown in this vignette, the contents are `ROC` and `split-plot`. 
+* `Paradigm`: In the example shown here, the contents are `ROC` and `split-plot`. 
 
 <div class="figure" style="text-align: center">
 <img src="images/rocSpTruth.png" alt="Fig. 1: Truth worksheet for file inst/extdata/toyFiles/ROC/rocSp.xlsx" width="50%" height="20%" />

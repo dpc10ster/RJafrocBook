@@ -48,7 +48,7 @@ for (i in 1:length(ncp))
 fCrit_2_10 <- fCrit # convention fCrit_ndf_ddf
 ```
 
-![](11-SampleSize1_files/figure-epub3/unnamed-chunk-1-1.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-1-2.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-1-3.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-1-4.png)
+<img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-1.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-2.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-3.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-4.png" width="672" />
 
 
 <table>
@@ -102,7 +102,7 @@ fCrit_2_10 <- fCrit # convention fCrit_ndf_ddf
 
 ### Fig. A 
 * This corresponds to `ncp = 0`, i.e., the *central* F-distribution. 
-* The integral under this distribution is unity (this is also true for all plots in this vignette). 
+* The integral under this distribution is unity (this is also true for all plots in this chapter). 
 * The critical value, `fCrit` in the above code block, is the value of `x` such that the probability of exceeding `x` is $\alpha$. The corresponding parameter `alpha` is defined above as 0.05.
 * In the current example `fCrit` = 4.102821. Notice the use of the quantile function `qf()` to determine this value, and the default value of `ncp`, namely zero, is used; specifically, one does not pass a 4th argument to `qf()`. 
 * **The decision rule for rejecting the NH uses the NH distribution of the F-statistic**, i.e., reject the NH if F >= `fCrit`. As expected, `prob > fCrit` = 0.05 because this is how `fCrit` was defined.   
@@ -130,7 +130,7 @@ The larger that non-centrality parameter, the greater the shift to the right of 
 
 ## Effect of `ncp` for `ndf` = 2 and `ddf` = 100
 
-![](11-SampleSize1_files/figure-epub3/unnamed-chunk-3-1.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-3-2.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-3-3.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-3-4.png)
+<img src="11-SampleSize1_files/figure-html/unnamed-chunk-3-1.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-3-2.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-3-3.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-3-4.png" width="672" />
 
 
 <table>
@@ -239,7 +239,7 @@ The larger that non-centrality parameter, the greater the shift to the right of 
 
 ## Effect of `ncp` for `ndf` = 1, `ddf` = 100
 
-![](11-SampleSize1_files/figure-epub3/unnamed-chunk-5-1.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-5-2.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-5-3.png)![](11-SampleSize1_files/figure-epub3/unnamed-chunk-5-4.png)
+<img src="11-SampleSize1_files/figure-html/unnamed-chunk-5-1.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-5-2.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-5-3.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-5-4.png" width="672" />
 
 
 <table>

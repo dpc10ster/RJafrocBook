@@ -13,7 +13,7 @@
 
 * Does one even need to perform a pivotal study? If the pilot study returns a significant difference, one has rejected the NH and that is all there is to it. There is no need to perform the pivotal study, unless one "tweaks" the new treatment and/or casts a wider sampling net to make a stronger argument, perhaps to the FDA, that the treatments are indeed generalizable, and that the difference is in the right direction (new treatment FOM > conventional treatment FOM). If a significant difference is observed in the opposite direction (e.g., new treatment FOM < conventional treatment FOM) one cannot justify a pivotal study with an expected effect-size in the "other or favored" direction; see example below. Since the Van Dyke pilot study came close to rejecting the NH and the observed effect size, see below, is not too small, a pivotal study is justified.  
 
-* This vignette discusses choosing a realistic effect size based on the pilot study. Illustrated first is using Van Dyke dataset, regarded as the pilot study.
+* This chapter discusses choosing a realistic effect size based on the pilot study. Illustrated first is using Van Dyke dataset, regarded as the pilot study.
 
 ## Illustration of `SsPowerGivenJK()` using `method = "ORH"`
 

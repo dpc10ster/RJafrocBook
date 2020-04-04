@@ -5,8 +5,8 @@
 
 
 ## Introduction
-* The purpose of this vignette is to explain the operating characteristics predicted by the RSM. It relates to Chapter 17 in my book [@RN2680]. 
-* This vignette is under development ...
+* The purpose of this chapter is to explain the operating characteristics predicted by the RSM. It relates to Chapter 17 in my book [@RN2680]. 
+* This chapter is under development ...
 * Also to explain the difference between `dataset` members (`lesionID`, `lesionWeight`) and (`lesDist`,  `lesWghtDistr`), which are RSM model parameters. 
 
 ## The distinction between predicted curves and empirical curves
@@ -41,7 +41,7 @@ p <- PlotEmpiricalOperatingCharacteristics(dataset04, opChType = "wAFROC")
 p$Plot
 ```
 
-![](19-PlotRsmOpCh_files/figure-epub3/unnamed-chunk-2-1.png)<!-- -->
+<img src="19-PlotRsmOpCh_files/figure-html/unnamed-chunk-2-1.png" width="672" />
 
 * The piecewise linear nature of the plot, with sharp breaks, indicates that this is due to a finite dataset.
 * In contrast the following code shows a smooth plot, because it is a model *predicted* plot.
@@ -68,7 +68,7 @@ p <- PlotRsmOperatingCharacteristics(mu = 2, lambda = 1, nu = 0.6, OpChType = "w
 p$wAFROCPlot
 ```
 
-![](19-PlotRsmOpCh_files/figure-epub3/unnamed-chunk-3-1.png)<!-- -->
+<img src="19-PlotRsmOpCh_files/figure-html/unnamed-chunk-3-1.png" width="672" />
 
 ## The distribution of number of lesions and weights 
 
@@ -110,7 +110,7 @@ p <- PlotRsmOperatingCharacteristics(mu = 2, lambda = 1, nu = 0.6, OpChType = "R
 p$ROCPlot
 ```
 
-![](19-PlotRsmOpCh_files/figure-epub3/unnamed-chunk-5-1.png)<!-- -->
+<img src="19-PlotRsmOpCh_files/figure-html/unnamed-chunk-5-1.png" width="672" />
 
 
 ## Summary  

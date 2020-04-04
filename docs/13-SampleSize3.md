@@ -4,7 +4,7 @@
 
 
 ## Introduction
-This illustrates the `RJafroc` implementation of sample-size estimation. Default $\alpha$ is 0.05 and default power (1-$\beta$) is 0.8. Three functions are provided. Each of these functions can be used with `method "DBMH"` (illustrated here, the default) or `method = "ORH"` (next vignette). Illustrated below, for the most part, is the random-reader random-case (RRRC) option, i.e., `option = "RRRC"`. The last two examples illustrate fixed-reader random-case (FRRC) `option = "FRRC"` and random-reader fixed-case (RRFC) `option = "RRFC"` options.
+This illustrates the `RJafroc` implementation of sample-size estimation. Default $\alpha$ is 0.05 and default power (1-$\beta$) is 0.8. Three functions are provided. Each of these functions can be used with `method "DBMH"` (illustrated here, the default) or `method = "ORH"` (next chapter). Illustrated below, for the most part, is the random-reader random-case (RRRC) option, i.e., `option = "RRRC"`. The last two examples illustrate fixed-reader random-case (FRRC) `option = "FRRC"` and random-reader fixed-case (RRFC) `option = "RRFC"` options.
 
 * `SsPowerGivenJK()` 
     Statistical power for specified numbers of readers and cases in an ROC study.
@@ -249,7 +249,7 @@ powTab
 
 ## Illustration of `SsSampleSizeKGivenJ()` using `method = "DBMH"`
 
-This function illustrates how the number of cases for 10 readers, used in Vignette 2, were chosen. In all but one example the default value of the `desiredPower` argument is used, namely 0.8 (if the argument is absent, its default value is used).
+This function illustrates how the number of cases for 10 readers, used in Chapter TBA, were chosen. In all but one example the default value of the `desiredPower` argument is used, namely 0.8 (if the argument is absent, its default value is used).
 
 ### RRRC
 
@@ -262,7 +262,7 @@ str(ncases)
 #>  $ powerRRRC: num 0.802
 ```
 
-`ncases` is a list containing the number of cases 163 and expected power 0.8015625. Compare the number of cases to the RRRC value used in vignette 2.
+`ncases` is a list containing the number of cases 163 and expected power 0.8015625. Compare the number of cases to the RRRC value used in Chapter TBA.
 
 #### Non default value of `desiredPower`
 This is illustrated below for 90% desired power.
@@ -289,7 +289,7 @@ str(ncases)
 #>  $ powerFRRC: num 0.801
 ```
 
-The required number of cases is 133 and expected power is 0.8011167. Compare the number of cases to the FRRC value used in vignette 2.
+The required number of cases is 133 and expected power is 0.8011167. Compare the number of cases to the FRRC value used in Chapter TBA.
 
 ### RRFC
 
@@ -302,6 +302,6 @@ str(ncases)
 #>  $ powerRRFC: num 0.805
 ```
 
-The required number of cases is 53 and expected power is 0.8049666. Compare the number of cases to the RRFC value used in vignette 2.
+The required number of cases is 53 and expected power is 0.8049666. Compare the number of cases to the RRFC value used in Chapter TBA.
 
 

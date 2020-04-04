@@ -26,7 +26,7 @@ figA <- ggplot(mapping = aes(x = FPF, y = TPF)) +
 print(figA)
 ```
 
-<img src="22-DegenerateROCs_files/figure-epub3/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
+<img src="22-DegenerateROCs_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" />
 
 This is an extreme example of an ROC curve with a "hook". If the data is such that the only operating point provided by the observer is (0,0.75) then this curve will be an exact fit to the operating point.  
 
@@ -55,7 +55,7 @@ figC <- ggplot(mapping = aes(x = FPF, y = TPF)) +
 print(figB);print(figC)
 ```
 
-![](22-DegenerateROCs_files/figure-epub3/unnamed-chunk-3-1.png)<!-- -->![](22-DegenerateROCs_files/figure-epub3/unnamed-chunk-3-2.png)<!-- -->
+<img src="22-DegenerateROCs_files/figure-html/unnamed-chunk-3-1.png" width="672" /><img src="22-DegenerateROCs_files/figure-html/unnamed-chunk-3-2.png" width="672" />
 
 All of these represent exact fits to the observed operating point, with `b = 0` and different values of `a`. Not one of them is reasonable.
 
@@ -78,6 +78,6 @@ figD <- ggplot(mapping = aes(x = FPF, y = TPF)) +
 print(figD)
 ```
 
-<img src="22-DegenerateROCs_files/figure-epub3/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
+<img src="22-DegenerateROCs_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" />
 
 For this dataset this is in fact the fit yielded by the contaminated binormal model (CBM) and the radiological search model (RSM). Why should one select the lowest possible performance consistent with the data? Because it yields a *unique* value for performance: any higher performance would not be unique. 

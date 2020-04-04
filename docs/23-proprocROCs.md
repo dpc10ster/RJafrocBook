@@ -52,7 +52,7 @@ for (i in 1:2)
 }
 ```
 
-![](23-proprocROCs_files/figure-epub3/unnamed-chunk-2-1.png)<!-- -->![](23-proprocROCs_files/figure-epub3/unnamed-chunk-2-2.png)<!-- -->![](23-proprocROCs_files/figure-epub3/unnamed-chunk-2-3.png)<!-- -->![](23-proprocROCs_files/figure-epub3/unnamed-chunk-2-4.png)<!-- -->
+<img src="23-proprocROCs_files/figure-html/unnamed-chunk-2-1.png" width="672" /><img src="23-proprocROCs_files/figure-html/unnamed-chunk-2-2.png" width="672" /><img src="23-proprocROCs_files/figure-html/unnamed-chunk-2-3.png" width="672" /><img src="23-proprocROCs_files/figure-html/unnamed-chunk-2-4.png" width="672" />
 
 
 ## Discussion

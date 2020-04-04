@@ -3,7 +3,7 @@
 
 
 ## Introduction
-* This vignette is intended for those seeking a quick transition from Windows **JAFROC** to `RJafroc`.
+* This chapter is intended for those seeking a quick transition from Windows **JAFROC** to `RJafroc`.
 * Described first is the structure of an `RJafroc` dataset followed by how to read
 a *JAFROC*  format Excel file to create an `RJafroc` dataset.
 
@@ -223,7 +223,7 @@ print(ret)
 ```
 
 ## Explanation of the output
-The function returns a long unwieldy list. Let us consider them one by one. The function `UtilOutputReport()`, which can generate an Excel file report, making it much easier to visualize the results, is described in another vignette.
+The function returns a long unwieldy list. Let us consider them one by one. The function `UtilOutputReport()`, which can generate an Excel file report, making it much easier to visualize the results, is described in another chapter.
 
 ### FOMs
 * `fomArray` contains the `[1:2,1:4]` FOM values.
