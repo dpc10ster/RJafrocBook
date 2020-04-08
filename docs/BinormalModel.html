@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 11 QUICK START DBM2 | The RJafroc Book</title>
+  <title>Chapter 5 Binormal model | The RJafroc Book</title>
   <meta name="description" content="Extended RJafroc documentation." />
   <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 11 QUICK START DBM2 | The RJafroc Book" />
+  <meta property="og:title" content="Chapter 5 Binormal model | The RJafroc Book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 11 QUICK START DBM2 | The RJafroc Book" />
+  <meta name="twitter:title" content="Chapter 5 Binormal model | The RJafroc Book" />
   
   <meta name="twitter:description" content="Extended RJafroc documentation." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="QuickStartDBM1.html"/>
-<link rel="next" href="SSFDistr.html"/>
+<link rel="prev" href="ratingsParadigm.html"/>
+<link rel="next" href="rocdataformat.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -457,34 +457,168 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="QuickStartDBM2" class="section level1" number="11">
-<h1><span class="header-section-number">Chapter 11</span> QUICK START DBM2</h1>
-<div id="introduction-9" class="section level2" number="11.1">
-<h2><span class="header-section-number">11.1</span> Introduction</h2>
-<p>This chapter illustrates significance testing using the DBMH method. But, instead of the unwieldy output in <em>QuickStartDBMH.html</em>, it generates an Excel output file containing the following worksheets:</p>
-<ul>
-<li><code>Summary</code></li>
-<li><code>FOMs</code></li>
-<li><code>RRRC</code></li>
-<li><code>FRRC</code></li>
-<li><code>RRFC</code></li>
-<li><code>ANOVA</code></li>
-</ul>
+<div id="BinormalModel" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Binormal model</h1>
+<div id="introduction-3" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Introduction</h2>
+<p>In this chapter the univariate binormal model is described, in which one is dealing with one ROC rating per case, as in a single observer interpreting cases, one at a time, in a single modality. By convention the qualifier “univariate” is often omitted, i.e., it is implicit. In a later chapter a bivariate binormal model will be described where each case yields two ratings, as in a single observer interpreting cases in two modalities, or equivalently, two observers interpreting cases in a single modality.</p>
+<p>The equal variance binormal model was described in Chapter “Binary Paradigm”. The ratings method of acquiring ROC data and calculation of operating points was illustrated in Chapter “Ratings Paradigm”. It was shown that for a clinical ROC dataset the unequal-variance binormal model fitted the data better than the equal-variance binormal model. This chapter deals with details of the unequal-variance binormal model, establishes necessary notation for describing the model, and derives expressions for sensitivity, specificity and the area under the predicted ROC curve (due to its complexity it appears in an Appendix).
+The main aim of this chapter is to take the mystery out of statistical curve fitting. Accordingly, this is one chapter where the Appendices are longer than the main text, but as usual, they are essential reading as they reinforce the main text. It is not too much to expect the reader to load each file beginning with “main”, click on Source and see what happens. [The reader is reminded that any file that starts with “main” contains directly executable code.]</p>
 </div>
-<div id="generating-the-excel-output-file" class="section level2" number="11.2">
-<h2><span class="header-section-number">11.2</span> Generating the Excel output file</h2>
-<p>This illustrates the <code>UtilOutputReport()</code> function. The significance testing <code>method</code> is “DBMH”, the default, and the figure of merit <code>FOM</code> is “Wilcoxon”. Note <code>ReportFileExt</code> = “xlsx”` telling
-the function to create an Excel output file. The Excel output is created in a temporary file.</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="QuickStartDBM2.html#cb66-1"></a>ret &lt;-<span class="st"> </span><span class="kw">UtilOutputReport</span>(dataset03, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">overWrite =</span> <span class="ot">TRUE</span>, <span class="dt">ReportFileExt =</span> <span class="st">&quot;xlsx&quot;</span>)</span>
-<span id="cb66-2"><a href="QuickStartDBM2.html#cb66-2"></a><span class="co">#&gt; </span></span>
-<span id="cb66-3"><a href="QuickStartDBM2.html#cb66-3"></a><span class="co">#&gt; Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpgmorEB/RJafrocUtilOutputReport5e6a6a50b60e.xlsx</span></span></code></pre></div>
+<div id="the-binormal-model" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> The binormal model</h2>
+<p>The unequal-variance binormal model (henceforth abbreviated to binormal model; when the author means equal variances, it will be made explicit) is defined by (capital letters indicate random variables and their lower-case counterparts are actual realized values):</p>
+<p><span class="math display">\[\begin{equation*} 
+Z_{{k_t}t}\sim N\left ( \mu_t,\sigma_{t}^{2} \right );t=1,2
+\end{equation*}\]</span></p>
+<p>where</p>
+<p><span class="math display">\[\begin{equation*} 
+\mu_1=0;\mu_2=\mu;\sigma_{1}^{2}=1;\sigma_{2}^{2}=\sigma^{2}
+\end{equation*}\]</span></p>
+<p>Eqn. (6.2.1) states that the Z-samples for non-diseased cases are distributed as a <span class="math inline">\(N(0,1)\)</span> distribution, i.e., the unit normal distribution, while the Z-samples for diseased cases are distributed as a <span class="math inline">\(N(\mu,\sigma^2)\)</span> distribution, i.e., a normal distribution with mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span>. This is a 2-parameter model of the z-samples, not counting additional threshold parameters needed for data binning.</p>
+<div id="binning-the-data" class="section level3" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Binning the data</h3>
+<p>In an R-rating ROC study the observed ratings r take on integer values, 1 through R, it being understood that higher ratings correspond to greater confidence for disease. Defining dummy cutoffs <span class="math inline">\(\zeta_0 = -\infty\)</span> and <span class="math inline">\(\zeta_R = +\infty\)</span>, the binning rule for a case with realized z-sample z is (Chapter “Ratings Paradigm”, Eqn. 4.13):</p>
+<p><span class="math display">\[\begin{equation*} 
+if \left (\zeta_{r-1} \le z \le \zeta_r  \right )\Rightarrow \text rating = r
+\end{equation*}\]</span></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="BinormalModel.html#cb8-1"></a>mu &lt;-<span class="st"> </span><span class="fl">1.5</span>;sigma &lt;-<span class="st"> </span><span class="fl">1.5</span></span>
+<span id="cb8-2"><a href="BinormalModel.html#cb8-2"></a></span>
+<span id="cb8-3"><a href="BinormalModel.html#cb8-3"></a>z1 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">4</span>, <span class="dt">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb8-4"><a href="BinormalModel.html#cb8-4"></a>z2 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">6</span>, <span class="dt">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb8-5"><a href="BinormalModel.html#cb8-5"></a></span>
+<span id="cb8-6"><a href="BinormalModel.html#cb8-6"></a>Pdf1 &lt;-<span class="st"> </span><span class="kw">dnorm</span>(z1)</span>
+<span id="cb8-7"><a href="BinormalModel.html#cb8-7"></a>Pdf2 &lt;-<span class="st"> </span><span class="kw">dnorm</span>(z2, mu, <span class="dt">sd =</span> sigma)</span>
+<span id="cb8-8"><a href="BinormalModel.html#cb8-8"></a></span>
+<span id="cb8-9"><a href="BinormalModel.html#cb8-9"></a>df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">z =</span> <span class="kw">c</span>(z1, z2), <span class="dt">pdfs =</span> <span class="kw">c</span>(Pdf1, Pdf2), </span>
+<span id="cb8-10"><a href="BinormalModel.html#cb8-10"></a>                 <span class="dt">truth =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&#39;non-diseased&#39;</span>, <span class="kw">length</span>(Pdf1)), <span class="kw">rep</span>(<span class="st">&#39;diseased&#39;</span>, <span class="kw">length</span>(Pdf2))), </span>
+<span id="cb8-11"><a href="BinormalModel.html#cb8-11"></a>                 <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb8-12"><a href="BinormalModel.html#cb8-12"></a></span>
+<span id="cb8-13"><a href="BinormalModel.html#cb8-13"></a>cut_point &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">z =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">2.0</span>, <span class="fl">-0.5</span>, <span class="dv">1</span>, <span class="fl">2.5</span>))</span>
+<span id="cb8-14"><a href="BinormalModel.html#cb8-14"></a></span>
+<span id="cb8-15"><a href="BinormalModel.html#cb8-15"></a>rocPdfs &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x =</span> z, <span class="dt">y =</span> pdfs, <span class="dt">color =</span> truth)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb8-16"><a href="BinormalModel.html#cb8-16"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb8-17"><a href="BinormalModel.html#cb8-17"></a><span class="st">  </span><span class="kw">scale_colour_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;darkgrey&quot;</span>,<span class="st">&quot;black&quot;</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb8-18"><a href="BinormalModel.html#cb8-18"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.title =</span> <span class="kw">element_blank</span>(), <span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.85</span>, <span class="fl">0.95</span>), </span>
+<span id="cb8-19"><a href="BinormalModel.html#cb8-19"></a>        <span class="dt">legend.text =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">25</span>, <span class="dt">face =</span> <span class="st">&quot;bold&quot;</span>), </span>
+<span id="cb8-20"><a href="BinormalModel.html#cb8-20"></a>          <span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.8</span>, <span class="dt">size =</span> <span class="dv">30</span>,<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb8-21"><a href="BinormalModel.html#cb8-21"></a>        <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">25</span>,<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>)) <span class="op">+</span></span>
+<span id="cb8-22"><a href="BinormalModel.html#cb8-22"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">data =</span> cut_point, <span class="kw">aes</span>(<span class="dt">xintercept =</span> z), <span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span></span>
+<span id="cb8-23"><a href="BinormalModel.html#cb8-23"></a><span class="st">  </span><span class="kw">annotation_custom</span>(<span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(<span class="st">&quot;O&quot;</span>)),</span>
+<span id="cb8-24"><a href="BinormalModel.html#cb8-24"></a>                                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">32</span>)), </span>
+<span id="cb8-25"><a href="BinormalModel.html#cb8-25"></a>                    <span class="dt">xmin =</span> <span class="fl">-3.2</span>, <span class="dt">xmax =</span> <span class="fl">-3.2</span>, <span class="co"># adjust the position of &quot;O&quot;</span></span>
+<span id="cb8-26"><a href="BinormalModel.html#cb8-26"></a>                    <span class="dt">ymin =</span> <span class="fl">-0.0</span>, <span class="dt">ymax =</span> <span class="fl">-0.01</span>) <span class="op">+</span></span>
+<span id="cb8-27"><a href="BinormalModel.html#cb8-27"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb8-28"><a href="BinormalModel.html#cb8-28"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</span>
+<span id="cb8-29"><a href="BinormalModel.html#cb8-29"></a></span>
+<span id="cb8-30"><a href="BinormalModel.html#cb8-30"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> <span class="op">:</span><span class="st"> </span><span class="kw">length</span>(cut_point<span class="op">$</span>z)){</span>
+<span id="cb8-31"><a href="BinormalModel.html#cb8-31"></a>  rocPdfs &lt;-<span class="st"> </span>rocPdfs <span class="op">+</span></span>
+<span id="cb8-32"><a href="BinormalModel.html#cb8-32"></a><span class="st">    </span><span class="kw">annotation_custom</span>(<span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(zeta[.(i)]),<span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">20</span>)),</span>
+<span id="cb8-33"><a href="BinormalModel.html#cb8-33"></a>                      <span class="dt">xmin =</span> cut_point<span class="op">$</span>z[i], <span class="dt">xmax =</span> cut_point<span class="op">$</span>z[i],</span>
+<span id="cb8-34"><a href="BinormalModel.html#cb8-34"></a>                      <span class="dt">ymin =</span> <span class="fl">-0.01</span>, <span class="dt">ymax =</span> <span class="fl">-0.01</span>)</span>
+<span id="cb8-35"><a href="BinormalModel.html#cb8-35"></a>}</span>
+<span id="cb8-36"><a href="BinormalModel.html#cb8-36"></a></span>
+<span id="cb8-37"><a href="BinormalModel.html#cb8-37"></a>gt &lt;-<span class="st"> </span><span class="kw">ggplot_gtable</span>(<span class="kw">ggplot_build</span>(rocPdfs))</span>
+<span id="cb8-38"><a href="BinormalModel.html#cb8-38"></a>gt<span class="op">$</span>layout<span class="op">$</span>clip[gt<span class="op">$</span>layout<span class="op">$</span>name <span class="op">==</span><span class="st"> &quot;panel&quot;</span>] &lt;-<span class="st"> &quot;off&quot;</span></span>
+<span id="cb8-39"><a href="BinormalModel.html#cb8-39"></a><span class="kw">grid.draw</span>(gt)</span></code></pre></div>
+<p><img src="06-binormal-model_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>In the unequal-variance binormal model, the variance <span class="math inline">\(\sigma^2\)</span> of the Z-samples for diseased cases, is allowed to be different from unity. Most ROC datasets4 are consistent with <span class="math inline">\(\sigma \gt 1\)</span>. Fig. 6.1, generated with <span class="math inline">\(\mu = 1.5, \sigma = 1.5\)</span>, illustrates how realized z-samples are converted to ratings, i.e., it illustrates application of the binning rule. For example, a case with -sample equal to -2.5 would be rated “1”, and one with -sample equal to -1 would be rated “2”, cases with -samples greater than 2.5 would be rated “5”, etc.</p>
+<p>The binormal model is not as restrictive as might appear at first sight. Any monotone increasing transformation <span class="math inline">\(Y=f(Z)\)</span> applied to the observed z-samples, and the associated thresholds, will yield the same observed data, e.g., Table 6.1. This is because such a transformation leaves the ordering of the ratings unaltered and hence results in the same operating points. While the distributions for will not be binormal (i.e., two independent normal distributions), one can safely “pretend” that one is still dealing with an underlying binormal model. An alternative way of stating this is that any pair of distributions is allowed as long as they are reducible to a binormal model form by a monotonic increasing transformation of Y: e.g., <span class="math inline">\(Z=f^{-1}\)</span>. [If <span class="math inline">\(f\)</span> is a monotone increasing function of its argument, so is <span class="math inline">\(f^{-1}\)</span>}.] For this reason, the term “pair of latent underlying normal distributions” is sometimes used to describe the binormal model. The robustness of the binormal model has been investigated5,6. The referenced paper by Dorfman et al has an excellent discussion of the robustness of the binormal model.</p>
 </div>
-<div id="orh-significance-testing-1" class="section level2" number="11.3">
-<h2><span class="header-section-number">11.3</span> ORH significance testing</h2>
-<p>Simply change <code>method = "DBMH"</code> (the default) to <code>method = "ORH"</code>.</p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="QuickStartDBM2.html#cb67-1"></a>ret &lt;-<span class="st"> </span><span class="kw">UtilOutputReport</span>(dataset03, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>, <span class="dt">overWrite =</span> <span class="ot">TRUE</span>, <span class="dt">ReportFileExt =</span> <span class="st">&quot;xlsx&quot;</span>)</span>
-<span id="cb67-2"><a href="QuickStartDBM2.html#cb67-2"></a><span class="co">#&gt; </span></span>
-<span id="cb67-3"><a href="QuickStartDBM2.html#cb67-3"></a><span class="co">#&gt; Output file name is:      /var/folders/d1/mx6dcbzx3v39r260458z2b200000gn/T//RtmpgmorEB/RJafrocUtilOutputReport5e6a4e6f7906.xlsx</span></span></code></pre></div>
+<div id="expressions-for-sensitivity-and-specificity" class="section level3" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Expressions for sensitivity and specificity</h3>
+<p>Let <span class="math inline">\(Z_t\)</span> denote the random Z-sample for truth state <span class="math inline">\(t\)</span> (<span class="math inline">\(t\)</span> = 1 for non-diseased and <span class="math inline">\(t\)</span> = 2 for diseased cases). Since the distribution of Z-samples from disease-free cases is <span class="math inline">\(N(0,1)\)</span>, the expression for specificity, Chapter “Modeling Binary Paradigm”, Eqn. 3.13, applies. It is reproduced below:</p>
+<p><span class="math display">\[\begin{equation*} 
+Sp\left ( \zeta \right )=P\left ( Z_1 &lt; \zeta \right )=\Phi\left ( \zeta \right )
+\end{equation*}\]</span></p>
+<p>To obtain an expression for sensitivity, consider that for truth state <span class="math inline">\(t = 2\)</span>, the random variable <span class="math inline">\(\frac{Z_2-\mu}{\sigma}\)</span> is distributed as <span class="math inline">\(N(0,1)\)</span>:</p>
+<p><span class="math display">\[\begin{equation*} 
+\frac{Z_2-\mu}{\sigma}\sim N\left ( 0,1 \right )
+\end{equation*}\]</span></p>
+<p>Sensitivity is <span class="math inline">\(P\left ( Z_2 &gt; \zeta \right )\)</span>, which implies, because <span class="math inline">\(\sigma\)</span> is positive (subtract from both sides of the “greater than” symbol and divide by <span class="math inline">\(\sigma\)</span>):</p>
+<p><span class="math display">\[\begin{equation*} 
+Se\left ( \zeta | \mu, \sigma \right )= P\left ( Z_2 &gt; \zeta \right )=P\left ( \frac{Z_2-\mu}{\sigma} &gt; \frac{\zeta-\mu}{\sigma} \right )
+\end{equation*}\]</span></p>
+<p>The right-hand-side can be rewritten as follows:</p>
+<p><span class="math display">\[\begin{equation*} 
+Se\left ( \zeta | \mu, \sigma \right )= 1 - P\left ( \frac{Z_2-\mu}{\sigma} \leq  \frac{\zeta-\mu}{\sigma} \right )\\
+=1-\Phi\left (  \frac{\zeta-\mu}{\sigma}\right )=\Phi\left (  \frac{\mu-\zeta}{\sigma}\right )
+\end{equation*}\]</span></p>
+<p>Summarizing, the formulae for the specificity and sensitivity for the binormal model are:</p>
+<p><span class="math display">\[\begin{equation*} 
+Sp\left ( \zeta \right ) = \Phi\left ( \zeta \right )\\
+Se\left ( \zeta | \mu, \sigma \right ) = \Phi\left (  \frac{\mu-\zeta}{\sigma}\right )
+\end{equation*}\]</span></p>
+<p>The coordinates of the operating point defined by <span class="math inline">\(\zeta\)</span> are given by:</p>
+<p><span class="math display">\[\begin{equation*} 
+FPF\left ( \zeta \right ) = 1 - Sp\left ( \zeta \right ) = 1 - \Phi\left ( \zeta \right ) = \Phi\left ( -\zeta \right ) \\
+TPF\left ( \zeta | \mu, \sigma \right ) = \Phi\left ( \frac{\mu-\zeta}{\sigma} \right )
+\end{equation*}\]</span></p>
+<p>These expressions allow calculation of the operating point for any <span class="math inline">\(\zeta\)</span>. An equation for a curve is usually expressed as <span class="math inline">\(y=f(x)\)</span>. An expression of this form for the ROC curve, i.e., the y coordinate (TPF) expressed as a function of the x coordinate (FPF), follows upon inversion of the expression for FPF, Eqn. (6.2.11):</p>
+<p><span class="math display">\[\begin{equation*} 
+\zeta = -\Phi^{-1}\left ( FPF \right )
+\end{equation*}\]</span></p>
+<p>Substituting Eqn. (6.2.13) in the expression for TPF in 2nd Eqn. (6.2.11):</p>
+<p><span class="math display">\[\begin{equation*} 
+TPF = \Phi\left ( \frac{\mu + \Phi^{-1}\left (FPF  \right )}{\sigma} \right )
+\end{equation*}\]</span></p>
+</div>
+<div id="binormal-model-in-conventional-notation" class="section level3" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Binormal model in “conventional” notation</h3>
+<p>The following notation is widely used in the literature:</p>
+<p><span class="math display">\[\begin{equation*} 
+a=\frac{\mu}{\sigma};b=\frac{1}{\sigma}
+\end{equation*}\]</span></p>
+<p><img src="06-binormal-model_files/figure-html/unnamed-chunk-3-1.png" width="672" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<p>The reason for the <span class="math inline">\((a,b)\)</span> instead of the <span class="math inline">\((\mu,\sigma)\)</span> notation is that Dorfman and Alf assumed, in their seminal paper3, that the diseased (often termed signal) distribution had unit variance, and the non-diseased (often termed noise) distribution had standard deviation <span class="math inline">\(b\)</span> (<span class="math inline">\(b &gt; 0\)</span>) or variance <span class="math inline">\(b^2\)</span>, and that the separation of the two distributions was a, Fig. 6.2(A). In this example, <span class="math inline">\(a = 1.11\)</span> and <span class="math inline">\(b = 0.556\)</span>. Dorfman and Alf’s fundamental contribution, namely estimating these parameters from ratings data, to be described below, has led to the widespread usage of the <span class="math inline">\((a,b)\)</span> parameters, estimated by their software (RSCORE), and its modern variants (e.g., ROCFIT and ROCKIT).</p>
+</div>
+<div id="properties-of-the-binormal-model-roc-curve" class="section level3" number="5.2.4">
+<h3><span class="header-section-number">5.2.4</span> Properties of the binormal model ROC curve</h3>
+<p>Using the a, b notation, Eqn. (6.2.14) for the ROC curve reduces to:</p>
+<p><span class="math display">\[\begin{equation*} 
+TPF = \Phi\left ( a+ b \Phi^{-1}\left (FPF  \right ) \right )
+\end{equation*}\]</span></p>
+<p>Since <span class="math inline">\(\Phi^{-1}(FPF)\)</span> is an increasing function of its argument FPF, and <span class="math inline">\(b &gt; 0\)</span>, the argument of the <span class="math inline">\(\Phi\)</span> function is an increasing function of FPF. Since <span class="math inline">\(\Phi\)</span> is a monotonically increasing function of its argument, TPF is a monotonically increasing function of FPF. This is true regardless of the sign of <span class="math inline">\(a\)</span>. If FPF = 0, then <span class="math inline">\(\Phi^{-1}(0) = -\infty\)</span> and TPF = 0. If FPF = 1, then <span class="math inline">\(\Phi^{-1}(1) = +\infty\)</span> and TPF = 1. [The fact that TPF is a monotonic increasing function of FPF is consistent with the following argument: to increase FPF, <span class="math inline">\(\zeta\)</span> must decrease, which will increase the area under the diseased distribution to the right of <span class="math inline">\(\zeta\)</span>, i.e., increase TPF.]</p>
+<p>Regardless of the value of <span class="math inline">\(a\)</span>, as long as <span class="math inline">\(b \ge 0\)</span>, the ROC curve starts at (0,0) and ends at (1,1), increasing monotonically from the origin to (1,1).</p>
+<p>From Eqn. (6.2.11) and Eqn. (6.2.12), the expressions for FPF and TPF in terms of model parameters <span class="math inline">\((a,b)\)</span> are:</p>
+<p><span class="math display">\[\begin{equation*} 
+FPF\left ( \zeta \right ) = \Phi\left ( -\zeta \right )\\
+TPF = \Phi\left ( a - b \zeta \right )
+\end{equation*}\]</span></p>
+</div>
+<div id="pdfs-of-the-binormal-model" class="section level3" number="5.2.5">
+<h3><span class="header-section-number">5.2.5</span> pdfs of the binormal model</h3>
+</div>
+<div id="a-fitted-roc-curve" class="section level3" number="5.2.6">
+<h3><span class="header-section-number">5.2.6</span> A fitted ROC curve</h3>
+</div>
+</div>
+<div id="least-squares-estimation" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Least-squares estimation</h2>
+</div>
+<div id="maximum-likelihood-estimation-mle" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Maximum likelihood estimation (MLE)</h2>
+<div id="validating-the-fitting-model" class="section level3" number="5.4.1">
+<h3><span class="header-section-number">5.4.1</span> Validating the fitting model</h3>
+</div>
+<div id="estimating-the-covariance-matrix" class="section level3" number="5.4.2">
+<h3><span class="header-section-number">5.4.2</span> Estimating the covariance matrix</h3>
+</div>
+<div id="estimating-the-variance-of-az" class="section level3" number="5.4.3">
+<h3><span class="header-section-number">5.4.3</span> Estimating the variance of Az</h3>
+</div>
+</div>
+<div id="discussion" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> Discussion</h2>
+<p>I have tried to take out some of the mystery about how the binormal model is used to estimate parameters. A good understanding of this chapter should enable the reader to better understand alternative ROC models, discussed in a later chapter.</p>
+<p>It has been stated without explanation that the b-parameter of the binormal model is generally observed to be less than one, consistent with the diseased distribution being wider than the non-diseased one. The ROC literature is largely silent on the reason for this finding. One reason, namely location uncertainty, is presented in Chapter “Predictions of the RSM”, where RSM stands for Radiological Search Model. Basically, if the location of the lesion is unknown, then z-samples from diseased cases can be of two types, samples from the correct lesion location, or samples from other non-lesion locations. The resulting mixture distribution will then appear to have larger variance than the corresponding samples from non-diseased cases. This type of mixing need not be restricted to location uncertainty. Even is location is known, if the lesions are non-homogenous (e.g., they contain a range of contrasts) then a similar mixture-distribution induced broadening is expected.</p>
+<p>The fact that the b-parameter is less than unity implies that the predicted ROC curve is improper, meaning its slope is not monotone decreasing as the operating point moves up the curve. The result is that a portion of the curve, near (1,1) that crosses the chance-diagonal and hooks upward approaching (1,1) with infinite slope. Ways of fitting proper ROC curves are described in Chapter “Other proper ROC models”. Usually the hook is not readily visible, which has been used as an excuse to ignore the problem. For example, in Fig. 6.4, one would have to “zoom-in” on the upper right corner to see it, but the reader should make no mistake about it, the hook is there as .</p>
+<p>A recent example is Fig. 1 in the publication resulting from the Digital Mammographic Imaging Screening Trial (DMIST) clinical trial14,15, involving 49,528 asymptomatic women from 33 clinical sites and involving 153 radiologists, where each of the film modality ROC plots crosses the chance diagonal and hooks upwards to (1,1), which as is known, results anytime .</p>
+<p>The unphysical nature of the hook (predicting worse than chance-level performance for supposedly expert readers) is not the only reason for seeking alternate ROC models. The binormal model is susceptible to degeneracy problems. If the dataset does not provide any interior operating points (i.e., all observed points lie on the axes defined by FPF = 0 or TPF = 1) then the model fits these points with b = 0. The resulting straight-line segment fits do not make physical sense. These problems are addressed by the contaminated binormal model16 to be discussed in Chapter “Other proper ROC models”. The first paper in the series has particularly readable accounts of data degeneracy.</p>
+<p>To this day the binormal model is widely used to fit ROC datasets. In spite of its limitations, the binormal model has been very useful in bringing a level of quantification to this field that did not exist prior to the work3 by Dorfman and Alf.</p>
+</div>
+<div id="references-2" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> References</h2>
 
 </div>
 </div>
@@ -493,8 +627,8 @@ the function to create an Excel output file. The Excel output is created in a te
           </div>
         </div>
       </div>
-<a href="QuickStartDBM1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="SSFDistr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="ratingsParadigm.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="rocdataformat.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
