@@ -23,7 +23,7 @@ The dependence of variability of the operating point on the numbers of cases is 
 \end{equation*}
 
 \begin{equation*} 
-\phi\left ( z \right )=\frac{1}{\sqrt{2\pi}}\exp\left ( -\frac{{z}^2}{2} \right )
+\phi\left ( z \right )=\frac{1}{\sqrt{2\pi}}\exp\left ( -\frac{z^2}{2} \right )
 \end{equation*}
 
 \begin{equation*} 
