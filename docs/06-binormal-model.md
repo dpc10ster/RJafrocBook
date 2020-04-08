@@ -15,7 +15,7 @@ The main aim of this chapter is to take the mystery out of statistical curve fit
 The unequal-variance binormal model (henceforth abbreviated to binormal model; when the author means equal variances, it will be made explicit) is defined by (capital letters indicate random variables and their lower-case counterparts are actual realized values):
 
 \begin{equation*} 
-Z_{{k_t}t}\sim N\left ( \mu_t,\sigma_{t}^{2} \right );t=1,2
+Z_{k_tt}\sim N\left ( \mu_t,\sigma_{t}^{2} \right );t=1,2
 \end{equation*}
 
 where 
