@@ -181,15 +181,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2.6" data-path="BinormalModel.html"><a href="BinormalModel.html#a-fitted-roc-curve"><i class="fa fa-check"></i><b>5.2.6</b> A fitted ROC curve</a></li>
 <li class="chapter" data-level="5.2.7" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation"><i class="fa fa-check"></i><b>5.2.7</b> Least-squares estimation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation-1"><i class="fa fa-check"></i><b>5.3</b> Least-squares estimation</a></li>
-<li class="chapter" data-level="5.4" data-path="BinormalModel.html"><a href="BinormalModel.html#maximum-likelihood-estimation-mle"><i class="fa fa-check"></i><b>5.4</b> Maximum likelihood estimation (MLE)</a>
+<li class="chapter" data-level="5.3" data-path="BinormalModel.html"><a href="BinormalModel.html#maximum-likelihood-estimation-mle"><i class="fa fa-check"></i><b>5.3</b> Maximum likelihood estimation (MLE)</a>
 <ul>
-<li class="chapter" data-level="5.4.1" data-path="BinormalModel.html"><a href="BinormalModel.html#validating-the-fitting-model"><i class="fa fa-check"></i><b>5.4.1</b> Validating the fitting model</a></li>
-<li class="chapter" data-level="5.4.2" data-path="BinormalModel.html"><a href="BinormalModel.html#estimating-the-covariance-matrix"><i class="fa fa-check"></i><b>5.4.2</b> Estimating the covariance matrix</a></li>
-<li class="chapter" data-level="5.4.3" data-path="BinormalModel.html"><a href="BinormalModel.html#estimating-the-variance-of-az"><i class="fa fa-check"></i><b>5.4.3</b> Estimating the variance of Az</a></li>
+<li class="chapter" data-level="5.3.1" data-path="BinormalModel.html"><a href="BinormalModel.html#code-implementing-mle"><i class="fa fa-check"></i><b>5.3.1</b> Code implementing MLE</a></li>
+<li class="chapter" data-level="5.3.2" data-path="BinormalModel.html"><a href="BinormalModel.html#validating-the-fitting-model"><i class="fa fa-check"></i><b>5.3.2</b> Validating the fitting model</a></li>
+<li class="chapter" data-level="5.3.3" data-path="BinormalModel.html"><a href="BinormalModel.html#estimating-the-covariance-matrix"><i class="fa fa-check"></i><b>5.3.3</b> Estimating the covariance matrix</a></li>
+<li class="chapter" data-level="5.3.4" data-path="BinormalModel.html"><a href="BinormalModel.html#estimating-the-variance-of-az"><i class="fa fa-check"></i><b>5.3.4</b> Estimating the variance of Az</a></li>
 </ul></li>
-<li class="chapter" data-level="5.5" data-path="BinormalModel.html"><a href="BinormalModel.html#discussion"><i class="fa fa-check"></i><b>5.5</b> Discussion</a></li>
-<li class="chapter" data-level="5.6" data-path="BinormalModel.html"><a href="BinormalModel.html#references-2"><i class="fa fa-check"></i><b>5.6</b> References</a></li>
+<li class="chapter" data-level="5.4" data-path="BinormalModel.html"><a href="BinormalModel.html#discussion"><i class="fa fa-check"></i><b>5.4</b> Discussion</a></li>
+<li class="chapter" data-level="5.5" data-path="BinormalModel.html"><a href="BinormalModel.html#references-2"><i class="fa fa-check"></i><b>5.5</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="rocdataformat.html"><a href="rocdataformat.html"><i class="fa fa-check"></i><b>6</b> ROC DATA FORMAT</a>
 <ul>
@@ -601,7 +601,7 @@ P\left ( Z \le \zeta \mid  Z\sim N\left ( \mu,\sigma^2 \right ) \right ) = 1-TPF
 pdf_N\left ( \zeta \right ) = \frac{\partial \Phi\left ( \zeta \right )}{\partial \zeta} = \phi\left ( \zeta \right ) \equiv \frac{1}{\sqrt{2 \pi}}\exp\left ( -\frac{\zeta^2}{2} \right )
 \end{equation*}\]</span></p>
 <p><span class="math display">\[\begin{equation*} 
-pdf_D\left ( \zeta \right ) = \frac{\partial \Phi\left ( \frac{\zeta - \mu}{\sigma} \right )}{\partial \zeta} = \frac{1}{\sigma} \phi\left ( \frac{\zeta - \mu}{\sigma} \right ) \equiv \frac{1}{\sqrt{2 \pi}\sigma}\exp\left ( -\frac{\zeta^2}{2} \right )
+pdf_D\left ( \zeta \right ) = \frac{\partial \Phi\left ( \frac{\zeta - \mu}{\sigma} \right )}{\partial \zeta} = \frac{1}{\sigma} \phi\left ( \frac{\zeta - \mu}{\sigma} \right ) \equiv \frac{1}{\sqrt{2 \pi}\sigma}\exp\left ( -\frac{\left (\zeta-\mu  \right )^2}{2\sigma} \right )
 \end{equation*}\]</span></p>
 <p>The second equation can be written in <span class="math inline">\((a,b)\)</span> notation as:</p>
 <p><span class="math display">\[\begin{equation*} 
@@ -659,23 +659,69 @@ S  = \sum_{i=1}^{R-1}\left ( y_i - \left ( a + bx_i \right ) \right )^2
 <p>[A historical note: prior to computers and easy access to statistical functions the analyst had to use a special plotting paper, termed “double probability paper”, that converted probabilities into x and y distances using the inverse function. The complement of the inverse function is sometimes termed the z-deviate.4 Since this term confused me when I entered this field ca. 1985, and it confuses me even now, I will not use it further.]</p>
 </div>
 </div>
-<div id="least-squares-estimation-1" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> Least-squares estimation</h2>
+<div id="maximum-likelihood-estimation-mle" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Maximum likelihood estimation (MLE)</h2>
+<p>The approach taken by Dorfman and Alf was to maximize the likelihood function instead of S. The likelihood function is the probability of the observed data given a set of parameter values, i.e.,</p>
+<p><span class="math display">\[\begin{equation*} 
+\text {L} \equiv P\left ( data \mid \text {parameters} \right )
+\end{equation*}\]</span></p>
+<p>Generally “data” is suppressed, so likelihood is a function of the parameters; but “data” is always implicit. With reference to Fig. 6.1, the probability of a non-diseased case yielding a count in the 2nd bin equals the area under the curve labeled “Noise” bounded by the vertical lines at <span class="math inline">\(\zeta_1\)</span> and <span class="math inline">\(\zeta_2\)</span>. In general, the probability of a non-diseased case yielding a count in the rth bin equals the area under the curve labeled “Noise” bounded by the vertical lines at <span class="math inline">\(\zeta_{r-1}\)</span> and <span class="math inline">\(\zeta_r\)</span>. Since the area to the left of a threshold is the CDF corresponding to that threshold, the required probability is ( <em>r ) - ( </em>{r-1} ); we are simply subtracting two expressions for specificity, Eqn. (6.2.5).</p>
+<p><span class="math display">\[\begin{equation*} 
+\text {count in non-diseased bin } r = \Phi\left ( \zeta_r \right ) - \Phi\left ( \zeta_{r-1} \right )
+\end{equation*}\]</span></p>
+<p>Similarly, the probability of a diseased case yielding a count in the rth bin equals the area under the curve labeled “Signal” bounded by the vertical lines at <span class="math inline">\(\zeta_{r-1}\)</span> and <span class="math inline">\(\zeta_r\)</span>. The area under the diseased distribution to the left of threshold <span class="math inline">\(\zeta_r\)</span> is the <span class="math inline">\(1 - TPF\)</span> at that threshold:</p>
+<p><span class="math display">\[\begin{equation*} 
+1 - \Phi\left ( \frac{\mu-\zeta_r}{\sigma} \right ) = \Phi\left ( \frac{\zeta_r - \mu}{\sigma} \right )
+\end{equation*}\]</span></p>
+<p>The area between the two thresholds is:</p>
+<p><span class="math display">\[\begin{equation*} 
+P\left ( \text{count in diseased bin }r \right ) \\ = \Phi\left ( \frac{\zeta_r - \mu}{\sigma} \right ) - \Phi\left ( \frac{\zeta_{r-1} - \mu}{\sigma} \right ) \\
+= \Phi\left ( b\zeta_r-a \right ) - \Phi\left ( b\zeta_{r-1}-a \right )
+\end{equation*}\]</span></p>
+<p>Let <span class="math inline">\(K_{1r}\)</span> denote the number of non-diseased cases in the rth bin, and <span class="math inline">\(K_{2r}\)</span> denotes the number of diseased cases in the rth bin. Consider the number of counts <span class="math inline">\(K_{1r}\)</span> in non-diseased case bin <span class="math inline">\(r\)</span>. Since the probability of each count is <span class="math inline">\(\Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right )\)</span>, the probability of the observed number of counts, assuming the counts are independent, is <span class="math inline">\(\left (\Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right ) \right )^{K_{1r}}\)</span>. Similarly, the probability of observing counts in diseased case bin <span class="math inline">\(r\)</span> is <span class="math inline">\(\left (\Phi\left ( b\zeta_{r+1}-a \right ) - \Phi\left ( b\zeta_r-a \right ) \right )^{K_{2r}}\)</span>, subject to the same independence assumption. The probability of simultaneously observing <span class="math inline">\(K_{1r}\)</span> counts in non-diseased case bin r and <span class="math inline">\(K_{2r}\)</span> counts in diseased case bin <span class="math inline">\(r\)</span> is the product of these individual probabilities (again, an independence assumption is being used):</p>
+<p><span class="math display">\[\begin{equation*} 
+\left (\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )  \right )^{K_{1r}} \left (\Phi\left ( b\zeta_{r+1}-a  \right ) - \Phi\left ( b\zeta_r-a  \right )  \right )^{K_{2r}}
+\end{equation*}\]</span></p>
+<p>Similar expressions apply for all integer values of <span class="math inline">\(r\)</span> ranging from <span class="math inline">\(1,2,...,R\)</span>. Therefore the probability of observing the entire data set is the product of expressions like Eqn. (6.4.5), over all values of <span class="math inline">\(r\)</span>:</p>
+<p><span class="math display">\[\begin{equation*} 
+\prod_{r=1}^{R}\left [\left (\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )  \right )^{K_{1r}} \left (\Phi\left ( b\zeta_{r+1}-a  \right ) - \Phi\left ( b\zeta_r-a  \right )  \right )^{K_{2r}}  \right ]
+\end{equation*}\]</span></p>
+<p>We are almost there. A specific combination of <span class="math inline">\(K_{11},K_{12},...,K_{1R}\)</span> counts from <span class="math inline">\(K_1\)</span> non-diseased cases and counts <span class="math inline">\(K_{21},K_{22},...,K_{2R}\)</span> from <span class="math inline">\(K_2\)</span> diseased cases can occur the following number of times (given by the multinomial factor shown below):</p>
+<p><span class="math display">\[\begin{equation*} 
+\frac{K_1!}{\prod_{r=1}^{R}K_{1r}!}\frac{K_2!}{\prod_{r=1}^{R}K_{2r}!}
+\end{equation*}\]</span></p>
+<p>The likelihood function is the product of Eqn. (6.4.6) and Eqn. (6.4.7):</p>
+<p><span class="math display">\[\begin{equation*} 
+L\left ( a,b,\overrightarrow{\zeta} \right ) = \left (\frac{K_1!}{\prod_{r=1}^{R}K_{1r}!}\frac{K_2!}{\prod_{r=1}^{R}K_{2r}!}  \right )\times \\
+\prod_{r=1}^{R}\left [\left (\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )  \right )^{K_{1r}} \left (\Phi\left ( b\zeta_{r+1}-a  \right ) - \Phi\left ( b\zeta_r-a  \right )  \right )^{K_{2r}}  \right ]
+\end{equation*}\]</span></p>
+<p>The left hand side of Eqn. (6.4.8) explicitly shows the dependence of the likelihood function on the parameters of the model, namely <span class="math inline">\(a,b,\overrightarrow{\zeta}\)</span>, where the vector of thresholds is a compact notation for the set of thresholds <span class="math inline">\(\zeta_1,\zeta_2,...,\zeta_R,\)</span> (note that since <span class="math inline">\(\zeta_0 = -\infty\)</span>, and <span class="math inline">\(\zeta_R = +\infty\)</span>, only <span class="math inline">\(R-1\)</span> free threshold parameters are involved, and the total number of free parameters in the model is <span class="math inline">\(R+1\)</span>). For example, for a 5-rating ROC study, the total number of free parameters is 6, i.e., <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> and 4 thresholds.</p>
+<p>Eqn. (6.4.8) is forbidding but here comes a simplification. The difference of probabilities such as <span class="math inline">\(\Phi\left ( \zeta_r \right )-\Phi\left ( \zeta_{r-1} \right )\)</span> is guaranteed to be positive and less than one: the <span class="math inline">\(\Phi\)</span> function is a probability, i.e., in the range 0 to 1, and since <span class="math inline">\(\zeta_r\)</span> is greater than <span class="math inline">\(\zeta_{r-1}\)</span>, the difference is positive and less than one. When the difference is raised to the power of <span class="math inline">\(K_{1r}\)</span> (a non-negative integer) a very small number can result. Multiplication of all these small numbers may result in an even smaller number, which may be too small to be represented as a floating-point value, especially as the number of counts increases. To prevent this we resort to a trick. Instead of maximizing the likelihood function <span class="math inline">\(L\left ( a,b,\overrightarrow{\zeta} \right )\)</span> we choose to maximize the logarithm of the likelihood function (the base of the logarithm is immaterial). The logarithm of the likelihood function is:</p>
+<p><span class="math display">\[\begin{equation*} 
+LL\left ( a,b,\overrightarrow{\zeta} \right )=\log \left ( L\left ( a,b,\overrightarrow{\zeta} \right ) \right )
+\end{equation*}\]</span></p>
+<p>Since the logarithm is a monotonically increasing function of its argument, maximizing the logarithm of the likelihood function is equivalent to maximizing the likelihood function. Taking the logarithm converts the product symbols in Eqn. (6.4.8) to summations, so instead of multiplying small numbers one is adding them, thereby avoiding underflow errors. Another simplification is that one can ignore the logarithm of the multinomial factor involving the factorials, because these do not depend on the parameters of the model. Putting all this together, we get the following expression for the logarithm of the likelihood function:</p>
+<p><span class="math display">\[\begin{equation*} 
+LL\left ( a,b,\overrightarrow{\zeta} \right ) \propto \\
+\sum_{r=1}^{R} K_{1r}\log \left ( \Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right ) \right ) + \\
+\sum_{r=1}^{R} K_{2r}\log \left ( \Phi\left (b \zeta_{r+1} - a \right ) - \Phi\left ( b \zeta_r - a \right ) \right ) 
+\end{equation*}\]</span></p>
+<p>If one looks carefully at the left hand side of Eqn. (6.4.10) one sees that it is a function of the model parameters <span class="math inline">\(a,b,\overrightarrow{\zeta}\)</span> and the observed data, the latter being the counts contained in the vectors  and , where the vector notation is used as a compact form for the counts <span class="math inline">\(K_{11},K_{12},...,K_{1R}\)</span> and <span class="math inline">\(K_{21},K_{22},...,K_{2R}\)</span>, respectively. The right hand side of Eqn. (6.4.10) is monotonically related to the probability of observing the data given the model parameters <span class="math inline">\(a,b,\overrightarrow{\zeta}\)</span>. If the choice of model parameters is poor, then the probability of observing the data will be small and log likelihood will be small. With a better choice of model parameters the probability and log likelihood will increase. With optimal choice of model parameters the probability and log likelihood will be maximized, and the corresponding optimal values of the model parameters are called maximum likelihood estimates (MLEs). These are the estimates produced by the programs RSCORE and ROCFIT.</p>
+<div id="code-implementing-mle" class="section level3" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> Code implementing MLE</h3>
 </div>
-<div id="maximum-likelihood-estimation-mle" class="section level2" number="5.4">
-<h2><span class="header-section-number">5.4</span> Maximum likelihood estimation (MLE)</h2>
-<div id="validating-the-fitting-model" class="section level3" number="5.4.1">
-<h3><span class="header-section-number">5.4.1</span> Validating the fitting model</h3>
+<div id="validating-the-fitting-model" class="section level3" number="5.3.2">
+<h3><span class="header-section-number">5.3.2</span> Validating the fitting model</h3>
 </div>
-<div id="estimating-the-covariance-matrix" class="section level3" number="5.4.2">
-<h3><span class="header-section-number">5.4.2</span> Estimating the covariance matrix</h3>
+<div id="estimating-the-covariance-matrix" class="section level3" number="5.3.3">
+<h3><span class="header-section-number">5.3.3</span> Estimating the covariance matrix</h3>
 </div>
-<div id="estimating-the-variance-of-az" class="section level3" number="5.4.3">
-<h3><span class="header-section-number">5.4.3</span> Estimating the variance of Az</h3>
+<div id="estimating-the-variance-of-az" class="section level3" number="5.3.4">
+<h3><span class="header-section-number">5.3.4</span> Estimating the variance of Az</h3>
 </div>
 </div>
-<div id="discussion" class="section level2" number="5.5">
-<h2><span class="header-section-number">5.5</span> Discussion</h2>
+<div id="discussion" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Discussion</h2>
 <p>I have tried to take out some of the mystery about how the binormal model is used to estimate parameters. A good understanding of this chapter should enable the reader to better understand alternative ROC models, discussed in a later chapter.</p>
 <p>It has been stated without explanation that the b-parameter of the binormal model is generally observed to be less than one, consistent with the diseased distribution being wider than the non-diseased one. The ROC literature is largely silent on the reason for this finding. One reason, namely location uncertainty, is presented in Chapter “Predictions of the RSM”, where RSM stands for Radiological Search Model. Basically, if the location of the lesion is unknown, then z-samples from diseased cases can be of two types, samples from the correct lesion location, or samples from other non-lesion locations. The resulting mixture distribution will then appear to have larger variance than the corresponding samples from non-diseased cases. This type of mixing need not be restricted to location uncertainty. Even is location is known, if the lesions are non-homogenous (e.g., they contain a range of contrasts) then a similar mixture-distribution induced broadening is expected.</p>
 <p>The fact that the b-parameter is less than unity implies that the predicted ROC curve is improper, meaning its slope is not monotone decreasing as the operating point moves up the curve. The result is that a portion of the curve, near (1,1) that crosses the chance-diagonal and hooks upward approaching (1,1) with infinite slope. Ways of fitting proper ROC curves are described in Chapter “Other proper ROC models”. Usually the hook is not readily visible, which has been used as an excuse to ignore the problem. For example, in Fig. 6.4, one would have to “zoom-in” on the upper right corner to see it, but the reader should make no mistake about it, the hook is there as .</p>
@@ -683,8 +729,8 @@ S  = \sum_{i=1}^{R-1}\left ( y_i - \left ( a + bx_i \right ) \right )^2
 <p>The unphysical nature of the hook (predicting worse than chance-level performance for supposedly expert readers) is not the only reason for seeking alternate ROC models. The binormal model is susceptible to degeneracy problems. If the dataset does not provide any interior operating points (i.e., all observed points lie on the axes defined by FPF = 0 or TPF = 1) then the model fits these points with b = 0. The resulting straight-line segment fits do not make physical sense. These problems are addressed by the contaminated binormal model16 to be discussed in Chapter “Other proper ROC models”. The first paper in the series has particularly readable accounts of data degeneracy.</p>
 <p>To this day the binormal model is widely used to fit ROC datasets. In spite of its limitations, the binormal model has been very useful in bringing a level of quantification to this field that did not exist prior to the work3 by Dorfman and Alf.</p>
 </div>
-<div id="references-2" class="section level2" number="5.6">
-<h2><span class="header-section-number">5.6</span> References</h2>
+<div id="references-2" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> References</h2>
 
 </div>
 </div>
