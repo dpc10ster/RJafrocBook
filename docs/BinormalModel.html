@@ -179,8 +179,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2.4" data-path="BinormalModel.html"><a href="BinormalModel.html#properties-of-the-binormal-model-roc-curve"><i class="fa fa-check"></i><b>5.2.4</b> Properties of the binormal model ROC curve</a></li>
 <li class="chapter" data-level="5.2.5" data-path="BinormalModel.html"><a href="BinormalModel.html#pdfs-of-the-binormal-model"><i class="fa fa-check"></i><b>5.2.5</b> pdfs of the binormal model</a></li>
 <li class="chapter" data-level="5.2.6" data-path="BinormalModel.html"><a href="BinormalModel.html#a-fitted-roc-curve"><i class="fa fa-check"></i><b>5.2.6</b> A fitted ROC curve</a></li>
+<li class="chapter" data-level="5.2.7" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation"><i class="fa fa-check"></i><b>5.2.7</b> Least-squares estimation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation"><i class="fa fa-check"></i><b>5.3</b> Least-squares estimation</a></li>
+<li class="chapter" data-level="5.3" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation-1"><i class="fa fa-check"></i><b>5.3</b> Least-squares estimation</a></li>
 <li class="chapter" data-level="5.4" data-path="BinormalModel.html"><a href="BinormalModel.html#maximum-likelihood-estimation-mle"><i class="fa fa-check"></i><b>5.4</b> Maximum likelihood estimation (MLE)</a>
 <ul>
 <li class="chapter" data-level="5.4.1" data-path="BinormalModel.html"><a href="BinormalModel.html#validating-the-fitting-model"><i class="fa fa-check"></i><b>5.4.1</b> Validating the fitting model</a></li>
@@ -610,9 +611,55 @@ pdf_D\left ( \zeta \right ) = b\phi\left ( b\zeta-a \right ) = \frac{b}{\sqrt{2 
 </div>
 <div id="a-fitted-roc-curve" class="section level3" number="5.2.6">
 <h3><span class="header-section-number">5.2.6</span> A fitted ROC curve</h3>
+<p>To be described next is a method for fitting data such as in Table 6.1 to the binormal model, i.e., determining the parameters <span class="math inline">\(a,b\)</span> and the thresholds <span class="math inline">\(\zeta_r , r = 1, 2, ..., R-1\)</span>, to best fit, in some to-be-defined sense, the observed cell counts. The most common method uses an algorithm called maximum likelihood. But before getting to that, I describe the least-square method, which is conceptually the simplest, but is not really applicable for this type of fitting.</p>
+</div>
+<div id="least-squares-estimation" class="section level3" number="5.2.7">
+<h3><span class="header-section-number">5.2.7</span> Least-squares estimation</h3>
+<p>By applying the function <span class="math inline">\(\Phi^{-1}\)</span> to both sides of Eqn. (6.2.17), one gets (the “inverse” function cancels the “forward” function on the right hand side):</p>
+<p><span class="math display">\[\begin{equation*} 
+\Phi^{-1}\left ( TPF \right ) = a + b \Phi^{-1}\left ( FPF \right )
+\end{equation*}\]</span></p>
+<p>This suggests that a plot of <span class="math inline">\(y = \Phi^{-1}\left ( TPF \right )\)</span> vs. <span class="math inline">\(\Phi^{-1}\left ( FPF \right )\)</span> is expected to follow a straight line with slope b and intercept a. Fitting a straight line to such data is generally performed by the method of least-squares, a capability present in most software packages and even spreadsheets, e.g., Excel. Alternatively one can simply visually draw the best straight line that fits the points, memorably referred to7 as “chi-by-eye”. This was the way parameters of the binormal model were estimated prior to Dorfman and Alf’s work3. The least-squares method is a quantitative way of accomplishing the same aim. If <span class="math inline">\(\left ( x_t,y_t \right )\)</span> are the data points, one constructs <span class="math inline">\(S\)</span>, the sum of the squared deviations of the observed ordinates from the predicted values:</p>
+<p><span class="math display">\[\begin{equation*} 
+S  = \sum_{i=1}^{R-1}\left ( y_i - \left ( a + bx_i \right ) \right )^2
+\end{equation*}\]</span></p>
+<p>The idea is to minimize S with respect to the parameters <span class="math inline">\((a,b)\)</span>. One approach is to differentiate this with respect to <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> and equate each resulting derivate expression to zero. This yields two equations in two unknowns, which are solved for <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. If the reader has never done this before, one should go through these steps at least once, but it would be smarter in future to use software that does all this. In <code>R</code> the least-squares fitting function is <code>lm(y~x)</code>, which in its simplest form fits a linear model using the method of least-squares (in case you are wondering lm stands for linear model, a whole branch of statistics in itself; in this example one is using its simplest capability).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="BinormalModel.html#cb9-1"></a><span class="co"># ML estimates of a and b (from Eng JAVA program)</span></span>
+<span id="cb9-2"><a href="BinormalModel.html#cb9-2"></a><span class="co"># a &lt;- 1.3204; b &lt;- 0.6075 # these are not used in program; just there for comparison</span></span>
+<span id="cb9-3"><a href="BinormalModel.html#cb9-3"></a></span>
+<span id="cb9-4"><a href="BinormalModel.html#cb9-4"></a>FPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.017</span>, <span class="fl">0.050</span>, <span class="fl">0.183</span>, <span class="fl">0.5</span>)  <span class="co"># this is from Table 6.11, last two rows</span></span>
+<span id="cb9-5"><a href="BinormalModel.html#cb9-5"></a>TPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.440</span>, <span class="fl">0.680</span>, <span class="fl">0.780</span>, <span class="fl">0.900</span>)<span class="co"># ...do...</span></span>
+<span id="cb9-6"><a href="BinormalModel.html#cb9-6"></a></span>
+<span id="cb9-7"><a href="BinormalModel.html#cb9-7"></a>phiInvFPF &lt;-<span class="st"> </span><span class="kw">qnorm</span>(FPF)<span class="co"># apply the PHI_INV function</span></span>
+<span id="cb9-8"><a href="BinormalModel.html#cb9-8"></a>phiInvTPF &lt;-<span class="st"> </span><span class="kw">qnorm</span>(TPF)<span class="co"># ... do ... </span></span>
+<span id="cb9-9"><a href="BinormalModel.html#cb9-9"></a></span>
+<span id="cb9-10"><a href="BinormalModel.html#cb9-10"></a>fit &lt;-<span class="st"> </span><span class="kw">lm</span>(phiInvTPF<span class="op">~</span>phiInvFPF)</span>
+<span id="cb9-11"><a href="BinormalModel.html#cb9-11"></a><span class="kw">print</span>(fit)</span>
+<span id="cb9-12"><a href="BinormalModel.html#cb9-12"></a><span class="co">#&gt; </span></span>
+<span id="cb9-13"><a href="BinormalModel.html#cb9-13"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb9-14"><a href="BinormalModel.html#cb9-14"></a><span class="co">#&gt; lm(formula = phiInvTPF ~ phiInvFPF)</span></span>
+<span id="cb9-15"><a href="BinormalModel.html#cb9-15"></a><span class="co">#&gt; </span></span>
+<span id="cb9-16"><a href="BinormalModel.html#cb9-16"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb9-17"><a href="BinormalModel.html#cb9-17"></a><span class="co">#&gt; (Intercept)    phiInvFPF  </span></span>
+<span id="cb9-18"><a href="BinormalModel.html#cb9-18"></a><span class="co">#&gt;      1.3288       0.6307</span></span>
+<span id="cb9-19"><a href="BinormalModel.html#cb9-19"></a>pointsData &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">phiInvFPF =</span> phiInvFPF, <span class="dt">phiInvTPF =</span> phiInvTPF)</span>
+<span id="cb9-20"><a href="BinormalModel.html#cb9-20"></a>pointsPlot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> pointsData, </span>
+<span id="cb9-21"><a href="BinormalModel.html#cb9-21"></a>  <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> phiInvFPF, <span class="dt">y =</span> phiInvTPF)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">5</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb9-22"><a href="BinormalModel.html#cb9-22"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">25</span>,<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb9-23"><a href="BinormalModel.html#cb9-23"></a>        <span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">30</span>,<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>)) <span class="op">+</span></span>
+<span id="cb9-24"><a href="BinormalModel.html#cb9-24"></a><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> fit<span class="op">$</span>coefficients[<span class="dv">2</span>], <span class="dt">intercept =</span> fit<span class="op">$</span>coefficients[<span class="dv">1</span>], <span class="dt">size =</span> <span class="dv">2</span>)</span>
+<span id="cb9-25"><a href="BinormalModel.html#cb9-25"></a><span class="kw">print</span>(pointsPlot)</span></code></pre></div>
+<p><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Thsi plot shows operating points from Table 1, transformed by the <span class="math inline">\(\Phi^{-1}\)</span> function; the slope of the line is the least-squares estimate of the <span class="math inline">\(b\)</span> parameter and the intercept is the corresponding <span class="math inline">\(a\)</span> parameter of the binormal model.</p>
+<p>The first two lines of the output are simply a reminder about the names of the dependent and independent variables. The last line contains the least squares estimated values, <span class="math inline">\(a\)</span> = 1.3288 and <span class="math inline">\(b\)</span> = 0.6307. The corresponding maximum likelihood estimates of these parameters, as yielded by the Eng web code, Appendix B, are listed in line 4 of the main program: <span class="math inline">\(a\)</span> = 1.3204 and <span class="math inline">\(b\)</span> = 0.6075. The estimates appear to be close, particularly the estimate of <span class="math inline">\(a\)</span> , but there are a few things wrong with the least-squares approach. First, the method of least squares assumes that the data points are independent. Because of the manner in which they are constructed, namely by cumulating points, the independence assumption is not valid for ROC operating points. Cumulating the 4 and 5 responses constrains the resulting operating point to be above and to the right of the point obtained by cumulating the 5 responses only, so the data points are definitely not independent. Similarly, cumulating the 3, 4 and 5 responses constrains the resulting operating point to be above and to the right of the point obtained by cumulating the 4 and 5 responses, and so on. The second problem is the linear least-squares method assumes there is no error in measuring x; the only source of error that is accounted for is in the y-coordinate. In fact, both coordinates of an ROC operating point are subject to sampling error. Third, disregard of error in the x-direction is further implicit in the estimates of the thresholds, which according to Eqn. (6.2.19), is given by:</p>
+<p><span class="math display">\[\begin{equation*} 
+\zeta_r = - \Phi^{-1}\left ( FPF_r \right )
+\end{equation*}\]</span></p>
+<p>These are “rigid” estimates that assume no error in the FPF values. As was shown in Chapter “Modeling Binary Paradigm”, these are finite sample based estimates, subject to 95% confidence intervals.</p>
+<p>[A historical note: prior to computers and easy access to statistical functions the analyst had to use a special plotting paper, termed “double probability paper”, that converted probabilities into x and y distances using the inverse function. The complement of the inverse function is sometimes termed the z-deviate.4 Since this term confused me when I entered this field ca. 1985, and it confuses me even now, I will not use it further.]</p>
 </div>
 </div>
-<div id="least-squares-estimation" class="section level2" number="5.3">
+<div id="least-squares-estimation-1" class="section level2" number="5.3">
 <h2><span class="header-section-number">5.3</span> Least-squares estimation</h2>
 </div>
 <div id="maximum-likelihood-estimation-mle" class="section level2" number="5.4">

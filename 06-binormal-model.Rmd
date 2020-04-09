@@ -285,7 +285,55 @@ Generation of pdfs for specified values of binormal model parameters was illustr
 
 
 ### A fitted ROC curve
+To be described next is a method for fitting data such as in Table 6.1 to the binormal model, i.e., determining the parameters $a,b$ and the thresholds $\zeta_r , r = 1, 2, ..., R-1$, to best fit, in some to-be-defined sense, the observed cell counts. The most common method uses an algorithm called maximum likelihood. But before getting to that, I describe the least-square method, which is conceptually the simplest, but is not really applicable for this type of fitting.
 
+### Least-squares estimation
+By applying the function $\Phi^{-1}$  to both sides of Eqn. (6.2.17), one gets (the "inverse" function cancels the "forward" function on the right hand side):
+
+\begin{equation*} 
+\Phi^{-1}\left ( TPF \right ) = a + b \Phi^{-1}\left ( FPF \right )
+\end{equation*}
+
+This suggests that a plot of $y = \Phi^{-1}\left ( TPF \right )$  vs. $\Phi^{-1}\left ( FPF \right )$ is expected to follow a straight line with slope b and intercept a. Fitting a straight line to such data is generally performed by the method of least-squares, a capability present in most software packages and even spreadsheets, e.g., Excel. Alternatively one can simply visually draw the best straight line that fits the points, memorably referred to7 as "chi-by-eye". This was the way parameters of the binormal model were estimated prior to Dorfman and Alf's work3. The least-squares method is a quantitative way of accomplishing the same aim. If $\left ( x_t,y_t \right )$ are the data points, one constructs $S$, the sum of the squared deviations of the observed ordinates from the predicted values:
+
+\begin{equation*} 
+S  = \sum_{i=1}^{R-1}\left ( y_i - \left ( a + bx_i \right ) \right )^2
+\end{equation*} 
+
+The idea is to minimize S with respect to the parameters $(a,b)$. One approach is to differentiate this with respect to $a$ and $b$ and equate each resulting derivate expression to zero. This yields two equations in two unknowns, which are solved for $a$ and $b$. If the reader has never done this before, one should go through these steps at least once, but it would be smarter in future to use software that does all this. In `R` the least-squares fitting function is `lm(y~x)`, which in its simplest form fits a linear model   using the method of least-squares (in case you are wondering lm stands for linear model, a whole branch of statistics in itself; in this example one is using its simplest capability).
+
+```{r, fig.show='hold'}
+# ML estimates of a and b (from Eng JAVA program)
+# a <- 1.3204; b <- 0.6075 # these are not used in program; just there for comparison
+
+FPF <- c(0.017, 0.050, 0.183, 0.5)  # this is from Table 6.11, last two rows
+TPF <- c(0.440, 0.680, 0.780, 0.900)# ...do...
+
+phiInvFPF <- qnorm(FPF)# apply the PHI_INV function
+phiInvTPF <- qnorm(TPF)# ... do ... 
+
+fit <- lm(phiInvTPF~phiInvFPF)
+print(fit)
+pointsData <- data.frame(phiInvFPF = phiInvFPF, phiInvTPF = phiInvTPF)
+pointsPlot <- ggplot(data = pointsData, 
+  mapping = aes(x = phiInvFPF, y = phiInvTPF)) + geom_point(size = 5) + 
+  theme(axis.title.y = element_text(size = 25,face="bold"),
+        axis.title.x = element_text(size = 30,face="bold")) +
+  geom_abline(slope = fit$coefficients[2], intercept = fit$coefficients[1], size = 2)
+print(pointsPlot)
+```             
+
+Thsi plot shows operating points from Table 1, transformed by the $\Phi^{-1}$ function; the slope of the line is the least-squares estimate of the $b$ parameter and the intercept is the corresponding $a$ parameter of the binormal model.
+
+The first two lines of the output are simply a reminder about the names of the dependent and independent variables. The last line contains the least squares estimated values, $a$ = 1.3288 and $b$ = 0.6307. The corresponding maximum likelihood estimates of these parameters, as yielded by the Eng web code, Appendix B, are listed in line 4 of the main program: $a$ = 1.3204 and $b$ = 0.6075. The estimates appear to be close, particularly the estimate of $a$ , but there are a few things wrong with the least-squares approach. First, the method of least squares assumes that the data points are independent. Because of the manner in which they are constructed, namely by cumulating points, the independence assumption is not valid for ROC operating points. Cumulating the 4 and 5 responses constrains the resulting operating point to be above and to the right of the point obtained by cumulating the 5 responses only, so the data points are definitely not independent. Similarly, cumulating the 3, 4 and 5 responses constrains the resulting operating point to be above and to the right of the point obtained by cumulating the 4 and 5 responses, and so on. The second problem is the linear least-squares method assumes there is no error in measuring x; the only source of error that is accounted for is in the y-coordinate. In fact, both coordinates of an ROC operating point are subject to sampling error. Third, disregard of error in the x-direction is further implicit in the estimates of the thresholds, which according to Eqn. (6.2.19), is given by:
+
+\begin{equation*} 
+\zeta_r = - \Phi^{-1}\left ( FPF_r \right )
+\end{equation*} 
+
+These are "rigid" estimates that assume no error in the FPF values. As was shown in Chapter "Modeling Binary Paradigm", these are finite sample based estimates, subject to 95% confidence intervals.
+
+[A historical note: prior to computers and easy access to statistical functions the analyst had to use a special plotting paper, termed “double probability paper”, that converted probabilities into x and y distances using the inverse function. The complement of the inverse function is sometimes termed the z-deviate.4 Since this term confused me when I entered this field ca. 1985, and it confuses me even now, I will not use it further.]
 
 
 ## Least-squares estimation

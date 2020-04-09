@@ -179,8 +179,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2.4" data-path="BinormalModel.html"><a href="BinormalModel.html#properties-of-the-binormal-model-roc-curve"><i class="fa fa-check"></i><b>5.2.4</b> Properties of the binormal model ROC curve</a></li>
 <li class="chapter" data-level="5.2.5" data-path="BinormalModel.html"><a href="BinormalModel.html#pdfs-of-the-binormal-model"><i class="fa fa-check"></i><b>5.2.5</b> pdfs of the binormal model</a></li>
 <li class="chapter" data-level="5.2.6" data-path="BinormalModel.html"><a href="BinormalModel.html#a-fitted-roc-curve"><i class="fa fa-check"></i><b>5.2.6</b> A fitted ROC curve</a></li>
+<li class="chapter" data-level="5.2.7" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation"><i class="fa fa-check"></i><b>5.2.7</b> Least-squares estimation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation"><i class="fa fa-check"></i><b>5.3</b> Least-squares estimation</a></li>
+<li class="chapter" data-level="5.3" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation-1"><i class="fa fa-check"></i><b>5.3</b> Least-squares estimation</a></li>
 <li class="chapter" data-level="5.4" data-path="BinormalModel.html"><a href="BinormalModel.html#maximum-likelihood-estimation-mle"><i class="fa fa-check"></i><b>5.4</b> Maximum likelihood estimation (MLE)</a>
 <ul>
 <li class="chapter" data-level="5.4.1" data-path="BinormalModel.html"><a href="BinormalModel.html#validating-the-fitting-model"><i class="fa fa-check"></i><b>5.4.1</b> Validating the fitting model</a></li>
@@ -470,22 +471,22 @@ a <em>JAFROC</em> format Excel file to create an <code>RJafroc</code> dataset.</
 <div id="an-roc-dataset" class="section level2" number="10.2">
 <h2><span class="header-section-number">10.2</span> An ROC dataset</h2>
 <p>Dataset <code>dataset03</code> corresponding to the Franken ROC data <span class="citation">(Franken et al. <a href="#ref-RN1995" role="doc-biblioref">1992</a>)</span> is predefined. The following code shows the structure of this dataset.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="QuickStartDBM1.html#cb34-1"></a><span class="kw">str</span>(dataset03)</span>
-<span id="cb34-2"><a href="QuickStartDBM1.html#cb34-2"></a><span class="co">#&gt; List of 12</span></span>
-<span id="cb34-3"><a href="QuickStartDBM1.html#cb34-3"></a><span class="co">#&gt;  $ NL           : num [1:2, 1:4, 1:100, 1] 3 3 4 3 3 3 4 1 1 3 ...</span></span>
-<span id="cb34-4"><a href="QuickStartDBM1.html#cb34-4"></a><span class="co">#&gt;  $ LL           : num [1:2, 1:4, 1:67, 1] 5 5 4 4 5 4 4 5 2 2 ...</span></span>
-<span id="cb34-5"><a href="QuickStartDBM1.html#cb34-5"></a><span class="co">#&gt;  $ lesionVector : num [1:67] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb34-6"><a href="QuickStartDBM1.html#cb34-6"></a><span class="co">#&gt;  $ lesionID     : num [1:67, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb34-7"><a href="QuickStartDBM1.html#cb34-7"></a><span class="co">#&gt;  $ lesionWeight : num [1:67, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb34-8"><a href="QuickStartDBM1.html#cb34-8"></a><span class="co">#&gt;  $ dataType     : chr &quot;ROC&quot;</span></span>
-<span id="cb34-9"><a href="QuickStartDBM1.html#cb34-9"></a><span class="co">#&gt;  $ modalityID   : Named chr [1:2] &quot;TREAT1&quot; &quot;TREAT2&quot;</span></span>
-<span id="cb34-10"><a href="QuickStartDBM1.html#cb34-10"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;TREAT1&quot; &quot;TREAT2&quot;</span></span>
-<span id="cb34-11"><a href="QuickStartDBM1.html#cb34-11"></a><span class="co">#&gt;  $ readerID     : Named chr [1:4] &quot;READER_1&quot; &quot;READER_2&quot; &quot;READER_3&quot; &quot;READER_4&quot;</span></span>
-<span id="cb34-12"><a href="QuickStartDBM1.html#cb34-12"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;READER_1&quot; &quot;READER_2&quot; &quot;READER_3&quot; &quot;READER_4&quot;</span></span>
-<span id="cb34-13"><a href="QuickStartDBM1.html#cb34-13"></a><span class="co">#&gt;  $ design       : chr &quot;CROSSED&quot;</span></span>
-<span id="cb34-14"><a href="QuickStartDBM1.html#cb34-14"></a><span class="co">#&gt;  $ normalCases  : int [1:33] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
-<span id="cb34-15"><a href="QuickStartDBM1.html#cb34-15"></a><span class="co">#&gt;  $ abnormalCases: int [1:67] 34 35 36 37 38 39 40 41 42 43 ...</span></span>
-<span id="cb34-16"><a href="QuickStartDBM1.html#cb34-16"></a><span class="co">#&gt;  $ truthTableStr: num [1:2, 1:4, 1:100, 1:2] 1 1 1 1 1 1 1 1 1 1 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="QuickStartDBM1.html#cb35-1"></a><span class="kw">str</span>(dataset03)</span>
+<span id="cb35-2"><a href="QuickStartDBM1.html#cb35-2"></a><span class="co">#&gt; List of 12</span></span>
+<span id="cb35-3"><a href="QuickStartDBM1.html#cb35-3"></a><span class="co">#&gt;  $ NL           : num [1:2, 1:4, 1:100, 1] 3 3 4 3 3 3 4 1 1 3 ...</span></span>
+<span id="cb35-4"><a href="QuickStartDBM1.html#cb35-4"></a><span class="co">#&gt;  $ LL           : num [1:2, 1:4, 1:67, 1] 5 5 4 4 5 4 4 5 2 2 ...</span></span>
+<span id="cb35-5"><a href="QuickStartDBM1.html#cb35-5"></a><span class="co">#&gt;  $ lesionVector : num [1:67] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb35-6"><a href="QuickStartDBM1.html#cb35-6"></a><span class="co">#&gt;  $ lesionID     : num [1:67, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb35-7"><a href="QuickStartDBM1.html#cb35-7"></a><span class="co">#&gt;  $ lesionWeight : num [1:67, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb35-8"><a href="QuickStartDBM1.html#cb35-8"></a><span class="co">#&gt;  $ dataType     : chr &quot;ROC&quot;</span></span>
+<span id="cb35-9"><a href="QuickStartDBM1.html#cb35-9"></a><span class="co">#&gt;  $ modalityID   : Named chr [1:2] &quot;TREAT1&quot; &quot;TREAT2&quot;</span></span>
+<span id="cb35-10"><a href="QuickStartDBM1.html#cb35-10"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;TREAT1&quot; &quot;TREAT2&quot;</span></span>
+<span id="cb35-11"><a href="QuickStartDBM1.html#cb35-11"></a><span class="co">#&gt;  $ readerID     : Named chr [1:4] &quot;READER_1&quot; &quot;READER_2&quot; &quot;READER_3&quot; &quot;READER_4&quot;</span></span>
+<span id="cb35-12"><a href="QuickStartDBM1.html#cb35-12"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;READER_1&quot; &quot;READER_2&quot; &quot;READER_3&quot; &quot;READER_4&quot;</span></span>
+<span id="cb35-13"><a href="QuickStartDBM1.html#cb35-13"></a><span class="co">#&gt;  $ design       : chr &quot;CROSSED&quot;</span></span>
+<span id="cb35-14"><a href="QuickStartDBM1.html#cb35-14"></a><span class="co">#&gt;  $ normalCases  : int [1:33] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
+<span id="cb35-15"><a href="QuickStartDBM1.html#cb35-15"></a><span class="co">#&gt;  $ abnormalCases: int [1:67] 34 35 36 37 38 39 40 41 42 43 ...</span></span>
+<span id="cb35-16"><a href="QuickStartDBM1.html#cb35-16"></a><span class="co">#&gt;  $ truthTableStr: num [1:2, 1:4, 1:100, 1:2] 1 1 1 1 1 1 1 1 1 1 ...</span></span></code></pre></div>
 <ul>
 <li><p>It is a list with 8 members. The false positive ratings are contained in <code>{NL}</code>, an array
 with dimensions <code>[1:2,1:4,1:100,1]</code>. The first index corresponds to treatments, and since the
@@ -501,145 +502,145 @@ through 100 are <code>-Inf</code>: i.e., <code>all(dataset03$NL[1,1,34:100,1] ==
 <li><p>The fields <code>lesionVector</code>, <code>lesionID</code> and <code>lesionWeight</code>, while not needed for ROC data, are needed for the FROC paradigm.</p></li>
 </ul>
 <p>The <code>dataType</code> list member is the character string <code>"ROC"</code>, characterizing the ROC dataset.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="QuickStartDBM1.html#cb35-1"></a>dataset03<span class="op">$</span>dataType</span>
-<span id="cb35-2"><a href="QuickStartDBM1.html#cb35-2"></a><span class="co">#&gt; [1] &quot;ROC&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="QuickStartDBM1.html#cb36-1"></a>dataset03<span class="op">$</span>dataType</span>
+<span id="cb36-2"><a href="QuickStartDBM1.html#cb36-2"></a><span class="co">#&gt; [1] &quot;ROC&quot;</span></span></code></pre></div>
 <p>The <code>modalityID</code> list member is a character string with two entries, <code>"TREAT1"</code> and <code>"TREAT2"</code>, corresponding to the two modalities.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="QuickStartDBM1.html#cb36-1"></a>dataset03<span class="op">$</span>modalityID</span>
-<span id="cb36-2"><a href="QuickStartDBM1.html#cb36-2"></a><span class="co">#&gt;   TREAT1   TREAT2 </span></span>
-<span id="cb36-3"><a href="QuickStartDBM1.html#cb36-3"></a><span class="co">#&gt; &quot;TREAT1&quot; &quot;TREAT2&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="QuickStartDBM1.html#cb37-1"></a>dataset03<span class="op">$</span>modalityID</span>
+<span id="cb37-2"><a href="QuickStartDBM1.html#cb37-2"></a><span class="co">#&gt;   TREAT1   TREAT2 </span></span>
+<span id="cb37-3"><a href="QuickStartDBM1.html#cb37-3"></a><span class="co">#&gt; &quot;TREAT1&quot; &quot;TREAT2&quot;</span></span></code></pre></div>
 <p>The <code>readerID</code> list member is a character string with four entries, <code>"READER_1"</code>, <code>"READER_2"</code>, <code>"READER_3"</code> and <code>"READER_4"</code> corresponding to the four readers.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="QuickStartDBM1.html#cb37-1"></a>dataset03<span class="op">$</span>readerID</span>
-<span id="cb37-2"><a href="QuickStartDBM1.html#cb37-2"></a><span class="co">#&gt;   READER_1   READER_2   READER_3   READER_4 </span></span>
-<span id="cb37-3"><a href="QuickStartDBM1.html#cb37-3"></a><span class="co">#&gt; &quot;READER_1&quot; &quot;READER_2&quot; &quot;READER_3&quot; &quot;READER_4&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="QuickStartDBM1.html#cb38-1"></a>dataset03<span class="op">$</span>readerID</span>
+<span id="cb38-2"><a href="QuickStartDBM1.html#cb38-2"></a><span class="co">#&gt;   READER_1   READER_2   READER_3   READER_4 </span></span>
+<span id="cb38-3"><a href="QuickStartDBM1.html#cb38-3"></a><span class="co">#&gt; &quot;READER_1&quot; &quot;READER_2&quot; &quot;READER_3&quot; &quot;READER_4&quot;</span></span></code></pre></div>
 <p>Here are the actual ratings for cases 1:34.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="QuickStartDBM1.html#cb38-1"></a>dataset03<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">33</span>,<span class="dv">1</span>]</span>
-<span id="cb38-2"><a href="QuickStartDBM1.html#cb38-2"></a><span class="co">#&gt;  [1] 3 1 2 2 2 2 2 4 1 1 4 2 1 2 4 2 1 2 1 2 4 2 3 2 2 2 4 3 2 2 2 5 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="QuickStartDBM1.html#cb39-1"></a>dataset03<span class="op">$</span>NL[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">33</span>,<span class="dv">1</span>]</span>
+<span id="cb39-2"><a href="QuickStartDBM1.html#cb39-2"></a><span class="co">#&gt;  [1] 3 1 2 2 2 2 2 4 1 1 4 2 1 2 4 2 1 2 1 2 4 2 3 2 2 2 4 3 2 2 2 5 3</span></span></code></pre></div>
 <ul>
 <li><p>This says that for treatment 1 and reader 1, (non-diseased) case 1 was rated 3, case 2 was rated 1, cases 3-7 were rated 2, case 8 was rated 4, etc.</p></li>
 <li><p>As another example, for treatment 2 and reader 3, the FP ratings are:</p></li>
 </ul>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="QuickStartDBM1.html#cb39-1"></a>dataset03<span class="op">$</span>NL[<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">33</span>,<span class="dv">1</span>]</span>
-<span id="cb39-2"><a href="QuickStartDBM1.html#cb39-2"></a><span class="co">#&gt;  [1] 3 1 2 2 2 2 4 4 2 3 2 2 1 3 2 4 2 3 2 2 2 2 2 4 2 2 1 2 2 2 2 4 2</span></span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="QuickStartDBM1.html#cb40-1"></a>dataset03<span class="op">$</span>NL[<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">33</span>,<span class="dv">1</span>]</span>
+<span id="cb40-2"><a href="QuickStartDBM1.html#cb40-2"></a><span class="co">#&gt;  [1] 3 1 2 2 2 2 4 4 2 3 2 2 1 3 2 4 2 3 2 2 2 2 2 4 2 2 1 2 2 2 2 4 2</span></span></code></pre></div>
 </div>
 <div id="creating-a-dataset-from-a-jafroc-format-file" class="section level2" number="10.3">
 <h2><span class="header-section-number">10.3</span> Creating a dataset from a JAFROC format file</h2>
 <p>There is a file <code>RocData.xlsx</code> that is part of the package installation. Since it is a system
 file one must get its name as follows.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="QuickStartDBM1.html#cb40-1"></a>fileName &lt;-<span class="st"> &quot;RocData.xlsx&quot;</span></span>
-<span id="cb40-2"><a href="QuickStartDBM1.html#cb40-2"></a>sysFileName &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="kw">paste0</span>(<span class="st">&quot;extdata/&quot;</span>,fileName), <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="QuickStartDBM1.html#cb41-1"></a>fileName &lt;-<span class="st"> &quot;RocData.xlsx&quot;</span></span>
+<span id="cb41-2"><a href="QuickStartDBM1.html#cb41-2"></a>sysFileName &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="kw">paste0</span>(<span class="st">&quot;extdata/&quot;</span>,fileName), <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p>Next, one uses <code>DfReadDataFile()</code> as follows, assuming it is a JAFROC format file.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="QuickStartDBM1.html#cb41-1"></a>ds &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(sysFileName, <span class="dt">newExcelFileFormat =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb41-2"><a href="QuickStartDBM1.html#cb41-2"></a><span class="kw">str</span>(ds)</span>
-<span id="cb41-3"><a href="QuickStartDBM1.html#cb41-3"></a><span class="co">#&gt; List of 12</span></span>
-<span id="cb41-4"><a href="QuickStartDBM1.html#cb41-4"></a><span class="co">#&gt;  $ NL           : num [1:2, 1:5, 1:114, 1] 1 3 2 3 2 2 1 2 3 2 ...</span></span>
-<span id="cb41-5"><a href="QuickStartDBM1.html#cb41-5"></a><span class="co">#&gt;  $ LL           : num [1:2, 1:5, 1:45, 1] 5 5 5 5 5 5 5 5 5 5 ...</span></span>
-<span id="cb41-6"><a href="QuickStartDBM1.html#cb41-6"></a><span class="co">#&gt;  $ lesionVector : int [1:45] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb41-7"><a href="QuickStartDBM1.html#cb41-7"></a><span class="co">#&gt;  $ lesionID     : num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb41-8"><a href="QuickStartDBM1.html#cb41-8"></a><span class="co">#&gt;  $ lesionWeight : num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb41-9"><a href="QuickStartDBM1.html#cb41-9"></a><span class="co">#&gt;  $ dataType     : chr &quot;ROC&quot;</span></span>
-<span id="cb41-10"><a href="QuickStartDBM1.html#cb41-10"></a><span class="co">#&gt;  $ modalityID   : Named chr [1:2] &quot;0&quot; &quot;1&quot;</span></span>
-<span id="cb41-11"><a href="QuickStartDBM1.html#cb41-11"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;0&quot; &quot;1&quot;</span></span>
-<span id="cb41-12"><a href="QuickStartDBM1.html#cb41-12"></a><span class="co">#&gt;  $ readerID     : Named chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></span>
-<span id="cb41-13"><a href="QuickStartDBM1.html#cb41-13"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></span>
-<span id="cb41-14"><a href="QuickStartDBM1.html#cb41-14"></a><span class="co">#&gt;  $ design       : chr &quot;CROSSED&quot;</span></span>
-<span id="cb41-15"><a href="QuickStartDBM1.html#cb41-15"></a><span class="co">#&gt;  $ normalCases  : int [1:69] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
-<span id="cb41-16"><a href="QuickStartDBM1.html#cb41-16"></a><span class="co">#&gt;  $ abnormalCases: int [1:45] 70 71 72 73 74 75 76 77 78 79 ...</span></span>
-<span id="cb41-17"><a href="QuickStartDBM1.html#cb41-17"></a><span class="co">#&gt;  $ truthTableStr: num [1:2, 1:5, 1:114, 1:2] 1 1 1 1 1 1 1 1 1 1 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="QuickStartDBM1.html#cb42-1"></a>ds &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(sysFileName, <span class="dt">newExcelFileFormat =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb42-2"><a href="QuickStartDBM1.html#cb42-2"></a><span class="kw">str</span>(ds)</span>
+<span id="cb42-3"><a href="QuickStartDBM1.html#cb42-3"></a><span class="co">#&gt; List of 12</span></span>
+<span id="cb42-4"><a href="QuickStartDBM1.html#cb42-4"></a><span class="co">#&gt;  $ NL           : num [1:2, 1:5, 1:114, 1] 1 3 2 3 2 2 1 2 3 2 ...</span></span>
+<span id="cb42-5"><a href="QuickStartDBM1.html#cb42-5"></a><span class="co">#&gt;  $ LL           : num [1:2, 1:5, 1:45, 1] 5 5 5 5 5 5 5 5 5 5 ...</span></span>
+<span id="cb42-6"><a href="QuickStartDBM1.html#cb42-6"></a><span class="co">#&gt;  $ lesionVector : int [1:45] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb42-7"><a href="QuickStartDBM1.html#cb42-7"></a><span class="co">#&gt;  $ lesionID     : num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb42-8"><a href="QuickStartDBM1.html#cb42-8"></a><span class="co">#&gt;  $ lesionWeight : num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb42-9"><a href="QuickStartDBM1.html#cb42-9"></a><span class="co">#&gt;  $ dataType     : chr &quot;ROC&quot;</span></span>
+<span id="cb42-10"><a href="QuickStartDBM1.html#cb42-10"></a><span class="co">#&gt;  $ modalityID   : Named chr [1:2] &quot;0&quot; &quot;1&quot;</span></span>
+<span id="cb42-11"><a href="QuickStartDBM1.html#cb42-11"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;0&quot; &quot;1&quot;</span></span>
+<span id="cb42-12"><a href="QuickStartDBM1.html#cb42-12"></a><span class="co">#&gt;  $ readerID     : Named chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></span>
+<span id="cb42-13"><a href="QuickStartDBM1.html#cb42-13"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;0&quot; &quot;1&quot; &quot;2&quot; &quot;3&quot; ...</span></span>
+<span id="cb42-14"><a href="QuickStartDBM1.html#cb42-14"></a><span class="co">#&gt;  $ design       : chr &quot;CROSSED&quot;</span></span>
+<span id="cb42-15"><a href="QuickStartDBM1.html#cb42-15"></a><span class="co">#&gt;  $ normalCases  : int [1:69] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
+<span id="cb42-16"><a href="QuickStartDBM1.html#cb42-16"></a><span class="co">#&gt;  $ abnormalCases: int [1:45] 70 71 72 73 74 75 76 77 78 79 ...</span></span>
+<span id="cb42-17"><a href="QuickStartDBM1.html#cb42-17"></a><span class="co">#&gt;  $ truthTableStr: num [1:2, 1:5, 1:114, 1:2] 1 1 1 1 1 1 1 1 1 1 ...</span></span></code></pre></div>
 <p>Analysis is illustrated for <code>dataset03</code>, but one could have used the newly created dataset <code>ds</code>.</p>
 </div>
 <div id="analyzing-the-roc-dataset" class="section level2" number="10.4">
 <h2><span class="header-section-number">10.4</span> Analyzing the ROC dataset</h2>
 <p>This illustrates the <code>StSignificanceTesting()</code> function. The significance testing method is specified as <code>"DBMH"</code> and the figure of merit <code>FOM</code> is specified as “Wilcoxon”.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="QuickStartDBM1.html#cb42-1"></a>ret &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(dataset03, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;DBMH&quot;</span>)</span>
-<span id="cb42-2"><a href="QuickStartDBM1.html#cb42-2"></a><span class="kw">print</span>(ret)</span>
-<span id="cb42-3"><a href="QuickStartDBM1.html#cb42-3"></a><span class="co">#&gt; $fomArray</span></span>
-<span id="cb42-4"><a href="QuickStartDBM1.html#cb42-4"></a><span class="co">#&gt;           RdrREADER_1 RdrREADER_2 RdrREADER_3 RdrREADER_4</span></span>
-<span id="cb42-5"><a href="QuickStartDBM1.html#cb42-5"></a><span class="co">#&gt; TrtTREAT1   0.8534600   0.8649932   0.8573044   0.8152420</span></span>
-<span id="cb42-6"><a href="QuickStartDBM1.html#cb42-6"></a><span class="co">#&gt; TrtTREAT2   0.8496156   0.8435097   0.8401176   0.8143374</span></span>
-<span id="cb42-7"><a href="QuickStartDBM1.html#cb42-7"></a><span class="co">#&gt; </span></span>
-<span id="cb42-8"><a href="QuickStartDBM1.html#cb42-8"></a><span class="co">#&gt; $anovaY</span></span>
-<span id="cb42-9"><a href="QuickStartDBM1.html#cb42-9"></a><span class="co">#&gt;       Source           SS  DF          MS</span></span>
-<span id="cb42-10"><a href="QuickStartDBM1.html#cb42-10"></a><span class="co">#&gt; 1     Row1_T   0.02356541   1 0.023565410</span></span>
-<span id="cb42-11"><a href="QuickStartDBM1.html#cb42-11"></a><span class="co">#&gt; 2     Row2_R   0.20521800   3 0.068406000</span></span>
-<span id="cb42-12"><a href="QuickStartDBM1.html#cb42-12"></a><span class="co">#&gt; 3     Row3_C  52.52839868  99 0.530589886</span></span>
-<span id="cb42-13"><a href="QuickStartDBM1.html#cb42-13"></a><span class="co">#&gt; 4    Row4_TR   0.01506079   3 0.005020264</span></span>
-<span id="cb42-14"><a href="QuickStartDBM1.html#cb42-14"></a><span class="co">#&gt; 5    Row5_TC   6.41004881  99 0.064747968</span></span>
-<span id="cb42-15"><a href="QuickStartDBM1.html#cb42-15"></a><span class="co">#&gt; 6    Row6_RC  39.24295381 297 0.132131158</span></span>
-<span id="cb42-16"><a href="QuickStartDBM1.html#cb42-16"></a><span class="co">#&gt; 7   Row7_TRC  22.66007764 297 0.076296558</span></span>
-<span id="cb42-17"><a href="QuickStartDBM1.html#cb42-17"></a><span class="co">#&gt; 8 Row8_Total 121.08532315 799          NA</span></span>
-<span id="cb42-18"><a href="QuickStartDBM1.html#cb42-18"></a><span class="co">#&gt; </span></span>
-<span id="cb42-19"><a href="QuickStartDBM1.html#cb42-19"></a><span class="co">#&gt; $anovaYi</span></span>
-<span id="cb42-20"><a href="QuickStartDBM1.html#cb42-20"></a><span class="co">#&gt;   Source  DF  TrtTREAT1  TrtTREAT2</span></span>
-<span id="cb42-21"><a href="QuickStartDBM1.html#cb42-21"></a><span class="co">#&gt; 1      R   3 0.04926635 0.02415991</span></span>
-<span id="cb42-22"><a href="QuickStartDBM1.html#cb42-22"></a><span class="co">#&gt; 2      C  99 0.29396753 0.30137032</span></span>
-<span id="cb42-23"><a href="QuickStartDBM1.html#cb42-23"></a><span class="co">#&gt; 3     RC 297 0.10504787 0.10337984</span></span>
-<span id="cb42-24"><a href="QuickStartDBM1.html#cb42-24"></a><span class="co">#&gt; </span></span>
-<span id="cb42-25"><a href="QuickStartDBM1.html#cb42-25"></a><span class="co">#&gt; $varComp</span></span>
-<span id="cb42-26"><a href="QuickStartDBM1.html#cb42-26"></a><span class="co">#&gt;           varR       varC         varTR        varTC     varRC     varErr</span></span>
-<span id="cb42-27"><a href="QuickStartDBM1.html#cb42-27"></a><span class="co">#&gt; 1 3.775568e-05 0.05125091 -0.0007127629 -0.002887147 0.0279173 0.07629656</span></span>
-<span id="cb42-28"><a href="QuickStartDBM1.html#cb42-28"></a><span class="co">#&gt; </span></span>
-<span id="cb42-29"><a href="QuickStartDBM1.html#cb42-29"></a><span class="co">#&gt; $FTestStatsRRRC</span></span>
-<span id="cb42-30"><a href="QuickStartDBM1.html#cb42-30"></a><span class="co">#&gt;      fRRRC ndfRRRC ddfRRRC     pRRRC</span></span>
-<span id="cb42-31"><a href="QuickStartDBM1.html#cb42-31"></a><span class="co">#&gt; 1 4.694058       1       3 0.1188379</span></span>
-<span id="cb42-32"><a href="QuickStartDBM1.html#cb42-32"></a><span class="co">#&gt; </span></span>
-<span id="cb42-33"><a href="QuickStartDBM1.html#cb42-33"></a><span class="co">#&gt; $ciDiffTrtRRRC</span></span>
-<span id="cb42-34"><a href="QuickStartDBM1.html#cb42-34"></a><span class="co">#&gt;               TrtDiff   Estimate      StdErr DF        t     PrGTt      CILower</span></span>
-<span id="cb42-35"><a href="QuickStartDBM1.html#cb42-35"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627</span></span>
-<span id="cb42-36"><a href="QuickStartDBM1.html#cb42-36"></a><span class="co">#&gt;      CIUpper</span></span>
-<span id="cb42-37"><a href="QuickStartDBM1.html#cb42-37"></a><span class="co">#&gt; 1 0.02679926</span></span>
-<span id="cb42-38"><a href="QuickStartDBM1.html#cb42-38"></a><span class="co">#&gt; </span></span>
-<span id="cb42-39"><a href="QuickStartDBM1.html#cb42-39"></a><span class="co">#&gt; $ciAvgRdrEachTrtRRRC</span></span>
-<span id="cb42-40"><a href="QuickStartDBM1.html#cb42-40"></a><span class="co">#&gt;   Treatment      Area     StdErr        DF   CILower   CIUpper</span></span>
-<span id="cb42-41"><a href="QuickStartDBM1.html#cb42-41"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.02440215  70.12179 0.7990828 0.8964170</span></span>
-<span id="cb42-42"><a href="QuickStartDBM1.html#cb42-42"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.02356642 253.64403 0.7904843 0.8833058</span></span>
-<span id="cb42-43"><a href="QuickStartDBM1.html#cb42-43"></a><span class="co">#&gt; </span></span>
-<span id="cb42-44"><a href="QuickStartDBM1.html#cb42-44"></a><span class="co">#&gt; $FTestStatsFRRC</span></span>
-<span id="cb42-45"><a href="QuickStartDBM1.html#cb42-45"></a><span class="co">#&gt;      fFRRC ndfFRRC ddfFRRC    pFRRC</span></span>
-<span id="cb42-46"><a href="QuickStartDBM1.html#cb42-46"></a><span class="co">#&gt; 1 0.363956       1      99 0.547697</span></span>
-<span id="cb42-47"><a href="QuickStartDBM1.html#cb42-47"></a><span class="co">#&gt; </span></span>
-<span id="cb42-48"><a href="QuickStartDBM1.html#cb42-48"></a><span class="co">#&gt; $ciDiffTrtFRRC</span></span>
-<span id="cb42-49"><a href="QuickStartDBM1.html#cb42-49"></a><span class="co">#&gt;             Treatment   Estimate     StdErr DF         t    PrGTt     CILower</span></span>
-<span id="cb42-50"><a href="QuickStartDBM1.html#cb42-50"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.01799277 99 0.6032876 0.547697 -0.02484675</span></span>
-<span id="cb42-51"><a href="QuickStartDBM1.html#cb42-51"></a><span class="co">#&gt;      CIUpper</span></span>
-<span id="cb42-52"><a href="QuickStartDBM1.html#cb42-52"></a><span class="co">#&gt; 1 0.04655638</span></span>
-<span id="cb42-53"><a href="QuickStartDBM1.html#cb42-53"></a><span class="co">#&gt; </span></span>
-<span id="cb42-54"><a href="QuickStartDBM1.html#cb42-54"></a><span class="co">#&gt; $ciAvgRdrEachTrtFRRC</span></span>
-<span id="cb42-55"><a href="QuickStartDBM1.html#cb42-55"></a><span class="co">#&gt;   Treatment      Area     StdErr DF   CILower   CIUpper</span></span>
-<span id="cb42-56"><a href="QuickStartDBM1.html#cb42-56"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.02710939 99 0.7939590 0.9015408</span></span>
-<span id="cb42-57"><a href="QuickStartDBM1.html#cb42-57"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.02744860 99 0.7824311 0.8913591</span></span>
-<span id="cb42-58"><a href="QuickStartDBM1.html#cb42-58"></a><span class="co">#&gt; </span></span>
-<span id="cb42-59"><a href="QuickStartDBM1.html#cb42-59"></a><span class="co">#&gt; $msAnovaEachRdrFRRC</span></span>
-<span id="cb42-60"><a href="QuickStartDBM1.html#cb42-60"></a><span class="co">#&gt;   Source DF  RdrREADER_1 RdrREADER_2 RdrREADER_3  RdrREADER_4</span></span>
-<span id="cb42-61"><a href="QuickStartDBM1.html#cb42-61"></a><span class="co">#&gt; 1      T  1 0.0007389761  0.02307702  0.01476929 4.091217e-05</span></span>
-<span id="cb42-62"><a href="QuickStartDBM1.html#cb42-62"></a><span class="co">#&gt; 2      C 99 0.2038747746  0.22344191  0.21424677 2.854199e-01</span></span>
-<span id="cb42-63"><a href="QuickStartDBM1.html#cb42-63"></a><span class="co">#&gt; 3     TC 99 0.0915587344  0.08027926  0.06122898 6.057067e-02</span></span>
-<span id="cb42-64"><a href="QuickStartDBM1.html#cb42-64"></a><span class="co">#&gt; </span></span>
-<span id="cb42-65"><a href="QuickStartDBM1.html#cb42-65"></a><span class="co">#&gt; $ciDiffTrtEachRdrFRRC</span></span>
-<span id="cb42-66"><a href="QuickStartDBM1.html#cb42-66"></a><span class="co">#&gt;        Reader           Treatment     Estimate     StdErr DF          t</span></span>
-<span id="cb42-67"><a href="QuickStartDBM1.html#cb42-67"></a><span class="co">#&gt; 1 RdrREADER_1 TrtTREAT1-TrtTREAT2 0.0038444143 0.04279223 99 0.08983908</span></span>
-<span id="cb42-68"><a href="QuickStartDBM1.html#cb42-68"></a><span class="co">#&gt; 2 RdrREADER_2 TrtTREAT1-TrtTREAT2 0.0214834916 0.04006975 99 0.53615233</span></span>
-<span id="cb42-69"><a href="QuickStartDBM1.html#cb42-69"></a><span class="co">#&gt; 3 RdrREADER_3 TrtTREAT1-TrtTREAT2 0.0171867933 0.03499399 99 0.49113552</span></span>
-<span id="cb42-70"><a href="QuickStartDBM1.html#cb42-70"></a><span class="co">#&gt; 4 RdrREADER_4 TrtTREAT1-TrtTREAT2 0.0009045681 0.03480536 99 0.02598933</span></span>
-<span id="cb42-71"><a href="QuickStartDBM1.html#cb42-71"></a><span class="co">#&gt;       PrGTt     CILower    CIUpper</span></span>
-<span id="cb42-72"><a href="QuickStartDBM1.html#cb42-72"></a><span class="co">#&gt; 1 0.9285966 -0.08106465 0.08875348</span></span>
-<span id="cb42-73"><a href="QuickStartDBM1.html#cb42-73"></a><span class="co">#&gt; 2 0.5930559 -0.05802359 0.10099057</span></span>
-<span id="cb42-74"><a href="QuickStartDBM1.html#cb42-74"></a><span class="co">#&gt; 3 0.6244176 -0.05224888 0.08662247</span></span>
-<span id="cb42-75"><a href="QuickStartDBM1.html#cb42-75"></a><span class="co">#&gt; 4 0.9793182 -0.06815683 0.06996596</span></span>
-<span id="cb42-76"><a href="QuickStartDBM1.html#cb42-76"></a><span class="co">#&gt; </span></span>
-<span id="cb42-77"><a href="QuickStartDBM1.html#cb42-77"></a><span class="co">#&gt; $FTestStatsRRFC</span></span>
-<span id="cb42-78"><a href="QuickStartDBM1.html#cb42-78"></a><span class="co">#&gt;      fRRFC ndfRRFC ddfRRFC     pRRFC</span></span>
-<span id="cb42-79"><a href="QuickStartDBM1.html#cb42-79"></a><span class="co">#&gt; 1 4.694058       1       3 0.1188379</span></span>
-<span id="cb42-80"><a href="QuickStartDBM1.html#cb42-80"></a><span class="co">#&gt; </span></span>
-<span id="cb42-81"><a href="QuickStartDBM1.html#cb42-81"></a><span class="co">#&gt; $ciDiffTrtRRFC</span></span>
-<span id="cb42-82"><a href="QuickStartDBM1.html#cb42-82"></a><span class="co">#&gt;             Treatment   Estimate      StdErr DF        t     PrGTt      CILower</span></span>
-<span id="cb42-83"><a href="QuickStartDBM1.html#cb42-83"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627</span></span>
-<span id="cb42-84"><a href="QuickStartDBM1.html#cb42-84"></a><span class="co">#&gt;      CIUpper</span></span>
-<span id="cb42-85"><a href="QuickStartDBM1.html#cb42-85"></a><span class="co">#&gt; 1 0.02679926</span></span>
-<span id="cb42-86"><a href="QuickStartDBM1.html#cb42-86"></a><span class="co">#&gt; </span></span>
-<span id="cb42-87"><a href="QuickStartDBM1.html#cb42-87"></a><span class="co">#&gt; $ciAvgRdrEachTrtRRFC</span></span>
-<span id="cb42-88"><a href="QuickStartDBM1.html#cb42-88"></a><span class="co">#&gt;   Treatment      Area     StdErr DF   CILower   CIUpper</span></span>
-<span id="cb42-89"><a href="QuickStartDBM1.html#cb42-89"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.01109801  3 0.8124311 0.8830687</span></span>
-<span id="cb42-90"><a href="QuickStartDBM1.html#cb42-90"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.00777173  3 0.8121620 0.8616282</span></span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="QuickStartDBM1.html#cb43-1"></a>ret &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(dataset03, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;DBMH&quot;</span>)</span>
+<span id="cb43-2"><a href="QuickStartDBM1.html#cb43-2"></a><span class="kw">print</span>(ret)</span>
+<span id="cb43-3"><a href="QuickStartDBM1.html#cb43-3"></a><span class="co">#&gt; $fomArray</span></span>
+<span id="cb43-4"><a href="QuickStartDBM1.html#cb43-4"></a><span class="co">#&gt;           RdrREADER_1 RdrREADER_2 RdrREADER_3 RdrREADER_4</span></span>
+<span id="cb43-5"><a href="QuickStartDBM1.html#cb43-5"></a><span class="co">#&gt; TrtTREAT1   0.8534600   0.8649932   0.8573044   0.8152420</span></span>
+<span id="cb43-6"><a href="QuickStartDBM1.html#cb43-6"></a><span class="co">#&gt; TrtTREAT2   0.8496156   0.8435097   0.8401176   0.8143374</span></span>
+<span id="cb43-7"><a href="QuickStartDBM1.html#cb43-7"></a><span class="co">#&gt; </span></span>
+<span id="cb43-8"><a href="QuickStartDBM1.html#cb43-8"></a><span class="co">#&gt; $anovaY</span></span>
+<span id="cb43-9"><a href="QuickStartDBM1.html#cb43-9"></a><span class="co">#&gt;       Source           SS  DF          MS</span></span>
+<span id="cb43-10"><a href="QuickStartDBM1.html#cb43-10"></a><span class="co">#&gt; 1     Row1_T   0.02356541   1 0.023565410</span></span>
+<span id="cb43-11"><a href="QuickStartDBM1.html#cb43-11"></a><span class="co">#&gt; 2     Row2_R   0.20521800   3 0.068406000</span></span>
+<span id="cb43-12"><a href="QuickStartDBM1.html#cb43-12"></a><span class="co">#&gt; 3     Row3_C  52.52839868  99 0.530589886</span></span>
+<span id="cb43-13"><a href="QuickStartDBM1.html#cb43-13"></a><span class="co">#&gt; 4    Row4_TR   0.01506079   3 0.005020264</span></span>
+<span id="cb43-14"><a href="QuickStartDBM1.html#cb43-14"></a><span class="co">#&gt; 5    Row5_TC   6.41004881  99 0.064747968</span></span>
+<span id="cb43-15"><a href="QuickStartDBM1.html#cb43-15"></a><span class="co">#&gt; 6    Row6_RC  39.24295381 297 0.132131158</span></span>
+<span id="cb43-16"><a href="QuickStartDBM1.html#cb43-16"></a><span class="co">#&gt; 7   Row7_TRC  22.66007764 297 0.076296558</span></span>
+<span id="cb43-17"><a href="QuickStartDBM1.html#cb43-17"></a><span class="co">#&gt; 8 Row8_Total 121.08532315 799          NA</span></span>
+<span id="cb43-18"><a href="QuickStartDBM1.html#cb43-18"></a><span class="co">#&gt; </span></span>
+<span id="cb43-19"><a href="QuickStartDBM1.html#cb43-19"></a><span class="co">#&gt; $anovaYi</span></span>
+<span id="cb43-20"><a href="QuickStartDBM1.html#cb43-20"></a><span class="co">#&gt;   Source  DF  TrtTREAT1  TrtTREAT2</span></span>
+<span id="cb43-21"><a href="QuickStartDBM1.html#cb43-21"></a><span class="co">#&gt; 1      R   3 0.04926635 0.02415991</span></span>
+<span id="cb43-22"><a href="QuickStartDBM1.html#cb43-22"></a><span class="co">#&gt; 2      C  99 0.29396753 0.30137032</span></span>
+<span id="cb43-23"><a href="QuickStartDBM1.html#cb43-23"></a><span class="co">#&gt; 3     RC 297 0.10504787 0.10337984</span></span>
+<span id="cb43-24"><a href="QuickStartDBM1.html#cb43-24"></a><span class="co">#&gt; </span></span>
+<span id="cb43-25"><a href="QuickStartDBM1.html#cb43-25"></a><span class="co">#&gt; $varComp</span></span>
+<span id="cb43-26"><a href="QuickStartDBM1.html#cb43-26"></a><span class="co">#&gt;           varR       varC         varTR        varTC     varRC     varErr</span></span>
+<span id="cb43-27"><a href="QuickStartDBM1.html#cb43-27"></a><span class="co">#&gt; 1 3.775568e-05 0.05125091 -0.0007127629 -0.002887147 0.0279173 0.07629656</span></span>
+<span id="cb43-28"><a href="QuickStartDBM1.html#cb43-28"></a><span class="co">#&gt; </span></span>
+<span id="cb43-29"><a href="QuickStartDBM1.html#cb43-29"></a><span class="co">#&gt; $FTestStatsRRRC</span></span>
+<span id="cb43-30"><a href="QuickStartDBM1.html#cb43-30"></a><span class="co">#&gt;      fRRRC ndfRRRC ddfRRRC     pRRRC</span></span>
+<span id="cb43-31"><a href="QuickStartDBM1.html#cb43-31"></a><span class="co">#&gt; 1 4.694058       1       3 0.1188379</span></span>
+<span id="cb43-32"><a href="QuickStartDBM1.html#cb43-32"></a><span class="co">#&gt; </span></span>
+<span id="cb43-33"><a href="QuickStartDBM1.html#cb43-33"></a><span class="co">#&gt; $ciDiffTrtRRRC</span></span>
+<span id="cb43-34"><a href="QuickStartDBM1.html#cb43-34"></a><span class="co">#&gt;               TrtDiff   Estimate      StdErr DF        t     PrGTt      CILower</span></span>
+<span id="cb43-35"><a href="QuickStartDBM1.html#cb43-35"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627</span></span>
+<span id="cb43-36"><a href="QuickStartDBM1.html#cb43-36"></a><span class="co">#&gt;      CIUpper</span></span>
+<span id="cb43-37"><a href="QuickStartDBM1.html#cb43-37"></a><span class="co">#&gt; 1 0.02679926</span></span>
+<span id="cb43-38"><a href="QuickStartDBM1.html#cb43-38"></a><span class="co">#&gt; </span></span>
+<span id="cb43-39"><a href="QuickStartDBM1.html#cb43-39"></a><span class="co">#&gt; $ciAvgRdrEachTrtRRRC</span></span>
+<span id="cb43-40"><a href="QuickStartDBM1.html#cb43-40"></a><span class="co">#&gt;   Treatment      Area     StdErr        DF   CILower   CIUpper</span></span>
+<span id="cb43-41"><a href="QuickStartDBM1.html#cb43-41"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.02440215  70.12179 0.7990828 0.8964170</span></span>
+<span id="cb43-42"><a href="QuickStartDBM1.html#cb43-42"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.02356642 253.64403 0.7904843 0.8833058</span></span>
+<span id="cb43-43"><a href="QuickStartDBM1.html#cb43-43"></a><span class="co">#&gt; </span></span>
+<span id="cb43-44"><a href="QuickStartDBM1.html#cb43-44"></a><span class="co">#&gt; $FTestStatsFRRC</span></span>
+<span id="cb43-45"><a href="QuickStartDBM1.html#cb43-45"></a><span class="co">#&gt;      fFRRC ndfFRRC ddfFRRC    pFRRC</span></span>
+<span id="cb43-46"><a href="QuickStartDBM1.html#cb43-46"></a><span class="co">#&gt; 1 0.363956       1      99 0.547697</span></span>
+<span id="cb43-47"><a href="QuickStartDBM1.html#cb43-47"></a><span class="co">#&gt; </span></span>
+<span id="cb43-48"><a href="QuickStartDBM1.html#cb43-48"></a><span class="co">#&gt; $ciDiffTrtFRRC</span></span>
+<span id="cb43-49"><a href="QuickStartDBM1.html#cb43-49"></a><span class="co">#&gt;             Treatment   Estimate     StdErr DF         t    PrGTt     CILower</span></span>
+<span id="cb43-50"><a href="QuickStartDBM1.html#cb43-50"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.01799277 99 0.6032876 0.547697 -0.02484675</span></span>
+<span id="cb43-51"><a href="QuickStartDBM1.html#cb43-51"></a><span class="co">#&gt;      CIUpper</span></span>
+<span id="cb43-52"><a href="QuickStartDBM1.html#cb43-52"></a><span class="co">#&gt; 1 0.04655638</span></span>
+<span id="cb43-53"><a href="QuickStartDBM1.html#cb43-53"></a><span class="co">#&gt; </span></span>
+<span id="cb43-54"><a href="QuickStartDBM1.html#cb43-54"></a><span class="co">#&gt; $ciAvgRdrEachTrtFRRC</span></span>
+<span id="cb43-55"><a href="QuickStartDBM1.html#cb43-55"></a><span class="co">#&gt;   Treatment      Area     StdErr DF   CILower   CIUpper</span></span>
+<span id="cb43-56"><a href="QuickStartDBM1.html#cb43-56"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.02710939 99 0.7939590 0.9015408</span></span>
+<span id="cb43-57"><a href="QuickStartDBM1.html#cb43-57"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.02744860 99 0.7824311 0.8913591</span></span>
+<span id="cb43-58"><a href="QuickStartDBM1.html#cb43-58"></a><span class="co">#&gt; </span></span>
+<span id="cb43-59"><a href="QuickStartDBM1.html#cb43-59"></a><span class="co">#&gt; $msAnovaEachRdrFRRC</span></span>
+<span id="cb43-60"><a href="QuickStartDBM1.html#cb43-60"></a><span class="co">#&gt;   Source DF  RdrREADER_1 RdrREADER_2 RdrREADER_3  RdrREADER_4</span></span>
+<span id="cb43-61"><a href="QuickStartDBM1.html#cb43-61"></a><span class="co">#&gt; 1      T  1 0.0007389761  0.02307702  0.01476929 4.091217e-05</span></span>
+<span id="cb43-62"><a href="QuickStartDBM1.html#cb43-62"></a><span class="co">#&gt; 2      C 99 0.2038747746  0.22344191  0.21424677 2.854199e-01</span></span>
+<span id="cb43-63"><a href="QuickStartDBM1.html#cb43-63"></a><span class="co">#&gt; 3     TC 99 0.0915587344  0.08027926  0.06122898 6.057067e-02</span></span>
+<span id="cb43-64"><a href="QuickStartDBM1.html#cb43-64"></a><span class="co">#&gt; </span></span>
+<span id="cb43-65"><a href="QuickStartDBM1.html#cb43-65"></a><span class="co">#&gt; $ciDiffTrtEachRdrFRRC</span></span>
+<span id="cb43-66"><a href="QuickStartDBM1.html#cb43-66"></a><span class="co">#&gt;        Reader           Treatment     Estimate     StdErr DF          t</span></span>
+<span id="cb43-67"><a href="QuickStartDBM1.html#cb43-67"></a><span class="co">#&gt; 1 RdrREADER_1 TrtTREAT1-TrtTREAT2 0.0038444143 0.04279223 99 0.08983908</span></span>
+<span id="cb43-68"><a href="QuickStartDBM1.html#cb43-68"></a><span class="co">#&gt; 2 RdrREADER_2 TrtTREAT1-TrtTREAT2 0.0214834916 0.04006975 99 0.53615233</span></span>
+<span id="cb43-69"><a href="QuickStartDBM1.html#cb43-69"></a><span class="co">#&gt; 3 RdrREADER_3 TrtTREAT1-TrtTREAT2 0.0171867933 0.03499399 99 0.49113552</span></span>
+<span id="cb43-70"><a href="QuickStartDBM1.html#cb43-70"></a><span class="co">#&gt; 4 RdrREADER_4 TrtTREAT1-TrtTREAT2 0.0009045681 0.03480536 99 0.02598933</span></span>
+<span id="cb43-71"><a href="QuickStartDBM1.html#cb43-71"></a><span class="co">#&gt;       PrGTt     CILower    CIUpper</span></span>
+<span id="cb43-72"><a href="QuickStartDBM1.html#cb43-72"></a><span class="co">#&gt; 1 0.9285966 -0.08106465 0.08875348</span></span>
+<span id="cb43-73"><a href="QuickStartDBM1.html#cb43-73"></a><span class="co">#&gt; 2 0.5930559 -0.05802359 0.10099057</span></span>
+<span id="cb43-74"><a href="QuickStartDBM1.html#cb43-74"></a><span class="co">#&gt; 3 0.6244176 -0.05224888 0.08662247</span></span>
+<span id="cb43-75"><a href="QuickStartDBM1.html#cb43-75"></a><span class="co">#&gt; 4 0.9793182 -0.06815683 0.06996596</span></span>
+<span id="cb43-76"><a href="QuickStartDBM1.html#cb43-76"></a><span class="co">#&gt; </span></span>
+<span id="cb43-77"><a href="QuickStartDBM1.html#cb43-77"></a><span class="co">#&gt; $FTestStatsRRFC</span></span>
+<span id="cb43-78"><a href="QuickStartDBM1.html#cb43-78"></a><span class="co">#&gt;      fRRFC ndfRRFC ddfRRFC     pRRFC</span></span>
+<span id="cb43-79"><a href="QuickStartDBM1.html#cb43-79"></a><span class="co">#&gt; 1 4.694058       1       3 0.1188379</span></span>
+<span id="cb43-80"><a href="QuickStartDBM1.html#cb43-80"></a><span class="co">#&gt; </span></span>
+<span id="cb43-81"><a href="QuickStartDBM1.html#cb43-81"></a><span class="co">#&gt; $ciDiffTrtRRFC</span></span>
+<span id="cb43-82"><a href="QuickStartDBM1.html#cb43-82"></a><span class="co">#&gt;             Treatment   Estimate      StdErr DF        t     PrGTt      CILower</span></span>
+<span id="cb43-83"><a href="QuickStartDBM1.html#cb43-83"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627</span></span>
+<span id="cb43-84"><a href="QuickStartDBM1.html#cb43-84"></a><span class="co">#&gt;      CIUpper</span></span>
+<span id="cb43-85"><a href="QuickStartDBM1.html#cb43-85"></a><span class="co">#&gt; 1 0.02679926</span></span>
+<span id="cb43-86"><a href="QuickStartDBM1.html#cb43-86"></a><span class="co">#&gt; </span></span>
+<span id="cb43-87"><a href="QuickStartDBM1.html#cb43-87"></a><span class="co">#&gt; $ciAvgRdrEachTrtRRFC</span></span>
+<span id="cb43-88"><a href="QuickStartDBM1.html#cb43-88"></a><span class="co">#&gt;   Treatment      Area     StdErr DF   CILower   CIUpper</span></span>
+<span id="cb43-89"><a href="QuickStartDBM1.html#cb43-89"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.01109801  3 0.8124311 0.8830687</span></span>
+<span id="cb43-90"><a href="QuickStartDBM1.html#cb43-90"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.00777173  3 0.8121620 0.8616282</span></span></code></pre></div>
 </div>
 <div id="explanation-of-the-output" class="section level2" number="10.5">
 <h2><span class="header-section-number">10.5</span> Explanation of the output</h2>
@@ -649,10 +650,10 @@ file one must get its name as follows.</p>
 <ul>
 <li><code>fomArray</code> contains the <code>[1:2,1:4]</code> FOM values.</li>
 </ul>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="QuickStartDBM1.html#cb43-1"></a>ret<span class="op">$</span>fomArray</span>
-<span id="cb43-2"><a href="QuickStartDBM1.html#cb43-2"></a><span class="co">#&gt;           RdrREADER_1 RdrREADER_2 RdrREADER_3 RdrREADER_4</span></span>
-<span id="cb43-3"><a href="QuickStartDBM1.html#cb43-3"></a><span class="co">#&gt; TrtTREAT1   0.8534600   0.8649932   0.8573044   0.8152420</span></span>
-<span id="cb43-4"><a href="QuickStartDBM1.html#cb43-4"></a><span class="co">#&gt; TrtTREAT2   0.8496156   0.8435097   0.8401176   0.8143374</span></span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="QuickStartDBM1.html#cb44-1"></a>ret<span class="op">$</span>fomArray</span>
+<span id="cb44-2"><a href="QuickStartDBM1.html#cb44-2"></a><span class="co">#&gt;           RdrREADER_1 RdrREADER_2 RdrREADER_3 RdrREADER_4</span></span>
+<span id="cb44-3"><a href="QuickStartDBM1.html#cb44-3"></a><span class="co">#&gt; TrtTREAT1   0.8534600   0.8649932   0.8573044   0.8152420</span></span>
+<span id="cb44-4"><a href="QuickStartDBM1.html#cb44-4"></a><span class="co">#&gt; TrtTREAT2   0.8496156   0.8435097   0.8401176   0.8143374</span></span></code></pre></div>
 <p>This shows the 2 x 4 array of FOM values.</p>
 </div>
 <div id="pseudovalue-anova-table" class="section level3" number="10.5.2">
@@ -660,27 +661,27 @@ file one must get its name as follows.</p>
 <ul>
 <li><code>anovaY</code>, where the Y denotes that these are pseudovalue based, is the ANOVA table.</li>
 </ul>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="QuickStartDBM1.html#cb44-1"></a>ret<span class="op">$</span>anovaY</span>
-<span id="cb44-2"><a href="QuickStartDBM1.html#cb44-2"></a><span class="co">#&gt;       Source           SS  DF          MS</span></span>
-<span id="cb44-3"><a href="QuickStartDBM1.html#cb44-3"></a><span class="co">#&gt; 1     Row1_T   0.02356541   1 0.023565410</span></span>
-<span id="cb44-4"><a href="QuickStartDBM1.html#cb44-4"></a><span class="co">#&gt; 2     Row2_R   0.20521800   3 0.068406000</span></span>
-<span id="cb44-5"><a href="QuickStartDBM1.html#cb44-5"></a><span class="co">#&gt; 3     Row3_C  52.52839868  99 0.530589886</span></span>
-<span id="cb44-6"><a href="QuickStartDBM1.html#cb44-6"></a><span class="co">#&gt; 4    Row4_TR   0.01506079   3 0.005020264</span></span>
-<span id="cb44-7"><a href="QuickStartDBM1.html#cb44-7"></a><span class="co">#&gt; 5    Row5_TC   6.41004881  99 0.064747968</span></span>
-<span id="cb44-8"><a href="QuickStartDBM1.html#cb44-8"></a><span class="co">#&gt; 6    Row6_RC  39.24295381 297 0.132131158</span></span>
-<span id="cb44-9"><a href="QuickStartDBM1.html#cb44-9"></a><span class="co">#&gt; 7   Row7_TRC  22.66007764 297 0.076296558</span></span>
-<span id="cb44-10"><a href="QuickStartDBM1.html#cb44-10"></a><span class="co">#&gt; 8 Row8_Total 121.08532315 799          NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="QuickStartDBM1.html#cb45-1"></a>ret<span class="op">$</span>anovaY</span>
+<span id="cb45-2"><a href="QuickStartDBM1.html#cb45-2"></a><span class="co">#&gt;       Source           SS  DF          MS</span></span>
+<span id="cb45-3"><a href="QuickStartDBM1.html#cb45-3"></a><span class="co">#&gt; 1     Row1_T   0.02356541   1 0.023565410</span></span>
+<span id="cb45-4"><a href="QuickStartDBM1.html#cb45-4"></a><span class="co">#&gt; 2     Row2_R   0.20521800   3 0.068406000</span></span>
+<span id="cb45-5"><a href="QuickStartDBM1.html#cb45-5"></a><span class="co">#&gt; 3     Row3_C  52.52839868  99 0.530589886</span></span>
+<span id="cb45-6"><a href="QuickStartDBM1.html#cb45-6"></a><span class="co">#&gt; 4    Row4_TR   0.01506079   3 0.005020264</span></span>
+<span id="cb45-7"><a href="QuickStartDBM1.html#cb45-7"></a><span class="co">#&gt; 5    Row5_TC   6.41004881  99 0.064747968</span></span>
+<span id="cb45-8"><a href="QuickStartDBM1.html#cb45-8"></a><span class="co">#&gt; 6    Row6_RC  39.24295381 297 0.132131158</span></span>
+<span id="cb45-9"><a href="QuickStartDBM1.html#cb45-9"></a><span class="co">#&gt; 7   Row7_TRC  22.66007764 297 0.076296558</span></span>
+<span id="cb45-10"><a href="QuickStartDBM1.html#cb45-10"></a><span class="co">#&gt; 8 Row8_Total 121.08532315 799          NA</span></span></code></pre></div>
 </div>
 <div id="pseudovalue-anova-table-each-treatment" class="section level3" number="10.5.3">
 <h3><span class="header-section-number">10.5.3</span> Pseudovalue ANOVA table, each treatment</h3>
 <ul>
 <li><code>anovaYi</code> is the ANOVA table for individual treatments.</li>
 </ul>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="QuickStartDBM1.html#cb45-1"></a>ret<span class="op">$</span>anovaYi</span>
-<span id="cb45-2"><a href="QuickStartDBM1.html#cb45-2"></a><span class="co">#&gt;   Source  DF  TrtTREAT1  TrtTREAT2</span></span>
-<span id="cb45-3"><a href="QuickStartDBM1.html#cb45-3"></a><span class="co">#&gt; 1      R   3 0.04926635 0.02415991</span></span>
-<span id="cb45-4"><a href="QuickStartDBM1.html#cb45-4"></a><span class="co">#&gt; 2      C  99 0.29396753 0.30137032</span></span>
-<span id="cb45-5"><a href="QuickStartDBM1.html#cb45-5"></a><span class="co">#&gt; 3     RC 297 0.10504787 0.10337984</span></span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="QuickStartDBM1.html#cb46-1"></a>ret<span class="op">$</span>anovaYi</span>
+<span id="cb46-2"><a href="QuickStartDBM1.html#cb46-2"></a><span class="co">#&gt;   Source  DF  TrtTREAT1  TrtTREAT2</span></span>
+<span id="cb46-3"><a href="QuickStartDBM1.html#cb46-3"></a><span class="co">#&gt; 1      R   3 0.04926635 0.02415991</span></span>
+<span id="cb46-4"><a href="QuickStartDBM1.html#cb46-4"></a><span class="co">#&gt; 2      C  99 0.29396753 0.30137032</span></span>
+<span id="cb46-5"><a href="QuickStartDBM1.html#cb46-5"></a><span class="co">#&gt; 3     RC 297 0.10504787 0.10337984</span></span></code></pre></div>
 <p>The <code>0</code> and <code>1</code> headers come from the treatment names.</p>
 </div>
 <div id="pseudovalue-variance-components" class="section level3" number="10.5.4">
@@ -688,9 +689,9 @@ file one must get its name as follows.</p>
 <ul>
 <li><code>varComp</code> is the variance components (needed for sample size estimation).</li>
 </ul>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="QuickStartDBM1.html#cb46-1"></a>ret<span class="op">$</span>varComp</span>
-<span id="cb46-2"><a href="QuickStartDBM1.html#cb46-2"></a><span class="co">#&gt;           varR       varC         varTR        varTC     varRC     varErr</span></span>
-<span id="cb46-3"><a href="QuickStartDBM1.html#cb46-3"></a><span class="co">#&gt; 1 3.775568e-05 0.05125091 -0.0007127629 -0.002887147 0.0279173 0.07629656</span></span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="QuickStartDBM1.html#cb47-1"></a>ret<span class="op">$</span>varComp</span>
+<span id="cb47-2"><a href="QuickStartDBM1.html#cb47-2"></a><span class="co">#&gt;           varR       varC         varTR        varTC     varRC     varErr</span></span>
+<span id="cb47-3"><a href="QuickStartDBM1.html#cb47-3"></a><span class="co">#&gt; 1 3.775568e-05 0.05125091 -0.0007127629 -0.002887147 0.0279173 0.07629656</span></span></code></pre></div>
 </div>
 <div id="random-reader-random-case-rrrc-analysis" class="section level3" number="10.5.5">
 <h3><span class="header-section-number">10.5.5</span> Random-reader random-case (RRRC) analysis</h3>
@@ -698,38 +699,38 @@ file one must get its name as follows.</p>
 <li><code>ret$FTestStatsRRRC$fRRRC</code> is the F-statistic for testing the NH that the
 treatments have identical FOMs. RRRC means random-reader random-case generalization.</li>
 </ul>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="QuickStartDBM1.html#cb47-1"></a>ret<span class="op">$</span>FTestStatsRRRC<span class="op">$</span>fRRRC</span>
-<span id="cb47-2"><a href="QuickStartDBM1.html#cb47-2"></a><span class="co">#&gt; [1] 4.694058</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="QuickStartDBM1.html#cb48-1"></a>ret<span class="op">$</span>FTestStatsRRRC<span class="op">$</span>fRRRC</span>
+<span id="cb48-2"><a href="QuickStartDBM1.html#cb48-2"></a><span class="co">#&gt; [1] 4.694058</span></span></code></pre></div>
 <div id="f-statistic-and-p-value-for-rrrc-analysis" class="section level4" number="10.5.5.1">
 <h4><span class="header-section-number">10.5.5.1</span> F-statistic and p-value for RRRC analysis</h4>
 <ul>
 <li><code>ret$FTestStatsRRRC$ddfRRRC</code> is the denominator degrees of freedom of the F-statistic.</li>
 </ul>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="QuickStartDBM1.html#cb48-1"></a>ret<span class="op">$</span>FTestStatsRRRC<span class="op">$</span>ddfRRRC</span>
-<span id="cb48-2"><a href="QuickStartDBM1.html#cb48-2"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="QuickStartDBM1.html#cb49-1"></a>ret<span class="op">$</span>FTestStatsRRRC<span class="op">$</span>ddfRRRC</span>
+<span id="cb49-2"><a href="QuickStartDBM1.html#cb49-2"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
 <ul>
 <li><code>ret$FTestStatsRRRC$pRRRC</code> is the p-value of the test.</li>
 </ul>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="QuickStartDBM1.html#cb49-1"></a>ret<span class="op">$</span>FTestStatsRRRC<span class="op">$</span>pRRRC</span>
-<span id="cb49-2"><a href="QuickStartDBM1.html#cb49-2"></a><span class="co">#&gt; [1] 0.1188379</span></span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="QuickStartDBM1.html#cb50-1"></a>ret<span class="op">$</span>FTestStatsRRRC<span class="op">$</span>pRRRC</span>
+<span id="cb50-2"><a href="QuickStartDBM1.html#cb50-2"></a><span class="co">#&gt; [1] 0.1188379</span></span></code></pre></div>
 </div>
 <div id="confidence-intervals-for-rrrc-analysis" class="section level4" number="10.5.5.2">
 <h4><span class="header-section-number">10.5.5.2</span> Confidence Intervals for RRRC analysis</h4>
 <ul>
 <li><code>ciDiffTrtRRRC</code> is the 95% confidence interval of reader-averaged differences between treatments.</li>
 </ul>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="QuickStartDBM1.html#cb50-1"></a>ret<span class="op">$</span>ciDiffTrtRRRC</span>
-<span id="cb50-2"><a href="QuickStartDBM1.html#cb50-2"></a><span class="co">#&gt;               TrtDiff   Estimate      StdErr DF        t     PrGTt      CILower</span></span>
-<span id="cb50-3"><a href="QuickStartDBM1.html#cb50-3"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627</span></span>
-<span id="cb50-4"><a href="QuickStartDBM1.html#cb50-4"></a><span class="co">#&gt;      CIUpper</span></span>
-<span id="cb50-5"><a href="QuickStartDBM1.html#cb50-5"></a><span class="co">#&gt; 1 0.02679926</span></span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="QuickStartDBM1.html#cb51-1"></a>ret<span class="op">$</span>ciDiffTrtRRRC</span>
+<span id="cb51-2"><a href="QuickStartDBM1.html#cb51-2"></a><span class="co">#&gt;               TrtDiff   Estimate      StdErr DF        t     PrGTt      CILower</span></span>
+<span id="cb51-3"><a href="QuickStartDBM1.html#cb51-3"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627</span></span>
+<span id="cb51-4"><a href="QuickStartDBM1.html#cb51-4"></a><span class="co">#&gt;      CIUpper</span></span>
+<span id="cb51-5"><a href="QuickStartDBM1.html#cb51-5"></a><span class="co">#&gt; 1 0.02679926</span></span></code></pre></div>
 <ul>
 <li><code>ciAvgRdrEachTrtRRRC</code> is the 95% confidence interval of reader-averaged FOMs for each treatments.</li>
 </ul>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="QuickStartDBM1.html#cb51-1"></a>ret<span class="op">$</span>ciAvgRdrEachTrtRRRC</span>
-<span id="cb51-2"><a href="QuickStartDBM1.html#cb51-2"></a><span class="co">#&gt;   Treatment      Area     StdErr        DF   CILower   CIUpper</span></span>
-<span id="cb51-3"><a href="QuickStartDBM1.html#cb51-3"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.02440215  70.12179 0.7990828 0.8964170</span></span>
-<span id="cb51-4"><a href="QuickStartDBM1.html#cb51-4"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.02356642 253.64403 0.7904843 0.8833058</span></span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="QuickStartDBM1.html#cb52-1"></a>ret<span class="op">$</span>ciAvgRdrEachTrtRRRC</span>
+<span id="cb52-2"><a href="QuickStartDBM1.html#cb52-2"></a><span class="co">#&gt;   Treatment      Area     StdErr        DF   CILower   CIUpper</span></span>
+<span id="cb52-3"><a href="QuickStartDBM1.html#cb52-3"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.02440215  70.12179 0.7990828 0.8964170</span></span>
+<span id="cb52-4"><a href="QuickStartDBM1.html#cb52-4"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.02356642 253.64403 0.7904843 0.8833058</span></span></code></pre></div>
 </div>
 </div>
 <div id="fixed-reader-random-case-frrc-analysis" class="section level3" number="10.5.6">
@@ -739,63 +740,63 @@ treatments have identical FOMs. RRRC means random-reader random-case generalizat
 <ul>
 <li><code>ret$FTestStatsFRRC$fFRRC</code> is the F-statistic for fixed-reader random-case analysis.</li>
 </ul>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="QuickStartDBM1.html#cb52-1"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>fFRRC</span>
-<span id="cb52-2"><a href="QuickStartDBM1.html#cb52-2"></a><span class="co">#&gt; [1] 0.363956</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="QuickStartDBM1.html#cb53-1"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>fFRRC</span>
+<span id="cb53-2"><a href="QuickStartDBM1.html#cb53-2"></a><span class="co">#&gt; [1] 0.363956</span></span></code></pre></div>
 <ul>
 <li><code>ret$FTestStatsFRRC$ndfFRRC</code> is the numerator degrees of freedom of the F-statistic, always one less than the number of treatments.</li>
 </ul>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="QuickStartDBM1.html#cb53-1"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>ndfFRRC</span>
-<span id="cb53-2"><a href="QuickStartDBM1.html#cb53-2"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="QuickStartDBM1.html#cb54-1"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>ndfFRRC</span>
+<span id="cb54-2"><a href="QuickStartDBM1.html#cb54-2"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 <ul>
 <li><code>ret$FTestStatsFRRC$ddfFRRC</code> is the denominator degreesof freedom of the F-statistic, for fixed-reader random-case analysis.</li>
 </ul>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="QuickStartDBM1.html#cb54-1"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>ddfFRRC</span>
-<span id="cb54-2"><a href="QuickStartDBM1.html#cb54-2"></a><span class="co">#&gt; [1] 99</span></span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="QuickStartDBM1.html#cb55-1"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>ddfFRRC</span>
+<span id="cb55-2"><a href="QuickStartDBM1.html#cb55-2"></a><span class="co">#&gt; [1] 99</span></span></code></pre></div>
 <ul>
 <li><code>ret$FTestStatsFRRC$pFRRC</code> is the p-value for fixed-reader random-case analysis.</li>
 </ul>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="QuickStartDBM1.html#cb55-1"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>pFRRC</span>
-<span id="cb55-2"><a href="QuickStartDBM1.html#cb55-2"></a><span class="co">#&gt; [1] 0.547697</span></span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="QuickStartDBM1.html#cb56-1"></a>ret<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>pFRRC</span>
+<span id="cb56-2"><a href="QuickStartDBM1.html#cb56-2"></a><span class="co">#&gt; [1] 0.547697</span></span></code></pre></div>
 </div>
 <div id="confidence-intervals-for-frrc-analysis" class="section level4" number="10.5.6.2">
 <h4><span class="header-section-number">10.5.6.2</span> Confidence Intervals for FRRC analysis</h4>
 <ul>
 <li><code>ciDiffTrtFRRC</code> is the 95% CI of reader-average differences between treatments for fixed-reader random-case analysis</li>
 </ul>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="QuickStartDBM1.html#cb56-1"></a>ret<span class="op">$</span>ciDiffTrtFRRC</span>
-<span id="cb56-2"><a href="QuickStartDBM1.html#cb56-2"></a><span class="co">#&gt;             Treatment   Estimate     StdErr DF         t    PrGTt     CILower</span></span>
-<span id="cb56-3"><a href="QuickStartDBM1.html#cb56-3"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.01799277 99 0.6032876 0.547697 -0.02484675</span></span>
-<span id="cb56-4"><a href="QuickStartDBM1.html#cb56-4"></a><span class="co">#&gt;      CIUpper</span></span>
-<span id="cb56-5"><a href="QuickStartDBM1.html#cb56-5"></a><span class="co">#&gt; 1 0.04655638</span></span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="QuickStartDBM1.html#cb57-1"></a>ret<span class="op">$</span>ciDiffTrtFRRC</span>
+<span id="cb57-2"><a href="QuickStartDBM1.html#cb57-2"></a><span class="co">#&gt;             Treatment   Estimate     StdErr DF         t    PrGTt     CILower</span></span>
+<span id="cb57-3"><a href="QuickStartDBM1.html#cb57-3"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.01799277 99 0.6032876 0.547697 -0.02484675</span></span>
+<span id="cb57-4"><a href="QuickStartDBM1.html#cb57-4"></a><span class="co">#&gt;      CIUpper</span></span>
+<span id="cb57-5"><a href="QuickStartDBM1.html#cb57-5"></a><span class="co">#&gt; 1 0.04655638</span></span></code></pre></div>
 <ul>
 <li><code>ret$ciAvgRdrEachTrtFRRC</code> is the 95% CI of reader-average FOMs of each treatment for fixed-reader random-case analysis</li>
 </ul>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="QuickStartDBM1.html#cb57-1"></a>ret<span class="op">$</span>ciAvgRdrEachTrtFRRC</span>
-<span id="cb57-2"><a href="QuickStartDBM1.html#cb57-2"></a><span class="co">#&gt;   Treatment      Area     StdErr DF   CILower   CIUpper</span></span>
-<span id="cb57-3"><a href="QuickStartDBM1.html#cb57-3"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.02710939 99 0.7939590 0.9015408</span></span>
-<span id="cb57-4"><a href="QuickStartDBM1.html#cb57-4"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.02744860 99 0.7824311 0.8913591</span></span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="QuickStartDBM1.html#cb58-1"></a>ret<span class="op">$</span>ciAvgRdrEachTrtFRRC</span>
+<span id="cb58-2"><a href="QuickStartDBM1.html#cb58-2"></a><span class="co">#&gt;   Treatment      Area     StdErr DF   CILower   CIUpper</span></span>
+<span id="cb58-3"><a href="QuickStartDBM1.html#cb58-3"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.02710939 99 0.7939590 0.9015408</span></span>
+<span id="cb58-4"><a href="QuickStartDBM1.html#cb58-4"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.02744860 99 0.7824311 0.8913591</span></span></code></pre></div>
 </div>
 <div id="anova-for-frrc-analysis" class="section level4" number="10.5.6.3">
 <h4><span class="header-section-number">10.5.6.3</span> ANOVA for FRRC analysis</h4>
 <ul>
 <li><code>ret$msAnovaEachRdrFRRC</code> is the mean-squares ANOVA for each reader</li>
 </ul>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="QuickStartDBM1.html#cb58-1"></a>ret<span class="op">$</span>msAnovaEachRdrFRRC</span>
-<span id="cb58-2"><a href="QuickStartDBM1.html#cb58-2"></a><span class="co">#&gt;   Source DF  RdrREADER_1 RdrREADER_2 RdrREADER_3  RdrREADER_4</span></span>
-<span id="cb58-3"><a href="QuickStartDBM1.html#cb58-3"></a><span class="co">#&gt; 1      T  1 0.0007389761  0.02307702  0.01476929 4.091217e-05</span></span>
-<span id="cb58-4"><a href="QuickStartDBM1.html#cb58-4"></a><span class="co">#&gt; 2      C 99 0.2038747746  0.22344191  0.21424677 2.854199e-01</span></span>
-<span id="cb58-5"><a href="QuickStartDBM1.html#cb58-5"></a><span class="co">#&gt; 3     TC 99 0.0915587344  0.08027926  0.06122898 6.057067e-02</span></span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="QuickStartDBM1.html#cb59-1"></a>ret<span class="op">$</span>msAnovaEachRdrFRRC</span>
+<span id="cb59-2"><a href="QuickStartDBM1.html#cb59-2"></a><span class="co">#&gt;   Source DF  RdrREADER_1 RdrREADER_2 RdrREADER_3  RdrREADER_4</span></span>
+<span id="cb59-3"><a href="QuickStartDBM1.html#cb59-3"></a><span class="co">#&gt; 1      T  1 0.0007389761  0.02307702  0.01476929 4.091217e-05</span></span>
+<span id="cb59-4"><a href="QuickStartDBM1.html#cb59-4"></a><span class="co">#&gt; 2      C 99 0.2038747746  0.22344191  0.21424677 2.854199e-01</span></span>
+<span id="cb59-5"><a href="QuickStartDBM1.html#cb59-5"></a><span class="co">#&gt; 3     TC 99 0.0915587344  0.08027926  0.06122898 6.057067e-02</span></span></code></pre></div>
 </div>
 <div id="confidence-intervals-for-frrc-analysis-1" class="section level4" number="10.5.6.4">
 <h4><span class="header-section-number">10.5.6.4</span> Confidence Intervals for FRRC analysis</h4>
 <ul>
 <li><code>ciDiffTrtFRRC</code> is the CI for reader-averaged treatment differences, for fixed-reader random-case analysis</li>
 </ul>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="QuickStartDBM1.html#cb59-1"></a>ret<span class="op">$</span>ciDiffTrtFRRC</span>
-<span id="cb59-2"><a href="QuickStartDBM1.html#cb59-2"></a><span class="co">#&gt;             Treatment   Estimate     StdErr DF         t    PrGTt     CILower</span></span>
-<span id="cb59-3"><a href="QuickStartDBM1.html#cb59-3"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.01799277 99 0.6032876 0.547697 -0.02484675</span></span>
-<span id="cb59-4"><a href="QuickStartDBM1.html#cb59-4"></a><span class="co">#&gt;      CIUpper</span></span>
-<span id="cb59-5"><a href="QuickStartDBM1.html#cb59-5"></a><span class="co">#&gt; 1 0.04655638</span></span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="QuickStartDBM1.html#cb60-1"></a>ret<span class="op">$</span>ciDiffTrtFRRC</span>
+<span id="cb60-2"><a href="QuickStartDBM1.html#cb60-2"></a><span class="co">#&gt;             Treatment   Estimate     StdErr DF         t    PrGTt     CILower</span></span>
+<span id="cb60-3"><a href="QuickStartDBM1.html#cb60-3"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.01799277 99 0.6032876 0.547697 -0.02484675</span></span>
+<span id="cb60-4"><a href="QuickStartDBM1.html#cb60-4"></a><span class="co">#&gt;      CIUpper</span></span>
+<span id="cb60-5"><a href="QuickStartDBM1.html#cb60-5"></a><span class="co">#&gt; 1 0.04655638</span></span></code></pre></div>
 </div>
 </div>
 <div id="random-reader-fixed-case-rrfc-analysis" class="section level3" number="10.5.7">
@@ -805,137 +806,137 @@ treatments have identical FOMs. RRRC means random-reader random-case generalizat
 <ul>
 <li><code>ret$FTestStatsRRFC$fRRFC</code> is the F-statistic for for random-reader fixed-case analysis</li>
 </ul>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="QuickStartDBM1.html#cb60-1"></a>ret<span class="op">$</span>FTestStatsRRFC<span class="op">$</span>fRRFC</span>
-<span id="cb60-2"><a href="QuickStartDBM1.html#cb60-2"></a><span class="co">#&gt; [1] 4.694058</span></span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="QuickStartDBM1.html#cb61-1"></a>ret<span class="op">$</span>FTestStatsRRFC<span class="op">$</span>fRRFC</span>
+<span id="cb61-2"><a href="QuickStartDBM1.html#cb61-2"></a><span class="co">#&gt; [1] 4.694058</span></span></code></pre></div>
 <ul>
 <li><code>ret$FTestStatsRRFC$ddfRRFC</code> is the ddf for for random-reader fixed-case analysis</li>
 </ul>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="QuickStartDBM1.html#cb61-1"></a>ret<span class="op">$</span>FTestStatsRRFC<span class="op">$</span>ddfRRFC</span>
-<span id="cb61-2"><a href="QuickStartDBM1.html#cb61-2"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="QuickStartDBM1.html#cb62-1"></a>ret<span class="op">$</span>FTestStatsRRFC<span class="op">$</span>ddfRRFC</span>
+<span id="cb62-2"><a href="QuickStartDBM1.html#cb62-2"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
 <ul>
 <li><code>ret$FTestStatsRRFC$pRRFC</code> is the p-value for for random-reader fixed-case analysis</li>
 </ul>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="QuickStartDBM1.html#cb62-1"></a>ret<span class="op">$</span>FTestStatsRRFC<span class="op">$</span>pRRFC</span>
-<span id="cb62-2"><a href="QuickStartDBM1.html#cb62-2"></a><span class="co">#&gt; [1] 0.1188379</span></span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="QuickStartDBM1.html#cb63-1"></a>ret<span class="op">$</span>FTestStatsRRFC<span class="op">$</span>pRRFC</span>
+<span id="cb63-2"><a href="QuickStartDBM1.html#cb63-2"></a><span class="co">#&gt; [1] 0.1188379</span></span></code></pre></div>
 </div>
 <div id="confidence-intervals-for-rrfc-analysis" class="section level4" number="10.5.7.2">
 <h4><span class="header-section-number">10.5.7.2</span> Confidence Intervals for RRFC analysis</h4>
 <ul>
 <li><code>ciDiffTrtRRFC</code> is the CI for reader-averaged inter-treatment FOM differences for random-reader fixed-case analysis</li>
 </ul>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="QuickStartDBM1.html#cb63-1"></a>ret<span class="op">$</span>ciDiffTrtRRFC</span>
-<span id="cb63-2"><a href="QuickStartDBM1.html#cb63-2"></a><span class="co">#&gt;             Treatment   Estimate      StdErr DF        t     PrGTt      CILower</span></span>
-<span id="cb63-3"><a href="QuickStartDBM1.html#cb63-3"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627</span></span>
-<span id="cb63-4"><a href="QuickStartDBM1.html#cb63-4"></a><span class="co">#&gt;      CIUpper</span></span>
-<span id="cb63-5"><a href="QuickStartDBM1.html#cb63-5"></a><span class="co">#&gt; 1 0.02679926</span></span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="QuickStartDBM1.html#cb64-1"></a>ret<span class="op">$</span>ciDiffTrtRRFC</span>
+<span id="cb64-2"><a href="QuickStartDBM1.html#cb64-2"></a><span class="co">#&gt;             Treatment   Estimate      StdErr DF        t     PrGTt      CILower</span></span>
+<span id="cb64-3"><a href="QuickStartDBM1.html#cb64-3"></a><span class="co">#&gt; 1 TrtTREAT1-TrtTREAT2 0.01085482 0.005010122  3 2.166577 0.1188379 -0.005089627</span></span>
+<span id="cb64-4"><a href="QuickStartDBM1.html#cb64-4"></a><span class="co">#&gt;      CIUpper</span></span>
+<span id="cb64-5"><a href="QuickStartDBM1.html#cb64-5"></a><span class="co">#&gt; 1 0.02679926</span></span></code></pre></div>
 <ul>
 <li><code>ciAvgRdrEachTrtRRFC</code> is the CI for treatment FOMs for each reader for random-reader fixed-case analysis</li>
 </ul>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="QuickStartDBM1.html#cb64-1"></a>ret<span class="op">$</span>ciAvgRdrEachTrtRRFC</span>
-<span id="cb64-2"><a href="QuickStartDBM1.html#cb64-2"></a><span class="co">#&gt;   Treatment      Area     StdErr DF   CILower   CIUpper</span></span>
-<span id="cb64-3"><a href="QuickStartDBM1.html#cb64-3"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.01109801  3 0.8124311 0.8830687</span></span>
-<span id="cb64-4"><a href="QuickStartDBM1.html#cb64-4"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.00777173  3 0.8121620 0.8616282</span></span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="QuickStartDBM1.html#cb65-1"></a>ret<span class="op">$</span>ciAvgRdrEachTrtRRFC</span>
+<span id="cb65-2"><a href="QuickStartDBM1.html#cb65-2"></a><span class="co">#&gt;   Treatment      Area     StdErr DF   CILower   CIUpper</span></span>
+<span id="cb65-3"><a href="QuickStartDBM1.html#cb65-3"></a><span class="co">#&gt; 1 TrtTREAT1 0.8477499 0.01109801  3 0.8124311 0.8830687</span></span>
+<span id="cb65-4"><a href="QuickStartDBM1.html#cb65-4"></a><span class="co">#&gt; 2 TrtTREAT2 0.8368951 0.00777173  3 0.8121620 0.8616282</span></span></code></pre></div>
 </div>
 </div>
 </div>
 <div id="orh-significance-testing" class="section level2" number="10.6">
 <h2><span class="header-section-number">10.6</span> ORH significance testing</h2>
 <p>Simply change <code>method = "DBMH"</code> to <code>method = "ORH"</code>.</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="QuickStartDBM1.html#cb65-1"></a>ret &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(dataset03, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>)</span>
-<span id="cb65-2"><a href="QuickStartDBM1.html#cb65-2"></a><span class="kw">str</span>(ret)</span>
-<span id="cb65-3"><a href="QuickStartDBM1.html#cb65-3"></a><span class="co">#&gt; List of 14</span></span>
-<span id="cb65-4"><a href="QuickStartDBM1.html#cb65-4"></a><span class="co">#&gt;  $ fomArray            : num [1:2, 1:4] 0.853 0.85 0.865 0.844 0.857 ...</span></span>
-<span id="cb65-5"><a href="QuickStartDBM1.html#cb65-5"></a><span class="co">#&gt;   ..- attr(*, &quot;dimnames&quot;)=List of 2</span></span>
-<span id="cb65-6"><a href="QuickStartDBM1.html#cb65-6"></a><span class="co">#&gt;   .. ..$ : chr [1:2] &quot;TrtTREAT1&quot; &quot;TrtTREAT2&quot;</span></span>
-<span id="cb65-7"><a href="QuickStartDBM1.html#cb65-7"></a><span class="co">#&gt;   .. ..$ : chr [1:4] &quot;RdrREADER_1&quot; &quot;RdrREADER_2&quot; &quot;RdrREADER_3&quot; &quot;RdrREADER_4&quot;</span></span>
-<span id="cb65-8"><a href="QuickStartDBM1.html#cb65-8"></a><span class="co">#&gt;  $ meanSquares         :&#39;data.frame&#39;:    1 obs. of  3 variables:</span></span>
-<span id="cb65-9"><a href="QuickStartDBM1.html#cb65-9"></a><span class="co">#&gt;   ..$ msT : num 0.000236</span></span>
-<span id="cb65-10"><a href="QuickStartDBM1.html#cb65-10"></a><span class="co">#&gt;   ..$ msR : num 0.000684</span></span>
-<span id="cb65-11"><a href="QuickStartDBM1.html#cb65-11"></a><span class="co">#&gt;   ..$ msTR: num 5.02e-05</span></span>
-<span id="cb65-12"><a href="QuickStartDBM1.html#cb65-12"></a><span class="co">#&gt;  $ varComp             :&#39;data.frame&#39;:    1 obs. of  6 variables:</span></span>
-<span id="cb65-13"><a href="QuickStartDBM1.html#cb65-13"></a><span class="co">#&gt;   ..$ varR : num 2.33e-05</span></span>
-<span id="cb65-14"><a href="QuickStartDBM1.html#cb65-14"></a><span class="co">#&gt;   ..$ varTR: num -0.000684</span></span>
-<span id="cb65-15"><a href="QuickStartDBM1.html#cb65-15"></a><span class="co">#&gt;   ..$ cov1 : num 0.000792</span></span>
-<span id="cb65-16"><a href="QuickStartDBM1.html#cb65-16"></a><span class="co">#&gt;   ..$ cov2 : num 0.000484</span></span>
-<span id="cb65-17"><a href="QuickStartDBM1.html#cb65-17"></a><span class="co">#&gt;   ..$ cov3 : num 0.000513</span></span>
-<span id="cb65-18"><a href="QuickStartDBM1.html#cb65-18"></a><span class="co">#&gt;   ..$ var  : num 0.00153</span></span>
-<span id="cb65-19"><a href="QuickStartDBM1.html#cb65-19"></a><span class="co">#&gt;  $ FTestStatsRRRC      :&#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
-<span id="cb65-20"><a href="QuickStartDBM1.html#cb65-20"></a><span class="co">#&gt;   ..$ fRRRC  : num 4.69</span></span>
-<span id="cb65-21"><a href="QuickStartDBM1.html#cb65-21"></a><span class="co">#&gt;   ..$ ndfRRRC: num 1</span></span>
-<span id="cb65-22"><a href="QuickStartDBM1.html#cb65-22"></a><span class="co">#&gt;   ..$ ddfRRRC: num 3</span></span>
-<span id="cb65-23"><a href="QuickStartDBM1.html#cb65-23"></a><span class="co">#&gt;   ..$ pRRRC  : num 0.119</span></span>
-<span id="cb65-24"><a href="QuickStartDBM1.html#cb65-24"></a><span class="co">#&gt;  $ ciDiffTrtRRRC       :&#39;data.frame&#39;:    1 obs. of  8 variables:</span></span>
-<span id="cb65-25"><a href="QuickStartDBM1.html#cb65-25"></a><span class="co">#&gt;   ..$ Treatment: chr &quot;TrtTREAT1-TrtTREAT2&quot;</span></span>
-<span id="cb65-26"><a href="QuickStartDBM1.html#cb65-26"></a><span class="co">#&gt;   ..$ Estimate : num 0.0109</span></span>
-<span id="cb65-27"><a href="QuickStartDBM1.html#cb65-27"></a><span class="co">#&gt;   ..$ StdErr   : num 0.00501</span></span>
-<span id="cb65-28"><a href="QuickStartDBM1.html#cb65-28"></a><span class="co">#&gt;   ..$ DF       : num 3</span></span>
-<span id="cb65-29"><a href="QuickStartDBM1.html#cb65-29"></a><span class="co">#&gt;   ..$ t        : num 2.17</span></span>
-<span id="cb65-30"><a href="QuickStartDBM1.html#cb65-30"></a><span class="co">#&gt;   ..$ PrGTt    : num 0.119</span></span>
-<span id="cb65-31"><a href="QuickStartDBM1.html#cb65-31"></a><span class="co">#&gt;   ..$ CILower  : num -0.00509</span></span>
-<span id="cb65-32"><a href="QuickStartDBM1.html#cb65-32"></a><span class="co">#&gt;   ..$ CIUpper  : num 0.0268</span></span>
-<span id="cb65-33"><a href="QuickStartDBM1.html#cb65-33"></a><span class="co">#&gt;  $ ciAvgRdrEachTrtRRRC :&#39;data.frame&#39;:    2 obs. of  6 variables:</span></span>
-<span id="cb65-34"><a href="QuickStartDBM1.html#cb65-34"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 2 levels &quot;TrtTREAT1&quot;,&quot;TrtTREAT2&quot;: 1 2</span></span>
-<span id="cb65-35"><a href="QuickStartDBM1.html#cb65-35"></a><span class="co">#&gt;   ..$ Area     : num [1:2] 0.848 0.837</span></span>
-<span id="cb65-36"><a href="QuickStartDBM1.html#cb65-36"></a><span class="co">#&gt;   ..$ StdErr   : num [1:2] 0.0244 0.0236</span></span>
-<span id="cb65-37"><a href="QuickStartDBM1.html#cb65-37"></a><span class="co">#&gt;   ..$ DF       : num [1:2] 70.1 253.6</span></span>
-<span id="cb65-38"><a href="QuickStartDBM1.html#cb65-38"></a><span class="co">#&gt;   ..$ CILower  : num [1:2] 0.799 0.79</span></span>
-<span id="cb65-39"><a href="QuickStartDBM1.html#cb65-39"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:2] 0.896 0.883</span></span>
-<span id="cb65-40"><a href="QuickStartDBM1.html#cb65-40"></a><span class="co">#&gt;  $ FTestStatsFRRC      :&#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
-<span id="cb65-41"><a href="QuickStartDBM1.html#cb65-41"></a><span class="co">#&gt;   ..$ fFRRC  : num 0.364</span></span>
-<span id="cb65-42"><a href="QuickStartDBM1.html#cb65-42"></a><span class="co">#&gt;   ..$ ndfFRRC: num 1</span></span>
-<span id="cb65-43"><a href="QuickStartDBM1.html#cb65-43"></a><span class="co">#&gt;   ..$ ddfFRRC: num Inf</span></span>
-<span id="cb65-44"><a href="QuickStartDBM1.html#cb65-44"></a><span class="co">#&gt;   ..$ pFRRC  : num 0.546</span></span>
-<span id="cb65-45"><a href="QuickStartDBM1.html#cb65-45"></a><span class="co">#&gt;  $ ciDiffTrtFRRC       :&#39;data.frame&#39;:    1 obs. of  8 variables:</span></span>
-<span id="cb65-46"><a href="QuickStartDBM1.html#cb65-46"></a><span class="co">#&gt;   ..$ Treatment: chr &quot;TrtTREAT1-TrtTREAT2&quot;</span></span>
-<span id="cb65-47"><a href="QuickStartDBM1.html#cb65-47"></a><span class="co">#&gt;   ..$ Estimate : num 0.0109</span></span>
-<span id="cb65-48"><a href="QuickStartDBM1.html#cb65-48"></a><span class="co">#&gt;   ..$ StdErr   : num 0.018</span></span>
-<span id="cb65-49"><a href="QuickStartDBM1.html#cb65-49"></a><span class="co">#&gt;   ..$ DF       : num Inf</span></span>
-<span id="cb65-50"><a href="QuickStartDBM1.html#cb65-50"></a><span class="co">#&gt;   ..$ t        : num 0.603</span></span>
-<span id="cb65-51"><a href="QuickStartDBM1.html#cb65-51"></a><span class="co">#&gt;   ..$ PrGTt    : num 0.546</span></span>
-<span id="cb65-52"><a href="QuickStartDBM1.html#cb65-52"></a><span class="co">#&gt;   ..$ CILower  : num -0.0244</span></span>
-<span id="cb65-53"><a href="QuickStartDBM1.html#cb65-53"></a><span class="co">#&gt;   ..$ CIUpper  : num 0.0461</span></span>
-<span id="cb65-54"><a href="QuickStartDBM1.html#cb65-54"></a><span class="co">#&gt;  $ ciAvgRdrEachTrtFRRC :&#39;data.frame&#39;:    2 obs. of  6 variables:</span></span>
-<span id="cb65-55"><a href="QuickStartDBM1.html#cb65-55"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 2 levels &quot;TrtTREAT1&quot;,&quot;TrtTREAT2&quot;: 1 2</span></span>
-<span id="cb65-56"><a href="QuickStartDBM1.html#cb65-56"></a><span class="co">#&gt;   ..$ Area     : num [1:2] 0.848 0.837</span></span>
-<span id="cb65-57"><a href="QuickStartDBM1.html#cb65-57"></a><span class="co">#&gt;   ..$ StdErr   : num [1:2] 0.0271 0.0274</span></span>
-<span id="cb65-58"><a href="QuickStartDBM1.html#cb65-58"></a><span class="co">#&gt;   ..$ DF       : num [1:2] Inf Inf</span></span>
-<span id="cb65-59"><a href="QuickStartDBM1.html#cb65-59"></a><span class="co">#&gt;   ..$ CILower  : num [1:2] 0.795 0.783</span></span>
-<span id="cb65-60"><a href="QuickStartDBM1.html#cb65-60"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:2] 0.901 0.891</span></span>
-<span id="cb65-61"><a href="QuickStartDBM1.html#cb65-61"></a><span class="co">#&gt;  $ ciDiffTrtEachRdrFRRC:&#39;data.frame&#39;:    4 obs. of  9 variables:</span></span>
-<span id="cb65-62"><a href="QuickStartDBM1.html#cb65-62"></a><span class="co">#&gt;   ..$ Reader   : Factor w/ 4 levels &quot;RdrREADER_1&quot;,..: 1 2 3 4</span></span>
-<span id="cb65-63"><a href="QuickStartDBM1.html#cb65-63"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 1 level &quot;TrtTREAT1-TrtTREAT2&quot;: 1 1 1 1</span></span>
-<span id="cb65-64"><a href="QuickStartDBM1.html#cb65-64"></a><span class="co">#&gt;   ..$ Estimate : num [1:4] 0.003844 0.021483 0.017187 0.000905</span></span>
-<span id="cb65-65"><a href="QuickStartDBM1.html#cb65-65"></a><span class="co">#&gt;   ..$ StdErr   : num [1:4] 0.0428 0.0401 0.035 0.0348</span></span>
-<span id="cb65-66"><a href="QuickStartDBM1.html#cb65-66"></a><span class="co">#&gt;   ..$ DF       : num [1:4] Inf Inf Inf Inf</span></span>
-<span id="cb65-67"><a href="QuickStartDBM1.html#cb65-67"></a><span class="co">#&gt;   ..$ t        : num [1:4] 0.0898 0.5362 0.4911 0.026</span></span>
-<span id="cb65-68"><a href="QuickStartDBM1.html#cb65-68"></a><span class="co">#&gt;   ..$ PrGTt    : num [1:4] 0.928 0.592 0.623 0.979</span></span>
-<span id="cb65-69"><a href="QuickStartDBM1.html#cb65-69"></a><span class="co">#&gt;   ..$ CILower  : num [1:4] -0.08 -0.0571 -0.0514 -0.0673</span></span>
-<span id="cb65-70"><a href="QuickStartDBM1.html#cb65-70"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:4] 0.0877 0.1 0.0858 0.0691</span></span>
-<span id="cb65-71"><a href="QuickStartDBM1.html#cb65-71"></a><span class="co">#&gt;  $ varCovEachRdr       :&#39;data.frame&#39;:    4 obs. of  3 variables:</span></span>
-<span id="cb65-72"><a href="QuickStartDBM1.html#cb65-72"></a><span class="co">#&gt;   ..$ Reader: Factor w/ 4 levels &quot;RdrREADER_1&quot;,..: 1 2 3 4</span></span>
-<span id="cb65-73"><a href="QuickStartDBM1.html#cb65-73"></a><span class="co">#&gt;   ..$ Var   : num [1:4] 0.00148 0.00152 0.00138 0.00173</span></span>
-<span id="cb65-74"><a href="QuickStartDBM1.html#cb65-74"></a><span class="co">#&gt;   ..$ Cov1  : num [1:4] 0.000562 0.000716 0.000765 0.001124</span></span>
-<span id="cb65-75"><a href="QuickStartDBM1.html#cb65-75"></a><span class="co">#&gt;  $ FTestStatsRRFC      :&#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
-<span id="cb65-76"><a href="QuickStartDBM1.html#cb65-76"></a><span class="co">#&gt;   ..$ fRRFC  : num 4.69</span></span>
-<span id="cb65-77"><a href="QuickStartDBM1.html#cb65-77"></a><span class="co">#&gt;   ..$ ndfRRFC: num 1</span></span>
-<span id="cb65-78"><a href="QuickStartDBM1.html#cb65-78"></a><span class="co">#&gt;   ..$ ddfRRFC: num 3</span></span>
-<span id="cb65-79"><a href="QuickStartDBM1.html#cb65-79"></a><span class="co">#&gt;   ..$ pRRFC  : num 0.119</span></span>
-<span id="cb65-80"><a href="QuickStartDBM1.html#cb65-80"></a><span class="co">#&gt;  $ ciDiffTrtRRFC       :&#39;data.frame&#39;:    1 obs. of  8 variables:</span></span>
-<span id="cb65-81"><a href="QuickStartDBM1.html#cb65-81"></a><span class="co">#&gt;   ..$ Treatment: chr &quot;TrtTREAT1-TrtTREAT2&quot;</span></span>
-<span id="cb65-82"><a href="QuickStartDBM1.html#cb65-82"></a><span class="co">#&gt;   ..$ Estimate : num 0.0109</span></span>
-<span id="cb65-83"><a href="QuickStartDBM1.html#cb65-83"></a><span class="co">#&gt;   ..$ StdErr   : num 0.00501</span></span>
-<span id="cb65-84"><a href="QuickStartDBM1.html#cb65-84"></a><span class="co">#&gt;   ..$ DF       : num 3</span></span>
-<span id="cb65-85"><a href="QuickStartDBM1.html#cb65-85"></a><span class="co">#&gt;   ..$ t        : num 2.17</span></span>
-<span id="cb65-86"><a href="QuickStartDBM1.html#cb65-86"></a><span class="co">#&gt;   ..$ PrGTt    : num 0.119</span></span>
-<span id="cb65-87"><a href="QuickStartDBM1.html#cb65-87"></a><span class="co">#&gt;   ..$ CILower  : num -0.00509</span></span>
-<span id="cb65-88"><a href="QuickStartDBM1.html#cb65-88"></a><span class="co">#&gt;   ..$ CIUpper  : num 0.0268</span></span>
-<span id="cb65-89"><a href="QuickStartDBM1.html#cb65-89"></a><span class="co">#&gt;  $ ciAvgRdrEachTrtRRFC :&#39;data.frame&#39;:    2 obs. of  6 variables:</span></span>
-<span id="cb65-90"><a href="QuickStartDBM1.html#cb65-90"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 2 levels &quot;TrtTREAT1&quot;,&quot;TrtTREAT2&quot;: 1 2</span></span>
-<span id="cb65-91"><a href="QuickStartDBM1.html#cb65-91"></a><span class="co">#&gt;   ..$ Area     : num [1:2] 0.848 0.837</span></span>
-<span id="cb65-92"><a href="QuickStartDBM1.html#cb65-92"></a><span class="co">#&gt;   ..$ StdErr   : num [1:2] 0.0111 0.00777</span></span>
-<span id="cb65-93"><a href="QuickStartDBM1.html#cb65-93"></a><span class="co">#&gt;   ..$ DF       : num [1:2] 3 3</span></span>
-<span id="cb65-94"><a href="QuickStartDBM1.html#cb65-94"></a><span class="co">#&gt;   ..$ CILower  : num [1:2] 0.812 0.812</span></span>
-<span id="cb65-95"><a href="QuickStartDBM1.html#cb65-95"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:2] 0.883 0.862</span></span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="QuickStartDBM1.html#cb66-1"></a>ret &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(dataset03, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>)</span>
+<span id="cb66-2"><a href="QuickStartDBM1.html#cb66-2"></a><span class="kw">str</span>(ret)</span>
+<span id="cb66-3"><a href="QuickStartDBM1.html#cb66-3"></a><span class="co">#&gt; List of 14</span></span>
+<span id="cb66-4"><a href="QuickStartDBM1.html#cb66-4"></a><span class="co">#&gt;  $ fomArray            : num [1:2, 1:4] 0.853 0.85 0.865 0.844 0.857 ...</span></span>
+<span id="cb66-5"><a href="QuickStartDBM1.html#cb66-5"></a><span class="co">#&gt;   ..- attr(*, &quot;dimnames&quot;)=List of 2</span></span>
+<span id="cb66-6"><a href="QuickStartDBM1.html#cb66-6"></a><span class="co">#&gt;   .. ..$ : chr [1:2] &quot;TrtTREAT1&quot; &quot;TrtTREAT2&quot;</span></span>
+<span id="cb66-7"><a href="QuickStartDBM1.html#cb66-7"></a><span class="co">#&gt;   .. ..$ : chr [1:4] &quot;RdrREADER_1&quot; &quot;RdrREADER_2&quot; &quot;RdrREADER_3&quot; &quot;RdrREADER_4&quot;</span></span>
+<span id="cb66-8"><a href="QuickStartDBM1.html#cb66-8"></a><span class="co">#&gt;  $ meanSquares         :&#39;data.frame&#39;:    1 obs. of  3 variables:</span></span>
+<span id="cb66-9"><a href="QuickStartDBM1.html#cb66-9"></a><span class="co">#&gt;   ..$ msT : num 0.000236</span></span>
+<span id="cb66-10"><a href="QuickStartDBM1.html#cb66-10"></a><span class="co">#&gt;   ..$ msR : num 0.000684</span></span>
+<span id="cb66-11"><a href="QuickStartDBM1.html#cb66-11"></a><span class="co">#&gt;   ..$ msTR: num 5.02e-05</span></span>
+<span id="cb66-12"><a href="QuickStartDBM1.html#cb66-12"></a><span class="co">#&gt;  $ varComp             :&#39;data.frame&#39;:    1 obs. of  6 variables:</span></span>
+<span id="cb66-13"><a href="QuickStartDBM1.html#cb66-13"></a><span class="co">#&gt;   ..$ varR : num 2.33e-05</span></span>
+<span id="cb66-14"><a href="QuickStartDBM1.html#cb66-14"></a><span class="co">#&gt;   ..$ varTR: num -0.000684</span></span>
+<span id="cb66-15"><a href="QuickStartDBM1.html#cb66-15"></a><span class="co">#&gt;   ..$ cov1 : num 0.000792</span></span>
+<span id="cb66-16"><a href="QuickStartDBM1.html#cb66-16"></a><span class="co">#&gt;   ..$ cov2 : num 0.000484</span></span>
+<span id="cb66-17"><a href="QuickStartDBM1.html#cb66-17"></a><span class="co">#&gt;   ..$ cov3 : num 0.000513</span></span>
+<span id="cb66-18"><a href="QuickStartDBM1.html#cb66-18"></a><span class="co">#&gt;   ..$ var  : num 0.00153</span></span>
+<span id="cb66-19"><a href="QuickStartDBM1.html#cb66-19"></a><span class="co">#&gt;  $ FTestStatsRRRC      :&#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
+<span id="cb66-20"><a href="QuickStartDBM1.html#cb66-20"></a><span class="co">#&gt;   ..$ fRRRC  : num 4.69</span></span>
+<span id="cb66-21"><a href="QuickStartDBM1.html#cb66-21"></a><span class="co">#&gt;   ..$ ndfRRRC: num 1</span></span>
+<span id="cb66-22"><a href="QuickStartDBM1.html#cb66-22"></a><span class="co">#&gt;   ..$ ddfRRRC: num 3</span></span>
+<span id="cb66-23"><a href="QuickStartDBM1.html#cb66-23"></a><span class="co">#&gt;   ..$ pRRRC  : num 0.119</span></span>
+<span id="cb66-24"><a href="QuickStartDBM1.html#cb66-24"></a><span class="co">#&gt;  $ ciDiffTrtRRRC       :&#39;data.frame&#39;:    1 obs. of  8 variables:</span></span>
+<span id="cb66-25"><a href="QuickStartDBM1.html#cb66-25"></a><span class="co">#&gt;   ..$ Treatment: chr &quot;TrtTREAT1-TrtTREAT2&quot;</span></span>
+<span id="cb66-26"><a href="QuickStartDBM1.html#cb66-26"></a><span class="co">#&gt;   ..$ Estimate : num 0.0109</span></span>
+<span id="cb66-27"><a href="QuickStartDBM1.html#cb66-27"></a><span class="co">#&gt;   ..$ StdErr   : num 0.00501</span></span>
+<span id="cb66-28"><a href="QuickStartDBM1.html#cb66-28"></a><span class="co">#&gt;   ..$ DF       : num 3</span></span>
+<span id="cb66-29"><a href="QuickStartDBM1.html#cb66-29"></a><span class="co">#&gt;   ..$ t        : num 2.17</span></span>
+<span id="cb66-30"><a href="QuickStartDBM1.html#cb66-30"></a><span class="co">#&gt;   ..$ PrGTt    : num 0.119</span></span>
+<span id="cb66-31"><a href="QuickStartDBM1.html#cb66-31"></a><span class="co">#&gt;   ..$ CILower  : num -0.00509</span></span>
+<span id="cb66-32"><a href="QuickStartDBM1.html#cb66-32"></a><span class="co">#&gt;   ..$ CIUpper  : num 0.0268</span></span>
+<span id="cb66-33"><a href="QuickStartDBM1.html#cb66-33"></a><span class="co">#&gt;  $ ciAvgRdrEachTrtRRRC :&#39;data.frame&#39;:    2 obs. of  6 variables:</span></span>
+<span id="cb66-34"><a href="QuickStartDBM1.html#cb66-34"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 2 levels &quot;TrtTREAT1&quot;,&quot;TrtTREAT2&quot;: 1 2</span></span>
+<span id="cb66-35"><a href="QuickStartDBM1.html#cb66-35"></a><span class="co">#&gt;   ..$ Area     : num [1:2] 0.848 0.837</span></span>
+<span id="cb66-36"><a href="QuickStartDBM1.html#cb66-36"></a><span class="co">#&gt;   ..$ StdErr   : num [1:2] 0.0244 0.0236</span></span>
+<span id="cb66-37"><a href="QuickStartDBM1.html#cb66-37"></a><span class="co">#&gt;   ..$ DF       : num [1:2] 70.1 253.6</span></span>
+<span id="cb66-38"><a href="QuickStartDBM1.html#cb66-38"></a><span class="co">#&gt;   ..$ CILower  : num [1:2] 0.799 0.79</span></span>
+<span id="cb66-39"><a href="QuickStartDBM1.html#cb66-39"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:2] 0.896 0.883</span></span>
+<span id="cb66-40"><a href="QuickStartDBM1.html#cb66-40"></a><span class="co">#&gt;  $ FTestStatsFRRC      :&#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
+<span id="cb66-41"><a href="QuickStartDBM1.html#cb66-41"></a><span class="co">#&gt;   ..$ fFRRC  : num 0.364</span></span>
+<span id="cb66-42"><a href="QuickStartDBM1.html#cb66-42"></a><span class="co">#&gt;   ..$ ndfFRRC: num 1</span></span>
+<span id="cb66-43"><a href="QuickStartDBM1.html#cb66-43"></a><span class="co">#&gt;   ..$ ddfFRRC: num Inf</span></span>
+<span id="cb66-44"><a href="QuickStartDBM1.html#cb66-44"></a><span class="co">#&gt;   ..$ pFRRC  : num 0.546</span></span>
+<span id="cb66-45"><a href="QuickStartDBM1.html#cb66-45"></a><span class="co">#&gt;  $ ciDiffTrtFRRC       :&#39;data.frame&#39;:    1 obs. of  8 variables:</span></span>
+<span id="cb66-46"><a href="QuickStartDBM1.html#cb66-46"></a><span class="co">#&gt;   ..$ Treatment: chr &quot;TrtTREAT1-TrtTREAT2&quot;</span></span>
+<span id="cb66-47"><a href="QuickStartDBM1.html#cb66-47"></a><span class="co">#&gt;   ..$ Estimate : num 0.0109</span></span>
+<span id="cb66-48"><a href="QuickStartDBM1.html#cb66-48"></a><span class="co">#&gt;   ..$ StdErr   : num 0.018</span></span>
+<span id="cb66-49"><a href="QuickStartDBM1.html#cb66-49"></a><span class="co">#&gt;   ..$ DF       : num Inf</span></span>
+<span id="cb66-50"><a href="QuickStartDBM1.html#cb66-50"></a><span class="co">#&gt;   ..$ t        : num 0.603</span></span>
+<span id="cb66-51"><a href="QuickStartDBM1.html#cb66-51"></a><span class="co">#&gt;   ..$ PrGTt    : num 0.546</span></span>
+<span id="cb66-52"><a href="QuickStartDBM1.html#cb66-52"></a><span class="co">#&gt;   ..$ CILower  : num -0.0244</span></span>
+<span id="cb66-53"><a href="QuickStartDBM1.html#cb66-53"></a><span class="co">#&gt;   ..$ CIUpper  : num 0.0461</span></span>
+<span id="cb66-54"><a href="QuickStartDBM1.html#cb66-54"></a><span class="co">#&gt;  $ ciAvgRdrEachTrtFRRC :&#39;data.frame&#39;:    2 obs. of  6 variables:</span></span>
+<span id="cb66-55"><a href="QuickStartDBM1.html#cb66-55"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 2 levels &quot;TrtTREAT1&quot;,&quot;TrtTREAT2&quot;: 1 2</span></span>
+<span id="cb66-56"><a href="QuickStartDBM1.html#cb66-56"></a><span class="co">#&gt;   ..$ Area     : num [1:2] 0.848 0.837</span></span>
+<span id="cb66-57"><a href="QuickStartDBM1.html#cb66-57"></a><span class="co">#&gt;   ..$ StdErr   : num [1:2] 0.0271 0.0274</span></span>
+<span id="cb66-58"><a href="QuickStartDBM1.html#cb66-58"></a><span class="co">#&gt;   ..$ DF       : num [1:2] Inf Inf</span></span>
+<span id="cb66-59"><a href="QuickStartDBM1.html#cb66-59"></a><span class="co">#&gt;   ..$ CILower  : num [1:2] 0.795 0.783</span></span>
+<span id="cb66-60"><a href="QuickStartDBM1.html#cb66-60"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:2] 0.901 0.891</span></span>
+<span id="cb66-61"><a href="QuickStartDBM1.html#cb66-61"></a><span class="co">#&gt;  $ ciDiffTrtEachRdrFRRC:&#39;data.frame&#39;:    4 obs. of  9 variables:</span></span>
+<span id="cb66-62"><a href="QuickStartDBM1.html#cb66-62"></a><span class="co">#&gt;   ..$ Reader   : Factor w/ 4 levels &quot;RdrREADER_1&quot;,..: 1 2 3 4</span></span>
+<span id="cb66-63"><a href="QuickStartDBM1.html#cb66-63"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 1 level &quot;TrtTREAT1-TrtTREAT2&quot;: 1 1 1 1</span></span>
+<span id="cb66-64"><a href="QuickStartDBM1.html#cb66-64"></a><span class="co">#&gt;   ..$ Estimate : num [1:4] 0.003844 0.021483 0.017187 0.000905</span></span>
+<span id="cb66-65"><a href="QuickStartDBM1.html#cb66-65"></a><span class="co">#&gt;   ..$ StdErr   : num [1:4] 0.0428 0.0401 0.035 0.0348</span></span>
+<span id="cb66-66"><a href="QuickStartDBM1.html#cb66-66"></a><span class="co">#&gt;   ..$ DF       : num [1:4] Inf Inf Inf Inf</span></span>
+<span id="cb66-67"><a href="QuickStartDBM1.html#cb66-67"></a><span class="co">#&gt;   ..$ t        : num [1:4] 0.0898 0.5362 0.4911 0.026</span></span>
+<span id="cb66-68"><a href="QuickStartDBM1.html#cb66-68"></a><span class="co">#&gt;   ..$ PrGTt    : num [1:4] 0.928 0.592 0.623 0.979</span></span>
+<span id="cb66-69"><a href="QuickStartDBM1.html#cb66-69"></a><span class="co">#&gt;   ..$ CILower  : num [1:4] -0.08 -0.0571 -0.0514 -0.0673</span></span>
+<span id="cb66-70"><a href="QuickStartDBM1.html#cb66-70"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:4] 0.0877 0.1 0.0858 0.0691</span></span>
+<span id="cb66-71"><a href="QuickStartDBM1.html#cb66-71"></a><span class="co">#&gt;  $ varCovEachRdr       :&#39;data.frame&#39;:    4 obs. of  3 variables:</span></span>
+<span id="cb66-72"><a href="QuickStartDBM1.html#cb66-72"></a><span class="co">#&gt;   ..$ Reader: Factor w/ 4 levels &quot;RdrREADER_1&quot;,..: 1 2 3 4</span></span>
+<span id="cb66-73"><a href="QuickStartDBM1.html#cb66-73"></a><span class="co">#&gt;   ..$ Var   : num [1:4] 0.00148 0.00152 0.00138 0.00173</span></span>
+<span id="cb66-74"><a href="QuickStartDBM1.html#cb66-74"></a><span class="co">#&gt;   ..$ Cov1  : num [1:4] 0.000562 0.000716 0.000765 0.001124</span></span>
+<span id="cb66-75"><a href="QuickStartDBM1.html#cb66-75"></a><span class="co">#&gt;  $ FTestStatsRRFC      :&#39;data.frame&#39;:    1 obs. of  4 variables:</span></span>
+<span id="cb66-76"><a href="QuickStartDBM1.html#cb66-76"></a><span class="co">#&gt;   ..$ fRRFC  : num 4.69</span></span>
+<span id="cb66-77"><a href="QuickStartDBM1.html#cb66-77"></a><span class="co">#&gt;   ..$ ndfRRFC: num 1</span></span>
+<span id="cb66-78"><a href="QuickStartDBM1.html#cb66-78"></a><span class="co">#&gt;   ..$ ddfRRFC: num 3</span></span>
+<span id="cb66-79"><a href="QuickStartDBM1.html#cb66-79"></a><span class="co">#&gt;   ..$ pRRFC  : num 0.119</span></span>
+<span id="cb66-80"><a href="QuickStartDBM1.html#cb66-80"></a><span class="co">#&gt;  $ ciDiffTrtRRFC       :&#39;data.frame&#39;:    1 obs. of  8 variables:</span></span>
+<span id="cb66-81"><a href="QuickStartDBM1.html#cb66-81"></a><span class="co">#&gt;   ..$ Treatment: chr &quot;TrtTREAT1-TrtTREAT2&quot;</span></span>
+<span id="cb66-82"><a href="QuickStartDBM1.html#cb66-82"></a><span class="co">#&gt;   ..$ Estimate : num 0.0109</span></span>
+<span id="cb66-83"><a href="QuickStartDBM1.html#cb66-83"></a><span class="co">#&gt;   ..$ StdErr   : num 0.00501</span></span>
+<span id="cb66-84"><a href="QuickStartDBM1.html#cb66-84"></a><span class="co">#&gt;   ..$ DF       : num 3</span></span>
+<span id="cb66-85"><a href="QuickStartDBM1.html#cb66-85"></a><span class="co">#&gt;   ..$ t        : num 2.17</span></span>
+<span id="cb66-86"><a href="QuickStartDBM1.html#cb66-86"></a><span class="co">#&gt;   ..$ PrGTt    : num 0.119</span></span>
+<span id="cb66-87"><a href="QuickStartDBM1.html#cb66-87"></a><span class="co">#&gt;   ..$ CILower  : num -0.00509</span></span>
+<span id="cb66-88"><a href="QuickStartDBM1.html#cb66-88"></a><span class="co">#&gt;   ..$ CIUpper  : num 0.0268</span></span>
+<span id="cb66-89"><a href="QuickStartDBM1.html#cb66-89"></a><span class="co">#&gt;  $ ciAvgRdrEachTrtRRFC :&#39;data.frame&#39;:    2 obs. of  6 variables:</span></span>
+<span id="cb66-90"><a href="QuickStartDBM1.html#cb66-90"></a><span class="co">#&gt;   ..$ Treatment: Factor w/ 2 levels &quot;TrtTREAT1&quot;,&quot;TrtTREAT2&quot;: 1 2</span></span>
+<span id="cb66-91"><a href="QuickStartDBM1.html#cb66-91"></a><span class="co">#&gt;   ..$ Area     : num [1:2] 0.848 0.837</span></span>
+<span id="cb66-92"><a href="QuickStartDBM1.html#cb66-92"></a><span class="co">#&gt;   ..$ StdErr   : num [1:2] 0.0111 0.00777</span></span>
+<span id="cb66-93"><a href="QuickStartDBM1.html#cb66-93"></a><span class="co">#&gt;   ..$ DF       : num [1:2] 3 3</span></span>
+<span id="cb66-94"><a href="QuickStartDBM1.html#cb66-94"></a><span class="co">#&gt;   ..$ CILower  : num [1:2] 0.812 0.812</span></span>
+<span id="cb66-95"><a href="QuickStartDBM1.html#cb66-95"></a><span class="co">#&gt;   ..$ CIUpper  : num [1:2] 0.883 0.862</span></span></code></pre></div>
 </div>
 <div id="references-7" class="section level2" number="10.7">
 <h2><span class="header-section-number">10.7</span> References</h2>

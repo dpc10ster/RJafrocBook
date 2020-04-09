@@ -179,8 +179,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2.4" data-path="BinormalModel.html"><a href="BinormalModel.html#properties-of-the-binormal-model-roc-curve"><i class="fa fa-check"></i><b>5.2.4</b> Properties of the binormal model ROC curve</a></li>
 <li class="chapter" data-level="5.2.5" data-path="BinormalModel.html"><a href="BinormalModel.html#pdfs-of-the-binormal-model"><i class="fa fa-check"></i><b>5.2.5</b> pdfs of the binormal model</a></li>
 <li class="chapter" data-level="5.2.6" data-path="BinormalModel.html"><a href="BinormalModel.html#a-fitted-roc-curve"><i class="fa fa-check"></i><b>5.2.6</b> A fitted ROC curve</a></li>
+<li class="chapter" data-level="5.2.7" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation"><i class="fa fa-check"></i><b>5.2.7</b> Least-squares estimation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation"><i class="fa fa-check"></i><b>5.3</b> Least-squares estimation</a></li>
+<li class="chapter" data-level="5.3" data-path="BinormalModel.html"><a href="BinormalModel.html#least-squares-estimation-1"><i class="fa fa-check"></i><b>5.3</b> Least-squares estimation</a></li>
 <li class="chapter" data-level="5.4" data-path="BinormalModel.html"><a href="BinormalModel.html#maximum-likelihood-estimation-mle"><i class="fa fa-check"></i><b>5.4</b> Maximum likelihood estimation (MLE)</a>
 <ul>
 <li class="chapter" data-level="5.4.1" data-path="BinormalModel.html"><a href="BinormalModel.html#validating-the-fitting-model"><i class="fa fa-check"></i><b>5.4.1</b> Validating the fitting model</a></li>
@@ -488,10 +489,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li>These parameters do not apply to individual cases; rather they refer to a large population (asymptotically infinite in size) of cases.</li>
 </ul>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="RsmOpCh.html#cb113-1"></a><span class="kw">str</span>(dataset04<span class="op">$</span>lesionID)</span>
-<span id="cb113-2"><a href="RsmOpCh.html#cb113-2"></a><span class="co">#&gt;  num [1:100, 1:3] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb113-3"><a href="RsmOpCh.html#cb113-3"></a><span class="kw">str</span>(dataset04<span class="op">$</span>lesionWeight)</span>
-<span id="cb113-4"><a href="RsmOpCh.html#cb113-4"></a><span class="co">#&gt;  num [1:100, 1:3] 1 1 1 1 1 1 1 1 1 1 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="RsmOpCh.html#cb114-1"></a><span class="kw">str</span>(dataset04<span class="op">$</span>lesionID)</span>
+<span id="cb114-2"><a href="RsmOpCh.html#cb114-2"></a><span class="co">#&gt;  num [1:100, 1:3] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb114-3"><a href="RsmOpCh.html#cb114-3"></a><span class="kw">str</span>(dataset04<span class="op">$</span>lesionWeight)</span>
+<span id="cb114-4"><a href="RsmOpCh.html#cb114-4"></a><span class="co">#&gt;  num [1:100, 1:3] 1 1 1 1 1 1 1 1 1 1 ...</span></span></code></pre></div>
 <ul>
 <li>Note that the first index of both arrays is the case index for the 100 abnormal cases in this dataset.</li>
 <li>With finite number of cases the empirical operating characteristic (or for that matter any fitted operating characteristic) will have sampling variability as in the following example.</li>
@@ -499,8 +500,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="the-empirical-wafroc" class="section level2" number="19.4">
 <h2><span class="header-section-number">19.4</span> The empirical wAFROC</h2>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="RsmOpCh.html#cb114-1"></a>p &lt;-<span class="st"> </span><span class="kw">PlotEmpiricalOperatingCharacteristics</span>(dataset04, <span class="dt">opChType =</span> <span class="st">&quot;wAFROC&quot;</span>)</span>
-<span id="cb114-2"><a href="RsmOpCh.html#cb114-2"></a>p<span class="op">$</span>Plot</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="RsmOpCh.html#cb115-1"></a>p &lt;-<span class="st"> </span><span class="kw">PlotEmpiricalOperatingCharacteristics</span>(dataset04, <span class="dt">opChType =</span> <span class="st">&quot;wAFROC&quot;</span>)</span>
+<span id="cb115-2"><a href="RsmOpCh.html#cb115-2"></a>p<span class="op">$</span>Plot</span></code></pre></div>
 <p><img src="19-PlotRsmOpCh_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <ul>
 <li>The piecewise linear nature of the plot, with sharp breaks, indicates that this is due to a finite dataset.</li>
@@ -509,38 +510,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="the-predicted-wafroc" class="section level2" number="19.5">
 <h2><span class="header-section-number">19.5</span> The predicted wAFROC</h2>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="RsmOpCh.html#cb115-1"></a><span class="co">## Following example is for mu = 2, lambda = 1, nu = 0.6. 20% of the diseased </span></span>
-<span id="cb115-2"><a href="RsmOpCh.html#cb115-2"></a><span class="co">## cases have a single lesion, 40% have two lesions, 10% have 3 lesions, </span></span>
-<span id="cb115-3"><a href="RsmOpCh.html#cb115-3"></a><span class="co">## and 30% have 4 lesions.  </span></span>
-<span id="cb115-4"><a href="RsmOpCh.html#cb115-4"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">0.2</span>), <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>), <span class="kw">c</span>(<span class="dv">3</span>, <span class="fl">0.1</span>), <span class="kw">c</span>(<span class="dv">4</span>, <span class="fl">0.3</span>))</span>
-<span id="cb115-5"><a href="RsmOpCh.html#cb115-5"></a></span>
-<span id="cb115-6"><a href="RsmOpCh.html#cb115-6"></a><span class="co">## On cases with one lesion the weights are 1, on cases with 2 lesions the weights</span></span>
-<span id="cb115-7"><a href="RsmOpCh.html#cb115-7"></a><span class="co">## are 0.4 and 0.6, on cases with three lesions the weights are 0.2, 0.3 and 0.5, and</span></span>
-<span id="cb115-8"><a href="RsmOpCh.html#cb115-8"></a><span class="co">## on cases with 4 lesions the weights are 0.3, 0.4, 0.2 and 0.1: </span></span>
-<span id="cb115-9"><a href="RsmOpCh.html#cb115-9"></a>lesWghtDistr &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">1.0</span>, <span class="op">-</span><span class="ot">Inf</span>, <span class="op">-</span><span class="ot">Inf</span>, <span class="op">-</span><span class="ot">Inf</span>), </span>
-<span id="cb115-10"><a href="RsmOpCh.html#cb115-10"></a>                      <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>,  <span class="fl">0.6</span>, <span class="op">-</span><span class="ot">Inf</span>, <span class="op">-</span><span class="ot">Inf</span>), </span>
-<span id="cb115-11"><a href="RsmOpCh.html#cb115-11"></a>                      <span class="kw">c</span>(<span class="dv">3</span>, <span class="fl">0.2</span>,  <span class="fl">0.3</span>,  <span class="fl">0.5</span>, <span class="op">-</span><span class="ot">Inf</span>), </span>
-<span id="cb115-12"><a href="RsmOpCh.html#cb115-12"></a>                      <span class="kw">c</span>(<span class="dv">4</span>, <span class="fl">0.3</span>,  <span class="fl">0.4</span>, <span class="fl">0.2</span>,  <span class="fl">0.1</span>))</span>
-<span id="cb115-13"><a href="RsmOpCh.html#cb115-13"></a>p &lt;-<span class="st"> </span><span class="kw">PlotRsmOperatingCharacteristics</span>(<span class="dt">mu =</span> <span class="dv">2</span>, <span class="dt">lambda =</span> <span class="dv">1</span>, <span class="dt">nu =</span> <span class="fl">0.6</span>, <span class="dt">OpChType =</span> <span class="st">&quot;wAFROC&quot;</span>,</span>
-<span id="cb115-14"><a href="RsmOpCh.html#cb115-14"></a>                                       <span class="dt">lesDistr =</span> lesDistr, <span class="dt">lesWghtDistr =</span> lesWghtDistr, </span>
-<span id="cb115-15"><a href="RsmOpCh.html#cb115-15"></a>                                       <span class="dt">legendPosition =</span> <span class="st">&quot;bottom&quot;</span>, <span class="dt">nlfRange =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">llfRange =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb115-16"><a href="RsmOpCh.html#cb115-16"></a>p<span class="op">$</span>wAFROCPlot</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="RsmOpCh.html#cb116-1"></a><span class="co">## Following example is for mu = 2, lambda = 1, nu = 0.6. 20% of the diseased </span></span>
+<span id="cb116-2"><a href="RsmOpCh.html#cb116-2"></a><span class="co">## cases have a single lesion, 40% have two lesions, 10% have 3 lesions, </span></span>
+<span id="cb116-3"><a href="RsmOpCh.html#cb116-3"></a><span class="co">## and 30% have 4 lesions.  </span></span>
+<span id="cb116-4"><a href="RsmOpCh.html#cb116-4"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">0.2</span>), <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>), <span class="kw">c</span>(<span class="dv">3</span>, <span class="fl">0.1</span>), <span class="kw">c</span>(<span class="dv">4</span>, <span class="fl">0.3</span>))</span>
+<span id="cb116-5"><a href="RsmOpCh.html#cb116-5"></a></span>
+<span id="cb116-6"><a href="RsmOpCh.html#cb116-6"></a><span class="co">## On cases with one lesion the weights are 1, on cases with 2 lesions the weights</span></span>
+<span id="cb116-7"><a href="RsmOpCh.html#cb116-7"></a><span class="co">## are 0.4 and 0.6, on cases with three lesions the weights are 0.2, 0.3 and 0.5, and</span></span>
+<span id="cb116-8"><a href="RsmOpCh.html#cb116-8"></a><span class="co">## on cases with 4 lesions the weights are 0.3, 0.4, 0.2 and 0.1: </span></span>
+<span id="cb116-9"><a href="RsmOpCh.html#cb116-9"></a>lesWghtDistr &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">1.0</span>, <span class="op">-</span><span class="ot">Inf</span>, <span class="op">-</span><span class="ot">Inf</span>, <span class="op">-</span><span class="ot">Inf</span>), </span>
+<span id="cb116-10"><a href="RsmOpCh.html#cb116-10"></a>                      <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>,  <span class="fl">0.6</span>, <span class="op">-</span><span class="ot">Inf</span>, <span class="op">-</span><span class="ot">Inf</span>), </span>
+<span id="cb116-11"><a href="RsmOpCh.html#cb116-11"></a>                      <span class="kw">c</span>(<span class="dv">3</span>, <span class="fl">0.2</span>,  <span class="fl">0.3</span>,  <span class="fl">0.5</span>, <span class="op">-</span><span class="ot">Inf</span>), </span>
+<span id="cb116-12"><a href="RsmOpCh.html#cb116-12"></a>                      <span class="kw">c</span>(<span class="dv">4</span>, <span class="fl">0.3</span>,  <span class="fl">0.4</span>, <span class="fl">0.2</span>,  <span class="fl">0.1</span>))</span>
+<span id="cb116-13"><a href="RsmOpCh.html#cb116-13"></a>p &lt;-<span class="st"> </span><span class="kw">PlotRsmOperatingCharacteristics</span>(<span class="dt">mu =</span> <span class="dv">2</span>, <span class="dt">lambda =</span> <span class="dv">1</span>, <span class="dt">nu =</span> <span class="fl">0.6</span>, <span class="dt">OpChType =</span> <span class="st">&quot;wAFROC&quot;</span>,</span>
+<span id="cb116-14"><a href="RsmOpCh.html#cb116-14"></a>                                       <span class="dt">lesDistr =</span> lesDistr, <span class="dt">lesWghtDistr =</span> lesWghtDistr, </span>
+<span id="cb116-15"><a href="RsmOpCh.html#cb116-15"></a>                                       <span class="dt">legendPosition =</span> <span class="st">&quot;bottom&quot;</span>, <span class="dt">nlfRange =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">llfRange =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb116-16"><a href="RsmOpCh.html#cb116-16"></a>p<span class="op">$</span>wAFROCPlot</span></code></pre></div>
 <p><img src="19-PlotRsmOpCh_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 </div>
 <div id="the-distribution-of-number-of-lesions-and-weights" class="section level2" number="19.6">
 <h2><span class="header-section-number">19.6</span> The distribution of number of lesions and weights</h2>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="RsmOpCh.html#cb116-1"></a>lesDistr</span>
-<span id="cb116-2"><a href="RsmOpCh.html#cb116-2"></a><span class="co">#&gt;      [,1] [,2]</span></span>
-<span id="cb116-3"><a href="RsmOpCh.html#cb116-3"></a><span class="co">#&gt; [1,]    1  0.2</span></span>
-<span id="cb116-4"><a href="RsmOpCh.html#cb116-4"></a><span class="co">#&gt; [2,]    2  0.4</span></span>
-<span id="cb116-5"><a href="RsmOpCh.html#cb116-5"></a><span class="co">#&gt; [3,]    3  0.1</span></span>
-<span id="cb116-6"><a href="RsmOpCh.html#cb116-6"></a><span class="co">#&gt; [4,]    4  0.3</span></span>
-<span id="cb116-7"><a href="RsmOpCh.html#cb116-7"></a>lesWghtDistr</span>
-<span id="cb116-8"><a href="RsmOpCh.html#cb116-8"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5]</span></span>
-<span id="cb116-9"><a href="RsmOpCh.html#cb116-9"></a><span class="co">#&gt; [1,]    1  1.0 -Inf -Inf -Inf</span></span>
-<span id="cb116-10"><a href="RsmOpCh.html#cb116-10"></a><span class="co">#&gt; [2,]    2  0.4  0.6 -Inf -Inf</span></span>
-<span id="cb116-11"><a href="RsmOpCh.html#cb116-11"></a><span class="co">#&gt; [3,]    3  0.2  0.3  0.5 -Inf</span></span>
-<span id="cb116-12"><a href="RsmOpCh.html#cb116-12"></a><span class="co">#&gt; [4,]    4  0.3  0.4  0.2  0.1</span></span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="RsmOpCh.html#cb117-1"></a>lesDistr</span>
+<span id="cb117-2"><a href="RsmOpCh.html#cb117-2"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb117-3"><a href="RsmOpCh.html#cb117-3"></a><span class="co">#&gt; [1,]    1  0.2</span></span>
+<span id="cb117-4"><a href="RsmOpCh.html#cb117-4"></a><span class="co">#&gt; [2,]    2  0.4</span></span>
+<span id="cb117-5"><a href="RsmOpCh.html#cb117-5"></a><span class="co">#&gt; [3,]    3  0.1</span></span>
+<span id="cb117-6"><a href="RsmOpCh.html#cb117-6"></a><span class="co">#&gt; [4,]    4  0.3</span></span>
+<span id="cb117-7"><a href="RsmOpCh.html#cb117-7"></a>lesWghtDistr</span>
+<span id="cb117-8"><a href="RsmOpCh.html#cb117-8"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5]</span></span>
+<span id="cb117-9"><a href="RsmOpCh.html#cb117-9"></a><span class="co">#&gt; [1,]    1  1.0 -Inf -Inf -Inf</span></span>
+<span id="cb117-10"><a href="RsmOpCh.html#cb117-10"></a><span class="co">#&gt; [2,]    2  0.4  0.6 -Inf -Inf</span></span>
+<span id="cb117-11"><a href="RsmOpCh.html#cb117-11"></a><span class="co">#&gt; [3,]    3  0.2  0.3  0.5 -Inf</span></span>
+<span id="cb117-12"><a href="RsmOpCh.html#cb117-12"></a><span class="co">#&gt; [4,]    4  0.3  0.4  0.2  0.1</span></span></code></pre></div>
 <ul>
 <li>The second column of <code>lesDistr</code> specifies the fraction of diseased cases with the number of lesions specified in the first column.</li>
 <li>The first column of <code>lesWghtDistr</code> is a copy of the first column of <code>lesDistr</code>. The remaining non-<code>-Inf</code> entries are the weights.</li>
@@ -556,11 +557,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>By changing <code>OpChType</code> one can generate other operating characteristics.</li>
 <li>Note that lesiion weights argument is not needed for ROC curves. It is only needed for <code>wAFROC</code> and <code>wAFROC1</code> curves.</li>
 </ul>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="RsmOpCh.html#cb117-1"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">0.2</span>), <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>), <span class="kw">c</span>(<span class="dv">3</span>, <span class="fl">0.1</span>), <span class="kw">c</span>(<span class="dv">4</span>, <span class="fl">0.3</span>))</span>
-<span id="cb117-2"><a href="RsmOpCh.html#cb117-2"></a>p &lt;-<span class="st"> </span><span class="kw">PlotRsmOperatingCharacteristics</span>(<span class="dt">mu =</span> <span class="dv">2</span>, <span class="dt">lambda =</span> <span class="dv">1</span>, <span class="dt">nu =</span> <span class="fl">0.6</span>, <span class="dt">OpChType =</span> <span class="st">&quot;ROC&quot;</span>,</span>
-<span id="cb117-3"><a href="RsmOpCh.html#cb117-3"></a>                                       <span class="dt">lesDistr =</span> lesDistr,  </span>
-<span id="cb117-4"><a href="RsmOpCh.html#cb117-4"></a>                                       <span class="dt">legendPosition =</span> <span class="st">&quot;bottom&quot;</span>)</span>
-<span id="cb117-5"><a href="RsmOpCh.html#cb117-5"></a>p<span class="op">$</span>ROCPlot</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="RsmOpCh.html#cb118-1"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">0.2</span>), <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.4</span>), <span class="kw">c</span>(<span class="dv">3</span>, <span class="fl">0.1</span>), <span class="kw">c</span>(<span class="dv">4</span>, <span class="fl">0.3</span>))</span>
+<span id="cb118-2"><a href="RsmOpCh.html#cb118-2"></a>p &lt;-<span class="st"> </span><span class="kw">PlotRsmOperatingCharacteristics</span>(<span class="dt">mu =</span> <span class="dv">2</span>, <span class="dt">lambda =</span> <span class="dv">1</span>, <span class="dt">nu =</span> <span class="fl">0.6</span>, <span class="dt">OpChType =</span> <span class="st">&quot;ROC&quot;</span>,</span>
+<span id="cb118-3"><a href="RsmOpCh.html#cb118-3"></a>                                       <span class="dt">lesDistr =</span> lesDistr,  </span>
+<span id="cb118-4"><a href="RsmOpCh.html#cb118-4"></a>                                       <span class="dt">legendPosition =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb118-5"><a href="RsmOpCh.html#cb118-5"></a>p<span class="op">$</span>ROCPlot</span></code></pre></div>
 <p><img src="19-PlotRsmOpCh_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 <div id="summary-6" class="section level2" number="19.8">
