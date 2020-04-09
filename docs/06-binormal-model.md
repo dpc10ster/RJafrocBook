@@ -166,8 +166,38 @@ TPF = \Phi\left ( a - b \zeta \right )
 
 
 ### pdfs of the binormal model
+According to Eqn. (6.2.1), the probability that a Z-sample is smaller than a specified threshold  $\zeta$, i.e., the CDF function, is:
+
+\begin{equation*} 
+P\left ( Z \le \zeta \mid  Z\sim N\left ( 0,1 \right ) \right ) = 1-FPF\left ( \zeta \right ) = \Phi \left ( \zeta  \right )
+\end{equation*}
+
+\begin{equation*} 
+P\left ( Z \le \zeta \mid  Z\sim N\left ( \mu,\sigma^2 \right ) \right ) = 1-TPF\left ( \zeta \right ) = \Phi \left ( \frac{\zeta - \mu}{\sigma}  \right )
+\end{equation*}
+
+Since the *pdf* is the derivative of the corresponding CDF function, it follows that (the subscripts N and D denote non-diseased and diseased cases, respectively):
+
+\begin{equation*} 
+pdf_N\left ( \zeta \right ) = \frac{\partial \Phi\left ( \zeta \right )}{\partial \zeta} = \phi\left ( \zeta \right ) \equiv \frac{1}{\sqrt{2 \pi}}\exp\left ( -\frac{\zeta^2}{2} \right )
+\end{equation*}
+
+\begin{equation*} 
+pdf_D\left ( \zeta \right ) = \frac{\partial \Phi\left ( \frac{\zeta - \mu}{\sigma} \right )}{\partial \zeta} = \frac{1}{\sigma} \phi\left ( \frac{\zeta - \mu}{\sigma} \right ) \equiv \frac{1}{\sqrt{2 \pi}\sigma}\exp\left ( -\frac{\zeta^2}{2} \right )
+\end{equation*}
+
+The second equation can be written in $(a,b)$  notation as:
+
+\begin{equation*} 
+pdf_D\left ( \zeta \right ) = b\phi\left ( b\zeta-a \right ) = \frac{b}{\sqrt{2 \pi}}\exp\left ( -\frac{\left (b\zeta - a \right )^2}{2} \right )
+\end{equation*}
+
+Generation of pdfs for specified values of binormal model parameters was illustrated above (ref. TBA) for specified values of $\mu,\sigma$. Using transformations in Eqn. (6.2.16) the code can be readily converted to accept $a,b$  values as inputs.
+
 
 ### A fitted ROC curve
+
+
 
 ## Least-squares estimation
 
