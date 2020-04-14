@@ -446,8 +446,8 @@ K_{tr} \geq 5
 The expected values are given by:
 
 \begin{equation*} 
-\left \langle K_{1r} \right \rangle=K_1\left ( \Phi\left ( \zeta_{r+1} \right ) \right - \Phi\left ( \zeta_r \right ))\\
-\left \langle K_{2r} \right \rangle=K_2\left ( \Phi\left ( a\zeta_{r+1}-b \right ) \right - \Phi\left ( a\zeta_r - b\right ))
+\left \langle K_{1r} \right \rangle=K_1\left ( K_1\left ( \Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right ) \right )\\
+\left \langle K_{2r} \right \rangle=K_2\left ( \Phi\left ( a\zeta_{r+1}-b \right ) \right - \Phi\left ( a\zeta_r - b\right )\right)
 \end{equation*} 
 
 These expressions should make sense: the difference between the two CDF functions is the probability of a count in the specified bin, and multiplication by the total number of relevant cases should yield the expected counts (a non-integer). 
