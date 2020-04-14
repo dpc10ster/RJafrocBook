@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 21 Improper ROCs | The RJafroc Book</title>
+  <title>Chapter 6 Hypothesis Testing | The RJafroc Book</title>
   <meta name="description" content="Extended RJafroc documentation." />
   <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 21 Improper ROCs | The RJafroc Book" />
+  <meta property="og:title" content="Chapter 6 Hypothesis Testing | The RJafroc Book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 21 Improper ROCs | The RJafroc Book" />
+  <meta name="twitter:title" content="Chapter 6 Hypothesis Testing | The RJafroc Book" />
   
   <meta name="twitter:description" content="Extended RJafroc documentation." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="RsmOpCh.html"/>
-<link rel="next" href="DegenerateDatasetsBinormalModel.html"/>
+<link rel="prev" href="BinormalModel.html"/>
+<link rel="next" href="rocdataformat.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -134,8 +134,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="" data-path="a-note-on-the-online-distribution-mechanism-of-the-book.html"><a href="a-note-on-the-online-distribution-mechanism-of-the-book.html"><i class="fa fa-check"></i>A note on the online distribution mechanism of the book</a></li>
-<li class="chapter" data-level="" data-path="contributing-to-this-book.html"><a href="contributing-to-this-book.html"><i class="fa fa-check"></i>Contributing to this book</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="NpvPpv.html"><a href="NpvPpv.html"><i class="fa fa-check"></i><b>2</b> Negative and Positive Predictive Values</a>
 <ul>
@@ -196,7 +194,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html"><i class="fa fa-check"></i><b>6</b> Hypothesis Testing</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#introduction-4"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
-<li class="chapter" data-level="6.2" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references-3"><i class="fa fa-check"></i><b>6.2</b> References</a></li>
+<li class="chapter" data-level="6.2" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#hypothesis-testing-for-a-single-modality-single-reader-roc-study"><i class="fa fa-check"></i><b>6.2</b> Hypothesis testing for a single-modality single-reader ROC study</a></li>
+<li class="chapter" data-level="6.3" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references-3"><i class="fa fa-check"></i><b>6.3</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="rocdataformat.html"><a href="rocdataformat.html"><i class="fa fa-check"></i><b>7</b> ROC DATA FORMAT</a>
 <ul>
@@ -465,34 +464,51 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ImproperROCs" class="section level1" number="21">
-<h1><span class="header-section-number">Chapter 21</span> Improper ROCs</h1>
-<div id="the-binormal-model-1" class="section level2" number="21.1">
-<h2><span class="header-section-number">21.1</span> The binormal model</h2>
-<p>The binormal model has two parameters, <code>a</code> and <code>b</code>. The signal (or diseased cases) distribution has unit standard deviation.
-The noise (or non-diseased cases) distribution has standard deviation <code>b</code>. The <code>a</code> parameter is the separation of the two distributions.</p>
+<div id="HypothesisTesting" class="section level1" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Hypothesis Testing</h1>
+<div id="introduction-4" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Introduction</h2>
+<p>The problem addressed in this chapter is how to decide whether an estimate of AUC is consistent with a pre-specified value. One example of this is when a single-reader rates a set of cases in a single-modality, from which one estimates AUC, and the question is whether the estimate is statistically consistent with a pre-specified value. From a clinical point of view, this is generally not a useful exercise, but its simplicity is conducive to illustrating the broader concepts involved in this and later chapters. The clinically more useful analysis is when multiple readers interpret the same cases in two or more modalities. With two modalities, for example, one obtains an estimate AUC for each reader in each modality, averages the AUC values over all readers within each modality, and computes the inter-modality difference in reader-averaged AUC values. The question forming the main subject of this book is whether the observed difference is consistent with zero.</p>
+<p>Each situation outlined above admits a binary (yes/no) answer, which is different from the estimation problem that was dealt with in connection with the maximum likelihood method in Chapter 06, where one computed numerical estimates (and confidence intervals) of the parameters of the fitting model.</p>
+<p><strong>Hypothesis testing is the process of dichotomizing the possible outcomes of a statistical study and then using probabilistic arguments to choose one option over the other.</strong></p>
+<p>The two competing options are termed the null hypothesis (NH) and the alternative hypothesis (AH). The hypothesis testing procedure is analogous1 to the jury trial system in the US, with 20 instead of 12 jurors, with the null hypothesis being the presumption of innocence and the alternative hypothesis being the defendant is guilty, and the decision rule is to assume the defendant is innocent unless all 20 jurors agree the defendant is guilty. If even one juror disagrees, the defendant is deemed innocent (equivalent to choosing an <span class="math inline">\(\alpha\)</span> – defined below - of 0.05, or 1/20).</p>
 </div>
-<div id="improper-rocs" class="section level2" number="21.2">
-<h2><span class="header-section-number">21.2</span> Improper ROCs</h2>
-<p>Binormal model fits invariably lead to ROC curves that inappropriately cross the chance diagonal, leading to a prediction of a region of the ROC curve where performance is worse than chance, even for expert observers. By convention, such curves are termed <em>improper</em>. This chapter illustrates improper ROCs predicted by the binormal model.</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="ImproperROCs.html#cb121-1"></a>  aArray &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="fl">1.5</span>, <span class="dv">2</span>)</span>
-<span id="cb121-2"><a href="ImproperROCs.html#cb121-2"></a>  bArray &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
-<span id="cb121-3"><a href="ImproperROCs.html#cb121-3"></a>  chance_diag &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb121-4"><a href="ImproperROCs.html#cb121-4"></a>  p &lt;-<span class="st"> </span><span class="kw">PlotBinormalFit</span>(aArray, bArray) <span class="op">+</span></span>
-<span id="cb121-5"><a href="ImproperROCs.html#cb121-5"></a><span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb121-6"><a href="ImproperROCs.html#cb121-6"></a><span class="st">    </span><span class="kw">scale_y_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="op">+</span></span>
-<span id="cb121-7"><a href="ImproperROCs.html#cb121-7"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.85</span>, <span class="fl">0.2</span>))</span>
-<span id="cb121-8"><a href="ImproperROCs.html#cb121-8"></a>p &lt;-<span class="st"> </span>p <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">data =</span> chance_diag, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y), <span class="dt">linetype=</span><span class="st">&quot;dotted&quot;</span>)</span>
-<span id="cb121-9"><a href="ImproperROCs.html#cb121-9"></a><span class="kw">print</span>(p)</span></code></pre></div>
-<p><img src="21-improperROCs_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>The red plot is the clearest example of an improper ROC. This type of curve occurs whenever <code>b &lt; 1</code>. The chance line crossing near the upper right corner, around (0.919,0.919), and the fact that the ROC curve must eventually reach (1, 1) implies the curve must turn upwards as one approaches (1, 1), thereby displaying a “hook”. Whenever <code>b != 1</code> the hook is there, regardless of whether it is easily visible or not. If <code>b &lt; 1</code> the hook is near the upper right corner. If <code>b &gt; 1</code> the hook is near the origin (see green line, corresponding to <code>b = 1.5</code>). With increasing <code>a</code> the hook is less prominent (blue line corresponding to <code>a = 1.5, b = 0.5</code> and purple line corresponding to <code>a = 2, b = 0.5</code>). But it is there.</p>
+<div id="hypothesis-testing-for-a-single-modality-single-reader-roc-study" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Hypothesis testing for a single-modality single-reader ROC study</h2>
+<p>The binormal model described in Chapter 06 can be used to generate sets of ratings to illustrate the methods being described in this chapter. To recapitulate, the model is described by:</p>
+<p><span class="math display">\[\begin{equation*} 
+Z_{k_11} \sim N\left ( 0,1 \right )\\
+Z_{k_22} \sim N\left ( \mu,\sigma^2 \right )
+\end{equation*}\]</span></p>
+<p>The following code chunk encodes the <code>Wilcoxon</code> function:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="HypothesisTesting.html#cb1-1"></a>Wilcoxon &lt;-<span class="st"> </span><span class="cf">function</span> (zk1, zk2)</span>
+<span id="cb1-2"><a href="HypothesisTesting.html#cb1-2"></a>{</span>
+<span id="cb1-3"><a href="HypothesisTesting.html#cb1-3"></a>  K1 =<span class="st"> </span><span class="kw">length</span>(zk1)</span>
+<span id="cb1-4"><a href="HypothesisTesting.html#cb1-4"></a>  K2 =<span class="st"> </span><span class="kw">length</span>(zk2)</span>
+<span id="cb1-5"><a href="HypothesisTesting.html#cb1-5"></a>  W &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-6"><a href="HypothesisTesting.html#cb1-6"></a>    <span class="cf">for</span> (k1 <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K1) {</span>
+<span id="cb1-7"><a href="HypothesisTesting.html#cb1-7"></a>      W &lt;-<span class="st"> </span>W <span class="op">+</span><span class="st"> </span><span class="kw">sum</span>(zk1[k1] <span class="op">&lt;</span><span class="st"> </span>zk2)</span>
+<span id="cb1-8"><a href="HypothesisTesting.html#cb1-8"></a>      W &lt;-<span class="st"> </span>W <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(zk1[k1] <span class="op">==</span><span class="st"> </span>zk2)</span>
+<span id="cb1-9"><a href="HypothesisTesting.html#cb1-9"></a>    }</span>
+<span id="cb1-10"><a href="HypothesisTesting.html#cb1-10"></a>    W &lt;-<span class="st"> </span>W<span class="op">/</span>K1<span class="op">/</span>K2</span>
+<span id="cb1-11"><a href="HypothesisTesting.html#cb1-11"></a>  <span class="kw">return</span> (W)</span>
+<span id="cb1-12"><a href="HypothesisTesting.html#cb1-12"></a>}</span></code></pre></div>
+<p>In the next code chunk we set <span class="math inline">\(\mu = 1.5\)</span> and <span class="math inline">\(\sigma = 1.3\)</span> (these values were selected arbitrarily; the reader may wish to experiment with different ones) and simulate <span class="math inline">\(K_1 = 50\)</span> non-diseased cases and <span class="math inline">\(K_2 = 52\)</span> diseased cases. For clarity I like to keep the sizes of the two arrays slightly different; this allows one to quickly check, with a glance at the <code>Environment</code> panel, that array dimensions are as expected. The <code>for</code> loop draws 50 samples from the <span class="math inline">\(N(0,1)\)</span> distribution and 52 samples from the <span class="math inline">\(N(\mu,\sigma^2)\)</span> distribution, calculates the empirical AUC using the Wilcoxon, and the process is repeated 10,000 times, the AUC values are saved to a huge array <code>AUC</code>. After exit from the for-loop wee calcuate the mean and standard deviation of the <code>AUC</code> values and print them out.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="HypothesisTesting.html#cb2-1"></a>seed &lt;-<span class="st"> </span><span class="dv">1</span>;<span class="kw">set.seed</span>(seed)</span>
+<span id="cb2-2"><a href="HypothesisTesting.html#cb2-2"></a>mu &lt;-<span class="st"> </span><span class="fl">1.5</span>;sigma &lt;-<span class="st"> </span><span class="fl">1.3</span>;K1 &lt;-<span class="st"> </span><span class="dv">50</span>;K2 &lt;-<span class="st"> </span><span class="dv">52</span></span>
+<span id="cb2-3"><a href="HypothesisTesting.html#cb2-3"></a></span>
+<span id="cb2-4"><a href="HypothesisTesting.html#cb2-4"></a><span class="co"># cheat to find the population mean and std. dev.</span></span>
+<span id="cb2-5"><a href="HypothesisTesting.html#cb2-5"></a>AUC &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="dv">10000</span>)</span>
+<span id="cb2-6"><a href="HypothesisTesting.html#cb2-6"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(AUC)) {</span>
+<span id="cb2-7"><a href="HypothesisTesting.html#cb2-7"></a>  zk1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(K1);zk2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(K2, <span class="dt">mean =</span> mu, <span class="dt">sd =</span> sigma)  </span>
+<span id="cb2-8"><a href="HypothesisTesting.html#cb2-8"></a>  AUC[i] &lt;-<span class="st"> </span><span class="kw">Wilcoxon</span>(zk1, zk2)</span>
+<span id="cb2-9"><a href="HypothesisTesting.html#cb2-9"></a>}</span>
+<span id="cb2-10"><a href="HypothesisTesting.html#cb2-10"></a>meanAUC   &lt;-<span class="st">  </span><span class="kw">mean</span>(AUC);sigmaAUC  &lt;-<span class="st">  </span><span class="kw">sd</span>(AUC)</span>
+<span id="cb2-11"><a href="HypothesisTesting.html#cb2-11"></a><span class="kw">cat</span>(<span class="st">&quot;pop mean AUC = &quot;</span>, meanAUC, <span class="st">&quot;, pop sigma AUC = &quot;</span>, sigmaAUC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb2-12"><a href="HypothesisTesting.html#cb2-12"></a><span class="co">#&gt; pop mean AUC =  0.819178 , pop sigma AUC =  0.04176683</span></span></code></pre></div>
 </div>
-<div id="reason-for-improper-rocs" class="section level2" number="21.3">
-<h2><span class="header-section-number">21.3</span> Reason for improper ROCs</h2>
-<p>The reason for the “hook”" becomes apparent upon examination of the pdfs.
-<img src="21-improperROCs_files/figure-html/unnamed-chunk-2-1.png" width="672" /><img src="21-improperROCs_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
-<pre><code>#&gt; a =  0.7 , b =  0.5</code></pre>
-<p>Since <code>b &lt; 1</code>, the diseased <em>pdf</em> is broader and has a lower peak (since the integral under each distribution is unity) than the non-diseased pdf. Sliding an imaginary threshold to the left, starting from the extreme right, one sees that initially, just below <code>z = 7</code>, the diseased distribution starts being <em>“picked up”</em> while the non-diseased distribution is not <em>“picked up”</em>, causing the ROC to start with infinite slope near the origin (because TPF is increasing while FPF is not). Around <code>z = 2.5</code> the non-diseased distribution starts being <em>“picked up”</em>, causing the ROC slope to decrease. Around <code>z = -3</code>, almost all of the non-diseased distribution has been <em>“picked up”</em> which means FPF is near unity, but since not all of the broader diseased distribution has been <em>“picked up”</em>, TPF is less than unity. Here is a region where <code>TPF &lt; FPF</code>, meaning <em>the operating point is below the chance diagonal</em>. As the threshold is lowered further, TPF continues to increase, as the rest of the diseased distribution is <em>“picked up”</em> while FPF stays almost constant at unity. In this region, the ROC curve is approaching the upper right corner with almost infinite slope (because TPF is increasing but FPF is not).</p>
+<div id="references-3" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> References</h2>
 
 </div>
 </div>
@@ -501,8 +517,8 @@ The noise (or non-diseased cases) distribution has standard deviation <code>b</c
           </div>
         </div>
       </div>
-<a href="RsmOpCh.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="DegenerateDatasetsBinormalModel.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="BinormalModel.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="rocdataformat.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
