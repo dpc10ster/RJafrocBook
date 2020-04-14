@@ -195,7 +195,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="6.1" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#introduction-4"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
 <li class="chapter" data-level="6.2" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#hypothesis-testing-for-a-single-modality-single-reader-roc-study"><i class="fa fa-check"></i><b>6.2</b> Hypothesis testing for a single-modality single-reader ROC study</a></li>
-<li class="chapter" data-level="6.3" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references-3"><i class="fa fa-check"></i><b>6.3</b> References</a></li>
+<li class="chapter" data-level="6.3" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#type-i-errors"><i class="fa fa-check"></i><b>6.3</b> Type-I errors</a></li>
+<li class="chapter" data-level="6.4" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references-3"><i class="fa fa-check"></i><b>6.4</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="rocdataformat.html"><a href="rocdataformat.html"><i class="fa fa-check"></i><b>7</b> ROC DATA FORMAT</a>
 <ul>
@@ -493,7 +494,7 @@ Z_{k_22} \sim N\left ( \mu,\sigma^2 \right )
 <span id="cb1-10"><a href="HypothesisTesting.html#cb1-10"></a>    W &lt;-<span class="st"> </span>W<span class="op">/</span>K1<span class="op">/</span>K2</span>
 <span id="cb1-11"><a href="HypothesisTesting.html#cb1-11"></a>  <span class="kw">return</span> (W)</span>
 <span id="cb1-12"><a href="HypothesisTesting.html#cb1-12"></a>}</span></code></pre></div>
-<p>In the next code chunk we set <span class="math inline">\(\mu = 1.5\)</span> and <span class="math inline">\(\sigma = 1.3\)</span> (these values were selected arbitrarily; the reader may wish to experiment with different ones) and simulate <span class="math inline">\(K_1 = 50\)</span> non-diseased cases and <span class="math inline">\(K_2 = 52\)</span> diseased cases. For clarity I like to keep the sizes of the two arrays slightly different; this allows one to quickly check, with a glance at the <code>Environment</code> panel, that array dimensions are as expected. The <code>for</code> loop draws 50 samples from the <span class="math inline">\(N(0,1)\)</span> distribution and 52 samples from the <span class="math inline">\(N(\mu,\sigma^2)\)</span> distribution, calculates the empirical AUC using the Wilcoxon, and the process is repeated 10,000 times, the AUC values are saved to a huge array <code>AUC</code>. After exit from the for-loop wee calcuate the mean and standard deviation of the <code>AUC</code> values and print them out.</p>
+<p>In the next code chunk we set <span class="math inline">\(\mu = 1.5\)</span> and <span class="math inline">\(\sigma = 1.3\)</span> (these values were selected arbitrarily; the reader may wish to experiment with different ones) and simulate <span class="math inline">\(K_1 = 50\)</span> non-diseased cases and <span class="math inline">\(K_2 = 52\)</span> diseased cases. For clarity I like to keep the sizes of the two arrays slightly different; this allows one to quickly check, with a glance at the <code>Environment</code> panel, that array dimensions are as expected. The <code>for</code> loop draws 50 samples from the <span class="math inline">\(N(0,1)\)</span> distribution and 52 samples from the <span class="math inline">\(N(\mu,\sigma^2)\)</span> distribution, calculates the empirical AUC using the Wilcoxon, and the process is repeated 10,000 times, the AUC values are saved to a huge array <code>AUC</code>. After exit from the <code>for-loop</code> we calculate the mean and standard deviation of the <code>AUC</code> values.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="HypothesisTesting.html#cb2-1"></a>seed &lt;-<span class="st"> </span><span class="dv">1</span>;<span class="kw">set.seed</span>(seed)</span>
 <span id="cb2-2"><a href="HypothesisTesting.html#cb2-2"></a>mu &lt;-<span class="st"> </span><span class="fl">1.5</span>;sigma &lt;-<span class="st"> </span><span class="fl">1.3</span>;K1 &lt;-<span class="st"> </span><span class="dv">50</span>;K2 &lt;-<span class="st"> </span><span class="dv">52</span></span>
 <span id="cb2-3"><a href="HypothesisTesting.html#cb2-3"></a></span>
@@ -506,9 +507,55 @@ Z_{k_22} \sim N\left ( \mu,\sigma^2 \right )
 <span id="cb2-10"><a href="HypothesisTesting.html#cb2-10"></a>meanAUC   &lt;-<span class="st">  </span><span class="kw">mean</span>(AUC);sigmaAUC  &lt;-<span class="st">  </span><span class="kw">sd</span>(AUC)</span>
 <span id="cb2-11"><a href="HypothesisTesting.html#cb2-11"></a><span class="kw">cat</span>(<span class="st">&quot;pop mean AUC = &quot;</span>, meanAUC, <span class="st">&quot;, pop sigma AUC = &quot;</span>, sigmaAUC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb2-12"><a href="HypothesisTesting.html#cb2-12"></a><span class="co">#&gt; pop mean AUC =  0.819178 , pop sigma AUC =  0.04176683</span></span></code></pre></div>
+<p>By the simple (if unimaginative) approach of sampling 10,000 times, one estimates the <em>population</em> mean and standard deviation of empirical AUC, denoted below by <span class="math inline">\(AUC_{pop}\)</span> and <span class="math inline">\(\sigma_{AUC}\)</span>, respectively. Based on the 10,000 simulations, <span class="math inline">\(AUC_{pop}\)</span> = 0.819178 and <span class="math inline">\(\sigma_{AUC}\)</span> =0.0417668.</p>
+<p>The next chunk simulates one more independent ROC study with the same numbers of cases, and the resulting area under the empirical curve is denoted <span class="math inline">\(AUC\)</span>, AUC in the code.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="HypothesisTesting.html#cb3-1"></a><span class="co"># one more trial, this is the one we want to compare to meanAUC, i.e., get P-value</span></span>
+<span id="cb3-2"><a href="HypothesisTesting.html#cb3-2"></a>zk1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(K1);zk2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(K2, <span class="dt">mean =</span> mu, <span class="dt">sd =</span> sigma) <span class="co"># sqrt(DeLong(zk1,zk2)) </span></span>
+<span id="cb3-3"><a href="HypothesisTesting.html#cb3-3"></a>AUC &lt;-<span class="st"> </span><span class="kw">Wilcoxon</span>(zk1, zk2)</span>
+<span id="cb3-4"><a href="HypothesisTesting.html#cb3-4"></a><span class="kw">cat</span>(<span class="st">&quot;New AUC = &quot;</span>, AUC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb3-5"><a href="HypothesisTesting.html#cb3-5"></a><span class="co">#&gt; New AUC =  0.8626923</span></span>
+<span id="cb3-6"><a href="HypothesisTesting.html#cb3-6"></a></span>
+<span id="cb3-7"><a href="HypothesisTesting.html#cb3-7"></a>z &lt;-<span class="st"> </span>(AUC <span class="op">-</span><span class="st"> </span>meanAUC)<span class="op">/</span>sigmaAUC</span>
+<span id="cb3-8"><a href="HypothesisTesting.html#cb3-8"></a><span class="co">#z &lt;- qnorm(0.05/2)</span></span>
+<span id="cb3-9"><a href="HypothesisTesting.html#cb3-9"></a><span class="kw">cat</span>(<span class="st">&quot;z-statistic = &quot;</span>, z, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb3-10"><a href="HypothesisTesting.html#cb3-10"></a><span class="co">#&gt; z-statistic =  1.04184</span></span></code></pre></div>
+<p>Is the new value, 0.8626923, sufficiently different from the population mean (0.819178) to reject the null hypothesis <span class="math inline">\(NH: AUC = AUC_{pop}\)</span>? Note that the answer to this question can be either yes or no: equivocation is not allowed.</p>
+<p>The new value is “somewhat close” to the population mean, but how does one decide if “somewhat close” is close enough? Needed is the statistical distribution of the random variable <span class="math inline">\(AUC\)</span> under the hypothesis that the true mean is <span class="math inline">\(AUC_{pop}\)</span>. In the asymptotic limit of a large number of cases (this is an approximation), one can assume that the pdf of <span class="math inline">\(AUC\)</span> under the null hypothesis is the normal distribution <span class="math inline">\(N\left ( AUC_{pop}, \sigma_{AUC}^{2} \right )\)</span>:</p>
+<p><span class="math display">\[\begin{equation*} 
+pdf_{AUC}\left ( AUC\mid AUC_{pop}, \sigma_{AUC} \right )=\frac{1}{\sqrt{2\pi}\sigma_{AUC}}exp\left ( -\frac{1}{2} \left ( \frac{AUC-AUC_{pop}}{\sigma_{AUC}} \right )^2\right )
+\end{equation*}\]</span></p>
+<p>The translated and scaled value is distributed as a unit normal distribution, i.e.,</p>
+<p><span class="math display">\[\begin{equation*} 
+Z=\frac{AUC-AUC_{pop}}{\sigma_{AUC}}\sim N\left ( 0,1 \right )
+\end{equation*}\]</span></p>
+<p>[The <span class="math inline">\(Z\)</span> notation here should not be confused with z-sample, decision variable or rating of a case in an ROC study; the latter, when sampled over a set of non-diseased and diseased cases, yield a realization of <span class="math inline">\(AUC\)</span>. The author trusts the distinction will be clear from the context.] The observed magnitude of <span class="math inline">\(z\)</span> is 1.0418397.</p>
+<p><strong>The ubiquitous p-value is the probability that the observed magnitude of <span class="math inline">\(z\)</span>, or larger, occurs under the null hypothesis (NH), that the true mean of <span class="math inline">\(Z\)</span> is zero.</strong></p>
+<p>The p-value corresponding to an observed <span class="math inline">\(z\)</span> of 1.0418397 is given by (as always, uppercase <span class="math inline">\(Z\)</span> is the random variable, while lower case <span class="math inline">\(z\)</span> is a realized value):</p>
+<p><span class="math display">\[\begin{equation*} 
+P\left ( \lvert Z \rvert \geq \lvert z \rvert \mid Z\sim N\left ( 0,1 \right )\right )=\\
+P\left ( \lvert Z \rvert \geq 1.042 \mid Z\sim N\left ( 0,1 \right )\right )=\\
+2\Phi\left ( -1.042 \right )=0.2975
+\end{equation*}\]</span></p>
+<p>To recapitulate statistical notation, <span class="math inline">\(P\left ( \lvert Z \rvert \geq \lvert z \rvert \mid Z\sim N\left ( 0,1 \right )\right )\)</span> is to be parsed as <span class="math inline">\(P\left ( A\mid B \right )\)</span>, that is, the probability <span class="math inline">\(\lvert Z \rvert \geq \lvert z \rvert\)</span> given that <span class="math inline">\(Z\sim N\left ( 0,1 \right )\)</span>. The last line in Eqn. (8.4) follows from the symmetry of the unit normal distribution, i.e., the area above 1.042 must equal the area below -1.042.</p>
+<p>Since <span class="math inline">\(z\)</span> is a continuous variable, the probability that a sampled value will exactly equal the observed value is zero. Therefore, one must pose the question as stated above, namely what is the probability that <span class="math inline">\(Z\)</span> is at least as extreme as the observed value (by “extreme” I mean further from zero, in either positive or negative directions). If the observed was <span class="math inline">\(z\)</span> = 2.5 then the corresponding p-value would be , which is smaller than 0.2975 (<code>2*pnorm(-2.5)</code> = 0.01241933). This is cited below as the “second example”.</p>
+<p>Under the zero-mean null hypothesis, the larger the magnitude of the observed value of <span class="math inline">\(Z\)</span>, the smaller the p-value, and the more unlikely that the data supports the NH. <strong>The p-value can be interpreted as the degree of unlikelihood that the data supports the NH.</strong></p>
+<p>By convention one adopts a fixed value of the probability, denoted and usually <span class="math inline">\(\alpha\)</span> = 0.05, which is termed the <em>size</em> of the test or <em>the significance level</em> of the test, and the decision rule is to reject the null hypothesis if the observed p-value &lt; <span class="math inline">\(\alpha\)</span>.</p>
+<p><span class="math display">\[\begin{equation*} 
+p \leq \alpha \Rightarrow \text{Reject NH}
+\end{equation*}\]</span></p>
+<p>In the first example, with observed p-value equal to 0.2975, one would not reject the null hypothesis, but in the second example, with observed p-value equal to 0.01242, one would. If the p-value is exactly 0.05 (unlikely with ROC analysis, but one needs to account for it) then one does not reject the NH. In the 20-juror analogy, of one juror insists the defendant is not guilty, then observed P is 0.05, and one does not reject the NH that the defendant is innocent (the double negatives, very common in statistics, can be confusing; in plain English, the defendant goes home).</p>
+<p>According to the previous discussion, the critical magnitude of <span class="math inline">\(z\)</span> that determines whether to reject the null hypothesis is given by:</p>
+<p><span class="math display">\[\begin{equation*} 
+z_\frac{\alpha}{2}=-\Phi^{-1}\left ( \frac{\alpha}{2} \right )
+\end{equation*}\]</span></p>
+<p>For <span class="math inline">\(\alpha\)</span> = 0.05 this evaluates to 1.95996 (which is sometimes rounded up to two, good enough for “government work” as the saying goes) and the decision rule is to reject the null hypothesis only if the observed magnitude of <span class="math inline">\(z\)</span> is larger than <span class="math inline">\(z_\frac{\alpha}{2}\)</span>.</p>
+<p><strong>The decision rule based on comparing the observed z to a critical value is equivalent to a decision rule based on comparing the observed p-value to <span class="math inline">\(\alpha\)</span>. It is also equivalent, as will be shown later, to a decision rule based on a <span class="math inline">\(\left ( 1-\alpha \right )\)</span> confidence interval for the observed statistic. One rejects the NH if the closed confidence interval does not include zero.</strong></p>
 </div>
-<div id="references-3" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> References</h2>
+<div id="type-i-errors" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Type-I errors</h2>
+</div>
+<div id="references-3" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> References</h2>
 
 </div>
 </div>
