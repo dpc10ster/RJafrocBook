@@ -194,7 +194,26 @@ If $f$ is close to 0.05, then for 2000 trials, the 0.95 or 95% CI for $f$ is $f 
 The only way to reduce the width of the CI, and thereby run a more stringent test of the validity of the analysis, is to increase the number of trials $T$. Since the width of the CI depends on the inverse square root of the number of trials, one soon reaches a point of diminishing returns. Usually $T = 2000$ trials are enough for most statisticians and the author, but examples using more simulations have been published.
 
 ## One sided vs. two sided tests
+In the preceding example, the null hypothesis was rejected anytime the magnitude of the observed value of $z$ exceeded the critical value $-\Phi^{-1}\left ( \frac{\alpha}{2} \right)$. This is a statement of the alternative hypothesis (AH) $AUC\neq AUC_{pop}$, in other words too high or too low values of $z$ *both* result in rejection of the null hypothesis. This is referred to as a two-sided AH and the resulting p-value is termed a *two-sided* p-value. This is the most common one used in the literature.
 
+Now suppose that the additional trial performed by the radiologist was performed after an intervention following which the radiologist’s performance is expected to increase. To make matters clearer, assume the interpretations in the 10,000 trials used to estimate $AUC_{pop}$ were performed with the radiologist wearing an old pair of eye-glasses, possibly out of proper strength, and the additional trial is performed after the radiologist gets a new set of prescription eye-glasses. Because the radiologist’s eyesight has improved, the expectation is that performance should increase. In this situation, it is appropriate to use the one-sided alternative hypothesis $AUC > AUC_{pop}$. Now, large values of $z$ result in rejection of the null hypothesis, but small values do not. The critical value of $z$ is defined by $z_\alpha = \Phi\left ( 1-\alpha \right )$, which for $\alpha$ = 0.05 is 1.645 (i.e., `qnorm(1-alpha)
+= 1.644854`). Compare 1.64 to the critical value  $-\Phi^{-1}\left ( \frac{\alpha}{2} \right)$ = 1.96 for a two-sided test. If the change is in the expected direction, it is more likely that one will reject the NH with a one-sided than with a two-sided test. The p-value for a one-sided test is given by: 
+
+\begin{equation*} 
+\Pr\left ( Z \geq 1.042 \mid NH \right ) = \Phi \left (-1.042  \right ) = 0.1487
+\end{equation*} 
+
+Notice that this is half the corresponding two-sided test p-value; this is because one is only interested in the area under the unit normal that is above the observed value of $z$. If the intent is to obtain a significant finding, it is tempting to use one-sided tests. The down side of a one-sided test is that even with a large excursion of the observed $z$ in the other direction one cannot reject the null hypothesis. So if the new eye-glasses are so bad as to render the radiologist practically blind (think of a botched cataract surgery) the observed $z$ would be large and negative, but one cannot reject the null hypothesis $AUC=AUC_{pop}$.
+
+The one-sided test could be run the other way, with the alternative hypothesis being stated as $AUC<AUC_{pop}$. Now, large negative excursions of the observed value of AUC cause rejection of the null hypothesis, but large positive excursions do not. The critical value is defined by  $z_\alpha = \Phi^{-1}\left (\alpha  \right )$, which for $\alpha$ = 0.05  is -1.645. The p-value is given by (note the reversed sign compared to the previous one-sided test:
+
+\begin{equation*} 
+\Pr\left ( Z \leq 1.042 \mid NH  \right ) = \Phi(1.042) = 1 - 0.1487 = 0.8513
+\end{equation*} 
+
+This is the complement of the value for a one-sided test with the alternative hypothesis going the other way: obviously the probability that $Z$ is smaller than the observed value (1.042) plus the probability that $Z$ is larger than the same value must equal one. 
+
+## Statistical power
 
 
 ## References  

@@ -197,7 +197,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#hypothesis-testing-for-a-single-modality-single-reader-roc-study"><i class="fa fa-check"></i><b>6.2</b> Hypothesis testing for a single-modality single-reader ROC study</a></li>
 <li class="chapter" data-level="6.3" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#type-i-errors"><i class="fa fa-check"></i><b>6.3</b> Type-I errors</a></li>
 <li class="chapter" data-level="6.4" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#one-sided-vs.-two-sided-tests"><i class="fa fa-check"></i><b>6.4</b> One sided vs. two sided tests</a></li>
-<li class="chapter" data-level="6.5" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references-3"><i class="fa fa-check"></i><b>6.5</b> References</a></li>
+<li class="chapter" data-level="6.5" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#statistical-power"><i class="fa fa-check"></i><b>6.5</b> Statistical power</a></li>
+<li class="chapter" data-level="6.6" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references-3"><i class="fa fa-check"></i><b>6.6</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="rocdataformat.html"><a href="rocdataformat.html"><i class="fa fa-check"></i><b>7</b> ROC DATA FORMAT</a>
 <ul>
@@ -605,9 +606,23 @@ F \sim N\left ( f,\sigma_{f}^{2} \right )
 </div>
 <div id="one-sided-vs.-two-sided-tests" class="section level2" number="6.4">
 <h2><span class="header-section-number">6.4</span> One sided vs. two sided tests</h2>
+<p>In the preceding example, the null hypothesis was rejected anytime the magnitude of the observed value of <span class="math inline">\(z\)</span> exceeded the critical value <span class="math inline">\(-\Phi^{-1}\left ( \frac{\alpha}{2} \right)\)</span>. This is a statement of the alternative hypothesis (AH) <span class="math inline">\(AUC\neq AUC_{pop}\)</span>, in other words too high or too low values of <span class="math inline">\(z\)</span> <em>both</em> result in rejection of the null hypothesis. This is referred to as a two-sided AH and the resulting p-value is termed a <em>two-sided</em> p-value. This is the most common one used in the literature.</p>
+<p>Now suppose that the additional trial performed by the radiologist was performed after an intervention following which the radiologist’s performance is expected to increase. To make matters clearer, assume the interpretations in the 10,000 trials used to estimate <span class="math inline">\(AUC_{pop}\)</span> were performed with the radiologist wearing an old pair of eye-glasses, possibly out of proper strength, and the additional trial is performed after the radiologist gets a new set of prescription eye-glasses. Because the radiologist’s eyesight has improved, the expectation is that performance should increase. In this situation, it is appropriate to use the one-sided alternative hypothesis <span class="math inline">\(AUC &gt; AUC_{pop}\)</span>. Now, large values of <span class="math inline">\(z\)</span> result in rejection of the null hypothesis, but small values do not. The critical value of <span class="math inline">\(z\)</span> is defined by <span class="math inline">\(z_\alpha = \Phi\left ( 1-\alpha \right )\)</span>, which for <span class="math inline">\(\alpha\)</span> = 0.05 is 1.645 (i.e., <code>qnorm(1-alpha) = 1.644854</code>). Compare 1.64 to the critical value <span class="math inline">\(-\Phi^{-1}\left ( \frac{\alpha}{2} \right)\)</span> = 1.96 for a two-sided test. If the change is in the expected direction, it is more likely that one will reject the NH with a one-sided than with a two-sided test. The p-value for a one-sided test is given by:</p>
+<p><span class="math display">\[\begin{equation*} 
+\Pr\left ( Z \geq 1.042 \mid NH \right ) = \Phi \left (-1.042  \right ) = 0.1487
+\end{equation*}\]</span></p>
+<p>Notice that this is half the corresponding two-sided test p-value; this is because one is only interested in the area under the unit normal that is above the observed value of <span class="math inline">\(z\)</span>. If the intent is to obtain a significant finding, it is tempting to use one-sided tests. The down side of a one-sided test is that even with a large excursion of the observed <span class="math inline">\(z\)</span> in the other direction one cannot reject the null hypothesis. So if the new eye-glasses are so bad as to render the radiologist practically blind (think of a botched cataract surgery) the observed <span class="math inline">\(z\)</span> would be large and negative, but one cannot reject the null hypothesis <span class="math inline">\(AUC=AUC_{pop}\)</span>.</p>
+<p>The one-sided test could be run the other way, with the alternative hypothesis being stated as <span class="math inline">\(AUC&lt;AUC_{pop}\)</span>. Now, large negative excursions of the observed value of AUC cause rejection of the null hypothesis, but large positive excursions do not. The critical value is defined by <span class="math inline">\(z_\alpha = \Phi^{-1}\left (\alpha \right )\)</span>, which for <span class="math inline">\(\alpha\)</span> = 0.05 is -1.645. The p-value is given by (note the reversed sign compared to the previous one-sided test:</p>
+<p><span class="math display">\[\begin{equation*} 
+\Pr\left ( Z \leq 1.042 \mid NH  \right ) = \Phi(1.042) = 1 - 0.1487 = 0.8513
+\end{equation*}\]</span></p>
+<p>This is the complement of the value for a one-sided test with the alternative hypothesis going the other way: obviously the probability that <span class="math inline">\(Z\)</span> is smaller than the observed value (1.042) plus the probability that <span class="math inline">\(Z\)</span> is larger than the same value must equal one.</p>
 </div>
-<div id="references-3" class="section level2" number="6.5">
-<h2><span class="header-section-number">6.5</span> References</h2>
+<div id="statistical-power" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> Statistical power</h2>
+</div>
+<div id="references-3" class="section level2" number="6.6">
+<h2><span class="header-section-number">6.6</span> References</h2>
 
 </div>
 </div>
