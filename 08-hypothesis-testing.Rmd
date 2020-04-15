@@ -138,6 +138,61 @@ Just because one rejects the null hypothesis, as in the second example, does not
 \Pr( \text{Type I error} \mid {NH} )=\alpha
 \end{equation*} 
 
+To demonstrate the ideas one needs to have a very cooperative reader interpreting new sets of independent cases not just one more time, but 2000 more times (the reason for the 2000 trials will be explained below). The simulation code for this follows:
+
+```{r}
+seed <- 1;set.seed(seed)
+mu <- 1.5;sigma <- 1.3;K1 <- 50;K2 <- 52
+
+nTrials <- 2000
+alpha <- 0.05 # size of test
+reject = array(0, dim = nTrials)
+for (trial in 1:length(reject)) {  
+  zk1 <- rnorm(K1);zk2 <- rnorm(K2, mean = mu, sd = sigma)  
+  AUC <- Wilcoxon(zk1, zk2)  
+  z <- (AUC - meanAUC)/sigmaAUC
+  p <- 2*pnorm(-abs(z)) # p value for individual trial
+  if (p < alpha) reject[trial] = 1 
+}
+
+CI <- c(0,0); width <- -qnorm(alpha/2)
+ObsvdTypeIErrRate <- sum(reject)/length(reject)
+CI[1] <- ObsvdTypeIErrRate - width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/nTrials)
+CI[2] <- ObsvdTypeIErrRate + width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/nTrials)
+cat("alpha = ", alpha, "\n")
+cat("ObsvdTypeIErrRate = ", ObsvdTypeIErrRate, ", 95% confidence interval = ", CI, "\n")
+exact <- binom.test(sum(reject),n = 2000,p = alpha)
+cat("exact 95% CI = ", as.numeric(exact$conf.int), "\n")
+```             
+
+The population means were calculated in an earlier code chunk. One initializes `NTrials` to 2000 and $\alpha$ to 0.05. The `for-loop` describes our captive reader interpreting independent sets of cases 2000 times. *Each completed interpretation of 102 cases is termed a trial.* For each trial one calculates the observed value of `AUC`, the observed `z` statistic and the the observed p-value. The observed p-value is compared against the fixed value $\alpha$ and one sets the corresponding `reject[trial]` flag to unity if $p < \alpha$. In other words, if the trial-specific p-value is less than $\alpha$ one counts an instance of rejection of the null hypothesis. The process is repeated 2000 times.
+
+Upon exit from the for-loop, one calculates the observed Type-I error rate, denoted `ObsvdTypeIErrRate` by summing the reject array and dividing by 2000. One calculates a 95% confidence interval for `ObsvdTypeIErrRate` based on the binomial distribution, as in Chapter 03. 
+
+The observed Type-I error rate is a realization of a random variable, as is the estimated 95% confidence interval. The fact that the confidence interval includes $\alpha$ = 0.05 is no coincidence - it shows that the hypothesis testing procedure is working as expected. To distinguish between the selected $\alpha$ (a fixed value) and that observed in a simulation study (a realization of a random variable), the term *empirical $\alpha$* is used to denote the observed value rejection rate.
+
+It is a mistake to state that one wishes to minimize the Type-I error probability (the author has seen this comment from a senior researcher, which is the reason for bringing it up). The minimum value of $\alpha$ (a probability) is zero. Run the software with this value of $\alpha$: the NH will never be rejected. The downside of minimizing the expected Type-I error rate is that the NH will never be rejected, even when the NH is patently false. The aim of a valid method of analyzing the data is not minimizing the Type-I error rate, rather, the observed Type-I error rate should equal the specified value of $\alpha$ (0.05 in our example), allowance being made for the inherent variability in it’s estimate, i.e., its confidence interval. This is the reason 2000 trials were chosen for testing the validity of the NH testing procedure. With this choice, the 95% confidence interval, assuming that observed value is close to 0.05, is roughly ±0.01 as explained next. 
+
+Following analogous reasoning to Chapter 03, Eqn. (3.10.10), and defining $f$ as the observed rejection fraction over $T$ trials, and as usual, $F$ is a random variable and $f$ a realized value, 
+
+\begin{equation*} 
+\sigma_f = \sqrt{f(1-f)/T}\\
+F \sim N\left ( f,\sigma_{f}^{2} \right )
+\end{equation*} 
+
+An approximate $(1-\alpha)100$ percent CI for $f$  is:
+
+\begin{equation*} 
+{CI}_f = \left [ f-z_{\frac{\alpha}{2}}\sigma_f, f+z_{\frac{\alpha}{2}}\sigma_f \right ]
+\end{equation*} 
+
+If $f$ is close to 0.05, then for 2000 trials, the 0.95 or 95% CI for $f$ is $f \pm 0.01$, i.e.,  `qnorm(alpha/2) * sqrt(.05*(.95)/2000)` = 0.009551683 ~ 0.01.
+
+The only way to reduce the width of the CI, and thereby run a more stringent test of the validity of the analysis, is to increase the number of trials $T$. Since the width of the CI depends on the inverse square root of the number of trials, one soon reaches a point of diminishing returns. Usually $T = 2000$ trials are enough for most statisticians and the author, but examples using more simulations have been published.
+
+## One sided vs. two sided tests
+
+
 
 ## References  
 

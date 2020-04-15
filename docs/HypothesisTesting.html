@@ -196,7 +196,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#introduction-4"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
 <li class="chapter" data-level="6.2" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#hypothesis-testing-for-a-single-modality-single-reader-roc-study"><i class="fa fa-check"></i><b>6.2</b> Hypothesis testing for a single-modality single-reader ROC study</a></li>
 <li class="chapter" data-level="6.3" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#type-i-errors"><i class="fa fa-check"></i><b>6.3</b> Type-I errors</a></li>
-<li class="chapter" data-level="6.4" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references-3"><i class="fa fa-check"></i><b>6.4</b> References</a></li>
+<li class="chapter" data-level="6.4" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#one-sided-vs.-two-sided-tests"><i class="fa fa-check"></i><b>6.4</b> One sided vs. two sided tests</a></li>
+<li class="chapter" data-level="6.5" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references-3"><i class="fa fa-check"></i><b>6.5</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="rocdataformat.html"><a href="rocdataformat.html"><i class="fa fa-check"></i><b>7</b> ROC DATA FORMAT</a>
 <ul>
@@ -560,9 +561,53 @@ z_\frac{\alpha}{2}=-\Phi^{-1}\left ( \frac{\alpha}{2} \right )
 <p><span class="math display">\[\begin{equation*} 
 \Pr( \text{Type I error} \mid {NH} )=\alpha
 \end{equation*}\]</span></p>
+<p>To demonstrate the ideas one needs to have a very cooperative reader interpreting new sets of independent cases not just one more time, but 2000 more times (the reason for the 2000 trials will be explained below). The simulation code for this follows:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="HypothesisTesting.html#cb5-1"></a>seed &lt;-<span class="st"> </span><span class="dv">1</span>;<span class="kw">set.seed</span>(seed)</span>
+<span id="cb5-2"><a href="HypothesisTesting.html#cb5-2"></a>mu &lt;-<span class="st"> </span><span class="fl">1.5</span>;sigma &lt;-<span class="st"> </span><span class="fl">1.3</span>;K1 &lt;-<span class="st"> </span><span class="dv">50</span>;K2 &lt;-<span class="st"> </span><span class="dv">52</span></span>
+<span id="cb5-3"><a href="HypothesisTesting.html#cb5-3"></a></span>
+<span id="cb5-4"><a href="HypothesisTesting.html#cb5-4"></a>nTrials &lt;-<span class="st"> </span><span class="dv">2000</span></span>
+<span id="cb5-5"><a href="HypothesisTesting.html#cb5-5"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span> <span class="co"># size of test</span></span>
+<span id="cb5-6"><a href="HypothesisTesting.html#cb5-6"></a>reject =<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="dt">dim =</span> nTrials)</span>
+<span id="cb5-7"><a href="HypothesisTesting.html#cb5-7"></a><span class="cf">for</span> (trial <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(reject)) {  </span>
+<span id="cb5-8"><a href="HypothesisTesting.html#cb5-8"></a>  zk1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(K1);zk2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(K2, <span class="dt">mean =</span> mu, <span class="dt">sd =</span> sigma)  </span>
+<span id="cb5-9"><a href="HypothesisTesting.html#cb5-9"></a>  AUC &lt;-<span class="st"> </span><span class="kw">Wilcoxon</span>(zk1, zk2)  </span>
+<span id="cb5-10"><a href="HypothesisTesting.html#cb5-10"></a>  z &lt;-<span class="st"> </span>(AUC <span class="op">-</span><span class="st"> </span>meanAUC)<span class="op">/</span>sigmaAUC</span>
+<span id="cb5-11"><a href="HypothesisTesting.html#cb5-11"></a>  p &lt;-<span class="st"> </span><span class="dv">2</span><span class="op">*</span><span class="kw">pnorm</span>(<span class="op">-</span><span class="kw">abs</span>(z)) <span class="co"># p value for individual trial</span></span>
+<span id="cb5-12"><a href="HypothesisTesting.html#cb5-12"></a>  <span class="cf">if</span> (p <span class="op">&lt;</span><span class="st"> </span>alpha) reject[trial] =<span class="st"> </span><span class="dv">1</span> </span>
+<span id="cb5-13"><a href="HypothesisTesting.html#cb5-13"></a>}</span>
+<span id="cb5-14"><a href="HypothesisTesting.html#cb5-14"></a></span>
+<span id="cb5-15"><a href="HypothesisTesting.html#cb5-15"></a>CI &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>); width &lt;-<span class="st"> </span><span class="op">-</span><span class="kw">qnorm</span>(alpha<span class="op">/</span><span class="dv">2</span>)</span>
+<span id="cb5-16"><a href="HypothesisTesting.html#cb5-16"></a>ObsvdTypeIErrRate &lt;-<span class="st"> </span><span class="kw">sum</span>(reject)<span class="op">/</span><span class="kw">length</span>(reject)</span>
+<span id="cb5-17"><a href="HypothesisTesting.html#cb5-17"></a>CI[<span class="dv">1</span>] &lt;-<span class="st"> </span>ObsvdTypeIErrRate <span class="op">-</span><span class="st"> </span>width<span class="op">*</span><span class="kw">sqrt</span>(ObsvdTypeIErrRate<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>ObsvdTypeIErrRate)<span class="op">/</span>nTrials)</span>
+<span id="cb5-18"><a href="HypothesisTesting.html#cb5-18"></a>CI[<span class="dv">2</span>] &lt;-<span class="st"> </span>ObsvdTypeIErrRate <span class="op">+</span><span class="st"> </span>width<span class="op">*</span><span class="kw">sqrt</span>(ObsvdTypeIErrRate<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>ObsvdTypeIErrRate)<span class="op">/</span>nTrials)</span>
+<span id="cb5-19"><a href="HypothesisTesting.html#cb5-19"></a><span class="kw">cat</span>(<span class="st">&quot;alpha = &quot;</span>, alpha, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb5-20"><a href="HypothesisTesting.html#cb5-20"></a><span class="co">#&gt; alpha =  0.05</span></span>
+<span id="cb5-21"><a href="HypothesisTesting.html#cb5-21"></a><span class="kw">cat</span>(<span class="st">&quot;ObsvdTypeIErrRate = &quot;</span>, ObsvdTypeIErrRate, <span class="st">&quot;, 95% confidence interval = &quot;</span>, CI, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb5-22"><a href="HypothesisTesting.html#cb5-22"></a><span class="co">#&gt; ObsvdTypeIErrRate =  0.0535 , 95% confidence interval =  0.04363788 0.06336212</span></span>
+<span id="cb5-23"><a href="HypothesisTesting.html#cb5-23"></a>exact &lt;-<span class="st"> </span><span class="kw">binom.test</span>(<span class="kw">sum</span>(reject),<span class="dt">n =</span> <span class="dv">2000</span>,<span class="dt">p =</span> alpha)</span>
+<span id="cb5-24"><a href="HypothesisTesting.html#cb5-24"></a><span class="kw">cat</span>(<span class="st">&quot;exact 95% CI = &quot;</span>, <span class="kw">as.numeric</span>(exact<span class="op">$</span>conf.int), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb5-25"><a href="HypothesisTesting.html#cb5-25"></a><span class="co">#&gt; exact 95% CI =  0.04404871 0.06428544</span></span></code></pre></div>
+<p>The population means were calculated in an earlier code chunk. One initializes <code>NTrials</code> to 2000 and <span class="math inline">\(\alpha\)</span> to 0.05. The <code>for-loop</code> describes our captive reader interpreting independent sets of cases 2000 times. <em>Each completed interpretation of 102 cases is termed a trial.</em> For each trial one calculates the observed value of <code>AUC</code>, the observed <code>z</code> statistic and the the observed p-value. The observed p-value is compared against the fixed value <span class="math inline">\(\alpha\)</span> and one sets the corresponding <code>reject[trial]</code> flag to unity if <span class="math inline">\(p &lt; \alpha\)</span>. In other words, if the trial-specific p-value is less than <span class="math inline">\(\alpha\)</span> one counts an instance of rejection of the null hypothesis. The process is repeated 2000 times.</p>
+<p>Upon exit from the for-loop, one calculates the observed Type-I error rate, denoted <code>ObsvdTypeIErrRate</code> by summing the reject array and dividing by 2000. One calculates a 95% confidence interval for <code>ObsvdTypeIErrRate</code> based on the binomial distribution, as in Chapter 03.</p>
+<p>The observed Type-I error rate is a realization of a random variable, as is the estimated 95% confidence interval. The fact that the confidence interval includes <span class="math inline">\(\alpha\)</span> = 0.05 is no coincidence - it shows that the hypothesis testing procedure is working as expected. To distinguish between the selected <span class="math inline">\(\alpha\)</span> (a fixed value) and that observed in a simulation study (a realization of a random variable), the term <em>empirical <span class="math inline">\(\alpha\)</span></em> is used to denote the observed value rejection rate.</p>
+<p>It is a mistake to state that one wishes to minimize the Type-I error probability (the author has seen this comment from a senior researcher, which is the reason for bringing it up). The minimum value of <span class="math inline">\(\alpha\)</span> (a probability) is zero. Run the software with this value of <span class="math inline">\(\alpha\)</span>: the NH will never be rejected. The downside of minimizing the expected Type-I error rate is that the NH will never be rejected, even when the NH is patently false. The aim of a valid method of analyzing the data is not minimizing the Type-I error rate, rather, the observed Type-I error rate should equal the specified value of <span class="math inline">\(\alpha\)</span> (0.05 in our example), allowance being made for the inherent variability in it’s estimate, i.e., its confidence interval. This is the reason 2000 trials were chosen for testing the validity of the NH testing procedure. With this choice, the 95% confidence interval, assuming that observed value is close to 0.05, is roughly ±0.01 as explained next.</p>
+<p>Following analogous reasoning to Chapter 03, Eqn. (3.10.10), and defining <span class="math inline">\(f\)</span> as the observed rejection fraction over <span class="math inline">\(T\)</span> trials, and as usual, <span class="math inline">\(F\)</span> is a random variable and <span class="math inline">\(f\)</span> a realized value,</p>
+<p><span class="math display">\[\begin{equation*} 
+\sigma_f = \sqrt{f(1-f)/T}\\
+F \sim N\left ( f,\sigma_{f}^{2} \right )
+\end{equation*}\]</span></p>
+<p>An approximate <span class="math inline">\((1-\alpha)100\)</span> percent CI for <span class="math inline">\(f\)</span> is:</p>
+<p><span class="math display">\[\begin{equation*} 
+{CI}_f = \left [ f-z_{\frac{\alpha}{2}}\sigma_f, f+z_{\frac{\alpha}{2}}\sigma_f \right ]
+\end{equation*}\]</span></p>
+<p>If <span class="math inline">\(f\)</span> is close to 0.05, then for 2000 trials, the 0.95 or 95% CI for <span class="math inline">\(f\)</span> is <span class="math inline">\(f \pm 0.01\)</span>, i.e., <code>qnorm(alpha/2) * sqrt(.05*(.95)/2000)</code> = 0.009551683 ~ 0.01.</p>
+<p>The only way to reduce the width of the CI, and thereby run a more stringent test of the validity of the analysis, is to increase the number of trials <span class="math inline">\(T\)</span>. Since the width of the CI depends on the inverse square root of the number of trials, one soon reaches a point of diminishing returns. Usually <span class="math inline">\(T = 2000\)</span> trials are enough for most statisticians and the author, but examples using more simulations have been published.</p>
 </div>
-<div id="references-3" class="section level2" number="6.4">
-<h2><span class="header-section-number">6.4</span> References</h2>
+<div id="one-sided-vs.-two-sided-tests" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> One sided vs. two sided tests</h2>
+</div>
+<div id="references-3" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> References</h2>
 
 </div>
 </div>
