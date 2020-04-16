@@ -4,7 +4,7 @@
 
 ## Introduction
 The problem addressed in this chapter is how to decide whether an estimate of AUC is consistent with a pre-specified value. One example of this is when a single-reader rates a set of cases in a single-modality, from which one estimates AUC, and the question is whether the estimate is statistically consistent with a pre-specified value. From a clinical point of view, this is generally not a useful exercise, but its simplicity is conducive to illustrating the broader concepts involved in this and later chapters. The clinically more useful analysis is when multiple readers interpret the same cases in two or more modalities. With two modalities, for example, one obtains an estimate AUC for each reader in each modality, averages the AUC values over all readers within each modality, and computes the inter-modality difference in reader-averaged AUC values. The question forming the main subject of this book is whether the observed difference is consistent with zero.
- 
+
 Each situation outlined above admits a binary (yes/no) answer, which is different from the estimation problem that was dealt with in connection with the maximum likelihood method in Chapter 06, where one computed numerical estimates (and confidence intervals) of the parameters of the fitting model. 
 
 **Hypothesis testing is the process of dichotomizing the possible outcomes of a statistical study and then using probabilistic arguments to choose one option over the other.**
@@ -28,11 +28,11 @@ Wilcoxon <- function (zk1, zk2)
   K1 = length(zk1)
   K2 = length(zk2)
   W <- 0
-    for (k1 in 1:K1) {
-      W <- W + sum(zk1[k1] < zk2)
-      W <- W + 0.5 * sum(zk1[k1] == zk2)
-    }
-    W <- W/K1/K2
+  for (k1 in 1:K1) {
+    W <- W + sum(zk1[k1] < zk2)
+    W <- W + 0.5 * sum(zk1[k1] == zk2)
+  }
+  W <- W/K1/K2
   return (W)
 }
 ```
@@ -214,6 +214,168 @@ The one-sided test could be run the other way, with the alternative hypothesis b
 This is the complement of the value for a one-sided test with the alternative hypothesis going the other way: obviously the probability that $Z$ is smaller than the observed value (1.042) plus the probability that $Z$ is larger than the same value must equal one. 
 
 ## Statistical power
+So far, focus has been on the null hypothesis. The Type-I error probability was introduced, defined as the probability of incorrectly rejecting the null hypothesis, the control, or "cap" on which is  $\alpha$, usually set to 0.05. What if the null hypothesis is actually false and the study fails to reject it? This is termed a Type-II error, the control on which is denoted  $\beta$, the probability of a Type-II error. **The complement of $\beta$  is called statistical power.** 
+
+The following table summarizes the two types of errors and the two correct decisions that can occur in hypothesis testing. In the context of hypothesis testing, a Type-II error could be termed a false negative, not to be confused with false negatives occurring on individual case-level decisions. 
+
+Truth           Fail to reject NH        Reject NH
+---------       ------------------       ----------------
+NH is True        1 - $\alpha$             $\alpha$ (FPF)
+NH is False       $\beta$ (FNF)            Power = 1 - $\beta$
+
+
+This resembles the 2 x 2 table encountered in Chapter 02, which led to the concepts of $FPF$, $TPF$ and the ROC curve. Indeed, it is possible think of an analogous plot of empirical (i.e., observed) power vs. empirical $\alpha$, which looks like an ROC plot, with empirical $\alpha$  playing the role of $FPF$ and empirical power playing the role of $TPF$, see below. If  $\alpha$ = 0, then power = 0; i.e., if Type-I errors are minimized all the way to zero, then power is zero and one makes Type-II errors all the time. On the other hand, if $\alpha$  = 1 then Power = 1, and one makes Type-I errors all the time. 
+
+A little history is due at this point. The author's first FROC study, which led to his entry into this field [@RN621], was published in Radiology in 1986 after a lot of help from a reviewer, who we (correctly) guessed was the late Prof. Charles E. Metz. Prof. Gary T. Barnes (the author's mentor at that time at the University of Alabama at Birmingham) and the author visited Prof. Charles Metz in Chicago for a day ca. 1986, to figuratively “pick Charlie’s brain”. Prof. Metz referred to the concept outlined in the previous paragraph, as an *ROC within an ROC*. 
+
+This curve does not summarize the result of a single ROC study. Rather it summarizes the probabilistic behavior of the two types of errors that occur when one conducts thousands of such studies, under both NH true and NH false conditions, each time with different values of $\alpha$, with each trial ending in a decision to reject or not reject the null hypothesis. The long sentence is best explained with an example. 
+
+
+```r
+seed <- 1;set.seed(seed)
+muNH <- 1.5;muAH <- 2.1;sigma <- 1.3;K1 <- 50;K2 <- 52# Line 6
+
+# cheat to find the population mean and std. dev.
+AUC <- array(dim = 10000) # line 8
+for (i in 1:length(AUC)) {
+  zk1 <- rnorm(K1);zk2 <- rnorm(K2, mean = muNH, sd = sigma)  
+  AUC[i] <- Wilcoxon(zk1, zk2)
+}
+sigmaAUC <- sqrt(var(AUC));meanAUC <- mean(AUC) # Line 14
+
+T <- 2000  # Line 16
+mu <- c(muNH,muAH) # Line 17
+alphaArr <- seq(0.05, 0.95, length.out = 10)
+EmpAlpha <- array(dim = length(alphaArr));EmpPower <- array(dim = length(alphaArr))
+for (a in 1:length(alphaArr)) { # Line 20
+  alpha <- alphaArr[a] 
+  reject <- array(0, dim = c(2, T))
+  for (h in 1:2) {  
+    for (t in 1:length(reject[h,])) {  
+      zk1 <- rnorm(K1);zk2 <- rnorm(K2, mean = mu[h], sd = sigma)  
+      AUC <- Wilcoxon(zk1, zk2)  
+      obsvdZ <- (AUC - meanAUC)/sigmaAUC
+      p <- 2*pnorm(-abs(obsvdZ)) # p value for individual t
+      if (p < alpha) reject[h,t] = 1 
+    }
+  }
+  EmpAlpha[a] <- sum(reject[1,])/length(reject[1,])
+  EmpPower[a] <- sum(reject[2,])/length(reject[2,])
+}
+EmpAlpha <- c(0,EmpAlpha,1); EmpPower <- c(0,EmpPower,1) # Line 19
+
+pointData <- data.frame(EmpAlpha = EmpAlpha, EmpPower = EmpPower)
+zetas <- seq(-5, 5, by = 0.01)
+muRoc <- 1.8
+curveData <- data.frame(EmpAlpha = pnorm(-zetas), EmpPower = pnorm(muRoc - zetas))
+alphaPowerPlot <- ggplot(mapping = aes(x = EmpAlpha, y = EmpPower)) + geom_point(data = pointData, shape = 1, size = 3) + geom_line(data = curveData)
+print(alphaPowerPlot)
+```
+
+<img src="08-hypothesis-testing_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+
+Line 6 creates two variables, `muNH` = 1.5 (the binormal model separation parameter under the NH) and `muAH` = 2.1 (the separation parameter under the AH). Under either hypotheses, the same diseased case standard deviation `sigma` = 1.3 and 50 non-diseased and 52 diseased cases are assumed. As before, lines 8 – 14 use the "brute force" technique to determine population AUC and standard deviation of AUC under the NH condition. Line 16 defines the number of trials `T` = 2000. Line 17 creates a vector `mu` containing the NH and AH values defined at line 6. Line 18 creates `alphaArr`, a sequence of 10 equally spaced values in the range 0.05 to 0.95, which represent 10 values for $\alpha$. Line 19 creates two arrays of length 10 each, named `EmpAlpha` and `EmpPower`, to hold the values of the observed Type-I error rate, i.e., empirical $\alpha$, and the empirical power, respectively. The program will run `T` = 2000 NH and `T` = 2000 AH trials using as $\alpha$ each successive value in `alphaArr` and save the observed Type-I error rates and observed powers to the arrays `EmpAlpha` and `EmpPower`, respectively. 
+
+The action begins in line 20, which begins a for-loop in `a`, an index into `alphaArr.` Line 21 selects the appropriate value for `alpha` (0.05 on the first pass, 0.15 on the next pass, etc.). Line 22 initializes `reject[2,2000]` with zeroes, to hold the result of each trial; the first index corresponds to hypothesis `h` and the second to trial `t`. Line 23 begins a for-loop in `h`, with `h` = 1 corresponding to the NH and `h` = 2 to the AH. Line 24 begins a for-loop in `t`, the trial index. The code within this block is similar to previous examples. It simulates ratings, computes AUC, calculates the p-value, and saves a rejection of the NH as a one at the appropriate array location `reject[h,t]`. Lines 32 – 33 calculate the empirical $\alpha$ and empirical power for each value of $\alpha$  in `alphaArr`. After padding the ends with zero and ones (the trivial points), the remaining lines plot the "ROC within an ROC".
+
+Each of the circles in the figure corresponds to a specific value of $\alpha$. For example the lowest non-trivial corresponds to  $\alpha$ = 0.05, for which the empirical $\alpha$ is 0.049 and the corresponding empirical Power is 0.4955. True $\alpha$ increases as the operating point moves up the plot, with empirical $\alpha$ and empirical power increasing correspondingly. The $AUC$ under this curve is determined by the effect size, defined as the difference between the AH and NH values of the separation parameter. If the effect size is zero, then the circles will scatter around the chance diagonal; the scatter will be consistent with the 2000 trials used to generate each coordinate of a point. As the effect size increases, the plot approaches the perfect "ROC", i.e., approaching the top-left corner. One could use AUC under this "ROC" as a measure of the incremental performance, the advantage being that it would be totally independent of $\alpha$, but this would not be practical as it requires replication of the study under NH and AH conditions about 2000 times each and the entire process has to be repeated for several values of $\alpha$. The purpose of this demonstration was to illustrate the concept behind Metz's profound remark. 
+	
+It is time to move on to factors affecting statistical power in a single study.
+
+
+### Factors affecting statistical power
+* Effect size: effect size is defined as the difference in $AUC_{pop}$  values between the alternative hypothesis condition and the null hypothesis condition. Recall that  $AUC_{pop}$ is defined as the true or population value of the empirical ROC-AUC for the relevant hypothesis. One can use the "cheat method" to estimate it under the alternative hypothesis. The formalism is easier if one assumes it is equal to the asymptotic binormal model predicted value. The binormal model yields an estimate of the parameters, which only approach the population values in the asymptotic limit of a large number of cases. In the following, it is assumed that the parameters on the right hand side are the population values)
+It follows that effect size (ES) is given by (all quantities on the right hand side of Eqn. (8.13) are population values):
+
+\begin{equation*} 
+AUC = \Phi\left ( \frac{ \mu }{\sqrt{ 1 + \sigma^2}} \right )
+\end{equation*} 
+
+It follows that effect size (ES) is given by (all quantities on the right hand side of above equation are population values):
+
+\begin{equation*} 
+ES = \Phi\left ( \frac{\mu_{AH}}{\sqrt{1+\sigma^2}} \right ) - \Phi\left ( \frac{\mu_{NH}}{\sqrt{1+\sigma^2}} \right )
+\end{equation*} 
+
+
+```r
+EffectSize <- function (muNH, sigmaNH, muAH, sigmaAH)
+{
+  ES <- pnorm(muAH/sqrt(1+sigmaAH^2)) - pnorm(muNH/sqrt(1+sigmaNH^2))
+  return (ES)
+}
+
+seed <- 1;set.seed(seed)
+muAH <- 2.1 # NH value, defined previously, was mu = 1.5
+
+T <- 2000
+alpha <- 0.05 # size of test
+reject = array(0, dim = T)
+for (t in 1:length(reject)) {  
+  zk1 <- rnorm(K1);zk2 <- rnorm(K2, mean = muAH, sd = sigma)  
+  AUC <- Wilcoxon(zk1, zk2)  
+  obsvdZ <- (AUC - meanAUC)/sigmaAUC
+  p <- 2*pnorm(-abs(obsvdZ)) # p value for individual t
+  if (p < alpha) reject[t] = 1 
+}
+
+ObsvdTypeIErrRate <- sum(reject)/length(reject)
+CI <- c(0,0);width <- -qnorm(alpha/2)
+CI[1] <- ObsvdTypeIErrRate - width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/T)
+CI[2] <- ObsvdTypeIErrRate + width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/T)
+cat("obsvdPower = ", ObsvdTypeIErrRate, "\n")
+#> obsvdPower =  0.489
+cat("95% confidence interval = ", CI, "\n")
+#> 95% confidence interval =  0.4670922 0.5109078
+cat("Effect Size = ", EffectSize(mu, sigma, muAH, sigma), "\n")
+#> Effect Size =  0.08000617 0
+```
+
+The ES for the code above is 0.08 (in AUC units). It should be obvious that if effect size is zero, then power equals $\alpha$. This is because then there is no distinction between the null and alternative hypotheses conditions. Conversely, as effect size increases, statistical power increases, the limiting value being unity, when every trial results in rejection of the null hypothesis. The reader should experiment with different values of `muAH` to be convinced of the truth of these statements.
+
+* Sample size: increase the number of cases by a factor of two, and run the above code chunk. 
+
+
+```
+#> pop NH mean AUC =  0.8594882 , pop NH sigma AUC =  0.02568252
+#> num. non-diseased images =  100 num. diseased images =  104
+#> obsvdPower =  0.313
+#> 95% confidence interval =  0.2926772 0.3333228
+#> Effect Size =  0.08000617 0
+```
+
+So doubling the numbers of cases (both non-diseased and diseased) results in statistical power increasing from 0.509 to 0.844. Increasing the numbers of cases decreases  $\sigma_{AUC}$, the standard deviation of the empirical AUC. The new value of $\sigma_{AUC}$ is 0.02947, which should be compared to the value 0.04177 for K1 = 50, K2 = 52. Recall that $\sigma_{AUC}$ enters the denominator of the Z-statistic, so decreasing it will increase the probability of rejecting the null hypothesis. 
+
+* Alpha: Statistical power depends on $alpha$.  return the sample size to the original values  . The results below are for two runs of the code, the first with the original value  , set at line 16, the second with  :
+
+
+```
+#> alpha =  0.05 obsvdPower =  0.1545 
+#> alpha =  0.01 obsvdPower =  0.0265
+```
+
+Decreasing  $\alpha$ results in decreased statistical power. 
+
+## Comments
+The Wilcoxon statistic was used to estimate the area under the ROC curve. One could have used the binormal model, introduced in Chapter 06, to obtain maximum likelihood estimates of the area under the binormal model fitted ROC curve. The reasons for choosing the simpler empirical area are as follows. (1) With continuous ratings and 102 operating points, the area under the empirical ROC curve is expected to be a close approximation to the fitted area. (2) With maximum likelihood estimation, the code would be more complex – in addition to the fitting routine one would require a binning routine and that would introduce yet another variable in the analysis, namely the number of bins and how the bin boundaries were chosen. (3) The maximum likelihood fitting code can sometimes fail to converge, while the Wilcoxon method is always guaranteed to yield a result. The non-convergence issue is overcome by modern methods of curve fitting described in later chapters. (4) The aim was to provide an understanding of null hypothesis testing and statistical power without being bogged down in the details of curve fitting.
+
+## Why alpha is chosen to be 5%
+One might ask why $\alpha$ is traditionally chosen to be 5%. It is not a magical number, rather a cost benefit tradeoff. Choosing too small a value of $\alpha$ would result in greater probability $(1-\alpha)$ of the NH not being rejected, even when it is false, i.e., decreased power. Sometimes it is important to detect a true difference between the measured AUC and the postulated value. For example, a new eye-laser surgery procedure is invented and the number of patients is necessarily small as one does not wish to subject a large number of patients to an untried procedure. One seeks some leeway on the Type-I error probability, possibly increasing it to $\alpha$ = 0.1, in order to have a reasonable chance of success in detecting an improvement in performance due to better eyesight after the surgery. If the NH is rejected and the change is in the right direction, then that is good news for the researcher. One might then consider a larger clinical trial and set $\alpha$ at the traditional 0.05, making up the lost statistical power by increasing the number of patients on which the surgery is tried. 
+
+If a whole branch of science hinges on the results of a study, such as discovering the Higg's Boson in particle physics, statistical significance is often expressed in multiples of the standard deviation ($\sigma$) of the normal distribution, with the significance threshold set at a much stricter level (e.g. $5\sigma$). This corresponds to $\alpha$ ~ 1 in 3.5 million (`1/pnorm(-5)` =  3.5 x 10^6, a one-sided test of significance). There is an article in Scientific American (https://blogs.scientificamerican.com/observations/five-sigmawhats-that/) on the use of $n\sigma$, where `n` is an integer, e.g. 5, to denote the significance level of a study, and some interesting anecdotes on why such high significance levels (low alpha) are used in some fields of research. 
+
+Similar concerns apply to manufacturing where the cost of a mistake could be the very expensive recall of an entire product line. For background on Six Sigma Performance, see http://www.six-sigma-material.com/Six-Sigma.html. An article downloaded 3/30/17 from https://en.wikipedia.org/wiki/Six_Sigma is included as supplemental material to this chapter (Six Sigma.pdf). It has an explanation of why $6\sigma$ translates to one defect per 3.4 million opportunities (it has to do with short-term and long-term drifts in a process). In the author's opinion, looking at other fields offers a deeper understanding of this material than simply stating that by tradition one adopts alpha = 5%.
+
+Most observer performance studies, while important in the search for better imaging methods, are not of such "earth-shattering" importance, and it is somewhat important to detect true differences (AH is true) at a reasonable alpha, so alpha = 5% and beta = 20% represent a good compromise. If one adopted a $5\sigma$ criterion, the NH would never be rejected, and progress in image quality optimization would come to a grinding halt. That is not to say that a $5\sigma$ criterion cannot be used; rather if used, the number of patients needed to detect a reasonable difference (effect size) with 80% probability would be astronomically large. Truth-proven cases are a precious commodity in observer performance studies. Particle physicists working on discovering the Higg's Boson can get away with $5\sigma$ criterion because the number of independent observations and/or effect size is much larger than corresponding numbers in observer performance research.
+
+## Discussion
+In most statistics books, the subject of hypothesis testing is demonstrated in different (i.e., non-ROC) contexts. That is to be expected since the ROC-analysis field is a very small subspecialty of statistics (Prof. Howard E. Rockette, private communication, ca. 2002). Since this book is about ROC analysis, the author decided to use a demonstration using ROC analysis. Using a data simulator, one is allowed to "cheat" by conducting a very large number of simulations to estimate the population $AUC$ under the null hypothesis. This permitted us to explore the related concepts of Type-I and Type-II errors within the context of ROC analysis. Ideally, both errors should be zero, but the nature of statistics leads one to two compromises. Usually one accepts a Type-I error capped at 5% and a Type-II error capped at 20%. These translate to $\alpha$ = 0.05 and desired statistical power = 80%. The dependence of statistical power on   $\alpha$, the numbers of cases and the effect size was explored. Statistical power increases with the effect size, it increases with  $\alpha$ and it increases with the sample size (numbers of cases). 
+
+In Chapter 11 sample-size calculations are described that allow one to estimate the numbers of readers and cases needed to detect a specified difference in inter-modality AUCs with an expected statistical power  $1-\beta$ . The word "detect" in the preceding sentence is shorthand for "reject the NH with probability capped at  $\alpha$ while also rejecting the alternative hypothesis with probability capped at $\beta$". 
+
+This chapter also gives the first example of validation of a hypothesis testing method. Statisticians sometimes refer to this as showing a proposed test is a "5% test". What is meant is that one needs to be assured that when the NH is true the probability of NH rejection equals the expected value, namely  $\alpha$, typically chosen to be 5%. Since the observed NH rejection rate over 2000 simulations is a random variable, one does not expect the NH rejection rate to exactly equal 5%, rather the constructed 95% confidence interval (also a random interval variable) should include the NH value with probability  $\alpha$. 
+
+As noted in the introduction, comparing a single reader's performance to a specified value is not a clinically interesting problem. The next two chapters describe methods for significance testing of multiple-reader multiple-case (MRMC) ROC datasets, consisting of interpretations by a group of readers of a common set of cases in typically two modalities. It turns out that the analyses yield variability estimates that permit sample size calculation. After all, sample size calculation is all about estimation of variability, the denominator of the z-statistic, i.e., Eqn. (8.3), in the context of this chapter. The formulae will look more complex, as interest is not in determining the standard deviation of AUC, but in the standard deviation of the inter-modality reader-averaged AUC difference. However, the basic concepts remain the same. 
 
 
 ## References  
