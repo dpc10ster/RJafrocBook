@@ -402,7 +402,6 @@ If one looks carefully at the left hand side of Eqn. (6.4.10) one sees that it i
 
 
 ```r
-  library(RJafroc)
 
 # ML estimates of a and b (from Eng JAVA program)
 # a <- 1.3204; b <- 0.6075 # these are not used in program; just there for comparison

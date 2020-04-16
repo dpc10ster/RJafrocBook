@@ -210,8 +210,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7" data-path="DBMHnalysis.html"><a href="DBMHnalysis.html"><i class="fa fa-check"></i><b>7</b> DBMH-analysis</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="DBMHnalysis.html"><a href="DBMHnalysis.html#introduction-5"><i class="fa fa-check"></i><b>7.1</b> Introduction</a></li>
-<li class="chapter" data-level="7.2" data-path="DBMHnalysis.html"><a href="DBMHnalysis.html#historical-background"><i class="fa fa-check"></i><b>7.2</b> Historical background</a></li>
+<li class="chapter" data-level="7.1" data-path="DBMHnalysis.html"><a href="DBMHnalysis.html#introduction-5"><i class="fa fa-check"></i><b>7.1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="DBMHnalysis.html"><a href="DBMHnalysis.html#historical-background"><i class="fa fa-check"></i><b>7.1.1</b> Historical background</a></li>
+<li class="chapter" data-level="7.1.2" data-path="DBMHnalysis.html"><a href="DBMHnalysis.html#the-wagner-analogy"><i class="fa fa-check"></i><b>7.1.2</b> The Wagner analogy</a></li>
+<li class="chapter" data-level="7.1.3" data-path="DBMHnalysis.html"><a href="DBMHnalysis.html#organization-of-the-chapter"><i class="fa fa-check"></i><b>7.1.3</b> Organization of the chapter</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="DBMHnalysis.html"><a href="DBMHnalysis.html#random-and-fixed-factors"><i class="fa fa-check"></i><b>7.2</b> Random and fixed factors</a></li>
 <li class="chapter" data-level="7.3" data-path="DBMHnalysis.html"><a href="DBMHnalysis.html#references-4"><i class="fa fa-check"></i><b>7.3</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="rocdataformat.html"><a href="rocdataformat.html"><i class="fa fa-check"></i><b>8</b> ROC DATA FORMAT</a>
@@ -787,33 +792,32 @@ LL\left ( a,b,\overrightarrow{\zeta} \right ) \propto \\
 <p>If one looks carefully at the left hand side of Eqn. (6.4.10) one sees that it is a function of the model parameters <span class="math inline">\(a,b,\overrightarrow{\zeta}\)</span> and the observed data, the latter being the counts contained in the vectors <span class="math inline">\(\overrightarrow{K_1}\)</span> and <span class="math inline">\(\overrightarrow{K_2}\)</span>, where the vector notation is used as a compact form for the counts <span class="math inline">\(K_{11},K_{12},...,K_{1R}\)</span> and <span class="math inline">\(K_{21},K_{22},...,K_{2R}\)</span>, respectively. The right hand side of Eqn. (6.4.10) is monotonically related to the probability of observing the data given the model parameters <span class="math inline">\(a,b,\overrightarrow{\zeta}\)</span>. If the choice of model parameters is poor, then the probability of observing the data will be small and log likelihood will be small. With a better choice of model parameters the probability and log likelihood will increase. With optimal choice of model parameters the probability and log likelihood will be maximized, and the corresponding optimal values of the model parameters are called maximum likelihood estimates (MLEs). These are the estimates produced by the programs RSCORE and ROCFIT.</p>
 <div id="code-implementing-mle" class="section level3" number="5.3.1">
 <h3><span class="header-section-number">5.3.1</span> Code implementing MLE</h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="BinormalModel.html#cb11-1"></a>  <span class="kw">library</span>(RJafroc)</span>
-<span id="cb11-2"><a href="BinormalModel.html#cb11-2"></a></span>
-<span id="cb11-3"><a href="BinormalModel.html#cb11-3"></a><span class="co"># ML estimates of a and b (from Eng JAVA program)</span></span>
-<span id="cb11-4"><a href="BinormalModel.html#cb11-4"></a><span class="co"># a &lt;- 1.3204; b &lt;- 0.6075 # these are not used in program; just there for comparison</span></span>
-<span id="cb11-5"><a href="BinormalModel.html#cb11-5"></a></span>
-<span id="cb11-6"><a href="BinormalModel.html#cb11-6"></a>K1t &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">19</span>, <span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
-<span id="cb11-7"><a href="BinormalModel.html#cb11-7"></a>K2t &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>,  <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">12</span>, <span class="dv">22</span>)</span>
-<span id="cb11-8"><a href="BinormalModel.html#cb11-8"></a>dataset &lt;-<span class="st"> </span><span class="kw">Df2RJafrocDataset</span>(K1t, K2t, <span class="dt">InputIsCountsTable =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb11-9"><a href="BinormalModel.html#cb11-9"></a>retFit &lt;-<span class="st"> </span><span class="kw">FitBinormalRoc</span>(dataset)</span>
-<span id="cb11-10"><a href="BinormalModel.html#cb11-10"></a>retFit[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</span>
-<span id="cb11-11"><a href="BinormalModel.html#cb11-11"></a><span class="co">#&gt; $a</span></span>
-<span id="cb11-12"><a href="BinormalModel.html#cb11-12"></a><span class="co">#&gt; [1] 1.320449</span></span>
-<span id="cb11-13"><a href="BinormalModel.html#cb11-13"></a><span class="co">#&gt; </span></span>
-<span id="cb11-14"><a href="BinormalModel.html#cb11-14"></a><span class="co">#&gt; $b</span></span>
-<span id="cb11-15"><a href="BinormalModel.html#cb11-15"></a><span class="co">#&gt; [1] 0.6074912</span></span>
-<span id="cb11-16"><a href="BinormalModel.html#cb11-16"></a><span class="co">#&gt; </span></span>
-<span id="cb11-17"><a href="BinormalModel.html#cb11-17"></a><span class="co">#&gt; $zetas</span></span>
-<span id="cb11-18"><a href="BinormalModel.html#cb11-18"></a><span class="co">#&gt;    zetaFwd1    zetaFwd2    zetaFwd3    zetaFwd4 </span></span>
-<span id="cb11-19"><a href="BinormalModel.html#cb11-19"></a><span class="co">#&gt; 0.007679249 0.896272157 1.515648564 2.396721792 </span></span>
-<span id="cb11-20"><a href="BinormalModel.html#cb11-20"></a><span class="co">#&gt; </span></span>
-<span id="cb11-21"><a href="BinormalModel.html#cb11-21"></a><span class="co">#&gt; $AUC</span></span>
-<span id="cb11-22"><a href="BinormalModel.html#cb11-22"></a><span class="co">#&gt; [1] 0.8704517</span></span>
-<span id="cb11-23"><a href="BinormalModel.html#cb11-23"></a><span class="co">#&gt; </span></span>
-<span id="cb11-24"><a href="BinormalModel.html#cb11-24"></a><span class="co">#&gt; $StdAUC</span></span>
-<span id="cb11-25"><a href="BinormalModel.html#cb11-25"></a><span class="co">#&gt;            [,1]</span></span>
-<span id="cb11-26"><a href="BinormalModel.html#cb11-26"></a><span class="co">#&gt; [1,] 0.03790432</span></span>
-<span id="cb11-27"><a href="BinormalModel.html#cb11-27"></a><span class="kw">print</span>(retFit<span class="op">$</span>fittedPlot)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="BinormalModel.html#cb11-1"></a></span>
+<span id="cb11-2"><a href="BinormalModel.html#cb11-2"></a><span class="co"># ML estimates of a and b (from Eng JAVA program)</span></span>
+<span id="cb11-3"><a href="BinormalModel.html#cb11-3"></a><span class="co"># a &lt;- 1.3204; b &lt;- 0.6075 # these are not used in program; just there for comparison</span></span>
+<span id="cb11-4"><a href="BinormalModel.html#cb11-4"></a></span>
+<span id="cb11-5"><a href="BinormalModel.html#cb11-5"></a>K1t &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">19</span>, <span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb11-6"><a href="BinormalModel.html#cb11-6"></a>K2t &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>,  <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">12</span>, <span class="dv">22</span>)</span>
+<span id="cb11-7"><a href="BinormalModel.html#cb11-7"></a>dataset &lt;-<span class="st"> </span><span class="kw">Df2RJafrocDataset</span>(K1t, K2t, <span class="dt">InputIsCountsTable =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb11-8"><a href="BinormalModel.html#cb11-8"></a>retFit &lt;-<span class="st"> </span><span class="kw">FitBinormalRoc</span>(dataset)</span>
+<span id="cb11-9"><a href="BinormalModel.html#cb11-9"></a>retFit[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</span>
+<span id="cb11-10"><a href="BinormalModel.html#cb11-10"></a><span class="co">#&gt; $a</span></span>
+<span id="cb11-11"><a href="BinormalModel.html#cb11-11"></a><span class="co">#&gt; [1] 1.320449</span></span>
+<span id="cb11-12"><a href="BinormalModel.html#cb11-12"></a><span class="co">#&gt; </span></span>
+<span id="cb11-13"><a href="BinormalModel.html#cb11-13"></a><span class="co">#&gt; $b</span></span>
+<span id="cb11-14"><a href="BinormalModel.html#cb11-14"></a><span class="co">#&gt; [1] 0.6074912</span></span>
+<span id="cb11-15"><a href="BinormalModel.html#cb11-15"></a><span class="co">#&gt; </span></span>
+<span id="cb11-16"><a href="BinormalModel.html#cb11-16"></a><span class="co">#&gt; $zetas</span></span>
+<span id="cb11-17"><a href="BinormalModel.html#cb11-17"></a><span class="co">#&gt;    zetaFwd1    zetaFwd2    zetaFwd3    zetaFwd4 </span></span>
+<span id="cb11-18"><a href="BinormalModel.html#cb11-18"></a><span class="co">#&gt; 0.007679249 0.896272157 1.515648564 2.396721792 </span></span>
+<span id="cb11-19"><a href="BinormalModel.html#cb11-19"></a><span class="co">#&gt; </span></span>
+<span id="cb11-20"><a href="BinormalModel.html#cb11-20"></a><span class="co">#&gt; $AUC</span></span>
+<span id="cb11-21"><a href="BinormalModel.html#cb11-21"></a><span class="co">#&gt; [1] 0.8704517</span></span>
+<span id="cb11-22"><a href="BinormalModel.html#cb11-22"></a><span class="co">#&gt; </span></span>
+<span id="cb11-23"><a href="BinormalModel.html#cb11-23"></a><span class="co">#&gt; $StdAUC</span></span>
+<span id="cb11-24"><a href="BinormalModel.html#cb11-24"></a><span class="co">#&gt;            [,1]</span></span>
+<span id="cb11-25"><a href="BinormalModel.html#cb11-25"></a><span class="co">#&gt; [1,] 0.03790432</span></span>
+<span id="cb11-26"><a href="BinormalModel.html#cb11-26"></a><span class="kw">print</span>(retFit<span class="op">$</span>fittedPlot)</span></code></pre></div>
 <p><img src="06-binormal-model_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>Note the usage of the <code>RJafroc</code> package <span class="citation">(Chakraborty, Philips, and Zhai <a href="#ref-R-RJafroc" role="doc-biblioref">2020</a>)</span>. Specifically, the function <code>FitBinormalRoc</code>. The ratings table is converted to an <code>RJafroc</code> dataset object, followed by application of the fitting function. The results, contained in <code>retFit</code> should be compared to those obtained from the <a href="http://www.rad.jhmi.edu/jeng/javarad/roc/JROCFITi.html">website implementation of ROCFIT</a>.</p>
 </div>
