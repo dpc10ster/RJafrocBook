@@ -475,15 +475,24 @@ See book chapter 6.4.3. This is implemented in RJafroc.
 ### Estimating the variance of Az
 See book chapter 6.4.4. This is implemented in RJafroc.
 
-### Expression for area under ROC curve
+### Single FOM derived from ROC curve
+Sensitivity and specificity are *dual* measures of overall performance. It is hard to unambiguosly compare two systems usng dual measures. What if sensivity is higher for one system but specificity is higher for another. This is, of course, a consequence of sensivity/specificity depending on the position of the operating point on the ROC curve. Desirable is a *single* measure of performance that takes into account performance over the entire ROC curve. Two commonly used measures are the binormla model predicted area $A_z$ under the ROC curve, and the $d'$ index. 
+
+(Book) Appendix 6.A derives the formula for the partial area under the unequal-variance binormal model. A special case of this formula is the area under the whole ROC curve, reproduced below using both parameterizations of the model:
 
 \begin{equation*} 
 A_z=\Phi\left ( \frac{a}{\sqrt{1+b^2}} \right )=\Phi\left ( \frac{\mu}{\sqrt{1+\sigma^2}} \right )
 \end{equation*} 
 
+The binormal fitted AUC increases as $a$ increases or as $b$ decreases. Equivalently, it increases as $\mu$ increases or as $\sigma$ decreases. An equivalent $d'$ parameter is defined as the separation of two unit-variance normal distributions yielding the same AUC as that predicted by the $(a,b)$ parameter binormal model. It is defined by:
+
+\begin{equation*} 
+d'=\sqrt{2}\Phi^{-1}\left ( A_z \right )
+\end{equation*} 
+
 
 ## Discussion
-This chapter has covered much territory. The binormal model is historically very important and the contribution by Dorfman and Alf [@RN212] was seminal. Prior to their work, there was no valid way of estimating AUC from observed ratings counts. Their work and a key paper by Lusted [@RN1487] accelerated research using ROC methods. The number of publications using their algorithm, and the more modern versions developed by Metz and colleagues, is probably well in excess of 500. Because of its key role, the author has endeavored to take out some of the mystery about how the binormal model parameters are estimated. In particular, a common misunderstanding that the binormal model assumptions are violated by real datasets, when in fact it is quite robust to apparent deviations from normality, is addressed. 
+The binormal model is historically very important and the contribution by Dorfman and Alf [@RN212] was seminal. Prior to their work, there was no valid way of estimating AUC from observed ratings counts. Their work and a key paper by Lusted [@RN1487] accelerated research using ROC methods. The number of publications using their algorithm, and the more modern versions developed by Metz and colleagues, is probably well in excess of 500. Because of its key role, the author has endeavored to take out some of the mystery about how the binormal model parameters are estimated. In particular, a common misunderstanding that the binormal model assumptions are violated by real datasets, when in fact it is quite robust to apparent deviations from normality, is addressed. 
 
 A good understanding of this chapter should enable the reader to better understand alternative ROC models, discussed in a later chapter.
 
