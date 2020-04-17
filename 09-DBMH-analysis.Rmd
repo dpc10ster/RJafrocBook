@@ -69,9 +69,9 @@ This section provides an overview of the steps involved in analysis of MRMC data
 
 ## The Dorfman-Berbaum-Metz (DBM) method
 The figure-of-merit has three indices:  
-1. A treatment index i, where i runs from 1 to I, where I is the total number of treatments. 
-1. A reader index j, where j runs from 1 to J, where J is the total number of readers. 
-1. The often-suppressed case-sample index $\{c\}$, where  $\{1\}$  i.e., $c$ = 1, denotes a set of cases,   $K_1$ non-diseased and $K_2$  diseased, interpreted by all readers in all treatments, and other integer values of $c$ correspond to other sets of cases that, although not interpreted by the readers, could potentially be “interpreted” using resampling methods such as the bootstrap or the jackknife. 
+1. A treatment index $i$, where $i$ runs from 1 to $I$, where $I$ is the total number of treatments. 
+1. A reader index $j$, where $j$ runs from 1 to $J$, where $J$ is the total number of readers. 
+1. The often-suppressed case-sample index $\{c\}$, where  $\{1\}$  i.e., $c$ = 1, denotes a set of cases,   $K_1$ non-diseased and $K_2$ diseased, interpreted by all readers in all treatments, and other integer values of $c$ correspond to other independent sets of cases that, although not in fact interpreted by the readers, could potentially be “interpreted” using resampling methods such as the bootstrap or the jackknife. 
 
 The approach [@RN204] taken by Dorfman-Berbaum-Metz (DBM) was to use the jackknife resampling method described in (book) Chapter 7 to calculate FOM pseudovalues ${Y'}_{ijk}$ defined by (the reason for the prime will become clear shortly):
 
@@ -79,27 +79,103 @@ The approach [@RN204] taken by Dorfman-Berbaum-Metz (DBM) was to use the jackkni
 Y'_{ijk}=K\theta_{ij}-(K-1)\theta_{ij\{k\}}
 \end{equation*}
 
-Here  is the estimate of the figure-of-merit for reader j interpreting all cases in treatment i and  is the corresponding figure of merit with case k deleted from the analysis. To adhere to convention and to keep the notation simple the   index on every figure of merit symbol is suppressed unless it is absolutely necessary for clarity. 
+Here $\theta_{ij}$ is the estimate of the figure-of-merit for reader $j$ interpreting all cases in treatment $i$ and $\theta_{ij\{k\}}$ is the corresponding figure of merit with case $k$ *deleted* from the analysis. To adhere to convention and to keep the notation simple the $\{1\}$ index on every figure of merit symbol is suppressed (unless it is absolutely necessary for clarity). 
 
-Recall from Chapter 07 that the jackknife is a way of teasing out the case-dependence: the left hand side of Eqn. (9.1) literally has a case index k, with k running from 1 to K, where K is the total number of cases:  . 
+Recall from book Chapter 07 that the jackknife is a way of teasing out the case-dependence: the left hand side of Eqn. (9.1) literally has a case index $k$, with $k$ running from 1 to $K$, where $K$ is the total number of cases:  $K=K_1+K_2$. 
 
-Hillis has proposed a centering transformation on the pseudovalues (Hillis calls them normalized pseudovalues but to the author centering is a more accurate and descriptive term ):
+Hillis has proposed a centering transformation on the pseudovalues (Hillis calls them "normalized" pseudovalues but to the author "centering" is a more accurate and descriptive term - *Normalize: (In mathematics) multiply (a series, function, or item of data) by a factor that makes the norm or some associated quantity such as an integral equal to a desired value (usually 1). New Oxford American Dictionary, 2016*):
 
-  	.	(9.2)
+\begin{equation*}
+Y_{ijk}=Y'_{ijk}+\left (\theta_{ij} - Y'_{ij\bullet}  \right )
+\end{equation*}
+
 
 The effect of this transformation is that the average of the centered pseudovalues over the case index is identical to the corresponding estimate of the figure of merit:
 
-  	.	(9.3)
+\begin{equation*}
+Y_{ij\bullet}=Y'_{ij\bullet}+\left (\theta_{ij} - Y'_{ij\bullet}  \right )=\theta_{ij}
+\end{equation*}
 
 This has the advantage that all confidence intervals are correctly centered. The transformation is unnecessary if one uses the Wilcoxon as the figure-of-merit, as the pseudovalues calculated using the Wilcoxon as the figure of merit are automatically centered. It is left as an exercise for the reader to show that this statement is true.
 
+*It is understood that, unless explicitly stated otherwise, all calculations from now on will use centered pseudovalues.*
+
+Consider $N$ replications of a MRMC study, where a replication means repetition of the study with the same treatments, readers and case-set $\{1\}$. For $N$ replications per treatment-reader-case combination, the DBM model for the pseudovalues is ($n$ is the replication index, usually $n$ = 1, but kept here for now):
+
+\begin{equation*}
+Y_{n(ijk)}  = \mu + \tau_i+ R_j + C_k + (\tau R)_{ij}+ (\tau C)_{ik}+ (R C)_{jk} + (\tau RC)_{ijk}+ \epsilon_{n(ijk)} 
+\end{equation*}
+
+The notation for the replication index, i.e., $n(ijk)$, implies $n$ observations for treatment-reader-case combination $ijk$. 
+
+*The basic assumption of the DBM model, Eqn. (9.4), is that the pseudovalues can be regarded as independent and identically distributed observations. If that is true, the pseudovalue data can be analyzed by standard ANOVA techniques.*
+
+### Explanation of terms in the model 
+The term $\mu$ is a constant. By definition, the treatment effect $\tau_i$  is subject to the constraint:
+
+\begin{equation*}
+\sum_{i=1}^{I}\tau_i=0\Rightarrow \tau_\bullet=0
+\end{equation*}
+
+It is shown below, Eqn. (9.9), that this constraint ensures that $\mu$  has the interpretation as the average of the pseudovalues over treatments, readers, cases and replications, if any. 
+
+The right hand side of Eqn. (9.4) consists of one fixed and 7 random effects. The current analysis assumes readers and cases as random factors (RRRC), so by definition $R_j$ and $C_k$ are random effects, and moreover, any term that includes a random factor is a random effect; for example, $(\tau R)_{ij}$ is a random effect because it includes the $R$ factor. Here is a list of the random terms: 
+
+\begin{equation*}
+R_j, C_k, (\tau R)_{ij}, (\tau C)_{ik}, (RC)_{jk},  (\tau RC)_{ijk},  \epsilon_{ijk}
+\end{equation*}
+
+
+**Assumption:** Each of the random effects is modeled as a random sample from mutually independent zero-mean normal distributions with variances as specified below:
+
+\begin{equation*}
+R_j  \sim N\left ( 0,\sigma_{R}^{2} \right ) \\
+C_k \sim N\left ( 0,\sigma_{C}^{2} \right ) \\
+(\tau R)_{ij} \sim N\left ( 0,\sigma_{\tau R}^{2} \right ) \\
+(\tau C)_{ik} \sim N\left ( 0,\sigma_{\tau C}^{2} \right ) \\
+(RC)_{jk} \sim N\left ( 0,\sigma_{RC}^{2} \right ) \\
+(\tau RC)_{ijk} \sim N\left ( 0,\sigma_{\tau RC}^{2} \right ) \\
+\epsilon_{ijk} \sim N\left ( 0,\sigma_{\epsilon}^{2} \right )
+\end{equation*}
+
+One could have placed a $Y$ subscript (or superscript) on each of the variances, as they describe fluctuations of the pseudovalues, not FOM values – the latter are the subject of the next chapter. However, this tends to make the notation cumbersome. So here is the convention:
+
+*Unless explicitly stated otherwise, all variance symbols in this chapter refer to pseudovalues. * 
+
+Another convention: $(\tau R)_{ij}$ is *not* the product of the treatment and reader factors, rather it is a single factor, namely the treatment-reader factor with $IJ$ levels, subscripted by the index $ij$ and similarly for the other product-like terms in Eqn. (9.7).
+
+### Meanings of variance components in the DBM model
+The variances defined in Eqn. (9.7) are collectively termed variance components. Specifically, they are jackknife pseudovalue variance components, to be distinguished from figure of merit (FOM) variance components to be introduced in Chapter 10. They are in order: $\sigma_{R}^{2} ,\sigma_{C}^{2} \sigma_{\tau R}^{2},\sigma_{\tau C}^{2},\sigma_{RC}^{2}, \sigma_{\tau RC}^{2},\sigma_{\epsilon}^{2}$. They have the following meanings (all references to "variance" mean "variance of pseudovalues").
+
+*	The term $\sigma_{R}^{2}$ is the variance of readers that is independent of treatment or case, which are modeled separately. It is not to be confused with the terms $\sigma_{br+wr}^{2}$ and $\sigma_{cs+wr}^{2}$  used in §9.3, which describe the variability of $\thetas$ measured under specified conditions. [A jackknife pseudovalue is a weighted difference of FOM like quantities, Eqn. (9.1). Its meaning will be explored later. For now, *a pseudovalue variance is distinct from a FOM variance*.]
+*	The term $\sigma_{C}^{2}$ is the variance of cases that is independent of treatment or reader.
+*	The term $\sigma_{\tau R}^{2}$ is the treatment-dependent variance of readers that was excluded in the definition of $\sigma_{R}^{2}$. If one were to sample readers and treatments for the same case-set, the net variance would be  $\sigma_{R}^{2}+\sigma_{\tau R}^{2}+\sigma_{\epsilon}^{2}$. 
+*	The term $\sigma_{\tau C}^{2}$ is the treatment-dependent variance of cases that was excluded in the definition of \sigma_{C}^{2}. So, if one were to sample cases and treatments for the same readers, the net variance would be $\sigma_{C}^{2}+\sigma_{\tau C}^{2}+\sigma_{\epsilon}^{2}$. 
+*	The term $\sigma_{RC}^{2}$  is the treatment-independent variance of readers and cases that were excluded in the definitions of $\sigma_{R}^{2}$ and $\sigma_{C}^{2}$. So, if one were to sample readers and cases for the same treatment, the net variance would be  $\sigma_{R}^{2}+\sigma_{C}^{2}+\sigma_{RC}^{2}+\sigma_{\epsilon}^{2}$. 
+*	The term $\sigma_{\tau RC}^{2}$ is the variance of treatments, readers and cases that were excluded in the definitions of all the preceding terms in Eqn. (9.7). So, if one were to sample treatments, readers and cases the net variance would be $\sigma_{R}^{2}+\sigma_{C}^{2}+\sigma_{\tau C}^{2}+\sigma_{RC}^{2}+\sigma_{\tau RC}^{2}+\sigma_{\epsilon}^{2}$. 
+*	The last term, $\sigma_{\epsilon}^{2}$  describes the variance arising from different replications of the study using the same treatments, readers and cases. Measuring this variance requires repeating the study several ($N$) times with the same treatments, readers and cases, and computing the variance of $Y_{n(ijk)}$ , where the additional $n$-index refers to true replications, $n$ = 1, 2, ..., $N$. 
+
+\begin{equation*}
+\sigma_{\epsilon}^{2}=\frac{1}{IJK}\sum_{i=1}^{I}\sum_{j=1}^{J}\sum_{k=1}^{k}\frac{1}{N-1}\sum_{n=1}^{N}\left ( Y_{n(ijk)} - Y_{\bullet (ijk)} \right )^2
+\end{equation*}
+
+The right hand side of Eqn. (9.8) is the variance of $Y_{n(ijk)}$, for specific $ijk$, with respect to the replication index $n$, averaged over all $ijk$. In practice $N$ = 1 (i.e., there are no replications) and this variance cannot be estimated (it would imply dividing by zero). It has the meaning of *reader inconsistency*, usually termed *within-reader* variability. As will be shown later, the presence of this inestimable term does not limit ones ability to perform significance testing on the treatment effect without having to replicate the whole study, as implied in earlier work [@RN1450].
+
+An equation like Eqn. (9.7) is termed a *linear model* with the left hand side, the pseudovalue "observations", modeled by a sum of fixed and random terms. Specifically it is a *mixed model*, because the right hand side has both fixed and random effects. Statistical methods have been developed for analysis of such linear models. One estimates the terms on the right hand side of Eqn. (9.7), it being understood that for the random effects, one estimates the variances of the zero-mean normal distributions, Eqn. (9.7), from which the samples are obtained (by assumption).
  
+Estimating the fixed effects is trivial. The term   is estimated by averaging the left hand side of Eqn. Eqn. (9.4) over all three indices (since N = 1):
 
-Consider N replications of a MRMC study, where a replication means repetition of the study with the same treatments, readers and case-set  ; it is not to be confused with repetitions with different case sets, i.e., the   index. For N replications per treatment-reader-case combination, the DBM model for the pseudovalues is (n is the replication index, usually n = 1, but kept here for now):
+  	.	(9.9)
 
- 
+Because of the way the treatment effect is defined, Eqn. (9.5), averaging, which involves summing, over the treatment-index i, yields zero, and all of the remaining random terms yield zero upon averaging, because they are individually sampled from zero-mean normal distributions. To estimate the treatment effect one takes the difference as shown below:
 
-The notation  for the replication index, i.e.,  , implies   observations for treatment-reader-case combination  . 
+  	.	(9.10)
+
+It can be easily seen that the reader and case averaged difference between two treatments   and   is estimated by
+
+  	.	(9.11)
+	
+Estimating the strengths of the random terms is a little more complicated. It involves methods adapted from least squares, or maximum likelihood, and more esoteric ways. The author does not care to go into these methods. Instead, results are presented and arguments are made to make them plausible. The starting point is definitions of quantities called mean squares and their expected values.
 
 
 
