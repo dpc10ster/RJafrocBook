@@ -155,23 +155,56 @@ The right hand side of Eqn. (9.8) is the variance of $Y_{n(ijk)}$, for specific 
 
 An equation like Eqn. (9.7) is termed a *linear model* with the left hand side, the pseudovalue "observations", modeled by a sum of fixed and random terms. Specifically it is a *mixed model*, because the right hand side has both fixed and random effects. Statistical methods have been developed for analysis of such linear models. One estimates the terms on the right hand side of Eqn. (9.7), it being understood that for the random effects, one estimates the variances of the zero-mean normal distributions, Eqn. (9.7), from which the samples are obtained (by assumption).
  
-Estimating the fixed effects is trivial. The term   is estimated by averaging the left hand side of Eqn. Eqn. (9.4) over all three indices (since N = 1):
+Estimating the fixed effects is trivial. The term $\mu$ is estimated by averaging the left hand side of Eqn. (9.4) over all three indices (since $N$ = 1): $\mu=Y_{1(\bullet \bullet \bullet)}$
 
-  	.	(9.9)
+Because of the way the treatment effect is defined, Eqn. (9.5), averaging, which involves summing, over the treatment-index $i$, yields zero, and all of the remaining random terms yield zero upon averaging, because they are individually sampled from zero-mean normal distributions. To estimate the treatment effect one takes the difference $\tau_i=Y_{1(\bullet \bullet \bullet)}-\mu$.
 
-Because of the way the treatment effect is defined, Eqn. (9.5), averaging, which involves summing, over the treatment-index i, yields zero, and all of the remaining random terms yield zero upon averaging, because they are individually sampled from zero-mean normal distributions. To estimate the treatment effect one takes the difference as shown below:
-
-  	.	(9.10)
-
-It can be easily seen that the reader and case averaged difference between two treatments   and   is estimated by
-
-  	.	(9.11)
+It can be easily seen that the reader and case averaged difference between two different treatments $i$ and $i'$  is estimated by $\tau_i-\tau_{i'} = Y_{1(i \bullet \bullet)} - Y_{1(i' \bullet \bullet)}$.
 	
-Estimating the strengths of the random terms is a little more complicated. It involves methods adapted from least squares, or maximum likelihood, and more esoteric ways. The author does not care to go into these methods. Instead, results are presented and arguments are made to make them plausible. The starting point is definitions of quantities called mean squares and their expected values.
+Estimating the strengths of the random terms is a little more complicated. It involves methods adapted from least squares, or maximum likelihood, and more esoteric ways. I do not feel comfortable going into these methods. Instead, results are presented and arguments are made to make them plausible. The starting point is definitions of quantities called **mean squares** and their expected values.
 
+### Definitions of mean-squares 
+Again, to be clear, one should put a $Y$ subscript (or superscript) on each of the following definitions, but that would make the notation unnecessarily cumbersome. 
 
+*In this chapter, all mean-square quantities are calculated using pseudovalues, not figure-of-merit values. The presence of three subscripts on Y should make this clear. Also the replication index and the nesting notation are suppressed. The notation is abbreviated so MST is the mean square corresponding to the treatment effect, etc.*
+
+\begin{equation*}
+\text{MS(T)}=\frac{JK\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{I-1} \\
+\text{MS(R)}=\frac{IK\sum_{j=1}^{J}\left ( Y_{\bullet j \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{J-1} \\
+\text{MS(TR)}=\frac{K\sum_{i=1}^{I}\sum_{j=1}^{J}\left ( Y_{i j \bullet} - Y_{i \bullet \bullet} - Y_{\bullet j \bullet} + Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(J-1)} \\
+\text{MST(C)}=\frac{J\sum_{i=1}^{I}\sum_{k=1}^{K}\left ( Y_{i \bullet k} - Y_{i \bullet \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(K-1)} \\
+\text{MS(TRC)}=\frac{\sum_{i=1}^{I}\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{i j k} - Y_{i j \bullet} - Y_{i \bullet k} - Y_{\bullet j k} + Y_{i \bullet \bullet} + Y_{\bullet j \bullet} + Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(J-1)K-1)}
+\end{equation*}
+
+Note the absence of $MSE$, corresponding to the $\epsilon$ term on the right hand side of Eqn. (9.4). With only one observation per treatment-reader-case combination, MSE cannot be estimated; it effectively gets folded into the $MSTRC$ term. 
+	
+The most general case is presented next, where both readers and cases are regarded as random factors, termed random-reader random-case analysis (RRRC).
 
 ## Random-reader random-case analysis (RRRC)
+The mean squares on the left hand side of Eqn. (9.12) can be calculated directly from the pseudovalues. The next step in the analysis is to obtain expressions for their expected values in terms of the variances defined in Eqn. (9.7). Assuming no replications, i.e., N = 1, the expected mean squares are as follows, Table 9.1; understanding how this table is derived, would lead the author well outside his expertise and the scope of this book; suffice to say that these are unconstrained estimates29 which are different from the constrained estimates appearing in the original DBM publication1; the differences between these two types of estimates is summarized in Ref. 29 and calculation of expected mean squares values is detailed in Scheffe's book30: 
+
+Source          df               E(MS)
+-------         ----             ------------------------------------------------------------
+T               (I-1)            $\sigma_{\epsilon}^{2}$ + $\sigma_{\tau RC}^{2}$ + $K\sigma_{\tau R}^{2}$ + $J\sigma_{\tau C}^{2}$ + $JK\sigma_{\tau}^{2}$ 
+R               (J-1)            $\sigma_{\epsilon}^{2}$ + $I\sigma_{RC}^{2}$ + $IK\sigma_{R}^{2}$ + $K\sigma_{\tau R}^{2}$
+C               (K-1)            $\sigma_{\epsilon}^{2}$ + $I\sigma_{RC}^{2}$ + $IJ\sigma_{C}^{2}$ + $J\sigma_{\tau C}^{2}$
+TR              (I-1)(J-1)       $\sigma_{\epsilon}^{2}$ + $\sigma_{\tau RC}^{2}$ + $K\sigma_{\tau R}^{2}$  
+TC              (I-1)(K-1)       $\sigma_{\epsilon}^{2}$ + $\sigma_{\tau RC}^{2}$ + $J\sigma_{\tau C}^{2}$
+RC              (J-1)(K-1)       $\sigma_{\epsilon}^{2}$ + $I\sigma_{RC}^{2}$ 
+TRC             (I-1)(J-1)(K-1)  $\sigma_{\epsilon}^{2}$ + $\sigma_{\tau RC}^{2}$ 
+$\epsilon$      $N-1=0$          $\sigma_{\epsilon}^{2}$
+
+Since treatment is a fixed effect, the variance symbol $\sigma_{\tau}^{2}$, which is used for notational consistency in Table 9.1, could cause confusion. It is defined by:
+
+\begin{equation*}
+\sigma_{\tau}^{2}=\frac{1}{I-1}\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{\bullet \bullet \bullet} \right )^2
+\end{equation*}
+
+The expression on the right hand side "looks like" a variance, indeed one that could be calculated for just two treatments (I = 2) but, of course, random sampling from a distribution of treatments is not the intent of the notation. Under the null hypothesis, $Y_{1 \bullet \bullet} = Y_{2 \bullet \bullet} = ... = Y_{I \bullet \bullet}$, which implies $\sigma_{\tau}^{2} = 0$.
+
+The expected mean squares in Table 9.1 are variance-like quantities; specifically, they are weighted linear combinations of the variances appearing in Eqn. (9.7). For single factors the column headed "degrees of freedom" ($df$) is one less than the number of levels of the corresponding factor; estimating a variance requires first estimating the mean, which imposes a constraint, thereby decreasing $df$ by one. For interaction terms, $df$ is the product of the degrees of freedom for the individual factors. As an example, the term $(\tau RC)_{ijk}$ contains three individual factors, and therefore  $df = (I-1)(J-1)(K-1)$. The number of degrees of freedom can be thought of as the amount of information available in estimating a mean square. As a special case, with no replications, the $\epsilon$  term has zero $df$ as $N-1 = 0$. With only one observation $Y_{1(ijk)}$ there is no information to estimate the variance corresponding to the $\epsilon$  term. To estimate this term one needs to replicate the study several times – each time the same readers interpret the same cases in all treatments – a very boring task for the reader and totally unnecessary from the researcher's point of view. 
+
+### Significance testing
 
 
 ## Fixed-reader random-case analysis
