@@ -441,8 +441,50 @@ F_{AH} \sim F_{ndf,ddf,\Delta}
 The non-central F-distribution will be used later for sample size estimation (in Chapter [BACKGROUND ON THE F-DISTRIBUTION] and TBA).
 
 
-
 ## Fixed-reader random-case analysis
+The model is the same as in Eqn. (9.4) except one puts $\sigma_{R}^{2}$ = $\sigma_{\tau R}^{2}$ = 0 in Table 9.1. The appropriate test statistic is: 
+
+\begin{equation*}
+\frac{E\left ( MS(T) \right )}{E\left ( MS(TC) \right )} = \frac{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau R}^{2}+JK\sigma_{\tau C}^{2}}{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau R}^{2}}
+\end{equation*}
+
+Under the null hypothesis $\sigma_{\tau}^{2} = 0$:
+
+\begin{equation*}
+\frac{E\left ( MS(T) \right )}{E\left ( MS(TC) \right )} = 1
+\end{equation*}
+
+As before, one defines the F-statistic (replacing *expected* with *observed* values) by
+
+\begin{equation*}
+F_{DBM|R}=\frac{MS(T)}{MS(TC)}
+\end{equation*}
+
+The observed value $F_{DBM|R}$ (the Roe-Metz notation [@RN1124] is used which indicates that the factor appearing to the right of the vertical bar is regarded as fixed) is distributed as an F-statistic with $ndf = I – 1$ and $ddf = (I-1)(K-1)$; the degrees of freedom follow from the rows labeled $T$ and $TC$ in Table 9.1. Therefore, the distribution of the observed value is (no Satterthwaite approximation needed this time as both numerator and denominator are simple mean-squares):
+
+\begin{equation*}
+F_{DBM|R} \sim F_{I-1,(I-1)(K-1)}
+\end{equation*}
+
+The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value:
+
+\begin{equation*}
+F_{DBM|R} > F_{1-\alpha,I-1,(I-1)(K-1)}
+\end{equation*}
+
+The p-value of the test is the probability that a random sample from the F-distribution Eqn. (9.39), exceeds the observed value:
+
+\begin{equation*}
+p=\Pr\left ( F> F_{DBM|R} \mid F \sim F_{I-1,(I-1)(K-1)} \right )
+\end{equation*}
+
+The $(1-\alpha)$  confidence interval for the inter-treatment reader-averaged difference FOM is given by:
+
+\begin{equation*}
+CI_{1-\alpha}=\left ( \theta_{i \bullet \bullet} - \theta_{i' \bullet \bullet} \right ) \pm t_{\alpha/2,(I-1)(K-1)}\sqrt{2\frac{MS(T)}{JK}}
+\end{equation*}
+
+### Single-reader multiple-treatment analysis
 
 
 ## Random-reader fixed-case (RRFC) analysis
