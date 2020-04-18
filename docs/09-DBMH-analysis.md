@@ -48,8 +48,8 @@ This section provides an overview of the steps involved in analysis of MRMC data
 1.	A FOM is selected: *the selection of FOM is the single-most critical aspect of analyzing an observer performance study*. The selected FOM is denoted $\theta$. To keep the notation reasonably compact the usual circumflex "hat" symbol used previously to denote an estimate is suppressed. The FOM has to be an objective scalar measure of performance with larger values characterizing better performance. [The qualifier "larger" is trivially satisfied; if the figure of merit has the opposite characteristic, a sign change is all that is needed to bring it back to compliance with this requirement.] Examples are empirical $AUC$, the binormal model-based estimate $A_z$ , other advance method based estimates of $AUC$, sensitivity at a predefined value of specificity, etc. An example of a FOM requiring a sign-change is $FPF$ at a specified $TPF$, where smaller values signify better performance.
 1. For each treatment $i$ and reader $j$ the figure of merit $\theta_{ij}$ is estimated from the ratings data. Repeating this over all treatments and readers yields a matrix of observed values $\theta_{ij}$. This is averaged over all readers in each treatment yielding  $\theta_{i\bullet}$. The observed effect-size $ES_{obs}$ is defined as the difference between the reader-averaged FOMs in the two treatments, i.e., $ES_{obs}$ = $\theta_{2\bullet}$ - $\theta_{1\bullet}$. While extensible to more than two treatments, the explanation is more transparent by restricting to two modalities.
 1. If the magnitude of $ES_{obs}$ is "large" one has reason to suspect that there might indeed be a significant difference in AUCs between the two treatments, where significant is used in the sense of (book) Chapter 08. Quantification of this statement, specifically how large is "large", requires the conceptually more complex steps described next.
-+	In the DBMH approach, the subject of this chapter, jackknife pseudovalues are calculated as described in Chapter 08. A standard ANOVA model with uncorrelated errors is used to model the pseudovalues. 
-+	In the ORH approach, the subject of the next chapter, the FOM is modeled directly using a custom ANOVA model with correlated errors.
+   +	In the DBMH approach, the subject of this chapter, jackknife pseudovalues are calculated as described in Chapter 08. A standard ANOVA model with uncorrelated errors is used to model the pseudovalues. 
+   +	In the ORH approach, the subject of the next chapter, the FOM is modeled directly using a custom ANOVA model with correlated errors.
 1.	Depending on the selected method of modeling the data (pseudovalue vs. FOM) a statistical model is used which includes parameters modeling the true values in each treatment, and expected variations due to different variability components in the model, e.g., between-reader variability, case-sampling variability, interactions (e.g., modeling the possibility that the random effect of a given reader could be treatment dependent) and the presence of correlations (between pseudovalues or FOMs) because of the pairings inherent in the interpretations.
 1.	In RRRC analysis one accounts for randomness in readers and cases. In FRRC analysis one regards reader as a fixed factor. In RRFC analysis one regards case as a fixed factor. The statistical model depends on the type of analysis.
 1.	The parameters of the statistical model are estimated from the observed data. 
@@ -81,6 +81,7 @@ Hillis has proposed a centering transformation on the pseudovalues (Hillis calls
 Y_{ijk}=Y'_{ijk}+\left (\theta_{ij} - Y'_{ij\bullet}  \right )
 \end{equation*}
 
+**Note: the bullet symbol denotes an average over the corresponding index.**
 
 The effect of this transformation is that the average of the centered pseudovalues over the case index is identical to the corresponding estimate of the figure of merit:
 
@@ -136,7 +137,7 @@ One could have placed a $Y$ subscript (or superscript) on each of the variances,
 
 Another convention: $(\tau R)_{ij}$ is *not* the product of the treatment and reader factors, rather it is a single factor, namely the treatment-reader factor with $IJ$ levels, subscripted by the index $ij$ and similarly for the other product-like terms in Eqn. (9.7).
 
-### Meanings of variance components in the DBM model
+### Meanings of variance components in the DBM model (this section can be improved)
 The variances defined in Eqn. (9.7) are collectively termed variance components. Specifically, they are jackknife pseudovalue variance components, to be distinguished from figure of merit (FOM) variance components to be introduced in Chapter 10. They are in order: $\sigma_{R}^{2} ,\sigma_{C}^{2} \sigma_{\tau R}^{2},\sigma_{\tau C}^{2},\sigma_{RC}^{2}, \sigma_{\tau RC}^{2},\sigma_{\epsilon}^{2}$. They have the following meanings (all references to "variance" mean "variance of pseudovalues").
 
 *	The term $\sigma_{R}^{2}$ is the variance of readers that is independent of treatment or case, which are modeled separately. It is not to be confused with the terms $\sigma_{br+wr}^{2}$ and $\sigma_{cs+wr}^{2}$ used in §9.3, which describe the variability of $\theta$ measured under specified conditions. [A jackknife pseudovalue is a weighted difference of FOM like quantities, Eqn. (9.1). Its meaning will be explored later. For now, *a pseudovalue variance is distinct from a FOM variance*.]
@@ -163,7 +164,7 @@ It can be easily seen that the reader and case averaged difference between two d
 
 Estimating the strengths of the random terms is a little more complicated. It involves methods adapted from least squares, or maximum likelihood, and more esoteric ways. I do not feel comfortable going into these methods. Instead, results are presented and arguments are made to make them plausible. The starting point is definitions of quantities called **mean squares** and their expected values.
 
-### Definitions of mean-squares 
+### Definitions of mean-squares (need citations here) 
 Again, to be clear, one should put a $Y$ subscript (or superscript) on each of the following definitions, but that would make the notation unnecessarily cumbersome. 
 
 *In this chapter, all mean-square quantities are calculated using pseudovalues, not figure-of-merit values. The presence of three subscripts on Y should make this clear. Also the replication index and the nesting notation are suppressed. The notation is abbreviated so MST is the mean square corresponding to the treatment effect, etc.*
@@ -202,9 +203,12 @@ Since treatment is a fixed effect, the variance symbol $\sigma_{\tau}^{2}$, whic
 \sigma_{\tau}^{2}=\frac{1}{I-1}\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{\bullet \bullet \bullet} \right )^2
 \end{equation*}
 
-The expression on the right hand side "looks like" a variance, indeed one that could be calculated for just two treatments (I = 2) but, of course, random sampling from a distribution of treatments is not the intent of the notation. Under the null hypothesis, $Y_{1 \bullet \bullet} = Y_{2 \bullet \bullet} = ... = Y_{I \bullet \bullet}$, which implies $\sigma_{\tau}^{2} = 0$.
+The expression on the right hand side "looks like" a variance, indeed one that could be calculated for just two treatments (I = 2) but, of course, random sampling from a distribution of treatments is not the intent of the notation. Under the null hypothesis, $Y_{1 \bullet \bullet} = Y_{2 \bullet \bullet} = \cdot \cdot \cdot = Y_{I \bullet \bullet}$, which implies $\sigma_{\tau}^{2} = 0$.
 
-The expected mean squares in Table 9.1 are variance-like quantities; specifically, they are weighted linear combinations of the variances appearing in Eqn. (9.7). For single factors the column headed "degrees of freedom" ($df$) is one less than the number of levels of the corresponding factor; estimating a variance requires first estimating the mean, which imposes a constraint, thereby decreasing $df$ by one. For interaction terms, $df$ is the product of the degrees of freedom for the individual factors. As an example, the term $(\tau RC)_{ijk}$ contains three individual factors, and therefore  $df = (I-1)(J-1)(K-1)$. The number of degrees of freedom can be thought of as the amount of information available in estimating a mean square. As a special case, with no replications, the $\epsilon$  term has zero $df$ as $N-1 = 0$. With only one observation $Y_{1(ijk)}$ there is no information to estimate the variance corresponding to the $\epsilon$  term. To estimate this term one needs to replicate the study several times – each time the same readers interpret the same cases in all treatments – a very boring task for the reader and totally unnecessary from the researcher's point of view. 
+The expected mean squares in Table 9.1 are variance-like quantities; specifically, they are weighted linear combinations of the variances appearing in Eqn. (9.7). For single factors the column headed "degrees of freedom" ($df$) is one less than the number of levels of the corresponding factor; estimating a variance requires first estimating the mean, which imposes a constraint, thereby decreasing $df$ by one. For interaction terms, $df$ is the product of the degrees of freedom for the individual factors. As an example, the term $(\tau RC)_{ijk}$ contains three individual factors, and therefore  $df = (I-1)(J-1)(K-1)$. The number of degrees of freedom can be thought of as the amount of information available in estimating a mean square. As a special case, with no replications, the $\epsilon$  term has zero $df$ as $N-1 = 0$. With only one observation $Y_{1(ijk)}$ there is no information to estimate the variance corresponding to the $\epsilon$  term. To estimate this term one needs to replicate the study several times – each time the same readers interpret the same cases in all treatments – a very boring task for the reader and totally unnecessary from the researcher's point of view.
+
+### Example calculation of mean squares
+We choose `dataset02` to illustrate calculation of mean squares for pseudovalues. This is referred to in the book as the "VD" dataset [@RN1993]. It consists of 114 cases, 45 of which are diseased, interpreted in two treatments ("0" = single spin echo MRI, "1" = cine-MRI) by five radiologists using the ROC paradigm. The first line below computes the pseudovalues and extracts the numbers of treatmenets, readers and cases, used in the subsequent calculations of mean squares.
 
 
 ```r
@@ -269,39 +273,94 @@ for (i in 1:I) {
   }
 }
 msTRC <- msTRC/((I - 1) * (J - 1) * (K - 1))
-cat("msT = ", msT, ", msR = ", msR, ", msC = ", msC, ", msTR = ", msTR, ", msTC = ", msTC, ", msRC = ", msRC, ", msTRC = ", msTRC, "\n")
-#> msT =  0.5467634 , msR =  0.4373268 , msC =  0.3968699 , msTR =  0.06281749 , msTC =  0.09984808 , msRC =  0.06450106 , msTRC =  0.0399716
-UtilMeanSquares(dataset02)
-#> $msT
-#> [1] 0.5467634
-#> 
-#> $msR
-#> [1] 0.4373268
-#> 
-#> $msC
-#> [1] 0.3968699
-#> 
-#> $msTR
-#> [1] 0.06281749
-#> 
-#> $msTC
-#> [1] 0.09984808
-#> 
-#> $msRC
-#> [1] 0.06450106
-#> 
-#> $msTRC
-#> [1] 0.0399716
-#> 
-#> $msCSingleT
-#> [1] 0.3362943 0.1604237
-#> 
-#> $msCSingleR
-#> [1] 0.12224980 0.21274824 0.13653391 0.01728937 0.16605281
+data.frame("msT" = msT, "msR" = msR, "msC" = msC, "msTR" = msTR, "msTC" = msTC, "msRC" = msRC, "msTRC" = msTRC)
+#>         msT       msR       msC       msTR       msTC       msRC     msTRC
+#> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
+as.data.frame(UtilMeanSquares(dataset02)[1:7])
+#>         msT       msR       msC       msTR       msTC       msRC     msTRC
+#> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
 ```
+After displaying the results of the calculation, the results are compared to those calculated by `RJafroc` function `UtilMeanSquares`.
 
 ### Significance testing
+If the NH of no treatment effect is true, i.e., if $\sigma_{\tau}^{2}$ = 0, then according to Table 9.1 the following holds (the last term in the row labeled $T$ in Table 9.1 drops out):
 
+\begin{equation*}
+E\left ( MST\mid NH \right ) = \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} + J\sigma_{\tau C}^{2}
+\end{equation*}
+
+Also, the following linear combination is equal to $E\left ( MST\mid NH \right )$:
+
+\begin{equation*}
+E\left ( MS(TR) \right ) + E\left ( MS(TC) \right )  - E\left ( MS(TRC) \right ) \\ 
+= \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} \right ) + \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J\sigma_{\tau C}^{2} \right ) -\left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2}  \right ) \\
+= \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J \sigma_{\tau C}^{2} +  K\sigma_{\tau R}^{2} \\
+= E\left ( MS(T)\mid NH \right )
+\end{equation*}
+
+Therefore, under the NH, the ratio: 
+
+\begin{equation*}
+\frac{E\left ( MS(T)\mid NH \right )}{E\left ( MS(TR) \right ) + E\left ( MS(TC) \right )  - E\left ( MS(TRC) \right )} = 1
+\end{equation*}
+
+In practice, one does not know the expected values – that would require averaging each of these quantities, regarded as random variables, over their respective distributions. Therefore, one defines the following statistic, denoted  $F_{DBM}$, using the observed values of the mean squares, calculated almost trivially using Eqn. (9.12):
+
+\begin{equation*}
+F_{DBM} = \frac{MS(T)}{MS(TR) + MS(TC) - MS(TRC)}
+\end{equation*}
+
+$F_{DBM}$ is a realization of a random variable. A non-zero treatment effect, i.e.,  $\sigma_{\tau}^{2} > 0$, will cause the ratio to be larger than one, because $E\left ( MS(T) \right)$  will be larger, see row labeled $T$ in Table 9.1. Therefore values of $F_{DBM} > 1$  will tend to reject the NH. Drawing on a theorem from statistics [@RN1492], under the NH the ratio of two independent mean squares is distributed as a (central) F-statistic with degrees of freedom corresponding to those of the mean squares forming the numerator and denominator of the ratio (Theorem 12.2.5 in “An Introduction to Mathematical Statistics and Its Applications”).  Knowing the distribution of the statistic defined by (9.18) under the NH enables hypothesis testing. This is completely analogous to Chapter 08 where knowledge of the distribution of AUC under the NH enabled testing the null hypothesis that the observed value of AUC equals a pre-specified value. 
+
+Under the NH the left hand side of by (9.18), i.e., $F_{DBM}$, is distributed according to the F-distribution characterized by two numbers: 
+
+* A numerator degrees of freedom ($ndf$) – determined by the degrees of freedom of the numerator $MST$ of the ratio comprising the F-statistic, i.e., $I – 1$, and 
+* A denominator degrees of freedom ($ddf$) - determined by the degrees of freedom of the denominator of the ratio comprising the F-statistic, to be described below. 
+
+Summarizing,
+
+\begin{equation*}
+F_{DBM} \sim F_{ndf,ddf} \\
+ndf=I-1
+\end{equation*}
+
+The next topic is estimating $ddf$.
+
+### The Satterthwaite approximation
+The denominator of the F-ratio is MS(TR)+MS(TC)-MS(TRC).
+
+This is not a simple mean square. Rather it is a *linear combination of mean squares* (with coefficients 1, 1 and  1), and the resulting value could even be negative, which is an illegal value for a sample from an F-distribution. In 1941 Satterthwaite [@RN2359; @RN2360] proposed an approximate degree of freedom for a linear combination of simple mean square quantities. Online Appendix 9.A explains the approximation in more detail. The end result is that the mean square quantity described in Eqn. (9.21) has an approximate degree of freedom defined by (this is called the *Satterthwaite's approximation*):
+
+\begin{equation*}
+ddf_{Sat}=\frac{\left ( MS(TR) + MS(TC) - MS(TRC) \right )^2}{\left ( \frac{{MS(TR)}^2}{(I-1)(J-1)} + \frac{{MS(TC)}^2}{(I-1)(K-1)} + \frac{{MS(TRC)}^2}{(I-1)(J-1)(K-1)}  \right )}
+\end{equation*}
+
+The subscript $Sat$ is for Satterthwaite. From Eqn. (9.22) it should be fairly obvious that in general   is not an integer. To accommodate possible negative estimates of the denominator, Eqn. (9.21), the original DBM method1 proposed four expressions for the F-statistic and corresponding expressions for $ddf$. Rather than repeat them here, since they have been superseded by the method described below, the interested reader is referred to Eqn. 6 and Eqn. 7 in [@RN1866].
+
+Hillis [@RN1865] proposes the following statistic for testing the null hypothesis (the subscript $DBMH$ give credit to the original formulation by DBM and the subsequent improvements by Hillis): 
+
+\begin{equation*}
+F_{DBMH} = \frac{MS(T)}{MS(TR) + \max \left (MS(TC) - MS(TRC), 0  \right )}
+\end{equation*}
+
+Now the denominator cannot be negative. One can think of the F-statistic $F_{DBMH}$ as a signal-to-noise ratio like quantity, with the difference that both numerator and denominator are variance like quantities. If the "variance" represented by the treatment effect is larger than the variance of the noise tending to mask the treatment effect, then $F_{DBMH}$  tends to be large, which makes the observed treatment "variance" stand out more clearly compared to the noise. 
+
+Hillis has shown that the left hand side of Eqn. (9.23) is distributed as an F-statistic with ndf defined by Eqn. (9.20), and denominator degrees of freedom   defined by:
+
+\begin{equation*}
+ddf_H =\frac{\left ( MS(TR) + \max \left (MS(TC) - MS(TRC),0  \right ) \right )^2}{\left ( \frac{{MS(TR)}^2}{(I-1)(J-1)}  \right )}
+\end{equation*}
+
+Summarizing,
+
+\begin{equation*}
+F_{DBM} \sim F_{ndf,ddf} \\
+ndf=I-1
+\end{equation*}
+
+Instead of 4 rules, as in the original DBM method, the Hillis modification involves just one rule, summarized by Eqns. (9.23) through Eqn. (9.25). Moreover, the F-statistic is constrained to non-negative values. Using simulation testing [@RN1866] has shown that the DBMH method has better null hypothesis behavior than the original DBM method; the latter tended to be too conservative, typically yielding Type I error rates smaller than the optimal 5%. 
+
+### Decision rules, p-value and confidence intervals
 
 ## Fixed-reader random-case analysis
 
