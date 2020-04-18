@@ -4,7 +4,7 @@
 
 
 ## Introduction
-Since it plays an important role in sample size estimation, it is helpful to examine the behavior of the F-distribution. In the following `ndf` = numerator degrees of freedom, `ddf` = denominator degrees of freedom and `ncp` = non-centrality parameter (i.e., the $\Delta$ appearing in Eqn. (11.6) of [@RN2680]). 
+Since it plays an important role in significance testing and sample size estimation, it is helpful to examine the behavior of the F-distribution. In the following `ndf` = numerator degrees of freedom, `ddf` = denominator degrees of freedom and `ncp` = non-centrality parameter (i.e., the $\Delta$ appearing in Eqn. (11.6) of [@RN2680]). 
 
 The use of three `R` functions is demonstrated. 
 
@@ -48,7 +48,7 @@ for (i in 1:length(ncp))
 fCrit_2_10 <- fCrit # convention fCrit_ndf_ddf
 ```
 
-<img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-1.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-2.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-3.png" width="672" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-4.png" width="672" />
+<img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-1.png" width="50%" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-2.png" width="50%" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-3.png" width="50%" /><img src="11-SampleSize1_files/figure-html/unnamed-chunk-1-4.png" width="50%" />
 
 
 <table>

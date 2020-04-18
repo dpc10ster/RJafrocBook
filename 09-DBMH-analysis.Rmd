@@ -56,8 +56,8 @@ This section provides an overview of the steps involved in analysis of MRMC data
 1.	A FOM is selected: *the selection of FOM is the single-most critical aspect of analyzing an observer performance study*. The selected FOM is denoted $\theta$. To keep the notation reasonably compact the usual circumflex "hat" symbol used previously to denote an estimate is suppressed. The FOM has to be an objective scalar measure of performance with larger values characterizing better performance. [The qualifier "larger" is trivially satisfied; if the figure of merit has the opposite characteristic, a sign change is all that is needed to bring it back to compliance with this requirement.] Examples are empirical $AUC$, the binormal model-based estimate $A_z$ , other advance method based estimates of $AUC$, sensitivity at a predefined value of specificity, etc. An example of a FOM requiring a sign-change is $FPF$ at a specified $TPF$, where smaller values signify better performance.
 1. For each treatment $i$ and reader $j$ the figure of merit $\theta_{ij}$ is estimated from the ratings data. Repeating this over all treatments and readers yields a matrix of observed values $\theta_{ij}$. This is averaged over all readers in each treatment yielding  $\theta_{i\bullet}$. The observed effect-size $ES_{obs}$ is defined as the difference between the reader-averaged FOMs in the two treatments, i.e., $ES_{obs}$ = $\theta_{2\bullet}$ - $\theta_{1\bullet}$. While extensible to more than two treatments, the explanation is more transparent by restricting to two modalities.
 1. If the magnitude of $ES_{obs}$ is "large" one has reason to suspect that there might indeed be a significant difference in AUCs between the two treatments, where significant is used in the sense of (book) Chapter 08. Quantification of this statement, specifically how large is "large", requires the conceptually more complex steps described next.
-   +	In the DBMH approach, the subject of this chapter, jackknife pseudovalues are calculated as described in Chapter 08. A standard ANOVA model with uncorrelated errors is used to model the pseudovalues. 
-   +	In the ORH approach, the subject of the next chapter, the FOM is modeled directly using a custom ANOVA model with correlated errors.
++	In the DBMH approach, the subject of this chapter, jackknife pseudovalues are calculated as described in Chapter 08. A standard ANOVA model with uncorrelated errors is used to model the pseudovalues. 
++	In the ORH approach, the subject of the next chapter, the FOM is modeled directly using a custom ANOVA model with correlated errors.
 1.	Depending on the selected method of modeling the data (pseudovalue vs. FOM) a statistical model is used which includes parameters modeling the true values in each treatment, and expected variations due to different variability components in the model, e.g., between-reader variability, case-sampling variability, interactions (e.g., modeling the possibility that the random effect of a given reader could be treatment dependent) and the presence of correlations (between pseudovalues or FOMs) because of the pairings inherent in the interpretations.
 1.	In RRRC analysis one accounts for randomness in readers and cases. In FRRC analysis one regards reader as a fixed factor. In RRFC analysis one regards case as a fixed factor. The statistical model depends on the type of analysis.
 1.	The parameters of the statistical model are estimated from the observed data. 
@@ -338,7 +338,7 @@ This is not a simple mean square. Rather it is a *linear combination of mean squ
 ddf_{Sat}=\frac{\left ( MS(TR) + MS(TC) - MS(TRC) \right )^2}{\left ( \frac{MS(TR)^2}{(I-1)(J-1)} + \frac{MS(TC)^2}{(I-1)(K-1)} + \frac{MS(TRC)^2}{(I-1)(J-1)(K-1)}  \right )}
 \end{equation*}
 
-The subscript $Sat$ is for Satterthwaite. From Eqn. (9.22) it should be fairly obvious that in general   is not an integer. To accommodate possible negative estimates of the denominator, Eqn. (9.21), the original DBM method1 proposed four expressions for the F-statistic and corresponding expressions for $ddf$. Rather than repeat them here, since they have been superseded by the method described below, the interested reader is referred to Eqn. 6 and Eqn. 7 in [@RN1866].
+The subscript $Sat$ is for Satterthwaite. From Eqn. (9.22) it should be fairly obvious that in general $ddf_{Sat}$ is not an integer. To accommodate possible negative estimates of the denominator, Eqn. (9.21), the original DBM method [@RN204] proposed four expressions for the F-statistic and corresponding expressions for $ddf$. Rather than repeat them here, since they have been superseded by the method described below, the interested reader is referred to Eqn. 6 and Eqn. 7 in [@RN1866].
 
 Hillis [@RN1865] proposes the following statistic for testing the null hypothesis (the subscript $DBMH$ give credit to the original formulation by DBM and the subsequent improvements by Hillis): 
 
@@ -364,6 +364,21 @@ ndf=I-1
 Instead of 4 rules, as in the original DBM method, the Hillis modification involves just one rule, summarized by Eqns. (9.23) through Eqn. (9.25). Moreover, the F-statistic is constrained to non-negative values. Using simulation testing [@RN1866] has shown that the DBMH method has better null hypothesis behavior than the original DBM method; the latter tended to be too conservative, typically yielding Type I error rates smaller than the optimal 5%. 
 
 ### Decision rules, p-value and confidence intervals
+The critical value of the F-statistic $F_{1-\alpha,ndf,ddf_H}$  is defined such that fraction   of the distribution lies to the left of the critical value, in other words it is the quantile function for the F-distribution: 
+
+\begin{equation*}
+\Pr\left ( F\leq F_{1-\alpha,ndf,ddf_H} \mid F\sim F_{ndf,ddf_H}\right ) = 1 - \alpha
+\end{equation*}
+
+The critical value $F_{1-\alpha,ndf,ddf_H}$ increases as $\alpha$ decreases. The value of $\alpha$, generally chosen to be 0.05, termed the *nominal* $\alpha$, is fixed. The decision rule is that if $F_{DBMH} > F_{1-\alpha, ndf, ddf_H}$ one rejects the NH and otherwise one does not. It follows, from the definition of $F_{DBMH}$, Eqn. (9.23), that rejection of the NH is more likely if: 
+* $F_{DBMH}$ is large, Eqn. (9.18), which occurs if $MS(T)$ is large, meaning the treatment effect is large, and / or $MS(TR) + \max \left (MS(TC) - MS(TRC),0  \right )$ is small, see comments following Eqn. (9.23). 
+*	$\alpha$ is large: for then $F_{1-\alpha,ndf,ddf_H}$ decreases and is more likely to be exceeded by $F_{DBMH}$. 
+*	ndf is large: the more the number of treatment pairings, the greater the chance that at least one pairing will reject the NH. 
+* $ddf_H$	is large: this causes the critical value to decrease, see below, and is more likely to be exceeded by $F_{DBMH}$. 
+
+#### Example code illustrating the F-distribution for different arguments
+* see [BACKGROUND ON THE F-DISTRIBUTION]
+
 
 ## Fixed-reader random-case analysis
 

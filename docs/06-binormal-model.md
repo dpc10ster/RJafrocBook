@@ -412,21 +412,21 @@ dataset <- Df2RJafrocDataset(K1t, K2t, InputIsCountsTable = TRUE)
 retFit <- FitBinormalRoc(dataset)
 retFit[1:5]
 #> $a
-#> [1] 1.320449
+#> [1] 1.320453
 #> 
 #> $b
-#> [1] 0.6074912
+#> [1] 0.6074929
 #> 
 #> $zetas
 #>    zetaFwd1    zetaFwd2    zetaFwd3    zetaFwd4 
-#> 0.007679249 0.896272157 1.515648564 2.396721792 
+#> 0.007680547 0.896273068 1.515647850 2.396722099 
 #> 
 #> $AUC
-#> [1] 0.8704517
+#> [1] 0.8704522
 #> 
 #> $StdAUC
 #>            [,1]
-#> [1,] 0.03790432
+#> [1,] 0.03790423
 print(retFit$fittedPlot)
 ```
 
