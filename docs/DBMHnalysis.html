@@ -134,8 +134,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="" data-path="a-note-on-the-online-distribution-mechanism-of-the-book.html"><a href="a-note-on-the-online-distribution-mechanism-of-the-book.html"><i class="fa fa-check"></i>A note on the online distribution mechanism of the book</a></li>
-<li class="chapter" data-level="" data-path="contributing-to-this-book.html"><a href="contributing-to-this-book.html"><i class="fa fa-check"></i>Contributing to this book</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="NpvPpv.html"><a href="NpvPpv.html"><i class="fa fa-check"></i><b>2</b> Negative and Positive Predictive Values</a>
 <ul>
@@ -729,73 +727,73 @@ C_k \sim N\left ( 0,\sigma_{C}^{2} \right ) \\
 <div id="example-calculation-of-mean-squares" class="section level3" number="7.7.1">
 <h3><span class="header-section-number">7.7.1</span> Example calculation of mean squares</h3>
 <p>We choose <code>dataset02</code> to illustrate calculation of mean squares for pseudovalues. This is referred to in the book as the “VD” dataset <span class="citation">(Van Dyke et al. <a href="#ref-RN1993" role="doc-biblioref">1993</a>)</span>. It consists of 114 cases, 45 of which are diseased, interpreted in two treatments (“0” = single spin echo MRI, “1” = cine-MRI) by five radiologists using the ROC paradigm. The first line below computes the pseudovalues and extracts the numbers of treatmenets, readers and cases, used in the subsequent calculations of mean squares.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="DBMHnalysis.html#cb21-1"></a>Y &lt;-<span class="st"> </span><span class="kw">UtilPseudoValues</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>)<span class="op">$</span>jkPseudoValues</span>
-<span id="cb21-2"><a href="DBMHnalysis.html#cb21-2"></a>I &lt;-<span class="st"> </span><span class="kw">dim</span>(Y)[<span class="dv">1</span>];J &lt;-<span class="st"> </span><span class="kw">dim</span>(Y)[<span class="dv">2</span>];K &lt;-<span class="st"> </span><span class="kw">dim</span>(Y)[<span class="dv">3</span>]</span>
-<span id="cb21-3"><a href="DBMHnalysis.html#cb21-3"></a>msT &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb21-4"><a href="DBMHnalysis.html#cb21-4"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) { <span class="co"># OK</span></span>
-<span id="cb21-5"><a href="DBMHnalysis.html#cb21-5"></a>  msT &lt;-<span class="st"> </span>msT <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
-<span id="cb21-6"><a href="DBMHnalysis.html#cb21-6"></a>}</span>
-<span id="cb21-7"><a href="DBMHnalysis.html#cb21-7"></a>msT &lt;-<span class="st"> </span>msT <span class="op">*</span><span class="st"> </span>K <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>(I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span>
-<span id="cb21-8"><a href="DBMHnalysis.html#cb21-8"></a></span>
-<span id="cb21-9"><a href="DBMHnalysis.html#cb21-9"></a>msTC &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb21-10"><a href="DBMHnalysis.html#cb21-10"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
-<span id="cb21-11"><a href="DBMHnalysis.html#cb21-11"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># OK</span></span>
-<span id="cb21-12"><a href="DBMHnalysis.html#cb21-12"></a>    msTC &lt;-<span class="st"> </span>msTC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
-<span id="cb21-13"><a href="DBMHnalysis.html#cb21-13"></a>  }</span>
-<span id="cb21-14"><a href="DBMHnalysis.html#cb21-14"></a>  msTC &lt;-<span class="st"> </span>msTC <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
-<span id="cb21-15"><a href="DBMHnalysis.html#cb21-15"></a>} </span>
-<span id="cb21-16"><a href="DBMHnalysis.html#cb21-16"></a></span>
-<span id="cb21-17"><a href="DBMHnalysis.html#cb21-17"></a>msR &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb21-18"><a href="DBMHnalysis.html#cb21-18"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) { <span class="co"># OK</span></span>
-<span id="cb21-19"><a href="DBMHnalysis.html#cb21-19"></a>  msR &lt;-<span class="st"> </span>msR <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
-<span id="cb21-20"><a href="DBMHnalysis.html#cb21-20"></a>}</span>
-<span id="cb21-21"><a href="DBMHnalysis.html#cb21-21"></a>msR &lt;-<span class="st"> </span>msR <span class="op">*</span><span class="st"> </span>K <span class="op">*</span><span class="st"> </span>I<span class="op">/</span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span>
-<span id="cb21-22"><a href="DBMHnalysis.html#cb21-22"></a></span>
-<span id="cb21-23"><a href="DBMHnalysis.html#cb21-23"></a>msC &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb21-24"><a href="DBMHnalysis.html#cb21-24"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># Not used subsequently</span></span>
-<span id="cb21-25"><a href="DBMHnalysis.html#cb21-25"></a>  msC &lt;-<span class="st"> </span>msC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
-<span id="cb21-26"><a href="DBMHnalysis.html#cb21-26"></a>}</span>
-<span id="cb21-27"><a href="DBMHnalysis.html#cb21-27"></a>msC &lt;-<span class="st"> </span>msC <span class="op">*</span><span class="st"> </span>I <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span>
-<span id="cb21-28"><a href="DBMHnalysis.html#cb21-28"></a></span>
-<span id="cb21-29"><a href="DBMHnalysis.html#cb21-29"></a>msTR &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb21-30"><a href="DBMHnalysis.html#cb21-30"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
-<span id="cb21-31"><a href="DBMHnalysis.html#cb21-31"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) { <span class="co"># OK</span></span>
-<span id="cb21-32"><a href="DBMHnalysis.html#cb21-32"></a>    msTR &lt;-<span class="st"> </span>msTR <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, ]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
-<span id="cb21-33"><a href="DBMHnalysis.html#cb21-33"></a>  }</span>
-<span id="cb21-34"><a href="DBMHnalysis.html#cb21-34"></a>}</span>
-<span id="cb21-35"><a href="DBMHnalysis.html#cb21-35"></a>msTR &lt;-<span class="st"> </span>msTR <span class="op">*</span><span class="st"> </span>K<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
-<span id="cb21-36"><a href="DBMHnalysis.html#cb21-36"></a></span>
-<span id="cb21-37"><a href="DBMHnalysis.html#cb21-37"></a>msTC &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb21-38"><a href="DBMHnalysis.html#cb21-38"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
-<span id="cb21-39"><a href="DBMHnalysis.html#cb21-39"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># OK</span></span>
-<span id="cb21-40"><a href="DBMHnalysis.html#cb21-40"></a>    msTC &lt;-<span class="st"> </span>msTC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
-<span id="cb21-41"><a href="DBMHnalysis.html#cb21-41"></a>  }</span>
-<span id="cb21-42"><a href="DBMHnalysis.html#cb21-42"></a>}</span>
-<span id="cb21-43"><a href="DBMHnalysis.html#cb21-43"></a>msTC &lt;-<span class="st"> </span>msTC <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
-<span id="cb21-44"><a href="DBMHnalysis.html#cb21-44"></a></span>
-<span id="cb21-45"><a href="DBMHnalysis.html#cb21-45"></a>msRC &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb21-46"><a href="DBMHnalysis.html#cb21-46"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) {</span>
-<span id="cb21-47"><a href="DBMHnalysis.html#cb21-47"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># ?? Not used subsequently</span></span>
-<span id="cb21-48"><a href="DBMHnalysis.html#cb21-48"></a>    msRC &lt;-<span class="st"> </span>msRC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[, j, k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
-<span id="cb21-49"><a href="DBMHnalysis.html#cb21-49"></a>  }</span>
-<span id="cb21-50"><a href="DBMHnalysis.html#cb21-50"></a>}</span>
-<span id="cb21-51"><a href="DBMHnalysis.html#cb21-51"></a>msRC &lt;-<span class="st"> </span>msRC <span class="op">*</span><span class="st"> </span>I<span class="op">/</span>((J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
-<span id="cb21-52"><a href="DBMHnalysis.html#cb21-52"></a></span>
-<span id="cb21-53"><a href="DBMHnalysis.html#cb21-53"></a>msTRC &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb21-54"><a href="DBMHnalysis.html#cb21-54"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
-<span id="cb21-55"><a href="DBMHnalysis.html#cb21-55"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) {</span>
-<span id="cb21-56"><a href="DBMHnalysis.html#cb21-56"></a>    <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># OK</span></span>
-<span id="cb21-57"><a href="DBMHnalysis.html#cb21-57"></a>      msTRC &lt;-<span class="st"> </span>msTRC <span class="op">+</span><span class="st"> </span>(Y[i, j, k] <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, ]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
-<span id="cb21-58"><a href="DBMHnalysis.html#cb21-58"></a>    }</span>
-<span id="cb21-59"><a href="DBMHnalysis.html#cb21-59"></a>  }</span>
-<span id="cb21-60"><a href="DBMHnalysis.html#cb21-60"></a>}</span>
-<span id="cb21-61"><a href="DBMHnalysis.html#cb21-61"></a>msTRC &lt;-<span class="st"> </span>msTRC<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
-<span id="cb21-62"><a href="DBMHnalysis.html#cb21-62"></a><span class="kw">data.frame</span>(<span class="st">&quot;msT&quot;</span> =<span class="st"> </span>msT, <span class="st">&quot;msR&quot;</span> =<span class="st"> </span>msR, <span class="st">&quot;msC&quot;</span> =<span class="st"> </span>msC, <span class="st">&quot;msTR&quot;</span> =<span class="st"> </span>msTR, <span class="st">&quot;msTC&quot;</span> =<span class="st"> </span>msTC, <span class="st">&quot;msRC&quot;</span> =<span class="st"> </span>msRC, <span class="st">&quot;msTRC&quot;</span> =<span class="st"> </span>msTRC)</span>
-<span id="cb21-63"><a href="DBMHnalysis.html#cb21-63"></a><span class="co">#&gt;         msT       msR       msC       msTR       msTC       msRC     msTRC</span></span>
-<span id="cb21-64"><a href="DBMHnalysis.html#cb21-64"></a><span class="co">#&gt; 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716</span></span>
-<span id="cb21-65"><a href="DBMHnalysis.html#cb21-65"></a><span class="kw">as.data.frame</span>(<span class="kw">UtilMeanSquares</span>(dataset02)[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>])</span>
-<span id="cb21-66"><a href="DBMHnalysis.html#cb21-66"></a><span class="co">#&gt;         msT       msR       msC       msTR       msTC       msRC     msTRC</span></span>
-<span id="cb21-67"><a href="DBMHnalysis.html#cb21-67"></a><span class="co">#&gt; 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="DBMHnalysis.html#cb1-1"></a>Y &lt;-<span class="st"> </span><span class="kw">UtilPseudoValues</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>)<span class="op">$</span>jkPseudoValues</span>
+<span id="cb1-2"><a href="DBMHnalysis.html#cb1-2"></a>I &lt;-<span class="st"> </span><span class="kw">dim</span>(Y)[<span class="dv">1</span>];J &lt;-<span class="st"> </span><span class="kw">dim</span>(Y)[<span class="dv">2</span>];K &lt;-<span class="st"> </span><span class="kw">dim</span>(Y)[<span class="dv">3</span>]</span>
+<span id="cb1-3"><a href="DBMHnalysis.html#cb1-3"></a>msT &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-4"><a href="DBMHnalysis.html#cb1-4"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) { <span class="co"># OK</span></span>
+<span id="cb1-5"><a href="DBMHnalysis.html#cb1-5"></a>  msT &lt;-<span class="st"> </span>msT <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-6"><a href="DBMHnalysis.html#cb1-6"></a>}</span>
+<span id="cb1-7"><a href="DBMHnalysis.html#cb1-7"></a>msT &lt;-<span class="st"> </span>msT <span class="op">*</span><span class="st"> </span>K <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>(I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb1-8"><a href="DBMHnalysis.html#cb1-8"></a></span>
+<span id="cb1-9"><a href="DBMHnalysis.html#cb1-9"></a>msTC &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-10"><a href="DBMHnalysis.html#cb1-10"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
+<span id="cb1-11"><a href="DBMHnalysis.html#cb1-11"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># OK</span></span>
+<span id="cb1-12"><a href="DBMHnalysis.html#cb1-12"></a>    msTC &lt;-<span class="st"> </span>msTC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-13"><a href="DBMHnalysis.html#cb1-13"></a>  }</span>
+<span id="cb1-14"><a href="DBMHnalysis.html#cb1-14"></a>  msTC &lt;-<span class="st"> </span>msTC <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb1-15"><a href="DBMHnalysis.html#cb1-15"></a>} </span>
+<span id="cb1-16"><a href="DBMHnalysis.html#cb1-16"></a></span>
+<span id="cb1-17"><a href="DBMHnalysis.html#cb1-17"></a>msR &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-18"><a href="DBMHnalysis.html#cb1-18"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) { <span class="co"># OK</span></span>
+<span id="cb1-19"><a href="DBMHnalysis.html#cb1-19"></a>  msR &lt;-<span class="st"> </span>msR <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-20"><a href="DBMHnalysis.html#cb1-20"></a>}</span>
+<span id="cb1-21"><a href="DBMHnalysis.html#cb1-21"></a>msR &lt;-<span class="st"> </span>msR <span class="op">*</span><span class="st"> </span>K <span class="op">*</span><span class="st"> </span>I<span class="op">/</span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb1-22"><a href="DBMHnalysis.html#cb1-22"></a></span>
+<span id="cb1-23"><a href="DBMHnalysis.html#cb1-23"></a>msC &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-24"><a href="DBMHnalysis.html#cb1-24"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># Not used subsequently</span></span>
+<span id="cb1-25"><a href="DBMHnalysis.html#cb1-25"></a>  msC &lt;-<span class="st"> </span>msC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-26"><a href="DBMHnalysis.html#cb1-26"></a>}</span>
+<span id="cb1-27"><a href="DBMHnalysis.html#cb1-27"></a>msC &lt;-<span class="st"> </span>msC <span class="op">*</span><span class="st"> </span>I <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb1-28"><a href="DBMHnalysis.html#cb1-28"></a></span>
+<span id="cb1-29"><a href="DBMHnalysis.html#cb1-29"></a>msTR &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-30"><a href="DBMHnalysis.html#cb1-30"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
+<span id="cb1-31"><a href="DBMHnalysis.html#cb1-31"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) { <span class="co"># OK</span></span>
+<span id="cb1-32"><a href="DBMHnalysis.html#cb1-32"></a>    msTR &lt;-<span class="st"> </span>msTR <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, ]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-33"><a href="DBMHnalysis.html#cb1-33"></a>  }</span>
+<span id="cb1-34"><a href="DBMHnalysis.html#cb1-34"></a>}</span>
+<span id="cb1-35"><a href="DBMHnalysis.html#cb1-35"></a>msTR &lt;-<span class="st"> </span>msTR <span class="op">*</span><span class="st"> </span>K<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb1-36"><a href="DBMHnalysis.html#cb1-36"></a></span>
+<span id="cb1-37"><a href="DBMHnalysis.html#cb1-37"></a>msTC &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-38"><a href="DBMHnalysis.html#cb1-38"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
+<span id="cb1-39"><a href="DBMHnalysis.html#cb1-39"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># OK</span></span>
+<span id="cb1-40"><a href="DBMHnalysis.html#cb1-40"></a>    msTC &lt;-<span class="st"> </span>msTC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-41"><a href="DBMHnalysis.html#cb1-41"></a>  }</span>
+<span id="cb1-42"><a href="DBMHnalysis.html#cb1-42"></a>}</span>
+<span id="cb1-43"><a href="DBMHnalysis.html#cb1-43"></a>msTC &lt;-<span class="st"> </span>msTC <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb1-44"><a href="DBMHnalysis.html#cb1-44"></a></span>
+<span id="cb1-45"><a href="DBMHnalysis.html#cb1-45"></a>msRC &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-46"><a href="DBMHnalysis.html#cb1-46"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) {</span>
+<span id="cb1-47"><a href="DBMHnalysis.html#cb1-47"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># ?? Not used subsequently</span></span>
+<span id="cb1-48"><a href="DBMHnalysis.html#cb1-48"></a>    msRC &lt;-<span class="st"> </span>msRC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[, j, k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-49"><a href="DBMHnalysis.html#cb1-49"></a>  }</span>
+<span id="cb1-50"><a href="DBMHnalysis.html#cb1-50"></a>}</span>
+<span id="cb1-51"><a href="DBMHnalysis.html#cb1-51"></a>msRC &lt;-<span class="st"> </span>msRC <span class="op">*</span><span class="st"> </span>I<span class="op">/</span>((J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb1-52"><a href="DBMHnalysis.html#cb1-52"></a></span>
+<span id="cb1-53"><a href="DBMHnalysis.html#cb1-53"></a>msTRC &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-54"><a href="DBMHnalysis.html#cb1-54"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
+<span id="cb1-55"><a href="DBMHnalysis.html#cb1-55"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) {</span>
+<span id="cb1-56"><a href="DBMHnalysis.html#cb1-56"></a>    <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># OK</span></span>
+<span id="cb1-57"><a href="DBMHnalysis.html#cb1-57"></a>      msTRC &lt;-<span class="st"> </span>msTRC <span class="op">+</span><span class="st"> </span>(Y[i, j, k] <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, ]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-58"><a href="DBMHnalysis.html#cb1-58"></a>    }</span>
+<span id="cb1-59"><a href="DBMHnalysis.html#cb1-59"></a>  }</span>
+<span id="cb1-60"><a href="DBMHnalysis.html#cb1-60"></a>}</span>
+<span id="cb1-61"><a href="DBMHnalysis.html#cb1-61"></a>msTRC &lt;-<span class="st"> </span>msTRC<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb1-62"><a href="DBMHnalysis.html#cb1-62"></a><span class="kw">data.frame</span>(<span class="st">&quot;msT&quot;</span> =<span class="st"> </span>msT, <span class="st">&quot;msR&quot;</span> =<span class="st"> </span>msR, <span class="st">&quot;msC&quot;</span> =<span class="st"> </span>msC, <span class="st">&quot;msTR&quot;</span> =<span class="st"> </span>msTR, <span class="st">&quot;msTC&quot;</span> =<span class="st"> </span>msTC, <span class="st">&quot;msRC&quot;</span> =<span class="st"> </span>msRC, <span class="st">&quot;msTRC&quot;</span> =<span class="st"> </span>msTRC)</span>
+<span id="cb1-63"><a href="DBMHnalysis.html#cb1-63"></a><span class="co">#&gt;         msT       msR       msC       msTR       msTC       msRC     msTRC</span></span>
+<span id="cb1-64"><a href="DBMHnalysis.html#cb1-64"></a><span class="co">#&gt; 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716</span></span>
+<span id="cb1-65"><a href="DBMHnalysis.html#cb1-65"></a><span class="kw">as.data.frame</span>(<span class="kw">UtilMeanSquares</span>(dataset02)[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>])</span>
+<span id="cb1-66"><a href="DBMHnalysis.html#cb1-66"></a><span class="co">#&gt;         msT       msR       msC       msTR       msTC       msRC     msTRC</span></span>
+<span id="cb1-67"><a href="DBMHnalysis.html#cb1-67"></a><span class="co">#&gt; 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716</span></span></code></pre></div>
 <p>After displaying the results of the calculation, the results are compared to those calculated by <code>RJafroc</code> function <code>UtilMeanSquares</code>.</p>
 </div>
 <div id="significance-testing" class="section level3" number="7.7.2">
@@ -872,6 +870,55 @@ ndf=I-1
 <ul>
 <li>see <a href="SSFDistr.html#SSFDistr">BACKGROUND ON THE F-DISTRIBUTION</a></li>
 </ul>
+</div>
+<div id="p-value-and-confidence-interval" class="section level4" number="7.7.4.2">
+<h4><span class="header-section-number">7.7.4.2</span> p-value and confidence interval</h4>
+<p>**The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than <span class="math inline">\(F_{DBMH}\)</span> could occur by chance. In other words, it is the area under the (central) F-distribution <span class="math inline">\(F_{ndf,ddf}\)</span> that lies above the observed value <span class="math inline">\(F_{DBMH}\)</span>:</p>
+<p><span class="math display">\[\begin{equation*}
+p=\Pr\left ( F &gt; F_{DBMH} \mid F \sim F_{ndf,ddf_H} \right )
+\end{equation*}\]</span></p>
+<p>If <span class="math inline">\(p &lt; \alpha\)</span> then the NH that all treatments are identical is rejected at significance level <span class="math inline">\(\alpha\)</span>. That informs the researcher that there exists at least one treatment-pair that has a significant difference. To identify which pair(s) are different, one calculates confidence intervals for each paired difference. Hillis has shown that the <span class="math inline">\((1-\alpha)\)</span> percent confidence interval for <span class="math inline">\(Y_{i \bullet \bullet} - Y_{i&#39; \bullet \bullet}\)</span> is given by:</p>
+<p><span class="math display">\[\begin{equation*}
+CI_{1-\alpha}=\left ( Y_{i \bullet \bullet} - Y_{i&#39; \bullet \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MS(TR) + \max\left ( MS(TC)-MS(TRC),0 \right ) \right )}
+\end{equation*}\]</span></p>
+<p>Here <span class="math inline">\(t_{\alpha/2;ddf_H}\)</span> is that value such that <span class="math inline">\(\alpha/2\)</span> of the <em>central t-distribution</em> with <span class="math inline">\(ddf_H\)</span> degrees of freedom is contained in the upper tail of the distribution:</p>
+<p><span class="math display">\[\begin{equation*}
+\Pr\left ( T&gt;t_{\alpha/2;ddf_H} \right )=\alpha/2
+\end{equation*}\]</span></p>
+<p>Since centered pseudovalues were used:</p>
+<p><span class="math display">\[\begin{equation*}
+\left ( Y_{i \bullet \bullet} - Y_{i&#39; \bullet \bullet} \right )=\left ( \theta_{i \bullet \bullet} - \theta_{i&#39; \bullet \bullet} \right )
+\end{equation*}\]</span></p>
+<p>Eqn. (9.28) can be rewritten:</p>
+<p><span class="math display">\[\begin{equation*}
+CI_{1-\alpha}=\left ( \theta_{i \bullet \bullet} - \theta_{i&#39; \bullet \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MS(TR) + \max\left ( MS(TC)-MS(TRC),0 \right ) \right )}
+\end{equation*}\]</span></p>
+<p>For two treatments the following equivalent rules could be adopted to reject the NH:</p>
+<ul>
+<li><span class="math inline">\(F_{DBMH} &gt; F_{1-\alpha,ndf,ddf_H}\)</span></li>
+<li><span class="math inline">\(p &lt; \alpha\)</span></li>
+<li><span class="math inline">\(CI_{1-alpha}\)</span> excludes zero</li>
+</ul>
+<p>For more than two treatments the first two rules are equivalent and if a significant difference is found using either of them, then one can use the confidence intervals to determine which treatment pair differences are significantly different from zero. In this book the first F-test is called the <em>overall F-test</em> and the subsequent tests the <em>treatment-pair t-tests</em>. One only conducts treatment pair t-tests if the overall F-test yields a significant result.</p>
+</div>
+<div id="non-centrality-parameter" class="section level4" number="7.7.4.3">
+<h4><span class="header-section-number">7.7.4.3</span> Non-centrality parameter</h4>
+<p>So far attention has been on the NH distribution of the F-statistics. If the AH is true, i.e., if <span class="math inline">\(\sigma_{\tau}^{2} \neq 0\)</span>, then the following holds, Eqn. (9.17):</p>
+<p><span class="math display">\[\begin{equation*}
+F_{AH}=\frac{E\left ( MS(T) \mid AH\right )}{E\left ( MS(TR) \right )+E\left ( MS(TC) \right )-E\left ( MS(TRC) \right )}\\
+=\frac{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2+JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}\\
+=1+\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}
+\end{equation*}\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[\begin{equation*}
+F_{AH}=1+\Delta\\
+\Delta=\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}
+\end{equation*}\]</span></p>
+<p>The parameter <span class="math inline">\(\Delta\)</span> is known as the non-centrality parameter.It can be shown that under the AH, <span class="math inline">\(F_{AH}\)</span> is distributed as a non-central F-distribution with non-centrality parameter <span class="math inline">\(\Delta\)</span>:</p>
+<p><span class="math display">\[\begin{equation*}
+F_{AH} \sim F_{ndf,ddf,\Delta}
+\end{equation*}\]</span></p>
+<p>The non-central F-distribution will be used later for sample size estimation (in Chapter <a href="SSFDistr.html#SSFDistr">BACKGROUND ON THE F-DISTRIBUTION</a> and TBA).</p>
 </div>
 </div>
 </div>

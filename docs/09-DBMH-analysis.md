@@ -376,6 +376,71 @@ The critical value $F_{1-\alpha,ndf,ddf_H}$ increases as $\alpha$ decreases. The
 #### Example code illustrating the F-distribution for different arguments
 * see [BACKGROUND ON THE F-DISTRIBUTION]
 
+#### p-value and confidence interval
+**The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{DBMH}$  could occur by chance. In other words, it is the area under the (central) F-distribution $F_{ndf,ddf}$ that lies above the observed value $F_{DBMH}$:
+
+\begin{equation*}
+p=\Pr\left ( F > F_{DBMH} \mid F \sim F_{ndf,ddf_H} \right )
+\end{equation*}
+
+If $p < \alpha$ then the NH that all treatments are identical is rejected at significance level $\alpha$. That informs the researcher that there exists at least one treatment-pair that has a significant difference. To identify which pair(s) are different, one calculates confidence intervals for each paired difference. Hillis has shown that the $(1-\alpha)$ percent confidence interval for $Y_{i \bullet \bullet} - Y_{i' \bullet \bullet}$ is given by:
+
+\begin{equation*}
+CI_{1-\alpha}=\left ( Y_{i \bullet \bullet} - Y_{i' \bullet \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MS(TR) + \max\left ( MS(TC)-MS(TRC),0 \right ) \right )}
+\end{equation*}
+
+Here $t_{\alpha/2;ddf_H}$ is that value such that $\alpha/2$  of the *central t-distribution* with  $ddf_H$ degrees of freedom is contained in the upper tail of the distribution: 
+ 
+\begin{equation*}
+\Pr\left ( T>t_{\alpha/2;ddf_H} \right )=\alpha/2
+\end{equation*}
+
+Since centered pseudovalues were used:   
+
+\begin{equation*}
+\left ( Y_{i \bullet \bullet} - Y_{i' \bullet \bullet} \right )=\left ( \theta_{i \bullet \bullet} - \theta_{i' \bullet \bullet} \right )
+\end{equation*}
+
+Eqn. (9.28) can be rewritten:
+
+\begin{equation*}
+CI_{1-\alpha}=\left ( \theta_{i \bullet \bullet} - \theta_{i' \bullet \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MS(TR) + \max\left ( MS(TC)-MS(TRC),0 \right ) \right )}
+\end{equation*}
+
+For two treatments the following equivalent rules could be adopted to reject the NH: 
+
+* $F_{DBMH} > F_{1-\alpha,ndf,ddf_H}$
+* $p < \alpha$
+* $CI_{1-alpha}$ excludes zero
+
+For more than two treatments the first two rules are equivalent and if a significant difference is found using either of them, then one can use the confidence intervals to determine which treatment pair differences are significantly different from zero. In this book the first F-test is called the *overall F-test* and the subsequent tests the *treatment-pair t-tests*. One only conducts treatment pair t-tests if the overall F-test yields a significant result.
+  
+#### Non-centrality parameter
+So far attention has been on the NH distribution of the F-statistics. If the AH is true, i.e., if $\sigma_{\tau}^{2} \neq 0$, then the following holds, Eqn. (9.17):	
+
+\begin{equation*}
+F_{AH}=\frac{E\left ( MS(T) \mid AH\right )}{E\left ( MS(TR) \right )+E\left ( MS(TC) \right )-E\left ( MS(TRC) \right )}\\
+=\frac{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2+JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}\\
+=1+\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}
+\end{equation*}
+
+Therefore,
+	
+\begin{equation*}
+F_{AH}=1+\Delta\\
+\Delta=\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}
+\end{equation*}
+
+
+The parameter $\Delta$ is known as the non-centrality parameter.It can be shown that under the AH, $F_{AH}$ is distributed as a non-central F-distribution with non-centrality parameter $\Delta$:
+
+\begin{equation*}
+F_{AH} \sim F_{ndf,ddf,\Delta}
+\end{equation*}
+
+The non-central F-distribution will be used later for sample size estimation (in Chapter [BACKGROUND ON THE F-DISTRIBUTION] and TBA).
+
+
 
 ## Fixed-reader random-case analysis
 
