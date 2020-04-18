@@ -332,7 +332,7 @@ The denominator of the F-ratio is MS(TR)+MS(TC)-MS(TRC).
 This is not a simple mean square. Rather it is a *linear combination of mean squares* (with coefficients 1, 1 and  1), and the resulting value could even be negative, which is an illegal value for a sample from an F-distribution. In 1941 Satterthwaite [@RN2359; @RN2360] proposed an approximate degree of freedom for a linear combination of simple mean square quantities. Online Appendix 9.A explains the approximation in more detail. The end result is that the mean square quantity described in Eqn. (9.21) has an approximate degree of freedom defined by (this is called the *Satterthwaite's approximation*):
 
 \begin{equation*}
-ddf_{Sat}=\frac{\left ( MS(TR) + MS(TC) - MS(TRC) \right )^2}{\left ( \frac{{MS(TR)}^2}{(I-1)(J-1)} + \frac{{MS(TC)}^2}{(I-1)(K-1)} + \frac{{MS(TRC)}^2}{(I-1)(J-1)(K-1)}  \right )}
+ddf_{Sat}=\frac{\left ( MS(TR) + MS(TC) - MS(TRC) \right )^2}{\left ( \frac{MS(TR)^2}{(I-1)(J-1)} + \frac{MS(TC)^2}{(I-1)(K-1)} + \frac{MS(TRC)^2}{(I-1)(J-1)(K-1)}  \right )}
 \end{equation*}
 
 The subscript $Sat$ is for Satterthwaite. From Eqn. (9.22) it should be fairly obvious that in general   is not an integer. To accommodate possible negative estimates of the denominator, Eqn. (9.21), the original DBM method1 proposed four expressions for the F-statistic and corresponding expressions for $ddf$. Rather than repeat them here, since they have been superseded by the method described below, the interested reader is referred to Eqn. 6 and Eqn. 7 in [@RN1866].
@@ -348,7 +348,7 @@ Now the denominator cannot be negative. One can think of the F-statistic $F_{DBM
 Hillis has shown that the left hand side of Eqn. (9.23) is distributed as an F-statistic with ndf defined by Eqn. (9.20), and denominator degrees of freedom   defined by:
 
 \begin{equation*}
-ddf_H =\frac{\left ( MS(TR) + \max \left (MS(TC) - MS(TRC),0  \right ) \right )^2}{\left ( \frac{{MS(TR)}^2}{(I-1)(J-1)}  \right )}
+ddf_H =\frac{\left ( MS(TR) + \max \left (MS(TC) - MS(TRC),0  \right ) \right )^2}{\left ( \frac{MS(TR)^2}{(I-1)(J-1)}  \right )}
 \end{equation*}
 
 Summarizing,
