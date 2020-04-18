@@ -398,13 +398,13 @@ Here $t_{\alpha/2;ddf_H}$ is that value such that $\alpha/2$  of the *central t-
 Since centered pseudovalues were used:   
 
 \begin{equation*}
-\left ( Y_{i \bullet \bullet} - Y_{i' \bullet \bullet} \right )=\left ( \theta_{i \bullet \bullet} - \theta_{i' \bullet \bullet} \right )
+\left ( Y_{i \bullet \bullet} - Y_{i' \bullet \bullet} \right )=\left ( \theta_{i \bullet } - \theta_{i' \bullet} \right )
 \end{equation*}
 
 Eqn. (9.28) can be rewritten:
 
 \begin{equation*}
-CI_{1-\alpha}=\left ( \theta_{i \bullet \bullet} - \theta_{i' \bullet \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MS(TR) + \max\left ( MS(TC)-MS(TRC),0 \right ) \right )}
+CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MS(TR) + \max\left ( MS(TC)-MS(TRC),0 \right ) \right )}
 \end{equation*}
 
 For two treatments the following equivalent rules could be adopted to reject the NH: 
@@ -481,14 +481,67 @@ p=\Pr\left ( F> F_{DBM|R} \mid F \sim F_{I-1,(I-1)(K-1)} \right )
 The $(1-\alpha)$  confidence interval for the inter-treatment reader-averaged difference FOM is given by:
 
 \begin{equation*}
-CI_{1-\alpha}=\left ( \theta_{i \bullet \bullet} - \theta_{i' \bullet \bullet} \right ) \pm t_{\alpha/2,(I-1)(K-1)}\sqrt{2\frac{MS(T)}{JK}}
+CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2,(I-1)(K-1)}\sqrt{2\frac{MS(T)}{JK}}
 \end{equation*}
 
 ### Single-reader multiple-treatment analysis
+With a single reader interpreting cases in two or more treatments, the reader factor must necessarily be regarded as fixed. The preceding analysis is applicable. One simply puts $J = 1$ in the equations above. 
 
+#### Non-centrality parameter
+Analogous to Eqn. (9.34), the non-centrality parameter is defined by:
+
+\begin{equation*}
+\Delta=\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+J\sigma_{\tau C}^2}
+\end{equation*}
+
+Under the AH, the test statistic is distributed as a non-central F-distribution as follows:
+
+\begin{equation*}
+F_{AH|R}=\frac{MS(T)}{MS(TC)}\sim F_{I-1,(I-1)(K-1),\Delta}
+\end{equation*}
 
 ## Random-reader fixed-case (RRFC) analysis
+The model is the same as in Eqn. Eqn. (9.4) except one puts $\sigma_C^2 = \sigma_{\tau C}^2 =0$ in Table 9.1. It follows that: 
 
+\begin{equation*}
+\frac{E(MS(T))}{E(MS(TR))}=\frac{\sigma_\epsilon^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+JK\sigma_{\tau}^2}{\sigma_\epsilon^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2}
+\end{equation*}
+
+Under the null hypothesis $\sigma_\tau^2 = 0$:
+
+\begin{equation*}
+\frac{E(MS(T))}{E(MS(TR))}=1
+\end{equation*}
+
+Therefore, one defines the F-statistic (replacing expected values with observed values) by:
+
+\begin{equation*}
+F_{DBM|C} \sim \frac{MS(T)}{MS(TR)}
+\end{equation*}
+  
+The observed value $F_{DBM|C}$ is distributed as an F-statistic with $ndf = I – 1$ and $ddf = (I-1)(J-1)$, see rows labeled $T$ and $TR$ in Table 9.1.
+ 
+\begin{equation*}
+F_{DBM|C} \sim F_{I-1,(I-1)(J-1))}
+\end{equation*}
+
+The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:
+
+\begin{equation*}
+F_{DBM|C} > F_{1-\alpha,I-1,(I-1)(J-1))}
+\end{equation*}
+
+The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:
+
+\begin{equation*}
+p=\Pr\left ( F>F_{DBM|C} \mid F \sim F_{I-1,(I-1)(J-1)} \right )
+\end{equation*}
+
+The confidence interval for inter-treatment differences is given by (TBA check this):
+
+\begin{equation*}
+CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2,(I-1)(J-1)}\sqrt{2\frac{MS(TR)}{JK}}
+\end{equation*}
 
 ## DBMH analysis: Example 1, Van Dyke Data
 
