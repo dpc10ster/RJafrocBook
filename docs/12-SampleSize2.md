@@ -69,14 +69,14 @@ str(MS)
 #>  $ msR       : num 0.437
 #>  $ msC       : num 0.397
 #>  $ msTR      : num 0.0628
-#>  $ msTC      : num 0.0998
+#>  $ msTC      : num 0.0521
 #>  $ msRC      : num 0.0645
 #>  $ msTRC     : num 0.04
 #>  $ msCSingleT: num [1:2] 0.336 0.16
 #>  $ msCSingleR: num [1:5] 0.1222 0.2127 0.1365 0.0173 0.1661
 ```
 
-The next line calculates `ddf` = 34.3342678. The remaining lines calculate the critical value of the F-distribution, `FCrit` = 4.1270572 and statistical power = 0.7911126, which by design is close to 80%, i.e., the numbers of readers and cases were chosen to achieve this value. 
+The next line calculates `ddf` = 12.822129. The remaining lines calculate the critical value of the F-distribution, `FCrit` = 4.680382 and statistical power = 0.7494133, which by design is close to 80%, i.e., the numbers of readers and cases were chosen to achieve this value. 
 
 ### Fixed reader random case (FRRC)
 This code illustrates fixed reader random case sample size estimation. Assumed are 10 readers and 133 cases  in the pivotal study. The formulae are:

@@ -22,7 +22,7 @@ scaleFactor <- ret$scaleFactor
 ```
 
 
-The fitting model is defined by `muMed = r muMed`,  `lambdaMed = 5.6140941`  and  `nuMed = 0.3696988` and `lesionPmf`. The effect size scale factor is 2.1542102.
+The fitting model is defined by `muMed = r muMed`,  `lambdaMed = 5.6140942`  and  `nuMed = 0.3696988` and `lesionPmf`. The effect size scale factor is 2.1542102.
 
 
 
