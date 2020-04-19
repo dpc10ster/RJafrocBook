@@ -283,6 +283,7 @@ msTRC <- msTRC/((I - 1) * (J - 1) * (K - 1))
 data.frame("msT" = msT, "msR" = msR, "msC" = msC, "msTR" = msTR, "msTC" = msTC, "msRC" = msRC, "msTRC" = msTRC)
 as.data.frame(UtilMeanSquares(dataset02)[1:7])
 ```
+
 After displaying the results of the calculation, the results are compared to those calculated by `RJafroc` function `UtilMeanSquares(dataset02)`.
 
 ### Significance testing
@@ -436,7 +437,9 @@ data.frame("F_DBMH" = retRJafroc$FTestStatsRRRC$fRRRC,
            "pValueH" = retRJafroc$FTestStatsRRRC$pRRRC)
 ```
 
-The first output shows the values ($F_{DBMH}$, $ddf_H$, $p$) calculated by the above code, which closely follows the formulae in this chapter. The next output are the correponding variables yielded by `RJafroc`.
+* The first output shows the values ($F_{DBMH}$, $ddf_H$, $p$) calculated by the above code, which closely follows the formulae in this chapter. The next output are the correponding variables yielded by `RJafroc`. 
+
+* The FOM difference is not significant, whether viewed from the point of view of the F-statistic exceeding the critical value or the observed p-value being larger than alpha. 
 
 #### Example 4: Code illustrating the confidence interval calculation for RRRC analysis, Van Dyke data
 
@@ -458,21 +461,23 @@ for (i in 1 : nDiffs) {
   CI_DIFF_FOM_RRRC[i,2] <- trtDiff[i]
   CI_DIFF_FOM_RRRC[i,3] <- qt(1-alpha/2,df = ddf_H)*sqrt(2*F_DBMH_den/J/K) + trtDiff[i]
   print(data.frame("Lower" = CI_DIFF_FOM_RRRC[i,1], 
-             "Mid" = CI_DIFF_FOM_RRRC[i,2], 
-             "Upper" = CI_DIFF_FOM_RRRC[i,3]))
+                   "Mid" = CI_DIFF_FOM_RRRC[i,2], 
+                   "Upper" = CI_DIFF_FOM_RRRC[i,3]))
 }
 data.frame("Lower" = retRJafroc$ciDiffTrtRRRC$CILower, 
            "Mid" = retRJafroc$ciDiffTrtRRRC$Estimate, 
            "Upper" = retRJafroc$ciDiffTrtRRRC$CIUpper)
 ```
 
-Again, the first row of output shows the Lower, the Mid-point and the Upper 95% confidence interval. The second row shows the corresponding RJafroc output.
+* Again, the first row of output shows the Lower, the Mid-point and the Upper 95% confidence interval. The second row shows the corresponding RJafroc output.
+
+* The FOM difference is not significant, whether viewed from the point of view of the F-statistic not exceeding the critical value, the observed p-value being larger than alpha or the 95% CI for the difference FOM including zero. 
 
 ## Fixed-reader random-case (FRRC) analysis
 The model is the same as in Eqn. (9.4) except one puts $\sigma_{R}^{2}$ = $\sigma_{\tau R}^{2}$ = 0 in Table 9.1. The appropriate test statistic is: 
 
 \begin{equation*}
-\frac{E\left ( MS(T) \right )}{E\left ( MS(TC) \right )} = \frac{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau R}^{2}+JK\sigma_{\tau C}^{2}}{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau R}^{2}}
+\frac{E\left ( MS(T) \right )}{E\left ( MS(TC) \right )} = \frac{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau C}^{2}+JK\sigma_{\tau}^{2}}{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau C}^{2}}
 \end{equation*}
 
 Under the null hypothesis $\sigma_{\tau}^{2} = 0$:
@@ -481,13 +486,13 @@ Under the null hypothesis $\sigma_{\tau}^{2} = 0$:
 \frac{E\left ( MS(T) \right )}{E\left ( MS(TC) \right )} = 1
 \end{equation*}
 
-As before, one defines the F-statistic (replacing *expected* with *observed* values) by
+As before, one defines the F-statistic (by replacing *expected* with *observed* values) by
 
 \begin{equation*}
 F_{DBM|R}=\frac{MS(T)}{MS(TC)}
 \end{equation*}
 
-The observed value $F_{DBM|R}$ (the Roe-Metz notation [@RN1124] is used which indicates that the factor appearing to the right of the vertical bar is regarded as fixed) is distributed as an F-statistic with $ndf = I – 1$ and $ddf = (I-1)(K-1)$; the degrees of freedom follow from the rows labeled $T$ and $TC$ in Table 9.1. Therefore, the distribution of the observed value is (no Satterthwaite approximation needed this time as both numerator and denominator are simple mean-squares):
+The observed value $F_{DBM|R}$ (the Roe-Metz notation [@RN1124] is used which indicates that the factor appearing to the right of the vertical bar is regarded as fixed) is distributed as an F-statistic with $\text{ndf}$ = $I – 1$ and $ddf = (I-1)(K-1)$; the degrees of freedom follow from the rows labeled $T$ and $TC$ in Table 9.1. Therefore, the distribution of the observed value is (no Satterthwaite approximation needed this time as both numerator and denominator are simple mean-squares):
 
 \begin{equation*}
 F_{DBM|R} \sim F_{I-1,(I-1)(K-1)}
@@ -513,6 +518,32 @@ CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\
 
 ### Single-reader multiple-treatment analysis
 With a single reader interpreting cases in two or more treatments, the reader factor must necessarily be regarded as fixed. The preceding analysis is applicable. One simply puts $J = 1$ in the equations above. 
+
+#### Example 5: Code illustrating p-values for FRRC analysis, Van Dyke data
+```{r}
+FDbmFR <- retMS$msT / retMS$msTC
+ndf <- (I-1); ddf <- (I-1)*(K-1)
+pValue <- 1 - pf(FDbmFR, ndf, ddf)
+
+std_DIFF_FOM_FRRC <- sqrt(2*retMS$msTC/J/K)
+nDiffs <- I*(I-1)/2
+CI_DIFF_FOM_FRRC <- array(dim = c(nDiffs, 3))
+for (i in 1 : nDiffs) {
+  CI_DIFF_FOM_FRRC[i,1] <- qt(alpha/2,df = ddf)*std_DIFF_FOM_FRRC + trtDiff[i]
+  CI_DIFF_FOM_FRRC[i,2] <- trtDiff[i]
+  CI_DIFF_FOM_FRRC[i,3] <- qt(1-alpha/2,df = ddf)*std_DIFF_FOM_FRRC + trtDiff[i]
+  print(data.frame("pValue" = pValue, 
+                   "Lower" = CI_DIFF_FOM_FRRC[i,1], 
+                   "Mid" = CI_DIFF_FOM_FRRC[i,2], 
+                   "Upper" = CI_DIFF_FOM_FRRC[i,3]))
+}
+data.frame("pValue" = retRJafroc$FTestStatsFRRC$pFRRC,
+           "Lower" = retRJafroc$ciDiffTrtFRRC$CILower, 
+           "Mid" = retRJafroc$ciDiffTrtFRRC$Estimate, 
+           "Upper" = retRJafroc$ciDiffTrtFRRC$CIUpper)
+```
+
+As one might expect, if one "freezes" reader variability, the FOM difference becomes significant, whether viewed from the point of view of the F-statistic exceeding the critical value, the observed p-value being smaller than alpha or the 95% CI for the difference FOM not including zero. 
 
 ## Random-reader fixed-case (RRFC) analysis
 The model is the same as in Eqn. Eqn. (9.4) except one puts $\sigma_C^2 = \sigma_{\tau C}^2 =0$ in Table 9.1. It follows that: 
@@ -556,6 +587,32 @@ The confidence interval for inter-treatment differences is given by (TBA check t
 \begin{equation*}
 CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2,(I-1)(J-1)}\sqrt{2\frac{MS(TR)}{JK}}
 \end{equation*}
+
+#### Example 6: Code illustrating analysis for RRFC analysis, Van Dyke data
+
+```{r}
+FDbmFC <- retMS$msT / retMS$msTR
+ndf <- (I-1)
+ddf <- (I-1)*(J-1)
+pValue <- 1 - pf(FDbmFC, ndf, ddf)
+
+nDiffs <- I*(I-1)/2
+CI_DIFF_FOM_RRFC <- array(dim = c(nDiffs, 3))
+for (i in 1 : nDiffs) {
+  CI_DIFF_FOM_RRFC[i,1] <- qt(alpha/2,df = ddf)*sqrt(2*retMS$msTR/J/K) + trtDiff[i]
+  CI_DIFF_FOM_RRFC[i,2] <- trtDiff[i]
+  CI_DIFF_FOM_RRFC[i,3] <- qt(1-alpha/2,df = ddf)*sqrt(2*retMS$msTR/J/K) + trtDiff[i]
+  print(data.frame("pValue" = pValue, 
+                   "Lower" = CI_DIFF_FOM_RRFC[i,1], 
+                   "Mid" = CI_DIFF_FOM_RRFC[i,2], 
+                   "Upper" = CI_DIFF_FOM_RRFC[i,3]))
+}
+data.frame("pValue" = retRJafroc$FTestStatsRRFC$pRRFC, 
+           "Lower" = retRJafroc$ciDiffTrtRRFC$CILower, 
+           "Mid" = retRJafroc$ciDiffTrtRRFC$Estimate, 
+           "Upper" = retRJafroc$ciDiffTrtRRFC$CIUpper)
+```
+
 
 ## DBMH analysis: Example 1, Van Dyke Data
 
