@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Dorfman Berbaum Metz Hillis (DBMH) Analysis {#DBMHnalysis}
 
 ```{r setup, include = FALSE}
@@ -107,11 +112,6 @@ Consider $N$ replications of a MRMC study, where a replication means repetition 
 Y_{n(ijk)}  = \mu + \tau_i+ R_j + C_k + (\tau R)_{ij}+ (\tau C)_{ik}+ (R C)_{jk} + (\tau RC)_{ijk}+ \epsilon_{n(ijk)} 
 \end{equation*}
 
-The notation for the replication index, i.e., $n(ijk)$, implies $n$ observations for treatment-reader-case combination $ijk$. 
-
-*The basic assumption of the DBM model, Eqn. (9.4), is that the pseudovalues can be regarded as independent and identically distributed observations. If that is true, the pseudovalue data can be analyzed by standard ANOVA techniques.*
-
-### Explanation of terms in the model 
 The term $\mu$ is a constant. By definition, the treatment effect $\tau_i$  is subject to the constraint:
 
 \begin{equation*}
@@ -120,6 +120,16 @@ The term $\mu$ is a constant. By definition, the treatment effect $\tau_i$  is s
 
 It is shown below, Eqn. (9.9), that this constraint ensures that $\mu$  has the interpretation as the average of the pseudovalues over treatments, readers, cases and replications, if any. 
 
+The notation for the replication index, i.e., $n(ijk)$, implies $n$ observations for treatment-reader-case combination $ijk$. With no replications ($N$ = 1) it is convenient to omit the n-symbol. As an example, the parameter $\tau_i$ is readily estimated as follows: 
+
+\begin{equation*}
+Y_{ijk}\equiv Y_{1(ijk)}\\
+\tau_i = Y_{i \bullet \bullet} -Y_{\bullet \bullet \bullet} 
+\end{equation*}
+
+*The basic assumption of the DBM model, Eqn. (9.4), is that the pseudovalues can be regarded as independent and identically distributed observations. That being the case, the pseudovalues can be analyzed by standard ANOVA techniques.*
+
+### Explanation of terms in the model 
 The right hand side of Eqn. (9.4) consists of one fixed and 7 random effects. The current analysis assumes readers and cases as random factors (RRRC), so by definition $R_j$ and $C_k$ are random effects, and moreover, any term that includes a random factor is a random effect; for example, $(\tau R)_{ij}$ is a random effect because it includes the $R$ factor. Here is a list of the random terms: 
 
 \begin{equation*}
@@ -164,18 +174,20 @@ The right hand side of Eqn. (9.8) is the variance of $Y_{n(ijk)}$, for specific 
 
 An equation like Eqn. (9.7) is termed a *linear model* with the left hand side, the pseudovalue "observations", modeled by a sum of fixed and random terms. Specifically it is a *mixed model*, because the right hand side has both fixed and random effects. Statistical methods have been developed for analysis of such linear models. One estimates the terms on the right hand side of Eqn. (9.7), it being understood that for the random effects, one estimates the variances of the zero-mean normal distributions, Eqn. (9.7), from which the samples are obtained (by assumption).
 
-Estimating the fixed effects is trivial. The term $\mu$ is estimated by averaging the left hand side of Eqn. (9.4) over all three indices (since $N$ = 1): $\mu=Y_{1(\bullet \bullet \bullet)}$
+Estimating the fixed effects is trivial. The term $\mu$ is estimated by averaging the left hand side of Eqn. (9.4) over all three indices (since $N$ = 1): $\mu=Y_{\bullet \bullet \bullet}$
 
-Because of the way the treatment effect is defined, Eqn. (9.5), averaging, which involves summing, over the treatment-index $i$, yields zero, and all of the remaining random terms yield zero upon averaging, because they are individually sampled from zero-mean normal distributions. To estimate the treatment effect one takes the difference $\tau_i=Y_{1(\bullet \bullet \bullet)}-\mu$.
+Because of the way the treatment effect is defined, Eqn. (9.5), averaging, which involves summing, over the treatment-index $i$, yields zero, and all of the remaining random terms yield zero upon averaging, because they are individually sampled from zero-mean normal distributions. To estimate the treatment effect one takes the difference $\tau_i=Y_{\bullet \bullet \bullet}-\mu$.
 
-It can be easily seen that the reader and case averaged difference between two different treatments $i$ and $i'$  is estimated by $\tau_i-\tau_{i'} = Y_{1(i \bullet \bullet)} - Y_{1(i' \bullet \bullet)}$.
+It can be easily seen that the reader and case averaged difference between two different treatments $i$ and $i'$  is estimated by $\tau_i-\tau_{i'} = Y_{i \bullet \bullet} - Y_{i' \bullet \bullet}$.
 
 Estimating the strengths of the random terms is a little more complicated. It involves methods adapted from least squares, or maximum likelihood, and more esoteric ways. I do not feel comfortable going into these methods. Instead, results are presented and arguments are made to make them plausible. The starting point is definitions of quantities called **mean squares** and their expected values.
 
-### Definitions of mean-squares (need citations here) 
+### Definitions of mean-squares 
 Again, to be clear, one should put a $Y$ subscript (or superscript) on each of the following definitions, but that would make the notation unnecessarily cumbersome. 
 
 *In this chapter, all mean-square quantities are calculated using pseudovalues, not figure-of-merit values. The presence of three subscripts on Y should make this clear. Also the replication index and the nesting notation are suppressed. The notation is abbreviated so MST is the mean square corresponding to the treatment effect, etc.*
+
+The definitions of the mean-squares below match those (when provided) in [@RN1476, page 1261]; the definition of $MS(R)$ in [@RN2508, top of page 339] is incorrect. 
 
 \begin{equation*}
 \text{MS(T)}=\frac{JK\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{I-1} \\
@@ -189,10 +201,14 @@ Again, to be clear, one should put a $Y$ subscript (or superscript) on each of t
 
 Note the absence of $MSE$, corresponding to the $\epsilon$ term on the right hand side of Eqn. (9.4). With only one observation per treatment-reader-case combination, MSE cannot be estimated; it effectively gets folded into the $MS(TRC)$ term. 
 
-The most general case is presented next, where both readers and cases are regarded as random factors, termed random-reader random-case analysis (RRRC).
+## Expected values of mean squares 
+> "In our original formulation [2], expected mean squares for the ANOVA were derived from a restricted parameterization in which mixed-factor interactions sum to zero over indexes of fixed effects. In the restricted parameterization, the mixed effects are correlated, parameters are sometimes awkward to define [17], and extension to unbalanced designs is dubious [17, 18]. In this article, we recommend the unrestricted parameterization. The restricted and unrestricted parameterizations are special cases of a general model by Scheffe [19] that allows an arbitrary covariance structure among experimental units within a level of a random factor. Tables 1 and 2 show the ANOVA tables with expected mean squares for the unrestricted formulation."
+>
+> --- Dorfman, Berbaum and Lenth
 
-## Random-reader random-case (RRRC) analysis 
-The mean squares on the left hand side of Eqn. (9.12) can be calculated directly from the pseudovalues. The next step in the analysis is to obtain expressions for their expected values in terms of the variances defined in Eqn. (9.7). Assuming no replications, i.e., N = 1, the expected mean squares are as follows, Table 9.1; understanding how this table is derived, would lead the author well outside his expertise and the scope of this book; suffice to say that these are unconstrained estimates29 which are different from the constrained estimates appearing in the original DBM publication1; the differences between these two types of estimates is summarized in Ref. 29 and calculation of expected mean squares values is detailed in Scheffe's book30: 
+The references in this quotation are to those in [@RN2079].
+
+The mean squares on the left hand side of Eqn. (9.12) can be calculated directly from the pseudovalues. The next step in the analysis is to obtain expressions for their expected values in terms of the variances defined in Eqn. (9.7). Assuming no replications, i.e., $N$ = 1, the expected mean squares are as follows, Table 9.1; understanding how this table is derived, would lead the author well outside his expertise and the scope of this book; suffice to say that these are *unconstrained* estimates which are different from the *constrained* estimates appearing in the original DBM publication [@RN204]; the differences between these two types of estimates is summarized in [@RN2079]: 
 
 Source          df               E(MS)
 -------         ----             ------------------------------------------------------------
@@ -205,13 +221,47 @@ RC              (J-1)(K-1)       $\sigma_{\epsilon}^{2}$ + $I\sigma_{RC}^{2}$
 TRC             (I-1)(J-1)(K-1)  $\sigma_{\epsilon}^{2}$ + $\sigma_{\tau RC}^{2}$ 
 $\epsilon$      $N-1=0$          $\sigma_{\epsilon}^{2}$
 
-Since treatment is a fixed effect, the variance symbol $\sigma_{\tau}^{2}$, which is used for notational consistency in Table 9.1, could cause confusion. It is defined by:
+Table: Table 9.1 Unconstrained expected values of mean-squares, as in [@RN2079]
+
+Source          df               E(MS)
+-------         ----             ------------------------------------------------------------
+T               (I-1)            $\sigma_{\epsilon}^{2}$ + $\sigma_{\tau RC}^{2}$ + $K\sigma_{\tau R}^{2}$ + $J\sigma_{\tau C}^{2}$ + $JK\sigma_{\tau}^{2}$ 
+R               (J-1)            $\sigma_{\epsilon}^{2}$ + $I\sigma_{RC}^{2}$ + $IK\sigma_{R}^{2}$
+C               (K-1)            $\sigma_{\epsilon}^{2}$ + $I\sigma_{RC}^{2}$ + $IJ\sigma_{C}^{2}$
+TR              (I-1)(J-1)       $\sigma_{\epsilon}^{2}$ + $\sigma_{\tau RC}^{2}$ + $K\sigma_{\tau R}^{2}$  
+TC              (I-1)(K-1)       $\sigma_{\epsilon}^{2}$ + $\sigma_{\tau RC}^{2}$ + $J\sigma_{\tau C}^{2}$
+RC              (J-1)(K-1)       $\sigma_{\epsilon}^{2}$ + $I\sigma_{RC}^{2}$ 
+TRC             (I-1)(J-1)(K-1)  $\sigma_{\epsilon}^{2}$ + $\sigma_{\tau RC}^{2}$ 
+$\epsilon$      0                $\sigma_{\epsilon}^{2}$
+
+Table: Table 9.2 Constrained expected values of mean-squares, as in [@RN204] 
+
+Source          df               E(MS)
+-------         ----             ------------------------------------------------------------
+T               (I-1)            $\sigma^{2}$ + $K\sigma_{\tau R}^{2}$ + $J\sigma_{\tau C}^{2}$ + $JK\sigma_{\tau}^{2}$ 
+R               (J-1)            $\sigma^{2}$ + $I\sigma_{RC}^{2}$ + $IK\sigma_{R}^{2}$ + $K\sigma_{\tau R}^{2}$
+C               (K-1)            $\sigma^{2}$ + $I\sigma_{RC}^{2}$ + $IJ\sigma_{C}^{2}$ + $J\sigma_{\tau C}^{2}$
+TR              (I-1)(J-1)       $\sigma^{2}$ + $K\sigma_{\tau R}^{2}$  
+TC              (I-1)(K-1)       $\sigma^{2}$ + $J\sigma_{\tau C}^{2}$
+RC              (J-1)(K-1)       $\sigma^{2}$ + $I\sigma_{RC}^{2}$ 
+TRC             (I-1)(J-1)(K-1)  $\sigma^{2}\equiv \sigma_{\epsilon}^{2}+ \sigma_{\tau RC}^{2}$ 
+$\epsilon$      0                $\sigma_{\epsilon}^{2}$
+
+Table: Table 9.3 As in Hillis "marginal anova paper" [@RN2508]
+
+In Tables 9.1 - 9.3 the following notation is used as a shorthand.
 
 \begin{equation*}
 \sigma_{\tau}^{2}=\frac{1}{I-1}\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{\bullet \bullet \bullet} \right )^2
 \end{equation*}
 
-The expression on the right hand side "looks like" a variance, indeed one that could be calculated for just two treatments (I = 2) but, of course, random sampling from a distribution of treatments is not the intent of the notation. Under the null hypothesis, $Y_{1 \bullet \bullet} = Y_{2 \bullet \bullet} = \cdot \cdot \cdot = Y_{I \bullet \bullet}$, which implies $\sigma_{\tau}^{2} = 0$.
+* Since treatment is a fixed effect, the variance symbol $\sigma_{\tau}^{2}$, which is used for notational consistency in Tables 9.1 - 9.3, could cause confusion. 
+
+* The right hand side "looks like" a variance, indeed one that could be calculated for just two treatments but, of course, random sampling from a *distribution of treatments* is not the intent of the notation. With this explanation, I trust the reader will not be confused.
+
+
+## Random-reader random-case (RRRC) analysis 
+The most general case is presented next, where both readers and cases are regarded as random factors, termed random-reader random-case analysis (RRRC).
 
 The expected mean squares in Table 9.1 are variance-like quantities; specifically, they are weighted linear combinations of the variances appearing in Eqn. (9.7). For single factors the column headed "degrees of freedom" ($df$) is one less than the number of levels of the corresponding factor; estimating a variance requires first estimating the mean, which imposes a constraint, thereby decreasing $df$ by one. For interaction terms, $df$ is the product of the degrees of freedom for the individual factors. As an example, the term $(\tau RC)_{ijk}$ contains three individual factors, and therefore  $df = (I-1)(J-1)(K-1)$. The number of degrees of freedom can be thought of as the amount of information available in estimating a mean square. As a special case, with no replications, the $\epsilon$  term has zero $df$ as $N-1 = 0$. With only one observation $Y_{1(ijk)}$ there is no information to estimate the variance corresponding to the $\epsilon$  term. To estimate this term one needs to replicate the study several times – each time the same readers interpret the same cases in all treatments – a very boring task for the reader and totally unnecessary from the researcher's point of view.
 
