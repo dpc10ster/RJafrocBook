@@ -137,7 +137,7 @@ One could have placed a $Y$ subscript (or superscript) on each of the variances,
 
 Another convention: $(\tau R)_{ij}$ is *not* the product of the treatment and reader factors, rather it is a single factor, namely the treatment-reader factor with $IJ$ levels, subscripted by the index $ij$ and similarly for the other product-like terms in Eqn. (9.7).
 
-### Meanings of variance components in the DBM model (this section can be improved)
+### Meanings of variance components in the DBM model (TBA this section can be improved)
 The variances defined in Eqn. (9.7) are collectively termed variance components. Specifically, they are jackknife pseudovalue variance components, to be distinguished from figure of merit (FOM) variance components to be introduced in Chapter 10. They are in order: $\sigma_{R}^{2} ,\sigma_{C}^{2} \sigma_{\tau R}^{2},\sigma_{\tau C}^{2},\sigma_{RC}^{2}, \sigma_{\tau RC}^{2},\sigma_{\epsilon}^{2}$. They have the following meanings (all references to "variance" mean "variance of pseudovalues").
 
 *	The term $\sigma_{R}^{2}$ is the variance of readers that is independent of treatment or case, which are modeled separately. It is not to be confused with the terms $\sigma_{br+wr}^{2}$ and $\sigma_{cs+wr}^{2}$ used in §9.3, which describe the variability of $\theta$ measured under specified conditions. [A jackknife pseudovalue is a weighted difference of FOM like quantities, Eqn. (9.1). Its meaning will be explored later. For now, *a pseudovalue variance is distinct from a FOM variance*.]
@@ -207,7 +207,7 @@ The expression on the right hand side "looks like" a variance, indeed one that c
 
 The expected mean squares in Table 9.1 are variance-like quantities; specifically, they are weighted linear combinations of the variances appearing in Eqn. (9.7). For single factors the column headed "degrees of freedom" ($df$) is one less than the number of levels of the corresponding factor; estimating a variance requires first estimating the mean, which imposes a constraint, thereby decreasing $df$ by one. For interaction terms, $df$ is the product of the degrees of freedom for the individual factors. As an example, the term $(\tau RC)_{ijk}$ contains three individual factors, and therefore  $df = (I-1)(J-1)(K-1)$. The number of degrees of freedom can be thought of as the amount of information available in estimating a mean square. As a special case, with no replications, the $\epsilon$  term has zero $df$ as $N-1 = 0$. With only one observation $Y_{1(ijk)}$ there is no information to estimate the variance corresponding to the $\epsilon$  term. To estimate this term one needs to replicate the study several times – each time the same readers interpret the same cases in all treatments – a very boring task for the reader and totally unnecessary from the researcher's point of view.
 
-### Example calculation of mean squares
+### Example 1: Calculation of mean squares
 We choose `dataset02` to illustrate calculation of mean squares for pseudovalues. This is referred to in the book as the "VD" dataset [@RN1993]. It consists of 114 cases, 45 of which are diseased, interpreted in two treatments ("0" = single spin echo MRI, "1" = cine-MRI) by five radiologists using the ROC paradigm. The first line below computes the pseudovalues and extracts the numbers of treatmenets, readers and cases, used in the subsequent calculations of mean squares.
 
 
@@ -280,7 +280,7 @@ as.data.frame(UtilMeanSquares(dataset02)[1:7])
 #>         msT       msR       msC       msTR       msTC       msRC     msTRC
 #> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
 ```
-After displaying the results of the calculation, the results are compared to those calculated by `RJafroc` function `UtilMeanSquares`.
+After displaying the results of the calculation, the results are compared to those calculated by `RJafroc` function `UtilMeanSquares(dataset02)`.
 
 ### Significance testing
 If the NH of no treatment effect is true, i.e., if $\sigma_{\tau}^{2}$ = 0, then according to Table 9.1 the following holds (the last term in the row labeled $T$ in Table 9.1 drops out):
@@ -373,8 +373,8 @@ The critical value $F_{1-\alpha,ndf,ddf_H}$ increases as $\alpha$ decreases. The
 *	ndf is large: the more the number of treatment pairings, the greater the chance that at least one pairing will reject the NH. 
 * $ddf_H$	is large: this causes the critical value to decrease, see below, and is more likely to be exceeded by $F_{DBMH}$. 
 
-#### Example code illustrating the F-distribution for different arguments
-* see [BACKGROUND ON THE F-DISTRIBUTION]
+#### Example 2: Code illustrating the F-distribution for different arguments
+* See [BACKGROUND ON THE F-DISTRIBUTION].
 
 #### p-value and confidence interval
 **The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{DBMH}$  could occur by chance. In other words, it is the area under the (central) F-distribution $F_{ndf,ddf}$ that lies above the observed value $F_{DBMH}$:
@@ -390,7 +390,7 @@ CI_{1-\alpha}=\left ( Y_{i \bullet \bullet} - Y_{i' \bullet \bullet} \right ) \p
 \end{equation*}
 
 Here $t_{\alpha/2;ddf_H}$ is that value such that $\alpha/2$  of the *central t-distribution* with  $ddf_H$ degrees of freedom is contained in the upper tail of the distribution: 
- 
+
 \begin{equation*}
 \Pr\left ( T>t_{\alpha/2;ddf_H} \right )=\alpha/2
 \end{equation*}
@@ -414,34 +414,68 @@ For two treatments the following equivalent rules could be adopted to reject the
 * $CI_{1-alpha}$ excludes zero
 
 For more than two treatments the first two rules are equivalent and if a significant difference is found using either of them, then one can use the confidence intervals to determine which treatment pair differences are significantly different from zero. In this book the first F-test is called the *overall F-test* and the subsequent tests the *treatment-pair t-tests*. One only conducts treatment pair t-tests if the overall F-test yields a significant result.
-  
-#### Non-centrality parameter
-So far attention has been on the NH distribution of the F-statistics. If the AH is true, i.e., if $\sigma_{\tau}^{2} \neq 0$, then the following holds, Eqn. (9.17):	
 
-\begin{equation*}
-F_{AH}=\frac{E\left ( MS(T) \mid AH\right )}{E\left ( MS(TR) \right )+E\left ( MS(TC) \right )-E\left ( MS(TRC) \right )}\\
-=\frac{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2+JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}\\
-=1+\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}
-\end{equation*}
-
-Therefore,
-	
-\begin{equation*}
-F_{AH}=1+\Delta\\
-\Delta=\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}
-\end{equation*}
+#### Example 3: Code illustrating the F-statistic, ddf and p-value for RRRC analysis, Van Dyke data
 
 
-The parameter $\Delta$ is known as the non-centrality parameter.It can be shown that under the AH, $F_{AH}$ is distributed as a non-central F-distribution with non-centrality parameter $\Delta$:
+```r
+alpha <- 0.05
+retMS <- data.frame("msT" = msT, "msR" = msR, "msC" = msC, "msTR" = msTR, "msTC" = msTC, "msRC" = msRC, "msTRC" = msTRC)
+F_DBMH_den <- retMS$msTR+max(retMS$msTC - retMS$msTRC,0) # den of Eqn. (9.23)
+F_DBMH <- retMS$msT / F_DBMH_den # Eqn. (9.23)
+ndf <- (I-1)
+ddf_H <- F_DBMH_den^2/(retMS$msTR^2/((I-1)*(J-1))) # Eqn. (9.22)
+FCrit <- qf(1 - alpha, ndf, ddf_H)
+pValueH <- 1 - pf(F_DBMH, ndf, ddf_H)
+retRJafroc <- StSignificanceTesting(dataset = dataset02, FOM = "Wilcoxon", method = "DBMH")
+data.frame("F_DBMH" = F_DBMH, "ddf_H"= ddf_H, "pValueH" = pValueH)
+#>     F_DBMH    ddf_H    pValueH
+#> 1 4.456319 15.25967 0.05166569
+data.frame("F_DBMH" = retRJafroc$FTestStatsRRRC$fRRRC, 
+           "ddf_H"= retRJafroc$FTestStatsRRRC$ddfRRRC, 
+           "pValueH" = retRJafroc$FTestStatsRRRC$pRRRC)
+#>     F_DBMH    ddf_H    pValueH
+#> 1 4.456319 15.25967 0.05166569
+```
 
-\begin{equation*}
-F_{AH} \sim F_{ndf,ddf,\Delta}
-\end{equation*}
+The first output shows the values ($F_{DBMH}$, $ddf_H$, $p$) calculated by the above code, which closely follows the formulae in this chapter. The next output are the correponding variables yielded by `RJafroc`.
 
-The non-central F-distribution will be used later for sample size estimation (in Chapter [BACKGROUND ON THE F-DISTRIBUTION] and TBA).
+#### Example 4: Code illustrating the confidence interval calculation for RRRC analysis, Van Dyke data
 
 
-## Fixed-reader random-case analysis
+```r
+theta <- UtilFigureOfMerit(dataset02, FOM = "Wilcoxon")
+theta_i_dot <- array(dim = I)
+for (i in 1:I) theta_i_dot[i] <- mean(theta[i,])
+trtDiff <- array(dim = c(I,I))
+for (i1 in 1:(I-1)) {    
+  for (i2 in (i1+1):I) {
+    trtDiff[i1,i2] <- theta_i_dot[i1]- theta_i_dot[i2]    
+  }
+}
+trtDiff <- trtDiff[!is.na(trtDiff)]
+nDiffs <- I*(I-1)/2
+CI_DIFF_FOM_RRRC <- array(dim = c(nDiffs, 3))
+for (i in 1 : nDiffs) {
+  CI_DIFF_FOM_RRRC[i,1] <- qt(alpha/2,df = ddf_H)*sqrt(2*F_DBMH_den/J/K) + trtDiff[i]
+  CI_DIFF_FOM_RRRC[i,2] <- trtDiff[i]
+  CI_DIFF_FOM_RRRC[i,3] <- qt(1-alpha/2,df = ddf_H)*sqrt(2*F_DBMH_den/J/K) + trtDiff[i]
+  print(data.frame("Lower" = CI_DIFF_FOM_RRRC[i,1], 
+             "Mid" = CI_DIFF_FOM_RRRC[i,2], 
+             "Upper" = CI_DIFF_FOM_RRRC[i,3]))
+}
+#>        Lower         Mid        Upper
+#> 1 -0.0879595 -0.04380032 0.0003588544
+data.frame("Lower" = retRJafroc$ciDiffTrtRRRC$CILower, 
+           "Mid" = retRJafroc$ciDiffTrtRRRC$Estimate, 
+           "Upper" = retRJafroc$ciDiffTrtRRRC$CIUpper)
+#>        Lower         Mid        Upper
+#> 1 -0.0879595 -0.04380032 0.0003588544
+```
+
+Again, the first row of output shows the Lower, the Mid-point and the Upper 95% confidence interval. The second row shows the corresponding RJafroc output.
+
+## Fixed-reader random-case (FRRC) analysis
 The model is the same as in Eqn. (9.4) except one puts $\sigma_{R}^{2}$ = $\sigma_{\tau R}^{2}$ = 0 in Table 9.1. The appropriate test statistic is: 
 
 \begin{equation*}
@@ -487,19 +521,6 @@ CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\
 ### Single-reader multiple-treatment analysis
 With a single reader interpreting cases in two or more treatments, the reader factor must necessarily be regarded as fixed. The preceding analysis is applicable. One simply puts $J = 1$ in the equations above. 
 
-#### Non-centrality parameter
-Analogous to Eqn. (9.34), the non-centrality parameter is defined by:
-
-\begin{equation*}
-\Delta=\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\sigma_{\tau RC}^2+J\sigma_{\tau C}^2}
-\end{equation*}
-
-Under the AH, the test statistic is distributed as a non-central F-distribution as follows:
-
-\begin{equation*}
-F_{AH|R}=\frac{MS(T)}{MS(TC)}\sim F_{I-1,(I-1)(K-1),\Delta}
-\end{equation*}
-
 ## Random-reader fixed-case (RRFC) analysis
 The model is the same as in Eqn. Eqn. (9.4) except one puts $\sigma_C^2 = \sigma_{\tau C}^2 =0$ in Table 9.1. It follows that: 
 
@@ -518,9 +539,9 @@ Therefore, one defines the F-statistic (replacing expected values with observed 
 \begin{equation*}
 F_{DBM|C} \sim \frac{MS(T)}{MS(TR)}
 \end{equation*}
-  
+
 The observed value $F_{DBM|C}$ is distributed as an F-statistic with $ndf = I – 1$ and $ddf = (I-1)(J-1)$, see rows labeled $T$ and $TR$ in Table 9.1.
- 
+
 \begin{equation*}
 F_{DBM|C} \sim F_{I-1,(I-1)(J-1))}
 \end{equation*}
