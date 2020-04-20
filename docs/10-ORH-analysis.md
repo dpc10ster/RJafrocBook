@@ -80,17 +80,54 @@ The covariance of two scalar random variables X and Y is defined by:
 
 $$Cov(x,y) =\frac{\sum_{i=1}^{N}(x_{i}-x_{\bullet})(y_{i}-y_{\bullet})}{N-1}=E(XY)-E(X)-E(Y)$$
 
+  $E*X)$ is the expectation value of the random variable $X$, i.e., the integral of x multiplied by its $pdf$: 
 
+$$E(X)=\int pdf(x) x dx$$
 
+The integral is over the range of $x$. The covariance can be thought of as variance of two random variables that is *common* to both of them. The variance, a special case of covariance, of $X$ is defined by:
 
+$$Var(x,y) =Cov(X,X)=E(X^2)-(E(X))^2=\sigma_x^2$$
 
+It can be shown using the Cauchy–Schwarz inequality that
 
+$$\mid Cov(X,Y) \mid^2 \le Var(X)Var(Y)$$
 
+A related quantity, the correlation $\rho$  is defined by (the $\sigma$s  are standard deviations):
 
+$$\rho_{XY} \equiv Cor(X,Y)=\frac{Cov(X,Y)}{\sigma_X \sigma_Y}$$
 
+It has the property:
 
+$$\mid \rho_{XY} \mid \le 1$$
 
+### Special case
 
+Assuming $X$ and $Y$ have the same variance:
+
+$$Var(X)=Var(Y)\equiv Var\equiv \sigma^2$$
+
+A useful theorem applicable to the OR single-reader multiple-treatment model is:
+
+$$Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)$$
+
+The first line of the above equation is general, the second line specializes to the OR single-reader multiple-treatment model where the variances are equal and likewise all covariances in Eqn. (10.5) are equal) The correlation  $\rho_1$ is defined by (the reason for the subscript 1 on $\rho$  is the same as the reason for the subscript 1 on  $Cov_1$, which will be explained later): 
+
+$$\rho_1=\frac{Cov_1}{Var}$$
+
+The I x I covariance matrix $\Sigma$  can be written alternatively as (shown below is the matrix for I = 5; as the matrix is symmetric one need only show elements at and above the diagonal): 
+
+$$\Sigma = 
+    \begin{bmatrix}
+        \sigma^2 & \rho_1\sigma^2 & \rho_1\sigma^2 & \rho_1\sigma^2 & \rho_1\sigma^2\\
+         & \sigma^2 & \rho_1\sigma^2 & \rho_1\sigma^2 & \rho_1\sigma^2\\
+         &  & \sigma^2 & \rho_1\sigma^2 & \rho_1\sigma^2\\
+         &  &  & \sigma^2 & \rho_1\sigma^2\\
+         &  &  &  & \sigma^2
+    \end{bmatrix}
+$$
+
+### Estimation of the covariance matrix
+An unbiased estimate of the covariance Eqn. (10.4) follows from:
 
 
 
