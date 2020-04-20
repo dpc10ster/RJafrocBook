@@ -198,7 +198,7 @@ Note the absence of $MSE$, corresponding to the $\epsilon$ term on the right han
 >
 > --- [@RN2079]
 
-The mean squares on the left hand side of Eqn. (9.12) can be calculated directly from the pseudovalues. The next step in the analysis is to obtain expressions for their expected values in terms of the variances defined in Eqn. (9.7). Assuming no replications, i.e., $N$ = 1, the expected mean squares are as follows, Table 9.1; understanding how this table is derived, would lead the author well outside his expertise and the scope of this book; suffice to say that these are *unconstrained* estimates (as summarized in the quotation above) which are different from the *constrained* estimates appearing in the original DBM publication [@RN204] 
+The mean squares on the left hand side of Eqn. (9.12) can be calculated directly from the pseudovalues. The next step in the analysis is to obtain expressions for their expected values in terms of the variances defined in Eqn. (9.7). Assuming no replications, i.e., $N$ = 1, the expected mean squares are as follows, Table 9.1; understanding how this table is derived, would lead the author well outside his expertise and the scope of this book; suffice to say that these are *unconstrained* estimates (as summarized in the quotation above) which are different from the *constrained* estimates appearing in the original DBM publication [@RN204]. 
 
 Source          df               E(MS)
 -------         ----             ------------------------------------------------------------
@@ -298,7 +298,7 @@ data.frame("msT" = msT, "msR" = msR, "msC" = msC, "msTR" = msTR, "msTC" = msTC, 
 #> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
 as.data.frame(UtilMeanSquares(dataset02)[1:7])
 #>         msT       msR       msC       msTR       msTC       msRC     msTRC
-#> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.05213307 0.06450106 0.0399716
+#> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
 ```
 
 After displaying the results of the calculation, the results are compared to those calculated by `RJafroc` function `UtilMeanSquares(dataset02)`.
