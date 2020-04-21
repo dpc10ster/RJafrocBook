@@ -447,10 +447,16 @@ data.frame ("Cov_jk" = ret1$Cov1, "Var_jk" = ret1$Var)
 ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon")$varComp
 data.frame ("Cov_rjjk" = ret4$cov1, "Var_rjjk" = ret4$var)
 
-ret2 <- VarCov1_Bs(zik1, zik2)
-data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var)
+ret2 <- VarCov1_Bs(zik1, zik2) 
+data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) # local code uses 2000 nBoots
+
+ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 200)$varComp
+data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var)
 
 ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000)$varComp
+data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var) # matches local code with 2000 nBoots, provided seeds are identical
+
+ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 20000)$varComp
 data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var)
 
 mtrxDLStr <- VarCovMtrxDLStr(rocData1R)
