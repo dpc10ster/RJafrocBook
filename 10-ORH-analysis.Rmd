@@ -506,16 +506,27 @@ MS(T)=\frac{1}{I-1}\sum_{i=1}^{I}(\theta_i-\theta_\bullet)^2
 
 *Unlike the previous chapter, all mean square quantities defined in this chapter are based on FOMs; specifically, they are not based on pseudovalues. Converting between them is described in Ref. 1-3 and is implemented in the RJafroc package.*
 
+It can be shown [@RN1772] that under the null hypothesis that all treatments have identical performances, the test statistic $F_{1R}$ defined below (the $1R$ subscript is meant to denote single-reader analysis) is distributed approximately as a $\chi^2$ distribution with $I-1$ degrees of freedom, i.e., 
 
 \begin{equation}
-F_{1R}\equiv \frac{MS(T)}{Var-Cov_1} \sim F_{I-1,\infty}
+F_{1R} \equiv \frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}
 (\#eq:F1RMT)
+\end{equation}
+
+\@ref(eq:F1RMT) is from §5.4 [@RN1865] with two other covariance terms "zeroed out" because they are multiplied by a zero (since we are restricting to $J=1$). 
+
+The $\chi_{ndf}^2$ distribution is related to the F-distribution $F_{ndf,\infty}$:
+
+\begin{equation}
+\frac{\chi_{ndf}^{2}}{I-1} \equiv F_{ndf,\infty}
+(\#eq:Chisqr2F)
 \end{equation}
 
 Dividing a $\chi^2$ distributed random variable with $ndf$ degrees of freedom which is divided by $ndf$ yields an F-distributed random variable with $\text{ndf}$ and $ddf=\infty$, as in \@ref(eq:Chisqr2F). Here is an `R` example: 
 
 ```{r}
 pf(3.1,4,Inf)
+pchisq(3.1*4,4)
 ```
 
 The first form shows that the CDF of the F-distribution with 4 and infinite degrees of freedom at 3.1 equals the CDF of the $\chi_2$ distribution with 4 degrees of freedom at 3.1 times 4. A little "mulling over it" should convince the reader about the truth of these statements.
