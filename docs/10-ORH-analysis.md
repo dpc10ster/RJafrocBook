@@ -116,7 +116,10 @@ $$Var(X)=Var(Y)\equiv Var\equiv \sigma^2$$
 
 A useful theorem applicable to the OR single-reader multiple-treatment model is:
 
-$$Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)$$
+\begin{equation}
+Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
+(\#eq:UsefulTheorem)
+\end{equation}
 
 The first line of the above equation is general, the second line specializes to the OR single-reader multiple-treatment model where the variances are equal and likewise all covariances in Eqn. (10.5) are equal) The correlation  $\rho_1$ is defined by (the reason for the subscript 1 on $\rho$  is the same as the reason for the subscript 1 on  $Cov_1$, which will be explained later): 
 
@@ -221,7 +224,8 @@ zik2 <- rocData1R$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
 # bs = bootstrap
 # dl = DeLong
 ret1 <- VarCov1_Jk(zik1, zik2)
-data.frame ("Cov_jk" = ret1$Cov1, "Var_jk" = ret1$Var)
+Var <- ret1$Var;Cov1 <- ret1$Cov1 # use these (i.e., jackknife) as default values 
+data.frame ("Cov_jk" = Cov1, "Var_jk" = Var)
 #>         Cov_jk       Var_jk
 #> 1 0.0003734661 0.0006989006
 
@@ -257,9 +261,109 @@ data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
 #>         Cov_dl       Var_dl
 #> 1 0.0003684357 0.0006900766
 ```
+### TBA Discussion of above code
 
-## Comparison to `RJafroc`
-TBA
+## Significance testing
+The covariance matrix is needed for significance testing. Define the mean square corresponding to the treatment effect, denoted $MS(T)$, by:
+
+\begin{equation}
+MS(T)=\frac{1}{I-1}\sum_{i=1}^{I}(\theta_i-\theta_\bullet)^2
+(\#eq:DefinitionMST)
+\end{equation}
+
+*Unlike the previous chapter, all mean square quantities defined in this chapter are based on FOMs; specifically, they are not based on pseudovalues. Converting between them is described in Ref. 1-3 and is implemented in the RJafroc package.*
+
+It can be shown1 that under the null hypothesis that all treatments have identical performances the test statistic $F_{1R}$ defined below (the $1R$ subscript is meant to denote single-reader analysis) is distributed approximately as a central F -distribution with $I-1$ numerator degrees of freedom (ndf) and infinite denominator degrees of freedom ($ddf=\infty$), i.e., 
+
+\begin{equation}
+\frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}\\
+F_{1R}\equiv \frac{MS(T)}{Var-Cov_1} \sim F_{I-1,\infty}
+(\#eq:F1RMT)
+\end{equation}
+
+[The first form is from §5.4 ibid. with two other covariance terms "zeroed out" because they are multiplied by  . Dividing a  distributed random variable with   degrees of freedom by   yields an F- distributed random variable with ndf  =   and ddf  = ∞, as in the second form in Eqn. (10.23). Here is an R example: pf(3.1,4,Inf) = 0.9853881; pchisq(3.1*4,4) = 0.9853881. The first form shows that the CDF of the F-distribution with 4 and infinite degrees of freedom at 3.1 equals the CDF of the  distribution with 4 degrees of freedom at 3.1 times 4. A little "mulling over it" should convince the reader about the truth of these statements.]
+
+The p-value is the probability that a sample from the $F_{I-1,\infty}$ distribution is greater than or equal to the observed value of the test statistic, namely: 
+
+\begin{equation}
+\frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}\\
+p\equiv \Pr(f>F_{1R} \mid f \sim F_{I-1,\infty})
+(\#eq:pValue1RMT)
+\end{equation}
+
+The $(1-\alpha)$  confidence interval for the inter-treatment FOM difference is given by:
+
+\begin{equation}
+\frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}\\
+CI_{1-\alpha} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\infty} \sqrt{2(Var-Cov_1)}
+(\#eq:CIValue1RMT)
+\end{equation}
+
+Comparing Eqn. \@ref(eq:CIValue1RMT) to \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(Var-Cov_1)}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96 and $t_{1-\alpha/2,\infty}$ is +1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. All this should should make sense. One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96. 
+
+### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
+We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader analysis described in §9.8 the previous chapter (with just one reader the conclusions apply to the specific reader, so reader must be a fixed factor). Source the file MainOrDbmh1R.R, a listing of which appears in Online Appendix 10.C. For convenience, a few relevant lines are shown here:
+
+
+```r
+# seed <- 1;set.seed(seed)
+alpha <- 0.05
+theta_i <- c(0,0);for (i in 1:I) theta_i[i] <- Wilcoxon(zik1[i,], zik2[i,])
+
+MS_T <- 0;MS_T <- MS_T + sum((theta_i[i]-mean(theta_i))^2);MS_T <- MS_T/(I-1)
+
+F_1R <- MS_T/(Var - Cov1)
+pValue <- 1 - pf(F_1R, I-1, Inf)
+
+trtDiff <- array(dim = c(I,I))
+for (i1 in 1:(I-1)) {    
+  for (i2 in (i1+1):I) {
+    trtDiff[i1,i2] <- theta_i[i1]- theta_i[i2]    
+  }
+}
+trtDiff <- trtDiff[!is.na(trtDiff)]
+nDiffs <- I*(I-1)/2
+CI_DIFF_FOM_1RMT <- array(dim = c(nDiffs, 3))
+for (i in 1 : nDiffs) {
+  CI_DIFF_FOM_1RMT[i,1] <- qt(alpha/2,df = Inf)*sqrt(2*(Var - Cov1)) + trtDiff[i]
+  CI_DIFF_FOM_1RMT[i,2] <- trtDiff[i]
+  CI_DIFF_FOM_1RMT[i,3] <- qt(1-alpha/2,df = Inf)*sqrt(2*(Var - Cov1)) + trtDiff[i]
+  print(data.frame("F_1R" = F_1R, 
+                   "pValue" = pValue,
+                   "Lower" = CI_DIFF_FOM_1RMT[i,1], 
+                   "Mid" = CI_DIFF_FOM_1RMT[i,2], 
+                   "Upper" = CI_DIFF_FOM_1RMT[i,3]))
+}
+#>        F_1R    pValue       Lower         Mid      Upper
+#> 1 0.6100555 0.4347669 -0.07818322 -0.02818035 0.02182251
+
+# StSignificanceTestingSingleFixedFactor(rocData1R, FOM = "Wilcoxon")
+
+# cat("DBMH: F-stat = ", ret1$fFRRC, ", ddf = ", ret1$ddfFRRC, ", P-val = ", ret1$pFRRC,"\n")
+# 
+# ret2 <- SignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC")
+# cat("ORH (Jackknife):  F-stat = ", ret2$fFRRC, ", ddf = ", ret2$ddfFRRC, ", P-val = ", ret2$pFRRC,"\n")
+# 
+# ret3 <- SignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC", 
+#                             covEstMethod = "DeLong")
+# cat("ORH (DeLong):  F-stat = ", ret3$fFRRC, ", ddf = ", ret3$ddfFRRC, ", P-val = ", ret3$pFRRC,"\n")
+# 
+# ret4 <- SignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC", 
+#                             covEstMethod = "Bootstrap")
+# cat("ORH (Bootstrap):  F-stat = ", ret4$fFRRC, ", ddf = ", ret4$ddfFRRC, ", P-val = ", ret4$pFRRC,"\n")
+# 
+# 
+# data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var) # matches local code with 2000 nBoots, provided seeds are identical
+# 
+# ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 20000)$varComp
+# data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var)
+# 
+# mtrxDLStr <- VarCovMtrxDLStr(rocData1R)
+# ret3 <- VarCovs(mtrxDLStr)
+# 
+# data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
+```
+
 
 ## References  
 
