@@ -506,20 +506,23 @@ MS(T)=\frac{1}{I-1}\sum_{i=1}^{I}(\theta_i-\theta_\bullet)^2
 
 *Unlike the previous chapter, all mean square quantities defined in this chapter are based on FOMs; specifically, they are not based on pseudovalues. Converting between them is described in Ref. 1-3 and is implemented in the RJafroc package.*
 
-It can be shown1 that under the null hypothesis that all treatments have identical performances the test statistic $F_{1R}$ defined below (the $1R$ subscript is meant to denote single-reader analysis) is distributed approximately as a central F -distribution with $I-1$ numerator degrees of freedom (ndf) and infinite denominator degrees of freedom ($ddf=\infty$), i.e., 
 
 \begin{equation}
-\frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}\\
 F_{1R}\equiv \frac{MS(T)}{Var-Cov_1} \sim F_{I-1,\infty}
 (\#eq:F1RMT)
 \end{equation}
 
-[The first form is from §5.4 ibid. with two other covariance terms "zeroed out" because they are multiplied by  . Dividing a  distributed random variable with   degrees of freedom by   yields an F- distributed random variable with ndf  =   and ddf  = ∞, as in the second form in Eqn. (10.23). Here is an R example: pf(3.1,4,Inf) = 0.9853881; pchisq(3.1*4,4) = 0.9853881. The first form shows that the CDF of the F-distribution with 4 and infinite degrees of freedom at 3.1 equals the CDF of the  distribution with 4 degrees of freedom at 3.1 times 4. A little "mulling over it" should convince the reader about the truth of these statements.]
+Dividing a $\chi^2$ distributed random variable with $ndf$ degrees of freedom which is divided by $ndf$ yields an F-distributed random variable with $\text{ndf}$ and $ddf=\infty$, as in \@ref(eq:Chisqr2F). Here is an `R` example: 
+
+```{r}
+pf(3.1,4,Inf)
+```
+
+The first form shows that the CDF of the F-distribution with 4 and infinite degrees of freedom at 3.1 equals the CDF of the $\chi_2$ distribution with 4 degrees of freedom at 3.1 times 4. A little "mulling over it" should convince the reader about the truth of these statements.
 
 The p-value is the probability that a sample from the $F_{I-1,\infty}$ distribution is greater than or equal to the observed value of the test statistic, namely: 
 
 \begin{equation}
-\frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}\\
 p\equiv \Pr(f>F_{1R} \mid f \sim F_{I-1,\infty})
 (\#eq:pValue1RMT)
 \end{equation}
@@ -527,12 +530,11 @@ p\equiv \Pr(f>F_{1R} \mid f \sim F_{I-1,\infty})
 The $(1-\alpha)$  confidence interval for the inter-treatment FOM difference is given by:
 
 \begin{equation}
-\frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}\\
 CI_{1-\alpha} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\infty} \sqrt{2(Var-Cov_1)}
 (\#eq:CIValue1RMT)
 \end{equation}
 
-Comparing Eqn. \@ref(eq:CIValue1RMT) to \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(Var-Cov_1)}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96 and $t_{1-\alpha/2,\infty}$ is +1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. All this should should make sense. One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96. 
+Comparing \@ref(eq:CIValue1RMT) to \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(Var-Cov_1)}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96 and $t_{1-\alpha/2,\infty}$ is +1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. All this should should make sense. One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96. 
 
 ### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
 We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader analysis described in §9.8 the previous chapter (with just one reader the conclusions apply to the specific reader, so reader must be a fixed factor). Source the file MainOrDbmh1R.R, a listing of which appears in Online Appendix 10.C. For convenience, a few relevant lines are shown here:
