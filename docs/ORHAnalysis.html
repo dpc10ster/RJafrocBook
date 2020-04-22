@@ -263,7 +263,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="ORHAnalysis.html"><a href="ORHAnalysis.html#significance-testing-1"><i class="fa fa-check"></i><b>8.3</b> Significance testing</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="ORHAnalysis.html"><a href="ORHAnalysis.html#comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments"><i class="fa fa-check"></i><b>8.3.1</b> Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments</a></li>
+<li class="chapter" data-level="8.3.1" data-path="ORHAnalysis.html"><a href="ORHAnalysis.html#an-aside-on-the-relation-between-the-chisquare-and-the-f-distribution-with-infinite-ddf"><i class="fa fa-check"></i><b>8.3.1</b> An aside on the relation between the chisquare and the F-distribution with infinite ddf</a></li>
+<li class="chapter" data-level="8.3.2" data-path="ORHAnalysis.html"><a href="ORHAnalysis.html#p-value-and-confidence-interval-1"><i class="fa fa-check"></i><b>8.3.2</b> p-value and confidence interval</a></li>
+<li class="chapter" data-level="8.3.3" data-path="ORHAnalysis.html"><a href="ORHAnalysis.html#comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments"><i class="fa fa-check"></i><b>8.3.3</b> Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments</a></li>
 </ul></li>
 <li class="chapter" data-level="8.4" data-path="ORHAnalysis.html"><a href="ORHAnalysis.html#references-5"><i class="fa fa-check"></i><b>8.4</b> References</a></li>
 </ul></li>
@@ -737,24 +739,36 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 MS(T)=\frac{1}{I-1}\sum_{i=1}^{I}(\theta_i-\theta_\bullet)^2
 \tag{8.15}
 \end{equation}\]</span></p>
-<p><em>Unlike the previous chapter, all mean square quantities defined in this chapter are based on FOMs; specifically, they are not based on pseudovalues. Converting between them is described in Ref. 1-3 and is implemented in the RJafroc package.</em></p>
-<p>It can be shown <span class="citation">(Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>)</span> that under the null hypothesis that all treatments have identical performances, the test statistic <span class="math inline">\(F_{1R}\)</span> defined below (the <span class="math inline">\(1R\)</span> subscript is meant to denote single-reader analysis) is distributed approximately as a <span class="math inline">\(\chi^2\)</span> distribution with <span class="math inline">\(I-1\)</span> degrees of freedom, i.e.,</p>
+<p><em>Unlike the previous chapter, all mean square quantities defined in this chapter are based on FOMs, not pseudovalues. Converting between them is described in <span class="citation">(Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>; Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>; Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span> and is implemented in the <code>RJafroc</code> package.</em></p>
+<p>It can be shown <span class="citation">(Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>)</span> that under the null hypothesis (that all treatments have identical performances) the test statistic <span class="math inline">\(Chi_{1R}\)</span> defined below (the <span class="math inline">\(1R\)</span> subscript denotes single-reader analysis) is distributed approximately as a <span class="math inline">\(\chi^2\)</span> distribution with <span class="math inline">\(I-1\)</span> degrees of freedom, i.e.,</p>
 <p><span class="math display" id="eq:F1RMT">\[\begin{equation}
-F_{1R} \equiv \frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}
+Chi_{1R} \equiv \frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}
 \tag{8.16}
 \end{equation}\]</span></p>
-<p><a href="ORHAnalysis.html#eq:F1RMT">(8.16)</a> is from §5.4 <span class="citation">(Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>)</span> with two other covariance terms “zeroed out” because they are multiplied by a zero (since we are restricting to <span class="math inline">\(J=1\)</span>).</p>
+<p><a href="ORHAnalysis.html#eq:F1RMT">(8.16)</a> is from §5.4 <span class="citation">(Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>)</span> with two covariance terms “zeroed out” because they are multiplied by a zero (since, in this example, we are restricting to <span class="math inline">\(J=1\)</span>).</p>
+<p>Or equivalently, in terms of the F-distribution <span class="citation">(Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>)</span>:</p>
+<p><span class="math display" id="eq:F1RMT">\[\begin{equation}
+F_{1R} \equiv \frac{MS(T)}{Var-Cov_1} \sim F_{I-1, \infty}
+\tag{8.16}
+\end{equation}\]</span></p>
+<div id="an-aside-on-the-relation-between-the-chisquare-and-the-f-distribution-with-infinite-ddf" class="section level3" number="8.3.1">
+<h3><span class="header-section-number">8.3.1</span> An aside on the relation between the chisquare and the F-distribution with infinite ddf</h3>
 <p>The <span class="math inline">\(\chi_{ndf}^2\)</span> distribution is related to the F-distribution <span class="math inline">\(F_{ndf,\infty}\)</span>:</p>
 <p><span class="math display" id="eq:Chisqr2F">\[\begin{equation}
-\frac{\chi_{ndf}^{2}}{I-1} \equiv F_{ndf,\infty}
+\frac{\chi_{1-\alpha,ndf}^{2}}{ndf} \equiv F_{1-\alpha,Z, ndf,\infty}
 \tag{8.17}
 \end{equation}\]</span></p>
-<p>Dividing a <span class="math inline">\(\chi^2\)</span> distributed random variable with <span class="math inline">\(ndf\)</span> degrees of freedom which is divided by <span class="math inline">\(ndf\)</span> yields an F-distributed random variable with <span class="math inline">\(\text{ndf}\)</span> and <span class="math inline">\(ddf=\infty\)</span>, as in <a href="ORHAnalysis.html#eq:Chisqr2F">(8.17)</a>. Here is an <code>R</code> example:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="ORHAnalysis.html#cb2-1"></a><span class="kw">pf</span>(<span class="fl">3.1</span>,<span class="dv">4</span>,<span class="ot">Inf</span>)</span>
-<span id="cb2-2"><a href="ORHAnalysis.html#cb2-2"></a><span class="co">#&gt; [1] 0.9853881</span></span>
-<span id="cb2-3"><a href="ORHAnalysis.html#cb2-3"></a><span class="kw">pchisq</span>(<span class="fl">3.1</span><span class="op">*</span><span class="dv">4</span>,<span class="dv">4</span>)</span>
-<span id="cb2-4"><a href="ORHAnalysis.html#cb2-4"></a><span class="co">#&gt; [1] 0.9853881</span></span></code></pre></div>
-<p>The first form shows that the CDF of the F-distribution with 4 and infinite degrees of freedom at 3.1 equals the CDF of the <span class="math inline">\(\chi_2\)</span> distribution with 4 degrees of freedom at 3.1 times 4. A little “mulling over it” should convince the reader about the truth of these statements.</p>
+<p>A <span class="math inline">\(\chi^2\)</span> distributed random variable, with <span class="math inline">\(ndf\)</span> degrees of freedom, divided by <span class="math inline">\(ndf\)</span> yields an F-distributed random variable with <span class="math inline">\(ndf\)</span> and <span class="math inline">\(ddf=\infty\)</span> degrees of freedom, as in <a href="ORHAnalysis.html#eq:Chisqr2F">(8.17)</a>.</p>
+<p>Here is an <code>R</code> example:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="ORHAnalysis.html#cb2-1"></a>chi &lt;-<span class="st"> </span><span class="kw">qchisq</span>(<span class="fl">0.05</span>,<span class="dv">4</span>)</span>
+<span id="cb2-2"><a href="ORHAnalysis.html#cb2-2"></a><span class="kw">pchisq</span>(chi,<span class="dv">4</span>)</span>
+<span id="cb2-3"><a href="ORHAnalysis.html#cb2-3"></a><span class="co">#&gt; [1] 0.05</span></span>
+<span id="cb2-4"><a href="ORHAnalysis.html#cb2-4"></a><span class="kw">pf</span>(chi<span class="op">/</span><span class="dv">4</span>,<span class="dv">4</span>,<span class="ot">Inf</span>)</span>
+<span id="cb2-5"><a href="ORHAnalysis.html#cb2-5"></a><span class="co">#&gt; [1] 0.05</span></span></code></pre></div>
+<p>The two output lines show that the CDF of the <span class="math inline">\(\chi^2\)</span> distribution with <span class="math inline">\(df = 4\)</span> at value <span class="math inline">\(chi\)</span> = 0.710723 equals 0.05, which is also the CDF of the the F-distribution with <span class="math inline">\(ndf = 4\)</span> and <span class="math inline">\(ddf = \infty\)</span> at value <span class="math inline">\(chi/4\)</span> = 0.1776808. A little “mulling over it” should convince the reader about the truth of these statements.</p>
+</div>
+<div id="p-value-and-confidence-interval-1" class="section level3" number="8.3.2">
+<h3><span class="header-section-number">8.3.2</span> p-value and confidence interval</h3>
 <p>The p-value is the probability that a sample from the <span class="math inline">\(F_{I-1,\infty}\)</span> distribution is greater than or equal to the observed value of the test statistic, namely:</p>
 <p><span class="math display" id="eq:pValue1RMT">\[\begin{equation}
 p\equiv \Pr(f&gt;F_{1R} \mid f \sim F_{I-1,\infty})
@@ -766,8 +780,9 @@ CI_{1-\alpha} = (\theta_{i\bullet} - \theta_{i&#39;\bullet}) \pm t_{\alpha/2,\in
 \tag{8.19}
 \end{equation}\]</span></p>
 <p>Comparing <a href="ORHAnalysis.html#eq:CIValue1RMT">(8.19)</a> to <a href="ORHAnalysis.html#eq:UsefulTheorem">(8.7)</a> shows that the term <span class="math inline">\(\sqrt{2(Var-Cov_1)}\)</span> is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term <span class="math inline">\(t_{\alpha/2,\infty}\)</span> is -1.96 and <span class="math inline">\(t_{1-\alpha/2,\infty}\)</span> is +1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. All this should should make sense. One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The “2” comes from rounding up 1.96.</p>
-<div id="comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments" class="section level3" number="8.3.1">
-<h3><span class="header-section-number">8.3.1</span> Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments</h3>
+</div>
+<div id="comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments" class="section level3" number="8.3.3">
+<h3><span class="header-section-number">8.3.3</span> Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments</h3>
 <p>We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader analysis described in §9.8 the previous chapter (with just one reader the conclusions apply to the specific reader, so reader must be a fixed factor). Source the file MainOrDbmh1R.R, a listing of which appears in Online Appendix 10.C. For convenience, a few relevant lines are shown here:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="ORHAnalysis.html#cb3-1"></a><span class="co"># seed &lt;- 1;set.seed(seed)</span></span>
 <span id="cb3-2"><a href="ORHAnalysis.html#cb3-2"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>

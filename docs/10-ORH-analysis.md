@@ -271,36 +271,49 @@ MS(T)=\frac{1}{I-1}\sum_{i=1}^{I}(\theta_i-\theta_\bullet)^2
 (\#eq:DefinitionMST)
 \end{equation}
 
-*Unlike the previous chapter, all mean square quantities defined in this chapter are based on FOMs; specifically, they are not based on pseudovalues. Converting between them is described in Ref. 1-3 and is implemented in the RJafroc package.*
+*Unlike the previous chapter, all mean square quantities defined in this chapter are based on FOMs, not pseudovalues. Converting between them is described in [@RN1865; @RN1772; @RN1866] and is implemented in the `RJafroc` package.*
 
-It can be shown [@RN1772] that under the null hypothesis that all treatments have identical performances, the test statistic $F_{1R}$ defined below (the $1R$ subscript is meant to denote single-reader analysis) is distributed approximately as a $\chi^2$ distribution with $I-1$ degrees of freedom, i.e., 
+It can be shown [@RN1772] that under the null hypothesis (that all treatments have identical performances) the test statistic $Chi_{1R}$ defined below (the $1R$ subscript denotes single-reader analysis) is distributed approximately as a $\chi^2$ distribution with $I-1$ degrees of freedom, i.e., 
 
 \begin{equation}
-F_{1R} \equiv \frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}
+Chi_{1R} \equiv \frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}
 (\#eq:F1RMT)
 \end{equation}
 
-\@ref(eq:F1RMT) is from §5.4 [@RN1865] with two other covariance terms "zeroed out" because they are multiplied by a zero (since we are restricting to $J=1$). 
+\@ref(eq:F1RMT) is from §5.4 [@RN1865] with two covariance terms "zeroed out" because they are multiplied by a zero (since, in this example, we are restricting to $J=1$). 
+
+Or equivalently, in terms of the F-distribution [@RN1772]:
+
+\begin{equation}
+F_{1R} \equiv \frac{MS(T)}{Var-Cov_1} \sim F_{I-1, \infty}
+(\#eq:F1RMT)
+\end{equation}
+
+### An aside on the relation between the chisquare and the F-distribution with infinite ddf
 
 The $\chi_{ndf}^2$ distribution is related to the F-distribution $F_{ndf,\infty}$:
 
 \begin{equation}
-\frac{\chi_{ndf}^{2}}{I-1} \equiv F_{ndf,\infty}
+\frac{\chi_{1-\alpha,ndf}^{2}}{ndf} \equiv F_{1-\alpha,Z, ndf,\infty}
 (\#eq:Chisqr2F)
 \end{equation}
 
-Dividing a $\chi^2$ distributed random variable with $ndf$ degrees of freedom which is divided by $ndf$ yields an F-distributed random variable with $\text{ndf}$ and $ddf=\infty$, as in \@ref(eq:Chisqr2F). Here is an `R` example: 
+A $\chi^2$ distributed random variable, with $ndf$ degrees of freedom, divided by $ndf$ yields an F-distributed random variable with $ndf$ and $ddf=\infty$ degrees of freedom, as in \@ref(eq:Chisqr2F). 
+
+Here is an `R` example: 
 
 
 ```r
-pf(3.1,4,Inf)
-#> [1] 0.9853881
-pchisq(3.1*4,4)
-#> [1] 0.9853881
+chi <- qchisq(0.05,4)
+pchisq(chi,4)
+#> [1] 0.05
+pf(chi/4,4,Inf)
+#> [1] 0.05
 ```
 
-The first form shows that the CDF of the F-distribution with 4 and infinite degrees of freedom at 3.1 equals the CDF of the $\chi_2$ distribution with 4 degrees of freedom at 3.1 times 4. A little "mulling over it" should convince the reader about the truth of these statements.
+The two output lines show that the CDF of the $\chi^2$ distribution with $df = 4$ at value $chi$ = 0.710723 equals 0.05, which is also the CDF of the the F-distribution with $ndf = 4$ and $ddf = \infty$ at value $chi/4$ = 0.1776808. A little "mulling over it" should convince the reader about the truth of these statements.
 
+### p-value and confidence interval
 The p-value is the probability that a sample from the $F_{I-1,\infty}$ distribution is greater than or equal to the observed value of the test statistic, namely: 
 
 \begin{equation}
