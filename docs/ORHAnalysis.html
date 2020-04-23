@@ -984,15 +984,51 @@ Var &amp; Cov_2 &amp; Cov_2 &amp; Cov_1 &amp; Cov_3 &amp; Cov_3 \\
 </div>
 <div id="physical-meanings-of-the-covariance-terms" class="section level3" number="8.4.2">
 <h3><span class="header-section-number">8.4.2</span> Physical meanings of the covariance terms</h3>
-<p>The meanings of the different terms follow a similar description to that given in <a href="ORHAnalysis.html#StrCovMatrix">8.4.1</a>. The diagonal term of the covariance matrix is the variance of the figure-of-merit values obtained when reader j interprets different case-sets in treatment i: each case-set yields a number and the variance of the C numbers, averaged over the I x J treatments and readers, is . It captures the total variability due to varying difficulty levels of the case-sets and within-reader variability.</p>
-<p>is the correlation of the figure-of-merit values obtained when the same reader j interprets a case-set in different treatment . Each case-set, starting with c = 1, yields two numbers and ; the process is repeated for C case-sets. The correlation of the two pairs of C-length arrays, averaged over all pairings of different treatments and same readers, is . Because of the common contribution due to the shared reader, will be non-zero. For large common variation, the two arrays become almost perfectly correlated, and approaches unity. For zero common variation, the two arrays become independent, and equals zero. Translating to covariances, one has .</p>
-<p>is the correlation of the figure-of-merit values obtained when different readers interpret the same case-set in the same treatment i. As before this yields two numbers and upon repeating over C case-sets one has two C-length arrays, whose correlation, upon averaging over all distinct treatment pairings and same readers, yields . If one assumes that common variation between different-reader same-treatment FOMs is smaller than the common variation between same-reader different-treatment FOMs, then will be smaller than . This is equivalent to stating that readers agree more with themselves on different treatments than they do with other readers on the same treatment. Translating to covariances, one has .</p>
-<p>is the correlation of the figure-of-merit values obtained when different readers interpret the same case set in different treatments , etc., yielding . This is expected to yield the least correlation.</p>
+<p>The meanings of the different terms follow a similar description to that given in <a href="ORHAnalysis.html#StrCovMatrix">8.4.1</a>. The diagonal term <span class="math inline">\(Var\)</span> of the covariance matrix <span class="math inline">\(\Sigma\)</span> is the variance of the figure-of-merit values obtained when reader <span class="math inline">\(j\)</span> interprets different case-sets in treatment <span class="math inline">\(i\)</span>: each case-set yields a number <span class="math inline">\(\theta_{ij\{c\}}\)</span> and the variance of the <span class="math inline">\(C\)</span> numbers, averaged over the <span class="math inline">\(I \times J\)</span> treatments and readers, is <span class="math inline">\(Var\)</span>. It captures the total variability due to varying difficulty levels of the case-sets and within-reader variability.</p>
+<p><span class="math inline">\(\rho_{1;ii&#39;jj}\)</span> is the correlation of the figure-of-merit values obtained when the same reader <span class="math inline">\(j\)</span> interprets a case-set in different treatment <span class="math inline">\(i,i&#39;\)</span>. Each case-set, starting with <span class="math inline">\(c = 1\)</span>, yields two numbers <span class="math inline">\(\theta_{ij\{1\}}\)</span> and <span class="math inline">\(\theta_{i&#39;j\{1\}}\)</span>; the process is repeated for <span class="math inline">\(C\)</span> case-sets. The correlation of the two pairs of C-length arrays, averaged over all pairings of different treatments and same readers, is <span class="math inline">\(\rho_1\)</span>. Because of the common contribution due to the shared reader, <span class="math inline">\(\rho_1\)</span> will be non-zero. For large common variation, the two arrays become almost perfectly correlated, and <span class="math inline">\(\rho_1\)</span> approaches unity. For zero common variation, the two arrays become independent, and <span class="math inline">\(\rho_1\)</span> equals zero. Translating to covariances, one has <span class="math inline">\(Cov_1 &lt; Var\)</span>.</p>
+<p><span class="math inline">\(\rho_{2;iijj&#39;}\)</span> is the correlation of the figure-of-merit values obtained when different readers <span class="math inline">\(j,j&#39;\)</span> interpret the same case-set in the same treatment <span class="math inline">\(i\)</span>. As before this yields two numbers and upon repeating over <span class="math inline">\(C\)</span> case-sets one has two C-length arrays, whose correlation, upon averaging over all distinct treatment pairings and same readers, yields <span class="math inline">\(\rho_2\)</span>. If one assumes that common variation between different-reader same-treatment FOMs is smaller than the common variation between same-reader different-treatment FOMs, then <span class="math inline">\(\rho_2\)</span> will be smaller than <span class="math inline">\(\rho_1\)</span>. This is equivalent to stating that readers agree more with themselves on different treatments than they do with other readers on the same treatment. Translating to covariances, one has <span class="math inline">\(Cov_2 &lt; Cov_1 &lt; Var\)</span>.</p>
+<p><span class="math inline">\(\rho_{3;ii&#39;jj&#39;}\)</span> is the correlation of the figure-of-merit values obtained when different readers <span class="math inline">\(j,j&#39;\)</span> interpret the same case set in different treatments <span class="math inline">\(i,i&#39;\)</span>, etc., yielding <span class="math inline">\(\rho_3\)</span>. This is expected to yield the least correlation.</p>
 <p>Summarizing, one expects the following ordering for the terms in the covariance matrix:</p>
-<pre><code>.   (10.40)</code></pre>
+<p><span class="math display" id="eq:CovOrderings">\[\begin{equation}
+Cov_3 &lt; Cov_2 &lt; Cov_1 &lt; Var
+\tag{8.27}
+\end{equation}\]</span></p>
 </div>
 <div id="orh-random-reader-random-case-analysis" class="section level3" number="8.4.3">
 <h3><span class="header-section-number">8.4.3</span> ORH random-reader random-case analysis</h3>
+<p>A model such as <a href="ORHAnalysis.html#eq:ORModel">(8.21)</a> cannot be analyzed by standard analysis of variance (ANOVA) techniques. Because of the correlated structure of the error term a customized ANOVA is needed (in standard ANOVA models, such as used in DBMH, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented by the epsilon term in the DBM model).</p>
+<p>One starts with the null hypothesis (NH) that the true figures-of-merit of all treatments are identical, i.e.,</p>
+<p><span class="math display" id="eq:ORModelNH">\[\begin{equation}
+NH:\tau_i=0\;\;  (i=1,2,...,I)
+\tag{8.28}
+\end{equation}\]</span></p>
+<p>The analysis described next considers both readers and cases as random effects. Because of the special nature of the covariance matrix, a modified F-statistic is needed 1-4,7, denoted <span class="math inline">\(F_{ORH}\)</span>, defined by:</p>
+<p><span class="math display" id="eq:FORH">\[\begin{equation}
+F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
+\tag{8.29}
+\end{equation}\]</span></p>
+<p><a href="ORHAnalysis.html#eq:FORH">(8.29)</a> incorporates Hillis’ modification, which ensures that the constraint <a href="ORHAnalysis.html#eq:FORH">(8.29)</a> is always obeyed and avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated directly using FOM values, not pseudovalues):</p>
+<p><span class="math display" id="eq:MSORH">\[\begin{equation}
+MS(T)=\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
+MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})^2
+\tag{8.30}
+\end{equation}\]</span></p>
+<p>In their original paper <span class="citation">(Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span> Obuchowski and Rockette state that their proposed test statistic F (basically <a href="ORHAnalysis.html#eq:FORH">(8.29)</a> without the constraint implied by the <span class="math inline">\(\max\)</span> function) is distributed as an F-statistic with numerator degree of freedom <span class="math inline">\(ndf=I-1\)</span> and denominator degree of freedom <span class="math inline">\(ddf=(I-1)(J-1)\)</span>. It turns out that then the test is unduly conservative, meaning it is unusually reluctant to reject the null hypothesis.</p>
+<p>In this connection the author has two historical anecdotes. The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski <span class="citation">(Obuchowski <a href="#ref-RN1971" role="doc-biblioref">1998</a>, <a href="#ref-RN1972" role="doc-biblioref">2000</a>)</span>, using the unmodified version of <a href="ORHAnalysis.html#eq:FORH">(8.29)</a>, predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study.</p>
+<p>The second story is that the author once conducted NH simulations using the Roe-Metz simulator described in the preceding chapter and the significance testing as described in the Obuchowski-Rockette paper: the method did not reject the null hypothesis even once in 2000 trials! Recall that with <span class="math inline">\(\alpha = 0.05\)</span> a valid test should reject the null hypothesis about <span class="math inline">\(100\pm20\)</span> times in 2000 trials. The author recalls (ca. 2004) telling Dr. Steve Hillis about this issue, and he suggested a different value for the denominator degrees of freedom (ddf), substitution of which magically solved the problem, i.e., the simulations rejected the null hypothesis about 5% of the time; the new <span class="math inline">\(ddf\)</span> is defined below (<span class="math inline">\(ndf\)</span> is unchanged), with the subscript H denoting the Hillis modification:</p>
+<p><span class="math display" id="eq:ndf">\[\begin{equation}
+ndf=I-1
+\tag{8.31}
+\end{equation}\]</span></p>
+<p><span class="math display" id="eq:ddfH">\[\begin{equation}
+ddf_H=\frac{\left [ MS(TR) + J \max(Cov_2-Cov_3)\right ]^2}{\frac{\left [ MS(TR) \right ]^2}{(I-1)(J-1)}}
+\tag{8.32}
+\end{equation}\]</span></p>
+<p>If <span class="math inline">\(Cov_2&lt;Cov_3\)</span> this reduces to the expression originally suggested by Obuchowski and Rockette. With these changes, under the null hypothesis, the observed statistic <span class="math inline">\(F_{ORH}\)</span>, defined in <a href="ORHAnalysis.html#eq:FORH">(8.29)</a>, is distributed as an F-statistic with <span class="math inline">\(I-1\)</span> and <span class="math inline">\(ddfH\)</span> degrees of freedom1-3:</p>
+<p><span class="math display" id="eq:SamplingDistrFORH">\[\begin{equation}
+F_{ORH}\sim F_{ndf,ddfH}
+\tag{8.33}
+\end{equation}\]</span></p>
 </div>
 <div id="decision-rule-p-value-and-confidence-interval" class="section level3" number="8.4.4">
 <h3><span class="header-section-number">8.4.4</span> Decision rule, p-value and confidence interval</h3>
@@ -1070,6 +1106,12 @@ Var &amp; Cov_2 &amp; Cov_2 &amp; Cov_1 &amp; Cov_3 &amp; Cov_3 \\
 </div>
 <div id="ref-RN1866">
 <p>Hillis, Stephen L., K. S. Berbaum, and C. E. Metz. 2008. “Recent Developments in the Dorfman-Berbaum-Metz Procedure for Multireader Roc Study Analysis.” Journal Article. <em>Acad Radiol</em> 15 (5): 647–61.</p>
+</div>
+<div id="ref-RN1971">
+<p>Obuchowski, Nancy A. 1998. “Sample Size Calculations in Studies of Test Accuracy.” Journal Article. <em>Statistical Methods in Medical Research</em> 7 (4): 371–92. <a href="https://doi.org/10.1177/096228029800700405">https://doi.org/10.1177/096228029800700405</a>.</p>
+</div>
+<div id="ref-RN1972">
+<p>Obuchowski, Nancy A. 2000. “Sample Size Tables for Receiver Operating Characteristic Studies.” Journal Article. <em>Am. J. Roentgenol.</em> 175 (3): 603–8. <a href="http://www.ajronline.org/cgi/content/abstract/175/3/603">http://www.ajronline.org/cgi/content/abstract/175/3/603</a>.</p>
 </div>
 <div id="ref-RN1450">
 <p>Obuchowski, N. A., and H. E. Rockette. 1995. “Hypothesis Testing of the Diagnostic Accuracy for Multiple Diagnostic Tests: An Anova Approach with Dependent Observations.” Journal Article. <em>Communications in Statistics: Simulation and Computation</em> 24: 285–308.</p>
