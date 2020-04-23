@@ -178,7 +178,6 @@ Suppose one has the luxury of repeatedly sampling case-sets, each consisting of 
 (\#eq:EstimateVari)
 \end{equation}
 
-
 The process is repeated for all treatments and the $I$-variance values are averaged. This is the final estimate of $Var$ appearing in \@ref(eq:DefinitionEpsilon). 
 
 To estimate the covariance matrix one considers pairs of FOM values for the same case-set $\{c\}$  but different treatments, i.e., $\theta_{i\{c\}}$ and $\theta_{i'\{c\}}$; *by definition primed and un-primed indices are different*. Since they are derived from the same case-set, one expects the values to be correlated. For a particularly easy case-set one expects all I-estimates to be collectively higher than usual. The process is repeated for different case-sets and one calculates the correlation $\rho_{1;ii'}$  between the two $C$-length arrays $\theta_{i\{c\}}$ and $\theta_{i'\{c\}}$: 
@@ -397,43 +396,177 @@ print(data.frame("theta_1" = ret_rj$fomArray[1],
 #> 1 -0.07818322 -0.02818035 0.02182251
 ```
 ## Multiple-reader multiple-treatment ORH model
-The previous sections served as a "gentle" introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to Eqn. (10.1), one needs an additional j index to index readers, and additional random terms to model reader and treatment-reader variability, and the error term needs to be modified appropriately to account for the additional reader factor. 
+The previous sections served as a "gentle" introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to \@ref(eq:ORModel1RMT), one needs an additional $j$ index to index readers, and additional random terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random reader factor. 
 
 The general Obuchowski and Rockette model for fully paired multiple-reader multiple-treatment interpretations is: 
 
-.	(10.26)
+\begin{equation}
+\theta_{ij\{c\}}=\mu+\tau_i+R_j+(\tau R)_{ij}+\epsilon_{ij\{c\}}
+(\#eq:ORModel)
+\end{equation}
 
-The fixed treatment effect   is subject to the usual constraint, Eqn. (10.2). The first two terms on the right hand side of Eqn. (10.26) have their usual meanings: a constant term   representing performance averaged over treatments and readers, and a treatment effect   (i = 1,2, ..., I). The following two terms are, by assumption, mutually independent random samples specified as follows:   denotes the random treatment-independent contribution to the figure-of-merit of reader j (j = 1,2, ..., J), modeled as a sample from a zero-mean normal distribution with variance  ;   denotes the treatment-dependent random contribution of reader j  in treatment i, modeled as a sample from a zero-mean normal distribution with variance  . There is a notational clash with similar variance component terms defined for the DBMH model – except in that case they applied to pseudovalues. The meaning should be clear from the context. Summarizing:
+The fixed treatment effect $\tau_i$ is subject to the usual constraint, \@ref(eq:ConstraintTau). The first two terms on the right hand side of Eqn. (10.26) have their usual meanings: a constant term  $\mu$ representing performance averaged over treatments and readers, and a treatment effect $\tau_i$  ($i$ = 1,2, ..., $I$). The following two terms are, by assumption, mutually independent random samples specified as follows:  $R_j$ denotes the random treatment-independent contribution to the figure-of-merit of reader $j$ ($j$ = 1,2, ..., $J$), modeled as a sample from a zero-mean normal distribution with variance $\sigma_R^2$;  $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance  $\sigma_{\tau R}^2$. There could be a perceived notational clash with similar variance component terms defined for the DBMH model – except in that case they applied to pseudovalues. The meaning should be clear from the context. Summarizing:
 
-.	(10.27)
+\begin{equation}
+R_j \sim N(0,\sigma_R^2)\\
+(\tau R) \sim N(0,\sigma_{\tau R}^2)
+(\#eq:ORVariances)
+\end{equation}
 
-For a single dataset c = 1. An estimate of   follows from averaging over the i and j indices (the averages over the random terms are zeroes):
+For a single dataset $c$ = 1. An estimate of $\mu$  follows from averaging over the $i$ and $j$ indices (the averages over the random terms are zeroes):
 
-.	(10.28)
+\begin{equation}
+\mu = \theta_{\bullet \bullet \{1\}}
+(\#eq:ORmuEstimate)
+\end{equation}
 
 As before the dot subscript denotes an average over the replaced index. Averaging over the j index and performing a subtraction yields an estimate of  :
 
-.	(10.29)
+\begin{equation}
+\tau_i = \theta_{i \bullet \{1\}} - \theta_{\bullet \bullet \{1\}}
+(\#eq:ORtauEstimate)
+\end{equation}
 
-The   estimates obey the sum rule Eqn. Error! Reference source not found.. For example, with two treatments, the values of  must be the negatives of each other. 
+The $\tau_i$ estimates obey the constraint \@ref(eq:ConstraintTau). For example, with two treatments, the values of $\tau_i$ must be the negatives of each other: $\tau_1=-\tau_2$. 
 
-The error term on the right hand side of Eqn. (10.26) is more complex than the corresponding DBM model error term. Obuchowski and Rockette model this term with a multivariate normal distribution with a length   zero-mean vector and a   covariance matrix  . In other words,  
+The error term on the right hand side of \@ref(eq:ORModel) is more complex than the corresponding DBM model error term. Obuchowski and Rockette model this term with a multivariate normal distribution with a length $(IJ)$  zero-mean vector and a $(IJ \times IJ)$ dimensional covariance matrix $\Sigma$. In other words,  
 
-.	(10.30)
+\begin{equation}
+\epsilon_{ij\{c\}} \sim N_{IJ}(\vec{0},\Sigma)
+(\#eq:OREpsSampling)
+\end{equation}
 
-Here   is the   variate normal distribution. The covariance matrix   is defined by 4 parameters,  , defined as follows:
+Here $N_{IJ}$ is the $N_{IJ}$ variate normal distribution. The covariance matrix $\Sigma$ is defined by 4 parameters, $Var, Cov_1, Cov_2, Cov_3$, defined as follows:
 
-.	(10.31)
+\begin{equation}
+Cov(\epsilon_{ij\{c\}},\epsilon_{i'j'\{c\}}) =
+\left\{\begin{matrix}
+= Var \Rightarrow (i=i',j=j') \\
+= Cov1 \Rightarrow (i\ne i',j=j')\\ 
+= Cov2 \Rightarrow (i = i',j \ne j')\\ 
+= Cov3 \Rightarrow (i\ne i',j \ne j')
+\end{matrix}\right\}
+(\#eq:ORVarCov)
+\end{equation}
 
-Apart from fixed effects, the model in Eqn. (10.31) contains 6 parameters: 
+Apart from fixed effects, the model in \@ref(eq:ORVarCov) contains 6 parameters: 
 
-.	(10.32)
+$$\sigma_R^2,\sigma_{\tau R}^2,Var,Cov_1,Cov_2,Cov_3$$
 
-This is the same number of variance component parameters as in the DBMH model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model Eqn. (10.26) "looks" simpler because four covariance terms are "hidden" in the   term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader, as allowing treatment and reader dependencies would greatly increase the number of parameters that would need to be estimated. 
+This is the same number of variance component parameters as in the DBMH model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model  \@ref(eq:ORModel) "looks" simpler because four covariance terms are "hidden" in the $\epsilon$ term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader, as allowing treatment and reader dependencies would greatly increase the number of parameters that would need to be estimated. 
 
-It is implicit in the Obuchowski-Rockette model that the $Var$, $Cov_1$, Cov_2$, and $Cov_3$,   estimates need to be averaged over all applicable treatment-reader combinations.
+*It is implicit in the Obuchowski-Rockette model that the $Var$, $Cov_1$, Cov_2$, and $Cov_3$,   estimates need to be averaged over all applicable treatment-reader combinations.*
 
-### Structure of the covariance matrix
+### Structure of the covariance matrix {#StrCovMatrix}
+To understand the structure of this matrix, recall that the diagonal elements of a (square) covariance matrix are variances and the off-diagonal elements are covariances. With two indices $ij$ one can still imagine a square matrix where each dimension is labeled by a pair of indices $ij$. One $ij$ pair corresponds to the horizontal direction, and the other $ij$ pair corresponds to the vertical direction. To visualize this let consider the simpler situation of two treatments ($I = 2$) and three readers ($J = 3$). The resulting 6x6 covariance matrix would look like this: 
+
+$$
+\Sigma=
+\begin{bmatrix}
+(11,11) & (12,11) & (13,11) & (21,11) & (22,11) & (23,11) \\
+ & (12,12) & (13,12) & (21,12) & (22,12) & (23,12) \\ 
+ & & (13,13) & (21,13) & (22,13) & (23,13) \\ 
+ & & & (21,21) & (22,21) & (23,21) \\
+ & & & & (22,22) & (23,22) \\ 
+ & & & & & (23,23)
+\end{bmatrix}
+$$
+
+Shown in each cell of the matrix is a pair of ij-values, serving as column indices, followed by a pair of ij-values serving as row indices, and a comma separates the pairs. For example, the first column is labeled by (11,xx), where xx depends on the row. The second column is labeled (12,xx), the third column is labeled (13,xx), and the remaining columns are successively labeled (21,xx), (22,xx) and (23,xx). Likewise, the first row is labeled by (yy,11), where yy depends on the column. The following rows are labeled (yy,12), (yy,13), (yy,21), (yy,22)and (yy,23). Note that the reader index increments faster than the treatment index.
+
+The diagonal elements are evidently those cells where the row and column index-pairs are equal. These are (11,11), (12,12), (13,13), (21,21), (22,22) and (23,23). According to Eqn. (10.31) the entries in these cells would be $Var$. 
+
+$$
+\Sigma=
+\begin{bmatrix}
+Var & (12,11) & (13,11) & (21,11) & (22,11) & (23,11) \\
+ & Var & (13,12) & (21,12) & (22,12) & (23,12) \\ 
+ & & Var & (21,13) & (22,13) & (23,13) \\ 
+ & & & Var & (22,21) & (23,21) \\
+ & & & & Var & (23,22) \\ 
+ & & & & & Var
+\end{bmatrix}
+$$
+
+According to Eqn. (10.31) the entries in cells with different treatment index pairs but identical reader index pairs would be $Cov_1$ (as an example, the cell (21,11) has the same reader index, namely reader 1, but different treatment indices, 2 and 1, so it is replaced by $Cov_1$):
+
+$$
+\Sigma=
+\begin{bmatrix}
+Var & (12,11) & (13,11) & Cov_1 & (22,11) & (23,11) \\
+ & Var & (13,12) & (21,12) & Cov_1 & (23,12) \\ 
+ & & Var & (21,13) & (22,13) & Cov_1 \\ 
+ & & & Var & (22,21) & (23,21) \\
+ & & & & Var & (23,22) \\ 
+ & & & & & Var
+\end{bmatrix}
+$$
+
+Similarly, the entries in cells with identical treatment index pairs but different reader index pairs would be  $Cov_2$:
+
+$$
+\Sigma=
+\begin{bmatrix}
+Var & Cov_2 & Cov_2 & Cov_1 & (22,11) & (23,11) \\
+ & Var & Cov_2 & (21,12) & Cov_1 & (23,12) \\ 
+ &  & Var & (21,13) & (22,13) & Cov_1 \\ 
+ &  &  & Var & Cov_2 & Cov_2 \\
+ &  &  &  & Var & Cov_2 \\ 
+ &  &  &  &  & Var
+\end{bmatrix}
+$$
+
+Finally, the entries in cells with different treatment index pairs and different reader index pairs would be  $Cov_3$:
+
+$$
+\Sigma=
+\begin{bmatrix}
+Var & Cov_2 & Cov_2 & Cov_1 & Cov_3 & Cov_3 \\
+ & Var & Cov_2 & Cov_3 & Cov_1 & Cov_3 \\ 
+ &  & Var & Cov_3 & Cov_3 & Cov_1 \\ 
+ &  &  & Var & Cov_2 & Cov_2 \\
+ &  &  &  & Var & Cov_2 \\ 
+ &  &  &  &  & Var
+\end{bmatrix}
+$$
+
+To understand these terms consider how they might be estimated. Suppose one had the luxury of repeating the study with different case-sets, c = 1, 2, ..., C. Then the variance term $Var$ can be estimated as follows:
+
+$$Var=
+\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 \right \rangle_{ij}$$
+
+Of course, in practice one would use the bootstrap or the jackknife as a stand-in for the c-index, but for pedagogic purpose, one maintains the fiction that one has a large number of case-sets at one's disposal (not to mention the time spent by the readers interpreting them). Notice that the left-hand-side of Eqn. (10.38) does not have treatment or reader indices. This is because implicit in the notation is averaging the observed variances over all treatments and readers, as implied by $\left \langle  \right \rangle _{ij}$. Likewise, the covariance terms are estimated as follows:
+
+$$Cov_1=
+\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 (\theta_{i'j\{c\}}-\theta_{i'j\{\bullet\}})^2 \right \rangle_{ii',jj}$$
+
+$$Cov_2=
+\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 (\theta_{ij'\{c\}}-\theta_{ij'\{\bullet\}})^2 \right \rangle_{ii,jj'}$$
+
+$$Cov_3=
+\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 (\theta_{i'j'\{c\}}-\theta_{i'j'\{\bullet\}})^2 \right \rangle_{ii',jj'}$$
+
+*In Eqn. (10.40) the convention is that primed and unprimed variables are always different.*
+
+Since there are no treatment and reader dependencies on the left-hand-sides of the above equations, one averages the estimates as follows: 
+
+* For $Cov_1$ one averages over all combinations of *different treatments and same readers*, as denoted by  $\left \langle  \right \rangle_{ii',jj}$. 
+* For $Cov_2$ one averages over all combinations of *same treatment and different readers*, as denoted by  $\left \langle  \right \rangle_{ii,jj'}$. 
+* For $Cov_3$ one averages over all combinations of *different treatments and different readers*, as denoted by  $\left \langle  \right \rangle_{ii',jj'}$. 
+
+
+### Physical meanings of the covariance terms
+The meanings of the different terms follow a similar description to that given in \@ref(StrCovMatrix). The diagonal term  of the covariance matrix   is the variance of the figure-of-merit values obtained when reader j interprets different case-sets in treatment i: each case-set yields a number   and the variance of the C numbers, averaged over the I x J treatments and readers, is  . It captures the total variability due to varying difficulty levels of the case-sets and within-reader variability. 
+
+  is the correlation of the figure-of-merit values obtained when the same reader j interprets a case-set in different treatment  . Each case-set, starting with c = 1, yields two numbers   and  ; the process is repeated for C case-sets. The correlation of the two pairs of C-length arrays, averaged over all pairings of different treatments and same readers, is  . Because of the common contribution due to the shared reader,   will be non-zero. For large common variation, the two arrays become almost perfectly correlated, and   approaches unity. For zero common variation, the two arrays become independent, and   equals zero. Translating to covariances, one has  .
+
+  is the correlation of the figure-of-merit values obtained when different readers   interpret the same case-set in the same treatment i. As before this yields two numbers and upon repeating over C case-sets one has two C-length arrays, whose correlation, upon averaging over all distinct treatment pairings and same readers, yields  . If one assumes that common variation between different-reader same-treatment FOMs is smaller than the common variation between same-reader different-treatment FOMs, then   will be smaller than  .  This is equivalent to stating that readers agree more with themselves on different treatments than they do with other readers on the same treatment. Translating to covariances, one has  . 
+
+  is the correlation of the figure-of-merit values obtained when different readers   interpret the same case set in different treatments  , etc., yielding  . This is expected to yield the least correlation. 
+
+Summarizing, one expects the following ordering for the terms in the covariance matrix:
+
+  	.	(10.40)
 
 
 ### ORH random-reader random-case analysis
