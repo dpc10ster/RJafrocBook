@@ -16,7 +16,7 @@ This chapter starts with a "gentle" introduction to the Obuchowski and Rockette 
 
 In the first step of the gentle introduction a single reader interpreting a case-set in multiple treatments is modeled and the results compared to those obtained using DBMH fixed-reader analysis described in the previous chapter. In the second step multiple readers interpreting a case-set in multiple treatments is modeled. The two analyses, DBMH and ORH, are compared for the same dataset. The special cases of fixed-reader and fixed-case analyses are described. Single treatment analysis, where interest is in comparing average performance of readers to a fixed value, is described. Three methods of estimating the covariance matrix are described.
 
-## Single-reader multiple-treatment model
+## Single-reader multiple-treatment model {#OneRMTModel}
 Consider a single-reader providing ROC interpretations of a common case-set $\{c\}$ in multiple-treatments $i$ ($i$ = 1, 2, …, $I$). Before proceeding, we note that this is not homologous (i.e., formally equivalent) to multiple-readers providing ROC interpretations in a single treatment, §10.7; this is because reader is a random factor while treatment is not. The figure of merit $\theta$  is modeled as:
 
 \begin{equation}
@@ -157,7 +157,7 @@ Sampling different case-sets, as required by Eqn. (10.16), is unrealistic and in
 The bootstrap method of estimating the covariance matrix, Eqn. (10.17), is a direct translation of Eqn. (10.16). Alternatively, one could have used the jackknife FOM values $\theta_{i(k)}$, i.e., the figure of merit with a particular case removed, for all cases, to estimate the covariance matrix:
 
 \begin{equation}
-\Sigma_{ii'}\mid_{jk} =\frac{(K-1)^2}{K} \left [ \frac{1}{K-1}\sum_{k=1}^{K} \left ( \theta_{i\{k\}} - \theta_{i\{\bullet\}} \right) \left ( \theta_{i'\{k\}} - \theta_{i'\{\bullet\}} \right) \right ]
+\Sigma_{ii'}\mid_{jk} =\frac{(K-1)^2}{K} \left [ \frac{1}{K-1}\sum_{k=1}^{K} \left ( \theta_{i(k)} - \theta_{i(\bullet)} \right) \left ( \theta_{i'(k)} - \theta_{i'(\bullet)} \right) \right ]
 (\#eq:EstimateSigmaJackknife)
 \end{equation}
 
@@ -585,20 +585,20 @@ The analysis described next considers both readers and cases as random effects. 
 
 \begin{equation}
 F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
-(\#eq:FORH)
+(\#eq:F-ORH)
 \end{equation}
 
-\@ref(eq:FORH) incorporates Hillis’ modification, which ensures that the constraint \@ref(eq:FORH) is always obeyed and avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated directly using FOM values, not pseudovalues):
+\@ref(eq:F-ORH) incorporates Hillis’ modification, which ensures that the constraint \@ref(eq:CovOrderings) is always obeyed and avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated directly using FOM values, not pseudovalues):
 
 \begin{equation}
 MS(T)=\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
 MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})^2
-(\#eq:MSORH)
+(\#eq:MS-ORH)
 \end{equation}
 
-In their original paper [@RN1450] Obuchowski and Rockette state that their proposed test statistic F (basically \@ref(eq:FORH) without the constraint implied by the $\max$ function) is distributed as an F-statistic with numerator degree of freedom  $ndf=I-1$ and denominator degree of freedom $ddf=(I-1)(J-1)$. It turns out that then the test is unduly conservative, meaning it is unusually reluctant to reject the null hypothesis.
+In their original paper [@RN1450] Obuchowski and Rockette state that their proposed test statistic F (basically \@ref(eq:F-ORH) without the constraint implied by the $\max$ function) is distributed as an F-statistic with numerator degree of freedom  $ndf=I-1$ and denominator degree of freedom $ddf=(I-1)(J-1)$. It turns out that then the test is unduly conservative, meaning it is unusually reluctant to reject the null hypothesis.
 
-In this connection the author has two historical anecdotes. The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski [@RN1971;@RN1972], using the unmodified version of \@ref(eq:FORH), predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study. 
+In this connection the author has two historical anecdotes. The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski [@RN1971;@RN1972], using the unmodified version of \@ref(eq:F-ORH), predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study. 
 
 The second story is that the author once conducted NH simulations using the Roe-Metz simulator described in the preceding chapter and the significance testing as described in the Obuchowski-Rockette paper: the method did not reject the null hypothesis even once in 2000 trials! Recall that with $\alpha = 0.05$  a valid test should reject the null hypothesis about $100\pm20$ times in 2000 trials. The author recalls (ca. 2004) telling Dr. Steve Hillis about this issue, and he suggested a different value for the denominator degrees of freedom (ddf), substitution of which magically solved the problem, i.e., the simulations rejected the null hypothesis about 5% of the time; the new $ddf$ is defined below ($ndf$ is unchanged), with the subscript H denoting the Hillis modification:
 
@@ -612,24 +612,29 @@ ddf_H=\frac{\left [ MS(TR) + J \max(Cov_2-Cov_3)\right ]^2}{\frac{\left [ MS(TR)
 (\#eq:ddfH)
 \end{equation}
 
-If  $Cov_2<Cov_3$ this reduces to the expression originally suggested by Obuchowski and Rockette. With these changes, under the null hypothesis, the observed statistic $F_{ORH}$, defined in \@ref(eq:FORH), is distributed as an F-statistic with  $I-1$ and $ddfH$ degrees of freedom1-3: 
+If  $Cov_2<Cov_3$ this reduces to the expression originally suggested by Obuchowski and Rockette. With these changes, under the null hypothesis, the observed statistic $F_{ORH}$, defined in \@ref(eq:F-ORH), is distributed as an F-statistic with  $I-1$ and $ddf_H$ degrees of freedom [@RN1772;@RN1865;@RN1866]: 
 
 \begin{equation}
-F_{ORH}\sim F_{ndf,ddfH}
-(\#eq:SamplingDistrFORH)
+F_{ORH}\sim F_{ndf,ddf_H}
+(\#eq:SamplingDistrF-ORH)
 \end{equation}
 
 ### Decision rule, p-value and confidence interval
-The critical value of the F-statistic for rejection of the null hypothesis is  , i.e., that value such that fraction   of the area under the distribution lies to the left of the critical value. From the definition of  , rejection of the NH is more likely if increases, meaning the treatment effect is larger, decreases (there is less contamination of the treatment effect by treatment-reader variability), the greater of Cov2 or Cov3 decreases (there is less contamination of the treatment effect by between-reader and treatment-reader variability),   increases (allowing a greater probability of Type I errors), ndf increases (the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH) or  increases (this lowers the critical value of the F-statistic). 
+The critical value of the F-statistic for rejection of the null hypothesis is $F_{1-\alpha,ndf,ddf_H}$ , i.e., that value such that fraction $1-\alpha$ of the area under the distribution lies to the left of the critical value. From definition \@ref(eq:F-ORH), rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger;  $MS(TR)$ decreases meaning there is less contamination of the treatment effect by treatment-reader variability; the greater of $Cov2$ or $Cov3$ decreases, meaning there is less contamination of the treatment effect by between-reader and treatment-reader variability, $\alpha$  increases, meaning one is allowing a greater probability of Type I errors, $ndf$ increases, meaning the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH or $ddf_H$  increases, as this lowers the critical value of the F-statistic. 
 
-The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than   could be observed by chance. In other words, it is the area under the F-distribution  that lies above the observed value :
+The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{ORH}$ could be observed by chance. In other words, it is the area under the F-distribution $F_{ndf,ddf_H}$ that lies above the observed value $F_{ORH}$:
+
+\begin{equation}
+p=\Pr(F>F_{ORH} \mid F\sim F_{ndf,ddf_H})
+(\#eq:pValueORHRRRC)
+\end{equation}
 
 ### Special cases
 
 ### Single-treatment multiple-reader analysis
 Suppose one has data in a single treatment and multiple readers are involved. One wishes to determine if the performance of the readers as a group equals some specified value. 
 
-In a §10.2 single-reader multiple-treatment analysis was described. Attention now turns to single-treatment multiple-reader analysis and they are not the same! After all, treatment is a fixed factor while reader is a random factor; so one cannot simply use the previous analysis with reader and treatment interchanged (my graduate student tried to do just that, and he is quite smart, hence the reason for this warning; one can use the previous analysis if reader is regarded as a fixed factor, and a function in RJafroc called `StSignificanceTestingSingleFixedFactor()` does just that). 
+In \@ref(OneRMTModel) single-reader multiple-treatment analysis was described. Attention now turns to single-treatment multiple-reader analysis and they are not the same! After all, treatment is a fixed factor while reader is a random factor; so one cannot simply use the previous analysis with reader and treatment interchanged (my graduate student tried to do just that, and he is quite smart, hence the reason for this warning; one can use the previous analysis if reader is regarded as a fixed factor, and a function in RJafroc called `StSignificanceTestingSingleFixedFactor()` does just that). 
 
 In the analysis described in this section reader is regarded as a random effect. The average performance of the readers is estimated and compared to a specified value. Hillis1,2,7 has described the appropriate modification of the OR model when all readers read cases in a single treatment. Two approaches are described, one using the DBM pseudovalue based model and the other based on the OR model with appropriate modification. The second approach is summarized below.
 
@@ -702,9 +707,6 @@ The original publication by Dorfman Berbaum and Metz5 and the subsequent one by 
 This concludes two methods used to analyze ROC MRMC datasets. A third method, restricted to the empirical AUC, is also available 17-20. As noted earlier, the author prefers methods that are applicable to other estimates of AUC, not just the empirical area, and to other data collection paradigms, and for which software is readily available. 
 
 The next chapter takes on the subject of sample size estimation using either DBMH or the ORH method. 
-
-
-
 
 ## References  
 
