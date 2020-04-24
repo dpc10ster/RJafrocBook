@@ -59,9 +59,10 @@ Finally, and this is where I had some difficulty understanding what is going on,
 Here $N_I$ is the I-variate normal distribution (i.e., each sample yields $I$ random numbers). Obuchowski and Rockette assumed the following structure for the covariance matrix (they describe a more general model, but here one restricts to the simpler one):
 
 \begin{equation}
-\Sigma=Cov\left ( \epsilon_{i\{c\}}, \epsilon_{i'\{c\}} \right )\\
-=Var \Rightarrow i=i'\\
-=Cov_1 \Rightarrow i\neq i'
+\Sigma=Cov\left ( \epsilon_{i\{c\}}, \epsilon_{i'\{c\}} \right )=\left\{\begin{matrix}
+Var \qquad (i=i')\\ 
+Cov_1 \qquad (i\neq i')
+\end{matrix}\right.
 (\#eq:DefinitionSigma)
 \end{equation}
 
@@ -518,7 +519,7 @@ Or equivalently, in terms of the F-distribution [@RN1772]:
 
 \begin{equation}
 F_{1R} \equiv \frac{MS(T)}{Var-Cov_1} \sim F_{I-1, \infty}
-(\#eq:F1RMT)
+(\#eq:DefF1RMT)
 \end{equation}
 
 ### An aside on the relation between the chisquare and the F-distribution with infinite ddf
@@ -630,8 +631,10 @@ The general Obuchowski and Rockette model for fully paired multiple-reader multi
 The fixed treatment effect $\tau_i$ is subject to the usual constraint, \@ref(eq:ConstraintTau). The first two terms on the right hand side of \@ref(eq:ORModel) have their usual meanings: a constant term  $\mu$ representing performance averaged over treatments and readers, and a treatment effect $\tau_i$  ($i$ = 1,2, ..., $I$). The following two terms are, by assumption, mutually independent random samples specified as follows:  $R_j$ denotes the random treatment-independent contribution to the figure-of-merit of reader $j$ ($j$ = 1,2, ..., $J$), modeled as a sample from a zero-mean normal distribution with variance $\sigma_R^2$;  $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance  $\sigma_{\tau R}^2$. There could be a perceived notational clash with similar variance component terms defined for the DBMH model – except in that case they applied to pseudovalues. The meaning should be clear from the context. Summarizing:
 
 \begin{equation}
-R_j \sim N(0,\sigma_R^2)\\
-(\tau R) \sim N(0,\sigma_{\tau R}^2)
+\left\{\begin{matrix}
+R_j \sim N(0,\sigma_R^2)\\ 
+{\tau R} \sim N(0,\sigma_{\tau R}^2)
+\end{matrix}\right.
 (\#eq:ORVariances)
 \end{equation}
 
@@ -675,7 +678,7 @@ Apart from fixed effects, the model implied by \@ref(eq:ORModel) and \@ref(eq:OR
 
 $$\sigma_R^2,\sigma_{\tau R}^2,Var,Cov_1,Cov_2,Cov_3$$
 
-This is the same number of variance component parameters as in the DBMH model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model  \@ref(eq:ORModel) "looks" simpler because four covariance terms are "hidden" in the $\epsilon$ term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader, as allowing treatment and reader dependencies would greatly increase the number of parameters that would need to be estimated. 
+This is the same number of variance component parameters as in the DBMH model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model  \@ref(eq:ORModel) "looks" simpler because four covariance terms are encapsulated in the $\epsilon$ term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader, as allowing treatment and reader dependencies would greatly increase the number of parameters that would need to be estimated. 
 
 *It is implicit in the Obuchowski-Rockette model that the $Var$, $Cov_1$, Cov_2$, and $Cov_3$,   estimates need to be averaged over all applicable treatment-reader combinations.*
 
@@ -764,14 +767,11 @@ Var=
 Of course, in practice one would use the bootstrap or the jackknife as a stand-in for the c-index, but for pedagogic purpose, one maintains the fiction that one has a large number of case-sets at one's disposal (not to mention the time spent by the readers interpreting them). Notice that the left-hand-side of \@ref(eq:EstVariance) lacks treatment or reader indices. This is because implicit in the notation is averaging the observed variances over all treatments and readers, as implied by $\left \langle  \right \rangle _{ij}$. Likewise, the covariance terms are estimated as follows:
 
 \begin{equation}
-Cov_1=
-\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 (\theta_{i'j\{c\}}-\theta_{i'j\{\bullet\}})^2 \right \rangle_{ii',jj}\\
-
-Cov_2=
-\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 (\theta_{ij'\{c\}}-\theta_{ij'\{\bullet\}})^2 \right \rangle_{ii,jj'}\\
-
-Cov_3=
-\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 (\theta_{i'j'\{c\}}-\theta_{i'j'\{\bullet\}})^2 \right \rangle_{ii',jj'}
+Cov=\left\{\begin{matrix}
+Cov_1=\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 (\theta_{i'j\{c\}}-\theta_{i'j\{\bullet\}})^2 \right \rangle_{ii',jj}\\ 
+Cov_2=\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 (\theta_{ij'\{c\}}-\theta_{ij'\{\bullet\}})^2 \right \rangle_{ii,jj'}\\ 
+Cov_3=\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\bullet\}})^2 (\theta_{i'j'\{c\}}-\theta_{i'j'\{\bullet\}})^2 \right \rangle_{ii',jj'}
+\end{matrix}\right.
 (\#eq:EstCov)
 \end{equation}
 
@@ -820,8 +820,11 @@ F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
 \@ref(eq:F-ORH) incorporates Hillis’ modification, which ensures that the constraint \@ref(eq:CovOrderings) is always obeyed and avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated directly using FOM values, not pseudovalues):
 
 \begin{equation}
+\left.\begin{matrix}
 MS(T)=\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
-MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})^2
+\\ 
+MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})
+\end{matrix}\right\}
 (\#eq:MS-ORH)
 \end{equation}
 
