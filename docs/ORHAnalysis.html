@@ -24,7 +24,7 @@
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2020-04-20" />
+<meta name="date" content="2020-04-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -134,6 +134,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="a-note-on-the-online-distribution-mechanism-of-the-book.html"><a href="a-note-on-the-online-distribution-mechanism-of-the-book.html"><i class="fa fa-check"></i>A note on the online distribution mechanism of the book</a></li>
+<li class="chapter" data-level="" data-path="contributing-to-this-book.html"><a href="contributing-to-this-book.html"><i class="fa fa-check"></i>Contributing to this book</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="NpvPpv.html"><a href="NpvPpv.html"><i class="fa fa-check"></i><b>2</b> Negative and Positive Predictive Values</a>
 <ul>
@@ -688,55 +690,55 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 <h3><span class="header-section-number">8.2.5</span> Code illustrating the covariance matrix</h3>
 <p>As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method <span class="citation">(DeLong, DeLong, and Clarke-Pearson <a href="#ref-RN112" role="doc-biblioref">1988</a>)</span>. In Chapter 07, these methods were described in the context of estimating the variance of AUC. <a href="ORHAnalysis.html#eq:EstimateSigmaBootstrap">(8.10)</a> and <a href="ORHAnalysis.html#eq:EstimateSigmaJackknife">(8.11)</a> extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A and implemented in file VarCovMtrxDLStr.R. It has been confirmed by the author that the implementation of the DeLong method <span class="citation">(DeLong, DeLong, and Clarke-Pearson <a href="#ref-RN112" role="doc-biblioref">1988</a>)</span> in file VarCovMtrxDLStr.R gives identical results to those yielded by the SAS macro attributed to DeLong. The file name stands for “variance covariance matrix according to the DeLong structural components method” described in five unnumbered equation following Eqn. 4 in the cited reference.</p>
 <p>The jackknife, bootstrap and the DeLong methods are used in file mainVarCov1.R, a listing and explanation of which appears in (TBA) Online Appendix 10.B. Source the file yielding the following code output:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="ORHAnalysis.html#cb1-1"></a>seed &lt;-<span class="st"> </span><span class="dv">1</span>;<span class="kw">set.seed</span>(seed)</span>
-<span id="cb1-2"><a href="ORHAnalysis.html#cb1-2"></a>jSelect &lt;-<span class="st"> </span><span class="dv">1</span>  <span class="co"># selects the reader to be analyzed</span></span>
-<span id="cb1-3"><a href="ORHAnalysis.html#cb1-3"></a>rocData1R &lt;-<span class="st"> </span><span class="kw">DfExtractDataset</span>(dataset02, <span class="dt">rdrs =</span> jSelect)</span>
-<span id="cb1-4"><a href="ORHAnalysis.html#cb1-4"></a></span>
-<span id="cb1-5"><a href="ORHAnalysis.html#cb1-5"></a>zik1 &lt;-<span class="st"> </span>rocData1R<span class="op">$</span>NL[,<span class="dv">1</span>,,<span class="dv">1</span>];K &lt;-<span class="st"> </span><span class="kw">dim</span>(zik1)[<span class="dv">2</span>];I &lt;-<span class="st"> </span><span class="kw">dim</span>(zik1)[<span class="dv">1</span>]</span>
-<span id="cb1-6"><a href="ORHAnalysis.html#cb1-6"></a>zik2 &lt;-<span class="st"> </span>rocData1R<span class="op">$</span>LL[,<span class="dv">1</span>,,<span class="dv">1</span>];K2 &lt;-<span class="st"> </span><span class="kw">dim</span>(zik2)[<span class="dv">2</span>];K1 &lt;-<span class="st"> </span>K<span class="op">-</span>K2;zik1 &lt;-<span class="st"> </span>zik1[,<span class="dv">1</span><span class="op">:</span>K1]</span>
-<span id="cb1-7"><a href="ORHAnalysis.html#cb1-7"></a></span>
-<span id="cb1-8"><a href="ORHAnalysis.html#cb1-8"></a><span class="co"># jk = jackknife</span></span>
-<span id="cb1-9"><a href="ORHAnalysis.html#cb1-9"></a><span class="co"># rjjk = RJafroc, covEstMethod = &quot;jackknife&quot;</span></span>
-<span id="cb1-10"><a href="ORHAnalysis.html#cb1-10"></a><span class="co"># rjbs = RJafroc, covEstMethod = &quot;bootstrap&quot;</span></span>
-<span id="cb1-11"><a href="ORHAnalysis.html#cb1-11"></a><span class="co"># bs = bootstrap</span></span>
-<span id="cb1-12"><a href="ORHAnalysis.html#cb1-12"></a><span class="co"># dl = DeLong</span></span>
-<span id="cb1-13"><a href="ORHAnalysis.html#cb1-13"></a>ret1 &lt;-<span class="st"> </span><span class="kw">VarCov1_Jk</span>(zik1, zik2)</span>
-<span id="cb1-14"><a href="ORHAnalysis.html#cb1-14"></a>Var &lt;-<span class="st"> </span>ret1<span class="op">$</span>Var;Cov1 &lt;-<span class="st"> </span>ret1<span class="op">$</span>Cov1 <span class="co"># use these (i.e., jackknife) as default values </span></span>
-<span id="cb1-15"><a href="ORHAnalysis.html#cb1-15"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_jk&quot;</span> =<span class="st"> </span>Cov1, <span class="st">&quot;Var_jk&quot;</span> =<span class="st"> </span>Var)</span>
-<span id="cb1-16"><a href="ORHAnalysis.html#cb1-16"></a><span class="co">#&gt;         Cov_jk       Var_jk</span></span>
-<span id="cb1-17"><a href="ORHAnalysis.html#cb1-17"></a><span class="co">#&gt; 1 0.0003734661 0.0006989006</span></span>
-<span id="cb1-18"><a href="ORHAnalysis.html#cb1-18"></a></span>
-<span id="cb1-19"><a href="ORHAnalysis.html#cb1-19"></a>ret4 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>)<span class="op">$</span>varComp</span>
-<span id="cb1-20"><a href="ORHAnalysis.html#cb1-20"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjjk&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>cov1, <span class="st">&quot;Var_rjjk&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>var)</span>
-<span id="cb1-21"><a href="ORHAnalysis.html#cb1-21"></a><span class="co">#&gt;       Cov_rjjk     Var_rjjk</span></span>
-<span id="cb1-22"><a href="ORHAnalysis.html#cb1-22"></a><span class="co">#&gt; 1 0.0003734661 0.0006989006</span></span>
-<span id="cb1-23"><a href="ORHAnalysis.html#cb1-23"></a></span>
-<span id="cb1-24"><a href="ORHAnalysis.html#cb1-24"></a>ret2 &lt;-<span class="st"> </span><span class="kw">VarCov1_Bs</span>(zik1, zik2) </span>
-<span id="cb1-25"><a href="ORHAnalysis.html#cb1-25"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_bs&quot;</span> =<span class="st"> </span>ret2<span class="op">$</span>Cov1, <span class="st">&quot;Var_bs&quot;</span> =<span class="st"> </span>ret2<span class="op">$</span>Var) <span class="co"># local code uses 2000 nBoots</span></span>
-<span id="cb1-26"><a href="ORHAnalysis.html#cb1-26"></a><span class="co">#&gt;         Cov_bs       Var_bs</span></span>
-<span id="cb1-27"><a href="ORHAnalysis.html#cb1-27"></a><span class="co">#&gt; 1 0.0003466804 0.0006738506</span></span>
-<span id="cb1-28"><a href="ORHAnalysis.html#cb1-28"></a></span>
-<span id="cb1-29"><a href="ORHAnalysis.html#cb1-29"></a>ret5 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">covEstMethod =</span> <span class="st">&quot;bootstrap&quot;</span>, <span class="dt">nBoots =</span> <span class="dv">200</span>)<span class="op">$</span>varComp</span>
-<span id="cb1-30"><a href="ORHAnalysis.html#cb1-30"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>cov1, <span class="st">&quot;Var_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>var)</span>
-<span id="cb1-31"><a href="ORHAnalysis.html#cb1-31"></a><span class="co">#&gt;      Cov_rjbs     Var_rjbs</span></span>
-<span id="cb1-32"><a href="ORHAnalysis.html#cb1-32"></a><span class="co">#&gt; 1 0.000283905 0.0005845354</span></span>
-<span id="cb1-33"><a href="ORHAnalysis.html#cb1-33"></a></span>
-<span id="cb1-34"><a href="ORHAnalysis.html#cb1-34"></a>ret5 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">covEstMethod =</span> <span class="st">&quot;bootstrap&quot;</span>, <span class="dt">nBoots =</span> <span class="dv">2000</span>)<span class="op">$</span>varComp</span>
-<span id="cb1-35"><a href="ORHAnalysis.html#cb1-35"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>cov1, <span class="st">&quot;Var_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>var) <span class="co"># matches local code with 2000 nBoots, provided seeds are identical</span></span>
-<span id="cb1-36"><a href="ORHAnalysis.html#cb1-36"></a><span class="co">#&gt;       Cov_rjbs     Var_rjbs</span></span>
-<span id="cb1-37"><a href="ORHAnalysis.html#cb1-37"></a><span class="co">#&gt; 1 0.0003466804 0.0006738506</span></span>
-<span id="cb1-38"><a href="ORHAnalysis.html#cb1-38"></a></span>
-<span id="cb1-39"><a href="ORHAnalysis.html#cb1-39"></a>ret5 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">covEstMethod =</span> <span class="st">&quot;bootstrap&quot;</span>, <span class="dt">nBoots =</span> <span class="dv">20000</span>)<span class="op">$</span>varComp</span>
-<span id="cb1-40"><a href="ORHAnalysis.html#cb1-40"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>cov1, <span class="st">&quot;Var_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>var)</span>
-<span id="cb1-41"><a href="ORHAnalysis.html#cb1-41"></a><span class="co">#&gt;       Cov_rjbs     Var_rjbs</span></span>
-<span id="cb1-42"><a href="ORHAnalysis.html#cb1-42"></a><span class="co">#&gt; 1 0.0003680714 0.0006862668</span></span>
-<span id="cb1-43"><a href="ORHAnalysis.html#cb1-43"></a></span>
-<span id="cb1-44"><a href="ORHAnalysis.html#cb1-44"></a>mtrxDLStr &lt;-<span class="st"> </span><span class="kw">VarCovMtrxDLStr</span>(rocData1R)</span>
-<span id="cb1-45"><a href="ORHAnalysis.html#cb1-45"></a>ret3 &lt;-<span class="st"> </span><span class="kw">VarCovs</span>(mtrxDLStr)</span>
-<span id="cb1-46"><a href="ORHAnalysis.html#cb1-46"></a></span>
-<span id="cb1-47"><a href="ORHAnalysis.html#cb1-47"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_dl&quot;</span> =<span class="st"> </span>ret3<span class="op">$</span>cov1, <span class="st">&quot;Var_dl&quot;</span> =<span class="st"> </span>ret3<span class="op">$</span>var)</span>
-<span id="cb1-48"><a href="ORHAnalysis.html#cb1-48"></a><span class="co">#&gt;         Cov_dl       Var_dl</span></span>
-<span id="cb1-49"><a href="ORHAnalysis.html#cb1-49"></a><span class="co">#&gt; 1 0.0003684357 0.0006900766</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="ORHAnalysis.html#cb26-1"></a>seed &lt;-<span class="st"> </span><span class="dv">1</span>;<span class="kw">set.seed</span>(seed)</span>
+<span id="cb26-2"><a href="ORHAnalysis.html#cb26-2"></a>jSelect &lt;-<span class="st"> </span><span class="dv">1</span>  <span class="co"># selects the reader to be analyzed</span></span>
+<span id="cb26-3"><a href="ORHAnalysis.html#cb26-3"></a>rocData1R &lt;-<span class="st"> </span><span class="kw">DfExtractDataset</span>(dataset02, <span class="dt">rdrs =</span> jSelect)</span>
+<span id="cb26-4"><a href="ORHAnalysis.html#cb26-4"></a></span>
+<span id="cb26-5"><a href="ORHAnalysis.html#cb26-5"></a>zik1 &lt;-<span class="st"> </span>rocData1R<span class="op">$</span>NL[,<span class="dv">1</span>,,<span class="dv">1</span>];K &lt;-<span class="st"> </span><span class="kw">dim</span>(zik1)[<span class="dv">2</span>];I &lt;-<span class="st"> </span><span class="kw">dim</span>(zik1)[<span class="dv">1</span>]</span>
+<span id="cb26-6"><a href="ORHAnalysis.html#cb26-6"></a>zik2 &lt;-<span class="st"> </span>rocData1R<span class="op">$</span>LL[,<span class="dv">1</span>,,<span class="dv">1</span>];K2 &lt;-<span class="st"> </span><span class="kw">dim</span>(zik2)[<span class="dv">2</span>];K1 &lt;-<span class="st"> </span>K<span class="op">-</span>K2;zik1 &lt;-<span class="st"> </span>zik1[,<span class="dv">1</span><span class="op">:</span>K1]</span>
+<span id="cb26-7"><a href="ORHAnalysis.html#cb26-7"></a></span>
+<span id="cb26-8"><a href="ORHAnalysis.html#cb26-8"></a><span class="co"># jk = jackknife</span></span>
+<span id="cb26-9"><a href="ORHAnalysis.html#cb26-9"></a><span class="co"># rjjk = RJafroc, covEstMethod = &quot;jackknife&quot;</span></span>
+<span id="cb26-10"><a href="ORHAnalysis.html#cb26-10"></a><span class="co"># rjbs = RJafroc, covEstMethod = &quot;bootstrap&quot;</span></span>
+<span id="cb26-11"><a href="ORHAnalysis.html#cb26-11"></a><span class="co"># bs = bootstrap</span></span>
+<span id="cb26-12"><a href="ORHAnalysis.html#cb26-12"></a><span class="co"># dl = DeLong</span></span>
+<span id="cb26-13"><a href="ORHAnalysis.html#cb26-13"></a>ret1 &lt;-<span class="st"> </span><span class="kw">VarCov1_Jk</span>(zik1, zik2)</span>
+<span id="cb26-14"><a href="ORHAnalysis.html#cb26-14"></a>Var &lt;-<span class="st"> </span>ret1<span class="op">$</span>Var;Cov1 &lt;-<span class="st"> </span>ret1<span class="op">$</span>Cov1 <span class="co"># use these (i.e., jackknife) as default values </span></span>
+<span id="cb26-15"><a href="ORHAnalysis.html#cb26-15"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_jk&quot;</span> =<span class="st"> </span>Cov1, <span class="st">&quot;Var_jk&quot;</span> =<span class="st"> </span>Var)</span>
+<span id="cb26-16"><a href="ORHAnalysis.html#cb26-16"></a><span class="co">#&gt;         Cov_jk       Var_jk</span></span>
+<span id="cb26-17"><a href="ORHAnalysis.html#cb26-17"></a><span class="co">#&gt; 1 0.0003734661 0.0006989006</span></span>
+<span id="cb26-18"><a href="ORHAnalysis.html#cb26-18"></a></span>
+<span id="cb26-19"><a href="ORHAnalysis.html#cb26-19"></a>ret4 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>)<span class="op">$</span>varComp</span>
+<span id="cb26-20"><a href="ORHAnalysis.html#cb26-20"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjjk&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>cov1, <span class="st">&quot;Var_rjjk&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>var)</span>
+<span id="cb26-21"><a href="ORHAnalysis.html#cb26-21"></a><span class="co">#&gt;       Cov_rjjk     Var_rjjk</span></span>
+<span id="cb26-22"><a href="ORHAnalysis.html#cb26-22"></a><span class="co">#&gt; 1 0.0003734661 0.0006989006</span></span>
+<span id="cb26-23"><a href="ORHAnalysis.html#cb26-23"></a></span>
+<span id="cb26-24"><a href="ORHAnalysis.html#cb26-24"></a>ret2 &lt;-<span class="st"> </span><span class="kw">VarCov1_Bs</span>(zik1, zik2) </span>
+<span id="cb26-25"><a href="ORHAnalysis.html#cb26-25"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_bs&quot;</span> =<span class="st"> </span>ret2<span class="op">$</span>Cov1, <span class="st">&quot;Var_bs&quot;</span> =<span class="st"> </span>ret2<span class="op">$</span>Var) <span class="co"># local code uses 2000 nBoots</span></span>
+<span id="cb26-26"><a href="ORHAnalysis.html#cb26-26"></a><span class="co">#&gt;         Cov_bs       Var_bs</span></span>
+<span id="cb26-27"><a href="ORHAnalysis.html#cb26-27"></a><span class="co">#&gt; 1 0.0003466804 0.0006738506</span></span>
+<span id="cb26-28"><a href="ORHAnalysis.html#cb26-28"></a></span>
+<span id="cb26-29"><a href="ORHAnalysis.html#cb26-29"></a>ret5 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">covEstMethod =</span> <span class="st">&quot;bootstrap&quot;</span>, <span class="dt">nBoots =</span> <span class="dv">200</span>)<span class="op">$</span>varComp</span>
+<span id="cb26-30"><a href="ORHAnalysis.html#cb26-30"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>cov1, <span class="st">&quot;Var_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>var)</span>
+<span id="cb26-31"><a href="ORHAnalysis.html#cb26-31"></a><span class="co">#&gt;      Cov_rjbs     Var_rjbs</span></span>
+<span id="cb26-32"><a href="ORHAnalysis.html#cb26-32"></a><span class="co">#&gt; 1 0.000283905 0.0005845354</span></span>
+<span id="cb26-33"><a href="ORHAnalysis.html#cb26-33"></a></span>
+<span id="cb26-34"><a href="ORHAnalysis.html#cb26-34"></a>ret5 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">covEstMethod =</span> <span class="st">&quot;bootstrap&quot;</span>, <span class="dt">nBoots =</span> <span class="dv">2000</span>)<span class="op">$</span>varComp</span>
+<span id="cb26-35"><a href="ORHAnalysis.html#cb26-35"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>cov1, <span class="st">&quot;Var_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>var) <span class="co"># matches local code with 2000 nBoots, provided seeds are identical</span></span>
+<span id="cb26-36"><a href="ORHAnalysis.html#cb26-36"></a><span class="co">#&gt;       Cov_rjbs     Var_rjbs</span></span>
+<span id="cb26-37"><a href="ORHAnalysis.html#cb26-37"></a><span class="co">#&gt; 1 0.0003466804 0.0006738506</span></span>
+<span id="cb26-38"><a href="ORHAnalysis.html#cb26-38"></a></span>
+<span id="cb26-39"><a href="ORHAnalysis.html#cb26-39"></a>ret5 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">covEstMethod =</span> <span class="st">&quot;bootstrap&quot;</span>, <span class="dt">nBoots =</span> <span class="dv">20000</span>)<span class="op">$</span>varComp</span>
+<span id="cb26-40"><a href="ORHAnalysis.html#cb26-40"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>cov1, <span class="st">&quot;Var_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>var)</span>
+<span id="cb26-41"><a href="ORHAnalysis.html#cb26-41"></a><span class="co">#&gt;       Cov_rjbs     Var_rjbs</span></span>
+<span id="cb26-42"><a href="ORHAnalysis.html#cb26-42"></a><span class="co">#&gt; 1 0.0003680714 0.0006862668</span></span>
+<span id="cb26-43"><a href="ORHAnalysis.html#cb26-43"></a></span>
+<span id="cb26-44"><a href="ORHAnalysis.html#cb26-44"></a>mtrxDLStr &lt;-<span class="st"> </span><span class="kw">VarCovMtrxDLStr</span>(rocData1R)</span>
+<span id="cb26-45"><a href="ORHAnalysis.html#cb26-45"></a>ret3 &lt;-<span class="st"> </span><span class="kw">VarCovs</span>(mtrxDLStr)</span>
+<span id="cb26-46"><a href="ORHAnalysis.html#cb26-46"></a></span>
+<span id="cb26-47"><a href="ORHAnalysis.html#cb26-47"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_dl&quot;</span> =<span class="st"> </span>ret3<span class="op">$</span>cov1, <span class="st">&quot;Var_dl&quot;</span> =<span class="st"> </span>ret3<span class="op">$</span>var)</span>
+<span id="cb26-48"><a href="ORHAnalysis.html#cb26-48"></a><span class="co">#&gt;         Cov_dl       Var_dl</span></span>
+<span id="cb26-49"><a href="ORHAnalysis.html#cb26-49"></a><span class="co">#&gt; 1 0.0003684357 0.0006900766</span></span></code></pre></div>
 </div>
 <div id="tba-discussion-of-above-code" class="section level3" number="8.2.6">
 <h3><span class="header-section-number">8.2.6</span> TBA Discussion of above code</h3>
@@ -775,10 +777,10 @@ F_{1R} \equiv \frac{MS(T)}{Var-Cov_1} \sim F_{I-1, \infty}
 \end{equation}\]</span></p>
 <p><a href="ORHAnalysis.html#eq:Chisqr2F">(8.18)</a> implies that the <span class="math inline">\(1-\alpha\)</span> quantile of the F-distribution with <span class="math inline">\(ndf=I-1\)</span> and <span class="math inline">\(ddf=\infty\)</span> equals the <span class="math inline">\(1-\alpha\)</span> quantile of the <span class="math inline">\(\chi_{I-1}^2\)</span> distribution <em>divided by <span class="math inline">\(I-1\)</span></em>.</p>
 <p>Here is an <code>R</code> illustration of this theorem for <span class="math inline">\(I-1 = 4\)</span> and <span class="math inline">\(\alpha = 0.05\)</span>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="ORHAnalysis.html#cb2-1"></a><span class="kw">qf</span>(<span class="fl">0.05</span>, <span class="dv">4</span>, <span class="ot">Inf</span>)</span>
-<span id="cb2-2"><a href="ORHAnalysis.html#cb2-2"></a><span class="co">#&gt; [1] 0.1776808</span></span>
-<span id="cb2-3"><a href="ORHAnalysis.html#cb2-3"></a><span class="kw">qchisq</span>(<span class="fl">0.05</span>,<span class="dv">4</span>)<span class="op">/</span><span class="dv">4</span></span>
-<span id="cb2-4"><a href="ORHAnalysis.html#cb2-4"></a><span class="co">#&gt; [1] 0.1776808</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="ORHAnalysis.html#cb27-1"></a><span class="kw">qf</span>(<span class="fl">0.05</span>, <span class="dv">4</span>, <span class="ot">Inf</span>)</span>
+<span id="cb27-2"><a href="ORHAnalysis.html#cb27-2"></a><span class="co">#&gt; [1] 0.1776808</span></span>
+<span id="cb27-3"><a href="ORHAnalysis.html#cb27-3"></a><span class="kw">qchisq</span>(<span class="fl">0.05</span>,<span class="dv">4</span>)<span class="op">/</span><span class="dv">4</span></span>
+<span id="cb27-4"><a href="ORHAnalysis.html#cb27-4"></a><span class="co">#&gt; [1] 0.1776808</span></span></code></pre></div>
 </div>
 <div id="p-value-and-confidence-interval-1" class="section level3" number="8.3.2">
 <h3><span class="header-section-number">8.3.2</span> p-value and confidence interval</h3>
@@ -797,63 +799,63 @@ CI_{1-\alpha} = (\theta_{i\bullet} - \theta_{i&#39;\bullet}) \pm t_{\alpha/2,\in
 <div id="comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments" class="section level3" number="8.3.3">
 <h3><span class="header-section-number">8.3.3</span> Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments</h3>
 <p>We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader analysis described in §9.8 the previous chapter (with just one reader the conclusions apply to the specific reader, so reader must be a fixed factor). Source the file (TBA) MainOrDbmh1R.R, a listing of which appears in (TBA) Online Appendix 10.C. For convenience, a few relevant lines are shown here:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="ORHAnalysis.html#cb3-1"></a><span class="co"># seed &lt;- 1;set.seed(seed)</span></span>
-<span id="cb3-2"><a href="ORHAnalysis.html#cb3-2"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
-<span id="cb3-3"><a href="ORHAnalysis.html#cb3-3"></a>theta_i &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>);<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) theta_i[i] &lt;-<span class="st"> </span><span class="kw">Wilcoxon</span>(zik1[i,], zik2[i,])</span>
-<span id="cb3-4"><a href="ORHAnalysis.html#cb3-4"></a></span>
-<span id="cb3-5"><a href="ORHAnalysis.html#cb3-5"></a>MS_T &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb3-6"><a href="ORHAnalysis.html#cb3-6"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
-<span id="cb3-7"><a href="ORHAnalysis.html#cb3-7"></a>  MS_T &lt;-<span class="st"> </span>MS_T <span class="op">+</span><span class="st"> </span>(theta_i[i]<span class="op">-</span><span class="kw">mean</span>(theta_i))<span class="op">^</span><span class="dv">2</span></span>
-<span id="cb3-8"><a href="ORHAnalysis.html#cb3-8"></a>}</span>
-<span id="cb3-9"><a href="ORHAnalysis.html#cb3-9"></a>MS_T &lt;-<span class="st"> </span>MS_T<span class="op">/</span>(I<span class="dv">-1</span>)</span>
-<span id="cb3-10"><a href="ORHAnalysis.html#cb3-10"></a></span>
-<span id="cb3-11"><a href="ORHAnalysis.html#cb3-11"></a>F_1R &lt;-<span class="st"> </span>MS_T<span class="op">/</span>(Var <span class="op">-</span><span class="st"> </span>Cov1)</span>
-<span id="cb3-12"><a href="ORHAnalysis.html#cb3-12"></a>pValue &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pf</span>(F_1R, I<span class="dv">-1</span>, <span class="ot">Inf</span>)</span>
-<span id="cb3-13"><a href="ORHAnalysis.html#cb3-13"></a></span>
-<span id="cb3-14"><a href="ORHAnalysis.html#cb3-14"></a>trtDiff &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(I,I))</span>
-<span id="cb3-15"><a href="ORHAnalysis.html#cb3-15"></a><span class="cf">for</span> (i1 <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(I<span class="dv">-1</span>)) {    </span>
-<span id="cb3-16"><a href="ORHAnalysis.html#cb3-16"></a>  <span class="cf">for</span> (i2 <span class="cf">in</span> (i1<span class="op">+</span><span class="dv">1</span>)<span class="op">:</span>I) {</span>
-<span id="cb3-17"><a href="ORHAnalysis.html#cb3-17"></a>    trtDiff[i1,i2] &lt;-<span class="st"> </span>theta_i[i1]<span class="op">-</span><span class="st"> </span>theta_i[i2]    </span>
-<span id="cb3-18"><a href="ORHAnalysis.html#cb3-18"></a>  }</span>
-<span id="cb3-19"><a href="ORHAnalysis.html#cb3-19"></a>}</span>
-<span id="cb3-20"><a href="ORHAnalysis.html#cb3-20"></a>trtDiff &lt;-<span class="st"> </span>trtDiff[<span class="op">!</span><span class="kw">is.na</span>(trtDiff)]</span>
-<span id="cb3-21"><a href="ORHAnalysis.html#cb3-21"></a>nDiffs &lt;-<span class="st"> </span>I<span class="op">*</span>(I<span class="dv">-1</span>)<span class="op">/</span><span class="dv">2</span></span>
-<span id="cb3-22"><a href="ORHAnalysis.html#cb3-22"></a>CI_DIFF_FOM_1RMT &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nDiffs, <span class="dv">3</span>))</span>
-<span id="cb3-23"><a href="ORHAnalysis.html#cb3-23"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> <span class="op">:</span><span class="st"> </span>nDiffs) {</span>
-<span id="cb3-24"><a href="ORHAnalysis.html#cb3-24"></a>  CI_DIFF_FOM_1RMT[i,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">qt</span>(alpha<span class="op">/</span><span class="dv">2</span>,<span class="dt">df =</span> <span class="ot">Inf</span>)<span class="op">*</span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>(Var <span class="op">-</span><span class="st"> </span>Cov1)) <span class="op">+</span><span class="st"> </span>trtDiff[i]</span>
-<span id="cb3-25"><a href="ORHAnalysis.html#cb3-25"></a>  CI_DIFF_FOM_1RMT[i,<span class="dv">2</span>] &lt;-<span class="st"> </span>trtDiff[i]</span>
-<span id="cb3-26"><a href="ORHAnalysis.html#cb3-26"></a>  CI_DIFF_FOM_1RMT[i,<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span><span class="op">-</span>alpha<span class="op">/</span><span class="dv">2</span>,<span class="dt">df =</span> <span class="ot">Inf</span>)<span class="op">*</span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>(Var <span class="op">-</span><span class="st"> </span>Cov1)) <span class="op">+</span><span class="st"> </span>trtDiff[i]</span>
-<span id="cb3-27"><a href="ORHAnalysis.html#cb3-27"></a>  <span class="kw">print</span>(<span class="kw">data.frame</span>(<span class="st">&quot;theta_1&quot;</span> =<span class="st"> </span>theta_i[<span class="dv">1</span>],</span>
-<span id="cb3-28"><a href="ORHAnalysis.html#cb3-28"></a>                   <span class="st">&quot;theta_2&quot;</span> =<span class="st"> </span>theta_i[<span class="dv">2</span>],</span>
-<span id="cb3-29"><a href="ORHAnalysis.html#cb3-29"></a>                   <span class="st">&quot;Var&quot;</span> =<span class="st"> </span>Var,</span>
-<span id="cb3-30"><a href="ORHAnalysis.html#cb3-30"></a>                   <span class="st">&quot;Cov1&quot;</span> =<span class="st"> </span>Cov1,</span>
-<span id="cb3-31"><a href="ORHAnalysis.html#cb3-31"></a>                   <span class="st">&quot;MS_T&quot;</span> =<span class="st"> </span>MS_T,</span>
-<span id="cb3-32"><a href="ORHAnalysis.html#cb3-32"></a>                   <span class="st">&quot;F_1R&quot;</span> =<span class="st"> </span>F_1R, </span>
-<span id="cb3-33"><a href="ORHAnalysis.html#cb3-33"></a>                   <span class="st">&quot;pValue&quot;</span> =<span class="st"> </span>pValue,</span>
-<span id="cb3-34"><a href="ORHAnalysis.html#cb3-34"></a>                   <span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_1RMT[i,<span class="dv">1</span>], </span>
-<span id="cb3-35"><a href="ORHAnalysis.html#cb3-35"></a>                   <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_1RMT[i,<span class="dv">2</span>], </span>
-<span id="cb3-36"><a href="ORHAnalysis.html#cb3-36"></a>                   <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_1RMT[i,<span class="dv">3</span>]))</span>
-<span id="cb3-37"><a href="ORHAnalysis.html#cb3-37"></a>}</span>
-<span id="cb3-38"><a href="ORHAnalysis.html#cb3-38"></a><span class="co">#&gt;     theta_1   theta_2          Var         Cov1         MS_T     F_1R    pValue</span></span>
-<span id="cb3-39"><a href="ORHAnalysis.html#cb3-39"></a><span class="co">#&gt; 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389</span></span>
-<span id="cb3-40"><a href="ORHAnalysis.html#cb3-40"></a><span class="co">#&gt;         Lower         Mid      Upper</span></span>
-<span id="cb3-41"><a href="ORHAnalysis.html#cb3-41"></a><span class="co">#&gt; 1 -0.07818322 -0.02818035 0.02182251</span></span>
-<span id="cb3-42"><a href="ORHAnalysis.html#cb3-42"></a><span class="co"># compare to RJafroc</span></span>
-<span id="cb3-43"><a href="ORHAnalysis.html#cb3-43"></a>ret_rj &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>)</span>
-<span id="cb3-44"><a href="ORHAnalysis.html#cb3-44"></a><span class="kw">print</span>(<span class="kw">data.frame</span>(<span class="st">&quot;theta_1&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>fomArray[<span class="dv">1</span>],</span>
-<span id="cb3-45"><a href="ORHAnalysis.html#cb3-45"></a>                 <span class="st">&quot;theta_2&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>fomArray[<span class="dv">2</span>],</span>
-<span id="cb3-46"><a href="ORHAnalysis.html#cb3-46"></a>                 <span class="st">&quot;Var&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>varComp<span class="op">$</span>var,</span>
-<span id="cb3-47"><a href="ORHAnalysis.html#cb3-47"></a>                 <span class="st">&quot;Cov1&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>varComp<span class="op">$</span>cov,</span>
-<span id="cb3-48"><a href="ORHAnalysis.html#cb3-48"></a>                 <span class="st">&quot;MS_T&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>msT,</span>
-<span id="cb3-49"><a href="ORHAnalysis.html#cb3-49"></a>                 <span class="st">&quot;F_1R&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>fFRRC, </span>
-<span id="cb3-50"><a href="ORHAnalysis.html#cb3-50"></a>                 <span class="st">&quot;pValue&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>pFRRC,</span>
-<span id="cb3-51"><a href="ORHAnalysis.html#cb3-51"></a>                 <span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ciDiffTrtFRRC<span class="op">$</span>CILower, </span>
-<span id="cb3-52"><a href="ORHAnalysis.html#cb3-52"></a>                 <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ciDiffTrtFRRC<span class="op">$</span>Estimate, </span>
-<span id="cb3-53"><a href="ORHAnalysis.html#cb3-53"></a>                 <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ciDiffTrtFRRC<span class="op">$</span>CIUpper))</span>
-<span id="cb3-54"><a href="ORHAnalysis.html#cb3-54"></a><span class="co">#&gt;     theta_1   theta_2          Var         Cov1         MS_T     F_1R    pValue</span></span>
-<span id="cb3-55"><a href="ORHAnalysis.html#cb3-55"></a><span class="co">#&gt; 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389</span></span>
-<span id="cb3-56"><a href="ORHAnalysis.html#cb3-56"></a><span class="co">#&gt;         Lower         Mid      Upper</span></span>
-<span id="cb3-57"><a href="ORHAnalysis.html#cb3-57"></a><span class="co">#&gt; 1 -0.07818322 -0.02818035 0.02182251</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="ORHAnalysis.html#cb28-1"></a><span class="co"># seed &lt;- 1;set.seed(seed)</span></span>
+<span id="cb28-2"><a href="ORHAnalysis.html#cb28-2"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
+<span id="cb28-3"><a href="ORHAnalysis.html#cb28-3"></a>theta_i &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>);<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) theta_i[i] &lt;-<span class="st"> </span><span class="kw">Wilcoxon</span>(zik1[i,], zik2[i,])</span>
+<span id="cb28-4"><a href="ORHAnalysis.html#cb28-4"></a></span>
+<span id="cb28-5"><a href="ORHAnalysis.html#cb28-5"></a>MS_T &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb28-6"><a href="ORHAnalysis.html#cb28-6"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
+<span id="cb28-7"><a href="ORHAnalysis.html#cb28-7"></a>  MS_T &lt;-<span class="st"> </span>MS_T <span class="op">+</span><span class="st"> </span>(theta_i[i]<span class="op">-</span><span class="kw">mean</span>(theta_i))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb28-8"><a href="ORHAnalysis.html#cb28-8"></a>}</span>
+<span id="cb28-9"><a href="ORHAnalysis.html#cb28-9"></a>MS_T &lt;-<span class="st"> </span>MS_T<span class="op">/</span>(I<span class="dv">-1</span>)</span>
+<span id="cb28-10"><a href="ORHAnalysis.html#cb28-10"></a></span>
+<span id="cb28-11"><a href="ORHAnalysis.html#cb28-11"></a>F_1R &lt;-<span class="st"> </span>MS_T<span class="op">/</span>(Var <span class="op">-</span><span class="st"> </span>Cov1)</span>
+<span id="cb28-12"><a href="ORHAnalysis.html#cb28-12"></a>pValue &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pf</span>(F_1R, I<span class="dv">-1</span>, <span class="ot">Inf</span>)</span>
+<span id="cb28-13"><a href="ORHAnalysis.html#cb28-13"></a></span>
+<span id="cb28-14"><a href="ORHAnalysis.html#cb28-14"></a>trtDiff &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(I,I))</span>
+<span id="cb28-15"><a href="ORHAnalysis.html#cb28-15"></a><span class="cf">for</span> (i1 <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(I<span class="dv">-1</span>)) {    </span>
+<span id="cb28-16"><a href="ORHAnalysis.html#cb28-16"></a>  <span class="cf">for</span> (i2 <span class="cf">in</span> (i1<span class="op">+</span><span class="dv">1</span>)<span class="op">:</span>I) {</span>
+<span id="cb28-17"><a href="ORHAnalysis.html#cb28-17"></a>    trtDiff[i1,i2] &lt;-<span class="st"> </span>theta_i[i1]<span class="op">-</span><span class="st"> </span>theta_i[i2]    </span>
+<span id="cb28-18"><a href="ORHAnalysis.html#cb28-18"></a>  }</span>
+<span id="cb28-19"><a href="ORHAnalysis.html#cb28-19"></a>}</span>
+<span id="cb28-20"><a href="ORHAnalysis.html#cb28-20"></a>trtDiff &lt;-<span class="st"> </span>trtDiff[<span class="op">!</span><span class="kw">is.na</span>(trtDiff)]</span>
+<span id="cb28-21"><a href="ORHAnalysis.html#cb28-21"></a>nDiffs &lt;-<span class="st"> </span>I<span class="op">*</span>(I<span class="dv">-1</span>)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb28-22"><a href="ORHAnalysis.html#cb28-22"></a>CI_DIFF_FOM_1RMT &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nDiffs, <span class="dv">3</span>))</span>
+<span id="cb28-23"><a href="ORHAnalysis.html#cb28-23"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> <span class="op">:</span><span class="st"> </span>nDiffs) {</span>
+<span id="cb28-24"><a href="ORHAnalysis.html#cb28-24"></a>  CI_DIFF_FOM_1RMT[i,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">qt</span>(alpha<span class="op">/</span><span class="dv">2</span>,<span class="dt">df =</span> <span class="ot">Inf</span>)<span class="op">*</span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>(Var <span class="op">-</span><span class="st"> </span>Cov1)) <span class="op">+</span><span class="st"> </span>trtDiff[i]</span>
+<span id="cb28-25"><a href="ORHAnalysis.html#cb28-25"></a>  CI_DIFF_FOM_1RMT[i,<span class="dv">2</span>] &lt;-<span class="st"> </span>trtDiff[i]</span>
+<span id="cb28-26"><a href="ORHAnalysis.html#cb28-26"></a>  CI_DIFF_FOM_1RMT[i,<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span><span class="op">-</span>alpha<span class="op">/</span><span class="dv">2</span>,<span class="dt">df =</span> <span class="ot">Inf</span>)<span class="op">*</span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>(Var <span class="op">-</span><span class="st"> </span>Cov1)) <span class="op">+</span><span class="st"> </span>trtDiff[i]</span>
+<span id="cb28-27"><a href="ORHAnalysis.html#cb28-27"></a>  <span class="kw">print</span>(<span class="kw">data.frame</span>(<span class="st">&quot;theta_1&quot;</span> =<span class="st"> </span>theta_i[<span class="dv">1</span>],</span>
+<span id="cb28-28"><a href="ORHAnalysis.html#cb28-28"></a>                   <span class="st">&quot;theta_2&quot;</span> =<span class="st"> </span>theta_i[<span class="dv">2</span>],</span>
+<span id="cb28-29"><a href="ORHAnalysis.html#cb28-29"></a>                   <span class="st">&quot;Var&quot;</span> =<span class="st"> </span>Var,</span>
+<span id="cb28-30"><a href="ORHAnalysis.html#cb28-30"></a>                   <span class="st">&quot;Cov1&quot;</span> =<span class="st"> </span>Cov1,</span>
+<span id="cb28-31"><a href="ORHAnalysis.html#cb28-31"></a>                   <span class="st">&quot;MS_T&quot;</span> =<span class="st"> </span>MS_T,</span>
+<span id="cb28-32"><a href="ORHAnalysis.html#cb28-32"></a>                   <span class="st">&quot;F_1R&quot;</span> =<span class="st"> </span>F_1R, </span>
+<span id="cb28-33"><a href="ORHAnalysis.html#cb28-33"></a>                   <span class="st">&quot;pValue&quot;</span> =<span class="st"> </span>pValue,</span>
+<span id="cb28-34"><a href="ORHAnalysis.html#cb28-34"></a>                   <span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_1RMT[i,<span class="dv">1</span>], </span>
+<span id="cb28-35"><a href="ORHAnalysis.html#cb28-35"></a>                   <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_1RMT[i,<span class="dv">2</span>], </span>
+<span id="cb28-36"><a href="ORHAnalysis.html#cb28-36"></a>                   <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_1RMT[i,<span class="dv">3</span>]))</span>
+<span id="cb28-37"><a href="ORHAnalysis.html#cb28-37"></a>}</span>
+<span id="cb28-38"><a href="ORHAnalysis.html#cb28-38"></a><span class="co">#&gt;     theta_1   theta_2          Var         Cov1         MS_T     F_1R    pValue</span></span>
+<span id="cb28-39"><a href="ORHAnalysis.html#cb28-39"></a><span class="co">#&gt; 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389</span></span>
+<span id="cb28-40"><a href="ORHAnalysis.html#cb28-40"></a><span class="co">#&gt;         Lower         Mid      Upper</span></span>
+<span id="cb28-41"><a href="ORHAnalysis.html#cb28-41"></a><span class="co">#&gt; 1 -0.07818322 -0.02818035 0.02182251</span></span>
+<span id="cb28-42"><a href="ORHAnalysis.html#cb28-42"></a><span class="co"># compare to RJafroc</span></span>
+<span id="cb28-43"><a href="ORHAnalysis.html#cb28-43"></a>ret_rj &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>)</span>
+<span id="cb28-44"><a href="ORHAnalysis.html#cb28-44"></a><span class="kw">print</span>(<span class="kw">data.frame</span>(<span class="st">&quot;theta_1&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>fomArray[<span class="dv">1</span>],</span>
+<span id="cb28-45"><a href="ORHAnalysis.html#cb28-45"></a>                 <span class="st">&quot;theta_2&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>fomArray[<span class="dv">2</span>],</span>
+<span id="cb28-46"><a href="ORHAnalysis.html#cb28-46"></a>                 <span class="st">&quot;Var&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>varComp<span class="op">$</span>var,</span>
+<span id="cb28-47"><a href="ORHAnalysis.html#cb28-47"></a>                 <span class="st">&quot;Cov1&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>varComp<span class="op">$</span>cov,</span>
+<span id="cb28-48"><a href="ORHAnalysis.html#cb28-48"></a>                 <span class="st">&quot;MS_T&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>msT,</span>
+<span id="cb28-49"><a href="ORHAnalysis.html#cb28-49"></a>                 <span class="st">&quot;F_1R&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>fFRRC, </span>
+<span id="cb28-50"><a href="ORHAnalysis.html#cb28-50"></a>                 <span class="st">&quot;pValue&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>pFRRC,</span>
+<span id="cb28-51"><a href="ORHAnalysis.html#cb28-51"></a>                 <span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ciDiffTrtFRRC<span class="op">$</span>CILower, </span>
+<span id="cb28-52"><a href="ORHAnalysis.html#cb28-52"></a>                 <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ciDiffTrtFRRC<span class="op">$</span>Estimate, </span>
+<span id="cb28-53"><a href="ORHAnalysis.html#cb28-53"></a>                 <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ciDiffTrtFRRC<span class="op">$</span>CIUpper))</span>
+<span id="cb28-54"><a href="ORHAnalysis.html#cb28-54"></a><span class="co">#&gt;     theta_1   theta_2          Var         Cov1         MS_T     F_1R    pValue</span></span>
+<span id="cb28-55"><a href="ORHAnalysis.html#cb28-55"></a><span class="co">#&gt; 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389</span></span>
+<span id="cb28-56"><a href="ORHAnalysis.html#cb28-56"></a><span class="co">#&gt;         Lower         Mid      Upper</span></span>
+<span id="cb28-57"><a href="ORHAnalysis.html#cb28-57"></a><span class="co">#&gt; 1 -0.07818322 -0.02818035 0.02182251</span></span></code></pre></div>
 </div>
 </div>
 <div id="multiple-reader-multiple-treatment-orh-model" class="section level2" number="8.4">
@@ -1029,7 +1031,7 @@ MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bu
 \tag{8.32}
 \end{equation}\]</span></p>
 <p>In their original paper <span class="citation">(Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span> Obuchowski and Rockette state that their proposed test statistic F (basically <a href="ORHAnalysis.html#eq:F-ORH">(8.31)</a> without the constraint implied by the <span class="math inline">\(\max\)</span> function) is distributed as an F-statistic with numerator degree of freedom <span class="math inline">\(ndf=I-1\)</span> and denominator degree of freedom <span class="math inline">\(ddf=(I-1)(J-1)\)</span>. It turns out that then the test is unduly conservative, meaning it is unusually reluctant to reject the null hypothesis.</p>
-<p>In this connection the author has two historical anecdotes. The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski <span class="citation">(Obuchowski <a href="#ref-RN1971" role="doc-biblioref">1998</a>, <a href="#ref-RN1972" role="doc-biblioref">2000</a>)</span>, using the unmodified version of <a href="ORHAnalysis.html#eq:F-ORH">(8.31)</a>, predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study.</p>
+<p>In this connection the author has two historical anecdotes. The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski <span class="citation">(Obuchowski <a href="#ref-RN1971" role="doc-biblioref">1998</a>; Nancy A. Obuchowski <a href="#ref-RN1972" role="doc-biblioref">2000</a>)</span>, using the unmodified version of <a href="ORHAnalysis.html#eq:F-ORH">(8.31)</a>, predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study.</p>
 <p>The second story is that the author once conducted NH simulations using the Roe-Metz simulator described in the preceding chapter and the significance testing as described in the Obuchowski-Rockette paper: the method did not reject the null hypothesis even once in 2000 trials! Recall that with <span class="math inline">\(\alpha = 0.05\)</span> a valid test should reject the null hypothesis about <span class="math inline">\(100\pm20\)</span> times in 2000 trials. The author recalls (ca. 2004) telling Dr. Steve Hillis about this issue, and he suggested a different value for the denominator degrees of freedom (ddf), substitution of which magically solved the problem, i.e., the simulations rejected the null hypothesis about 5% of the time; the new <span class="math inline">\(ddf\)</span> is defined below (<span class="math inline">\(ndf\)</span> is unchanged), with the subscript H denoting the Hillis modification:</p>
 <p><span class="math display" id="eq:ndf">\[\begin{equation}
 ndf=I-1
