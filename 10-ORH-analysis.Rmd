@@ -523,21 +523,21 @@ F_{1R} \equiv \frac{MS(T)}{Var-Cov_1} \sim F_{I-1, \infty}
 \end{equation}
 
 ### An aside on the relation between the chisquare and the F-distribution with infinite ddf
-Define $D_{1-\alpha}$, the $1-\alpha$ quantile of distribution $D$, as that "cutoff" value such that the probability of observing a random sample $d$ less than or equal to $D_{1-\alpha}$ is $1-\alpha$. In other words,
+Define $D_{1-\alpha}$, the $(1-\alpha)$ quantile of distribution $D$, as that "cutoff" value such that the probability of observing a random sample $d$ less than or equal to $D_{1-\alpha}$ is $(1-\alpha)$. In other words,
 
 \begin{equation}
 \Pr(d\leq D_{1-alpha} \mid d \sim D)=1-\alpha
 (\#eq:DefQuantile)
 \end{equation}
 
-With definition \@ref(eq:DefQuantile), the $1-\alpha$ quantile of the $\chi_{I-1}^2$ distribution, i.e., $\chi_{1-\alpha,I-1}^2$, is related to the $1-\alpha$ quantile of the $F_{I-1,\infty}$ distribution, i.e., $F_{1-\alpha,I-1,\infty}$, as follows [see @RN1772, Eq. 22]:
+With definition \@ref(eq:DefQuantile), the $(1-\alpha)$ quantile of the $\chi_{I-1}^2$ distribution, i.e., $\chi_{1-\alpha,I-1}^2$, is related to the $(1-\alpha)$ quantile of the $F_{I-1,\infty}$ distribution, i.e., $F_{1-\alpha,I-1,\infty}$, as follows [see @RN1772, Eq. 22]:
 
 \begin{equation}
 \frac{\chi_{1-\alpha,I-1}^{2}}{I-1} = F_{1-\alpha,I-1,\infty}
 (\#eq:Chisqr2F)
 \end{equation}
 
-\@ref(eq:Chisqr2F) implies that the $1-\alpha$ quantile of the F-distribution with $ndf=I-1$ and $ddf=\infty$ equals the $1-\alpha$ quantile of the $\chi_{I-1}^2$ distribution *divided by $I-1$*. 
+\@ref(eq:Chisqr2F) implies that the $(1-\alpha)$ quantile of the F-distribution with $ndf=(I-1)$ and $ddf=\infty$ equals the $(1-\alpha)$ quantile of the $\chi_{I-1}^2$ distribution *divided by $(I-1)$*. 
 
 Here is an `R` illustration of this theorem for $I-1 = 4$ and $\alpha = 0.05$: 
 
@@ -558,10 +558,10 @@ The $(1-\alpha)$  confidence interval for the inter-treatment FOM difference is 
 
 \begin{equation}
 CI_{1-\alpha} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\infty} \sqrt{2(Var-Cov_1)}
-(\#eq:CIValue1RMT)
+(\#eq:CIalpha1RMT)
 \end{equation}
 
-Comparing \@ref(eq:CIValue1RMT) to \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(Var-Cov_1)}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96 and $t_{1-\alpha/2,\infty}$ is +1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.] 
+Comparing \@ref(eq:CIalpha1RMT) to \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(Var-Cov_1)}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96 and $t_{1-\alpha/2,\infty}$ is +1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.] 
 
 ### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
 We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader analysis described in §9.8 the previous chapter (with just one reader the conclusions apply to the specific reader, so reader must be a fixed factor). Source the file (TBA) MainOrDbmh1R.R, a listing of which appears in (TBA) Online Appendix 10.C. For convenience, a few relevant lines are shown here:
@@ -628,7 +628,7 @@ The general Obuchowski and Rockette model for fully paired multiple-reader multi
 (\#eq:ORModel)
 \end{equation}
 
-The fixed treatment effect $\tau_i$ is subject to the usual constraint, \@ref(eq:ConstraintTau). The first two terms on the right hand side of \@ref(eq:ORModel) have their usual meanings: a constant term  $\mu$ representing performance averaged over treatments and readers, and a treatment effect $\tau_i$  ($i$ = 1,2, ..., $I$). The following two terms are, by assumption, mutually independent random samples specified as follows:  $R_j$ denotes the random treatment-independent contribution to the figure-of-merit of reader $j$ ($j$ = 1,2, ..., $J$), modeled as a sample from a zero-mean normal distribution with variance $\sigma_R^2$;  $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance  $\sigma_{\tau R}^2$. There could be a perceived notational clash with similar variance component terms defined for the DBMH model – except in that case they applied to pseudovalues. The meaning should be clear from the context. Summarizing:
+The fixed treatment effect $\tau_i$ is subject to the usual constraint, \@ref(eq:ConstraintTau). The first two terms on the right hand side of \@ref(eq:ORModel) have their usual meanings: a constant term  $\mu$ representing performance averaged over treatments and readers, and a treatment effect $\tau_i$  ($i$ = 1,2, ..., $I$). The following two terms are, by assumption, mutually independent random samples specified as follows:  $R_j$ denotes the random treatment-independent contribution to the figure-of-merit of reader $j$ ($j$ = 1,2, ..., $J$), modeled as a sample from a zero-mean normal distribution with variance $\sigma_R^2$;  $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance $\sigma_{\tau R}^2$. There could be a perceived notational clash with similar variance component terms defined for the DBMH model – except in that case they applied to pseudovalues. The meaning should be clear from the context. Summarizing:
 
 \begin{equation}
 \left\{\begin{matrix}
@@ -851,8 +851,8 @@ F_{ORH}\sim F_{ndf,ddf_H}
 (\#eq:SamplingDistrF-ORH)
 \end{equation}
 
-### Decision rule, p-value and confidence interval
-The critical value of the F-statistic for rejection of the null hypothesis is $F_{1-\alpha,ndf,ddf_H}$ , i.e., that value such that fraction $1-\alpha$ of the area under the distribution lies to the left of the critical value. From definition \@ref(eq:F-ORH), rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger;  $MS(TR)$ decreases meaning there is less contamination of the treatment effect by treatment-reader variability; the greater of $Cov2$ or $Cov3$ decreases, meaning there is less contamination of the treatment effect by between-reader and treatment-reader variability, $\alpha$  increases, meaning one is allowing a greater probability of Type I errors, $ndf$ increases, meaning the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH or $ddf_H$  increases, as this lowers the critical value of the F-statistic. 
+#### Decision rule, p-value and confidence interval
+The critical value of the F-statistic for rejection of the null hypothesis is $F_{1-\alpha,ndf,ddf_H}$ , i.e., that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. From definition \@ref(eq:F-ORH), rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger;  $MS(TR)$ decreases meaning there is less contamination of the treatment effect by treatment-reader variability; the greater of $Cov2$ or $Cov3$ decreases, meaning there is less contamination of the treatment effect by between-reader and treatment-reader variability, $\alpha$  increases, meaning one is allowing a greater probability of Type I errors, $ndf$ increases, meaning the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH or $ddf_H$  increases, as this lowers the critical value of the F-statistic. 
 
 The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{ORH}$ could be observed by chance. In other words, it is the area under the F-distribution $F_{ndf,ddf_H}$ that lies above the observed value $F_{ORH}$:
 
@@ -861,73 +861,162 @@ p=\Pr(F>F_{ORH} \mid F\sim F_{ndf,ddf_H})
 (\#eq:pValueORHRRRC)
 \end{equation}
 
-### Special cases
+### Fixed-reader random-case (FRRC) analysis
+Using the vertical bar notation $\mid R$  to denote that reader is regarded as a fixed effect [@RN1124], the appropriate F -statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is [@RN1865]: 
+
+\begin{equation}
+F_{ORH \mid R}=\frac{MS(T)}{Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0)}
+(\#eq:DefFStatFRRC)
+\end{equation}
+
+$F_{ORH \mid R}$, a realization (i.e., observation) of a random variable, is distributed as an F-statistic with:
+
+\begin{equation}
+\left.\begin{matrix}
+ndf=I-1\\ 
+ddf=\infty\\
+F_{ORH \mid R} \sim F_{ndf,ddf}
+\end{matrix}\right\}
+(\#eq:FStatFRRC)
+\end{equation}
+
+Alternatively, as with \@ref(eq:F1RMT),
+
+$$(I-1)F_{ORH \mid R} \sim t_{I-1}$$
+For $J$ = 1, \@ref(eq:DefFStatFRRC) reduces to \@ref(eq:DefF1RMT). 
+
+The critical value of the statistic is $F_{1-\alpha,I-1,\infty}$  which is that value such that fraction $(1-\alpha)$  of the area under the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value, i.e.,:
+
+$$F_{ORH \mid R}>F_{1-\alpha,I-1,\infty}$$
+
+The p-value of the test is the probability that a random sample from the distribution $F_{I-1,\infty}$  exceeds the observed value of the F statistic defined in \@ref(eq:DefFStatFRRC):
+
+\begin{equation}
+p=\Pr(F>F_{ORH \mid R} \mid F \sim F_{I-1,\infty})
+(\#eq:pValueaphaFRRC)
+\end{equation}
+
+ The $(1-\alpha)$ (symmetric) confidence interval for the difference figure of merit is given by:
+
+\begin{equation}
+CI_{1-\alpha}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, \infty}\sqrt{\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
+(\#eq:CIalphaFRRC)
+\end{equation}
+
+One can think of the numerator terms on the right hand side of \@ref(eq:CIalphaFRRC) as the variance of the inter-treatment FOM difference per reader, and the division by $J$ is needed as the readers, as a group, have smaller variance in inverse proportion to their numbers. 
+
+The NH is rejected if any of the following equivalent conditions is met:
+ 
+* The observed value of the F-statistic exceeds the critical value $F_{1-\alpha,I-1,\infty}$.
+* The p-value defined by \@ref(eq:pValueaphaFRRC) is less than  $\alpha$.
+* The $(1-\alpha)$ confidence interval does not include zero.
+
+Notice that for J = 1, \@ref(eq:CIalphaFRRC) reduces to \@ref(eq:CIalpha1RMT).
+
+### Random-reader fixed-case (RRFC) analysis
 
 ### Single-treatment multiple-reader analysis
-Suppose one has data in a single treatment and multiple readers are involved. One wishes to determine if the performance of the readers as a group equals some specified value. 
+Suppose one has data in a single treatment $i$ and multiple readers are involved. One wishes to determine if the performance of the readers as a group equals some specified value. *Since only a single treatment is involved, an implicit $i$ dependence in subsequent formulae is ignored.*
 
-In \@ref(OR1RMTModel) single-reader multiple-treatment analysis was described. Attention now turns to single-treatment multiple-reader analysis and they are not the same! After all, treatment is a fixed factor while reader is a random factor; so one cannot simply use the previous analysis with reader and treatment interchanged (my graduate student tried to do just that, and he is quite smart, hence the reason for this warning; one can use the previous analysis if reader is regarded as a fixed factor, and a function in RJafroc called `StSignificanceTestingSingleFixedFactor()` does just that). 
+In \@ref(OR1RMTModel) single-reader multiple-treatment analysis was described. It is not identical to single-treatment multiple-reader analysis. Treatment is a fixed factor while reader is a random factor. Therefore, one cannot simply use the previous analysis with reader and treatment interchanged (a graduate student tried to do just that, and he is quite smart, hence the reason for this warning; one can use the previous analysis if reader is regarded as a fixed factor, and a function in RJafroc called TBA `StSignificanceTestingSingleFixedFactor()` does just that). 
 
-In the analysis described in this section reader is regarded as a random effect. The average performance of the readers is estimated and compared to a specified value. Hillis1,2,7 has described the appropriate modification of the OR model when all readers read cases in a single treatment. Two approaches are described, one using the DBM pseudovalue based model and the other based on the OR model with appropriate modification. The second approach is summarized below.
+In the analysis described in this section reader is regarded as a random effect. The average performance of the readers is estimated and compared to a specified value. Hillis has described the appropriate modifications. [TBA Two approaches are described, one using the DBM pseudovalue based model and the other based on the OR model with appropriate modification. The second approach is summarized below. TBA]
 
-For single-treatment multiple-reader ORH analysis, the figure of merit model is (contrast the following equation to \@ref(eq:ORModel1RMT) noting the absence of an $i$ index; if multiple modalities are present the current analysis is applicable to data in each treatment analyzed one at a time): 
+For single-treatment multiple-reader ORH analysis, the figure of merit model is (contrast the following equation to \@ref(eq:ORModel1RMT) noting the absence of an $i$ index. If multiple modalities are present the current analysis is applicable to data in each treatment analyzed one at a time): 
 
-.	(10.62)
+\begin{equation}
+\theta_{j\{c\}}=\mu+R_j+\epsilon_{j\{c\}}
+(\#eq:OrModel1T)
+\end{equation}
 
-One wishes to test the NH:   where   is some pre-specified value. It follows from the previous equation that (since c = 1, in the interest of brevity, one can suppress the c index):
+One wishes to test the NH: $\mu=\mu_0$  where $\mu_0$ is some pre-specified value. (since $C$ = 1, in the interest of brevity one can suppress the $c$ index):
 
-.	(10.63)
+\begin{equation}
+\mu=\theta_{\bullet}
+(\#eq:OrModel1REstmu)
+\end{equation}
 
-The variance of the reader-averaged FOM can be shown4 to be given by (the reference is to the original OR publication, specifically Eqn. 2.3):
+The variance of the reader-averaged FOM can be shown [@RN1450] to be given by (the reference is to the original OR publication, specifically Eqn. 2.3):
 
-. 	.	(10.64)
+\begin{equation}
+\sigma_{\theta_{\bullet}}^{2}=\frac{1}{J}(\sigma_{R}^{2}+Var+(J-1)Cov_2)
+(\#eq:VarThetaiDot)
+\end{equation}
 
-Connection to existing literature: Rather than attempt to derive the preceding equation, it is shown how it follows from the existing literature4. For convenience Eqn. 2.3 ibid is reproduced below.
+### Connection to existing literature 
+Rather than attempt to derive the preceding equation, it is shown how it follows from the existing literature [@RN1450]. For convenience Eqn. 2.3 in cited reference is reproduced below.
 
-.	(10.65)
+\begin{equation}
+Var(\theta_{i \bullet \bullet}) =\frac{1}{J}(\sigma_{b}^{2}+\sigma_{ab}^{2}+(\sigma_{w}^{2}/K) + \sigma_{c}^{2}(1+J(J-1)r_2))
+(\#eq:VarThetaiDotDot)
+\end{equation}
 
-In the OR notation, the FOM has three indices,  . One deletes the i index as one is dealing with a single treatment and one can drop the average over the k index, as one is dealing with a single dataset;   in the OR notation is what we are calling  ; for single treatment the treatment-reader interaction term   is absent; and for single "replication" the term   (in OR notation K is the number of replications) is absent, or, more accurately, the within-reader variance  is absorbed into the case sampling variance   as the two are inseparable); the term   is what we are calling  ; and   in OR paper is what we are calling  .
+In the OR notation, the FOM has three indices, $\theta_{ijk}$. One deletes the $i$ index as one is dealing with a single treatment and one can drop the average over the $k$ index, as one is dealing with a single dataset; $\sigma_{b}^{2}$  in the OR notation is what we are calling $\sigma_{R}^{2}$; for single treatment the treatment-reader interaction term  $\sigma_{ab}^{2}$ is absent; and for single "replication" the term  $\sigma_{w}^{2}/K$ (in OR notation $K$ is the number of replications) is absent, or, more accurately, the within-reader variance $\sigma_{w}^{2}$ is absorbed into the case sampling variance $\sigma_{c}^{2}$  as the two are inseparable); the term $\sigma_{\epsilon}^{2}$ is what we are calling  $Var$; and $\sigma_{c}^{2}r_2$ in OR paper is what we are calling  $Cov_2$.
 
-An alternative first principles derivation, due to Mr. Xuetong Zhai, is given in Online Appendix 10.E. 
+An alternative first principles derivation, due to Mr. Xuetong Zhai, is given in TBA Online Appendix 10.E. 
 
-One needs to replace   in Eqn. (10.64) with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature7. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to Table 9.1 in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, t = 1 and the treatment-reader variance component goes away and the term   is what we are calling  ), it follows that:
+One needs to replace $\sigma_{R}^{2}$ in \@ref(eq:VarThetaDot) with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature [@RN2508]. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to TBA Table 9.1 in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, $t$ = 1 and the treatment-reader variance component goes away and the term $\sigma_{\epsilon}^{2}$ is what we are calling $Var$), it follows that:
 
-.	(10.66)
+$$E(MS(R))=\sigma_{R}^{2}+Var=Cov_2$$
 
-Substituting Eqn. (10.66) in Eqn. (10.64) yields,
+Substituting this equation in \@ref(eq:VarThetaDot) yields,
 
-.	.	(10.67)
+\begin{equation}
+\sigma_{\theta_{\bullet}}^{2}=\frac{1}{J}(E(MS(R))+JCov_2)
+(\#eq:VarThetaDot)
+\end{equation}
 
-An estimate of MSR is given by (from here on it is understood that MSR is an estimate, i.e., the circumflex notation is suppressed; the same is true for  ):
+An estimate of $MS(R)$ is given by (from here on it is understood that $MSR$ is an estimate defined by:
 
-.	(10.68)
+\begin{equation}
+MS(R)=\frac{1}{J-1}\sum_{j=1}^{J}(\theta_j - \theta_{\bullet})^2
+(\#eq:EstMsR1T)
+\end{equation}
 
-Replacing the expected mean-square value with the estimate and avoiding negative covariance, which could lead to a negative variance estimate, one has :
+Replacing the expected mean-square value with the estimate and avoiding negative covariance, which could lead to a negative variance estimate, one has:
 
-. 	.	(10.69)
+\begin{equation}
+\sigma_{\theta_{\bullet}}^{2}=\frac{1}{J}(MS(R)+J\max(Cov_2,0))
+(\#eq:EstVarThetaDot)
+\end{equation}
 
-The observed value of the t-statistic (the subscript emphasizes that this statistic applies to the single treatment analysis) for testing the NH is: 
+The observed value of the t-statistic for testing the NH is $t_{1T}$ (the supbscript means that this statistic applies to single treatment analysis): 
 
-.	(10.70)
+\begin{equation}
+t_{1T}=\frac{\mu-\mu_0}{\sigma_{\theta_{\bullet}}}=(\theta_{\bullet}-\mu_0)\sqrt{\frac{J}{(MS(R)+J\max(Cov_2,0)}}
+(\#eq:DefTStat1T)
+\end{equation}
 
-This is distributed as a t-statistic with   degrees of freedom: 
+This is distributed as a t-statistic with $df_{H}^{I=1}$  degrees of freedom: 
 
-. 	.	(10.71)
+\begin{equation}
+t_{1T} \sim t_{df_{H}^{1T}}
+(\#eq:DistTStat1T)
+\end{equation}
 
-In the above equation, Hillis single-treatment degree of freedom   is defined by7:
+In the above equation, Hillis single-treatment degree of freedom $t_{df_{H}^{1T}}$ is defined by [@RN2508]:
 
-.	(10.72)
+\begin{equation}
+df_{H}^{1T}=(J-1)\left [\frac{MS(R)+J \max(Cov_2,0)}{MS(R)} \right ]^2
+(\#eq:DefdfHI1)
+\end{equation}
 
 The p-value of the test is the probability that the a random sample from the specified t-distribution exceeds the magnitude of the observed value:
 
-.	(10.73)
+\begin{equation}
+p=\Pr(t>\left | t \right |\mid t \sim t_{df_{H}^{1T}})
+(\#eq:pValue1T)
+\end{equation}
 
-Therefore, a   confidence interval for   is:
+Therefore, a $100 \times (1-\alpha)$ percent confidence interval for  $\theta_{\bullet}-\mu_0$ is:
 
-.	(10.74)
-
+\begin{equation}
+\theta_{\bullet}-\mu_0 \pm t_{\alpha/2,df_{H}^{1T}} \sqrt{ \frac{MS(R)+\max(Cov_2,0)}{J}}
+(\#eq:CIalpha1T)
+\end{equation}
 
 The single treatment method is implemented in mainSingleTreatment.R. The relevant code is listed in Online Appendix 10.F. Source the code to get the following output.
+
 
 ## Discussion/Summary
 This chapter described the Obuchowski-Rockette method as modified by Hillis. As noted earlier, it has the same number of parameters as the DBMH method described in the preceding chapter, but the model \@ref(eq:ORModel) *appears* simpler as some terms are "hidden" in the structure of the error term. In this chapter the NH condition was considered. Extension to the alternative hypothesis, i.e., estimating statistical power, is deferred to online appendices to Chapter 11. The extension is a little simpler with the DBMH model, as it is a standard ANOVA model. For example the expressions for the DBMH non-centrality parameter was readily defined in Chapter 09, e.g., §9.7.4. Hillis has derived expressions allowing transformation between quantities in the two methods, and this is the approach adopted in this book and implemented in the cited online appendix.
