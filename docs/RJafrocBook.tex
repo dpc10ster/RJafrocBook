@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-04-25}
+\date{2020-04-26}
 
 \begin{document}
 \maketitle
@@ -195,13 +195,13 @@
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-The previous chapter described the DBM significance testing procedure5 for analyzing MRMC ROC data, along with improvements suggested by Hillis. Because the method depends on the assumption that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been criticized by Hillis who states that the method ``works'' but lacks firm statistical foundations \citep{RN1772, RN1865, RN1866}. I believes that if a method ``works'' there must be good reasons why it ``works'' and the last section of the previous chapter, §9.13, gave a justification for why the method ``works''. Specifically, the empirical AUC pseudovalues qualify as case-level FOM-like quantities; this property was also noted in 1997 by Hanley and Hajian-Tilaki \citep{RN1395}. However, this property only applies to the empirical AUC, so an alternate approach is desirable.
+The previous chapter described the DBM significance testing procedure \citep{RN204} for analyzing MRMC ROC data, along with improvements suggested by Hillis. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been criticized by Hillis who states that the method ``works'' but lacks firm statistical foundations \citep{RN1772, RN1865, RN1866}. If a method works there must be good reasons why it works and the last section of the previous chapter, §9.13, gave a justification for why the method works. Specifically, the empirical AUC pseudovalues qualify as case-level FOMs - this property was also noted by \citep{RN1395}. However, this property applies only to the empirical AUC, so an alternate approach that applies to any figure of merit is desirable.
 
-This chapter presents Hillis' preferred alternative to the DBMH approach. He has argued that the DBMH method can be regarded as a ``working model that gives the right results'', but a method based on an earlier publication \citep{RN1450} by Obuchowski and Rockette, which does not depend on pseudovalues, and predicts more or less the same results, is preferable from a conceptual viewpoint. Since, besides showing the correspondence, Hillis has made significant improvements to the original methodology, this chapter is named ``ORH Analysis'', where ORH stands for Obuchowski, Rockette and Hillis. The ORH method has advantages in being able to handle more complex study designs \citep{RN2508} that are outside the scope of this book (the author acknowledges a private communication from Dr.~Obuchowski, ca. 2006, that demonstrates the flexibility afforded by the OR approach) and it is possible that applications to other paradigms (e.g., the FROC paradigm uses a rather different FOM from empirical ROC-AUC) are better performed with the ORH method.
+This chapter presents Hillis' preferred alternative to the DBMH approach. He has argued that the DBMH method can be regarded as a ``working model that gives the right results'', but a method based on an earlier publication \citep{RN1450} by Obuchowski and Rockette, which does not depend on pseudovalues, and predicts more or less the same results, is preferable from a conceptual viewpoint. Since, besides showing the correspondence, Hillis has made significant improvements to the original methodology, this chapter is named ``ORH Analysis'', where ORH stands for Obuchowski, Rockette and Hillis. The ORH method has advantages in being able to handle more complex study designs \citep{RN2508} that are outside the scope of this book (the author acknowledges a private communication from Dr.~Obuchowski, ca. 2006, that demonstrated the flexibility afforded by the OR approach) and it is likely that applications to other FOMs (e.g., the FROC paradigm uses a rather different FOM from empirical ROC-AUC) are better performed with the ORH method.
 
-This chapter starts with a ``gentle'' introduction to the Obuchowski and Rockette method. The reason for the ``gentle'' introduction is that the method was rather opaque to me, an I suspect, most users. Part of the problem, in my opinion, is the notation, namely lack of usage of the \emph{case-set} index \(\{c\}\), whose absence can be confusing. The notational issue is highlighted in a key difference of the Obuchowski and Rockette method from DBMH, namely in how the error term is modeled by a covariance matrix. In this chapter the structure of the covariance matrix is examined in some detail, as it is key to understanding the ORH method.
+This chapter starts with a gentle introduction to the Obuchowski and Rockette method. The reason is that the method was rather opaque to me, an I suspect, most users. Part of the problem, in my opinion, is the notation, namely lack of usage of the \emph{case-set} index \(\{c\}\). A key difference of the Obuchowski and Rockette method from DBMH is in how the error term is modeled by a non-diagonal covariance matrix. The structure of the covariance matrix is examined in some detail as it is key to understanding the ORH method.
 
-In the first step of the gentle introduction a single reader interpreting a case-set in multiple treatments is modeled and the results compared to those obtained using DBMH fixed-reader analysis described in the previous chapter. In the second step multiple readers interpreting a case-set in multiple treatments is modeled. The two analyses, DBMH and ORH, are compared for the same dataset. The special cases of fixed-reader and fixed-case analyses are described. Single treatment analysis, where interest is in comparing average performance of readers to a fixed value, is described. Three methods of estimating the covariance matrix are described.
+In the first step of the introduction a single reader interpreting a case-set in multiple treatments is modeled and the results compared to those obtained using DBMH fixed-reader analysis described in the previous chapter. In the second step multiple readers interpreting a case-set in multiple treatments is modeled. The two analyses, DBMH and ORH, are compared for the same dataset. The special cases of fixed-reader and fixed-case analyses are described. Single treatment analysis, where interest is in comparing average performance of readers to a fixed value, is described. Three methods of estimating the covariance matrix are described.
 
 \hypertarget{OR1RMTModel}{%
 \section{Single-reader multiple-treatment model}\label{OR1RMTModel}}
@@ -275,17 +275,17 @@ Some elementary statistical results are presented next.
 The covariance of two scalar random variables X and Y is defined by:
 
 \begin{equation}
-Cov(x,y) =\frac{\sum_{i=1}^{N}(x_{i}-x_{\bullet})(y_{i}-y_{\bullet})}{N-1}=E(XY)-E(X)-E(Y)
+Cov(X,Y) =\frac{\sum_{i=1}^{N}(x_{i}-x_{\bullet})(y_{i}-y_{\bullet})}{N-1}=E(XY)-E(X)-E(Y)
 \label{eq:DefinitionCovariance}
 \end{equation}
 
-Here \(E*X)\) is the expectation value of the random variable \(X\), i.e., the integral of x multiplied by its \(pdf\):
+Here \(E(X)\) is the expectation value of the random variable \(X\), i.e., the integral of x multiplied by its \(pdf\) over the range of \(x\):
 
 \[E(X)=\int pdf(x) x dx\]
 
-The integral is over the range of \(x\). The covariance can be thought of as variance of two random variables that is \emph{common} to both of them. The variance, a special case of covariance, of \(X\) is defined by:
+The covariance can be thought of as the \emph{common} part of the variance of two random variables. The variance, a special case of covariance, of \(X\) is defined by:
 
-\[Var(x,y) =Cov(X,X)=E(X^2)-(E(X))^2=\sigma_x^2\]
+\[Var(X,Y) = Cov(X,X)=E(X^2)-(E(X))^2=\sigma_x^2\]
 
 It can be shown, using the Cauchy--Schwarz inequality, that:
 
@@ -454,7 +454,7 @@ The jackknife, bootstrap and the DeLong methods are used in file mainVarCov1.R, 
 \subsection{TBA Discussion of above code}\label{tba-discussion-of-above-code}}
 
 \hypertarget{significance-testing}{%
-\section{Significance testing}\label{significance-testing}}
+\subsection{Significance testing}\label{significance-testing}}
 
 The covariance matrix is needed for significance testing. Define the mean square corresponding to the treatment effect, denoted \(MS(T)\), by:
 
@@ -469,20 +469,20 @@ It can be shown that under the null hypothesis (that all treatments have identic
 
 \begin{equation}
 \chi_{1R} \equiv \frac{(I-1)MS(T)}{Var-Cov_1} \sim \chi_{I-1}^{2}
-\label{eq:F1RMT}
+\label{eq:F-1RMT}
 \end{equation}
 
-\eqref{eq:F1RMT} is from §5.4 \citep{RN1865} with two covariance terms ``zeroed out'' because they are multiplied by \(J-1 = 0\) (since, in this example, we are restricting to \(J=1\)).
+\eqref{eq:F-1RMT} is from §5.4 \citep{RN1865} with two covariance terms ``zeroed out'' because they are multiplied by \(J-1 = 0\) (since, in this example, we are restricting to \(J=1\)).
 
 Or equivalently, in terms of the F-distribution \citep{RN1772}:
 
 \begin{equation}
 F_{1R} \equiv \frac{MS(T)}{Var-Cov_1} \sim F_{I-1, \infty}
-\label{eq:DefF1RMT}
+\label{eq:DefF-1RMT}
 \end{equation}
 
 \hypertarget{an-aside-on-the-relation-between-the-chisquare-and-the-f-distribution-with-infinite-ddf}{%
-\subsection{An aside on the relation between the chisquare and the F-distribution with infinite ddf}\label{an-aside-on-the-relation-between-the-chisquare-and-the-f-distribution-with-infinite-ddf}}
+\subsubsection{An aside on the relation between the chisquare and the F-distribution with infinite ddf}\label{an-aside-on-the-relation-between-the-chisquare-and-the-f-distribution-with-infinite-ddf}}
 
 Define \(D_{1-\alpha}\), the \((1-\alpha)\) quantile of distribution \(D\), as that ``cutoff'' value such that the probability of observing a random sample \(d\) less than or equal to \(D_{1-\alpha}\) is \((1-\alpha)\). In other words,
 
@@ -524,7 +524,7 @@ p\equiv \Pr(f>F_{1R} \mid f \sim F_{I-1,\infty})
 The \((1-\alpha)\) confidence interval for the inter-treatment FOM difference is given by:
 
 \begin{equation}
-CI_{1-\alpha} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\infty} \sqrt{2(Var-Cov_1)}
+CI_{1-\alpha,1RMT} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\infty} \sqrt{2(Var-Cov_1)}
 \label{eq:CIalpha1RMT}
 \end{equation}
 
@@ -533,7 +533,7 @@ Comparing \eqref{eq:CIalpha1RMT} to \eqref{eq:UsefulTheorem} shows that the term
 \hypertarget{comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments}{%
 \subsection{Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments}\label{comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments}}
 
-We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader analysis described in §9.8 the previous chapter (with just one reader the conclusions apply to the specific reader, so reader must be a fixed factor). Source the file (TBA) MainOrDbmh1R.R, a listing of which appears in (TBA) Online Appendix 10.C. For convenience, a few relevant lines are shown here:
+We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader analysis described in §9.8 the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be a fixed factor). Source the file (TBA) MainOrDbmh1R.R, a listing of which appears in (TBA) Online Appendix 10.C. For convenience, a few relevant lines are shown here:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -600,7 +600,7 @@ We have shown two methods for analyzing a single reader in multiple treatments: 
 \hypertarget{multiple-reader-multiple-treatment-orh-model}{%
 \section{Multiple-reader multiple-treatment ORH model}\label{multiple-reader-multiple-treatment-orh-model}}
 
-The previous sections served as a ``gentle'' introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to \eqref{eq:ORModel1RMT}, one needs an additional \(j\) index to index readers, and additional random terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random reader factor.
+The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to \eqref{eq:ORModel1RMT}, one needs an additional \(j\) index to index readers, and additional random terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random reader factor.
 
 The general Obuchowski and Rockette model for fully paired multiple-reader multiple-treatment interpretations is:
 
@@ -846,13 +846,20 @@ F_{ORH}\sim F_{ndf,ddf_H}
 \hypertarget{decision-rule-p-value-and-confidence-interval}{%
 \subsubsection{Decision rule, p-value and confidence interval}\label{decision-rule-p-value-and-confidence-interval}}
 
-The critical value of the F-statistic for rejection of the null hypothesis is \(F_{1-\alpha,ndf,ddf_H}\) , i.e., that value such that fraction \((1-\alpha)\) of the area under the distribution lies to the left of the critical value. From definition \eqref{eq:F-ORH}, rejection of the NH is more likely if \(MS(T)\) increases, meaning the treatment effect is larger; \(MS(TR)\) decreases meaning there is less contamination of the treatment effect by treatment-reader variability; the greater of \(Cov2\) or \(Cov3\) decreases, meaning there is less contamination of the treatment effect by between-reader and treatment-reader variability, \(\alpha\) increases, meaning one is allowing a greater probability of Type I errors, \(ndf\) increases, meaning the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH or \(ddf_H\) increases, as this lowers the critical value of the F-statistic.
+The critical value of the F-statistic for rejection of the null hypothesis is \(F_{1-\alpha,ndf,ddf_H}\), i.e., that value such that fraction \((1-\alpha)\) of the area under the distribution lies to the left of the critical value. From definition \eqref{eq:F-ORH}, rejection of the NH is more likely if \(MS(T)\) increases, meaning the treatment effect is larger; \(MS(TR)\) decreases meaning there is less contamination of the treatment effect by treatment-reader variability; the greater of \(Cov2\) or \(Cov3\) decreases, meaning there is less contamination of the treatment effect by between-reader and treatment-reader variability, \(\alpha\) increases, meaning one is allowing a greater probability of Type I errors, \(ndf\) increases, meaning the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH or \(ddf_H\) increases, as this lowers the critical value of the F-statistic.
 
 The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than \(F_{ORH}\) could be observed by chance. In other words, it is the area under the F-distribution \(F_{ndf,ddf_H}\) that lies above the observed value \(F_{ORH}\):
 
 \begin{equation}
 p=\Pr(F>F_{ORH} \mid F\sim F_{ndf,ddf_H})
 \label{eq:pValueORHRRRC}
+\end{equation}
+
+The \((1-\alpha)\) confidence interval for \(\theta_{i \bullet} - \theta_{i' \bullet}\) is given by (the average is over the reader index; the case-set index \(\{1\}\) is suppressed):
+
+\begin{equation}
+CI_{1-\alpha,RRRC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, (ddf_H}\sqrt{\frac{2}{J}(MS(TR)+J\max(Cov_2-Cov_3,0))}
+\label{eq:CIalpha-RRRC}
 \end{equation}
 
 \hypertarget{fixed-reader-random-case-frrc-analysis}{%
@@ -876,10 +883,10 @@ F_{ORH \mid R} \sim F_{ndf,ddf}
 \label{eq:FStatFRRC}
 \end{equation}
 
-Alternatively, as with \eqref{eq:F1RMT},
+Alternatively, as with \eqref{eq:F-1RMT},
 
 \[(I-1)F_{ORH \mid R} \sim t_{I-1}\]
-For \(J\) = 1, \eqref{eq:DefFStatFRRC} reduces to \eqref{eq:DefF1RMT}.
+For \(J\) = 1, \eqref{eq:DefFStatFRRC} reduces to \eqref{eq:DefF-1RMT}.
 
 The critical value of the statistic is \(F_{1-\alpha,I-1,\infty}\) which is that value such that fraction \((1-\alpha)\) of the area under the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value, i.e.,:
 
@@ -895,7 +902,7 @@ p=\Pr(F>F_{ORH \mid R} \mid F \sim F_{I-1,\infty})
 The \((1-\alpha)\) (symmetric) confidence interval for the difference figure of merit is given by:
 
 \begin{equation}
-CI_{1-\alpha}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, \infty}\sqrt{\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
+CI_{1-\alpha,FRRC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, \infty}\sqrt{\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
 \label{eq:CIalphaFRRC}
 \end{equation}
 
@@ -917,6 +924,41 @@ Notice that for J = 1, \eqref{eq:CIalphaFRRC} reduces to \eqref{eq:CIalpha1RMT}.
 
 \hypertarget{random-reader-fixed-case-rrfc-analysis}{%
 \subsection{Random-reader fixed-case (RRFC) analysis}\label{random-reader-fixed-case-rrfc-analysis}}
+
+When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis \(NH: \tau_i = 0 \; (i=1,1,2,...I)\) is:
+
+\begin{equation}
+F_{ORH \mid C}=\frac{MS(T)}{MS(TR)}
+\label{eq:DefFStatRRFC}
+\end{equation}
+
+\(F_{ORH \mid C}\) is distributed as an F-statistic with:
+
+\begin{equation}
+\left.\begin{matrix}
+ndf=I-1\\ 
+ddf=(I-1)(J-1)\\
+F_{ORH \mid C} \sim F_{ndf,ddf}
+\end{matrix}\right\}
+\label{eq:FStatRRFC}
+\end{equation}
+
+The critical value of the statistic is \(F_{1-\alpha,I-1,(I-1)(J-1)}\), which is that value such that fraction \((1-\alpha)\) of the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:
+
+\[F_{ORH \mid C}>F_{1-\alpha,I-1,(I-1)(J-1)}\]
+
+The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:
+
+\[p=\Pr(F>F_{ORH \mid C} \mid F \sim F_{1-\alpha,I-1,(I-1)(J-1)})\]
+
+The \((1-\alpha)\) confidence interval is given by:
+
+\begin{equation}
+CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, (I-1)(J-1)}\sqrt{\frac{2}{J}MS(TR)}
+\label{eq:CIalphaRRFC}
+\end{equation}
+
+It is time to reinforce the formulae with examples.
 
 \hypertarget{single-treatment-multiple-reader-analysis}{%
 \subsection{Single-treatment multiple-reader analysis}\label{single-treatment-multiple-reader-analysis}}
