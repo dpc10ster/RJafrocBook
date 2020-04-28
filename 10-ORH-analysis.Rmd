@@ -229,34 +229,43 @@ The following notation is used:
 * jk = jackknife method
 * bs = boostrap method, with B = number of bootstraps and `seed` = value.
 * dl = DeLong method
+* rjjk = RJafroc, covEstMethod = "jackknife"
+* rjbs = RJafroc, covEstMethod = "bootstrap"
 
-
+Following is the result of the jackknife method, first using the code in this repository and next using `RJafroc`, as a cross-check:
 ```{r}
-# rjjk = RJafroc, covEstMethod = "jackknife"
-# rjbs = RJafroc, covEstMethod = "bootstrap"
 ret1 <- VarCov1_Jk(zik1, zik2)
-Var <- ret1$Var;Cov1 <- ret1$Cov1 # use these (i.e., jackknife) as default values in subsequent code
-data.frame ("Cov_jk" = Cov1, "Var_jk" = Var)
+Var <- ret1$Var
+Cov1 <- ret1$Cov1 # use these (i.e., jackknife) as default values in subsequent code
+data.frame ("Cov1_jk" = Cov1, "Var_jk" = Var)
 
-ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon")$varComp
+ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon")$varComp # default method is jackknife
 data.frame ("Cov_rjjk" = ret4$cov1, "Var_rjjk" = ret4$var)
+```
 
-ret2 <- VarCov1_Bs(zik1, zik2, 2000, seed = 100) # 2000 bootstraps
+Following are bootstrap method results with increasing number of bootstraps:
+```{r}
+ret2 <- VarCov1_Bs(zik1, zik2, 200, seed = 100)
 data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) 
 
-ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 200)$varComp
-data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var)
+ret2 <- VarCov1_Bs(zik1, zik2, 2000, seed = 100)
+data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) 
 
-ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000)$varComp
-data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var) # matches local code with 2000 nBoots, provided seeds are identical
+ret2 <- VarCov1_Bs(zik1, zik2, 20000, seed = 100)
+data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) 
+```
 
-ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 20000)$varComp
-data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var)
-
+Following is result of the DeLong method:
+```{r}
 mtrxDLStr <- VarCovMtrxDLStr(rocData1R)
 ret3 <- VarCovs(mtrxDLStr)
-
 data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
+```
+
+Following is result of bootstrap method as calculated by RJafroc, as a cross check with the bootstrap method:
+```{r}
+ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000)$varComp
+data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var) # matches local code with 2000 nBoots, provided seeds are identical
 ```
 
 ### TBA Discussion of above code
