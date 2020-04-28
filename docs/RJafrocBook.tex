@@ -196,7 +196,7 @@ source method
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{source}\NormalTok{(}\StringTok{\textquotesingle{}R/example.R\textquotesingle{}}\NormalTok{, }\DataTypeTok{local =}\NormalTok{ T)}
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/example.R"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -204,48 +204,20 @@ source method
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\CommentTok{\# source(here("R/example2.R"))}
 \KeywordTok{print}\NormalTok{(}\KeywordTok{head}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(x,y)))}
 \CommentTok{\#\textgreater{}   x        y}
-\CommentTok{\#\textgreater{} 1 1 1.081250}
-\CommentTok{\#\textgreater{} 2 2 1.749150}
-\CommentTok{\#\textgreater{} 3 3 1.734085}
-\CommentTok{\#\textgreater{} 4 4 4.304295}
-\CommentTok{\#\textgreater{} 5 5 3.690461}
-\CommentTok{\#\textgreater{} 6 6 5.791617}
+\CommentTok{\#\textgreater{} 1 1 1.060334}
+\CommentTok{\#\textgreater{} 2 2 0.904013}
+\CommentTok{\#\textgreater{} 3 3 1.839825}
+\CommentTok{\#\textgreater{} 4 4 4.588530}
+\CommentTok{\#\textgreater{} 5 5 3.747632}
+\CommentTok{\#\textgreater{} 6 6 6.298399}
 \end{Highlighting}
 \end{Shaded}
-
-read chunk (does not run code)
-
-run the variablesXY chunk and use the variables it creates
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{x\textless{}{-}}\DecValTok{1}\OperatorTok{:}\DecValTok{100}
-\NormalTok{y\textless{}{-}x}\OperatorTok{+}\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{)}
-\KeywordTok{head}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(x,y))}
-\CommentTok{\#\textgreater{}   x          y}
-\CommentTok{\#\textgreater{} 1 1 {-}0.5360904}
-\CommentTok{\#\textgreater{} 2 2  1.6600748}
-\CommentTok{\#\textgreater{} 3 3  1.9499999}
-\CommentTok{\#\textgreater{} 4 4  4.2143395}
-\CommentTok{\#\textgreater{} 5 5  4.4061410}
-\CommentTok{\#\textgreater{} 6 6  5.8120731}
-\end{Highlighting}
-\end{Shaded}
-
-run the plotXY chunk and create the plot
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(x,y)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{myReport_files/figure-latex/plotXY-1.pdf}
 
 \hypertarget{ORHAnalysis}{%
-\chapter{Obuchowski Rockette Hillis (ORH) Analysis}\label{ORHAnalysis}}
+\chapter{Obuchowski Rockette Hillis2 (ORH) Analysis}\label{ORHAnalysis}}
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -368,7 +340,7 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 \label{eq:UsefulTheorem}
 \end{equation}
 
-The first part of the above equation is general, the second part specializes to the OR single-reader multiple-treatment model where the variances are equal and likewise all covariances in \eqref{eq:ExampleSigma} are equal) The correlation \(\rho_1\) is defined by (the reason for the subscript 1 on \(\rho\) is the same as the reason for the subscript 1 on \(Cov_1\), which will be explained later):
+The left part of the above equation is general, the right part specializes to the OR single-reader multiple-treatment model where the variances are equal and likewise all covariances in \eqref{eq:ExampleSigma} are equal) The correlation \(\rho_1\) is defined by (the reason for the subscript 1 on \(\rho\) is the same as the reason for the subscript 1 on \(Cov_1\), which will be explained later):
 
 \[\rho_1=\frac{Cov_1}{Var}\]
 
@@ -449,32 +421,29 @@ In most situations one expects \(\rho_1\) (for ROC studies) to be positive. Ther
 
 As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method \citep{RN112}. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \eqref{eq:EstimateSigmaBootstrap} and \eqref{eq:EstimateSigmaJackknife} extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file \texttt{VarCovMtrxDLStr.R}. The implementation of the DeLong method \citep{RN112} in file \texttt{VarCovMtrxDLStr.R} gives identical results to those yielded by the SAS macro attributed to DeLong. The file name stands for ``variance covariance matrix according to the DeLong structural components method'' \emph{described in five unnumbered equations following Eqn. 4 in the cited reference}.
 
-The jackknife, bootstrap and the DeLong methods are used in file \texttt{mainVarCov1.R}, a listing and explanation of which appears in (TBA) Online Appendix 10.B. Source the file yielding the following code output:
-
 \begin{itemize}
+\tightlist
 \item
-  The codes for the functions (for \texttt{Var} and \texttt{Cov1} using bootstrap, jackknife, and the DeLong methods) are not displayed (but they are compiled). To display them download the repository and look at the corresponding \texttt{Rmd} file.
-\item
-  Here is the code to calculate the Wilcoxon statistic.
-\item
-  Here is the code to calculate \texttt{Cov1} and \texttt{Var} using the bootstrap method.
-\item
-  Here is the code to calculate \texttt{Cov1} and \texttt{Var} using the jackknife method.
-\item
-  Here is the code to calculate \texttt{Cov1} and \texttt{Var} using the DeLong method.
+  The functions (for \texttt{Var} and \texttt{Cov1} using bootstrap, jackknife, and the DeLong methods) are not displayed (but they are compiled). To display them download the repository and look at the corresponding \texttt{Rmd} file.
 \end{itemize}
 
-The following code uses the functions defined above to calculate \texttt{Cov1} and \texttt{Var} different ways.
+The following code chunk extracts (using the \texttt{DfExtractDataset()} function) single-reader multiple-treatment ROC data for \texttt{dataset02}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{seed \textless{}{-}}\StringTok{ }\DecValTok{1}\NormalTok{;}\KeywordTok{set.seed}\NormalTok{(seed)}
-\CommentTok{\#select the 1st reader to be analyzed}
-\NormalTok{rocData1R \textless{}{-}}\StringTok{ }\KeywordTok{DfExtractDataset}\NormalTok{(dataset02, }\DataTypeTok{rdrs =} \DecValTok{1}\NormalTok{)}
+\NormalTok{rocData1R \textless{}{-}}\StringTok{ }\KeywordTok{DfExtractDataset}\NormalTok{(dataset02, }\DataTypeTok{rdrs =} \DecValTok{1}\NormalTok{) }\CommentTok{\#select the 1st reader to be analyzed}
 
 \NormalTok{zik1 \textless{}{-}}\StringTok{ }\NormalTok{rocData1R}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{];K \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik1)[}\DecValTok{2}\NormalTok{];I \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik1)[}\DecValTok{1}\NormalTok{]}
 \NormalTok{zik2 \textless{}{-}}\StringTok{ }\NormalTok{rocData1R}\OperatorTok{$}\NormalTok{LL[,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{];K2 \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik2)[}\DecValTok{2}\NormalTok{];K1 \textless{}{-}}\StringTok{ }\NormalTok{K}\OperatorTok{{-}}\NormalTok{K2;zik1 \textless{}{-}}\StringTok{ }\NormalTok{zik1[,}\DecValTok{1}\OperatorTok{:}\NormalTok{K1]}
+\end{Highlighting}
+\end{Shaded}
 
+The following notation is used:
+* jk = jackknife method
+* bs = boostrap method, with B bootstraps and \texttt{seed} = seed
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \CommentTok{\# jk = jackknife}
 \CommentTok{\# rjjk = RJafroc, covEstMethod = "jackknife"}
 \CommentTok{\# rjbs = RJafroc, covEstMethod = "bootstrap"}
@@ -491,7 +460,7 @@ The following code uses the functions defined above to calculate \texttt{Cov1} a
 \CommentTok{\#\textgreater{}       Cov\_rjjk     Var\_rjjk}
 \CommentTok{\#\textgreater{} 1 0.0003734661 0.0006989006}
 
-\NormalTok{ret2 \textless{}{-}}\StringTok{ }\KeywordTok{VarCov1\_Bs}\NormalTok{(zik1, zik2, }\DecValTok{2000}\NormalTok{) }\CommentTok{\# 2000 bootstraps}
+\NormalTok{ret2 \textless{}{-}}\StringTok{ }\KeywordTok{VarCov1\_Bs}\NormalTok{(zik1, zik2, }\DecValTok{2000}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{100}\NormalTok{) }\CommentTok{\# 2000 bootstraps}
 \KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_bs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{Cov1, }\StringTok{"Var\_bs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{Var) }
 \CommentTok{\#\textgreater{}         Cov\_bs       Var\_bs}
 \CommentTok{\#\textgreater{} 1 0.0003466804 0.0006738506}

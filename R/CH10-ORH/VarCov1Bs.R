@@ -1,10 +1,10 @@
-VarCov1_Bs <- function (zik1, zik2, B) 
+VarCov1_Bs <- function (zik1, zik2, B, seed = NULL) 
 { 
   I <- dim(zik1)[1]
   K1 <- dim(zik1)[2]
   K2 <- dim(zik2)[2]
   aucBs <- array(dim = c(I,B))#to save the bs Auc values
-  set.seed(100)
+  set.seed(seed)
   for (b in 1 : B){
     k1b <- ceiling( runif(K1) * K1 ) # bs indices for non-diseased    
     k2b <- ceiling( runif(K2) * K2 ) # bs indices for diseased  

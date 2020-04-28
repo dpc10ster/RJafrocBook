@@ -14,18 +14,18 @@ source method
 source(here("R/example.R"))
 ```
 
-<img src="myReport_files/figure-html/unnamed-chunk-1-1.png" width="672" />
+![](myReport_files/figure-epub3/unnamed-chunk-1-1.png)<!-- -->
 
 ```r
 # source(here("R/example2.R"))
 print(head(data.frame(x,y)))
 #>   x        y
-#> 1 1 2.270260
-#> 2 2 2.949769
-#> 3 3 2.900507
-#> 4 4 5.195690
-#> 5 5 3.929142
-#> 6 6 7.390877
+#> 1 1 2.252275
+#> 2 2 2.919807
+#> 3 3 2.526587
+#> 4 4 2.648630
+#> 5 5 2.289681
+#> 6 6 5.859748
 ```
 
 

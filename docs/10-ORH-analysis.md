@@ -196,23 +196,25 @@ In most situations one expects $\rho_1$ (for ROC studies) to be positive. There 
 ### Code illustrating the covariance matrix (TBA)
 As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method [@RN112]. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \@ref(eq:EstimateSigmaBootstrap) and \@ref(eq:EstimateSigmaJackknife) extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file `VarCovMtrxDLStr.R`. The implementation of the DeLong method [@RN112] in file `VarCovMtrxDLStr.R` gives identical results to those yielded by the SAS macro attributed to DeLong. The file name stands for "variance covariance matrix according to the DeLong structural components method" *described in five unnumbered equations following Eqn. 4 in the cited reference*.
 
-The jackknife, bootstrap and the DeLong methods are used in file `mainVarCov1.R`, a listing and explanation of which appears in (TBA) Online Appendix 10.B. Source the file yielding the following code output:
-
-* The codes for the functions (for `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not displayed (but they are compiled). To display them download the repository and look at the corresponding `Rmd` file.
-* Here is the code to calculate the Wilcoxon statistic.
+* The functions (for `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not displayed (but they are compiled). To display them download the repository and look at the corresponding `Rmd` file.
 
 
 
-The following code uses the functions defined above to calculate `Cov1` and `Var` different ways.
+The following code chunk extracts (using the `DfExtractDataset()` function) single-reader multiple-treatment ROC data for `dataset02`. 
 
 ```r
-seed <- 1;set.seed(seed)
-#select the 1st reader to be analyzed
-rocData1R <- DfExtractDataset(dataset02, rdrs = 1)
+rocData1R <- DfExtractDataset(dataset02, rdrs = 1) #select the 1st reader to be analyzed
 
 zik1 <- rocData1R$NL[,1,,1];K <- dim(zik1)[2];I <- dim(zik1)[1]
 zik2 <- rocData1R$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
+```
 
+The following notation is used:
+* jk = jackknife method
+* bs = boostrap method, with B bootstraps and `seed` = seed
+
+
+```r
 # jk = jackknife
 # rjjk = RJafroc, covEstMethod = "jackknife"
 # rjbs = RJafroc, covEstMethod = "bootstrap"
@@ -229,7 +231,7 @@ data.frame ("Cov_rjjk" = ret4$cov1, "Var_rjjk" = ret4$var)
 #>       Cov_rjjk     Var_rjjk
 #> 1 0.0003734661 0.0006989006
 
-ret2 <- VarCov1_Bs(zik1, zik2, 2000) # 2000 bootstraps
+ret2 <- VarCov1_Bs(zik1, zik2, 2000, seed = 100) # 2000 bootstraps
 data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) 
 #>         Cov_bs       Var_bs
 #> 1 0.0003466804 0.0006738506
@@ -256,6 +258,7 @@ data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
 #>         Cov_dl       Var_dl
 #> 1 0.0003684357 0.0006900766
 ```
+
 ### TBA Discussion of above code
 
 ### Significance testing
