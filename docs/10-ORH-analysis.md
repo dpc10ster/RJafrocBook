@@ -211,15 +211,14 @@ zik2 <- rocData1R$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
 
 The following notation is used:
 * jk = jackknife method
-* bs = boostrap method, with B bootstraps and `seed` = seed
+* bs = boostrap method, with B = number of bootstraps and `seed` = value.
+* dl = DeLong method
+
 
 
 ```r
-# jk = jackknife
 # rjjk = RJafroc, covEstMethod = "jackknife"
 # rjbs = RJafroc, covEstMethod = "bootstrap"
-# bs = bootstrap
-# dl = DeLong
 ret1 <- VarCov1_Jk(zik1, zik2)
 Var <- ret1$Var;Cov1 <- ret1$Cov1 # use these (i.e., jackknife) as default values in subsequent code
 data.frame ("Cov_jk" = Cov1, "Var_jk" = Var)
