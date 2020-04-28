@@ -3,7 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Obuchowski Rockette Hillis (ORH) Analysis {#ORHAnalysis}
+# Obuchowski Rockette Hillis2 (ORH) Analysis {#ORHAnalysis}
 
 
 
@@ -121,7 +121,7 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 (\#eq:UsefulTheorem)
 \end{equation}
 
-The first part of the above equation is general, the second part specializes to the OR single-reader multiple-treatment model where the variances are equal and likewise all covariances in \@ref(eq:ExampleSigma) are equal) The correlation  $\rho_1$ is defined by (the reason for the subscript 1 on $\rho$  is the same as the reason for the subscript 1 on  $Cov_1$, which will be explained later): 
+The left part of the above equation is general, the right part specializes to the OR single-reader multiple-treatment model where the variances are equal and likewise all covariances in \@ref(eq:ExampleSigma) are equal) The correlation  $\rho_1$ is defined by (the reason for the subscript 1 on $\rho$  is the same as the reason for the subscript 1 on  $Cov_1$, which will be explained later): 
 
 $$\rho_1=\frac{Cov_1}{Var}$$
 
@@ -200,18 +200,6 @@ The jackknife, bootstrap and the DeLong methods are used in file `mainVarCov1.R`
 
 * The codes for the functions (for `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not displayed (but they are compiled). To display them download the repository and look at the corresponding `Rmd` file.
 * Here is the code to calculate the Wilcoxon statistic.
-
-
-
-* Here is the code to calculate `Cov1` and `Var` using the bootstrap method.
-
-
-* Here is the code to calculate `Cov1` and `Var` using the jackknife method.
-
-
-* Here is the code to calculate `Cov1` and `Var` using the DeLong method.
-
-
 
 
 

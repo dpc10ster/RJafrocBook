@@ -3,7 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Obuchowski Rockette Hillis (ORH) Analysis {#ORHAnalysis}
+# Obuchowski Rockette Hillis2 (ORH) Analysis {#ORHAnalysis}
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
 library(kableExtra)
 library(ggplot2)
 library(RJafroc)
+library(here)
 ```
 
 ## Introduction
@@ -129,7 +130,7 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 (\#eq:UsefulTheorem)
 \end{equation}
 
-The first part of the above equation is general, the second part specializes to the OR single-reader multiple-treatment model where the variances are equal and likewise all covariances in \@ref(eq:ExampleSigma) are equal) The correlation  $\rho_1$ is defined by (the reason for the subscript 1 on $\rho$  is the same as the reason for the subscript 1 on  $Cov_1$, which will be explained later): 
+The left part of the above equation is general, the right part specializes to the OR single-reader multiple-treatment model where the variances are equal and likewise all covariances in \@ref(eq:ExampleSigma) are equal) The correlation  $\rho_1$ is defined by (the reason for the subscript 1 on $\rho$  is the same as the reason for the subscript 1 on  $Cov_1$, which will be explained later): 
 
 $$\rho_1=\frac{Cov_1}{Var}$$
 
@@ -207,261 +208,20 @@ As indicated above, the covariance matrix can be estimated using the jackknife o
 The jackknife, bootstrap and the DeLong methods are used in file `mainVarCov1.R`, a listing and explanation of which appears in (TBA) Online Appendix 10.B. Source the file yielding the following code output:
 
 * The codes for the functions (for `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not displayed (but they are compiled). To display them download the repository and look at the corresponding `Rmd` file.
-* Here is the code to calculate the Wilcoxon statistic.
 
 ```{r echo=FALSE}
-# works only for one dimesional ratings
-Wilcoxon <- function (zk1, zk2)
-{
-  
-  K1 = length(zk1)
-  K2 = length(zk2)
-  
-  W <- 0
-  for (k1 in 1:K1) {
-    W <- W + sum(zk1[k1] < zk2)
-    W <- W + 0.5 * sum(zk1[k1] == zk2)
-  }
-  W <- W/K1/K2
-  
-  return (W)
-  
-}
-```
-
-* Here is the code to calculate `Cov1` and `Var` using the bootstrap method.
-```{r echo=FALSE}
-VarCov1_Bs <- function (zik1, zik2, B) 
-{ 
-  I <- dim(zik1)[1]
-  K1 <- dim(zik1)[2]
-  K2 <- dim(zik2)[2]
-  aucBs <- array(dim = c(I,B))#to save the bs Auc values
-  set.seed(100)
-  for (b in 1 : B){
-    k1b <- ceiling( runif(K1) * K1 ) # bs indices for non-diseased    
-    k2b <- ceiling( runif(K2) * K2 ) # bs indices for diseased  
-    for ( i in 1 : I) aucBs[i,b] <- Wilcoxon(zik1[i,k1b], zik2[i,k2b]) 
-  }
-  Covariance <- array(dim = c(I, I))
-  for (i in 1:I){
-    for (ip in 1:I){
-      Covariance[i, ip] <- cov(aucBs[i, ], aucBs[ip, ])          
-    }
-  }
-  Var <- 0
-  count <- 0
-  for (i in 1:I){    
-    Var <- Var + Covariance[i, i] 
-    count <- count + 1
-  }
-  Var <- Var / count 
-  Cov1 <- 0
-  count <- 0
-  for (i in 1:I){    
-    for (ip in 1:I){
-      if (ip != i){
-        Cov1 <- Cov1 + Covariance[i, ip] 
-        count <- count + 1
-      }
-    }
-  }  
-  Cov1 <- Cov1 / count 
-  return (list (    
-    Var = Var,
-    Cov1 = Cov1
-  ))  
-}
-```
-
-* Here is the code to calculate `Cov1` and `Var` using the jackknife method.
-```{r echo=FALSE}
-VarCov1_Jk <- function (zik1, zik2) 
-{ 
-  I <- dim(zik1)[1]
-  K1 <- dim(zik1)[2]
-  K2 <- dim(zik2)[2]
-  K <- K1+K2
-  FOM <- array(dim=c(I))
-  for (i in 1:I) {
-    FOM[i] <- Wilcoxon(zik1[i,],zik2[i,])    
-  }
-  
-  FOMik <- array(dim = c(I,  K))
-  for (i in 1:I) {
-    for (k in 1:K) {
-      if (k <= K1) {
-        FOMik[i,k] <- Wilcoxon(zik1[i,-k], zik2[i,])
-      } else {
-        FOMik[i,k] <- Wilcoxon(zik1[i,], zik2[i,-(k-K1)])
-      } 
-    }
-  }
-  
-  Cov <- array(dim = c(I, I))
-  
-  for (i in 1:I){
-    for (ip in 1:I){
-      Cov[i, ip] <- cov(FOMik[i,], FOMik[ip,])          
-    }
-  }  
-  
-  Var <- 0
-  count <- 0
-  for (i in 1:I){    
-    Var <- Var + Cov[i, i] 
-    count <- count + 1
-  }
-  Var <- Var / count 
-  Var <- Var * (K-1)^2/K
-  
-  Cov1 <- 0
-  count <- 0
-  for (i in 1:I){    
-    for (ip in 1:I){
-      if (ip != i){
-        Cov1 <- Cov1 + Cov[i, ip] 
-        count <- count + 1
-      }
-    }
-  }  
-  Cov1 <- Cov1 / count 
-  Cov1 <- Cov1 * (K-1)^2/K
-  return (list (    
-    Var = Var,
-    Cov1 = Cov1
-  ))  
-}
-```
-
-* Here is the code to calculate `Cov1` and `Var` using the DeLong method.
-```{r echo=FALSE}
-VarCovMtrxDLStr <- function(dataset){ # this is implementation of un-numbered equations following Eqn. 4 in 1988 paper
-  NL <- dataset$NL
-  LL <- dataset$LL
-  lesionNum <- dataset$lesionVector
-  lesionWeight <- dataset$lesionWeight
-  maxNL <- dim(NL)[4]
-  maxLL <- dim(LL)[4]
-  dataType <- dataset$dataType
-  modalityID <- dataset$modalityID
-  readerID <- dataset$readerID
-  I <- length(modalityID)
-  J <- length(readerID)
-  K <- dim(NL)[3]
-  K2 <- dim(LL)[3]
-  K1 <- K - K2
-  
-  dim(NL) <- c(I, J, K, maxNL)
-  dim(LL) <- c(I, J, K2, max(lesionNum))
-  
-  fomArray <- UtilFigureOfMerit(dataset, FOM = "Wilcoxon")
-  
-  V10 <- array(dim = c(I, J, K2))
-  V01 <- array(dim = c(I, J, K1))
-  for (i in 1:I) {
-    for (j in 1:J) {
-      nl <- NL[i, j, 1:K1, ]
-      ll <- cbind(NL[i, j, (K1 + 1):K, ], LL[i, j, , ])
-      dim(nl) <- c(K1, maxNL)
-      dim(ll) <- c(K2, maxNL + max(lesionNum))
-      fp <- apply(nl, 1, max)
-      tp <- apply(ll, 1, max)
-      for (k in 1:K2) {
-        V10[i, j, k] <- (sum(fp < tp[k]) + 0.5 * sum(fp == tp[k]))/K1
-      }
-      for (k in 1:K1) {
-        V01[i, j, k] <- (sum(fp[k] < tp) + 0.5 * sum(fp[k] == tp))/K2
-      }
-    }
-  }
-  s10 <- array(dim = c(I, I, J, J))
-  s01 <- array(dim = c(I, I, J, J))
-  for (i in 1:I) {
-    for (ip in 1:I) {
-      for (j in 1:J) {
-        for (jp in 1:J) {
-          s10[i, ip, j, jp] <- sum((V10[i, j, ] - fomArray[i, j]) * (V10[ip, jp, ] - fomArray[ip, jp]))/(K2 - 1)
-          s01[i, ip, j, jp] <- sum((V01[i, j, ] - fomArray[i, j]) * (V01[ip, jp, ] - fomArray[ip, jp]))/(K1 - 1)
-        }
-      }
-    }
-  }
-  S <- s10/K2 + s01/K1
-  return(S)
-}
-```
-
-
-```{r echo=FALSE}
-VarCovs <- function(covariances) {
-  var <- 0
-  count <- 0
-  I <- dim(covariances)[1]
-  J <- dim(covariances)[3]
-  for (i in 1:I) {
-    for (j in 1:J) {
-      var <- var + covariances[i, i, j, j]
-      count <- count + 1
-    }
-  }
-  var <- var/count
-  
-  cov1 <- 0
-  count <- 0
-  for (i in 1:I) {
-    for (ip in 1:I) {
-      for (j in 1:J) {
-        if (ip != i) {
-          cov1 <- cov1 + covariances[i, ip, j, j]
-          count <- count + 1
-        }
-      }
-    }
-  }
-  cov1 <- cov1/count
-  
-  cov2 <- 0
-  count <- 0
-  for (i in 1:I) {
-    for (j in 1:J) {
-      for (jp in 1:J) {
-        if (j != jp) {
-          cov2 <- cov2 + covariances[i, i, j, jp]
-          count <- count + 1
-        }
-      }
-    }
-  }
-  cov2 <- cov2/count
-  
-  cov3 <- 0
-  count <- 0
-  for (i in 1:I) {
-    for (ip in 1:I) {
-      if (i != ip) {
-        for (j in 1:J) {
-          for (jp in 1:J) {
-            if (j != jp) {
-              cov3 <- cov3 + covariances[i, ip, j, jp]
-              count <- count + 1
-            }
-          }
-        }
-      }
-    }
-  }
-  cov3 <- cov3/count
-  
-  return(list(var = var, cov1 = cov1, cov2 = cov2, cov3 = cov3))
-} 
+source(here("R/CH10-ORH/VarCov1Bs.R"))
+source(here("R/CH10-ORH/Wilcoxon.R"))
+source(here("R/CH10-ORH/VarCov1Bs.R"))
+source(here("R/CH10-ORH/VarCov1Jk.R")) 
+source(here("R/CH10-ORH/VarCovs.R"))
+source(here("R/CH10-ORH/VarCovMtrxDLStr.R"))
 ```
 
 The following code uses the functions defined above to calculate `Cov1` and `Var` different ways.
 ```{r}
 seed <- 1;set.seed(seed)
-#select the 1st reader to be analyzed
-rocData1R <- DfExtractDataset(dataset02, rdrs = 1)
+rocData1R <- DfExtractDataset(dataset02, rdrs = 1) #select the 1st reader to be analyzed
 
 zik1 <- rocData1R$NL[,1,,1];K <- dim(zik1)[2];I <- dim(zik1)[1]
 zik2 <- rocData1R$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
