@@ -194,29 +194,41 @@ The entire process is repeated for different treatment pairings and the resultin
 In most situations one expects $\rho_1$ (for ROC studies) to be positive. There is, perhaps unlikely, a scenario that could lead to anti-correlation and negative. This could occur, with "complementary" treatments, e.g., CT vs. MRI, where one treatment is good for bone imaging and the other for soft-tissue imaging. In this situation what constitutes an easy case-set in one treatment could be a difficult case-set in the other treatment.
 
 ### Code illustrating the covariance matrix (TBA)
-As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method [@RN112]. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \@ref(eq:EstimateSigmaBootstrap) and \@ref(eq:EstimateSigmaJackknife) extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file `VarCovMtrxDLStr.R`. The implementation of the DeLong method [@RN112] in file `VarCovMtrxDLStr.R` gives identical results to those yielded by the SAS macro attributed to DeLong. The file name stands for "variance covariance matrix according to the DeLong structural components method" *described in five unnumbered equations following Eqn. 4 in the cited reference*.
+As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method [@RN112]. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \@ref(eq:EstimateSigmaBootstrap) and \@ref(eq:EstimateSigmaJackknife) extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file `VarCovMtrxDLStr.R`. The file name stands for "variance covariance matrix according to the DeLong structural components method" *described in five unnumbered equations following Eqn. 4 in the cited reference*.
 
-* The functions (for `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not displayed (but they are compiled). To display them download the repository and look at the corresponding `Rmd` file.
+* The functions (for `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not displayed, but they are compiled. To display them download the repository and look at the `Rmd` file corresponding to this output and the sourced files listed below:
 
 
+```r
+source(here("R/CH10-ORH/Wilcoxon.R"))
+source(here("R/CH10-ORH/VarCov1Bs.R"))
+source(here("R/CH10-ORH/VarCov1Bs.R"))
+source(here("R/CH10-ORH/VarCov1Jk.R")) 
+source(here("R/CH10-ORH/VarCovMtrxDLStr.R"))
+source(here("R/CH10-ORH/VarCovs.R"))
+```
 
-The following code chunk extracts (using the `DfExtractDataset()` function) single-reader multiple-treatment ROC data for `dataset02`. 
+The following code chunk extracts (using the `DfExtractDataset` function) a single-reader multiple-treatment ROC dataset corresponding to the first reader from `dataset02`, i.e., the Van Dyke or `VD` dataset. 
+
 
 ```r
 rocData1R <- DfExtractDataset(dataset02, rdrs = 1) #select the 1st reader to be analyzed
-
 zik1 <- rocData1R$NL[,1,,1];K <- dim(zik1)[2];I <- dim(zik1)[1]
 zik2 <- rocData1R$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
 ```
 
-The following notation is used:
+The following notation is used in the code below:
+
 * jk = jackknife method
 * bs = boostrap method, with B = number of bootstraps and `seed` = value.
 * dl = DeLong method
 * rjjk = RJafroc, covEstMethod = "jackknife"
 * rjbs = RJafroc, covEstMethod = "bootstrap"
 
-Following is the result of the jackknife method, first using the code in this repository and next using `RJafroc`, as a cross-check:
+For exammple, `Cov1_jk` is the jackknife estimate of `Cov1`.
+
+Shown below are the results of the jackknife method, first using the code in this repository and next, as a cross-check, using `RJafroc` function `UtilVarComponentsOR`:
+
 
 ```r
 ret1 <- VarCov1_Jk(zik1, zik2)
@@ -226,13 +238,15 @@ data.frame ("Cov1_jk" = Cov1, "Var_jk" = Var)
 #>        Cov1_jk       Var_jk
 #> 1 0.0003734661 0.0006989006
 
-ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon")$varComp # default method is jackknife
+ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon")$varComp # default `covEstMethod` is jackknife
 data.frame ("Cov_rjjk" = ret4$cov1, "Var_rjjk" = ret4$var)
 #>       Cov_rjjk     Var_rjjk
 #> 1 0.0003734661 0.0006989006
 ```
 
-Following are bootstrap method results with increasing number of bootstraps:
+Note that the estimates are identical and that the $Cov_1$ estimate is smaller than the $Var$ estimate (their ratio is the correlation $\rho_1 = Cov_1/Var$ = 0.5343623). 
+
+Shown next are bootstrap method estimates with increasing number of bootstraps (200, 2000 and 20,000):
 
 ```r
 ret2 <- VarCov1_Bs(zik1, zik2, 200, seed = 100)
@@ -251,7 +265,22 @@ data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var)
 #> 1 0.0003680714 0.0006862668
 ```
 
-Following is result of the DeLong method:
+With increasing number of bootstraps the values approach the jackknife estimates.
+
+Following, as a cross check, are results of bootstrap method as calculated by the `RJafroc` function `UtilVarComponentsOR`:
+
+
+```r
+ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000, seed = 100)$varComp
+data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var)
+#>       Cov_rjbs     Var_rjbs
+#> 1 0.0003466804 0.0006738506
+```
+
+Note that the two estimates are identical *provided the seeds are identical*.
+
+Following are results of the DeLong covariance estimation method, the first output using this repository code and the second using the `RJafroc` function `UtilVarComponentsOR` with appropriate arguments:
+
 
 ```r
 mtrxDLStr <- VarCovMtrxDLStr(rocData1R)
@@ -259,18 +288,14 @@ ret3 <- VarCovs(mtrxDLStr)
 data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
 #>         Cov_dl       Var_dl
 #> 1 0.0003684357 0.0006900766
+
+ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "DeLong")$varComp
+data.frame ("Cov_rjdl" = ret5$cov1, "Var_rjdl" = ret5$var)
+#>       Cov_rjdl     Var_rjdl
+#> 1 0.0003684357 0.0006900766
 ```
 
-Following is result of bootstrap method as calculated by RJafroc, as a cross check with the bootstrap method:
-
-```r
-ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000)$varComp
-data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var) # matches local code with 2000 nBoots, provided seeds are identical
-#>       Cov_rjbs     Var_rjbs
-#> 1 0.0003466804 0.0006738506
-```
-
-### TBA Discussion of above code
+Note that the two estimates are identical and that the DeLong estimate are close to the bootstrap estimates using 20,000 bootstraps. The close correspondence is only expected when using the Wilcoxon figure of merit.
 
 ### Significance testing
 The covariance matrix is needed for significance testing. Define the mean square corresponding to the treatment effect, denoted $MS(T)$, by:
@@ -326,7 +351,7 @@ qchisq(0.05,4)/4
 ```
 
 ### p-value and confidence interval
-The p-value is the probability that a sample from the $F_{I-1,\infty}$ distribution is greater than or equal to the observed value of the test statistic, namely: 
+The p-value is the probability that a sample from the $F_{I-1,\infty}$ distribution is greater than the observed value of the test statistic, namely: 
 
 \begin{equation}
 p\equiv \Pr(f>F_{1R} \mid f \sim F_{I-1,\infty})
@@ -340,14 +365,52 @@ CI_{1-\alpha,1RMT} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\i
 (\#eq:CIalpha1RMT)
 \end{equation}
 
-Comparing \@ref(eq:CIalpha1RMT) to \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(Var-Cov_1)}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96 and $t_{1-\alpha/2,\infty}$ is +1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.] 
+Comparing \@ref(eq:CIalpha1RMT) to \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(Var-Cov_1)}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.] 
 
 ### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
-We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader analysis described in §9.8 the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor). Source the file (TBA) MainOrDbmh1R.R, a listing of which appears in (TBA) Online Appendix 10.C. For convenience, a few relevant lines are shown here:
+We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader random-case analysis described in §9.8 of the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor).
+
+Shown below are results obtained using RJafroc function `StSignificanceTesting` with `option = "FRRC"` for DBMH (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix (i.e., $Cov_1$ and $Var$). 
 
 
 ```r
-# seed <- 1;set.seed(seed)
+ret1 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "DBMH", option = "FRRC")
+data.frame("DBMH:F" = ret1$FTestStatsFRRC$fFRRC, 
+           "DBMH:ddf" = ret1$FTestStatsFRRC$ddfFRRC, 
+           "DBMH:P-val" = ret1$FTestStatsFRRC$pFRRC)
+#>     DBMH.F DBMH.ddf DBMH.P.val
+#> 1 1.220111      113  0.2716853
+
+ret2 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC")
+data.frame("ORHJack:F" = ret2$FTestStatsFRRC$fFRRC, 
+           "ORHJack:ddf" = ret2$FTestStatsFRRC$ddfFRRC, 
+           "ORHJack:P-val" = ret2$FTestStatsFRRC$pFRRC)
+#>   ORHJack.F ORHJack.ddf ORHJack.P.val
+#> 1  1.220111         Inf     0.2693389
+
+ret3 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC", 
+                              covEstMethod = "DeLong")
+data.frame("ORHDeLong:F" = ret3$FTestStatsFRRC$fFRRC, 
+           "ORHDeLong:ddf" = ret3$FTestStatsFRRC$ddfFRRC, 
+           "ORHDeLong:P-val" = ret3$FTestStatsFRRC$pFRRC)
+#>   ORHDeLong.F ORHDeLong.ddf ORHDeLong.P.val
+#> 1    1.234502           Inf       0.2665333
+
+ret4 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC", 
+                              covEstMethod = "bootstrap")
+data.frame("ORHBoot:F" = ret4$FTestStatsFRRC$fFRRC, 
+           "ORHBoot:ddf" = ret4$FTestStatsFRRC$ddfFRRC, 
+           "ORHBoot:P-val" = ret4$FTestStatsFRRC$pFRRC)
+#>   ORHBoot.F ORHBoot.ddf ORHBoot.P.val
+#> 1  1.163509         Inf      0.280739
+```
+
+The DBMH and ORH-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBMH and $\infty$ for ORH. The F-statistics for ORH-bootstrap and ORH-DeLong are different.
+
+Shown below is a first-principles implementation of signficance testing for the one-reader case and how it compares to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function.
+
+
+```r
 alpha <- 0.05
 theta_i <- c(0,0);for (i in 1:I) theta_i[i] <- Wilcoxon(zik1[i,], zik2[i,])
 
@@ -389,7 +452,7 @@ for (i in 1 : nDiffs) {
 #>         Lower         Mid      Upper
 #> 1 -0.07818322 -0.02818035 0.02182251
 # compare to RJafroc
-ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH")
+ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH", option = "FRRC")
 print(data.frame("theta_1" = ret_rj$fomArray[1],
                  "theta_2" = ret_rj$fomArray[2],
                  "Var" = ret_rj$varComp$var,
@@ -405,6 +468,27 @@ print(data.frame("theta_1" = ret_rj$fomArray[1],
 #>         Lower         Mid      Upper
 #> 1 -0.07818322 -0.02818035 0.02182251
 ```
+
+The first-principles and the `RJafroc` values agree with each other. This code also shows how to extract the different estimates ($Var$, $Cov_1$, etc.) from the object `ret_rj` returned by `RJafroc`. 
+
+* Var: ret_rj\$varComp\$var
+* Cov1: ret_rj\$varComp\$cov
+* F-statistic: ret_rj\$FTestStatsFRRC\$fFRRC
+* p-value: ret_rj\$FTestStatsFRRC\$pFRRC
+* CI Lower: ret_rj\$ciDiffTrtFRRC\$CILower
+* Mid Value: ret_rj\$ciDiffTrtFRRC\$Estimate
+* CI Upper: ret_rj\$ciDiffTrtFRRC\$CIUpper
+
+[Jumping ahead, if RRRC analysis were conduced, the correponding values would be:
+
+* F-statistic: ret_rj\$FTestStatsRRRC\$fRRRC
+* p-value: ret_rj\$FTestStatsRRRC\$pRRRC
+* CI Lower: ret_rj\$ciDiffTrtRRRC\$CILower
+* Mid Value: ret_rj\$ciDiffTrtRRRC\$Estimate
+* CI Upper: ret_rj\$ciDiffTrtRRRC\$CIUpper
+
+And similarly, for RRFC analysis, one replaces RRRC with RRFC.]
+
 ## Multiple-reader multiple-treatment ORH model
 The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to \@ref(eq:ORModel1RMT), one needs an additional $j$ index to index readers, and additional random terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random reader factor. 
 
@@ -476,11 +560,11 @@ $$
 \Sigma=
 \begin{bmatrix}
 (11,11) & (12,11) & (13,11) & (21,11) & (22,11) & (23,11) \\
- & (12,12) & (13,12) & (21,12) & (22,12) & (23,12) \\ 
- & & (13,13) & (21,13) & (22,13) & (23,13) \\ 
- & & & (21,21) & (22,21) & (23,21) \\
- & & & & (22,22) & (23,22) \\ 
- & & & & & (23,23)
+& (12,12) & (13,12) & (21,12) & (22,12) & (23,12) \\ 
+& & (13,13) & (21,13) & (22,13) & (23,13) \\ 
+& & & (21,21) & (22,21) & (23,21) \\
+& & & & (22,22) & (23,22) \\ 
+& & & & & (23,23)
 \end{bmatrix}
 $$
 
@@ -492,11 +576,11 @@ $$
 \Sigma=
 \begin{bmatrix}
 Var & (12,11) & (13,11) & (21,11) & (22,11) & (23,11) \\
- & Var & (13,12) & (21,12) & (22,12) & (23,12) \\ 
- & & Var & (21,13) & (22,13) & (23,13) \\ 
- & & & Var & (22,21) & (23,21) \\
- & & & & Var & (23,22) \\ 
- & & & & & Var
+& Var & (13,12) & (21,12) & (22,12) & (23,12) \\ 
+& & Var & (21,13) & (22,13) & (23,13) \\ 
+& & & Var & (22,21) & (23,21) \\
+& & & & Var & (23,22) \\ 
+& & & & & Var
 \end{bmatrix}
 $$
 
@@ -506,11 +590,11 @@ $$
 \Sigma=
 \begin{bmatrix}
 Var & (12,11) & (13,11) & Cov_1 & (22,11) & (23,11) \\
- & Var & (13,12) & (21,12) & Cov_1 & (23,12) \\ 
- & & Var & (21,13) & (22,13) & Cov_1 \\ 
- & & & Var & (22,21) & (23,21) \\
- & & & & Var & (23,22) \\ 
- & & & & & Var
+& Var & (13,12) & (21,12) & Cov_1 & (23,12) \\ 
+& & Var & (21,13) & (22,13) & Cov_1 \\ 
+& & & Var & (22,21) & (23,21) \\
+& & & & Var & (23,22) \\ 
+& & & & & Var
 \end{bmatrix}
 $$
 
@@ -520,11 +604,11 @@ $$
 \Sigma=
 \begin{bmatrix}
 Var & Cov_2 & Cov_2 & Cov_1 & (22,11) & (23,11) \\
- & Var & Cov_2 & (21,12) & Cov_1 & (23,12) \\ 
- &  & Var & (21,13) & (22,13) & Cov_1 \\ 
- &  &  & Var & Cov_2 & Cov_2 \\
- &  &  &  & Var & Cov_2 \\ 
- &  &  &  &  & Var
+& Var & Cov_2 & (21,12) & Cov_1 & (23,12) \\ 
+&  & Var & (21,13) & (22,13) & Cov_1 \\ 
+&  &  & Var & Cov_2 & Cov_2 \\
+&  &  &  & Var & Cov_2 \\ 
+&  &  &  &  & Var
 \end{bmatrix}
 $$
 
@@ -534,11 +618,11 @@ $$
 \Sigma=
 \begin{bmatrix}
 Var & Cov_2 & Cov_2 & Cov_1 & Cov_3 & Cov_3 \\
- & Var & Cov_2 & Cov_3 & Cov_1 & Cov_3 \\ 
- &  & Var & Cov_3 & Cov_3 & Cov_1 \\ 
- &  &  & Var & Cov_2 & Cov_2 \\
- &  &  &  & Var & Cov_2 \\ 
- &  &  &  &  & Var
+& Var & Cov_2 & Cov_3 & Cov_1 & Cov_3 \\ 
+&  & Var & Cov_3 & Cov_3 & Cov_1 \\ 
+&  &  & Var & Cov_2 & Cov_2 \\
+&  &  &  & Var & Cov_2 \\ 
+&  &  &  &  & Var
 \end{bmatrix}
 $$
 
@@ -690,7 +774,7 @@ p=\Pr(F>F_{ORH \mid R} \mid F \sim F_{I-1,\infty})
 (\#eq:pValueaphaFRRC)
 \end{equation}
 
- The $(1-\alpha)$ (symmetric) confidence interval for the difference figure of merit is given by:
+The $(1-\alpha)$ (symmetric) confidence interval for the difference figure of merit is given by:
 
 \begin{equation}
 CI_{1-\alpha,FRRC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, \infty}\sqrt{\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
@@ -700,7 +784,7 @@ CI_{1-\alpha,FRRC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, \
 One can think of the numerator terms on the right hand side of \@ref(eq:CIalphaFRRC) as the variance of the inter-treatment FOM difference per reader, and the division by $J$ is needed as the readers, as a group, have smaller variance in inverse proportion to their numbers. 
 
 The NH is rejected if any of the following equivalent conditions is met:
- 
+
 * The observed value of the F-statistic exceeds the critical value $F_{1-\alpha,I-1,\infty}$.
 * The p-value defined by \@ref(eq:pValueaphaFRRC) is less than $\alpha$.
 * The $(1-\alpha)$ confidence interval does not include zero.
