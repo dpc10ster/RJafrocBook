@@ -382,8 +382,7 @@ data.frame("ORHBoot:F" = ret4$FTestStatsFRRC$fFRRC,
 
 The DBMH and ORH-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBMH and $\infty$ for ORH. The F-statistics for ORH-bootstrap and ORH-DeLong are different.
 
-Shown below is a first-principles implementation of signficance testing for the one-reader case and how it compares to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function.
-
+Shown below is a first-principles implementation of signficance testing for the one-reader case.
 ```{r}
 alpha <- 0.05
 theta_i <- c(0,0);for (i in 1:I) theta_i[i] <- Wilcoxon(zik1[i,], zik2[i,])
@@ -407,9 +406,9 @@ trtDiff <- trtDiff[!is.na(trtDiff)]
 nDiffs <- I*(I-1)/2
 CI_DIFF_FOM_1RMT <- array(dim = c(nDiffs, 3))
 for (i in 1 : nDiffs) {
-  CI_DIFF_FOM_1RMT[i,1] <- qt(alpha/2,df = Inf)*sqrt(2*(Var - Cov1)) + trtDiff[i]
+  CI_DIFF_FOM_1RMT[i,1] <- trtDiff[i] + qt(alpha/2,  df = Inf)*sqrt(2*(Var - Cov1))
   CI_DIFF_FOM_1RMT[i,2] <- trtDiff[i]
-  CI_DIFF_FOM_1RMT[i,3] <- qt(1-alpha/2,df = Inf)*sqrt(2*(Var - Cov1)) + trtDiff[i]
+  CI_DIFF_FOM_1RMT[i,3] <- trtDiff[i] + qt(1-alpha/2,df = Inf)*sqrt(2*(Var - Cov1))
   print(data.frame("theta_1" = theta_i[1],
                    "theta_2" = theta_i[2],
                    "Var" = Var,
@@ -421,7 +420,11 @@ for (i in 1 : nDiffs) {
                    "Mid" = CI_DIFF_FOM_1RMT[i,2], 
                    "Upper" = CI_DIFF_FOM_1RMT[i,3]))
 }
-# compare to RJafroc
+```
+
+Next, how does it compare to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function?
+ 
+ ```{r}
 ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH", option = "FRRC")
 print(data.frame("theta_1" = ret_rj$fomArray[1],
                  "theta_2" = ret_rj$fomArray[2],
@@ -435,19 +438,31 @@ print(data.frame("theta_1" = ret_rj$fomArray[1],
                  "Upper" = ret_rj$ciDiffTrtFRRC$CIUpper))
 ```
 
-The first-principles and the `RJafroc` values agree with each other. This code also shows how to extract the different estimates ($Var$, $Cov_1$, etc.) from the object `ret_rj` returned by `RJafroc`. 
+The first-principles and the `RJafroc` values agree exactly with each other. This above code also shows how to extract the different estimates ($Var$, $Cov_1$, etc.) from the object `ret_rj` returned by `RJafroc`. 
 
 * Var: ret_rj\$varComp\$var
 * Cov1: ret_rj\$varComp\$cov
 * F-statistic: ret_rj\$FTestStatsFRRC\$fFRRC
+* ddf: ret_rj\$FTestStatsFRRC\$ddfFRRC
 * p-value: ret_rj\$FTestStatsFRRC\$pFRRC
 * CI Lower: ret_rj\$ciDiffTrtFRRC\$CILower
 * Mid Value: ret_rj\$ciDiffTrtFRRC\$Estimate
 * CI Upper: ret_rj\$ciDiffTrtFRRC\$CIUpper
 
-[Jumping ahead, if RRRC analysis were conduced, the correponding values would be:
+#### Jumping ahead 
+If RRRC analysis were conducted, the values would be:
 
+* msR: ret_rj\$meanSquares\$msR
+* msT: ret_rj\$meanSquares\$msT
+* msTR: ret_rj\$meanSquares\$msTR
+* Var: ret_rj\$varComp\$var
+* Cov1: ret_rj\$varComp\$cov
+* Cov2: ret_rj\$varComp\$cov2
+* Cov3: ret_rj\$varComp\$cov3
+* varR: ret_rj\$varComp\$varR
+* varTR: ret_rj\$varComp\$varTR
 * F-statistic: ret_rj\$FTestStatsRRRC\$fRRRC
+* ddf: ret_rj\$FTestStatsRRRC\$ddfRRRC
 * p-value: ret_rj\$FTestStatsRRRC\$pRRRC
 * CI Lower: ret_rj\$ciDiffTrtRRRC\$CILower
 * Mid Value: ret_rj\$ciDiffTrtRRRC\$Estimate

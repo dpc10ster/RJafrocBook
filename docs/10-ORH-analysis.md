@@ -402,13 +402,12 @@ data.frame("ORHBoot:F" = ret4$FTestStatsFRRC$fFRRC,
            "ORHBoot:ddf" = ret4$FTestStatsFRRC$ddfFRRC, 
            "ORHBoot:P-val" = ret4$FTestStatsFRRC$pFRRC)
 #>   ORHBoot.F ORHBoot.ddf ORHBoot.P.val
-#> 1  1.163509         Inf      0.280739
+#> 1  1.054981         Inf     0.3043627
 ```
 
 The DBMH and ORH-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBMH and $\infty$ for ORH. The F-statistics for ORH-bootstrap and ORH-DeLong are different.
 
-Shown below is a first-principles implementation of signficance testing for the one-reader case and how it compares to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function.
-
+Shown below is a first-principles implementation of signficance testing for the one-reader case.
 
 ```r
 alpha <- 0.05
@@ -433,9 +432,9 @@ trtDiff <- trtDiff[!is.na(trtDiff)]
 nDiffs <- I*(I-1)/2
 CI_DIFF_FOM_1RMT <- array(dim = c(nDiffs, 3))
 for (i in 1 : nDiffs) {
-  CI_DIFF_FOM_1RMT[i,1] <- qt(alpha/2,df = Inf)*sqrt(2*(Var - Cov1)) + trtDiff[i]
+  CI_DIFF_FOM_1RMT[i,1] <- trtDiff[i] + qt(alpha/2,  df = Inf)*sqrt(2*(Var - Cov1))
   CI_DIFF_FOM_1RMT[i,2] <- trtDiff[i]
-  CI_DIFF_FOM_1RMT[i,3] <- qt(1-alpha/2,df = Inf)*sqrt(2*(Var - Cov1)) + trtDiff[i]
+  CI_DIFF_FOM_1RMT[i,3] <- trtDiff[i] + qt(1-alpha/2,df = Inf)*sqrt(2*(Var - Cov1))
   print(data.frame("theta_1" = theta_i[1],
                    "theta_2" = theta_i[2],
                    "Var" = Var,
@@ -451,9 +450,14 @@ for (i in 1 : nDiffs) {
 #> 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389
 #>         Lower         Mid      Upper
 #> 1 -0.07818322 -0.02818035 0.02182251
-# compare to RJafroc
-ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH", option = "FRRC")
-print(data.frame("theta_1" = ret_rj$fomArray[1],
+```
+
+Next, how does it compare to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function?
+ 
+ 
+ ```r
+ ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH", option = "FRRC")
+ print(data.frame("theta_1" = ret_rj$fomArray[1],
                  "theta_2" = ret_rj$fomArray[2],
                  "Var" = ret_rj$varComp$var,
                  "Cov1" = ret_rj$varComp$cov,
@@ -463,25 +467,37 @@ print(data.frame("theta_1" = ret_rj$fomArray[1],
                  "Lower" = ret_rj$ciDiffTrtFRRC$CILower, 
                  "Mid" = ret_rj$ciDiffTrtFRRC$Estimate, 
                  "Upper" = ret_rj$ciDiffTrtFRRC$CIUpper))
-#>     theta_1   theta_2          Var         Cov1         MS_T     F_1R    pValue
-#> 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389
-#>         Lower         Mid      Upper
-#> 1 -0.07818322 -0.02818035 0.02182251
-```
+ #>     theta_1   theta_2          Var         Cov1         MS_T     F_1R    pValue
+ #> 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389
+ #>         Lower         Mid      Upper
+ #> 1 -0.07818322 -0.02818035 0.02182251
+ ```
 
-The first-principles and the `RJafroc` values agree with each other. This code also shows how to extract the different estimates ($Var$, $Cov_1$, etc.) from the object `ret_rj` returned by `RJafroc`. 
+The first-principles and the `RJafroc` values agree exactly with each other. This above code also shows how to extract the different estimates ($Var$, $Cov_1$, etc.) from the object `ret_rj` returned by `RJafroc`. 
 
 * Var: ret_rj\$varComp\$var
 * Cov1: ret_rj\$varComp\$cov
 * F-statistic: ret_rj\$FTestStatsFRRC\$fFRRC
+* ddf: ret_rj\$FTestStatsFRRC\$ddfFRRC
 * p-value: ret_rj\$FTestStatsFRRC\$pFRRC
 * CI Lower: ret_rj\$ciDiffTrtFRRC\$CILower
 * Mid Value: ret_rj\$ciDiffTrtFRRC\$Estimate
 * CI Upper: ret_rj\$ciDiffTrtFRRC\$CIUpper
 
-[Jumping ahead, if RRRC analysis were conduced, the correponding values would be:
+#### Jumping ahead 
+If RRRC analysis were conducted, the values would be:
 
+* msR: ret_rj\$meanSquares\$msR
+* msT: ret_rj\$meanSquares\$msT
+* msTR: ret_rj\$meanSquares\$msTR
+* Var: ret_rj\$varComp\$var
+* Cov1: ret_rj\$varComp\$cov
+* Cov2: ret_rj\$varComp\$cov2
+* Cov3: ret_rj\$varComp\$cov3
+* varR: ret_rj\$varComp\$varR
+* varTR: ret_rj\$varComp\$varTR
 * F-statistic: ret_rj\$FTestStatsRRRC\$fRRRC
+* ddf: ret_rj\$FTestStatsRRRC\$ddfRRRC
 * p-value: ret_rj\$FTestStatsRRRC\$pRRRC
 * CI Lower: ret_rj\$ciDiffTrtRRRC\$CILower
 * Mid Value: ret_rj\$ciDiffTrtRRRC\$Estimate
