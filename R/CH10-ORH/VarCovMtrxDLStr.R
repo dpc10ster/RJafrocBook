@@ -1,14 +1,14 @@
 VarCovMtrxDLStr <- function(dataset){ # this is implementation of un-numbered equations following Eqn. 4 in 1988 paper
-  NL <- dataset$NL
-  LL <- dataset$LL
-  lesionVector <- dataset$lesionVector
-  lesionID <- dataset$lesionID
-  lesionWeight <- dataset$lesionWeight
+  NL <- dataset$ratings$NL
+  LL <- dataset$ratings$LL
+  perCase <- dataset$lesions$perCase
+  IDs <- dataset$IDs
+  weights <- dataset$lesions$weights
   maxNL <- dim(NL)[4]
   maxLL <- dim(LL)[4]
-  dataType <- dataset$dataType
-  modalityID <- dataset$modalityID
-  readerID <- dataset$readerID
+  dataType <- dataset$descriptions$type
+  modalityID <- dataset$descriptions$modalityID
+  readerID <- dataset$descriptions$readerID
   I <- length(modalityID)
   J <- length(readerID)
   K <- dim(NL)[3]
@@ -16,7 +16,7 @@ VarCovMtrxDLStr <- function(dataset){ # this is implementation of un-numbered eq
   K1 <- K - K2
   
   dim(NL) <- c(I, J, K, maxNL)
-  dim(LL) <- c(I, J, K2, max(lesionVector))
+  dim(LL) <- c(I, J, K2, max(perCase))
   
   fomArray <- UtilFigureOfMerit(dataset, FOM = "Wilcoxon")
   
@@ -27,7 +27,7 @@ VarCovMtrxDLStr <- function(dataset){ # this is implementation of un-numbered eq
       nl <- NL[i, j, 1:K1, ]
       ll <- cbind(NL[i, j, (K1 + 1):K, ], LL[i, j, , ])
       dim(nl) <- c(K1, maxNL)
-      dim(ll) <- c(K2, maxNL + max(lesionVector))
+      dim(ll) <- c(K2, maxNL + max(perCase))
       fp <- apply(nl, 1, max)
       tp <- apply(ll, 1, max)
       for (k in 1:K2) {

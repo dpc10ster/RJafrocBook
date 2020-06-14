@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-04-27}
+\date{2020-06-14}
 
 \begin{document}
 \maketitle
@@ -207,12 +207,12 @@ source method
 \CommentTok{\# source(here("R/example2.R"))}
 \KeywordTok{print}\NormalTok{(}\KeywordTok{head}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(x,y)))}
 \CommentTok{\#\textgreater{}   x        y}
-\CommentTok{\#\textgreater{} 1 1 1.060334}
-\CommentTok{\#\textgreater{} 2 2 0.904013}
-\CommentTok{\#\textgreater{} 3 3 1.839825}
-\CommentTok{\#\textgreater{} 4 4 4.588530}
-\CommentTok{\#\textgreater{} 5 5 3.747632}
-\CommentTok{\#\textgreater{} 6 6 6.298399}
+\CommentTok{\#\textgreater{} 1 1 2.039574}
+\CommentTok{\#\textgreater{} 2 2 1.485255}
+\CommentTok{\#\textgreater{} 3 3 5.214021}
+\CommentTok{\#\textgreater{} 4 4 3.305117}
+\CommentTok{\#\textgreater{} 5 5 4.471868}
+\CommentTok{\#\textgreater{} 6 6 5.191855}
 \end{Highlighting}
 \end{Shaded}
 
@@ -419,78 +419,124 @@ In most situations one expects \(\rho_1\) (for ROC studies) to be positive. Ther
 \hypertarget{code-illustrating-the-covariance-matrix-tba}{%
 \subsection{Code illustrating the covariance matrix (TBA)}\label{code-illustrating-the-covariance-matrix-tba}}
 
-As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method \citep{RN112}. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \eqref{eq:EstimateSigmaBootstrap} and \eqref{eq:EstimateSigmaJackknife} extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file \texttt{VarCovMtrxDLStr.R}. The implementation of the DeLong method \citep{RN112} in file \texttt{VarCovMtrxDLStr.R} gives identical results to those yielded by the SAS macro attributed to DeLong. The file name stands for ``variance covariance matrix according to the DeLong structural components method'' \emph{described in five unnumbered equations following Eqn. 4 in the cited reference}.
+As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method \citep{RN112}. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \eqref{eq:EstimateSigmaBootstrap} and \eqref{eq:EstimateSigmaJackknife} extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file \texttt{VarCovMtrxDLStr.R}. The file name stands for ``variance covariance matrix according to the DeLong structural components method'' \emph{described in five unnumbered equations following Eqn. 4 in the cited reference}.
 
 \begin{itemize}
 \tightlist
 \item
-  The functions (for \texttt{Var} and \texttt{Cov1} using bootstrap, jackknife, and the DeLong methods) are not displayed (but they are compiled). To display them download the repository and look at the corresponding \texttt{Rmd} file.
+  The functions (for \texttt{Var} and \texttt{Cov1} using bootstrap, jackknife, and the DeLong methods) are not displayed, but they are compiled. To display them download the repository and look at the \texttt{Rmd} file corresponding to this output and the sourced files listed below:
 \end{itemize}
 
-The following code chunk extracts (using the \texttt{DfExtractDataset()} function) single-reader multiple-treatment ROC data for \texttt{dataset02}.
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH10{-}ORH/Wilcoxon.R"}\NormalTok{))}
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH10{-}ORH/VarCov1Bs.R"}\NormalTok{))}
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH10{-}ORH/VarCov1Bs.R"}\NormalTok{))}
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH10{-}ORH/VarCov1Jk.R"}\NormalTok{)) }
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH10{-}ORH/VarCovMtrxDLStr.R"}\NormalTok{))}
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH10{-}ORH/VarCovs.R"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+The following code chunk extracts (using the \texttt{DfExtractDataset} function) a single-reader multiple-treatment ROC dataset corresponding to the first reader from \texttt{dataset02}, i.e., the Van Dyke or \texttt{VD} dataset.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{rocData1R \textless{}{-}}\StringTok{ }\KeywordTok{DfExtractDataset}\NormalTok{(dataset02, }\DataTypeTok{rdrs =} \DecValTok{1}\NormalTok{) }\CommentTok{\#select the 1st reader to be analyzed}
-
-\NormalTok{zik1 \textless{}{-}}\StringTok{ }\NormalTok{rocData1R}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{];K \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik1)[}\DecValTok{2}\NormalTok{];I \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik1)[}\DecValTok{1}\NormalTok{]}
-\NormalTok{zik2 \textless{}{-}}\StringTok{ }\NormalTok{rocData1R}\OperatorTok{$}\NormalTok{LL[,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{];K2 \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik2)[}\DecValTok{2}\NormalTok{];K1 \textless{}{-}}\StringTok{ }\NormalTok{K}\OperatorTok{{-}}\NormalTok{K2;zik1 \textless{}{-}}\StringTok{ }\NormalTok{zik1[,}\DecValTok{1}\OperatorTok{:}\NormalTok{K1]}
+\NormalTok{zik1 \textless{}{-}}\StringTok{ }\NormalTok{rocData1R}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{];K \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik1)[}\DecValTok{2}\NormalTok{];I \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik1)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{zik2 \textless{}{-}}\StringTok{ }\NormalTok{rocData1R}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{LL[,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{];K2 \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik2)[}\DecValTok{2}\NormalTok{];K1 \textless{}{-}}\StringTok{ }\NormalTok{K}\OperatorTok{{-}}\NormalTok{K2;zik1 \textless{}{-}}\StringTok{ }\NormalTok{zik1[,}\DecValTok{1}\OperatorTok{:}\NormalTok{K1]}
 \end{Highlighting}
 \end{Shaded}
 
-The following notation is used:
-* jk = jackknife method
-* bs = boostrap method, with B bootstraps and \texttt{seed} = seed
+The following notation is used in the code below:
+
+\begin{itemize}
+\tightlist
+\item
+  jk = jackknife method
+\item
+  bs = boostrap method, with B = number of bootstraps and \texttt{seed} = value.
+\item
+  dl = DeLong method
+\item
+  rjjk = RJafroc, covEstMethod = ``jackknife''
+\item
+  rjbs = RJafroc, covEstMethod = ``bootstrap''
+\end{itemize}
+
+For exammple, \texttt{Cov1\_jk} is the jackknife estimate of \texttt{Cov1}.
+
+Shown below are the results of the jackknife method, first using the code in this repository and next, as a cross-check, using \texttt{RJafroc} function \texttt{UtilVarComponentsOR}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# jk = jackknife}
-\CommentTok{\# rjjk = RJafroc, covEstMethod = "jackknife"}
-\CommentTok{\# rjbs = RJafroc, covEstMethod = "bootstrap"}
-\CommentTok{\# bs = bootstrap}
-\CommentTok{\# dl = DeLong}
 \NormalTok{ret1 \textless{}{-}}\StringTok{ }\KeywordTok{VarCov1\_Jk}\NormalTok{(zik1, zik2)}
-\NormalTok{Var \textless{}{-}}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{Var;Cov1 \textless{}{-}}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{Cov1 }\CommentTok{\# use these (i.e., jackknife) as default values in subsequent code}
-\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_jk"}\NormalTok{ =}\StringTok{ }\NormalTok{Cov1, }\StringTok{"Var\_jk"}\NormalTok{ =}\StringTok{ }\NormalTok{Var)}
-\CommentTok{\#\textgreater{}         Cov\_jk       Var\_jk}
+\NormalTok{Var \textless{}{-}}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{Var}
+\NormalTok{Cov1 \textless{}{-}}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{Cov1 }\CommentTok{\# use these (i.e., jackknife) as default values in subsequent code}
+\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov1\_jk"}\NormalTok{ =}\StringTok{ }\NormalTok{Cov1, }\StringTok{"Var\_jk"}\NormalTok{ =}\StringTok{ }\NormalTok{Var)}
+\CommentTok{\#\textgreater{}        Cov1\_jk       Var\_jk}
 \CommentTok{\#\textgreater{} 1 0.0003734661 0.0006989006}
 
-\NormalTok{ret4 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp}
+\NormalTok{ret4 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp }\CommentTok{\# default \textasciigrave{}covEstMethod\textasciigrave{} is jackknife}
 \KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rjjk"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_rjjk"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{var)}
-\CommentTok{\#\textgreater{}       Cov\_rjjk     Var\_rjjk}
-\CommentTok{\#\textgreater{} 1 0.0003734661 0.0006989006}
+\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\end{Highlighting}
+\end{Shaded}
 
-\NormalTok{ret2 \textless{}{-}}\StringTok{ }\KeywordTok{VarCov1\_Bs}\NormalTok{(zik1, zik2, }\DecValTok{2000}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{100}\NormalTok{) }\CommentTok{\# 2000 bootstraps}
+Note that the estimates are identical and that the \(Cov_1\) estimate is smaller than the \(Var\) estimate (their ratio is the correlation \(\rho_1 = Cov_1/Var\) = 0.5343623).
+
+Shown next are bootstrap method estimates with increasing number of bootstraps (200, 2000 and 20,000):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret2 \textless{}{-}}\StringTok{ }\KeywordTok{VarCov1\_Bs}\NormalTok{(zik1, zik2, }\DecValTok{200}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{100}\NormalTok{)}
+\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_bs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{Cov1, }\StringTok{"Var\_bs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{Var) }
+\CommentTok{\#\textgreater{}        Cov\_bs       Var\_bs}
+\CommentTok{\#\textgreater{} 1 0.000283905 0.0005845354}
+
+\NormalTok{ret2 \textless{}{-}}\StringTok{ }\KeywordTok{VarCov1\_Bs}\NormalTok{(zik1, zik2, }\DecValTok{2000}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{100}\NormalTok{)}
 \KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_bs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{Cov1, }\StringTok{"Var\_bs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{Var) }
 \CommentTok{\#\textgreater{}         Cov\_bs       Var\_bs}
 \CommentTok{\#\textgreater{} 1 0.0003466804 0.0006738506}
 
-\NormalTok{ret5 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"bootstrap"}\NormalTok{, }\DataTypeTok{nBoots =} \DecValTok{200}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp}
-\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rjbs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_rjbs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{var)}
-\CommentTok{\#\textgreater{}      Cov\_rjbs     Var\_rjbs}
-\CommentTok{\#\textgreater{} 1 0.000283905 0.0005845354}
-
-\NormalTok{ret5 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"bootstrap"}\NormalTok{, }\DataTypeTok{nBoots =} \DecValTok{2000}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp}
-\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rjbs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_rjbs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{var) }\CommentTok{\# matches local code with 2000 nBoots, provided seeds are identical}
-\CommentTok{\#\textgreater{}       Cov\_rjbs     Var\_rjbs}
-\CommentTok{\#\textgreater{} 1 0.0003466804 0.0006738506}
-
-\NormalTok{ret5 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"bootstrap"}\NormalTok{, }\DataTypeTok{nBoots =} \DecValTok{20000}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp}
-\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rjbs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_rjbs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{var)}
-\CommentTok{\#\textgreater{}       Cov\_rjbs     Var\_rjbs}
+\NormalTok{ret2 \textless{}{-}}\StringTok{ }\KeywordTok{VarCov1\_Bs}\NormalTok{(zik1, zik2, }\DecValTok{20000}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{100}\NormalTok{)}
+\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_bs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{Cov1, }\StringTok{"Var\_bs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{Var) }
+\CommentTok{\#\textgreater{}         Cov\_bs       Var\_bs}
 \CommentTok{\#\textgreater{} 1 0.0003680714 0.0006862668}
-
-\NormalTok{mtrxDLStr \textless{}{-}}\StringTok{ }\KeywordTok{VarCovMtrxDLStr}\NormalTok{(rocData1R)}
-\NormalTok{ret3 \textless{}{-}}\StringTok{ }\KeywordTok{VarCovs}\NormalTok{(mtrxDLStr)}
-
-\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_dl"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_dl"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{var)}
-\CommentTok{\#\textgreater{}         Cov\_dl       Var\_dl}
-\CommentTok{\#\textgreater{} 1 0.0003684357 0.0006900766}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{tba-discussion-of-above-code}{%
-\subsection{TBA Discussion of above code}\label{tba-discussion-of-above-code}}
+With increasing number of bootstraps the values approach the jackknife estimates.
+
+Following, as a cross check, are results of bootstrap method as calculated by the \texttt{RJafroc} function \texttt{UtilVarComponentsOR}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret5 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"bootstrap"}\NormalTok{, }\DataTypeTok{nBoots =} \DecValTok{2000}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{100}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp}
+\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rjbs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_rjbs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{var)}
+\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\end{Highlighting}
+\end{Shaded}
+
+Note that the two estimates are identical \emph{provided the seeds are identical}.
+
+Following are results of the DeLong covariance estimation method, the first output using this repository code and the second using the \texttt{RJafroc} function \texttt{UtilVarComponentsOR} with appropriate arguments:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mtrxDLStr \textless{}{-}}\StringTok{ }\KeywordTok{VarCovMtrxDLStr}\NormalTok{(rocData1R)}
+\NormalTok{ret3 \textless{}{-}}\StringTok{ }\KeywordTok{VarCovs}\NormalTok{(mtrxDLStr)}
+\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_dl"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_dl"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{var)}
+\CommentTok{\#\textgreater{}         Cov\_dl       Var\_dl}
+\CommentTok{\#\textgreater{} 1 0.0003684357 0.0006900766}
+
+\NormalTok{ret5 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"DeLong"}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp}
+\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rjdl"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_rjdl"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{var)}
+\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\end{Highlighting}
+\end{Shaded}
+
+Note that the two estimates are identical and that the DeLong estimate are close to the bootstrap estimates using 20,000 bootstraps. The close correspondence is only expected when using the Wilcoxon figure of merit.
 
 \hypertarget{significance-testing}{%
 \subsection{Significance testing}\label{significance-testing}}
@@ -553,7 +599,7 @@ Here is an \texttt{R} illustration of this theorem for \(I-1 = 4\) and \(\alpha 
 \hypertarget{p-value-and-confidence-interval}{%
 \subsection{p-value and confidence interval}\label{p-value-and-confidence-interval}}
 
-The p-value is the probability that a sample from the \(F_{I-1,\infty}\) distribution is greater than or equal to the observed value of the test statistic, namely:
+The p-value is the probability that a sample from the \(F_{I-1,\infty}\) distribution is greater than the observed value of the test statistic, namely:
 
 \begin{equation}
 p\equiv \Pr(f>F_{1R} \mid f \sim F_{I-1,\infty})
@@ -567,16 +613,51 @@ CI_{1-\alpha,1RMT} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\i
 \label{eq:CIalpha1RMT}
 \end{equation}
 
-Comparing \eqref{eq:CIalpha1RMT} to \eqref{eq:UsefulTheorem} shows that the term \(\sqrt{2(Var-Cov_1)}\) is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term \(t_{\alpha/2,\infty}\) is -1.96 and \(t_{1-\alpha/2,\infty}\) is +1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. {[}One has probably encountered the rule that a 95\% confidence interval is plus or minus two standard deviations from the central value. The ``2'' comes from rounding up 1.96.{]}
+Comparing \eqref{eq:CIalpha1RMT} to \eqref{eq:UsefulTheorem} shows that the term \(\sqrt{2(Var-Cov_1)}\) is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term \(t_{\alpha/2,\infty}\) is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. {[}One has probably encountered the rule that a 95\% confidence interval is plus or minus two standard deviations from the central value. The ``2'' comes from rounding up 1.96.{]}
 
 \hypertarget{comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments}{%
 \subsection{Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments}\label{comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments}}
 
-We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader analysis described in §9.8 the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor). Source the file (TBA) MainOrDbmh1R.R, a listing of which appears in (TBA) Online Appendix 10.C. For convenience, a few relevant lines are shown here:
+We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader random-case analysis described in §9.8 of the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor).
+
+Shown below are results obtained using RJafroc function \texttt{StSignificanceTesting} with \texttt{analysisOption\ =\ "FRRC"} for DBMH (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix (i.e., \(Cov_1\) and \(Var\)).
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# seed \textless{}{-} 1;set.seed(seed)}
+\NormalTok{ret1 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R,}\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{analysisOption =} \StringTok{"FRRC"}\NormalTok{)}
+\KeywordTok{data.frame}\NormalTok{(}\StringTok{"DBMH:F"}\NormalTok{ =}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
+           \StringTok{"DBMH:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ddfFRRC, }
+           \StringTok{"DBMH:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC)}
+\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+
+\NormalTok{ret2 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R,}\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{analysisOption =} \StringTok{"FRRC"}\NormalTok{)}
+\KeywordTok{data.frame}\NormalTok{(}\StringTok{"ORHJack:F"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
+           \StringTok{"ORHJack:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ddfFRRC, }
+           \StringTok{"ORHJack:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC)}
+\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+
+\NormalTok{ret3 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R,}\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{analysisOption =} \StringTok{"FRRC"}\NormalTok{, }
+                              \DataTypeTok{covEstMethod =} \StringTok{"DeLong"}\NormalTok{)}
+\KeywordTok{data.frame}\NormalTok{(}\StringTok{"ORHDeLong:F"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
+           \StringTok{"ORHDeLong:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ddfFRRC, }
+           \StringTok{"ORHDeLong:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC)}
+\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+
+\NormalTok{ret4 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R,}\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{analysisOption =} \StringTok{"FRRC"}\NormalTok{, }
+                              \DataTypeTok{covEstMethod =} \StringTok{"bootstrap"}\NormalTok{)}
+\KeywordTok{data.frame}\NormalTok{(}\StringTok{"ORHBoot:F"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
+           \StringTok{"ORHBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ddfFRRC, }
+           \StringTok{"ORHBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC)}
+\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\end{Highlighting}
+\end{Shaded}
+
+The DBMH and ORH-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, \((I-1)(K-1)\) = 113 for DBMH and \(\infty\) for ORH. The F-statistics for ORH-bootstrap and ORH-DeLong are different.
+
+Shown below is a first-principles implementation of signficance testing for the one-reader case.
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{alpha \textless{}{-}}\StringTok{ }\FloatTok{0.05}
 \NormalTok{theta\_i \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{);}\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{I) theta\_i[i] \textless{}{-}}\StringTok{ }\KeywordTok{Wilcoxon}\NormalTok{(zik1[i,], zik2[i,])}
 
@@ -599,9 +680,9 @@ We have shown two methods for analyzing a single reader in multiple treatments: 
 \NormalTok{nDiffs \textless{}{-}}\StringTok{ }\NormalTok{I}\OperatorTok{*}\NormalTok{(I}\DecValTok{{-}1}\NormalTok{)}\OperatorTok{/}\DecValTok{2}
 \NormalTok{CI\_DIFF\_FOM\_1RMT \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(nDiffs, }\DecValTok{3}\NormalTok{))}
 \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1} \OperatorTok{:}\StringTok{ }\NormalTok{nDiffs) \{}
-\NormalTok{  CI\_DIFF\_FOM\_1RMT[i,}\DecValTok{1}\NormalTok{] \textless{}{-}}\StringTok{ }\KeywordTok{qt}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{,}\DataTypeTok{df =} \OtherTok{Inf}\NormalTok{)}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{(Var }\OperatorTok{{-}}\StringTok{ }\NormalTok{Cov1)) }\OperatorTok{+}\StringTok{ }\NormalTok{trtDiff[i]}
+\NormalTok{  CI\_DIFF\_FOM\_1RMT[i,}\DecValTok{1}\NormalTok{] \textless{}{-}}\StringTok{ }\NormalTok{trtDiff[i] }\OperatorTok{+}\StringTok{ }\KeywordTok{qt}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{,  }\DataTypeTok{df =} \OtherTok{Inf}\NormalTok{)}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{(Var }\OperatorTok{{-}}\StringTok{ }\NormalTok{Cov1))}
 \NormalTok{  CI\_DIFF\_FOM\_1RMT[i,}\DecValTok{2}\NormalTok{] \textless{}{-}}\StringTok{ }\NormalTok{trtDiff[i]}
-\NormalTok{  CI\_DIFF\_FOM\_1RMT[i,}\DecValTok{3}\NormalTok{] \textless{}{-}}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{,}\DataTypeTok{df =} \OtherTok{Inf}\NormalTok{)}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{(Var }\OperatorTok{{-}}\StringTok{ }\NormalTok{Cov1)) }\OperatorTok{+}\StringTok{ }\NormalTok{trtDiff[i]}
+\NormalTok{  CI\_DIFF\_FOM\_1RMT[i,}\DecValTok{3}\NormalTok{] \textless{}{-}}\StringTok{ }\NormalTok{trtDiff[i] }\OperatorTok{+}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{,}\DataTypeTok{df =} \OtherTok{Inf}\NormalTok{)}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{(Var }\OperatorTok{{-}}\StringTok{ }\NormalTok{Cov1))}
   \KeywordTok{print}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\StringTok{"theta\_1"}\NormalTok{ =}\StringTok{ }\NormalTok{theta\_i[}\DecValTok{1}\NormalTok{],}
                    \StringTok{"theta\_2"}\NormalTok{ =}\StringTok{ }\NormalTok{theta\_i[}\DecValTok{2}\NormalTok{],}
                    \StringTok{"Var"}\NormalTok{ =}\StringTok{ }\NormalTok{Var,}
@@ -613,28 +694,94 @@ We have shown two methods for analyzing a single reader in multiple treatments: 
                    \StringTok{"Mid"}\NormalTok{ =}\StringTok{ }\NormalTok{CI\_DIFF\_FOM\_1RMT[i,}\DecValTok{2}\NormalTok{], }
                    \StringTok{"Upper"}\NormalTok{ =}\StringTok{ }\NormalTok{CI\_DIFF\_FOM\_1RMT[i,}\DecValTok{3}\NormalTok{]))}
 \NormalTok{\}}
-\CommentTok{\#\textgreater{}     theta\_1   theta\_2          Var         Cov1         MS\_T     F\_1R    pValue}
-\CommentTok{\#\textgreater{} 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389}
-\CommentTok{\#\textgreater{}         Lower         Mid      Upper}
-\CommentTok{\#\textgreater{} 1 {-}0.07818322 {-}0.02818035 0.02182251}
-\CommentTok{\# compare to RJafroc}
-\NormalTok{ret\_rj \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{)}
-\KeywordTok{print}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\StringTok{"theta\_1"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{fomArray[}\DecValTok{1}\NormalTok{],}
-                 \StringTok{"theta\_2"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{fomArray[}\DecValTok{2}\NormalTok{],}
-                 \StringTok{"Var"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{varComp}\OperatorTok{$}\NormalTok{var,}
-                 \StringTok{"Cov1"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{varComp}\OperatorTok{$}\NormalTok{cov,}
-                 \StringTok{"MS\_T"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{msT,}
-                 \StringTok{"F\_1R"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
-                 \StringTok{"pValue"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC,}
-                 \StringTok{"Lower"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}\OperatorTok{$}\NormalTok{CILower, }
-                 \StringTok{"Mid"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}\OperatorTok{$}\NormalTok{Estimate, }
-                 \StringTok{"Upper"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}\OperatorTok{$}\NormalTok{CIUpper))}
-\CommentTok{\#\textgreater{}     theta\_1   theta\_2          Var         Cov1         MS\_T     F\_1R    pValue}
-\CommentTok{\#\textgreater{} 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389}
-\CommentTok{\#\textgreater{}         Lower         Mid      Upper}
-\CommentTok{\#\textgreater{} 1 {-}0.07818322 {-}0.02818035 0.02182251}
+\CommentTok{\#\textgreater{}      theta\_1    theta\_2           Var         Cov1          MS\_T      F\_1R}
+\CommentTok{\#\textgreater{} 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111}
+\CommentTok{\#\textgreater{}       pValue        Lower          Mid       Upper}
+\CommentTok{\#\textgreater{} 1 0.26933885 {-}0.078183215 {-}0.028180354 0.021822507}
 \end{Highlighting}
 \end{Shaded}
+
+Next, how does it compare to \texttt{RJafroc} \texttt{FRRC} analysis using the \texttt{StSignificanceTesting} function?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret\_rj \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{analysisOption =} \StringTok{"FRRC"}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\StringTok{"theta\_1"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{fomArray[}\DecValTok{1}\NormalTok{],}
+                \StringTok{"theta\_2"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{fomArray[}\DecValTok{2}\NormalTok{],}
+                \StringTok{"Var"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{varComp}\OperatorTok{$}\NormalTok{var,}
+                \StringTok{"Cov1"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{varComp}\OperatorTok{$}\NormalTok{cov,}
+                \StringTok{"MS\_T"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{msT,}
+                \StringTok{"F\_1R"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
+                \StringTok{"pValue"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC,}
+                \StringTok{"Lower"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}\OperatorTok{$}\NormalTok{CILower, }
+                \StringTok{"Mid"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}\OperatorTok{$}\NormalTok{Estimate, }
+                \StringTok{"Upper"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}\OperatorTok{$}\NormalTok{CIUpper))}
+\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\end{Highlighting}
+\end{Shaded}
+
+The first-principles and the \texttt{RJafroc} values agree exactly with each other. This above code also shows how to extract the different estimates (\(Var\), \(Cov_1\), etc.) from the object \texttt{ret\_rj} returned by \texttt{RJafroc}.
+
+\begin{itemize}
+\tightlist
+\item
+  Var: ret\_rj\$varComp\$var
+\item
+  Cov1: ret\_rj\$varComp\$cov
+\item
+  F-statistic: ret\_rj\$FTestStatsFRRC\$fFRRC
+\item
+  ddf: ret\_rj\$FTestStatsFRRC\$ddfFRRC
+\item
+  p-value: ret\_rj\$FTestStatsFRRC\$pFRRC
+\item
+  CI Lower: ret\_rj\$ciDiffTrtFRRC\$CILower
+\item
+  Mid Value: ret\_rj\$ciDiffTrtFRRC\$Estimate
+\item
+  CI Upper: ret\_rj\$ciDiffTrtFRRC\$CIUpper
+\end{itemize}
+
+\hypertarget{jumping-ahead}{%
+\subsubsection{Jumping ahead}\label{jumping-ahead}}
+
+If RRRC analysis were conducted, the values would be:
+
+\begin{itemize}
+\tightlist
+\item
+  msR: ret\_rj\$meanSquares\$msR
+\item
+  msT: ret\_rj\$meanSquares\$msT
+\item
+  msTR: ret\_rj\$meanSquares\$msTR
+\item
+  Var: ret\_rj\$varComp\$var
+\item
+  Cov1: ret\_rj\$varComp\$cov
+\item
+  Cov2: ret\_rj\$varComp\$cov2
+\item
+  Cov3: ret\_rj\$varComp\$cov3
+\item
+  varR: ret\_rj\$varComp\$varR
+\item
+  varTR: ret\_rj\$varComp\$varTR
+\item
+  F-statistic: ret\_rj\$FTestStatsRRRC\$fRRRC
+\item
+  ddf: ret\_rj\$FTestStatsRRRC\$ddfRRRC
+\item
+  p-value: ret\_rj\$FTestStatsRRRC\$pRRRC
+\item
+  CI Lower: ret\_rj\$ciDiffTrtRRRC\$CILower
+\item
+  Mid Value: ret\_rj\$ciDiffTrtRRRC\$Estimate
+\item
+  CI Upper: ret\_rj\$ciDiffTrtRRRC\$CIUpper
+\end{itemize}
+
+And similarly, for RRFC analysis, one replaces RRRC with RRFC.{]}
 
 \hypertarget{multiple-reader-multiple-treatment-orh-model}{%
 \section{Multiple-reader multiple-treatment ORH model}\label{multiple-reader-multiple-treatment-orh-model}}
@@ -711,11 +858,11 @@ To understand the structure of this matrix, recall that the diagonal elements of
 \Sigma=
 \begin{bmatrix}
 (11,11) & (12,11) & (13,11) & (21,11) & (22,11) & (23,11) \\
- & (12,12) & (13,12) & (21,12) & (22,12) & (23,12) \\ 
- & & (13,13) & (21,13) & (22,13) & (23,13) \\ 
- & & & (21,21) & (22,21) & (23,21) \\
- & & & & (22,22) & (23,22) \\ 
- & & & & & (23,23)
+& (12,12) & (13,12) & (21,12) & (22,12) & (23,12) \\ 
+& & (13,13) & (21,13) & (22,13) & (23,13) \\ 
+& & & (21,21) & (22,21) & (23,21) \\
+& & & & (22,22) & (23,22) \\ 
+& & & & & (23,23)
 \end{bmatrix}
 \]
 
@@ -727,11 +874,11 @@ The diagonal elements are evidently those cells where the row and column index-p
 \Sigma=
 \begin{bmatrix}
 Var & (12,11) & (13,11) & (21,11) & (22,11) & (23,11) \\
- & Var & (13,12) & (21,12) & (22,12) & (23,12) \\ 
- & & Var & (21,13) & (22,13) & (23,13) \\ 
- & & & Var & (22,21) & (23,21) \\
- & & & & Var & (23,22) \\ 
- & & & & & Var
+& Var & (13,12) & (21,12) & (22,12) & (23,12) \\ 
+& & Var & (21,13) & (22,13) & (23,13) \\ 
+& & & Var & (22,21) & (23,21) \\
+& & & & Var & (23,22) \\ 
+& & & & & Var
 \end{bmatrix}
 \]
 
@@ -741,11 +888,11 @@ According to \eqref{eq:ORVarCov} the entries in cells with \emph{different treat
 \Sigma=
 \begin{bmatrix}
 Var & (12,11) & (13,11) & Cov_1 & (22,11) & (23,11) \\
- & Var & (13,12) & (21,12) & Cov_1 & (23,12) \\ 
- & & Var & (21,13) & (22,13) & Cov_1 \\ 
- & & & Var & (22,21) & (23,21) \\
- & & & & Var & (23,22) \\ 
- & & & & & Var
+& Var & (13,12) & (21,12) & Cov_1 & (23,12) \\ 
+& & Var & (21,13) & (22,13) & Cov_1 \\ 
+& & & Var & (22,21) & (23,21) \\
+& & & & Var & (23,22) \\ 
+& & & & & Var
 \end{bmatrix}
 \]
 
@@ -755,11 +902,11 @@ Similarly, the entries in cells with identical treatment index pairs but differe
 \Sigma=
 \begin{bmatrix}
 Var & Cov_2 & Cov_2 & Cov_1 & (22,11) & (23,11) \\
- & Var & Cov_2 & (21,12) & Cov_1 & (23,12) \\ 
- &  & Var & (21,13) & (22,13) & Cov_1 \\ 
- &  &  & Var & Cov_2 & Cov_2 \\
- &  &  &  & Var & Cov_2 \\ 
- &  &  &  &  & Var
+& Var & Cov_2 & (21,12) & Cov_1 & (23,12) \\ 
+&  & Var & (21,13) & (22,13) & Cov_1 \\ 
+&  &  & Var & Cov_2 & Cov_2 \\
+&  &  &  & Var & Cov_2 \\ 
+&  &  &  &  & Var
 \end{bmatrix}
 \]
 
@@ -769,11 +916,11 @@ Finally, the entries in cells with different treatment index pairs and different
 \Sigma=
 \begin{bmatrix}
 Var & Cov_2 & Cov_2 & Cov_1 & Cov_3 & Cov_3 \\
- & Var & Cov_2 & Cov_3 & Cov_1 & Cov_3 \\ 
- &  & Var & Cov_3 & Cov_3 & Cov_1 \\ 
- &  &  & Var & Cov_2 & Cov_2 \\
- &  &  &  & Var & Cov_2 \\ 
- &  &  &  &  & Var
+& Var & Cov_2 & Cov_3 & Cov_1 & Cov_3 \\ 
+&  & Var & Cov_3 & Cov_3 & Cov_1 \\ 
+&  &  & Var & Cov_2 & Cov_2 \\
+&  &  &  & Var & Cov_2 \\ 
+&  &  &  &  & Var
 \end{bmatrix}
 \]
 

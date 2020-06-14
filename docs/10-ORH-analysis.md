@@ -213,8 +213,8 @@ The following code chunk extracts (using the `DfExtractDataset` function) a sing
 
 ```r
 rocData1R <- DfExtractDataset(dataset02, rdrs = 1) #select the 1st reader to be analyzed
-zik1 <- rocData1R$NL[,1,,1];K <- dim(zik1)[2];I <- dim(zik1)[1]
-zik2 <- rocData1R$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
+zik1 <- rocData1R$ratings$NL[,1,,1];K <- dim(zik1)[2];I <- dim(zik1)[1]
+zik2 <- rocData1R$ratings$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
 ```
 
 The following notation is used in the code below:
@@ -240,8 +240,7 @@ data.frame ("Cov1_jk" = Cov1, "Var_jk" = Var)
 
 ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon")$varComp # default `covEstMethod` is jackknife
 data.frame ("Cov_rjjk" = ret4$cov1, "Var_rjjk" = ret4$var)
-#>       Cov_rjjk     Var_rjjk
-#> 1 0.0003734661 0.0006989006
+#> data frame with 0 columns and 0 rows
 ```
 
 Note that the estimates are identical and that the $Cov_1$ estimate is smaller than the $Var$ estimate (their ratio is the correlation $\rho_1 = Cov_1/Var$ = 0.5343623). 
@@ -273,8 +272,7 @@ Following, as a cross check, are results of bootstrap method as calculated by th
 ```r
 ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000, seed = 100)$varComp
 data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var)
-#>       Cov_rjbs     Var_rjbs
-#> 1 0.0003466804 0.0006738506
+#> data frame with 0 columns and 0 rows
 ```
 
 Note that the two estimates are identical *provided the seeds are identical*.
@@ -291,8 +289,7 @@ data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
 
 ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "DeLong")$varComp
 data.frame ("Cov_rjdl" = ret5$cov1, "Var_rjdl" = ret5$var)
-#>       Cov_rjdl     Var_rjdl
-#> 1 0.0003684357 0.0006900766
+#> data frame with 0 columns and 0 rows
 ```
 
 Note that the two estimates are identical and that the DeLong estimate are close to the bootstrap estimates using 20,000 bootstraps. The close correspondence is only expected when using the Wilcoxon figure of merit.
@@ -370,39 +367,35 @@ Comparing \@ref(eq:CIalpha1RMT) to \@ref(eq:UsefulTheorem) shows that the term $
 ### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
 We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader random-case analysis described in §9.8 of the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor).
 
-Shown below are results obtained using RJafroc function `StSignificanceTesting` with `option = "FRRC"` for DBMH (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix (i.e., $Cov_1$ and $Var$). 
+Shown below are results obtained using RJafroc function `StSignificanceTesting` with `analysisOption = "FRRC"` for DBMH (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix (i.e., $Cov_1$ and $Var$). 
 
 
 ```r
-ret1 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "DBMH", option = "FRRC")
+ret1 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "DBMH", analysisOption = "FRRC")
 data.frame("DBMH:F" = ret1$FTestStatsFRRC$fFRRC, 
            "DBMH:ddf" = ret1$FTestStatsFRRC$ddfFRRC, 
            "DBMH:P-val" = ret1$FTestStatsFRRC$pFRRC)
-#>     DBMH.F DBMH.ddf DBMH.P.val
-#> 1 1.220111      113  0.2716853
+#> data frame with 0 columns and 0 rows
 
-ret2 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC")
+ret2 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC")
 data.frame("ORHJack:F" = ret2$FTestStatsFRRC$fFRRC, 
            "ORHJack:ddf" = ret2$FTestStatsFRRC$ddfFRRC, 
            "ORHJack:P-val" = ret2$FTestStatsFRRC$pFRRC)
-#>   ORHJack.F ORHJack.ddf ORHJack.P.val
-#> 1  1.220111         Inf     0.2693389
+#> data frame with 0 columns and 0 rows
 
-ret3 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC", 
+ret3 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC", 
                               covEstMethod = "DeLong")
 data.frame("ORHDeLong:F" = ret3$FTestStatsFRRC$fFRRC, 
            "ORHDeLong:ddf" = ret3$FTestStatsFRRC$ddfFRRC, 
            "ORHDeLong:P-val" = ret3$FTestStatsFRRC$pFRRC)
-#>   ORHDeLong.F ORHDeLong.ddf ORHDeLong.P.val
-#> 1    1.234502           Inf       0.2665333
+#> data frame with 0 columns and 0 rows
 
-ret4 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC", 
+ret4 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC", 
                               covEstMethod = "bootstrap")
 data.frame("ORHBoot:F" = ret4$FTestStatsFRRC$fFRRC, 
            "ORHBoot:ddf" = ret4$FTestStatsFRRC$ddfFRRC, 
            "ORHBoot:P-val" = ret4$FTestStatsFRRC$pFRRC)
-#>   ORHBoot.F ORHBoot.ddf ORHBoot.P.val
-#> 1  1.054981         Inf     0.3043627
+#> data frame with 0 columns and 0 rows
 ```
 
 The DBMH and ORH-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBMH and $\infty$ for ORH. The F-statistics for ORH-bootstrap and ORH-DeLong are different.
@@ -446,17 +439,17 @@ for (i in 1 : nDiffs) {
                    "Mid" = CI_DIFF_FOM_1RMT[i,2], 
                    "Upper" = CI_DIFF_FOM_1RMT[i,3]))
 }
-#>     theta_1   theta_2          Var         Cov1         MS_T     F_1R    pValue
-#> 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389
-#>         Lower         Mid      Upper
-#> 1 -0.07818322 -0.02818035 0.02182251
+#>      theta_1    theta_2           Var         Cov1          MS_T      F_1R
+#> 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111
+#>       pValue        Lower          Mid       Upper
+#> 1 0.26933885 -0.078183215 -0.028180354 0.021822507
 ```
 
 Next, how does it compare to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function?
  
  
  ```r
- ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH", option = "FRRC")
+ ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC")
  print(data.frame("theta_1" = ret_rj$fomArray[1],
                  "theta_2" = ret_rj$fomArray[2],
                  "Var" = ret_rj$varComp$var,
@@ -467,10 +460,7 @@ Next, how does it compare to `RJafroc` `FRRC` analysis using the `StSignificance
                  "Lower" = ret_rj$ciDiffTrtFRRC$CILower, 
                  "Mid" = ret_rj$ciDiffTrtFRRC$Estimate, 
                  "Upper" = ret_rj$ciDiffTrtFRRC$CIUpper))
- #>     theta_1   theta_2          Var         Cov1         MS_T     F_1R    pValue
- #> 1 0.9196457 0.9478261 0.0006989006 0.0003734661 0.0003970662 1.220111 0.2693389
- #>         Lower         Mid      Upper
- #> 1 -0.07818322 -0.02818035 0.02182251
+ #> data frame with 0 columns and 0 rows
  ```
 
 The first-principles and the `RJafroc` values agree exactly with each other. This above code also shows how to extract the different estimates ($Var$, $Cov_1$, etc.) from the object `ret_rj` returned by `RJafroc`. 

@@ -220,8 +220,8 @@ The following code chunk extracts (using the `DfExtractDataset` function) a sing
 
 ```{r}
 rocData1R <- DfExtractDataset(dataset02, rdrs = 1) #select the 1st reader to be analyzed
-zik1 <- rocData1R$NL[,1,,1];K <- dim(zik1)[2];I <- dim(zik1)[1]
-zik2 <- rocData1R$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
+zik1 <- rocData1R$ratings$NL[,1,,1];K <- dim(zik1)[2];I <- dim(zik1)[1]
+zik2 <- rocData1R$ratings$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
 ```
 
 The following notation is used in the code below:
@@ -354,26 +354,26 @@ Comparing \@ref(eq:CIalpha1RMT) to \@ref(eq:UsefulTheorem) shows that the term $
 ### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
 We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader random-case analysis described in §9.8 of the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor).
 
-Shown below are results obtained using RJafroc function `StSignificanceTesting` with `option = "FRRC"` for DBMH (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix (i.e., $Cov_1$ and $Var$). 
+Shown below are results obtained using RJafroc function `StSignificanceTesting` with `analysisOption = "FRRC"` for DBMH (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix (i.e., $Cov_1$ and $Var$). 
 
 ```{r}
-ret1 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "DBMH", option = "FRRC")
+ret1 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "DBMH", analysisOption = "FRRC")
 data.frame("DBMH:F" = ret1$FTestStatsFRRC$fFRRC, 
            "DBMH:ddf" = ret1$FTestStatsFRRC$ddfFRRC, 
            "DBMH:P-val" = ret1$FTestStatsFRRC$pFRRC)
 
-ret2 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC")
+ret2 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC")
 data.frame("ORHJack:F" = ret2$FTestStatsFRRC$fFRRC, 
            "ORHJack:ddf" = ret2$FTestStatsFRRC$ddfFRRC, 
            "ORHJack:P-val" = ret2$FTestStatsFRRC$pFRRC)
 
-ret3 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC", 
+ret3 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC", 
                               covEstMethod = "DeLong")
 data.frame("ORHDeLong:F" = ret3$FTestStatsFRRC$fFRRC, 
            "ORHDeLong:ddf" = ret3$FTestStatsFRRC$ddfFRRC, 
            "ORHDeLong:P-val" = ret3$FTestStatsFRRC$pFRRC)
 
-ret4 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", option = "FRRC", 
+ret4 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC", 
                               covEstMethod = "bootstrap")
 data.frame("ORHBoot:F" = ret4$FTestStatsFRRC$fFRRC, 
            "ORHBoot:ddf" = ret4$FTestStatsFRRC$ddfFRRC, 
@@ -425,7 +425,7 @@ for (i in 1 : nDiffs) {
 Next, how does it compare to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function?
  
  ```{r}
-ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH", option = "FRRC")
+ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC")
 print(data.frame("theta_1" = ret_rj$fomArray[1],
                  "theta_2" = ret_rj$fomArray[2],
                  "Var" = ret_rj$varComp$var,
