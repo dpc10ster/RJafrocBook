@@ -17,11 +17,11 @@ library(here)
 ```
 
 ## Introduction
-The previous chapter described the DBM significance testing procedure [@RN204] for analyzing MRMC ROC data, along with improvements suggested by Hillis. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been criticized by Hillis who states that the method "works" but lacks firm statistical foundations [@RN1772; @RN1865; @RN1866]. If a method works there must be good reasons why it works and the last section of the previous chapter, §9.13, gave a justification for why the method works. Specifically, the empirical AUC pseudovalues qualify as case-level FOMs - this property was also noted by [@RN1395]. However, this property applies only to the empirical AUC, so an alternate approach that applies to any figure of merit is desirable. 
+The previous chapter described the DBM significance testing procedure [@RN204] for analyzing MRMC ROC data, along with improvements suggested by Hillis. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been criticized by Hillis and others [@zhou2009statistical]. Hillis states that the method "works" but lacks firm statistical foundations [@RN1772; @RN1865; @RN1866]. The last section of the previous chapter, §9.13, gave a justification for why the method works for empirical AUC. Specifically, the empirical AUC pseudovalues qualify as case-level FOMs - this property has also been noted by [@RN1395]. However, this property applies only to the empirical AUC, so an alternate approach that applies to any figure of merit is highly desirable. 
 
 This chapter presents Hillis' preferred alternative to the DBMH approach. He has argued that the DBMH method can be regarded as a "working model that gives the right results", but a method based on an earlier publication [@RN1450] by Obuchowski and Rockette, which does not depend on pseudovalues, and predicts more or less the same results, is preferable from a conceptual viewpoint. Since, besides showing the correspondence, Hillis has made significant improvements to the original methodology, this chapter is named "ORH Analysis", where ORH stands for Obuchowski, Rockette and Hillis. The ORH method has advantages in being able to handle more complex study designs [@RN2508] that are outside the scope of this book (the author acknowledges a private communication from Dr. Obuchowski, ca. 2006, that demonstrated the flexibility afforded by the OR approach) and it is likely that applications to other FOMs (e.g., the FROC paradigm uses a rather different FOM from empirical ROC-AUC) are better performed with the ORH method.
 
-This chapter starts with a gentle introduction to the Obuchowski and Rockette method. The reason is that the method was rather opaque to me, an I suspect, most users. Part of the problem, in my opinion, is the notation, namely lack of usage of the *case-set* index $\{c\}$. A key difference of the Obuchowski and Rockette method from DBMH is in how the error term is modeled by a non-diagonal covariance matrix. The structure of the covariance matrix is examined in some detail as it is key to understanding the ORH method.
+This chapter starts with a gentle introduction to the Obuchowski and Rockette method. The reason is that the method was rather opaque to me, and I suspect most users. Part of the problem, in my opinion, is the notation, namely lack of usage of the *case-set* index $\{c\}$. A key difference of the Obuchowski and Rockette method from DBMH is in how the error term is modeled by a non-diagonal covariance matrix. The structure of the covariance matrix is examined in some detail as it is key to understanding the ORH method.
 
 In the first step of the introduction a single reader interpreting a case-set in multiple treatments is modeled and the results compared to those obtained using DBMH fixed-reader analysis described in the previous chapter. In the second step multiple readers interpreting a case-set in multiple treatments is modeled. The two analyses, DBMH and ORH, are compared for the same dataset. The special cases of fixed-reader and fixed-case analyses are described. Single treatment analysis, where interest is in comparing average performance of readers to a fixed value, is described. Three methods of estimating the covariance matrix are described.
 
@@ -46,7 +46,7 @@ The *c-index* was introduced in (book) Chapter 07. The left hand side of  \@ref(
 
 *This is one place the case-set index is essential for clarity; without it $\theta_i$ is a fixed quantity - the figure of merit estimate for treatment $i$ - lacking any index allowing for sampling related variability.* 
 
-Obuchowski and Rockette use a *k-index*, defined as the “kth repetition of the study involving the same diagnostic test, reader and patient (sic)”. In the author's opinion, what is meant is a case-set index instead of a repetition index. Repeating a study with the same treatment, reader and cases yields *within-reader* variability, which is different from sampling the population of cases with new case-sets, which yields *case-sampling plus within-reader* variability. As noted earlier, within-reader variability cannot be "turned off" and affects the interpretations of all case-sets. 
+Obuchowski and Rockette use a *k-index*, defined as the “kth repetition of the study involving the same diagnostic test, reader and patient (sic)”. In the author's opinion, what is meant is a case-set index instead of a repetition index. Repeating a study with the same treatment, reader and cases yields *within-reader* variability, which is different from sampling the population of cases with new case-sets, which yields *case-sampling plus within-reader* variability [@RN412]. As noted earlier, within-reader variability cannot be "turned off" and affects the interpretations of all case-sets. 
 
 *Interest is in extrapolating to the population of cases and the only way to do this is to sample different case-sets. It is shown below that usage of the case-set index interpretation yields the same results using the DBMH or the ORH methods.*
 
@@ -202,8 +202,8 @@ The entire process is repeated for different treatment pairings and the resultin
 
 In most situations one expects $\rho_1$ (for ROC studies) to be positive. There is, perhaps unlikely, a scenario that could lead to anti-correlation and negative. This could occur, with "complementary" treatments, e.g., CT vs. MRI, where one treatment is good for bone imaging and the other for soft-tissue imaging. In this situation what constitutes an easy case-set in one treatment could be a difficult case-set in the other treatment.
 
-### Code illustrating the covariance matrix (TBA)
-As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method [@RN112]. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \@ref(eq:EstimateSigmaBootstrap) and \@ref(eq:EstimateSigmaJackknife) extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file `VarCovMtrxDLStr.R`. The file name stands for "variance covariance matrix according to the DeLong structural components method" *described in five unnumbered equations following Eqn. 4 in the cited reference*.
+### Code illustrating the covariance matrix
+As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method [@RN112]. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \@ref(eq:EstimateSigmaBootstrap) and \@ref(eq:EstimateSigmaJackknife) extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is implemented in `VarCovMtrxDLStr.R`. The file name stands for "variance covariance matrix according to the DeLong structural components method" *described in five unnumbered equations following Eqn. 4 in the cited reference*.
 
 * To minimize clutter, the `R` functions (for estimating `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not shown, but they are compiled. To display them `clone` the book repository and look at the `Rmd` file corresponding to this output and the sourced `R` files listed below:
 
@@ -354,29 +354,29 @@ Comparing \@ref(eq:CIalpha1RMT) to \@ref(eq:UsefulTheorem) shows that the term $
 ### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
 We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader random-case analysis described in §9.8 of the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor).
 
-Shown below are results obtained using RJafroc function `StSignificanceTesting` with `analysisOption = "FRRC"` for DBMH (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix (i.e., $Cov_1$ and $Var$). 
+Shown below are results obtained using `RJafroc` function `StSignificanceTesting` with `analysisOption = "FRRC"` for `method` = "DBMH" (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix for the one-reader analysis (i.e., $Cov_1$ and $Var$). 
 
 ```{r}
 ret1 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "DBMH", analysisOption = "FRRC")
 data.frame("DBMH:F" = ret1$FRRC$FTests["Treatment", "FStat"], 
-           "DBMH:ddf" = ret1$FRRC$FTests["Error", "DF"], 
+           "DBMH:ddf" = ret1$FRRC$FTests["Treatment", "DF"], 
            "DBMH:P-val" = ret1$FRRC$FTests["Treatment", "p"])
 
 ret2 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC")
 data.frame("ORHJack:Chisq" = ret2$FRRC$FTests["Treatment", "Chisq"], 
-           "ORHJack:ddf" = ret2$FRRC$FTests["Error", "DF"], 
+           "ORHJack:ddf" = ret2$FRRC$FTests["Treatment", "DF"], 
            "ORHJack:P-val" = ret2$FRRC$FTests["Treatment", "p"])
 
 ret3 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC", 
                               covEstMethod = "DeLong")
 data.frame("ORHDeLong:Chisq" = ret3$FRRC$FTests["Treatment", "Chisq"], 
-           "ORHDeLong:ddf" = ret3$FRRC$FTests["Error", "DF"], 
+           "ORHDeLong:ddf" = ret3$FRRC$FTests["Treatment", "DF"], 
            "ORHDeLong:P-val" = ret3$FRRC$FTests["Treatment", "p"])
 
 ret4 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC", 
                               covEstMethod = "bootstrap")
 data.frame("ORHBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"], 
-           "ORHBoot:ddf" = ret4$FRRC$FTests["Error", "DF"], 
+           "ORHBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
            "ORHBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
 ```
 
@@ -811,9 +811,9 @@ CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, (
 It is time to reinforce the formulae with examples.
 
 ### Single-treatment multiple-reader analysis
-Suppose one has data in a single treatment $i$ and multiple readers are involved. One wishes to determine if the performance of the readers as a group equals some specified value. *Since only a single treatment is involved, an implicit $i$ dependence in subsequent formulae is ignored.*
+Suppose one has data in a single treatment $i$ and multiple readers are involved. One wishes to determine if the performance of the readers as a group equals some specified value. *Since only a single treatment is involved, an implicit $i$ dependence, in subsequent formulae, is ignored.*
 
-In \@ref(OR1RMTModel) single-reader multiple-treatment analysis was described. It is not identical to single-treatment multiple-reader analysis. Treatment is a fixed factor while reader is a random factor. Therefore, one cannot simply use the previous analysis with reader and treatment interchanged (a graduate student tried to do just that, and he is quite smart, hence the reason for this warning; one can use the previous analysis if reader is regarded as a fixed factor, and a function in RJafroc called TBA `StSignificanceTestingSingleFixedFactor()` does just that). 
+In \@ref(OR1RMTModel) single-reader multiple-treatment analysis was described. It is not identical to single-treatment multiple-reader analysis. Treatment is a fixed factor while reader is a random factor. Therefore, one cannot simply use the previous analysis with reader and treatment interchanged (a graduate student tried to do just that, and he is quite smart, hence the reason for this warning). 
 
 In the analysis described in this section reader is regarded as a random effect. The average performance of the readers is estimated and compared to a specified value. Hillis has described the appropriate modifications. [TBA Two approaches are described, one using the DBM pseudovalue based model and the other based on the OR model with appropriate modification. The second approach is summarized below. TBA]
 
@@ -848,9 +848,7 @@ Var(\theta_{i \bullet \bullet}) =\frac{1}{J}(\sigma_{b}^{2}+\sigma_{ab}^{2}+(\si
 
 In the OR notation, the FOM has three indices, $\theta_{ijk}$. One deletes the $i$ index as one is dealing with a single treatment and one can drop the average over the $k$ index, as one is dealing with a single dataset; $\sigma_{b}^{2}$ in the OR notation is what we are calling $\sigma_{R}^{2}$; for single treatment the treatment-reader interaction term $\sigma_{ab}^{2}$ is absent; and for single "replication" the term $\sigma_{w}^{2}/K$ (in OR notation $K$ is the number of replications) is absent, or, more accurately, the within-reader variance $\sigma_{w}^{2}$ is absorbed into the case sampling variance $\sigma_{c}^{2}$ as the two are inseparable); the term $\sigma_{\epsilon}^{2}$ is what we are calling $Var$; and $\sigma_{c}^{2}r_2$ in OR paper is what we are calling $Cov_2$.
 
-An alternative first principles derivation, due to Mr. Xuetong Zhai, is given in TBA Online Appendix 10.E. 
-
-One needs to replace $\sigma_{R}^{2}$ in \@ref(eq:VarThetaDot) with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature [@RN2508]. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to TBA Table 9.1 in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, $t$ = 1 and the treatment-reader variance component goes away and the term $\sigma_{\epsilon}^{2}$ is what we are calling $Var$), it follows that:
+One needs to replace $\sigma_{R}^{2}$ in \@ref(eq:VarThetaDot) with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature [@RN2508]. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to the expected mean squares table in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, $t$ = 1 and the treatment-reader variance component goes away and the term $\sigma_{\epsilon}^{2}$ is what we are calling $Var$), it follows that:
 
 $$E(MS(R))=\sigma_{R}^{2}+Var=Cov_2$$
 
@@ -916,7 +914,7 @@ The single treatment method is implemented in mainSingleTreatment.R. The relevan
 ## Discussion/Summary
 This chapter described the Obuchowski-Rockette method as modified by Hillis. As noted earlier, it has the same number of parameters as the DBMH method described in the preceding chapter, but the model \@ref(eq:ORModel) *appears* simpler as some terms are "hidden" in the structure of the error term. In this chapter the NH condition was considered. Extension to the alternative hypothesis, i.e., estimating statistical power, is deferred to online appendices to Chapter 11. The extension is a little simpler with the DBMH model, as it is a standard ANOVA model. For example the expressions for the DBMH non-centrality parameter was readily defined in Chapter 09, e.g., §9.7.4. Hillis has derived expressions allowing transformation between quantities in the two methods, and this is the approach adopted in this book and implemented in the cited online appendix.
 
-TBA: Online Appendix 10.A describes R implementation of the DeLong method for estimating the covariance matrix for empirical AUC. Since the main difficulty understanding the original OR method is conceptualizing the covariance matrix, the author has explained this at an elementary level, using a case-set index which is implicit in the original OR paper4. This was the reason for the gentle introduction analyzing performance of a single reader in multiple treatments. The jackknife, bootstrap and the DeLong methods, all implemented in Online Appendix 10.B, should reinforce understanding of the covariance matrix. The DBM and ORH methods are compared for this special case in Online Appendix 10.C. A minimal implementation of the ORH method for MRMC data is given in Online Appendix 10.D, which is a literal implementation of the relevant formulae. The special case of multiple readers in a single treatment is coded in Online Appendix 10.F. This will be used in Chapter 22 where standalone CAD performance is compared to a group of radiologists interpreting the same cases.
+Since the main difficulty understanding, as far as I am concerned, the original OR method is conceptualizing the covariance matrix, the author has explained this at an elementary level, using a case-set index which is implicit in [@RN1450]. This was the reason for the "gentle introduction" of analyzing performance of a single reader in multiple treatments. The jackknife, bootstrap and the DeLong methods should reinforce understanding of the covariance matrix. The DBM and ORH methods are compared for this special case. A minimal implementation of the ORH method for MRMC data is given, which is a literal implementation of the relevant formulae. The special case of multiple readers in a single treatment is coded.
 
 The original publication [@RN204] and a subsequent one [@RN1450] were major advances. Hillis' work showing their equivalence unified the two apparently disparate analyses, and this was a major advance. The Hillis papers, while difficult reads, are ones the author goes to repeatedly. 
 

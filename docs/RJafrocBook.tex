@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-06-14}
+\date{2020-06-15}
 
 \begin{document}
 \maketitle
@@ -206,21 +206,439 @@ source method
 \begin{Highlighting}[]
 \CommentTok{\# source(here("R/example2.R"))}
 \KeywordTok{print}\NormalTok{(}\KeywordTok{head}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(x,y)))}
-\CommentTok{\#\textgreater{}   x         y}
-\CommentTok{\#\textgreater{} 1 1 0.9128558}
-\CommentTok{\#\textgreater{} 2 2 2.1929531}
-\CommentTok{\#\textgreater{} 3 3 4.9616995}
-\CommentTok{\#\textgreater{} 4 4 1.9122270}
-\CommentTok{\#\textgreater{} 5 5 4.4296145}
-\CommentTok{\#\textgreater{} 6 6 6.1725955}
+\CommentTok{\#\textgreater{}   x        y}
+\CommentTok{\#\textgreater{} 1 1 1.268417}
+\CommentTok{\#\textgreater{} 2 2 2.268613}
+\CommentTok{\#\textgreater{} 3 3 2.994106}
+\CommentTok{\#\textgreater{} 4 4 2.643536}
+\CommentTok{\#\textgreater{} 5 5 3.690299}
+\CommentTok{\#\textgreater{} 6 6 5.144540}
 \end{Highlighting}
 \end{Shaded}
+
+\hypertarget{HypothesisTesting}{%
+\chapter{Hypothesis Testing}\label{HypothesisTesting}}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+The problem addressed in this chapter is how to decide whether an estimate of AUC is consistent with a pre-specified value. One example of this is when a single-reader rates a set of cases in a single-modality, from which one estimates AUC, and the question is whether the estimate is statistically consistent with a pre-specified value. From a clinical point of view, this is generally not a useful exercise, but its simplicity is conducive to illustrating the broader concepts involved in this and later chapters. The clinically more useful analysis is when multiple readers interpret the same cases in two or more modalities. With two modalities, for example, one obtains an estimate AUC for each reader in each modality, averages the AUC values over all readers within each modality, and computes the inter-modality difference in reader-averaged AUC values. The question forming the main subject of this book is whether the observed difference is consistent with zero.
+
+Each situation outlined above admits a binary (yes/no) answer, which is different from the estimation problem that was dealt with in connection with the maximum likelihood method in Chapter 06, where one computed numerical estimates (and confidence intervals) of the parameters of the fitting model.
+
+\textbf{Hypothesis testing is the process of dichotomizing the possible outcomes of a statistical study and then using probabilistic arguments to choose one option over the other.}
+
+The two competing options are termed the null hypothesis (NH) and the alternative hypothesis (AH). The hypothesis testing procedure is analogous1 to the jury trial system in the US, with 20 instead of 12 jurors, with the null hypothesis being the presumption of innocence and the alternative hypothesis being the defendant is guilty, and the decision rule is to assume the defendant is innocent unless all 20 jurors agree the defendant is guilty. If even one juror disagrees, the defendant is deemed innocent (equivalent to choosing an \(\alpha\) -- defined below - of 0.05, or 1/20).
+
+\hypertarget{hypothesis-testing-for-a-single-modality-single-reader-roc-study}{%
+\section{Hypothesis testing for a single-modality single-reader ROC study}\label{hypothesis-testing-for-a-single-modality-single-reader-roc-study}}
+
+The binormal model described in Chapter 06 can be used to generate sets of ratings to illustrate the methods being described in this chapter. To recapitulate, the model is described by:
+
+\begin{equation*} 
+Z_{k_11} \sim N\left ( 0,1 \right )\\
+Z_{k_22} \sim N\left ( \mu,\sigma^2 \right )
+\end{equation*}
+
+The following code chunk encodes the \texttt{Wilcoxon} function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Wilcoxon \textless{}{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{ (zk1, zk2)}
+\NormalTok{\{}
+\NormalTok{  K1 =}\StringTok{ }\KeywordTok{length}\NormalTok{(zk1)}
+\NormalTok{  K2 =}\StringTok{ }\KeywordTok{length}\NormalTok{(zk2)}
+\NormalTok{  W \textless{}{-}}\StringTok{ }\DecValTok{0}
+  \ControlFlowTok{for}\NormalTok{ (k1 }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{K1) \{}
+\NormalTok{    W \textless{}{-}}\StringTok{ }\NormalTok{W }\OperatorTok{+}\StringTok{ }\KeywordTok{sum}\NormalTok{(zk1[k1] }\OperatorTok{\textless{}}\StringTok{ }\NormalTok{zk2)}
+\NormalTok{    W \textless{}{-}}\StringTok{ }\NormalTok{W }\OperatorTok{+}\StringTok{ }\FloatTok{0.5} \OperatorTok{*}\StringTok{ }\KeywordTok{sum}\NormalTok{(zk1[k1] }\OperatorTok{==}\StringTok{ }\NormalTok{zk2)}
+\NormalTok{  \}}
+\NormalTok{  W \textless{}{-}}\StringTok{ }\NormalTok{W}\OperatorTok{/}\NormalTok{K1}\OperatorTok{/}\NormalTok{K2}
+  \KeywordTok{return}\NormalTok{ (W)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+In the next code chunk we set \(\mu = 1.5\) and \(\sigma = 1.3\) and simulate \(K_1 = 50\) non-diseased cases and \(K_2 = 52\) diseased cases. For clarity I like to keep the sizes of the two arrays slightly different; this allows one to quickly check, with a glance at the \texttt{Environment} panel, that array dimensions are as expected. The \texttt{for} loop draws 50 samples from the \(N(0,1)\) distribution and 52 samples from the \(N(\mu,\sigma^2)\) distribution, calculates the empirical AUC using the Wilcoxon, and the process is repeated 10,000 times, the AUC values are saved to a huge array \texttt{AUC}. After exit from the \texttt{for-loop} we calculate the mean and standard deviation of the \texttt{AUC} values.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{seed \textless{}{-}}\StringTok{ }\DecValTok{1}\NormalTok{;}\KeywordTok{set.seed}\NormalTok{(seed)}
+\NormalTok{mu \textless{}{-}}\StringTok{ }\FloatTok{1.5}\NormalTok{;sigma \textless{}{-}}\StringTok{ }\FloatTok{1.3}\NormalTok{;K1 \textless{}{-}}\StringTok{ }\DecValTok{50}\NormalTok{;K2 \textless{}{-}}\StringTok{ }\DecValTok{52}
+
+\CommentTok{\# cheat to find the population mean and std. dev.}
+\NormalTok{AUC \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \DecValTok{10000}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(AUC)) \{}
+\NormalTok{  zk1 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K1);zk2 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K2, }\DataTypeTok{mean =}\NormalTok{ mu, }\DataTypeTok{sd =}\NormalTok{ sigma)  }
+\NormalTok{  AUC[i] \textless{}{-}}\StringTok{ }\KeywordTok{Wilcoxon}\NormalTok{(zk1, zk2)}
+\NormalTok{\}}
+\NormalTok{meanAUC   \textless{}{-}}\StringTok{  }\KeywordTok{mean}\NormalTok{(AUC);sigmaAUC  \textless{}{-}}\StringTok{  }\KeywordTok{sd}\NormalTok{(AUC)}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"pop mean AUC = "}\NormalTok{, meanAUC, }\StringTok{", pop sigma AUC = "}\NormalTok{, sigmaAUC, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} pop mean AUC =  0.819178 , pop sigma AUC =  0.04176683}
+\end{Highlighting}
+\end{Shaded}
+
+By the simple (if unimaginative) approach of sampling 10,000 times, one estimates the \emph{population} mean and standard deviation of empirical AUC, denoted below by \(AUC_{pop}\) and \(\sigma_{AUC}\), respectively. Based on the 10,000 simulations, \(AUC_{pop}\) = 0.819178 and \(\sigma_{AUC}\) =0.0417668.
+
+The next chunk simulates one more independent ROC study with the same numbers of cases, and the resulting area under the empirical curve is denoted \(AUC\), AUC in the code.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# one more trial, this is the one we want to compare to meanAUC, i.e., get P{-}value}
+\NormalTok{zk1 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K1);zk2 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K2, }\DataTypeTok{mean =}\NormalTok{ mu, }\DataTypeTok{sd =}\NormalTok{ sigma) }
+\NormalTok{AUC \textless{}{-}}\StringTok{ }\KeywordTok{Wilcoxon}\NormalTok{(zk1, zk2)}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"New AUC = "}\NormalTok{, AUC, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} New AUC =  0.8626923}
+
+\NormalTok{z \textless{}{-}}\StringTok{ }\NormalTok{(AUC }\OperatorTok{{-}}\StringTok{ }\NormalTok{meanAUC)}\OperatorTok{/}\NormalTok{sigmaAUC}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"z{-}statistic = "}\NormalTok{, z, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} z{-}statistic =  1.04184}
+\end{Highlighting}
+\end{Shaded}
+
+Is the new value, 0.8626923, sufficiently different from the population mean (0.819178) to reject the null hypothesis \(NH: AUC = AUC_{pop}\)? Note that the answer to this question can be either yes or no: equivocation is not allowed.
+
+The new value is ``somewhat close'' to the population mean, but how does one decide if ``somewhat close'' is close enough? Needed is the statistical distribution of the random variable \(AUC\) under the hypothesis that the true mean is \(AUC_{pop}\). In the asymptotic limit of a large number of cases (this is an approximation), one can assume that the pdf of \(AUC\) under the null hypothesis is the normal distribution \(N\left ( AUC_{pop}, \sigma_{AUC}^{2} \right )\):
+
+\begin{equation*} 
+pdf_{AUC}\left ( AUC\mid AUC_{pop}, \sigma_{AUC} \right )=\frac{1}{\sqrt{2\pi}\sigma_{AUC}}exp\left ( -\frac{1}{2} \left ( \frac{AUC-AUC_{pop}}{\sigma_{AUC}} \right )^2\right )
+\end{equation*}
+
+The translated and scaled value is distributed as a unit normal distribution, i.e.,
+
+\begin{equation*} 
+Z=\frac{AUC-AUC_{pop}}{\sigma_{AUC}}\sim N\left ( 0,1 \right )
+\end{equation*}
+
+{[}The \(Z\) notation here should not be confused with z-sample, decision variable or rating of a case in an ROC study; the latter, when sampled over a set of non-diseased and diseased cases, yield a realization of \(AUC\). The author trusts the distinction will be clear from the context.{]} The observed magnitude of \(z\) is 1.0418397.
+
+\textbf{The ubiquitous p-value is the probability that the observed magnitude of \(z\), or larger, occurs under the null hypothesis (NH), that the true mean of \(Z\) is zero.}
+
+The p-value corresponding to an observed \(z\) of 1.0418397 is given by (as always, uppercase \(Z\) is the random variable, while lower case \(z\) is a realized value):
+
+\begin{equation*} 
+\Pr\left ( \lvert Z \rvert \geq \lvert z \rvert \mid Z\sim N\left ( 0,1 \right )\right )=\\
+\Pr\left ( \lvert Z \rvert \geq 1.042 \mid Z\sim N\left ( 0,1 \right )\right )=\\
+2\Phi\left ( -1.042 \right )=0.2975
+\end{equation*}
+
+To recapitulate statistical notation, \(\Pr\left ( \lvert Z \rvert \geq \lvert z \rvert \mid Z\sim N\left ( 0,1 \right )\right )\) is to be parsed as \(\Pr\left ( A\mid B \right )\), that is, the probability \(\lvert Z \rvert \geq \lvert z \rvert\) given that \(Z\sim N\left ( 0,1 \right )\). The last line in Eqn. (8.4) follows from the symmetry of the unit normal distribution, i.e., the area above 1.042 must equal the area below -1.042.
+
+Since \(z\) is a continuous variable, the probability that a sampled value will exactly equal the observed value is zero. Therefore, one must pose the question as stated above, namely what is the probability that \(Z\) is at least as extreme as the observed value (by ``extreme'' I mean further from zero, in either positive or negative directions). If the observed was \(z\) = 2.5 then the corresponding p-value would be \(2\Phi(-2.5)\)=0.01242, which is smaller than 0.2975 (\texttt{2*pnorm(-2.5)} = 0.01241933). This is cited below as the ``second example''.
+
+Under the zero-mean null hypothesis, the larger the magnitude of the observed value of \(Z\), the smaller the p-value, and the more unlikely that the data supports the NH. \textbf{The p-value can be interpreted as the degree of unlikelihood that the data supports the NH.}
+
+By convention one adopts a fixed value of the probability, denoted and usually \(\alpha\) = 0.05, which is termed the \emph{size} of the test or \emph{the significance level} of the test, and the decision rule is to reject the null hypothesis if the observed p-value \textless{} \(\alpha\).
+
+\begin{equation*} 
+p < \alpha \Rightarrow \text{Reject NH}
+\end{equation*}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p2tailed \textless{}{-}}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(}\OperatorTok{{-}}\KeywordTok{abs}\NormalTok{(z)) }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\KeywordTok{pnorm}\NormalTok{(}\KeywordTok{abs}\NormalTok{(z))) }\CommentTok{\# p value for two{-}sided AH}
+\NormalTok{p1tailedGT \textless{}{-}}\StringTok{ }\DecValTok{1}\OperatorTok{{-}}\KeywordTok{pnorm}\NormalTok{(z) }\CommentTok{\# p value for one{-}sided AH \textgreater{} 0 }
+\NormalTok{p1tailedLT \textless{}{-}}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(z)}\CommentTok{\# p value for one{-}sided AH \textless{} 0 }
+\NormalTok{alpha  \textless{}{-}}\StringTok{ }\FloatTok{0.05}
+\end{Highlighting}
+\end{Shaded}
+
+In the first example, with observed p-value equal to 0.2975, one would not reject the null hypothesis, but in the second example, with observed p-value equal to 0.01242, one would. If the p-value is exactly 0.05 (unlikely with ROC analysis, but one needs to account for it) then one does not reject the NH. In the 20-juror analogy, of one juror insists the defendant is not guilty, then observed \(\Pr\) is 0.05, and one does not reject the NH that the defendant is innocent (the double negatives, very common in statistics, can be confusing; in plain English, the defendant goes home).
+
+According to the previous discussion, the critical magnitude of \(z\) that determines whether to reject the null hypothesis is given by:
+
+\begin{equation*} 
+z_\frac{\alpha}{2}=-\Phi^{-1}\left ( \frac{\alpha}{2} \right )
+\end{equation*}
+
+For \(\alpha\) = 0.05 this evaluates to 1.95996 (which is sometimes rounded up to two, good enough for ``government work'' as the saying goes) and the decision rule is to reject the null hypothesis only if the observed magnitude of \(z\) is larger than \(z_\frac{\alpha}{2}\).
+
+\textbf{The decision rule based on comparing the observed z to a critical value is equivalent to a decision rule based on comparing the observed p-value to \(\alpha\). It is also equivalent, as will be shown later, to a decision rule based on a \(\left ( 1-\alpha \right )\) confidence interval for the observed statistic. One rejects the NH if the closed confidence interval does not include zero.}
+
+\hypertarget{type-i-errors}{%
+\section{Type-I errors}\label{type-i-errors}}
+
+Just because one rejects the null hypothesis, as in the second example, does not mean that the null hypothesis is false. Following the decision rule ``caps'', or puts an upper limit on, the probability of incorrectly rejecting the null hypothesis at \(\alpha\). In other words, by agreeing to reject the NH only if \(p \leq \alpha\), one has set an upper limit, namely \(\alpha\), on errors of this type, termed \emph{Type-I} errors. These could be termed false positives in the hypothesis testing sense, not to be confused with false positive occurring on individual case-level decisions. According to the definition of \(\alpha\):
+
+\begin{equation*} 
+\Pr( \text{Type I error} \mid {NH} )=\alpha
+\end{equation*}
+
+To demonstrate the ideas one needs to have a very cooperative reader interpreting new sets of independent cases not just one more time, but 2000 more times (the reason for the 2000 trials will be explained below). The simulation code for this follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{seed \textless{}{-}}\StringTok{ }\DecValTok{1}\NormalTok{;}\KeywordTok{set.seed}\NormalTok{(seed)}
+\NormalTok{mu \textless{}{-}}\StringTok{ }\FloatTok{1.5}\NormalTok{;sigma \textless{}{-}}\StringTok{ }\FloatTok{1.3}\NormalTok{;K1 \textless{}{-}}\StringTok{ }\DecValTok{50}\NormalTok{;K2 \textless{}{-}}\StringTok{ }\DecValTok{52}
+
+\NormalTok{nTrials \textless{}{-}}\StringTok{ }\DecValTok{2000}
+\NormalTok{alpha \textless{}{-}}\StringTok{ }\FloatTok{0.05} \CommentTok{\# size of test}
+\NormalTok{reject =}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DataTypeTok{dim =}\NormalTok{ nTrials)}
+\ControlFlowTok{for}\NormalTok{ (trial }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(reject)) \{  }
+\NormalTok{  zk1 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K1);zk2 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K2, }\DataTypeTok{mean =}\NormalTok{ mu, }\DataTypeTok{sd =}\NormalTok{ sigma)  }
+\NormalTok{  AUC \textless{}{-}}\StringTok{ }\KeywordTok{Wilcoxon}\NormalTok{(zk1, zk2)  }
+\NormalTok{  z \textless{}{-}}\StringTok{ }\NormalTok{(AUC }\OperatorTok{{-}}\StringTok{ }\NormalTok{meanAUC)}\OperatorTok{/}\NormalTok{sigmaAUC}
+\NormalTok{  p \textless{}{-}}\StringTok{ }\DecValTok{2}\OperatorTok{*}\KeywordTok{pnorm}\NormalTok{(}\OperatorTok{{-}}\KeywordTok{abs}\NormalTok{(z)) }\CommentTok{\# p value for individual trial}
+  \ControlFlowTok{if}\NormalTok{ (p }\OperatorTok{\textless{}}\StringTok{ }\NormalTok{alpha) reject[trial] =}\StringTok{ }\DecValTok{1} 
+\NormalTok{\}}
+
+\NormalTok{CI \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{); width \textless{}{-}}\StringTok{ }\OperatorTok{{-}}\KeywordTok{qnorm}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{)}
+\NormalTok{ObsvdTypeIErrRate \textless{}{-}}\StringTok{ }\KeywordTok{sum}\NormalTok{(reject)}\OperatorTok{/}\KeywordTok{length}\NormalTok{(reject)}
+\NormalTok{CI[}\DecValTok{1}\NormalTok{] \textless{}{-}}\StringTok{ }\NormalTok{ObsvdTypeIErrRate }\OperatorTok{{-}}\StringTok{ }\NormalTok{width}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(ObsvdTypeIErrRate}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{ObsvdTypeIErrRate)}\OperatorTok{/}\NormalTok{nTrials)}
+\NormalTok{CI[}\DecValTok{2}\NormalTok{] \textless{}{-}}\StringTok{ }\NormalTok{ObsvdTypeIErrRate }\OperatorTok{+}\StringTok{ }\NormalTok{width}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(ObsvdTypeIErrRate}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{ObsvdTypeIErrRate)}\OperatorTok{/}\NormalTok{nTrials)}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"alpha = "}\NormalTok{, alpha, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} alpha =  0.05}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"ObsvdTypeIErrRate = "}\NormalTok{, ObsvdTypeIErrRate, }\StringTok{", 95\% confidence interval = "}\NormalTok{, CI, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} ObsvdTypeIErrRate =  0.0535 , 95\% confidence interval =  0.04363788 0.06336212}
+\NormalTok{exact \textless{}{-}}\StringTok{ }\KeywordTok{binom.test}\NormalTok{(}\KeywordTok{sum}\NormalTok{(reject),}\DataTypeTok{n =} \DecValTok{2000}\NormalTok{,}\DataTypeTok{p =}\NormalTok{ alpha)}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"exact 95\% CI = "}\NormalTok{, }\KeywordTok{as.numeric}\NormalTok{(exact}\OperatorTok{$}\NormalTok{conf.int), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} exact 95\% CI =  0.04404871 0.06428544}
+\end{Highlighting}
+\end{Shaded}
+
+The population means were calculated in an earlier code chunk. One initializes \texttt{NTrials} to 2000 and \(\alpha\) to 0.05. The \texttt{for-loop} describes our captive reader interpreting independent sets of cases 2000 times. \emph{Each completed interpretation of 102 cases is termed a trial.} For each trial one calculates the observed value of \texttt{AUC}, the observed \texttt{z} statistic and the the observed p-value. The observed p-value is compared against the fixed value \(\alpha\) and one sets the corresponding \texttt{reject{[}trial{]}} flag to unity if \(p < \alpha\). In other words, if the trial-specific p-value is less than \(\alpha\) one counts an instance of rejection of the null hypothesis. The process is repeated 2000 times.
+
+Upon exit from the for-loop, one calculates the observed Type-I error rate, denoted \texttt{ObsvdTypeIErrRate} by summing the reject array and dividing by 2000. One calculates a 95\% confidence interval for \texttt{ObsvdTypeIErrRate} based on the binomial distribution, as in Chapter 03.
+
+The observed Type-I error rate is a realization of a random variable, as is the estimated 95\% confidence interval. The fact that the confidence interval includes \(\alpha\) = 0.05 is no coincidence - it shows that the hypothesis testing procedure is working as expected. To distinguish between the selected \(\alpha\) (a fixed value) and that observed in a simulation study (a realization of a random variable), the term \emph{empirical \(\alpha\)} is used to denote the observed value rejection rate.
+
+It is a mistake to state that one wishes to minimize the Type-I error probability (the author has seen this comment from a senior researcher, which is the reason for bringing it up). The minimum value of \(\alpha\) (a probability) is zero. Run the software with this value of \(\alpha\): the NH will never be rejected. The downside of minimizing the expected Type-I error rate is that the NH will never be rejected, even when the NH is patently false. The aim of a valid method of analyzing the data is not minimizing the Type-I error rate, rather, the observed Type-I error rate should equal the specified value of \(\alpha\) (0.05 in our example), allowance being made for the inherent variability in it's estimate, i.e., its confidence interval. This is the reason 2000 trials were chosen for testing the validity of the NH testing procedure. With this choice, the 95\% confidence interval, assuming that observed value is close to 0.05, is roughly ±0.01 as explained next.
+
+Following analogous reasoning to Chapter 03, Eqn. (3.10.10), and defining \(f\) as the observed rejection fraction over \(T\) trials, and as usual, \(F\) is a random variable and \(f\) a realized value,
+
+\begin{equation*} 
+\sigma_f = \sqrt{f(1-f)/T}\\
+F \sim N\left ( f,\sigma_{f}^{2} \right )
+\end{equation*}
+
+An approximate \((1-\alpha)100\) percent CI for \(f\) is:
+
+\begin{equation*} 
+{CI}_f = \left [ f-z_{\frac{\alpha}{2}}\sigma_f, f+z_{\frac{\alpha}{2}}\sigma_f \right ]
+\end{equation*}
+
+If \(f\) is close to 0.05, then for 2000 trials, the 0.95 or 95\% CI for \(f\) is \(f \pm 0.01\), i.e., \texttt{qnorm(alpha/2)\ *\ sqrt(.05*(.95)/2000)} = 0.009551683 \textasciitilde{} 0.01.
+
+The only way to reduce the width of the CI, and thereby run a more stringent test of the validity of the analysis, is to increase the number of trials \(T\). Since the width of the CI depends on the inverse square root of the number of trials, one soon reaches a point of diminishing returns. Usually \(T = 2000\) trials are enough for most statisticians and the author, but examples using more simulations have been published.
+
+\hypertarget{one-sided-vs.-two-sided-tests}{%
+\section{One sided vs.~two sided tests}\label{one-sided-vs.-two-sided-tests}}
+
+In the preceding example, the null hypothesis was rejected anytime the magnitude of the observed value of \(z\) exceeded the critical value \(-\Phi^{-1}\left ( \frac{\alpha}{2} \right)\). This is a statement of the alternative hypothesis (AH) \(AUC\neq AUC_{pop}\), in other words too high or too low values of \(z\) \emph{both} result in rejection of the null hypothesis. This is referred to as a two-sided AH and the resulting p-value is termed a \emph{two-sided} p-value. This is the most common one used in the literature.
+
+Now suppose that the additional trial performed by the radiologist was performed after an intervention following which the radiologist's performance is expected to increase. To make matters clearer, assume the interpretations in the 10,000 trials used to estimate \(AUC_{pop}\) were performed with the radiologist wearing an old pair of eye-glasses, possibly out of proper strength, and the additional trial is performed after the radiologist gets a new set of prescription eye-glasses. Because the radiologist's eyesight has improved, the expectation is that performance should increase. In this situation, it is appropriate to use the one-sided alternative hypothesis \(AUC > AUC_{pop}\). Now, large values of \(z\) result in rejection of the null hypothesis, but small values do not. The critical value of \(z\) is defined by \(z_\alpha = \Phi\left ( 1-\alpha \right )\), which for \(\alpha\) = 0.05 is 1.645 (i.e., \texttt{qnorm(1-alpha)\ =\ 1.644854}). Compare 1.64 to the critical value \(-\Phi^{-1}\left ( \frac{\alpha}{2} \right)\) = 1.96 for a two-sided test. If the change is in the expected direction, it is more likely that one will reject the NH with a one-sided than with a two-sided test. The p-value for a one-sided test is given by:
+
+\begin{equation*} 
+\Pr\left ( Z \geq 1.042 \mid NH \right ) = \Phi \left (-1.042  \right ) = 0.1487
+\end{equation*}
+
+Notice that this is half the corresponding two-sided test p-value; this is because one is only interested in the area under the unit normal that is above the observed value of \(z\). If the intent is to obtain a significant finding, it is tempting to use one-sided tests. The down side of a one-sided test is that even with a large excursion of the observed \(z\) in the other direction one cannot reject the null hypothesis. So if the new eye-glasses are so bad as to render the radiologist practically blind (think of a botched cataract surgery) the observed \(z\) would be large and negative, but one cannot reject the null hypothesis \(AUC=AUC_{pop}\).
+
+The one-sided test could be run the other way, with the alternative hypothesis being stated as \(AUC<AUC_{pop}\). Now, large negative excursions of the observed value of AUC cause rejection of the null hypothesis, but large positive excursions do not. The critical value is defined by \(z_\alpha = \Phi^{-1}\left (\alpha \right )\), which for \(\alpha\) = 0.05 is -1.645. The p-value is given by (note the reversed sign compared to the previous one-sided test:
+
+\begin{equation*} 
+\Pr\left ( Z \leq 1.042 \mid NH  \right ) = \Phi(1.042) = 1 - 0.1487 = 0.8513
+\end{equation*}
+
+This is the complement of the value for a one-sided test with the alternative hypothesis going the other way: obviously the probability that \(Z\) is smaller than the observed value (1.042) plus the probability that \(Z\) is larger than the same value must equal one.
+
+\hypertarget{statistical-power}{%
+\section{Statistical power}\label{statistical-power}}
+
+So far, focus has been on the null hypothesis. The Type-I error probability was introduced, defined as the probability of incorrectly rejecting the null hypothesis, the control, or ``cap'' on which is \(\alpha\), usually set to 0.05. What if the null hypothesis is actually false and the study fails to reject it? This is termed a Type-II error, the control on which is denoted \(\beta\), the probability of a Type-II error. \textbf{The complement of \(\beta\) is called statistical power.}
+
+The following table summarizes the two types of errors and the two correct decisions that can occur in hypothesis testing. In the context of hypothesis testing, a Type-II error could be termed a false negative, not to be confused with false negatives occurring on individual case-level decisions.
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+Truth & Fail to reject NH & Reject NH\tabularnewline
+\midrule
+\endhead
+NH is True & 1 - \(\alpha\) & \(\alpha\) (FPF)\tabularnewline
+NH is False & \(\beta\) (FNF) & Power = 1 - \(\beta\)\tabularnewline
+\bottomrule
+\end{longtable}
+
+This resembles the 2 x 2 table encountered in Chapter 02, which led to the concepts of \(FPF\), \(TPF\) and the ROC curve. Indeed, it is possible think of an analogous plot of empirical (i.e., observed) power vs.~empirical \(\alpha\), which looks like an ROC plot, with empirical \(\alpha\) playing the role of \(FPF\) and empirical power playing the role of \(TPF\), see below. If \(\alpha\) = 0, then power = 0; i.e., if Type-I errors are minimized all the way to zero, then power is zero and one makes Type-II errors all the time. On the other hand, if \(\alpha\) = 1 then Power = 1, and one makes Type-I errors all the time.
+
+A little history is due at this point. The author's first FROC study, which led to his entry into this field \citep{RN621}, was published in Radiology in 1986 after a lot of help from a reviewer, who we (correctly) guessed was the late Prof.~Charles E. Metz. Prof.~Gary T. Barnes (the author's mentor at that time at the University of Alabama at Birmingham) and the author visited Prof.~Charles Metz in Chicago for a day ca. 1986, to figuratively ``pick Charlie's brain''. Prof.~Metz referred to the concept outlined in the previous paragraph, as an \emph{ROC within an ROC}.
+
+This curve does not summarize the result of a single ROC study. Rather it summarizes the probabilistic behavior of the two types of errors that occur when one conducts thousands of such studies, under both NH true and NH false conditions, each time with different values of \(\alpha\), with each trial ending in a decision to reject or not reject the null hypothesis. The long sentence is best explained with an example.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{seed \textless{}{-}}\StringTok{ }\DecValTok{1}\NormalTok{;}\KeywordTok{set.seed}\NormalTok{(seed)}
+\NormalTok{muNH \textless{}{-}}\StringTok{ }\FloatTok{1.5}\NormalTok{;muAH \textless{}{-}}\StringTok{ }\FloatTok{2.1}\NormalTok{;sigma \textless{}{-}}\StringTok{ }\FloatTok{1.3}\NormalTok{;K1 \textless{}{-}}\StringTok{ }\DecValTok{50}\NormalTok{;K2 \textless{}{-}}\StringTok{ }\DecValTok{52}\CommentTok{\# Line 6}
+
+\CommentTok{\# cheat to find the population mean and std. dev.}
+\NormalTok{AUC \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \DecValTok{10000}\NormalTok{) }\CommentTok{\# line 8}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(AUC)) \{}
+\NormalTok{  zk1 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K1);zk2 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K2, }\DataTypeTok{mean =}\NormalTok{ muNH, }\DataTypeTok{sd =}\NormalTok{ sigma)  }
+\NormalTok{  AUC[i] \textless{}{-}}\StringTok{ }\KeywordTok{Wilcoxon}\NormalTok{(zk1, zk2)}
+\NormalTok{\}}
+\NormalTok{sigmaAUC \textless{}{-}}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{var}\NormalTok{(AUC));meanAUC \textless{}{-}}\StringTok{ }\KeywordTok{mean}\NormalTok{(AUC) }\CommentTok{\# Line 14}
+
+\NormalTok{T \textless{}{-}}\StringTok{ }\DecValTok{2000}  \CommentTok{\# Line 16}
+\NormalTok{mu \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(muNH,muAH) }\CommentTok{\# Line 17}
+\NormalTok{alphaArr \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.05}\NormalTok{, }\FloatTok{0.95}\NormalTok{, }\DataTypeTok{length.out =} \DecValTok{10}\NormalTok{)}
+\NormalTok{EmpAlpha \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{length}\NormalTok{(alphaArr));EmpPower \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{length}\NormalTok{(alphaArr))}
+\ControlFlowTok{for}\NormalTok{ (a }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(alphaArr)) \{ }\CommentTok{\# Line 20}
+\NormalTok{  alpha \textless{}{-}}\StringTok{ }\NormalTok{alphaArr[a] }
+\NormalTok{  reject \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, T))}
+  \ControlFlowTok{for}\NormalTok{ (h }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{) \{  }
+    \ControlFlowTok{for}\NormalTok{ (t }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(reject[h,])) \{  }
+\NormalTok{      zk1 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K1);zk2 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K2, }\DataTypeTok{mean =}\NormalTok{ mu[h], }\DataTypeTok{sd =}\NormalTok{ sigma)  }
+\NormalTok{      AUC \textless{}{-}}\StringTok{ }\KeywordTok{Wilcoxon}\NormalTok{(zk1, zk2)  }
+\NormalTok{      obsvdZ \textless{}{-}}\StringTok{ }\NormalTok{(AUC }\OperatorTok{{-}}\StringTok{ }\NormalTok{meanAUC)}\OperatorTok{/}\NormalTok{sigmaAUC}
+\NormalTok{      p \textless{}{-}}\StringTok{ }\DecValTok{2}\OperatorTok{*}\KeywordTok{pnorm}\NormalTok{(}\OperatorTok{{-}}\KeywordTok{abs}\NormalTok{(obsvdZ)) }\CommentTok{\# p value for individual t}
+      \ControlFlowTok{if}\NormalTok{ (p }\OperatorTok{\textless{}}\StringTok{ }\NormalTok{alpha) reject[h,t] =}\StringTok{ }\DecValTok{1} 
+\NormalTok{    \}}
+\NormalTok{  \}}
+\NormalTok{  EmpAlpha[a] \textless{}{-}}\StringTok{ }\KeywordTok{sum}\NormalTok{(reject[}\DecValTok{1}\NormalTok{,])}\OperatorTok{/}\KeywordTok{length}\NormalTok{(reject[}\DecValTok{1}\NormalTok{,])}
+\NormalTok{  EmpPower[a] \textless{}{-}}\StringTok{ }\KeywordTok{sum}\NormalTok{(reject[}\DecValTok{2}\NormalTok{,])}\OperatorTok{/}\KeywordTok{length}\NormalTok{(reject[}\DecValTok{2}\NormalTok{,])}
+\NormalTok{\}}
+\NormalTok{EmpAlpha \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,EmpAlpha,}\DecValTok{1}\NormalTok{); EmpPower \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,EmpPower,}\DecValTok{1}\NormalTok{) }\CommentTok{\# Line 19}
+
+\NormalTok{pointData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{EmpAlpha =}\NormalTok{ EmpAlpha, }\DataTypeTok{EmpPower =}\NormalTok{ EmpPower)}
+\NormalTok{zetas \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{{-}}\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DataTypeTok{by =} \FloatTok{0.01}\NormalTok{)}
+\NormalTok{muRoc \textless{}{-}}\StringTok{ }\FloatTok{1.8}
+\NormalTok{curveData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{EmpAlpha =} \KeywordTok{pnorm}\NormalTok{(}\OperatorTok{{-}}\NormalTok{zetas), }\DataTypeTok{EmpPower =} \KeywordTok{pnorm}\NormalTok{(muRoc }\OperatorTok{{-}}\StringTok{ }\NormalTok{zetas))}
+\NormalTok{alphaPowerPlot \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ EmpAlpha, }\DataTypeTok{y =}\NormalTok{ EmpPower)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ pointData, }\DataTypeTok{shape =} \DecValTok{1}\NormalTok{, }\DataTypeTok{size =} \DecValTok{3}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData)}
+\KeywordTok{print}\NormalTok{(alphaPowerPlot)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{08-hypothesis-testing_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+Line 6 creates two variables, \texttt{muNH} = 1.5 (the binormal model separation parameter under the NH) and \texttt{muAH} = 2.1 (the separation parameter under the AH). Under either hypotheses, the same diseased case standard deviation \texttt{sigma} = 1.3 and 50 non-diseased and 52 diseased cases are assumed. As before, lines 8 -- 14 use the ``brute force'' technique to determine population AUC and standard deviation of AUC under the NH condition. Line 16 defines the number of trials \texttt{T} = 2000. Line 17 creates a vector \texttt{mu} containing the NH and AH values defined at line 6. Line 18 creates \texttt{alphaArr}, a sequence of 10 equally spaced values in the range 0.05 to 0.95, which represent 10 values for \(\alpha\). Line 19 creates two arrays of length 10 each, named \texttt{EmpAlpha} and \texttt{EmpPower}, to hold the values of the observed Type-I error rate, i.e., empirical \(\alpha\), and the empirical power, respectively. The program will run \texttt{T} = 2000 NH and \texttt{T} = 2000 AH trials using as \(\alpha\) each successive value in \texttt{alphaArr} and save the observed Type-I error rates and observed powers to the arrays \texttt{EmpAlpha} and \texttt{EmpPower}, respectively.
+
+The action begins in line 20, which begins a for-loop in \texttt{a}, an index into \texttt{alphaArr.} Line 21 selects the appropriate value for \texttt{alpha} (0.05 on the first pass, 0.15 on the next pass, etc.). Line 22 initializes \texttt{reject{[}2,2000{]}} with zeroes, to hold the result of each trial; the first index corresponds to hypothesis \texttt{h} and the second to trial \texttt{t}. Line 23 begins a for-loop in \texttt{h}, with \texttt{h} = 1 corresponding to the NH and \texttt{h} = 2 to the AH. Line 24 begins a for-loop in \texttt{t}, the trial index. The code within this block is similar to previous examples. It simulates ratings, computes AUC, calculates the p-value, and saves a rejection of the NH as a one at the appropriate array location \texttt{reject{[}h,t{]}}. Lines 32 -- 33 calculate the empirical \(\alpha\) and empirical power for each value of \(\alpha\) in \texttt{alphaArr}. After padding the ends with zero and ones (the trivial points), the remaining lines plot the ``ROC within an ROC''.
+
+Each of the circles in the figure corresponds to a specific value of \(\alpha\). For example the lowest non-trivial corresponds to \(\alpha\) = 0.05, for which the empirical \(\alpha\) is 0.049 and the corresponding empirical Power is 0.4955. True \(\alpha\) increases as the operating point moves up the plot, with empirical \(\alpha\) and empirical power increasing correspondingly. The \(AUC\) under this curve is determined by the effect size, defined as the difference between the AH and NH values of the separation parameter. If the effect size is zero, then the circles will scatter around the chance diagonal; the scatter will be consistent with the 2000 trials used to generate each coordinate of a point. As the effect size increases, the plot approaches the perfect ``ROC'', i.e., approaching the top-left corner. One could use AUC under this ``ROC'' as a measure of the incremental performance, the advantage being that it would be totally independent of \(\alpha\), but this would not be practical as it requires replication of the study under NH and AH conditions about 2000 times each and the entire process has to be repeated for several values of \(\alpha\). The purpose of this demonstration was to illustrate the concept behind Metz's profound remark.
+
+It is time to move on to factors affecting statistical power in a single study.
+
+\hypertarget{factors-affecting-statistical-power}{%
+\subsection{Factors affecting statistical power}\label{factors-affecting-statistical-power}}
+
+\begin{itemize}
+\tightlist
+\item
+  Effect size: effect size is defined as the difference in \(AUC_{pop}\) values between the alternative hypothesis condition and the null hypothesis condition. Recall that \(AUC_{pop}\) is defined as the true or population value of the empirical ROC-AUC for the relevant hypothesis. One can use the ``cheat method'' to estimate it under the alternative hypothesis. The formalism is easier if one assumes it is equal to the asymptotic binormal model predicted value. The binormal model yields an estimate of the parameters, which only approach the population values in the asymptotic limit of a large number of cases. In the following, it is assumed that the parameters on the right hand side are the population values)
+  It follows that effect size (ES) is given by (all quantities on the right hand side of Eqn. (8.13) are population values):
+\end{itemize}
+
+\begin{equation*} 
+AUC = \Phi\left ( \frac{ \mu }{\sqrt{ 1 + \sigma^2}} \right )
+\end{equation*}
+
+It follows that effect size (ES) is given by (all quantities on the right hand side of above equation are population values):
+
+\begin{equation*} 
+ES = \Phi\left ( \frac{\mu_{AH}}{\sqrt{1+\sigma^2}} \right ) - \Phi\left ( \frac{\mu_{NH}}{\sqrt{1+\sigma^2}} \right )
+\end{equation*}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{EffectSize \textless{}{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{ (muNH, sigmaNH, muAH, sigmaAH)}
+\NormalTok{\{}
+\NormalTok{  ES \textless{}{-}}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(muAH}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{sigmaAH}\OperatorTok{\^{}}\DecValTok{2}\NormalTok{)) }\OperatorTok{{-}}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(muNH}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{sigmaNH}\OperatorTok{\^{}}\DecValTok{2}\NormalTok{))}
+  \KeywordTok{return}\NormalTok{ (ES)}
+\NormalTok{\}}
+
+\NormalTok{seed \textless{}{-}}\StringTok{ }\DecValTok{1}\NormalTok{;}\KeywordTok{set.seed}\NormalTok{(seed)}
+\NormalTok{muAH \textless{}{-}}\StringTok{ }\FloatTok{2.1} \CommentTok{\# NH value, defined previously, was mu = 1.5}
+
+\NormalTok{T \textless{}{-}}\StringTok{ }\DecValTok{2000}
+\NormalTok{alpha \textless{}{-}}\StringTok{ }\FloatTok{0.05} \CommentTok{\# size of test}
+\NormalTok{reject =}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DataTypeTok{dim =}\NormalTok{ T)}
+\ControlFlowTok{for}\NormalTok{ (t }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(reject)) \{  }
+\NormalTok{  zk1 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K1);zk2 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K2, }\DataTypeTok{mean =}\NormalTok{ muAH, }\DataTypeTok{sd =}\NormalTok{ sigma)  }
+\NormalTok{  AUC \textless{}{-}}\StringTok{ }\KeywordTok{Wilcoxon}\NormalTok{(zk1, zk2)  }
+\NormalTok{  obsvdZ \textless{}{-}}\StringTok{ }\NormalTok{(AUC }\OperatorTok{{-}}\StringTok{ }\NormalTok{meanAUC)}\OperatorTok{/}\NormalTok{sigmaAUC}
+\NormalTok{  p \textless{}{-}}\StringTok{ }\DecValTok{2}\OperatorTok{*}\KeywordTok{pnorm}\NormalTok{(}\OperatorTok{{-}}\KeywordTok{abs}\NormalTok{(obsvdZ)) }\CommentTok{\# p value for individual t}
+  \ControlFlowTok{if}\NormalTok{ (p }\OperatorTok{\textless{}}\StringTok{ }\NormalTok{alpha) reject[t] =}\StringTok{ }\DecValTok{1} 
+\NormalTok{\}}
+
+\NormalTok{ObsvdTypeIErrRate \textless{}{-}}\StringTok{ }\KeywordTok{sum}\NormalTok{(reject)}\OperatorTok{/}\KeywordTok{length}\NormalTok{(reject)}
+\NormalTok{CI \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{);width \textless{}{-}}\StringTok{ }\OperatorTok{{-}}\KeywordTok{qnorm}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{)}
+\NormalTok{CI[}\DecValTok{1}\NormalTok{] \textless{}{-}}\StringTok{ }\NormalTok{ObsvdTypeIErrRate }\OperatorTok{{-}}\StringTok{ }\NormalTok{width}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(ObsvdTypeIErrRate}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{ObsvdTypeIErrRate)}\OperatorTok{/}\NormalTok{T)}
+\NormalTok{CI[}\DecValTok{2}\NormalTok{] \textless{}{-}}\StringTok{ }\NormalTok{ObsvdTypeIErrRate }\OperatorTok{+}\StringTok{ }\NormalTok{width}\OperatorTok{*}\KeywordTok{sqrt}\NormalTok{(ObsvdTypeIErrRate}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{ObsvdTypeIErrRate)}\OperatorTok{/}\NormalTok{T)}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"obsvdPower = "}\NormalTok{, ObsvdTypeIErrRate, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} obsvdPower =  0.489}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"95\% confidence interval = "}\NormalTok{, CI, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} 95\% confidence interval =  0.4670922 0.5109078}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"Effect Size = "}\NormalTok{, }\KeywordTok{EffectSize}\NormalTok{(mu, sigma, muAH, sigma), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} Effect Size =  0.08000617 0}
+\end{Highlighting}
+\end{Shaded}
+
+The ES for the code above is 0.08 (in AUC units). It should be obvious that if effect size is zero, then power equals \(\alpha\). This is because then there is no distinction between the null and alternative hypotheses conditions. Conversely, as effect size increases, statistical power increases, the limiting value being unity, when every trial results in rejection of the null hypothesis. The reader should experiment with different values of \texttt{muAH} to be convinced of the truth of these statements.
+
+\begin{itemize}
+\tightlist
+\item
+  Sample size: increase the number of cases by a factor of two, and run the above code chunk.
+\end{itemize}
+
+\begin{verbatim}
+#> pop NH mean AUC =  0.8594882 , pop NH sigma AUC =  0.02568252
+#> num. non-diseased images =  100 num. diseased images =  104
+#> obsvdPower =  0.313
+#> 95% confidence interval =  0.2926772 0.3333228
+#> Effect Size =  0.08000617 0
+\end{verbatim}
+
+So doubling the numbers of cases (both non-diseased and diseased) results in statistical power increasing from 0.509 to 0.844. Increasing the numbers of cases decreases \(\sigma_{AUC}\), the standard deviation of the empirical AUC. The new value of \(\sigma_{AUC}\) is 0.02947, which should be compared to the value 0.04177 for K1 = 50, K2 = 52. Recall that \(\sigma_{AUC}\) enters the denominator of the Z-statistic, so decreasing it will increase the probability of rejecting the null hypothesis.
+
+\begin{itemize}
+\tightlist
+\item
+  Alpha: Statistical power depends on \(alpha\). return the sample size to the original values . The results below are for two runs of the code, the first with the original value , set at line 16, the second with :
+\end{itemize}
+
+\begin{verbatim}
+#> alpha =  0.05 obsvdPower =  0.1545 
+#> alpha =  0.01 obsvdPower =  0.0265
+\end{verbatim}
+
+Decreasing \(\alpha\) results in decreased statistical power.
+
+\hypertarget{comments}{%
+\section{Comments}\label{comments}}
+
+The Wilcoxon statistic was used to estimate the area under the ROC curve. One could have used the binormal model, introduced in Chapter 06, to obtain maximum likelihood estimates of the area under the binormal model fitted ROC curve. The reasons for choosing the simpler empirical area are as follows. (1) With continuous ratings and 102 operating points, the area under the empirical ROC curve is expected to be a close approximation to the fitted area. (2) With maximum likelihood estimation, the code would be more complex -- in addition to the fitting routine one would require a binning routine and that would introduce yet another variable in the analysis, namely the number of bins and how the bin boundaries were chosen. (3) The maximum likelihood fitting code can sometimes fail to converge, while the Wilcoxon method is always guaranteed to yield a result. The non-convergence issue is overcome by modern methods of curve fitting described in later chapters. (4) The aim was to provide an understanding of null hypothesis testing and statistical power without being bogged down in the details of curve fitting.
+
+\hypertarget{why-alpha-is-chosen-to-be-5}{%
+\section{Why alpha is chosen to be 5\%}\label{why-alpha-is-chosen-to-be-5}}
+
+One might ask why \(\alpha\) is traditionally chosen to be 5\%. It is not a magical number, rather a cost benefit tradeoff. Choosing too small a value of \(\alpha\) would result in greater probability \((1-\alpha)\) of the NH not being rejected, even when it is false, i.e., decreased power. Sometimes it is important to detect a true difference between the measured AUC and the postulated value. For example, a new eye-laser surgery procedure is invented and the number of patients is necessarily small as one does not wish to subject a large number of patients to an untried procedure. One seeks some leeway on the Type-I error probability, possibly increasing it to \(\alpha\) = 0.1, in order to have a reasonable chance of success in detecting an improvement in performance due to better eyesight after the surgery. If the NH is rejected and the change is in the right direction, then that is good news for the researcher. One might then consider a larger clinical trial and set \(\alpha\) at the traditional 0.05, making up the lost statistical power by increasing the number of patients on which the surgery is tried.
+
+If a whole branch of science hinges on the results of a study, such as discovering the Higg's Boson in particle physics, statistical significance is often expressed in multiples of the standard deviation (\(\sigma\)) of the normal distribution, with the significance threshold set at a much stricter level (e.g.~\(5\sigma\)). This corresponds to \(\alpha\) \textasciitilde{} 1 in 3.5 million (\texttt{1/pnorm(-5)} = 3.5 x 10\^{}6, a one-sided test of significance). There is an article in Scientific American (\url{https://blogs.scientificamerican.com/observations/five-sigmawhats-that/}) on the use of \(n\sigma\), where \texttt{n} is an integer, e.g.~5, to denote the significance level of a study, and some interesting anecdotes on why such high significance levels (low alpha) are used in some fields of research.
+
+Similar concerns apply to manufacturing where the cost of a mistake could be the very expensive recall of an entire product line. For background on Six Sigma Performance, see \url{http://www.six-sigma-material.com/Six-Sigma.html}. An article downloaded 3/30/17 from \url{https://en.wikipedia.org/wiki/Six_Sigma} is included as supplemental material to this chapter (Six Sigma.pdf). It has an explanation of why \(6\sigma\) translates to one defect per 3.4 million opportunities (it has to do with short-term and long-term drifts in a process). In the author's opinion, looking at other fields offers a deeper understanding of this material than simply stating that by tradition one adopts alpha = 5\%.
+
+Most observer performance studies, while important in the search for better imaging methods, are not of such ``earth-shattering'' importance, and it is somewhat important to detect true differences (AH is true) at a reasonable alpha, so alpha = 5\% and beta = 20\% represent a good compromise. If one adopted a \(5\sigma\) criterion, the NH would never be rejected, and progress in image quality optimization would come to a grinding halt. That is not to say that a \(5\sigma\) criterion cannot be used; rather if used, the number of patients needed to detect a reasonable difference (effect size) with 80\% probability would be astronomically large. Truth-proven cases are a precious commodity in observer performance studies. Particle physicists working on discovering the Higg's Boson can get away with \(5\sigma\) criterion because the number of independent observations and/or effect size is much larger than corresponding numbers in observer performance research.
+
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
+
+In most statistics books, the subject of hypothesis testing is demonstrated in different (i.e., non-ROC) contexts. That is to be expected since the ROC-analysis field is a very small subspecialty of statistics (Prof.~Howard E. Rockette, private communication, ca. 2002). Since this book is about ROC analysis, the author decided to use a demonstration using ROC analysis. Using a data simulator, one is allowed to ``cheat'' by conducting a very large number of simulations to estimate the population \(AUC\) under the null hypothesis. This permitted us to explore the related concepts of Type-I and Type-II errors within the context of ROC analysis. Ideally, both errors should be zero, but the nature of statistics leads one to two compromises. Usually one accepts a Type-I error capped at 5\% and a Type-II error capped at 20\%. These translate to \(\alpha\) = 0.05 and desired statistical power = 80\%. The dependence of statistical power on \(\alpha\), the numbers of cases and the effect size was explored. Statistical power increases with the effect size, it increases with \(\alpha\) and it increases with the sample size (numbers of cases).
+
+In Chapter 11 sample-size calculations are described that allow one to estimate the numbers of readers and cases needed to detect a specified difference in inter-modality AUCs with an expected statistical power \(1-\beta\) . The word ``detect'' in the preceding sentence is shorthand for ``reject the NH with probability capped at \(\alpha\) while also rejecting the alternative hypothesis with probability capped at \(\beta\)''.
+
+This chapter also gives the first example of validation of a hypothesis testing method. Statisticians sometimes refer to this as showing a proposed test is a ``5\% test''. What is meant is that one needs to be assured that when the NH is true the probability of NH rejection equals the expected value, namely \(\alpha\), typically chosen to be 5\%. Since the observed NH rejection rate over 2000 simulations is a random variable, one does not expect the NH rejection rate to exactly equal 5\%, rather the constructed 95\% confidence interval (also a random interval variable) should include the NH value with probability \(\alpha\).
+
+As noted in the introduction, comparing a single reader's performance to a specified value is not a clinically interesting problem. The next two chapters describe methods for significance testing of multiple-reader multiple-case (MRMC) ROC datasets, consisting of interpretations by a group of readers of a common set of cases in typically two modalities. It turns out that the analyses yield variability estimates that permit sample size calculation. After all, sample size calculation is all about estimation of variability, the denominator of the z-statistic, i.e., Eqn. (8.3), in the context of this chapter. The formulae will look more complex, as interest is not in determining the standard deviation of AUC, but in the standard deviation of the inter-modality reader-averaged AUC difference. However, the basic concepts remain the same.
+
+\hypertarget{references}{%
+\section{References}\label{references}}
 
 \hypertarget{DBMHnalysis}{%
 \chapter{Dorfman Berbaum Metz Hillis (DBMH) Analysis}\label{DBMHnalysis}}
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\hypertarget{introduction-1}{%
+\section{Introduction}\label{introduction-1}}
 
 In this chapter the term ``treatment'' is used as a generic for ``imaging system'', ``modality'' or ``image processing'' and ``reader'' is used as a generic for ``radiologist'' or algorithmic observer, e.g., a computer aided detection (CAD) algorithm. In the context of illustrating hypothesis-testing methods the previous chapter described analysis of a single ROC dataset and comparing the observed area \(AUC\) under the ROC plot to a specified value. Clinically this is not the most interesting problem; rather, interest is usually in comparing performance of a group of readers interpreting a common set of cases in two or more treatments. Such data is termed multiple reader multiple case (MRMC). {[}An argument could be made in favor of the term ``multiple-treatment multiple-reader'', since ``multiple-case'' is implicit in any ROC analysis that takes into account correct and incorrect decisions on cases. However, the author will stick with existing terminology.{]} The basic idea is that by sampling a sufficiently large number of readers and a sufficiently large number of cases one might be able to draw conclusions that apply broadly to other readers of similar skill levels interpreting other similar case sets in the selected treatments. How one accomplishes this, termed MRMC analysis, is the subject of this chapter.
 
@@ -257,7 +675,7 @@ The organization of the chapter is as follows. The concepts of reader and case p
 
 ROC MRMC studies require a sample of cases and interpretations by one or more readers in one or more treatments (in this book the term ``multiple'' includes as a special case ``one''). A study is never conducted on a sample of treatments. It would be nonsensical to image patients using a ``sample'' of all possible treatments known to exist. Every variation of an imaging technique (e.g., different kilovoltage or kVp) or display method (e.g., window-level setting) or image processing techniques qualifies as a distinct treatment. The number of possible treatments is very large, and, from a practical point of view, most of them are uninteresting. Rather, interest is in comparing two or more (a few at most) treatments that, based on preliminary studies, are clinically interesting. One treatment may be computed tomography, the other magnetic resonance imaging, or one may be interested in comparing a standard image processing method to a newly proposed one, or one may be interested in comparing CAD to a group of readers.
 
-This brings out an essential difference between how cases, readers and treatments have to be regarded in the variability estimation procedure. Cases and readers are usually regarded as random factors (there has to be at least one random factor -- if not, there are no sources of variability and nothing to apply statistics to!), while treatments are regarded as fixed factors. The random factors contribute stochastic (i.e., random) variability, but the fixed factors do not, rather they contribute constant shifts in performance. The terms fixed and random factors are used in this specific sense, and are derived, in turn, from ANOVA methods in statistics10,25. With two or more treatments, there are shifts in performance of treatments relative to each other, that one seeks to assess the significance of against a background of noise contributed by the random factors. If the shifts are sufficiently large compared to the noise, then one can state, with some certainty, that they are real. Quantifying the last statement uses the methods of hypothesis testing introduced in Chapter \ref{HypothesisTesting} or Chapter {[}Hypothesis Testing{]}.
+This brings out an essential difference between how cases, readers and treatments have to be regarded in the variability estimation procedure. Cases and readers are usually regarded as random factors (there has to be at least one random factor -- if not, there are no sources of variability and nothing to apply statistics to!), while treatments are regarded as fixed factors. The random factors contribute stochastic (i.e., random) variability, but the fixed factors do not, rather they contribute constant shifts in performance. The terms fixed and random factors are used in this specific sense, and are derived, in turn, from ANOVA methods in statistics10,25. With two or more treatments, there are shifts in performance of treatments relative to each other, that one seeks to assess the significance of against a background of noise contributed by the random factors. If the shifts are sufficiently large compared to the noise, then one can state, with some certainty, that they are real. Quantifying the last statement uses the methods of hypothesis testing introduced in Chapter \ref{HypothesisTesting} or Chapter \protect\hyperlink{HypothesisTesting}{Hypothesis Testing}.
 
 \hypertarget{reader-and-case-populations-and-data-correlations}{%
 \section{Reader and case populations and data correlations}\label{reader-and-case-populations-and-data-correlations}}
@@ -326,9 +744,10 @@ The figure-of-merit has three indices:\\
 
 The approach \citep{RN204} taken by Dorfman-Berbaum-Metz (DBM) was to use the jackknife resampling method described in (book) Chapter 7 to calculate FOM pseudovalues \({Y'}_{ijk}\) defined by (the reason for the prime will become clear shortly):
 
-\begin{equation*}
+\begin{equation}
 Y'_{ijk}=K\theta_{ij}-(K-1)\theta_{ij\{k\}}
-\end{equation*}
+\label{eq:pValNotCentered}
+\end{equation}
 
 Here \(\theta_{ij}\) is the estimate of the figure-of-merit for reader \(j\) interpreting all cases in treatment \(i\) and \(\theta_{ij\{k\}}\) is the corresponding figure of merit with case \(k\) \emph{deleted} from the analysis. To adhere to convention and to keep the notation simple the \(\{1\}\) index on every figure of merit symbol is suppressed (unless it is absolutely necessary for clarity).
 
@@ -336,46 +755,47 @@ Recall from book Chapter 07 that the jackknife is a way of teasing out the case-
 
 Hillis has proposed a centering transformation on the pseudovalues (Hillis calls them ``normalized'' pseudovalues but to the author ``centering'' is a more accurate and descriptive term - \emph{Normalize: (In mathematics) multiply (a series, function, or item of data) by a factor that makes the norm or some associated quantity such as an integral equal to a desired value (usually 1). New Oxford American Dictionary, 2016}):
 
-\begin{equation*}
+\begin{equation}
 Y_{ijk}=Y'_{ijk}+\left (\theta_{ij} - Y'_{ij\bullet}  \right )
-\end{equation*}
+\label{eq:pValCentered}
+\end{equation}
 
 \textbf{Note: the bullet symbol denotes an average over the corresponding index.}
 
 The effect of this transformation is that the average of the centered pseudovalues over the case index is identical to the corresponding estimate of the figure of merit:
 
-\begin{equation*}
+\begin{equation}
 Y_{ij\bullet}=Y'_{ij\bullet}+\left (\theta_{ij} - Y'_{ij\bullet}  \right )=\theta_{ij}
-\end{equation*}
+\label{eq:EffectOfCentering}
+\end{equation}
 
-This has the advantage that all confidence intervals are correctly centered. The transformation is unnecessary if one uses the Wilcoxon as the figure-of-merit, as the pseudovalues calculated using the Wilcoxon as the figure of merit are automatically centered. It is left as an exercise for the reader to show that this statement is true.
+This has the advantage that all confidence intervals are properly centered. The transformation is unnecessary if one uses the Wilcoxon as the figure-of-merit, as the pseudovalues calculated using the Wilcoxon as the figure of merit are automatically centered (it is left as an exercise for the reader to show that this statement is true).
 
 \emph{It is understood that, unless explicitly stated otherwise, all calculations from now on will use centered pseudovalues.}
 
 Consider \(N\) replications of a MRMC study, where a replication means repetition of the study with the same treatments, readers and case-set \(\{1\}\). For \(N\) replications per treatment-reader-case combination, the DBM model for the pseudovalues is (\(n\) is the replication index, usually \(n\) = 1, but kept here for now):
 
-\begin{equation*}
+\begin{equation}
 Y_{n(ijk)}  = \mu + \tau_i+ R_j + C_k + (\tau R)_{ij}+ (\tau C)_{ik}+ (R C)_{jk} + (\tau RC)_{ijk}+ \epsilon_{n(ijk)} 
-\end{equation*}
+\label{eq:SamplingDbmModel}
+\end{equation}
 
 The term \(\mu\) is a constant. By definition, the treatment effect \(\tau_i\) is subject to the constraint:
 
-\begin{equation*}
+\begin{equation}
 \sum_{i=1}^{I}\tau_i=0\Rightarrow \tau_\bullet=0
-\end{equation*}
+\label{eq:constraintTau}
+\end{equation}
 
 It is shown below, Eqn. (9.9), that this constraint ensures that \(\mu\) has the interpretation as the average of the pseudovalues over treatments, readers, cases and replications, if any.
 
 The notation for the replication index, i.e., \(n(ijk)\), implies \(n\) observations for treatment-reader-case combination \(ijk\). With no replications (\(N\) = 1) it is convenient to omit the n-symbol. As an example, the parameter \(\tau_i\) is readily estimated as follows:
 
 \begin{equation}
-\theta_{ij\{c\}}=\mu+\tau_i+R_j+(\tau R)_{ij}+\epsilon_{ij\{c\}}
-\end{equation}
-
-\[
-Y_{ijk}\equiv Y_{1(ijk)}\\
+Y_{ijk} \equiv Y_{1(ijk)}\\
 \tau_i = Y_{i \bullet \bullet} -Y_{\bullet \bullet \bullet} 
-\]
+\label{eq:estimatingTau}
+\end{equation}
 
 \emph{The basic assumption of the DBM model, Eqn. (9.4), is that the pseudovalues can be regarded as independent and identically distributed observations. That being the case, the pseudovalues can be analyzed by standard ANOVA techniques.}
 
@@ -384,13 +804,14 @@ Y_{ijk}\equiv Y_{1(ijk)}\\
 
 The right hand side of Eqn. (9.4) consists of one fixed and 7 random effects. The current analysis assumes readers and cases as random factors (RRRC), so by definition \(R_j\) and \(C_k\) are random effects, and moreover, any term that includes a random factor is a random effect; for example, \((\tau R)_{ij}\) is a random effect because it includes the \(R\) factor. Here is a list of the random terms:
 
-\[
+\begin{equation}
 R_j, C_k, (\tau R)_{ij}, (\tau C)_{ik}, (RC)_{jk},  (\tau RC)_{ijk},  \epsilon_{ijk}
-\]
+\label{eq:termsInDbmModel}
+\end{equation}
 
 \textbf{Assumption:} Each of the random effects is modeled as a random sample from mutually independent zero-mean normal distributions with variances as specified below:
 
-\[
+\begin{equation}
 R_j  \sim N\left ( 0,\sigma_{R}^{2} \right ) \\
 C_k \sim N\left ( 0,\sigma_{C}^{2} \right ) \\
 (\tau R)_{ij} \sim N\left ( 0,\sigma_{\tau R}^{2} \right ) \\
@@ -398,12 +819,12 @@ C_k \sim N\left ( 0,\sigma_{C}^{2} \right ) \\
 (RC)_{jk} \sim N\left ( 0,\sigma_{RC}^{2} \right ) \\
 (\tau RC)_{ijk} \sim N\left ( 0,\sigma_{\tau RC}^{2} \right ) \\
 \epsilon_{ijk} \sim N\left ( 0,\sigma_{\epsilon}^{2} \right )
-\]
+\label{eq:samplingOfDbmTerms}
+\end{equation}
 
 One could have placed a \(Y\) subscript (or superscript) on each of the variances, as they describe fluctuations of the pseudovalues, not FOM values -- the latter are the subject of the next chapter. However, this tends to make the notation cumbersome. So here is the convention:
 
-\emph{Unless explicitly stated otherwise, all variance symbols in this chapter refer to pseudovalues. }
-
+\textbf{Unless explicitly stated otherwise, all variance symbols in this chapter refer to pseudovalues. }
 Another convention: \((\tau R)_{ij}\) is \emph{not} the product of the treatment and reader factors, rather it is a single factor, namely the treatment-reader factor with \(IJ\) levels, subscripted by the index \(ij\) and similarly for the other product-like terms in Eqn. (9.7).
 
 \hypertarget{meanings-of-variance-components-in-the-dbm-model-tba-this-section-can-be-improved}{%
@@ -429,9 +850,10 @@ The variances defined in Eqn. (9.7) are collectively termed variance components.
   The last term, \(\sigma_{\epsilon}^{2}\) describes the variance arising from different replications of the study using the same treatments, readers and cases. Measuring this variance requires repeating the study several (\(N\)) times with the same treatments, readers and cases, and computing the variance of \(Y_{n(ijk)}\) , where the additional \(n\)-index refers to true replications, \(n\) = 1, 2, \ldots, \(N\).
 \end{itemize}
 
-\[
+\begin{equation}
 \sigma_{\epsilon}^{2}=\frac{1}{IJK}\sum_{i=1}^{I}\sum_{j=1}^{J}\sum_{k=1}^{k}\frac{1}{N-1}\sum_{n=1}^{N}\left ( Y_{n(ijk)} - Y_{\bullet (ijk)} \right )^2
-\]
+\label{eq:EstimatingEpsilon}
+\end{equation}
 
 The right hand side of Eqn. (9.8) is the variance of \(Y_{n(ijk)}\), for specific \(ijk\), with respect to the replication index \(n\), averaged over all \(ijk\). In practice \(N\) = 1 (i.e., there are no replications) and this variance cannot be estimated (it would imply dividing by zero). It has the meaning of \emph{reader inconsistency}, usually termed \emph{within-reader} variability. As will be shown later, the presence of this inestimable term does not limit ones ability to perform significance testing on the treatment effect without having to replicate the whole study, as implied in earlier work \citep{RN1450}.
 
@@ -454,7 +876,7 @@ Again, to be clear, one should put a \(Y\) subscript (or superscript) on each of
 
 The definitions of the mean-squares below match those (when provided) in \citep[page 1261]{RN1476}; the definition of \(MS(R)\) in \citep[top of page 339]{RN2508} is incorrect.
 
-\begin{equation*}
+\begin{equation}
 \text{MS(T)}=\frac{JK\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{I-1} \\
 \text{MS(R)}=\frac{IK\sum_{j=1}^{J}\left ( Y_{\bullet j \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{J-1} \\
 \text{MS(C)}=\frac{IJ\sum_{k=1}^{K}\left ( Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{K-1} \\
@@ -462,7 +884,8 @@ The definitions of the mean-squares below match those (when provided) in \citep[
 \text{MS(TC)}=\frac{J\sum_{i=1}^{I}\sum_{k=1}^{K}\left ( Y_{i \bullet k} - Y_{i \bullet \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(K-1)} \\
 \text{MS(RC)}=\frac{I\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{\bullet j k} - Y_{\bullet j \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(J-1)(K-1)}\\
 \text{MS(TRC)}=\frac{\sum_{i=1}^{I}\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{i j k} - Y_{i j \bullet} - Y_{i \bullet k} - Y_{\bullet j k} + Y_{i \bullet \bullet} + Y_{\bullet j \bullet} + Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(J-1)K-1)}
-\end{equation*}
+\label{eq:EstimatingMeanSquares}
+\end{equation}
 
 Note the absence of \(MSE\), corresponding to the \(\epsilon\) term on the right hand side of Eqn. (9.4). With only one observation per treatment-reader-case combination, MSE cannot be estimated; it effectively gets folded into the \(MS(TRC)\) term.
 
@@ -504,9 +927,10 @@ TRC & (I-1)(J-1)(K-1) & \(\sigma_{\epsilon}^{2}\) + \(\sigma_{\tau RC}^{2}\)\tab
   In Tables 9.1 the following notation is used as a shorthand:
 \end{itemize}
 
-\begin{equation*}
+\begin{equation}
 \sigma_{\tau}^{2}=\frac{1}{I-1}\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{\bullet \bullet \bullet} \right )^2
-\end{equation*}
+\label{eq:defnVarTau}
+\end{equation}
 
 \begin{itemize}
 \item
@@ -604,30 +1028,34 @@ After displaying the results of the calculation, the results are compared to tho
 
 If the NH of no treatment effect is true, i.e., if \(\sigma_{\tau}^{2}\) = 0, then according to Table 9.1 the following holds (the last term in the row labeled \(T\) in Table 9.1 drops out):
 
-\begin{equation*}
+\begin{equation}
 E\left ( MST\mid NH \right ) = \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} + J\sigma_{\tau C}^{2}
-\end{equation*}
+\label{eq:ExpValMST}
+\end{equation}
 
 Also, the following linear combination is equal to \(E\left ( MST\mid NH \right )\):
 
-\begin{equation*}
+\begin{equation}
 E\left ( MS(TR) \right ) + E\left ( MS(TC) \right )  - E\left ( MS(TRC) \right ) \\ 
 = \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} \right ) + \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J\sigma_{\tau C}^{2} \right ) -\left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2}  \right ) \\
 = \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J \sigma_{\tau C}^{2} +  K\sigma_{\tau R}^{2} \\
 = E\left ( MS(T)\mid NH \right )
-\end{equation*}
+\label{eq:linearComb}
+\end{equation}
 
 Therefore, under the NH, the ratio:
 
-\begin{equation*}
+\begin{equation}
 \frac{E\left ( MS(T)\mid NH \right )}{E\left ( MS(TR) \right ) + E\left ( MS(TC) \right )  - E\left ( MS(TRC) \right )} = 1
-\end{equation*}
+\label{eq:ConstrFRatio}
+\end{equation}
 
 In practice, one does not know the expected values -- that would require averaging each of these quantities, regarded as random variables, over their respective distributions. Therefore, one defines the following statistic, denoted \(F_{DBM}\), using the observed values of the mean squares, calculated almost trivially using Eqn. (9.12):
 
-\begin{equation*}
+\begin{equation}
 F_{DBM} = \frac{MS(T)}{MS(TR) + MS(TC) - MS(TRC)}
-\end{equation*}
+\label{eq:FStatRRRC}
+\end{equation}
 
 \(F_{DBM}\) is a realization of a random variable. A non-zero treatment effect, i.e., \(\sigma_{\tau}^{2} > 0\), will cause the ratio to be larger than one, because \(E\left ( MS(T) \right)\) will be larger, see row labeled \(T\) in Table 9.1. Therefore values of \(F_{DBM} > 1\) will tend to reject the NH. Drawing on a theorem from statistics \citep{RN1492}, under the NH the ratio of two independent mean squares is distributed as a (central) F-statistic with degrees of freedom corresponding to those of the mean squares forming the numerator and denominator of the ratio (Theorem 12.2.5 in ``An Introduction to Mathematical Statistics and Its Applications''). Knowing the distribution of the statistic defined by (9.18) under the NH enables hypothesis testing. This is completely analogous to Chapter 08 where knowledge of the distribution of AUC under the NH enabled testing the null hypothesis that the observed value of AUC equals a pre-specified value.
 
@@ -643,10 +1071,11 @@ Under the NH the left hand side of by (9.18), i.e., \(F_{DBM}\), is distributed 
 
 Summarizing,
 
-\begin{equation*}
+\begin{equation}
 F_{DBM} \sim F_{ndf,ddf} \\
 ndf=I-1
-\end{equation*}
+\label{eq:samplingFStat}
+\end{equation}
 
 The next topic is estimating \(ddf\).
 
@@ -657,32 +1086,36 @@ The denominator of the F-ratio is MS(TR)+MS(TC)-MS(TRC).
 
 This is not a simple mean square. Rather it is a \emph{linear combination of mean squares} (with coefficients 1, 1 and 1), and the resulting value could even be negative, which is an illegal value for a sample from an F-distribution. In 1941 Satterthwaite \citep{RN2359, RN2360} proposed an approximate degree of freedom for a linear combination of simple mean square quantities. Online Appendix 9.A explains the approximation in more detail. The end result is that the mean square quantity described in Eqn. (9.21) has an approximate degree of freedom defined by (this is called the \emph{Satterthwaite's approximation}):
 
-\begin{equation*}
+\begin{equation}
 ddf_{Sat}=\frac{\left ( MS(TR) + MS(TC) - MS(TRC) \right )^2}{\left ( \frac{MS(TR)^2}{(I-1)(J-1)} + \frac{MS(TC)^2}{(I-1)(K-1)} + \frac{MS(TRC)^2}{(I-1)(J-1)(K-1)}  \right )}
-\end{equation*}
+\label{eq:ddfSatter}
+\end{equation}
 
 The subscript \(Sat\) is for Satterthwaite. From Eqn. (9.22) it should be fairly obvious that in general \(ddf_{Sat}\) is not an integer. To accommodate possible negative estimates of the denominator, Eqn. (9.21), the original DBM method \citep{RN204} proposed four expressions for the F-statistic and corresponding expressions for \(ddf\). Rather than repeat them here, since they have been superseded by the method described below, the interested reader is referred to Eqn. 6 and Eqn. 7 in \citep{RN1866}.
 
 Hillis \citep{RN1865} proposes the following statistic for testing the null hypothesis (the subscript \(DBMH\) give credit to the original formulation by DBM and the subsequent improvements by Hillis):
 
-\begin{equation*}
+\begin{equation}
 F_{DBMH} = \frac{MS(T)}{MS(TR) + \max \left (MS(TC) - MS(TRC), 0  \right )}
-\end{equation*}
+\label{eq:FStatHillis}
+\end{equation}
 
 Now the denominator cannot be negative. One can think of the F-statistic \(F_{DBMH}\) as a signal-to-noise ratio like quantity, with the difference that both numerator and denominator are variance like quantities. If the ``variance'' represented by the treatment effect is larger than the variance of the noise tending to mask the treatment effect, then \(F_{DBMH}\) tends to be large, which makes the observed treatment ``variance'' stand out more clearly compared to the noise.
 
 Hillis has shown that the left hand side of Eqn. (9.23) is distributed as an F-statistic with ndf defined by Eqn. (9.20), and denominator degrees of freedom defined by:
 
-\begin{equation*}
+\begin{equation}
 ddf_H =\frac{\left ( MS(TR) + \max \left (MS(TC) - MS(TRC),0  \right ) \right )^2}{\left ( \frac{MS(TR)^2}{(I-1)(J-1)}  \right )}
-\end{equation*}
+\label{eq:ddfH}
+\end{equation}
 
 Summarizing,
 
-\begin{equation*}
+\begin{equation}
 F_{DBM} \sim F_{ndf,ddf} \\
 ndf=I-1
-\end{equation*}
+\label{eq:samplingFStatHillis}
+\end{equation}
 
 Instead of 4 rules, as in the original DBM method, the Hillis modification involves just one rule, summarized by Eqns. (9.23) through Eqn. (9.25). Moreover, the F-statistic is constrained to non-negative values. Using simulation testing \citep{RN1866} has shown that the DBMH method has better null hypothesis behavior than the original DBM method; the latter tended to be too conservative, typically yielding Type I error rates smaller than the optimal 5\%.
 
@@ -691,9 +1124,10 @@ Instead of 4 rules, as in the original DBM method, the Hillis modification invol
 
 The critical value of the F-statistic \(F_{1-\alpha,ndf,ddf_H}\) is defined such that fraction of the distribution lies to the left of the critical value, in other words it is the quantile function for the F-distribution:
 
-\begin{equation*}
+\begin{equation}
 \Pr\left ( F\leq F_{1-\alpha,ndf,ddf_H} \mid F\sim F_{ndf,ddf_H}\right ) = 1 - \alpha
-\end{equation*}
+\label{eq:critValFStat}
+\end{equation}
 
 The critical value \(F_{1-\alpha,ndf,ddf_H}\) increases as \(\alpha\) decreases. The value of \(\alpha\), generally chosen to be 0.05, termed the \emph{nominal} \(\alpha\), is fixed. The decision rule is that if \(F_{DBMH} > F_{1-\alpha, ndf, ddf_H}\) one rejects the NH and otherwise one does not. It follows, from the definition of \(F_{DBMH}\), Eqn. (9.23), that rejection of the NH is more likely if:
 * \(F_{DBMH}\) is large, Eqn. (9.18), which occurs if \(MS(T)\) is large, meaning the treatment effect is large, and / or \(MS(TR) + \max \left (MS(TC) - MS(TRC),0 \right )\) is small, see comments following Eqn. (9.23).
@@ -715,33 +1149,36 @@ The critical value \(F_{1-\alpha,ndf,ddf_H}\) increases as \(\alpha\) decreases.
 
 **The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than \(F_{DBMH}\) could occur by chance. In other words, it is the area under the (central) F-distribution \(F_{ndf,ddf}\) that lies above the observed value \(F_{DBMH}\):
 
-\begin{equation*}
+\begin{equation}
 p=\Pr\left ( F > F_{DBMH} \mid F \sim F_{ndf,ddf_H} \right )
-\end{equation*}
+\label{eq:pValueRRRC}
+\end{equation}
 
 If \(p < \alpha\) then the NH that all treatments are identical is rejected at significance level \(\alpha\). That informs the researcher that there exists at least one treatment-pair that has a significant difference. To identify which pair(s) are different, one calculates confidence intervals for each paired difference. Hillis has shown that the \((1-\alpha)\) percent confidence interval for \(Y_{i \bullet \bullet} - Y_{i' \bullet \bullet}\) is given by:
 
-\begin{equation*}
+\begin{equation}
 CI_{1-\alpha}=\left ( Y_{i \bullet \bullet} - Y_{i' \bullet \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MS(TR) + \max\left ( MS(TC)-MS(TRC),0 \right ) \right )}
-\end{equation*}
+\end{equation}
 
 Here \(t_{\alpha/2;ddf_H}\) is that value such that \(\alpha/2\) of the \emph{central t-distribution} with \(ddf_H\) degrees of freedom is contained in the upper tail of the distribution:
 
-\begin{equation*}
+\begin{equation}
 \Pr\left ( T>t_{\alpha/2;ddf_H} \right )=\alpha/2
-\end{equation*}
+\label{eq:tDistTailProb}
+\end{equation}
 
 Since centered pseudovalues were used:
 
-\begin{equation*}
+\begin{equation}
 \left ( Y_{i \bullet \bullet} - Y_{i' \bullet \bullet} \right )=\left ( \theta_{i \bullet } - \theta_{i' \bullet} \right )
-\end{equation*}
+\end{equation}
 
 Eqn. (9.28) can be rewritten:
 
-\begin{equation*}
+\begin{equation}
 CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MS(TR) + \max\left ( MS(TC)-MS(TRC),0 \right ) \right )}
-\end{equation*}
+\label{eq:confIntervalRRRC}
+\end{equation}
 
 For two treatments the following equivalent rules could be adopted to reject the NH:
 
@@ -836,45 +1273,50 @@ For more than two treatments the first two rules are equivalent and if a signifi
 
 The model is the same as in Eqn. (9.4) except one puts \(\sigma_{R}^{2}\) = \(\sigma_{\tau R}^{2}\) = 0 in Table 9.1. The appropriate test statistic is:
 
-\begin{equation*}
+\begin{equation}
 \frac{E\left ( MS(T) \right )}{E\left ( MS(TC) \right )} = \frac{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau C}^{2}+JK\sigma_{\tau}^{2}}{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau C}^{2}}
-\end{equation*}
+\end{equation}
 
 Under the null hypothesis \(\sigma_{\tau}^{2} = 0\):
 
-\begin{equation*}
+\begin{equation}
 \frac{E\left ( MS(T) \right )}{E\left ( MS(TC) \right )} = 1
-\end{equation*}
+\end{equation}
 
 As before, one defines the F-statistic (by replacing \emph{expected} with \emph{observed} values) by
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|R}=\frac{MS(T)}{MS(TC)}
-\end{equation*}
+\label{eq:FStatFRRC}
+\end{equation}
 
 The observed value \(F_{DBM|R}\) (the Roe-Metz notation \citep{RN1124} is used which indicates that the factor appearing to the right of the vertical bar is regarded as fixed) is distributed as an F-statistic with \(\text{ndf}\) = \(I – 1\) and \(ddf = (I-1)(K-1)\); the degrees of freedom follow from the rows labeled \(T\) and \(TC\) in Table 9.1. Therefore, the distribution of the observed value is (no Satterthwaite approximation needed this time as both numerator and denominator are simple mean-squares):
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|R} \sim F_{I-1,(I-1)(K-1)}
-\end{equation*}
+\label{eq:SamplingFStatFRRC}
+\end{equation}
 
 The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value:
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|R} > F_{1-\alpha,I-1,(I-1)(K-1)}
-\end{equation*}
+\label{eq:NhRejectRuleFRRC}
+\end{equation}
 
 The p-value of the test is the probability that a random sample from the F-distribution Eqn. (9.39), exceeds the observed value:
 
-\begin{equation*}
+\begin{equation}
 p=\Pr\left ( F> F_{DBM|R} \mid F \sim F_{I-1,(I-1)(K-1)} \right )
-\end{equation*}
+\label{eq:pFRRC}
+\end{equation}
 
 The \((1-\alpha)\) confidence interval for the inter-treatment reader-averaged difference FOM is given by:
 
-\begin{equation*}
+\begin{equation}
 CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2,(I-1)(K-1)}\sqrt{2\frac{MS(T)}{JK}}
-\end{equation*}
+\label{eq:confIntervalFRRC}
+\end{equation}
 
 \hypertarget{single-reader-multiple-treatment-analysis}{%
 \subsection{Single-reader multiple-treatment analysis}\label{single-reader-multiple-treatment-analysis}}
@@ -920,45 +1362,50 @@ As one might expect, if one ``freezes'' reader variability, the FOM difference b
 
 The model is the same as in Eqn. Eqn. (9.4) except one puts \(\sigma_C^2 = \sigma_{\tau C}^2 =0\) in Table 9.1. It follows that:
 
-\begin{equation*}
+\begin{equation}
 \frac{E(MS(T))}{E(MS(TR))}=\frac{\sigma_\epsilon^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+JK\sigma_{\tau}^2}{\sigma_\epsilon^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2}
-\end{equation*}
+\end{equation}
 
 Under the null hypothesis \(\sigma_\tau^2 = 0\):
 
-\begin{equation*}
+\begin{equation}
 \frac{E(MS(T))}{E(MS(TR))}=1
-\end{equation*}
+\end{equation}
 
 Therefore, one defines the F-statistic (replacing expected values with observed values) by:
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|C} \sim \frac{MS(T)}{MS(TR)}
-\end{equation*}
+\label{eq:FStatRRFC}
+\end{equation}
 
 The observed value \(F_{DBM|C}\) is distributed as an F-statistic with \(ndf = I – 1\) and \(ddf = (I-1)(J-1)\), see rows labeled \(T\) and \(TR\) in Table 9.1.
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|C} \sim F_{I-1,(I-1)(J-1))}
-\end{equation*}
+\label{eq:SamplingFStatRRFC}
+\end{equation}
 
 The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|C} > F_{1-\alpha,I-1,(I-1)(J-1))}
-\end{equation*}
+\label{eq:NhRejectRuleRRFC}
+\end{equation}
 
 The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:
 
-\begin{equation*}
+\begin{equation}
 p=\Pr\left ( F>F_{DBM|C} \mid F \sim F_{I-1,(I-1)(J-1)} \right )
-\end{equation*}
+\label{eq:pRRFC}
+\end{equation}
 
 The confidence interval for inter-treatment differences is given by (TBA check this):
 
-\begin{equation*}
+\begin{equation}
 CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2,(I-1)(J-1)}\sqrt{2\frac{MS(TR)}{JK}}
-\end{equation*}
+\label{eq:confIntervalRRFC}
+\end{equation}
 
 \hypertarget{example-6-code-illustrating-analysis-for-rrfc-analysis-van-dyke-data}{%
 \subsubsection{Example 6: Code illustrating analysis for RRFC analysis, Van Dyke data}\label{example-6-code-illustrating-analysis-for-rrfc-analysis-van-dyke-data}}
@@ -1088,14 +1535,14 @@ TRC & (I-1)(J-1)(K-1) & \(\sigma_{\epsilon}^{2}\) + \(\sigma_{\tau RC}^{2}\)\tab
 \bottomrule
 \end{longtable}
 
-\hypertarget{references}{%
-\section{References}\label{references}}
+\hypertarget{references-1}{%
+\section{References}\label{references-1}}
 
 \hypertarget{ORHAnalysis}{%
-\chapter{Obuchowski Rockette Hillis2 (ORH) Analysis}\label{ORHAnalysis}}
+\chapter{Obuchowski Rockette Hillis (ORH) Analysis}\label{ORHAnalysis}}
 
-\hypertarget{introduction-1}{%
-\section{Introduction}\label{introduction-1}}
+\hypertarget{introduction-2}{%
+\section{Introduction}\label{introduction-2}}
 
 The previous chapter described the DBM significance testing procedure \citep{RN204} for analyzing MRMC ROC data, along with improvements suggested by Hillis. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been criticized by Hillis who states that the method ``works'' but lacks firm statistical foundations \citep{RN1772, RN1865, RN1866}. If a method works there must be good reasons why it works and the last section of the previous chapter, §9.13, gave a justification for why the method works. Specifically, the empirical AUC pseudovalues qualify as case-level FOMs - this property was also noted by \citep{RN1395}. However, this property applies only to the empirical AUC, so an alternate approach that applies to any figure of merit is desirable.
 
@@ -1128,7 +1575,7 @@ The \emph{c-index} was introduced in (book) Chapter 07. The left hand side of \e
 
 \emph{This is one place the case-set index is essential for clarity; without it \(\theta_i\) is a fixed quantity - the figure of merit estimate for treatment \(i\) - lacking any index allowing for sampling related variability.}
 
-Obuchowski and Rockette use a \emph{k-index}, defined as the ``kth repetition of the study involving the same diagnostic test, reader and patient (sic)''. In the author's opinion, what is meant is a case-set index instead of a repetition index. Repeating a study with the same treatment, reader and cases yields \emph{within-reader} variability, which is different from sampling the population of cases with new case-sets, which yields \emph{case-sampling plus within-reader} variability. As noted earlier, within-reader variability cannot be ``turned off'' and affects the interpretations of all case-sets.
+Obuchowski and Rockette use a \emph{k-index}, defined as the ``kth repetition of the study involving the same diagnostic test, reader and patient (sic)''. In the author's opinion, what is meant is a case-set index instead of a repetition index. Repeating a study with the same treatment, reader and cases yields \emph{within-reader} variability, which is different from sampling the population of cases with new case-sets, which yields \emph{case-sampling plus within-reader} variability \citep{RN412}. As noted earlier, within-reader variability cannot be ``turned off'' and affects the interpretations of all case-sets.
 
 \emph{Interest is in extrapolating to the population of cases and the only way to do this is to sample different case-sets. It is shown below that usage of the case-set index interpretation yields the same results using the DBMH or the ORH methods.}
 
@@ -1291,15 +1738,15 @@ The entire process is repeated for different treatment pairings and the resultin
 
 In most situations one expects \(\rho_1\) (for ROC studies) to be positive. There is, perhaps unlikely, a scenario that could lead to anti-correlation and negative. This could occur, with ``complementary'' treatments, e.g., CT vs.~MRI, where one treatment is good for bone imaging and the other for soft-tissue imaging. In this situation what constitutes an easy case-set in one treatment could be a difficult case-set in the other treatment.
 
-\hypertarget{code-illustrating-the-covariance-matrix-tba}{%
-\subsection{Code illustrating the covariance matrix (TBA)}\label{code-illustrating-the-covariance-matrix-tba}}
+\hypertarget{code-illustrating-the-covariance-matrix}{%
+\subsection{Code illustrating the covariance matrix}\label{code-illustrating-the-covariance-matrix}}
 
-As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method \citep{RN112}. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \eqref{eq:EstimateSigmaBootstrap} and \eqref{eq:EstimateSigmaJackknife} extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file \texttt{VarCovMtrxDLStr.R}. The file name stands for ``variance covariance matrix according to the DeLong structural components method'' \emph{described in five unnumbered equations following Eqn. 4 in the cited reference}.
+As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method \citep{RN112}. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \eqref{eq:EstimateSigmaBootstrap} and \eqref{eq:EstimateSigmaJackknife} extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is implemented in \texttt{VarCovMtrxDLStr.R}. The file name stands for ``variance covariance matrix according to the DeLong structural components method'' \emph{described in five unnumbered equations following Eqn. 4 in the cited reference}.
 
 \begin{itemize}
 \tightlist
 \item
-  The functions (for \texttt{Var} and \texttt{Cov1} using bootstrap, jackknife, and the DeLong methods) are not displayed, but they are compiled. To display them download the repository and look at the \texttt{Rmd} file corresponding to this output and the sourced files listed below:
+  To minimize clutter, the \texttt{R} functions (for estimating \texttt{Var} and \texttt{Cov1} using bootstrap, jackknife, and the DeLong methods) are not shown, but they are compiled. To display them \texttt{clone} the book repository and look at the \texttt{Rmd} file corresponding to this output and the sourced \texttt{R} files listed below:
 \end{itemize}
 
 \begin{Shaded}
@@ -1334,12 +1781,12 @@ The following notation is used in the code below:
 \item
   dl = DeLong method
 \item
-  rjjk = RJafroc, covEstMethod = ``jackknife''
+  rj\_jk = RJafroc, \texttt{covEstMethod} = ``jackknife''
 \item
-  rjbs = RJafroc, covEstMethod = ``bootstrap''
+  rj\_bs = RJafroc, \texttt{covEstMethod} = ``bootstrap''
 \end{itemize}
 
-For exammple, \texttt{Cov1\_jk} is the jackknife estimate of \texttt{Cov1}.
+For example, \texttt{Cov1\_jk} is the jackknife estimate of \texttt{Cov1}.
 
 Shown below are the results of the jackknife method, first using the code in this repository and next, as a cross-check, using \texttt{RJafroc} function \texttt{UtilVarComponentsOR}:
 
@@ -1352,9 +1799,10 @@ Shown below are the results of the jackknife method, first using the code in thi
 \CommentTok{\#\textgreater{}        Cov1\_jk       Var\_jk}
 \CommentTok{\#\textgreater{} 1 0.0003734661 0.0006989006}
 
-\NormalTok{ret4 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp }\CommentTok{\# default \textasciigrave{}covEstMethod\textasciigrave{} is jackknife}
-\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rjjk"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_rjjk"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{var)}
-\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\NormalTok{ret4 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{) }\CommentTok{\# default \textasciigrave{}covEstMethod\textasciigrave{} is jackknife}
+\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov1\_rj\_jk"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov1"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{], }\StringTok{"Var\_rj\_jk"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Var"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{])}
+\CommentTok{\#\textgreater{}     Cov1\_rj\_jk    Var\_rj\_jk}
+\CommentTok{\#\textgreater{} 1 0.0003734661 0.0006989006}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1387,9 +1835,10 @@ Following, as a cross check, are results of bootstrap method as calculated by th
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{ret5 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"bootstrap"}\NormalTok{, }\DataTypeTok{nBoots =} \DecValTok{2000}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{100}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp}
-\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rjbs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_rjbs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{var)}
-\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\NormalTok{ret5 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"bootstrap"}\NormalTok{, }\DataTypeTok{nBoots =} \DecValTok{2000}\NormalTok{, }\DataTypeTok{seed =} \DecValTok{100}\NormalTok{)}
+\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rj\_bs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov1"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{], }\StringTok{"Var\_rj\_bs"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Var"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{])}
+\CommentTok{\#\textgreater{}      Cov\_rj\_bs    Var\_rj\_bs}
+\CommentTok{\#\textgreater{} 1 0.0003466804 0.0006738506}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1405,9 +1854,10 @@ Following are results of the DeLong covariance estimation method, the first outp
 \CommentTok{\#\textgreater{}         Cov\_dl       Var\_dl}
 \CommentTok{\#\textgreater{} 1 0.0003684357 0.0006900766}
 
-\NormalTok{ret5 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"DeLong"}\NormalTok{)}\OperatorTok{$}\NormalTok{varComp}
-\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rjdl"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{cov1, }\StringTok{"Var\_rjdl"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{var)}
-\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\NormalTok{ret5 \textless{}{-}}\StringTok{ }\KeywordTok{UtilVarComponentsOR}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"DeLong"}\NormalTok{)}
+\KeywordTok{data.frame}\NormalTok{ (}\StringTok{"Cov\_rj\_dl"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov1"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{], }\StringTok{"Var\_rj\_dl"}\NormalTok{ =}\StringTok{ }\NormalTok{ret5}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Var"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{])}
+\CommentTok{\#\textgreater{}      Cov\_rj\_dl    Var\_rj\_dl}
+\CommentTok{\#\textgreater{} 1 0.0003684357 0.0006900766}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1500,30 +1950,34 @@ Shown below are results obtained using RJafroc function \texttt{StSignificanceTe
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{ret1 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R,}\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBMH"}\NormalTok{, }\DataTypeTok{analysisOption =} \StringTok{"FRRC"}\NormalTok{)}
-\KeywordTok{data.frame}\NormalTok{(}\StringTok{"DBMH:F"}\NormalTok{ =}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
-           \StringTok{"DBMH:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ddfFRRC, }
-           \StringTok{"DBMH:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC)}
-\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\KeywordTok{data.frame}\NormalTok{(}\StringTok{"DBMH:F"}\NormalTok{ =}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"FStat"}\NormalTok{], }
+           \StringTok{"DBMH:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Error"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
+           \StringTok{"DBMH:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret1}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
+\CommentTok{\#\textgreater{}      DBMH.F DBMH.ddf DBMH.P.val}
+\CommentTok{\#\textgreater{} 1 1.2201111      113 0.27168532}
 
 \NormalTok{ret2 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R,}\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{analysisOption =} \StringTok{"FRRC"}\NormalTok{)}
-\KeywordTok{data.frame}\NormalTok{(}\StringTok{"ORHJack:F"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
-           \StringTok{"ORHJack:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ddfFRRC, }
-           \StringTok{"ORHJack:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC)}
-\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\KeywordTok{data.frame}\NormalTok{(}\StringTok{"ORHJack:Chisq"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"Chisq"}\NormalTok{], }
+           \StringTok{"ORHJack:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Error"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
+           \StringTok{"ORHJack:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret2}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
+\CommentTok{\#\textgreater{}   ORHJack.Chisq ORHJack.ddf ORHJack.P.val}
+\CommentTok{\#\textgreater{} 1     1.2201111          NA    0.26933885}
 
 \NormalTok{ret3 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R,}\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{analysisOption =} \StringTok{"FRRC"}\NormalTok{, }
                               \DataTypeTok{covEstMethod =} \StringTok{"DeLong"}\NormalTok{)}
-\KeywordTok{data.frame}\NormalTok{(}\StringTok{"ORHDeLong:F"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
-           \StringTok{"ORHDeLong:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ddfFRRC, }
-           \StringTok{"ORHDeLong:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC)}
-\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\KeywordTok{data.frame}\NormalTok{(}\StringTok{"ORHDeLong:Chisq"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"Chisq"}\NormalTok{], }
+           \StringTok{"ORHDeLong:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Error"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
+           \StringTok{"ORHDeLong:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret3}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
+\CommentTok{\#\textgreater{}   ORHDeLong.Chisq ORHDeLong.ddf ORHDeLong.P.val}
+\CommentTok{\#\textgreater{} 1       1.2345017            NA      0.26653335}
 
 \NormalTok{ret4 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R,}\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{analysisOption =} \StringTok{"FRRC"}\NormalTok{, }
                               \DataTypeTok{covEstMethod =} \StringTok{"bootstrap"}\NormalTok{)}
-\KeywordTok{data.frame}\NormalTok{(}\StringTok{"ORHBoot:F"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
-           \StringTok{"ORHBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{ddfFRRC, }
-           \StringTok{"ORHBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC)}
-\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\KeywordTok{data.frame}\NormalTok{(}\StringTok{"ORHBoot:Chisq"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"Chisq"}\NormalTok{], }
+           \StringTok{"ORHBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Error"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
+           \StringTok{"ORHBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
+\CommentTok{\#\textgreater{}   ORHBoot.Chisq ORHBoot.ddf ORHBoot.P.val}
+\CommentTok{\#\textgreater{} 1     1.1849047          NA    0.27635975}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1576,22 +2030,26 @@ Shown below is a first-principles implementation of signficance testing for the 
 \end{Highlighting}
 \end{Shaded}
 
-Next, how does it compare to \texttt{RJafroc} \texttt{FRRC} analysis using the \texttt{StSignificanceTesting} function?
+How does this compare to \texttt{RJafroc} \texttt{FRRC} analysis using the \texttt{StSignificanceTesting} function?
+TBA: the code has chisq not F; need to reconcile:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{ret\_rj \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(rocData1R, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"ORH"}\NormalTok{, }\DataTypeTok{analysisOption =} \StringTok{"FRRC"}\NormalTok{)}
-\KeywordTok{print}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\StringTok{"theta\_1"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{fomArray[}\DecValTok{1}\NormalTok{],}
-                \StringTok{"theta\_2"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{fomArray[}\DecValTok{2}\NormalTok{],}
-                \StringTok{"Var"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{varComp}\OperatorTok{$}\NormalTok{var,}
-                \StringTok{"Cov1"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{varComp}\OperatorTok{$}\NormalTok{cov,}
-                \StringTok{"MS\_T"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{msT,}
-                \StringTok{"F\_1R"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{fFRRC, }
-                \StringTok{"pValue"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FTestStatsFRRC}\OperatorTok{$}\NormalTok{pFRRC,}
-                \StringTok{"Lower"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}\OperatorTok{$}\NormalTok{CILower, }
-                \StringTok{"Mid"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}\OperatorTok{$}\NormalTok{Estimate, }
-                \StringTok{"Upper"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ciDiffTrtFRRC}\OperatorTok{$}\NormalTok{CIUpper))}
-\CommentTok{\#\textgreater{} data frame with 0 columns and 0 rows}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\StringTok{"theta\_1"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FOMs}\OperatorTok{$}\NormalTok{foms[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{],}
+                \StringTok{"theta\_2"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FOMs}\OperatorTok{$}\NormalTok{foms[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{],}
+                \StringTok{"Var"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ANOVA}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Var"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{],}
+                \StringTok{"Cov1"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ANOVA}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov1"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{],}
+                \StringTok{"MS\_T"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{ANOVA}\OperatorTok{$}\NormalTok{TRanova[}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{],}
+                \StringTok{"Chisq\_1R"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{,}\StringTok{"Chisq"}\NormalTok{], }
+                \StringTok{"pValue"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{,}\StringTok{"p"}\NormalTok{],}
+                \StringTok{"Lower"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciDiffTrt[}\DecValTok{1}\NormalTok{,}\StringTok{"CILower"}\NormalTok{], }
+                \StringTok{"Mid"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciDiffTrt[}\DecValTok{1}\NormalTok{,}\StringTok{"Estimate"}\NormalTok{], }
+                \StringTok{"Upper"}\NormalTok{ =}\StringTok{ }\NormalTok{ret\_rj}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciDiffTrt[}\DecValTok{1}\NormalTok{,}\StringTok{"CIUpper"}\NormalTok{]))}
+\CommentTok{\#\textgreater{}      theta\_1    theta\_2           Var         Cov1          MS\_T  Chisq\_1R}
+\CommentTok{\#\textgreater{} 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111}
+\CommentTok{\#\textgreater{}       pValue        Lower          Mid       Upper}
+\CommentTok{\#\textgreater{} 1 0.26933885 {-}0.078183215 {-}0.028180354 0.021822507}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1600,63 +2058,63 @@ The first-principles and the \texttt{RJafroc} values agree exactly with each oth
 \begin{itemize}
 \tightlist
 \item
-  Var: ret\_rj\$varComp\$var
+  Var: ret\_rj\(ANOVA\)VarCom{[}``Var'', ``Estimates''{]}
 \item
-  Cov1: ret\_rj\$varComp\$cov
+  Cov1: ret\_rj\(ANOVA\)VarCom{[}``Cov1'', ``Estimates''{]}
 \item
-  F-statistic: ret\_rj\$FTestStatsFRRC\$fFRRC
+  Chisquare-statistic: ret\_rj\(FRRC\)FTests{[}``Treatment'',``Chisq''{]}
 \item
-  ddf: ret\_rj\$FTestStatsFRRC\$ddfFRRC
+  df: ret\_rj\(FRRC\)FTests{[}1,``DF''{]}
 \item
-  p-value: ret\_rj\$FTestStatsFRRC\$pFRRC
+  p-value: ret\_rj\(FRRC\)FTests{[}``Treatment'',``p''{]}
 \item
-  CI Lower: ret\_rj\$ciDiffTrtFRRC\$CILower
+  CI Lower: ret\_rj\(FRRC\)ciDiffTrt{[}1,``CILower''{]}
 \item
-  Mid Value: ret\_rj\$ciDiffTrtFRRC\$Estimate
+  Mid Value: ret\_rj\(FRRC\)ciDiffTrt{[}1,``Estimate''{]}
 \item
-  CI Upper: ret\_rj\$ciDiffTrtFRRC\$CIUpper
+  CI Upper: ret\_rj\(FRRC\)ciDiffTrt{[}1,``CIUpper''{]}
 \end{itemize}
 
 \hypertarget{jumping-ahead}{%
 \subsubsection{Jumping ahead}\label{jumping-ahead}}
 
-If RRRC analysis were conducted, the values would be:
+If RRRC analysis were conducted, the values would be {[}one needs to analyze a dataset like \texttt{dataset02} having more than one treatments and readers and use \texttt{analysisOption} = ``RRRC''{]}:
 
 \begin{itemize}
 \tightlist
 \item
-  msR: ret\_rj\$meanSquares\$msR
+  msR: ret\_rj\(ANOVA\)TRanova{[}``R'', ``MS''{]}
 \item
-  msT: ret\_rj\$meanSquares\$msT
+  msT: ret\_rj\(ANOVA\)TRanova{[}``T'', ``MS''{]}
 \item
-  msTR: ret\_rj\$meanSquares\$msTR
+  msTR: ret\_rj\(ANOVA\)TRanova{[}``TR'', ``MS''{]}
 \item
-  Var: ret\_rj\$varComp\$var
+  Var: ret\_rj\(ANOVA\)VarCom{[}``Var'', ``Estimates''{]}
 \item
-  Cov1: ret\_rj\$varComp\$cov
+  Cov1: ret\_rj\(ANOVA\)VarCom{[}``Cov1'', ``Estimates''{]}
 \item
-  Cov2: ret\_rj\$varComp\$cov2
+  Cov2: ret\_rj\(ANOVA\)VarCom{[}``Cov2'', ``Estimates''{]}
 \item
-  Cov3: ret\_rj\$varComp\$cov3
+  Cov3: ret\_rj\(ANOVA\)VarCom{[}``Cov3'', ``Estimates''{]}
 \item
-  varR: ret\_rj\$varComp\$varR
+  varR: ret\_rj\(ANOVA\)VarCom{[}``VarR'', ``Estimates''{]}
 \item
-  varTR: ret\_rj\$varComp\$varTR
+  varTR: ret\_rj\(ANOVA\)VarCom{[}``VarTR'', ``Estimates''{]}
 \item
-  F-statistic: ret\_rj\$FTestStatsRRRC\$fRRRC
+  F-statistic: ret\_rj\(RRRC\)FTests{[}``Treatment'', ``FStat''{]}
 \item
-  ddf: ret\_rj\$FTestStatsRRRC\$ddfRRRC
+  ddf: ret\_rj\(RRRC\)FTests{[}``Error'', ``DF''{]}
 \item
-  p-value: ret\_rj\$FTestStatsRRRC\$pRRRC
+  p-value: ret\_rj\(RRRC\)FTests{[}``Treatment'', ``p''{]}
 \item
-  CI Lower: ret\_rj\$ciDiffTrtRRRC\$CILower
+  CI Lower: ret\_rj\(RRRC\)ciDiffTrt{[}``trt0-trt1'',``CILower''{]}
 \item
-  Mid Value: ret\_rj\$ciDiffTrtRRRC\$Estimate
+  Mid Value: ret\_rj\(RRRC\)ciDiffTrt{[}``trt0-trt1'',``Estimate''{]}
 \item
-  CI Upper: ret\_rj\$ciDiffTrtRRRC\$CIUpper
+  CI Upper: ret\_rj\(RRRC\)ciDiffTrt{[}``trt0-trt1'',``CIUpper''{]}
 \end{itemize}
 
-And similarly, for RRFC analysis, one replaces RRRC with RRFC.{]}
+And similarly, for \texttt{RRFC} analysis, one replaces \texttt{RRRC} with \texttt{RRFC}, etc.{]}
 
 \hypertarget{multiple-reader-multiple-treatment-orh-model}{%
 \section{Multiple-reader multiple-treatment ORH model}\label{multiple-reader-multiple-treatment-orh-model}}
@@ -2024,9 +2482,9 @@ It is time to reinforce the formulae with examples.
 \hypertarget{single-treatment-multiple-reader-analysis}{%
 \subsection{Single-treatment multiple-reader analysis}\label{single-treatment-multiple-reader-analysis}}
 
-Suppose one has data in a single treatment \(i\) and multiple readers are involved. One wishes to determine if the performance of the readers as a group equals some specified value. \emph{Since only a single treatment is involved, an implicit \(i\) dependence in subsequent formulae is ignored.}
+Suppose one has data in a single treatment \(i\) and multiple readers are involved. One wishes to determine if the performance of the readers as a group equals some specified value. \emph{Since only a single treatment is involved, an implicit \(i\) dependence, in subsequent formulae, is ignored.}
 
-In \ref{OR1RMTModel} single-reader multiple-treatment analysis was described. It is not identical to single-treatment multiple-reader analysis. Treatment is a fixed factor while reader is a random factor. Therefore, one cannot simply use the previous analysis with reader and treatment interchanged (a graduate student tried to do just that, and he is quite smart, hence the reason for this warning; one can use the previous analysis if reader is regarded as a fixed factor, and a function in RJafroc called TBA \texttt{StSignificanceTestingSingleFixedFactor()} does just that).
+In \ref{OR1RMTModel} single-reader multiple-treatment analysis was described. It is not identical to single-treatment multiple-reader analysis. Treatment is a fixed factor while reader is a random factor. Therefore, one cannot simply use the previous analysis with reader and treatment interchanged (a graduate student tried to do just that, and he is quite smart, hence the reason for this warning).
 
 In the analysis described in this section reader is regarded as a random effect. The average performance of the readers is estimated and compared to a specified value. Hillis has described the appropriate modifications. {[}TBA Two approaches are described, one using the DBM pseudovalue based model and the other based on the OR model with appropriate modification. The second approach is summarized below. TBA{]}
 
@@ -2063,9 +2521,7 @@ Var(\theta_{i \bullet \bullet}) =\frac{1}{J}(\sigma_{b}^{2}+\sigma_{ab}^{2}+(\si
 
 In the OR notation, the FOM has three indices, \(\theta_{ijk}\). One deletes the \(i\) index as one is dealing with a single treatment and one can drop the average over the \(k\) index, as one is dealing with a single dataset; \(\sigma_{b}^{2}\) in the OR notation is what we are calling \(\sigma_{R}^{2}\); for single treatment the treatment-reader interaction term \(\sigma_{ab}^{2}\) is absent; and for single ``replication'' the term \(\sigma_{w}^{2}/K\) (in OR notation \(K\) is the number of replications) is absent, or, more accurately, the within-reader variance \(\sigma_{w}^{2}\) is absorbed into the case sampling variance \(\sigma_{c}^{2}\) as the two are inseparable); the term \(\sigma_{\epsilon}^{2}\) is what we are calling \(Var\); and \(\sigma_{c}^{2}r_2\) in OR paper is what we are calling \(Cov_2\).
 
-An alternative first principles derivation, due to Mr.~Xuetong Zhai, is given in TBA Online Appendix 10.E.
-
-One needs to replace \(\sigma_{R}^{2}\) in \eqref{eq:VarThetaDot} with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature \citep{RN2508}. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to TBA Table 9.1 in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, \(t\) = 1 and the treatment-reader variance component goes away and the term \(\sigma_{\epsilon}^{2}\) is what we are calling \(Var\)), it follows that:
+One needs to replace \(\sigma_{R}^{2}\) in \eqref{eq:VarThetaDot} with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature \citep{RN2508}. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to the expected mean squares table in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, \(t\) = 1 and the treatment-reader variance component goes away and the term \(\sigma_{\epsilon}^{2}\) is what we are calling \(Var\)), it follows that:
 
 \[E(MS(R))=\sigma_{R}^{2}+Var=Cov_2\]
 
@@ -2132,7 +2588,7 @@ The single treatment method is implemented in mainSingleTreatment.R. The relevan
 
 This chapter described the Obuchowski-Rockette method as modified by Hillis. As noted earlier, it has the same number of parameters as the DBMH method described in the preceding chapter, but the model \eqref{eq:ORModel} \emph{appears} simpler as some terms are ``hidden'' in the structure of the error term. In this chapter the NH condition was considered. Extension to the alternative hypothesis, i.e., estimating statistical power, is deferred to online appendices to Chapter 11. The extension is a little simpler with the DBMH model, as it is a standard ANOVA model. For example the expressions for the DBMH non-centrality parameter was readily defined in Chapter 09, e.g., §9.7.4. Hillis has derived expressions allowing transformation between quantities in the two methods, and this is the approach adopted in this book and implemented in the cited online appendix.
 
-Online Appendix 10.A describes R implementation of the DeLong method for estimating the covariance matrix for empirical AUC. Since the main difficulty understanding the original OR method is conceptualizing the covariance matrix, the author has explained this at an elementary level, using a case-set index which is implicit in the original OR paper4. This was the reason for the gentle introduction analyzing performance of a single reader in multiple treatments. The jackknife, bootstrap and the DeLong methods, all implemented in Online Appendix 10.B, should reinforce understanding of the covariance matrix. The DBM and ORH methods are compared for this special case in Online Appendix 10.C. A minimal implementation of the ORH method for MRMC data is given in Online Appendix 10.D, which is a literal implementation of the relevant formulae. The special case of multiple readers in a single treatment is coded in Online Appendix 10.F. This will be used in Chapter 22 where standalone CAD performance is compared to a group of radiologists interpreting the same cases.
+Since the main difficulty understanding, as far as I am concerned, the original OR method is conceptualizing the covariance matrix, the author has explained this at an elementary level, using a case-set index which is implicit in \citep{RN1450}. This was the reason for the ``gentle introduction'' of analyzing performance of a single reader in multiple treatments. The jackknife, bootstrap and the DeLong methods should reinforce understanding of the covariance matrix. The DBM and ORH methods are compared for this special case. A minimal implementation of the ORH method for MRMC data is given, which is a literal implementation of the relevant formulae. The special case of multiple readers in a single treatment is coded.
 
 The original publication \citep{RN204} and a subsequent one \citep{RN1450} were major advances. Hillis' work showing their equivalence unified the two apparently disparate analyses, and this was a major advance. The Hillis papers, while difficult reads, are ones the author goes to repeatedly.
 
@@ -2140,8 +2596,8 @@ This concludes two methods used to analyze ROC MRMC datasets. A third method, re
 
 The next chapter takes on the subject of sample size estimation using either DBMH or the ORH method.
 
-\hypertarget{references-1}{%
-\section{References}\label{references-1}}
+\hypertarget{references-2}{%
+\section{References}\label{references-2}}
 
   \bibliography{packages.bib,myRefs.bib}
 

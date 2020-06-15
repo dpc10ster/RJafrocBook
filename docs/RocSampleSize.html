@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>A note on the online distribution mechanism of the book | The RJafroc Book</title>
+  <title>Chapter 4 Sample size estimation for ROC studies | The RJafroc Book</title>
   <meta name="description" content="Extended RJafroc documentation." />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="A note on the online distribution mechanism of the book | The RJafroc Book" />
+  <meta property="og:title" content="Chapter 4 Sample size estimation for ROC studies | The RJafroc Book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A note on the online distribution mechanism of the book | The RJafroc Book" />
+  <meta name="twitter:title" content="Chapter 4 Sample size estimation for ROC studies | The RJafroc Book" />
   
   <meta name="twitter:description" content="Extended RJafroc documentation." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="contributing-to-this-book.html"/>
+<link rel="prev" href="ORHAnalysis.html"/>
+<link rel="next" href="references-4.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -267,21 +267,99 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="a-note-on-the-online-distribution-mechanism-of-the-book" class="section level1 unnumbered" number="">
-<h1>A note on the online distribution mechanism of the book</h1>
-<ul>
-<li>In the hard-copy version of my book <span class="citation">(Chakraborty <a href="#ref-RN2680" role="doc-biblioref">2017</a>)</span> the online distribution mechanisms was <code>BitBucket</code>.</li>
-<li><code>BitBucket</code> allows code sharing within a <em>closed</em> group of a few users (e.g., myself and a grad student).</li>
-<li>Since the purpose of open-source code is to encourage collaborations, this was, in hindsight, an unfortunate choice. Moreover, as my experience with R-packages grew, it became apparent that the vast majority of R-packages are shared on <code>GitHub</code>, not <code>BitBucket</code>.</li>
-<li>For these reasons I have switched to <code>GitHub</code>. All previous instructions pertaining to <code>BitBucket</code> are obsolete.</li>
-<li>In order to access <code>GitHub</code> material one needs to create a (free) <code>GitHub</code> account.</li>
-<li>Go to <a href="https://github.com">this link</a> and click on <code>Sign Up</code>.</li>
-</ul>
+<div id="RocSampleSize" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Sample size estimation for ROC studies</h1>
+<div id="introduction-3" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Introduction</h2>
+<p>The question addressed in this chapter is “how many readers and cases”, usually abbreviated to “sample-size”, should one employ to conduct a “well-planned” ROC study. The reasons for the quotes around “well-planned” will shortly become clear. If cost were no concern, the reply would be: “as many readers and cases as one can get”. There are other causes affecting sample-size, e.g., the data collection paradigm and analysis, however, this chapter is restricted to the MRMC ROC data collection paradigm, with data analyzed by the DBMH or the ORH methods described in previous chapters. It turns out that provided one can specify conceptually valid effect-sizes between different paradigms (i.e., in the same “units”), the methods described in this chapter are extensible to other paradigms; see TBA Chapter 19 for sample size estimation for FROC studies. <em>For this reason it is important to understand the concepts of sample-size estimation in the simpler ROC context.</em></p>
+<p>For simplicity and practicality, this chapter is restricted to analysis of two-treatment data (I = 2). The purpose of most imaging system assessment studies is to determine, for a given diagnostic task, whether radiologists perform better using a new treatment over the conventional treatment, and whether the difference is statistically significant. Therefore, the two-treatment case is the most common one encountered. While it is possible to extend the methods to more than two treatments, the extensions are not, in my opinion, clinically interesting.</p>
+<p>Assume the figure of merit (FOM) <span class="math inline">\(\theta\)</span> is chosen to be the area AUC under the ROC curve (empirical or fitted is immaterial as far as the formulae are concerned; however, the choice will affect statistical power - the dependence has not been studied). The statistical analysis determines the significance level of the study, i.e., the probability or p-value for incorrectly rejecting the null hypothesis (NH) that the two <span class="math inline">\(\theta\)</span>s are equal: <span class="math inline">\(NH: \theta_1 = \theta_2\)</span>, where the subscripts refer to the two treatments. If the p-value is smaller than a pre-specified <span class="math inline">\(\alpha\)</span>, typically set at 5%, one rejects the NH and declares the treatments different at the <span class="math inline">\(\alpha\)</span> significance level. Statistical power is the probability of correctly rejecting the null hypothesis when the alternative hypothesis <span class="math inline">\(AH: \theta_1 \neq \theta_2\)</span> is true, (TBA Chapter 08).</p>
+<p>The value of the <em>true</em> difference between the treatments, i.e., the <em>true effect-size</em> is, of course, unknown. If it were known, there would be no need to conduct the ROC study. One would simply adopt the treatment with the higher <span class="math inline">\(\theta\)</span>. Sample-size estimation involves making an educated guess regarding the true effect-size , called the <em>anticipated effect size</em>, and denoted by <span class="math inline">\(d\)</span>. To quote Harold Kundel <span class="citation">(ICRU <a href="#ref-RN1383" role="doc-biblioref">1996</a>)</span>: “any calculation of power amounts to specification of the anticipated effect-size”. Increasing the anticipated effect size will increase statistical power but may represent an unrealistic expectation of the true difference between the treatments, in the sense that it overestimates the ability of technology to achieve this much improvement. An unduly small might be clinically insignificant, besides requiring a very large sample-size to achieve sufficient statistical power.</p>
+<p>Statistical power depends on the magnitude of <span class="math inline">\(d\)</span> divided by the standard deviation <span class="math inline">\(\sigma(d)\)</span> of <span class="math inline">\(d\)</span>, i.e. <span class="math inline">\(D=\frac{\left | d \right |}{\sigma (d)}\)</span>. The sign is relevant as it determines whether the project is worth pursuing at all (see §11.8.4). The ratio is termed <span class="citation">(Cohen <a href="#ref-cohen1988statistical" role="doc-biblioref">1988</a>)</span> Cohen’s D. When this signal-to-noise-ratio-like quantity is large, statistical power approaches 100%. Reader and case variability and data correlations determine <span class="math inline">\(\sigma(d)\)</span>. No matter how small the anticipated <span class="math inline">\(d\)</span>, as long as it is finite, then, using sufficient numbers of readers and cases <span class="math inline">\(\sigma(d)\)</span> can be made sufficiently small to achieve near 100% statistical power. Of course, a very small effect-size may not be clinically significant. There is a key difference between statistical significance and clinical significance. An effect-size in AUC units could be so small, e.g., 0.001, as to be clinically insignificant, but by employing a sufficiently large sample size one could design a study to detect this small and clinically meaningless difference with near unit probability, i.e., high statistical power.</p>
+<p>What determines clinical significance? A small effect-size, e.g., 0.01 AUC units, could be clinically significant if it applies to a large population, where the small benefit in detection rate is amplified by the number of patients benefiting from the new treatment. In contrast, for an “orphan” disease, i.e., one with very low prevalence, an effect-size of 0.05 might not be enough to justify the additional cost of the new treatment. The improvement might have to be 0.1 before it is worth it for a new treatment to be brought to market. One hates to monetize life and death issues, but there is no getting away from it, as cost/benefit issues determine clinical significance. The arbiters of clinical significance are engineers, imaging scientists, clinicians, epidemiologists, insurance companies and those who set government health care policies. The engineers and imaging scientists determine whether the effect-size the clinicians would like is feasible from technical and scientific viewpoints. The clinician determines, based on incidence of disease and other considerations, e.g., altruistic, malpractice, cost of the new device and insurance reimbursement, what effect-size is justifiable. Cohen has suggested that d values of 0.2, 0.5, and 0.8 be considered small, medium, and large, respectively, but he has also argued against their indiscriminate usage. However, after a study is completed, clinicians often find that an effect-size that biostatisticians label as small may, in certain circumstances, be clinically significant and an effect-size that they label as large may in other circumstances be clinically insignificant. Clearly, this is a complex issue. Some suggestions on choosing a clinically significant effect size are made in (TBA §11.12).</p>
+<p>Having developed a new imaging modality the R&amp;D team wishes to compare it to the existing standard with the short-term goal of making a submission to the FDA to allow them to perform pre-market testing of the device. The long-term goal is to commercialize the device. Assume the R&amp;D team has optimized the device based on physical measurements, (TBA Chapter 01), perhaps supplemented with anecdotal feedback from clinicians based on a few images. Needed at this point is a pilot study. A pilot study, conducted with a relatively small and practical sample size, is intended to provide estimates of different sources of variability and correlations. It also provides an initial estimate of the effect-size, termed the <em>observed effect-size</em>, <span class="math inline">\(d\)</span>. Based on results from the pilot the sample-size tools described in this chapter permit estimation of the numbers of readers and cases that will reduce <span class="math inline">\(\sigma(d)\)</span> sufficiently to achieve the desired power for the larger “pivotal” study. [A distinction could be made in the notation between observed and anticipated effect sizes, but it will be clear from the context. Later, it will be shown how one can make an educated guess about the anticipated effect size from an observed effect size.]</p>
+<p>This chapter is concerned with multiple-reader MRMC studies that follow the fully crossed factorial design meaning that each reader interprets a common case-set in all treatments. Since the resulting pairings (i.e., correlations) tend to decrease <span class="math inline">\(\sigma(d)\)</span> (since the variations occur in tandem, they tend to cancel out in the difference, see (TBA Chapter 09, Introduction), for Dr. Robert Wagner’s sailboat analogy) it yields more statistical power compared to an unpaired design, and consequently this design is frequently used. Two sample-size estimation procedures for MRMC are the Hillis-Berbaum method <span class="citation">(Hillis and Berbaum <a href="#ref-RN1476" role="doc-biblioref">2004</a>)</span> and the Obuchowski-Rockette <span class="citation">(Obuchowski <a href="#ref-RN1971" role="doc-biblioref">1998</a>)</span> method. With recent work by Hillis, the two methods have been shown to be substantially equivalent.</p>
+<p>This chapter will focus on the DBMH approach. Since it is based on a standard ANOVA model, it is easier to extend the NH testing procedure described in Chapter 09 to the alternative hypothesis, which is relevant for sample size estimation. [TBA Online Appendix 11.A shows how to translate the DBMH formulae to the ORH method <span class="citation">(Hillis, Obuchowski, and Berbaum <a href="#ref-RN2137" role="doc-biblioref">2011</a>)</span>.]</p>
+<p>Given an effect-size, and choosing this wisely is the most difficult part of the process, the method described in this chapter uses pseudovalue variance components estimated by the DBMH method to predict sample-sizes (i.e., different combinations of numbers of readers and cases) necessary to achieve a desired power.</p>
+</div>
+<div id="StatPower1" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Statistical Power</h2>
+<p>The concept of statistical power was introduced in [TBA Chapter 08] but it is worth repeating. There are two possible decisions following a test of a null hypothesis (NH): reject or fail to reject the NH. Each decision is associated with a probability on an erroneous conclusion. If the NH is true and one rejects it, the probability of the ensuing Type-I error is <span class="math inline">\(\alpha\)</span>. If the NH is false and one fails to reject it, the probability of the ensuing Type II- error is <span class="math inline">\(\beta\)</span>. Statistical power is the complement of <span class="math inline">\(\beta\)</span>, i.e.,</p>
+<p><span class="math display" id="eq:DefinitionStatPower">\[\begin{equation}
+Power = 1 - \beta
+\tag{4.1}
+\end{equation}\]</span></p>
+<p>Thus, statistical power is defined as the probability of (correctly) rejecting the null hypothesis when the null hypothesis is false. Typically, one aims for <span class="math inline">\(\beta = 0.2\)</span> or less, i.e., a statistical power of 80% or more. Again, like <span class="math inline">\(\alpha\)</span> = 0.05, this is a convention, and more nuanced cost-benefit considerations may cause the researcher to adopt a different value in the study design.</p>
+<div id="sample-size-estimation-for-random-reader-random-cases" class="section level3" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Sample size estimation for random-reader random-cases</h3>
+</div>
+<div id="estimation-of-the-covariance-matrix-1" class="section level3" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> Estimation of the covariance matrix</h3>
+</div>
+<div id="meaning-of-the-covariance-matrix-in-refeqexamplesigma-1" class="section level3" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> Meaning of the covariance matrix in <a href="ORHAnalysis.html#eq:ExampleSigma">(3.5)</a></h3>
+</div>
+<div id="code-illustrating-the-covariance-matrix-1" class="section level3" number="4.2.4">
+<h3><span class="header-section-number">4.2.4</span> Code illustrating the covariance matrix</h3>
+</div>
+<div id="significance-testing-2" class="section level3" number="4.2.5">
+<h3><span class="header-section-number">4.2.5</span> Significance testing</h3>
+</div>
+<div id="p-value-and-confidence-interval-2" class="section level3" number="4.2.6">
+<h3><span class="header-section-number">4.2.6</span> p-value and confidence interval</h3>
+</div>
+<div id="comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments-1" class="section level3" number="4.2.7">
+<h3><span class="header-section-number">4.2.7</span> Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments</h3>
+</div>
+</div>
+<div id="multiple-reader-multiple-treatment-orh-model-1" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Multiple-reader multiple-treatment ORH model</h2>
+<div id="StrCovMatrix" class="section level3" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> Structure of the covariance matrix</h3>
+</div>
+<div id="physical-meanings-of-the-covariance-terms-1" class="section level3" number="4.3.2">
+<h3><span class="header-section-number">4.3.2</span> Physical meanings of the covariance terms</h3>
+</div>
+<div id="orh-random-reader-random-case-analysis-1" class="section level3" number="4.3.3">
+<h3><span class="header-section-number">4.3.3</span> ORH random-reader random-case analysis</h3>
+<div id="decision-rule-p-value-and-confidence-interval-1" class="section level4" number="4.3.3.1">
+<h4><span class="header-section-number">4.3.3.1</span> Decision rule, p-value and confidence interval</h4>
+</div>
+</div>
+<div id="fixed-reader-random-case-frrc-analysis-2" class="section level3" number="4.3.4">
+<h3><span class="header-section-number">4.3.4</span> Fixed-reader random-case (FRRC) analysis</h3>
+</div>
+<div id="random-reader-fixed-case-rrfc-analysis-2" class="section level3" number="4.3.5">
+<h3><span class="header-section-number">4.3.5</span> Random-reader fixed-case (RRFC) analysis</h3>
+</div>
+<div id="single-treatment-multiple-reader-analysis-1" class="section level3" number="4.3.6">
+<h3><span class="header-section-number">4.3.6</span> Single-treatment multiple-reader analysis</h3>
+</div>
+</div>
+<div id="discussionsummary-1" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Discussion/Summary</h2>
+</div>
+<div id="references-3" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> References</h2>
+
+</div>
 </div>
 <h3>REFERENCES</h3>
 <div id="refs" class="references">
-<div id="ref-RN2680">
-<p>Chakraborty, Dev P. 2017. <em>Observer Performance Methods for Diagnostic Imaging - Foundations, Modeling, and Applications with R-Based Examples</em>. Book. Boca Raton, FL: CRC Press.</p>
+<div id="ref-cohen1988statistical">
+<p>Cohen, Jacob. 1988. “Statistical Power Analysis for the Social Sciences. 1988.” <em>Google Scholar</em>.</p>
+</div>
+<div id="ref-RN1476">
+<p>Hillis, Stephen L., and K. S. Berbaum. 2004. “Power Estimation for the Dorfman-Berbaum-Metz Method.” Journal Article. <em>Acad. Radiol.</em> 11 (11): 1260–73.</p>
+</div>
+<div id="ref-RN2137">
+<p>Hillis, Stephen L., Nancy A. Obuchowski, and Kevin S. Berbaum. 2011. “Power Estimation for Multireader Roc Methods: An Updated and Unified Approach.” Journal Article. <em>Academic Radiology</em> 18 (2): 129–42. <a href="https://doi.org/DOI:%2010.1016/j.acra.2010.09.007">https://doi.org/DOI: 10.1016/j.acra.2010.09.007</a>.</p>
+</div>
+<div id="ref-RN1383">
+<p>ICRU. 1996. “Medical Imaging: The Assessment of Image Quality.” Journal Article. <em>JOURNAL OF THE ICRU</em> 54 (1): 37–40.</p>
+</div>
+<div id="ref-RN1971">
+<p>Obuchowski, Nancy A. 1998. “Sample Size Calculations in Studies of Test Accuracy.” Journal Article. <em>Statistical Methods in Medical Research</em> 7 (4): 371–92. <a href="https://doi.org/10.1177/096228029800700405">https://doi.org/10.1177/096228029800700405</a>.</p>
 </div>
 </div>
             </section>
@@ -289,8 +367,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="contributing-to-this-book.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="ORHAnalysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references-4.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
