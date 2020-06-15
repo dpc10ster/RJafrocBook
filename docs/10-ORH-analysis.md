@@ -196,7 +196,7 @@ In most situations one expects $\rho_1$ (for ROC studies) to be positive. There 
 ### Code illustrating the covariance matrix (TBA)
 As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method [@RN112]. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \@ref(eq:EstimateSigmaBootstrap) and \@ref(eq:EstimateSigmaJackknife) extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file `VarCovMtrxDLStr.R`. The file name stands for "variance covariance matrix according to the DeLong structural components method" *described in five unnumbered equations following Eqn. 4 in the cited reference*.
 
-* To minimize clutter, the functions (for `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not shown, but they are compiled. To display them download the book repository and look at the `Rmd` file corresponding to this output and the sourced `R` files listed below:
+* To minimize clutter, the `R` functions (for estimating `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not shown, but they are compiled. To display them `clone` the book repository and look at the `Rmd` file corresponding to this output and the sourced `R` files listed below:
 
 
 ```r
@@ -222,8 +222,8 @@ The following notation is used in the code below:
 * jk = jackknife method
 * bs = boostrap method, with B = number of bootstraps and `seed` = value.
 * dl = DeLong method
-* rjjk = RJafroc, covEstMethod = "jackknife"
-* rjbs = RJafroc, covEstMethod = "bootstrap"
+* rj_jk = RJafroc, `covEstMethod` = "jackknife"
+* rj_bs = RJafroc, `covEstMethod` = "bootstrap"
 
 For exammple, `Cov1_jk` is the jackknife estimate of `Cov1`.
 
@@ -239,7 +239,7 @@ data.frame ("Cov1_jk" = Cov1, "Var_jk" = Var)
 #> 1 0.0003734661 0.0006989006
 
 ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon")$varComp # default `covEstMethod` is jackknife
-data.frame ("Cov_rjjk" = ret4$cov1, "Var_rjjk" = ret4$var)
+data.frame ("Cov1_rj_jk" = ret4$VarCom["Cov1", "Estimates"], "Var_rj_jk" = ret4$VarCom["Var", "Estimates"])
 #> data frame with 0 columns and 0 rows
 ```
 
@@ -271,7 +271,7 @@ Following, as a cross check, are results of bootstrap method as calculated by th
 
 ```r
 ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000, seed = 100)$varComp
-data.frame ("Cov_rjbs" = ret5$cov1, "Var_rjbs" = ret5$var)
+data.frame ("Cov_rj_bs" = ret5$cov1, "Var_rj_bs" = ret5$var)
 #> data frame with 0 columns and 0 rows
 ```
 
@@ -288,7 +288,7 @@ data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
 #> 1 0.0003684357 0.0006900766
 
 ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "DeLong")$varComp
-data.frame ("Cov_rjdl" = ret5$cov1, "Var_rjdl" = ret5$var)
+data.frame ("Cov_rj_dl" = ret5$cov1, "Var_rj_dl" = ret5$var)
 #> data frame with 0 columns and 0 rows
 ```
 
@@ -445,34 +445,38 @@ for (i in 1 : nDiffs) {
 #> 1 0.26933885 -0.078183215 -0.028180354 0.021822507
 ```
 
-Next, how does it compare to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function?
- 
+How does this compare to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function?
+TBA: the code has chisq not F; need to reconcile
+
  
  ```r
  ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC")
- print(data.frame("theta_1" = ret_rj$fomArray[1],
-                 "theta_2" = ret_rj$fomArray[2],
-                 "Var" = ret_rj$varComp$var,
-                 "Cov1" = ret_rj$varComp$cov,
-                 "MS_T" = ret_rj$msT,
-                 "F_1R" = ret_rj$FTestStatsFRRC$fFRRC, 
-                 "pValue" = ret_rj$FTestStatsFRRC$pFRRC,
-                 "Lower" = ret_rj$ciDiffTrtFRRC$CILower, 
-                 "Mid" = ret_rj$ciDiffTrtFRRC$Estimate, 
-                 "Upper" = ret_rj$ciDiffTrtFRRC$CIUpper))
- #> data frame with 0 columns and 0 rows
+ print(data.frame("theta_1" = ret_rj$FOMs$foms[1,1],
+                 "theta_2" = ret_rj$FOMs$foms[2,1],
+                 "Var" = ret_rj$ANOVA$VarCom["Var", "Estimates"],
+                 "Cov1" = ret_rj$ANOVA$VarCom["Cov1", "Estimates"],
+                 "MS_T" = ret_rj$ANOVA$TRanova[1,3],
+                 "Chisq_1R" = ret_rj$FRRC$FTests["Treatment","Chisq"], 
+                 "pValue" = ret_rj$FRRC$FTests["Treatment","p"],
+                 "Lower" = ret_rj$FRRC$ciDiffTrt[1,"CILower"], 
+                 "Mid" = ret_rj$FRRC$ciDiffTrt[1,"Estimate"], 
+                 "Upper" = ret_rj$FRRC$ciDiffTrt[1,"CIUpper"]))
+ #>      theta_1    theta_2           Var         Cov1          MS_T  Chisq_1R
+ #> 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111
+ #>       pValue        Lower          Mid       Upper
+ #> 1 0.26933885 -0.078183215 -0.028180354 0.021822507
  ```
 
 The first-principles and the `RJafroc` values agree exactly with each other. This above code also shows how to extract the different estimates ($Var$, $Cov_1$, etc.) from the object `ret_rj` returned by `RJafroc`. 
 
-* Var: ret_rj\$varComp\$var
-* Cov1: ret_rj\$varComp\$cov
-* F-statistic: ret_rj\$FTestStatsFRRC\$fFRRC
-* ddf: ret_rj\$FTestStatsFRRC\$ddfFRRC
-* p-value: ret_rj\$FTestStatsFRRC\$pFRRC
-* CI Lower: ret_rj\$ciDiffTrtFRRC\$CILower
-* Mid Value: ret_rj\$ciDiffTrtFRRC\$Estimate
-* CI Upper: ret_rj\$ciDiffTrtFRRC\$CIUpper
+* Var: ret_rj$ANOVA$VarCom["Var", "Estimates"]
+* Cov1: ret_rj$ANOVA$VarCom["Cov1", "Estimates"]
+* Chisquare-statistic: ret_rj$FRRC$FTests["Treatment","Chisq"]
+* df: ret_rj$FRRC$FTests[1,"DF"]
+* p-value: ret_rj$FRRC$FTests["Treatment","p"]
+* CI Lower: ret_rj$FRRC$ciDiffTrt[1,"CILower"]
+* Mid Value: ret_rj$FRRC$ciDiffTrt[1,"Estimate"]
+* CI Upper: ret_rj$FRRC$ciDiffTrt[1,"CIUpper"]
 
 #### Jumping ahead 
 If RRRC analysis were conducted, the values would be:

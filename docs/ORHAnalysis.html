@@ -385,7 +385,7 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 <h3><span class="header-section-number">4.2.5</span> Code illustrating the covariance matrix (TBA)</h3>
 <p>As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method <span class="citation">(DeLong, DeLong, and Clarke-Pearson <a href="#ref-RN112" role="doc-biblioref">1988</a>)</span>. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. <a href="ORHAnalysis.html#eq:EstimateSigmaBootstrap">(4.10)</a> and <a href="ORHAnalysis.html#eq:EstimateSigmaJackknife">(4.11)</a> extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file <code>VarCovMtrxDLStr.R</code>. The file name stands for “variance covariance matrix according to the DeLong structural components method” <em>described in five unnumbered equations following Eqn. 4 in the cited reference</em>.</p>
 <ul>
-<li>To minimize clutter, the functions (for <code>Var</code> and <code>Cov1</code> using bootstrap, jackknife, and the DeLong methods) are not shown, but they are compiled. To display them download the book repository and look at the <code>Rmd</code> file corresponding to this output and the sourced <code>R</code> files listed below:</li>
+<li>To minimize clutter, the <code>R</code> functions (for estimating <code>Var</code> and <code>Cov1</code> using bootstrap, jackknife, and the DeLong methods) are not shown, but they are compiled. To display them <code>clone</code> the book repository and look at the <code>Rmd</code> file corresponding to this output and the sourced <code>R</code> files listed below:</li>
 </ul>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="ORHAnalysis.html#cb17-1"></a><span class="kw">source</span>(<span class="kw">here</span>(<span class="st">&quot;R/CH10-ORH/Wilcoxon.R&quot;</span>))</span>
 <span id="cb17-2"><a href="ORHAnalysis.html#cb17-2"></a><span class="kw">source</span>(<span class="kw">here</span>(<span class="st">&quot;R/CH10-ORH/VarCov1Bs.R&quot;</span>))</span>
@@ -402,8 +402,8 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 <li>jk = jackknife method</li>
 <li>bs = boostrap method, with B = number of bootstraps and <code>seed</code> = value.</li>
 <li>dl = DeLong method</li>
-<li>rjjk = RJafroc, covEstMethod = “jackknife”</li>
-<li>rjbs = RJafroc, covEstMethod = “bootstrap”</li>
+<li>rj_jk = RJafroc, <code>covEstMethod</code> = “jackknife”</li>
+<li>rj_bs = RJafroc, <code>covEstMethod</code> = “bootstrap”</li>
 </ul>
 <p>For exammple, <code>Cov1_jk</code> is the jackknife estimate of <code>Cov1</code>.</p>
 <p>Shown below are the results of the jackknife method, first using the code in this repository and next, as a cross-check, using <code>RJafroc</code> function <code>UtilVarComponentsOR</code>:</p>
@@ -415,7 +415,7 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 <span id="cb19-6"><a href="ORHAnalysis.html#cb19-6"></a><span class="co">#&gt; 1 0.0003734661 0.0006989006</span></span>
 <span id="cb19-7"><a href="ORHAnalysis.html#cb19-7"></a></span>
 <span id="cb19-8"><a href="ORHAnalysis.html#cb19-8"></a>ret4 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>)<span class="op">$</span>varComp <span class="co"># default `covEstMethod` is jackknife</span></span>
-<span id="cb19-9"><a href="ORHAnalysis.html#cb19-9"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjjk&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>cov1, <span class="st">&quot;Var_rjjk&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>var)</span>
+<span id="cb19-9"><a href="ORHAnalysis.html#cb19-9"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov1_rj_jk&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>VarCom[<span class="st">&quot;Cov1&quot;</span>, <span class="st">&quot;Estimates&quot;</span>], <span class="st">&quot;Var_rj_jk&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>VarCom[<span class="st">&quot;Var&quot;</span>, <span class="st">&quot;Estimates&quot;</span>])</span>
 <span id="cb19-10"><a href="ORHAnalysis.html#cb19-10"></a><span class="co">#&gt; data frame with 0 columns and 0 rows</span></span></code></pre></div>
 <p>Note that the estimates are identical and that the <span class="math inline">\(Cov_1\)</span> estimate is smaller than the <span class="math inline">\(Var\)</span> estimate (their ratio is the correlation <span class="math inline">\(\rho_1 = Cov_1/Var\)</span> = 0.5343623).</p>
 <p>Shown next are bootstrap method estimates with increasing number of bootstraps (200, 2000 and 20,000):</p>
@@ -436,7 +436,7 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 <p>With increasing number of bootstraps the values approach the jackknife estimates.</p>
 <p>Following, as a cross check, are results of bootstrap method as calculated by the <code>RJafroc</code> function <code>UtilVarComponentsOR</code>:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="ORHAnalysis.html#cb21-1"></a>ret5 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">covEstMethod =</span> <span class="st">&quot;bootstrap&quot;</span>, <span class="dt">nBoots =</span> <span class="dv">2000</span>, <span class="dt">seed =</span> <span class="dv">100</span>)<span class="op">$</span>varComp</span>
-<span id="cb21-2"><a href="ORHAnalysis.html#cb21-2"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>cov1, <span class="st">&quot;Var_rjbs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>var)</span>
+<span id="cb21-2"><a href="ORHAnalysis.html#cb21-2"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rj_bs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>cov1, <span class="st">&quot;Var_rj_bs&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>var)</span>
 <span id="cb21-3"><a href="ORHAnalysis.html#cb21-3"></a><span class="co">#&gt; data frame with 0 columns and 0 rows</span></span></code></pre></div>
 <p>Note that the two estimates are identical <em>provided the seeds are identical</em>.</p>
 <p>Following are results of the DeLong covariance estimation method, the first output using this repository code and the second using the <code>RJafroc</code> function <code>UtilVarComponentsOR</code> with appropriate arguments:</p>
@@ -447,7 +447,7 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 <span id="cb22-5"><a href="ORHAnalysis.html#cb22-5"></a><span class="co">#&gt; 1 0.0003684357 0.0006900766</span></span>
 <span id="cb22-6"><a href="ORHAnalysis.html#cb22-6"></a></span>
 <span id="cb22-7"><a href="ORHAnalysis.html#cb22-7"></a>ret5 &lt;-<span class="st"> </span><span class="kw">UtilVarComponentsOR</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">covEstMethod =</span> <span class="st">&quot;DeLong&quot;</span>)<span class="op">$</span>varComp</span>
-<span id="cb22-8"><a href="ORHAnalysis.html#cb22-8"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rjdl&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>cov1, <span class="st">&quot;Var_rjdl&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>var)</span>
+<span id="cb22-8"><a href="ORHAnalysis.html#cb22-8"></a><span class="kw">data.frame</span> (<span class="st">&quot;Cov_rj_dl&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>cov1, <span class="st">&quot;Var_rj_dl&quot;</span> =<span class="st"> </span>ret5<span class="op">$</span>var)</span>
 <span id="cb22-9"><a href="ORHAnalysis.html#cb22-9"></a><span class="co">#&gt; data frame with 0 columns and 0 rows</span></span></code></pre></div>
 <p>Note that the two estimates are identical and that the DeLong estimate are close to the bootstrap estimates using 20,000 bootstraps. The close correspondence is only expected when using the Wilcoxon figure of merit.</p>
 </div>
@@ -575,29 +575,33 @@ CI_{1-\alpha,1RMT} = (\theta_{i\bullet} - \theta_{i&#39;\bullet}) \pm t_{\alpha/
 <span id="cb25-38"><a href="ORHAnalysis.html#cb25-38"></a><span class="co">#&gt; 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111</span></span>
 <span id="cb25-39"><a href="ORHAnalysis.html#cb25-39"></a><span class="co">#&gt;       pValue        Lower          Mid       Upper</span></span>
 <span id="cb25-40"><a href="ORHAnalysis.html#cb25-40"></a><span class="co">#&gt; 1 0.26933885 -0.078183215 -0.028180354 0.021822507</span></span></code></pre></div>
-<p>Next, how does it compare to <code>RJafroc</code> <code>FRRC</code> analysis using the <code>StSignificanceTesting</code> function?</p>
+<p>How does this compare to <code>RJafroc</code> <code>FRRC</code> analysis using the <code>StSignificanceTesting</code> function?
+TBA: the code has chisq not F; need to reconcile</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="ORHAnalysis.html#cb26-1"></a>ret_rj &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(rocData1R, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;ORH&quot;</span>, <span class="dt">analysisOption =</span> <span class="st">&quot;FRRC&quot;</span>)</span>
-<span id="cb26-2"><a href="ORHAnalysis.html#cb26-2"></a><span class="kw">print</span>(<span class="kw">data.frame</span>(<span class="st">&quot;theta_1&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>fomArray[<span class="dv">1</span>],</span>
-<span id="cb26-3"><a href="ORHAnalysis.html#cb26-3"></a>                <span class="st">&quot;theta_2&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>fomArray[<span class="dv">2</span>],</span>
-<span id="cb26-4"><a href="ORHAnalysis.html#cb26-4"></a>                <span class="st">&quot;Var&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>varComp<span class="op">$</span>var,</span>
-<span id="cb26-5"><a href="ORHAnalysis.html#cb26-5"></a>                <span class="st">&quot;Cov1&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>varComp<span class="op">$</span>cov,</span>
-<span id="cb26-6"><a href="ORHAnalysis.html#cb26-6"></a>                <span class="st">&quot;MS_T&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>msT,</span>
-<span id="cb26-7"><a href="ORHAnalysis.html#cb26-7"></a>                <span class="st">&quot;F_1R&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>fFRRC, </span>
-<span id="cb26-8"><a href="ORHAnalysis.html#cb26-8"></a>                <span class="st">&quot;pValue&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FTestStatsFRRC<span class="op">$</span>pFRRC,</span>
-<span id="cb26-9"><a href="ORHAnalysis.html#cb26-9"></a>                <span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ciDiffTrtFRRC<span class="op">$</span>CILower, </span>
-<span id="cb26-10"><a href="ORHAnalysis.html#cb26-10"></a>                <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ciDiffTrtFRRC<span class="op">$</span>Estimate, </span>
-<span id="cb26-11"><a href="ORHAnalysis.html#cb26-11"></a>                <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ciDiffTrtFRRC<span class="op">$</span>CIUpper))</span>
-<span id="cb26-12"><a href="ORHAnalysis.html#cb26-12"></a><span class="co">#&gt; data frame with 0 columns and 0 rows</span></span></code></pre></div>
+<span id="cb26-2"><a href="ORHAnalysis.html#cb26-2"></a><span class="kw">print</span>(<span class="kw">data.frame</span>(<span class="st">&quot;theta_1&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FOMs<span class="op">$</span>foms[<span class="dv">1</span>,<span class="dv">1</span>],</span>
+<span id="cb26-3"><a href="ORHAnalysis.html#cb26-3"></a>                <span class="st">&quot;theta_2&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FOMs<span class="op">$</span>foms[<span class="dv">2</span>,<span class="dv">1</span>],</span>
+<span id="cb26-4"><a href="ORHAnalysis.html#cb26-4"></a>                <span class="st">&quot;Var&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ANOVA<span class="op">$</span>VarCom[<span class="st">&quot;Var&quot;</span>, <span class="st">&quot;Estimates&quot;</span>],</span>
+<span id="cb26-5"><a href="ORHAnalysis.html#cb26-5"></a>                <span class="st">&quot;Cov1&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ANOVA<span class="op">$</span>VarCom[<span class="st">&quot;Cov1&quot;</span>, <span class="st">&quot;Estimates&quot;</span>],</span>
+<span id="cb26-6"><a href="ORHAnalysis.html#cb26-6"></a>                <span class="st">&quot;MS_T&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>ANOVA<span class="op">$</span>TRanova[<span class="dv">1</span>,<span class="dv">3</span>],</span>
+<span id="cb26-7"><a href="ORHAnalysis.html#cb26-7"></a>                <span class="st">&quot;Chisq_1R&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FRRC<span class="op">$</span>FTests[<span class="st">&quot;Treatment&quot;</span>,<span class="st">&quot;Chisq&quot;</span>], </span>
+<span id="cb26-8"><a href="ORHAnalysis.html#cb26-8"></a>                <span class="st">&quot;pValue&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FRRC<span class="op">$</span>FTests[<span class="st">&quot;Treatment&quot;</span>,<span class="st">&quot;p&quot;</span>],</span>
+<span id="cb26-9"><a href="ORHAnalysis.html#cb26-9"></a>                <span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FRRC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;CILower&quot;</span>], </span>
+<span id="cb26-10"><a href="ORHAnalysis.html#cb26-10"></a>                <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FRRC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;Estimate&quot;</span>], </span>
+<span id="cb26-11"><a href="ORHAnalysis.html#cb26-11"></a>                <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>ret_rj<span class="op">$</span>FRRC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;CIUpper&quot;</span>]))</span>
+<span id="cb26-12"><a href="ORHAnalysis.html#cb26-12"></a><span class="co">#&gt;      theta_1    theta_2           Var         Cov1          MS_T  Chisq_1R</span></span>
+<span id="cb26-13"><a href="ORHAnalysis.html#cb26-13"></a><span class="co">#&gt; 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111</span></span>
+<span id="cb26-14"><a href="ORHAnalysis.html#cb26-14"></a><span class="co">#&gt;       pValue        Lower          Mid       Upper</span></span>
+<span id="cb26-15"><a href="ORHAnalysis.html#cb26-15"></a><span class="co">#&gt; 1 0.26933885 -0.078183215 -0.028180354 0.021822507</span></span></code></pre></div>
 <p>The first-principles and the <code>RJafroc</code> values agree exactly with each other. This above code also shows how to extract the different estimates (<span class="math inline">\(Var\)</span>, <span class="math inline">\(Cov_1\)</span>, etc.) from the object <code>ret_rj</code> returned by <code>RJafroc</code>.</p>
 <ul>
-<li>Var: ret_rj$varComp$var</li>
-<li>Cov1: ret_rj$varComp$cov</li>
-<li>F-statistic: ret_rj$FTestStatsFRRC$fFRRC</li>
-<li>ddf: ret_rj$FTestStatsFRRC$ddfFRRC</li>
-<li>p-value: ret_rj$FTestStatsFRRC$pFRRC</li>
-<li>CI Lower: ret_rj$ciDiffTrtFRRC$CILower</li>
-<li>Mid Value: ret_rj$ciDiffTrtFRRC$Estimate</li>
-<li>CI Upper: ret_rj$ciDiffTrtFRRC$CIUpper</li>
+<li>Var: ret_rj<span class="math inline">\(ANOVA\)</span>VarCom[“Var”, “Estimates”]</li>
+<li>Cov1: ret_rj<span class="math inline">\(ANOVA\)</span>VarCom[“Cov1”, “Estimates”]</li>
+<li>Chisquare-statistic: ret_rj<span class="math inline">\(FRRC\)</span>FTests[“Treatment”,“Chisq”]</li>
+<li>df: ret_rj<span class="math inline">\(FRRC\)</span>FTests[1,“DF”]</li>
+<li>p-value: ret_rj<span class="math inline">\(FRRC\)</span>FTests[“Treatment”,“p”]</li>
+<li>CI Lower: ret_rj<span class="math inline">\(FRRC\)</span>ciDiffTrt[1,“CILower”]</li>
+<li>Mid Value: ret_rj<span class="math inline">\(FRRC\)</span>ciDiffTrt[1,“Estimate”]</li>
+<li>CI Upper: ret_rj<span class="math inline">\(FRRC\)</span>ciDiffTrt[1,“CIUpper”]</li>
 </ul>
 <div id="jumping-ahead" class="section level4" number="4.2.8.1">
 <h4><span class="header-section-number">4.2.8.1</span> Jumping ahead</h4>
