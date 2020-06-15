@@ -3,7 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Obuchowski Rockette Hillis2 (ORH) Analysis {#ORHAnalysis}
+# Obuchowski Rockette Hillis (ORH) Analysis {#ORHAnalysis}
 
 
 
@@ -225,7 +225,7 @@ The following notation is used in the code below:
 * rj_jk = RJafroc, `covEstMethod` = "jackknife"
 * rj_bs = RJafroc, `covEstMethod` = "bootstrap"
 
-For exammple, `Cov1_jk` is the jackknife estimate of `Cov1`.
+For example, `Cov1_jk` is the jackknife estimate of `Cov1`.
 
 Shown below are the results of the jackknife method, first using the code in this repository and next, as a cross-check, using `RJafroc` function `UtilVarComponentsOR`:
 
@@ -238,9 +238,10 @@ data.frame ("Cov1_jk" = Cov1, "Var_jk" = Var)
 #>        Cov1_jk       Var_jk
 #> 1 0.0003734661 0.0006989006
 
-ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon")$varComp # default `covEstMethod` is jackknife
+ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon") # default `covEstMethod` is jackknife
 data.frame ("Cov1_rj_jk" = ret4$VarCom["Cov1", "Estimates"], "Var_rj_jk" = ret4$VarCom["Var", "Estimates"])
-#> data frame with 0 columns and 0 rows
+#>     Cov1_rj_jk    Var_rj_jk
+#> 1 0.0003734661 0.0006989006
 ```
 
 Note that the estimates are identical and that the $Cov_1$ estimate is smaller than the $Var$ estimate (their ratio is the correlation $\rho_1 = Cov_1/Var$ = 0.5343623). 
@@ -270,9 +271,10 @@ Following, as a cross check, are results of bootstrap method as calculated by th
 
 
 ```r
-ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000, seed = 100)$varComp
-data.frame ("Cov_rj_bs" = ret5$cov1, "Var_rj_bs" = ret5$var)
-#> data frame with 0 columns and 0 rows
+ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000, seed = 100)
+data.frame ("Cov_rj_bs" = ret5$VarCom["Cov1", "Estimates"], "Var_rj_bs" = ret5$VarCom["Var", "Estimates"])
+#>      Cov_rj_bs    Var_rj_bs
+#> 1 0.0003466804 0.0006738506
 ```
 
 Note that the two estimates are identical *provided the seeds are identical*.
@@ -287,9 +289,10 @@ data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
 #>         Cov_dl       Var_dl
 #> 1 0.0003684357 0.0006900766
 
-ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "DeLong")$varComp
-data.frame ("Cov_rj_dl" = ret5$cov1, "Var_rj_dl" = ret5$var)
-#> data frame with 0 columns and 0 rows
+ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "DeLong")
+data.frame ("Cov_rj_dl" = ret5$VarCom["Cov1", "Estimates"], "Var_rj_dl" = ret5$VarCom["Var", "Estimates"])
+#>      Cov_rj_dl    Var_rj_dl
+#> 1 0.0003684357 0.0006900766
 ```
 
 Note that the two estimates are identical and that the DeLong estimate are close to the bootstrap estimates using 20,000 bootstraps. The close correspondence is only expected when using the Wilcoxon figure of merit.
@@ -372,30 +375,34 @@ Shown below are results obtained using RJafroc function `StSignificanceTesting` 
 
 ```r
 ret1 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "DBMH", analysisOption = "FRRC")
-data.frame("DBMH:F" = ret1$FTestStatsFRRC$fFRRC, 
-           "DBMH:ddf" = ret1$FTestStatsFRRC$ddfFRRC, 
-           "DBMH:P-val" = ret1$FTestStatsFRRC$pFRRC)
-#> data frame with 0 columns and 0 rows
+data.frame("DBMH:F" = ret1$FRRC$FTests["Treatment", "FStat"], 
+           "DBMH:ddf" = ret1$FRRC$FTests["Error", "DF"], 
+           "DBMH:P-val" = ret1$FRRC$FTests["Treatment", "p"])
+#>      DBMH.F DBMH.ddf DBMH.P.val
+#> 1 1.2201111      113 0.27168532
 
 ret2 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC")
-data.frame("ORHJack:F" = ret2$FTestStatsFRRC$fFRRC, 
-           "ORHJack:ddf" = ret2$FTestStatsFRRC$ddfFRRC, 
-           "ORHJack:P-val" = ret2$FTestStatsFRRC$pFRRC)
-#> data frame with 0 columns and 0 rows
+data.frame("ORHJack:Chisq" = ret2$FRRC$FTests["Treatment", "Chisq"], 
+           "ORHJack:ddf" = ret2$FRRC$FTests["Error", "DF"], 
+           "ORHJack:P-val" = ret2$FRRC$FTests["Treatment", "p"])
+#>   ORHJack.Chisq ORHJack.ddf ORHJack.P.val
+#> 1     1.2201111          NA    0.26933885
 
 ret3 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC", 
                               covEstMethod = "DeLong")
-data.frame("ORHDeLong:F" = ret3$FTestStatsFRRC$fFRRC, 
-           "ORHDeLong:ddf" = ret3$FTestStatsFRRC$ddfFRRC, 
-           "ORHDeLong:P-val" = ret3$FTestStatsFRRC$pFRRC)
-#> data frame with 0 columns and 0 rows
+data.frame("ORHDeLong:Chisq" = ret3$FRRC$FTests["Treatment", "Chisq"], 
+           "ORHDeLong:ddf" = ret3$FRRC$FTests["Error", "DF"], 
+           "ORHDeLong:P-val" = ret3$FRRC$FTests["Treatment", "p"])
+#>   ORHDeLong.Chisq ORHDeLong.ddf ORHDeLong.P.val
+#> 1       1.2345017            NA      0.26653335
 
 ret4 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC", 
                               covEstMethod = "bootstrap")
-data.frame("ORHBoot:F" = ret4$FTestStatsFRRC$fFRRC, 
-           "ORHBoot:ddf" = ret4$FTestStatsFRRC$ddfFRRC, 
-           "ORHBoot:P-val" = ret4$FTestStatsFRRC$pFRRC)
-#> data frame with 0 columns and 0 rows
+data.frame("ORHBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"], 
+           "ORHBoot:ddf" = ret4$FRRC$FTests["Error", "DF"], 
+           "ORHBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
+#>   ORHBoot.Chisq ORHBoot.ddf ORHBoot.P.val
+#> 1     1.4095755          NA    0.23512688
 ```
 
 The DBMH and ORH-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBMH and $\infty$ for ORH. The F-statistics for ORH-bootstrap and ORH-DeLong are different.
@@ -446,7 +453,7 @@ for (i in 1 : nDiffs) {
 ```
 
 How does this compare to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function?
-TBA: the code has chisq not F; need to reconcile
+TBA: the code has chisq not F; need to reconcile:
 
  
  ```r
@@ -479,25 +486,25 @@ The first-principles and the `RJafroc` values agree exactly with each other. Thi
 * CI Upper: ret_rj$FRRC$ciDiffTrt[1,"CIUpper"]
 
 #### Jumping ahead 
-If RRRC analysis were conducted, the values would be:
+If RRRC analysis were conducted, the values would be [one needs to analyze a dataset like `dataset02` having more than one treatments and readers and use `analysisOption` = "RRRC"]:
 
-* msR: ret_rj\$meanSquares\$msR
-* msT: ret_rj\$meanSquares\$msT
-* msTR: ret_rj\$meanSquares\$msTR
-* Var: ret_rj\$varComp\$var
-* Cov1: ret_rj\$varComp\$cov
-* Cov2: ret_rj\$varComp\$cov2
-* Cov3: ret_rj\$varComp\$cov3
-* varR: ret_rj\$varComp\$varR
-* varTR: ret_rj\$varComp\$varTR
-* F-statistic: ret_rj\$FTestStatsRRRC\$fRRRC
-* ddf: ret_rj\$FTestStatsRRRC\$ddfRRRC
-* p-value: ret_rj\$FTestStatsRRRC\$pRRRC
-* CI Lower: ret_rj\$ciDiffTrtRRRC\$CILower
-* Mid Value: ret_rj\$ciDiffTrtRRRC\$Estimate
-* CI Upper: ret_rj\$ciDiffTrtRRRC\$CIUpper
+* msR: ret_rj$ANOVA$TRanova["R", "MS"]
+* msT: ret_rj$ANOVA$TRanova["T", "MS"]
+* msTR: ret_rj$ANOVA$TRanova["TR", "MS"]
+* Var: ret_rj$ANOVA$VarCom["Var", "Estimates"]
+* Cov1: ret_rj$ANOVA$VarCom["Cov1", "Estimates"]
+* Cov2: ret_rj$ANOVA$VarCom["Cov2", "Estimates"]
+* Cov3: ret_rj$ANOVA$VarCom["Cov3", "Estimates"]
+* varR: ret_rj$ANOVA$VarCom["VarR", "Estimates"]
+* varTR: ret_rj$ANOVA$VarCom["VarTR", "Estimates"]
+* F-statistic: ret_rj$RRRC$FTests["Treatment", "FStat"]
+* ddf: ret_rj$RRRC$FTests["Error", "DF"]
+* p-value: ret_rj$RRRC$FTests["Treatment", "p"]
+* CI Lower: ret_rj$RRRC$ciDiffTrt["trt0-trt1","CILower"]
+* Mid Value: ret_rj$RRRC$ciDiffTrt["trt0-trt1","Estimate"]
+* CI Upper: ret_rj$RRRC$ciDiffTrt["trt0-trt1","CIUpper"]
 
-And similarly, for RRFC analysis, one replaces RRRC with RRFC.]
+And similarly, for `RRFC` analysis, one replaces `RRRC` with `RRFC`, etc.]
 
 ## Multiple-reader multiple-treatment ORH model
 The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to \@ref(eq:ORModel1RMT), one needs an additional $j$ index to index readers, and additional random terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random reader factor. 
@@ -944,7 +951,7 @@ The single treatment method is implemented in mainSingleTreatment.R. The relevan
 ## Discussion/Summary
 This chapter described the Obuchowski-Rockette method as modified by Hillis. As noted earlier, it has the same number of parameters as the DBMH method described in the preceding chapter, but the model \@ref(eq:ORModel) *appears* simpler as some terms are "hidden" in the structure of the error term. In this chapter the NH condition was considered. Extension to the alternative hypothesis, i.e., estimating statistical power, is deferred to online appendices to Chapter 11. The extension is a little simpler with the DBMH model, as it is a standard ANOVA model. For example the expressions for the DBMH non-centrality parameter was readily defined in Chapter 09, e.g., §9.7.4. Hillis has derived expressions allowing transformation between quantities in the two methods, and this is the approach adopted in this book and implemented in the cited online appendix.
 
-Online Appendix 10.A describes R implementation of the DeLong method for estimating the covariance matrix for empirical AUC. Since the main difficulty understanding the original OR method is conceptualizing the covariance matrix, the author has explained this at an elementary level, using a case-set index which is implicit in the original OR paper4. This was the reason for the gentle introduction analyzing performance of a single reader in multiple treatments. The jackknife, bootstrap and the DeLong methods, all implemented in Online Appendix 10.B, should reinforce understanding of the covariance matrix. The DBM and ORH methods are compared for this special case in Online Appendix 10.C. A minimal implementation of the ORH method for MRMC data is given in Online Appendix 10.D, which is a literal implementation of the relevant formulae. The special case of multiple readers in a single treatment is coded in Online Appendix 10.F. This will be used in Chapter 22 where standalone CAD performance is compared to a group of radiologists interpreting the same cases.
+TBA: Online Appendix 10.A describes R implementation of the DeLong method for estimating the covariance matrix for empirical AUC. Since the main difficulty understanding the original OR method is conceptualizing the covariance matrix, the author has explained this at an elementary level, using a case-set index which is implicit in the original OR paper4. This was the reason for the gentle introduction analyzing performance of a single reader in multiple treatments. The jackknife, bootstrap and the DeLong methods, all implemented in Online Appendix 10.B, should reinforce understanding of the covariance matrix. The DBM and ORH methods are compared for this special case in Online Appendix 10.C. A minimal implementation of the ORH method for MRMC data is given in Online Appendix 10.D, which is a literal implementation of the relevant formulae. The special case of multiple readers in a single treatment is coded in Online Appendix 10.F. This will be used in Chapter 22 where standalone CAD performance is compared to a group of radiologists interpreting the same cases.
 
 The original publication [@RN204] and a subsequent one [@RN1450] were major advances. Hillis' work showing their equivalence unified the two apparently disparate analyses, and this was a major advance. The Hillis papers, while difficult reads, are ones the author goes to repeatedly. 
 
