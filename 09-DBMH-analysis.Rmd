@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
 library(kableExtra)
 library(ggplot2)
 library(RJafroc)
+library(here)
 ```
 
 ## Introduction
@@ -74,15 +75,16 @@ This section provides an overview of the steps involved in analysis of MRMC data
 
 ## The Dorfman-Berbaum-Metz (DBM) method
 The figure-of-merit has three indices:  
-1. A treatment index $i$, where $i$ runs from 1 to $I$, where $I$ is the total number of treatments. 
+1. A treatment index $i$, where $i$ runs from 1 to $I$, where $I$ is the total number of treatments.
 1. A reader index $j$, where $j$ runs from 1 to $J$, where $J$ is the total number of readers. 
 1. The often-suppressed case-sample index $\{c\}$, where  $\{1\}$  i.e., $c$ = 1, denotes a set of cases,   $K_1$ non-diseased and $K_2$ diseased, interpreted by all readers in all treatments, and other integer values of $c$ correspond to other independent sets of cases that, although not in fact interpreted by the readers, could potentially be “interpreted” using resampling methods such as the bootstrap or the jackknife. 
 
 The approach [@RN204] taken by Dorfman-Berbaum-Metz (DBM) was to use the jackknife resampling method described in (book) Chapter 7 to calculate FOM pseudovalues ${Y'}_{ijk}$ defined by (the reason for the prime will become clear shortly):
 
-\begin{equation*}
+\begin{equation}
 Y'_{ijk}=K\theta_{ij}-(K-1)\theta_{ij\{k\}}
-\end{equation*}
+(\#eq:pValNotCentered)
+\end{equation}
 
 Here $\theta_{ij}$ is the estimate of the figure-of-merit for reader $j$ interpreting all cases in treatment $i$ and $\theta_{ij\{k\}}$ is the corresponding figure of merit with case $k$ *deleted* from the analysis. To adhere to convention and to keep the notation simple the $\{1\}$ index on every figure of merit symbol is suppressed (unless it is absolutely necessary for clarity). 
 
@@ -90,33 +92,37 @@ Recall from book Chapter 07 that the jackknife is a way of teasing out the case-
 
 Hillis has proposed a centering transformation on the pseudovalues (Hillis calls them "normalized" pseudovalues but to the author "centering" is a more accurate and descriptive term - *Normalize: (In mathematics) multiply (a series, function, or item of data) by a factor that makes the norm or some associated quantity such as an integral equal to a desired value (usually 1). New Oxford American Dictionary, 2016*):
 
-\begin{equation*}
+\begin{equation}
 Y_{ijk}=Y'_{ijk}+\left (\theta_{ij} - Y'_{ij\bullet}  \right )
-\end{equation*}
+(\#eq:pValCentered)
+\end{equation}
 
 **Note: the bullet symbol denotes an average over the corresponding index.**
 
 The effect of this transformation is that the average of the centered pseudovalues over the case index is identical to the corresponding estimate of the figure of merit:
 
-\begin{equation*}
+\begin{equation}
 Y_{ij\bullet}=Y'_{ij\bullet}+\left (\theta_{ij} - Y'_{ij\bullet}  \right )=\theta_{ij}
-\end{equation*}
+(\#eq:EffectOfCentering)
+\end{equation}
 
-This has the advantage that all confidence intervals are correctly centered. The transformation is unnecessary if one uses the Wilcoxon as the figure-of-merit, as the pseudovalues calculated using the Wilcoxon as the figure of merit are automatically centered. It is left as an exercise for the reader to show that this statement is true.
+This has the advantage that all confidence intervals are properly centered. The transformation is unnecessary if one uses the Wilcoxon as the figure-of-merit, as the pseudovalues calculated using the Wilcoxon as the figure of merit are automatically centered (it is left as an exercise for the reader to show that this statement is true).
 
 *It is understood that, unless explicitly stated otherwise, all calculations from now on will use centered pseudovalues.*
 
 Consider $N$ replications of a MRMC study, where a replication means repetition of the study with the same treatments, readers and case-set $\{1\}$. For $N$ replications per treatment-reader-case combination, the DBM model for the pseudovalues is ($n$ is the replication index, usually $n$ = 1, but kept here for now):
 
-\begin{equation*}
+\begin{equation}
 Y_{n(ijk)}  = \mu + \tau_i+ R_j + C_k + (\tau R)_{ij}+ (\tau C)_{ik}+ (R C)_{jk} + (\tau RC)_{ijk}+ \epsilon_{n(ijk)} 
-\end{equation*}
+(\#eq:SamplingDbmModel)
+\end{equation}
 
 The term $\mu$ is a constant. By definition, the treatment effect $\tau_i$  is subject to the constraint:
 
-\begin{equation*}
+\begin{equation}
 \sum_{i=1}^{I}\tau_i=0\Rightarrow \tau_\bullet=0
-\end{equation*}
+(\#eq:constraintTau)
+\end{equation}
 
 It is shown below, Eqn. (9.9), that this constraint ensures that $\mu$  has the interpretation as the average of the pseudovalues over treatments, readers, cases and replications, if any. 
 
@@ -125,6 +131,7 @@ The notation for the replication index, i.e., $n(ijk)$, implies $n$ observations
 \begin{equation}
 Y_{ijk} \equiv Y_{1(ijk)}\\
 \tau_i = Y_{i \bullet \bullet} -Y_{\bullet \bullet \bullet} 
+(\#eq:estimatingTau)
 \end{equation}
 
 *The basic assumption of the DBM model, Eqn. (9.4), is that the pseudovalues can be regarded as independent and identically distributed observations. That being the case, the pseudovalues can be analyzed by standard ANOVA techniques.*
@@ -132,14 +139,15 @@ Y_{ijk} \equiv Y_{1(ijk)}\\
 ### Explanation of terms in the model 
 The right hand side of Eqn. (9.4) consists of one fixed and 7 random effects. The current analysis assumes readers and cases as random factors (RRRC), so by definition $R_j$ and $C_k$ are random effects, and moreover, any term that includes a random factor is a random effect; for example, $(\tau R)_{ij}$ is a random effect because it includes the $R$ factor. Here is a list of the random terms: 
 
-$$
+\begin{equation}
 R_j, C_k, (\tau R)_{ij}, (\tau C)_{ik}, (RC)_{jk},  (\tau RC)_{ijk},  \epsilon_{ijk}
-$$
+(\#eq:termsInDbmModel)
+\end{equation}
 
 
 **Assumption:** Each of the random effects is modeled as a random sample from mutually independent zero-mean normal distributions with variances as specified below:
 
-$$
+\begin{equation}
 R_j  \sim N\left ( 0,\sigma_{R}^{2} \right ) \\
 C_k \sim N\left ( 0,\sigma_{C}^{2} \right ) \\
 (\tau R)_{ij} \sim N\left ( 0,\sigma_{\tau R}^{2} \right ) \\
@@ -147,12 +155,12 @@ C_k \sim N\left ( 0,\sigma_{C}^{2} \right ) \\
 (RC)_{jk} \sim N\left ( 0,\sigma_{RC}^{2} \right ) \\
 (\tau RC)_{ijk} \sim N\left ( 0,\sigma_{\tau RC}^{2} \right ) \\
 \epsilon_{ijk} \sim N\left ( 0,\sigma_{\epsilon}^{2} \right )
-$$
+(\#eq:samplingOfDbmTerms)
+\end{equation}
 
 One could have placed a $Y$ subscript (or superscript) on each of the variances, as they describe fluctuations of the pseudovalues, not FOM values – the latter are the subject of the next chapter. However, this tends to make the notation cumbersome. So here is the convention:
 
-*Unless explicitly stated otherwise, all variance symbols in this chapter refer to pseudovalues. * 
-
+**Unless explicitly stated otherwise, all variance symbols in this chapter refer to pseudovalues. ** 
 Another convention: $(\tau R)_{ij}$ is *not* the product of the treatment and reader factors, rather it is a single factor, namely the treatment-reader factor with $IJ$ levels, subscripted by the index $ij$ and similarly for the other product-like terms in Eqn. (9.7).
 
 ### Meanings of variance components in the DBM model (TBA this section can be improved)
@@ -166,9 +174,10 @@ The variances defined in Eqn. (9.7) are collectively termed variance components.
 *	The term $\sigma_{\tau RC}^{2}$ is the variance of treatments, readers and cases that were excluded in the definitions of all the preceding terms in Eqn. (9.7). So, if one were to sample treatments, readers and cases the net variance would be $\sigma_{R}^{2}+\sigma_{C}^{2}+\sigma_{\tau C}^{2}+\sigma_{RC}^{2}+\sigma_{\tau RC}^{2}+\sigma_{\epsilon}^{2}$. 
 *	The last term, $\sigma_{\epsilon}^{2}$  describes the variance arising from different replications of the study using the same treatments, readers and cases. Measuring this variance requires repeating the study several ($N$) times with the same treatments, readers and cases, and computing the variance of $Y_{n(ijk)}$ , where the additional $n$-index refers to true replications, $n$ = 1, 2, ..., $N$. 
 
-$$
+\begin{equation}
 \sigma_{\epsilon}^{2}=\frac{1}{IJK}\sum_{i=1}^{I}\sum_{j=1}^{J}\sum_{k=1}^{k}\frac{1}{N-1}\sum_{n=1}^{N}\left ( Y_{n(ijk)} - Y_{\bullet (ijk)} \right )^2
-$$
+(\#eq:EstimatingEpsilon)
+\end{equation}
 
 The right hand side of Eqn. (9.8) is the variance of $Y_{n(ijk)}$, for specific $ijk$, with respect to the replication index $n$, averaged over all $ijk$. In practice $N$ = 1 (i.e., there are no replications) and this variance cannot be estimated (it would imply dividing by zero). It has the meaning of *reader inconsistency*, usually termed *within-reader* variability. As will be shown later, the presence of this inestimable term does not limit ones ability to perform significance testing on the treatment effect without having to replicate the whole study, as implied in earlier work [@RN1450].
 
@@ -189,7 +198,7 @@ Again, to be clear, one should put a $Y$ subscript (or superscript) on each of t
 
 The definitions of the mean-squares below match those (when provided) in [@RN1476, page 1261]; the definition of $MS(R)$ in [@RN2508, top of page 339] is incorrect. 
 
-\begin{equation*}
+\begin{equation}
 \text{MS(T)}=\frac{JK\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{I-1} \\
 \text{MS(R)}=\frac{IK\sum_{j=1}^{J}\left ( Y_{\bullet j \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{J-1} \\
 \text{MS(C)}=\frac{IJ\sum_{k=1}^{K}\left ( Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{K-1} \\
@@ -197,7 +206,8 @@ The definitions of the mean-squares below match those (when provided) in [@RN147
 \text{MS(TC)}=\frac{J\sum_{i=1}^{I}\sum_{k=1}^{K}\left ( Y_{i \bullet k} - Y_{i \bullet \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(K-1)} \\
 \text{MS(RC)}=\frac{I\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{\bullet j k} - Y_{\bullet j \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(J-1)(K-1)}\\
 \text{MS(TRC)}=\frac{\sum_{i=1}^{I}\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{i j k} - Y_{i j \bullet} - Y_{i \bullet k} - Y_{\bullet j k} + Y_{i \bullet \bullet} + Y_{\bullet j \bullet} + Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(J-1)K-1)}
-\end{equation*}
+(\#eq:EstimatingMeanSquares)
+\end{equation}
 
 Note the absence of $MSE$, corresponding to the $\epsilon$ term on the right hand side of Eqn. (9.4). With only one observation per treatment-reader-case combination, MSE cannot be estimated; it effectively gets folded into the $MS(TRC)$ term. 
 
@@ -223,9 +233,10 @@ Table: Table 9.1 Unconstrained expected values of mean-squares, as in [@RN2079]
 
 * In Tables 9.1 the following notation is used as a shorthand:
 
-\begin{equation*}
+\begin{equation}
 \sigma_{\tau}^{2}=\frac{1}{I-1}\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{\bullet \bullet \bullet} \right )^2
-\end{equation*}
+(\#eq:defnVarTau)
+\end{equation}
 
 * Since treatment is a fixed effect, the variance symbol $\sigma_{\tau}^{2}$, which is used for notational consistency in Tables 9.1 - 9.3, could cause confusion. 
 
@@ -309,30 +320,34 @@ After displaying the results of the calculation, the results are compared to tho
 ### Significance testing
 If the NH of no treatment effect is true, i.e., if $\sigma_{\tau}^{2}$ = 0, then according to Table 9.1 the following holds (the last term in the row labeled $T$ in Table 9.1 drops out):
 
-\begin{equation*}
+\begin{equation}
 E\left ( MST\mid NH \right ) = \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} + J\sigma_{\tau C}^{2}
-\end{equation*}
+(\#eq:ExpValMST)
+\end{equation}
 
 Also, the following linear combination is equal to $E\left ( MST\mid NH \right )$:
 
-\begin{equation*}
+\begin{equation}
 E\left ( MS(TR) \right ) + E\left ( MS(TC) \right )  - E\left ( MS(TRC) \right ) \\ 
 = \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} \right ) + \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J\sigma_{\tau C}^{2} \right ) -\left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2}  \right ) \\
 = \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J \sigma_{\tau C}^{2} +  K\sigma_{\tau R}^{2} \\
 = E\left ( MS(T)\mid NH \right )
-\end{equation*}
+(\#eq:linearComb)
+\end{equation}
 
 Therefore, under the NH, the ratio: 
 
-\begin{equation*}
+\begin{equation}
 \frac{E\left ( MS(T)\mid NH \right )}{E\left ( MS(TR) \right ) + E\left ( MS(TC) \right )  - E\left ( MS(TRC) \right )} = 1
-\end{equation*}
+(\#eq:ConstrFRatio)
+\end{equation}
 
 In practice, one does not know the expected values – that would require averaging each of these quantities, regarded as random variables, over their respective distributions. Therefore, one defines the following statistic, denoted  $F_{DBM}$, using the observed values of the mean squares, calculated almost trivially using Eqn. (9.12):
 
-\begin{equation*}
+\begin{equation}
 F_{DBM} = \frac{MS(T)}{MS(TR) + MS(TC) - MS(TRC)}
-\end{equation*}
+(\#eq:FStatRRRC)
+\end{equation}
 
 $F_{DBM}$ is a realization of a random variable. A non-zero treatment effect, i.e.,  $\sigma_{\tau}^{2} > 0$, will cause the ratio to be larger than one, because $E\left ( MS(T) \right)$  will be larger, see row labeled $T$ in Table 9.1. Therefore values of $F_{DBM} > 1$  will tend to reject the NH. Drawing on a theorem from statistics [@RN1492], under the NH the ratio of two independent mean squares is distributed as a (central) F-statistic with degrees of freedom corresponding to those of the mean squares forming the numerator and denominator of the ratio (Theorem 12.2.5 in “An Introduction to Mathematical Statistics and Its Applications”).  Knowing the distribution of the statistic defined by (9.18) under the NH enables hypothesis testing. This is completely analogous to Chapter 08 where knowledge of the distribution of AUC under the NH enabled testing the null hypothesis that the observed value of AUC equals a pre-specified value. 
 
@@ -343,10 +358,11 @@ Under the NH the left hand side of by (9.18), i.e., $F_{DBM}$, is distributed ac
 
 Summarizing,
 
-\begin{equation*}
+\begin{equation}
 F_{DBM} \sim F_{ndf,ddf} \\
 ndf=I-1
-\end{equation*}
+(\#eq:samplingFStat)
+\end{equation}
 
 The next topic is estimating $ddf$.
 
@@ -355,41 +371,46 @@ The denominator of the F-ratio is MS(TR)+MS(TC)-MS(TRC).
 
 This is not a simple mean square. Rather it is a *linear combination of mean squares* (with coefficients 1, 1 and  1), and the resulting value could even be negative, which is an illegal value for a sample from an F-distribution. In 1941 Satterthwaite [@RN2359; @RN2360] proposed an approximate degree of freedom for a linear combination of simple mean square quantities. Online Appendix 9.A explains the approximation in more detail. The end result is that the mean square quantity described in Eqn. (9.21) has an approximate degree of freedom defined by (this is called the *Satterthwaite's approximation*):
 
-\begin{equation*}
+\begin{equation}
 ddf_{Sat}=\frac{\left ( MS(TR) + MS(TC) - MS(TRC) \right )^2}{\left ( \frac{MS(TR)^2}{(I-1)(J-1)} + \frac{MS(TC)^2}{(I-1)(K-1)} + \frac{MS(TRC)^2}{(I-1)(J-1)(K-1)}  \right )}
-\end{equation*}
+(\#eq:ddfSatter)
+\end{equation}
 
 The subscript $Sat$ is for Satterthwaite. From Eqn. (9.22) it should be fairly obvious that in general $ddf_{Sat}$ is not an integer. To accommodate possible negative estimates of the denominator, Eqn. (9.21), the original DBM method [@RN204] proposed four expressions for the F-statistic and corresponding expressions for $ddf$. Rather than repeat them here, since they have been superseded by the method described below, the interested reader is referred to Eqn. 6 and Eqn. 7 in [@RN1866].
 
 Hillis [@RN1865] proposes the following statistic for testing the null hypothesis (the subscript $DBMH$ give credit to the original formulation by DBM and the subsequent improvements by Hillis): 
 
-\begin{equation*}
+\begin{equation}
 F_{DBMH} = \frac{MS(T)}{MS(TR) + \max \left (MS(TC) - MS(TRC), 0  \right )}
-\end{equation*}
+(\#eq:FStatHillis)
+\end{equation}
 
 Now the denominator cannot be negative. One can think of the F-statistic $F_{DBMH}$ as a signal-to-noise ratio like quantity, with the difference that both numerator and denominator are variance like quantities. If the "variance" represented by the treatment effect is larger than the variance of the noise tending to mask the treatment effect, then $F_{DBMH}$  tends to be large, which makes the observed treatment "variance" stand out more clearly compared to the noise. 
 
 Hillis has shown that the left hand side of Eqn. (9.23) is distributed as an F-statistic with ndf defined by Eqn. (9.20), and denominator degrees of freedom   defined by:
 
-\begin{equation*}
+\begin{equation}
 ddf_H =\frac{\left ( MS(TR) + \max \left (MS(TC) - MS(TRC),0  \right ) \right )^2}{\left ( \frac{MS(TR)^2}{(I-1)(J-1)}  \right )}
-\end{equation*}
+(\#eq:ddfH)
+\end{equation}
 
 Summarizing,
 
-\begin{equation*}
+\begin{equation}
 F_{DBM} \sim F_{ndf,ddf} \\
 ndf=I-1
-\end{equation*}
+(\#eq:samplingFStatHillis)
+\end{equation}
 
 Instead of 4 rules, as in the original DBM method, the Hillis modification involves just one rule, summarized by Eqns. (9.23) through Eqn. (9.25). Moreover, the F-statistic is constrained to non-negative values. Using simulation testing [@RN1866] has shown that the DBMH method has better null hypothesis behavior than the original DBM method; the latter tended to be too conservative, typically yielding Type I error rates smaller than the optimal 5%. 
 
 ### Decision rules, p-value and confidence intervals
 The critical value of the F-statistic $F_{1-\alpha,ndf,ddf_H}$  is defined such that fraction   of the distribution lies to the left of the critical value, in other words it is the quantile function for the F-distribution: 
 
-\begin{equation*}
+\begin{equation}
 \Pr\left ( F\leq F_{1-\alpha,ndf,ddf_H} \mid F\sim F_{ndf,ddf_H}\right ) = 1 - \alpha
-\end{equation*}
+(\#eq:critValFStat)
+\end{equation}
 
 The critical value $F_{1-\alpha,ndf,ddf_H}$ increases as $\alpha$ decreases. The value of $\alpha$, generally chosen to be 0.05, termed the *nominal* $\alpha$, is fixed. The decision rule is that if $F_{DBMH} > F_{1-\alpha, ndf, ddf_H}$ one rejects the NH and otherwise one does not. It follows, from the definition of $F_{DBMH}$, Eqn. (9.23), that rejection of the NH is more likely if: 
 * $F_{DBMH}$ is large, Eqn. (9.18), which occurs if $MS(T)$ is large, meaning the treatment effect is large, and / or $MS(TR) + \max \left (MS(TC) - MS(TRC),0  \right )$ is small, see comments following Eqn. (9.23). 
@@ -403,33 +424,36 @@ The critical value $F_{1-\alpha,ndf,ddf_H}$ increases as $\alpha$ decreases. The
 #### p-value and confidence interval
 **The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{DBMH}$  could occur by chance. In other words, it is the area under the (central) F-distribution $F_{ndf,ddf}$ that lies above the observed value $F_{DBMH}$:
 
-\begin{equation*}
+\begin{equation}
 p=\Pr\left ( F > F_{DBMH} \mid F \sim F_{ndf,ddf_H} \right )
-\end{equation*}
+(\#eq:pValueRRRC)
+\end{equation}
 
 If $p < \alpha$ then the NH that all treatments are identical is rejected at significance level $\alpha$. That informs the researcher that there exists at least one treatment-pair that has a significant difference. To identify which pair(s) are different, one calculates confidence intervals for each paired difference. Hillis has shown that the $(1-\alpha)$ percent confidence interval for $Y_{i \bullet \bullet} - Y_{i' \bullet \bullet}$ is given by:
 
-\begin{equation*}
+\begin{equation}
 CI_{1-\alpha}=\left ( Y_{i \bullet \bullet} - Y_{i' \bullet \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MS(TR) + \max\left ( MS(TC)-MS(TRC),0 \right ) \right )}
-\end{equation*}
+\end{equation}
 
 Here $t_{\alpha/2;ddf_H}$ is that value such that $\alpha/2$  of the *central t-distribution* with  $ddf_H$ degrees of freedom is contained in the upper tail of the distribution: 
 
-\begin{equation*}
+\begin{equation}
 \Pr\left ( T>t_{\alpha/2;ddf_H} \right )=\alpha/2
-\end{equation*}
+(\#eq:tDistTailProb)
+\end{equation}
 
 Since centered pseudovalues were used:   
 
-\begin{equation*}
+\begin{equation}
 \left ( Y_{i \bullet \bullet} - Y_{i' \bullet \bullet} \right )=\left ( \theta_{i \bullet } - \theta_{i' \bullet} \right )
-\end{equation*}
+\end{equation}
 
 Eqn. (9.28) can be rewritten:
 
-\begin{equation*}
+\begin{equation}
 CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MS(TR) + \max\left ( MS(TC)-MS(TRC),0 \right ) \right )}
-\end{equation*}
+(\#eq:confIntervalRRRC)
+\end{equation}
 
 For two treatments the following equivalent rules could be adopted to reject the NH: 
 
@@ -496,45 +520,50 @@ data.frame("Lower" = retRJafroc$RRRC$ciDiffTrt[1,"CILower"],
 ## Fixed-reader random-case (FRRC) analysis
 The model is the same as in Eqn. (9.4) except one puts $\sigma_{R}^{2}$ = $\sigma_{\tau R}^{2}$ = 0 in Table 9.1. The appropriate test statistic is: 
 
-\begin{equation*}
+\begin{equation}
 \frac{E\left ( MS(T) \right )}{E\left ( MS(TC) \right )} = \frac{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau C}^{2}+JK\sigma_{\tau}^{2}}{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau C}^{2}}
-\end{equation*}
+\end{equation}
 
 Under the null hypothesis $\sigma_{\tau}^{2} = 0$:
 
-\begin{equation*}
+\begin{equation}
 \frac{E\left ( MS(T) \right )}{E\left ( MS(TC) \right )} = 1
-\end{equation*}
+\end{equation}
 
 As before, one defines the F-statistic (by replacing *expected* with *observed* values) by
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|R}=\frac{MS(T)}{MS(TC)}
-\end{equation*}
+(\#eq:FStatFRRC)
+\end{equation}
 
 The observed value $F_{DBM|R}$ (the Roe-Metz notation [@RN1124] is used which indicates that the factor appearing to the right of the vertical bar is regarded as fixed) is distributed as an F-statistic with $\text{ndf}$ = $I – 1$ and $ddf = (I-1)(K-1)$; the degrees of freedom follow from the rows labeled $T$ and $TC$ in Table 9.1. Therefore, the distribution of the observed value is (no Satterthwaite approximation needed this time as both numerator and denominator are simple mean-squares):
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|R} \sim F_{I-1,(I-1)(K-1)}
-\end{equation*}
+(\#eq:SamplingFStatFRRC)
+\end{equation}
 
 The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value:
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|R} > F_{1-\alpha,I-1,(I-1)(K-1)}
-\end{equation*}
+(\#eq:NhRejectRuleFRRC)
+\end{equation}
 
 The p-value of the test is the probability that a random sample from the F-distribution Eqn. (9.39), exceeds the observed value:
 
-\begin{equation*}
+\begin{equation}
 p=\Pr\left ( F> F_{DBM|R} \mid F \sim F_{I-1,(I-1)(K-1)} \right )
-\end{equation*}
+(\#eq:pFRRC)
+\end{equation}
 
 The $(1-\alpha)$  confidence interval for the inter-treatment reader-averaged difference FOM is given by:
 
-\begin{equation*}
+\begin{equation}
 CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2,(I-1)(K-1)}\sqrt{2\frac{MS(T)}{JK}}
-\end{equation*}
+(\#eq:confIntervalFRRC)
+\end{equation}
 
 ### Single-reader multiple-treatment analysis
 With a single reader interpreting cases in two or more treatments, the reader factor must necessarily be regarded as fixed. The preceding analysis is applicable. One simply puts $J = 1$ in the equations above. 
@@ -568,45 +597,50 @@ As one might expect, if one "freezes" reader variability, the FOM difference bec
 ## Random-reader fixed-case (RRFC) analysis
 The model is the same as in Eqn. Eqn. (9.4) except one puts $\sigma_C^2 = \sigma_{\tau C}^2 =0$ in Table 9.1. It follows that: 
 
-\begin{equation*}
+\begin{equation}
 \frac{E(MS(T))}{E(MS(TR))}=\frac{\sigma_\epsilon^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+JK\sigma_{\tau}^2}{\sigma_\epsilon^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2}
-\end{equation*}
+\end{equation}
 
 Under the null hypothesis $\sigma_\tau^2 = 0$:
 
-\begin{equation*}
+\begin{equation}
 \frac{E(MS(T))}{E(MS(TR))}=1
-\end{equation*}
+\end{equation}
 
 Therefore, one defines the F-statistic (replacing expected values with observed values) by:
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|C} \sim \frac{MS(T)}{MS(TR)}
-\end{equation*}
+(\#eq:FStatRRFC)
+\end{equation}
 
 The observed value $F_{DBM|C}$ is distributed as an F-statistic with $ndf = I – 1$ and $ddf = (I-1)(J-1)$, see rows labeled $T$ and $TR$ in Table 9.1.
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|C} \sim F_{I-1,(I-1)(J-1))}
-\end{equation*}
+(\#eq:SamplingFStatRRFC)
+\end{equation}
 
 The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:
 
-\begin{equation*}
+\begin{equation}
 F_{DBM|C} > F_{1-\alpha,I-1,(I-1)(J-1))}
-\end{equation*}
+(\#eq:NhRejectRuleRRFC)
+\end{equation}
 
 The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:
 
-\begin{equation*}
+\begin{equation}
 p=\Pr\left ( F>F_{DBM|C} \mid F \sim F_{I-1,(I-1)(J-1)} \right )
-\end{equation*}
+(\#eq:pRRFC)
+\end{equation}
 
 The confidence interval for inter-treatment differences is given by (TBA check this):
 
-\begin{equation*}
+\begin{equation}
 CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2,(I-1)(J-1)}\sqrt{2\frac{MS(TR)}{JK}}
-\end{equation*}
+(\#eq:confIntervalRRFC)
+\end{equation}
 
 #### Example 6: Code illustrating analysis for RRFC analysis, Van Dyke data
 

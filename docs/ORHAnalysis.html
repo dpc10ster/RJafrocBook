@@ -385,7 +385,7 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 <h3><span class="header-section-number">4.2.5</span> Code illustrating the covariance matrix (TBA)</h3>
 <p>As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method <span class="citation">(DeLong, DeLong, and Clarke-Pearson <a href="#ref-RN112" role="doc-biblioref">1988</a>)</span>. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. <a href="ORHAnalysis.html#eq:EstimateSigmaBootstrap">(4.10)</a> and <a href="ORHAnalysis.html#eq:EstimateSigmaJackknife">(4.11)</a> extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is described in Online Appendix 10.A (TBA) and implemented in file <code>VarCovMtrxDLStr.R</code>. The file name stands for “variance covariance matrix according to the DeLong structural components method” <em>described in five unnumbered equations following Eqn. 4 in the cited reference</em>.</p>
 <ul>
-<li>The functions (for <code>Var</code> and <code>Cov1</code> using bootstrap, jackknife, and the DeLong methods) are not displayed, but they are compiled. To display them download the repository and look at the <code>Rmd</code> file corresponding to this output and the sourced files listed below:</li>
+<li>To minimize clutter, the functions (for <code>Var</code> and <code>Cov1</code> using bootstrap, jackknife, and the DeLong methods) are not shown, but they are compiled. To display them download the book repository and look at the <code>Rmd</code> file corresponding to this output and the sourced <code>R</code> files listed below:</li>
 </ul>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="ORHAnalysis.html#cb17-1"></a><span class="kw">source</span>(<span class="kw">here</span>(<span class="st">&quot;R/CH10-ORH/Wilcoxon.R&quot;</span>))</span>
 <span id="cb17-2"><a href="ORHAnalysis.html#cb17-2"></a><span class="kw">source</span>(<span class="kw">here</span>(<span class="st">&quot;R/CH10-ORH/VarCov1Bs.R&quot;</span>))</span>
@@ -800,12 +800,12 @@ ndf=I-1
 \end{equation}\]</span></p>
 <p><span class="math display" id="eq:ddfH">\[\begin{equation}
 ddf_H=\frac{\left [ MS(TR) + J \max(Cov_2-Cov_3)\right ]^2}{\frac{\left [ MS(TR) \right ]^2}{(I-1)(J-1)}}
-\tag{4.35}
+\tag{3.19}
 \end{equation}\]</span></p>
 <p>If <span class="math inline">\(Cov_2&lt;Cov_3\)</span> this reduces to the expression originally suggested by Obuchowski and Rockette. With these changes, under the null hypothesis, the observed statistic <span class="math inline">\(F_{ORH}\)</span>, defined in <a href="ORHAnalysis.html#eq:F-ORH">(4.32)</a>, is distributed as an F-statistic with <span class="math inline">\(I-1\)</span> and <span class="math inline">\(ddf_H\)</span> degrees of freedom <span class="citation">(Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>; Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>; Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span>:</p>
 <p><span class="math display" id="eq:SamplingDistrF-ORH">\[\begin{equation}
 F_{ORH}\sim F_{ndf,ddf_H}
-\tag{4.36}
+\tag{4.35}
 \end{equation}\]</span></p>
 <div id="decision-rule-p-value-and-confidence-interval" class="section level4" number="4.3.3.1">
 <h4><span class="header-section-number">4.3.3.1</span> Decision rule, p-value and confidence interval</h4>
@@ -813,12 +813,12 @@ F_{ORH}\sim F_{ndf,ddf_H}
 <p>The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than <span class="math inline">\(F_{ORH}\)</span> could be observed by chance. In other words, it is the area under the F-distribution <span class="math inline">\(F_{ndf,ddf_H}\)</span> that lies above the observed value <span class="math inline">\(F_{ORH}\)</span>:</p>
 <p><span class="math display" id="eq:pValueORHRRRC">\[\begin{equation}
 p=\Pr(F&gt;F_{ORH} \mid F\sim F_{ndf,ddf_H})
-\tag{4.37}
+\tag{4.36}
 \end{equation}\]</span></p>
 <p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval for <span class="math inline">\(\theta_{i \bullet} - \theta_{i&#39; \bullet}\)</span> is given by (the average is over the reader index; the case-set index <span class="math inline">\(\{1\}\)</span> is suppressed):</p>
 <p><span class="math display" id="eq:CIalpha-RRRC">\[\begin{equation}
 CI_{1-\alpha,RRRC}=(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/2, (ddf_H}\sqrt{\frac{2}{J}(MS(TR)+J\max(Cov_2-Cov_3,0))}
-\tag{4.38}
+\tag{4.37}
 \end{equation}\]</span></p>
 </div>
 </div>
@@ -827,7 +827,7 @@ CI_{1-\alpha,RRRC}=(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/
 <p>Using the vertical bar notation <span class="math inline">\(\mid R\)</span> to denote that reader is regarded as a fixed effect <span class="citation">(Roe and Metz <a href="#ref-RN1124" role="doc-biblioref">1997</a>)</span>, the appropriate F -statistic for testing the null hypothesis <span class="math inline">\(NH: \tau_i = 0 \; (i=1,1,2,...I)\)</span> is <span class="citation">(Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>)</span>:</p>
 <p><span class="math display" id="eq:DefFStatFRRC">\[\begin{equation}
 F_{ORH \mid R}=\frac{MS(T)}{Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0)}
-\tag{4.39}
+\tag{4.38}
 \end{equation}\]</span></p>
 <p><span class="math inline">\(F_{ORH \mid R}\)</span>, a realization (i.e., observation) of a random variable, is distributed as an F-statistic with:</p>
 <p><span class="math display" id="eq:FStatFRRC">\[\begin{equation}
@@ -836,38 +836,38 @@ ndf=I-1\\
 ddf=\infty\\
 F_{ORH \mid R} \sim F_{ndf,ddf}
 \end{matrix}\right\}
-\tag{4.40}
+\tag{3.25}
 \end{equation}\]</span></p>
 <p>Alternatively, as with <a href="ORHAnalysis.html#eq:F-1RMT">(4.16)</a>,</p>
 <p><span class="math display">\[(I-1)F_{ORH \mid R} \sim t_{I-1}\]</span>
-For <span class="math inline">\(J\)</span> = 1, <a href="ORHAnalysis.html#eq:DefFStatFRRC">(4.39)</a> reduces to <a href="ORHAnalysis.html#eq:DefF-1RMT">(4.17)</a>.</p>
+For <span class="math inline">\(J\)</span> = 1, <a href="ORHAnalysis.html#eq:DefFStatFRRC">(4.38)</a> reduces to <a href="ORHAnalysis.html#eq:DefF-1RMT">(4.17)</a>.</p>
 <p>The critical value of the statistic is <span class="math inline">\(F_{1-\alpha,I-1,\infty}\)</span> which is that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the area under the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value, i.e.,:</p>
 <p><span class="math display">\[F_{ORH \mid R}&gt;F_{1-\alpha,I-1,\infty}\]</span></p>
-<p>The p-value of the test is the probability that a random sample from the distribution <span class="math inline">\(F_{I-1,\infty}\)</span> exceeds the observed value of the F statistic defined in <a href="ORHAnalysis.html#eq:DefFStatFRRC">(4.39)</a>:</p>
+<p>The p-value of the test is the probability that a random sample from the distribution <span class="math inline">\(F_{I-1,\infty}\)</span> exceeds the observed value of the F statistic defined in <a href="ORHAnalysis.html#eq:DefFStatFRRC">(4.38)</a>:</p>
 <p><span class="math display" id="eq:pValueaphaFRRC">\[\begin{equation}
 p=\Pr(F&gt;F_{ORH \mid R} \mid F \sim F_{I-1,\infty})
-\tag{4.41}
+\tag{4.39}
 \end{equation}\]</span></p>
 <p>The <span class="math inline">\((1-\alpha)\)</span> (symmetric) confidence interval for the difference figure of merit is given by:</p>
 <p><span class="math display" id="eq:CIalphaFRRC">\[\begin{equation}
 CI_{1-\alpha,FRRC}=(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/2, \infty}\sqrt{\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
-\tag{4.42}
+\tag{4.40}
 \end{equation}\]</span></p>
-<p>One can think of the numerator terms on the right hand side of <a href="ORHAnalysis.html#eq:CIalphaFRRC">(4.42)</a> as the variance of the inter-treatment FOM difference per reader, and the division by <span class="math inline">\(J\)</span> is needed as the readers, as a group, have smaller variance in inverse proportion to their numbers.</p>
+<p>One can think of the numerator terms on the right hand side of <a href="ORHAnalysis.html#eq:CIalphaFRRC">(4.40)</a> as the variance of the inter-treatment FOM difference per reader, and the division by <span class="math inline">\(J\)</span> is needed as the readers, as a group, have smaller variance in inverse proportion to their numbers.</p>
 <p>The NH is rejected if any of the following equivalent conditions is met:</p>
 <ul>
 <li>The observed value of the F-statistic exceeds the critical value <span class="math inline">\(F_{1-\alpha,I-1,\infty}\)</span>.</li>
-<li>The p-value defined by <a href="ORHAnalysis.html#eq:pValueaphaFRRC">(4.41)</a> is less than <span class="math inline">\(\alpha\)</span>.</li>
+<li>The p-value defined by <a href="ORHAnalysis.html#eq:pValueaphaFRRC">(4.39)</a> is less than <span class="math inline">\(\alpha\)</span>.</li>
 <li>The <span class="math inline">\((1-\alpha)\)</span> confidence interval does not include zero.</li>
 </ul>
-<p>Notice that for J = 1, <a href="ORHAnalysis.html#eq:CIalphaFRRC">(4.42)</a> reduces to <a href="ORHAnalysis.html#eq:CIalpha1RMT">(4.21)</a>.</p>
+<p>Notice that for J = 1, <a href="ORHAnalysis.html#eq:CIalphaFRRC">(4.40)</a> reduces to <a href="ORHAnalysis.html#eq:CIalpha1RMT">(4.21)</a>.</p>
 </div>
 <div id="random-reader-fixed-case-rrfc-analysis-1" class="section level3" number="4.3.5">
 <h3><span class="header-section-number">4.3.5</span> Random-reader fixed-case (RRFC) analysis</h3>
 <p>When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis <span class="math inline">\(NH: \tau_i = 0 \; (i=1,1,2,...I)\)</span> is:</p>
 <p><span class="math display" id="eq:DefFStatRRFC">\[\begin{equation}
 F_{ORH \mid C}=\frac{MS(T)}{MS(TR)}
-\tag{4.43}
+\tag{4.41}
 \end{equation}\]</span></p>
 <p><span class="math inline">\(F_{ORH \mid C}\)</span> is distributed as an F-statistic with:</p>
 <p><span class="math display" id="eq:FStatRRFC">\[\begin{equation}
@@ -876,7 +876,7 @@ ndf=I-1\\
 ddf=(I-1)(J-1)\\
 F_{ORH \mid C} \sim F_{ndf,ddf}
 \end{matrix}\right\}
-\tag{4.44}
+\tag{3.30}
 \end{equation}\]</span></p>
 <p>The critical value of the statistic is <span class="math inline">\(F_{1-\alpha,I-1,(I-1)(J-1)}\)</span>, which is that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:</p>
 <p><span class="math display">\[F_{ORH \mid C}&gt;F_{1-\alpha,I-1,(I-1)(J-1)}\]</span></p>
@@ -885,7 +885,7 @@ F_{ORH \mid C} \sim F_{ndf,ddf}
 <p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval is given by:</p>
 <p><span class="math display" id="eq:CIalphaRRFC">\[\begin{equation}
 CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/2, (I-1)(J-1)}\sqrt{\frac{2}{J}MS(TR)}
-\tag{4.45}
+\tag{4.42}
 \end{equation}\]</span></p>
 <p>It is time to reinforce the formulae with examples.</p>
 </div>
@@ -897,17 +897,17 @@ CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/
 <p>For single-treatment multiple-reader ORH analysis, the figure of merit model is (contrast the following equation to <a href="ORHAnalysis.html#eq:ORModel1RMT">(4.1)</a> noting the absence of an <span class="math inline">\(i\)</span> index. If multiple modalities are present the current analysis is applicable to data in each treatment analyzed one at a time):</p>
 <p><span class="math display" id="eq:OrModel1T">\[\begin{equation}
 \theta_{j\{c\}}=\mu+R_j+\epsilon_{j\{c\}}
-\tag{4.46}
+\tag{4.43}
 \end{equation}\]</span></p>
 <p>One wishes to test the NH: <span class="math inline">\(\mu=\mu_0\)</span> where <span class="math inline">\(\mu_0\)</span> is some pre-specified value. (since <span class="math inline">\(C\)</span> = 1, in the interest of brevity one can suppress the <span class="math inline">\(c\)</span> index):</p>
 <p><span class="math display" id="eq:OrModel1REstmu">\[\begin{equation}
 \mu=\theta_{\bullet}
-\tag{4.47}
+\tag{4.44}
 \end{equation}\]</span></p>
 <p>The variance of the reader-averaged FOM can be shown <span class="citation">(Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span> to be given by (the reference is to the original OR publication, specifically Eqn. 2.3):</p>
 <p><span class="math display" id="eq:VarThetaiDot">\[\begin{equation}
 \sigma_{\theta_{\bullet}}^{2}=\frac{1}{J}(\sigma_{R}^{2}+Var+(J-1)Cov_2)
-\tag{4.48}
+\tag{4.45}
 \end{equation}\]</span></p>
 </div>
 <div id="connection-to-existing-literature" class="section level3" number="4.3.7">
@@ -915,51 +915,51 @@ CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/
 <p>Rather than attempt to derive the preceding equation, it is shown how it follows from the existing literature <span class="citation">(Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span>. For convenience Eqn. 2.3 in cited reference is reproduced below.</p>
 <p><span class="math display" id="eq:VarThetaiDotDot">\[\begin{equation}
 Var(\theta_{i \bullet \bullet}) =\frac{1}{J}(\sigma_{b}^{2}+\sigma_{ab}^{2}+(\sigma_{w}^{2}/K) + \sigma_{c}^{2}(1+J(J-1)r_2))
-\tag{4.49}
+\tag{4.46}
 \end{equation}\]</span></p>
 <p>In the OR notation, the FOM has three indices, <span class="math inline">\(\theta_{ijk}\)</span>. One deletes the <span class="math inline">\(i\)</span> index as one is dealing with a single treatment and one can drop the average over the <span class="math inline">\(k\)</span> index, as one is dealing with a single dataset; <span class="math inline">\(\sigma_{b}^{2}\)</span> in the OR notation is what we are calling <span class="math inline">\(\sigma_{R}^{2}\)</span>; for single treatment the treatment-reader interaction term <span class="math inline">\(\sigma_{ab}^{2}\)</span> is absent; and for single “replication” the term <span class="math inline">\(\sigma_{w}^{2}/K\)</span> (in OR notation <span class="math inline">\(K\)</span> is the number of replications) is absent, or, more accurately, the within-reader variance <span class="math inline">\(\sigma_{w}^{2}\)</span> is absorbed into the case sampling variance <span class="math inline">\(\sigma_{c}^{2}\)</span> as the two are inseparable); the term <span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> is what we are calling <span class="math inline">\(Var\)</span>; and <span class="math inline">\(\sigma_{c}^{2}r_2\)</span> in OR paper is what we are calling <span class="math inline">\(Cov_2\)</span>.</p>
 <p>An alternative first principles derivation, due to Mr. Xuetong Zhai, is given in TBA Online Appendix 10.E.</p>
-<p>One needs to replace <span class="math inline">\(\sigma_{R}^{2}\)</span> in <a href="ORHAnalysis.html#eq:VarThetaDot">(4.50)</a> with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature <span class="citation">(Hillis <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span>. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to TBA Table 9.1 in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, <span class="math inline">\(t\)</span> = 1 and the treatment-reader variance component goes away and the term <span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> is what we are calling <span class="math inline">\(Var\)</span>), it follows that:</p>
+<p>One needs to replace <span class="math inline">\(\sigma_{R}^{2}\)</span> in <a href="ORHAnalysis.html#eq:VarThetaDot">(4.47)</a> with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature <span class="citation">(Hillis <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span>. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to TBA Table 9.1 in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, <span class="math inline">\(t\)</span> = 1 and the treatment-reader variance component goes away and the term <span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> is what we are calling <span class="math inline">\(Var\)</span>), it follows that:</p>
 <p><span class="math display">\[E(MS(R))=\sigma_{R}^{2}+Var=Cov_2\]</span></p>
-<p>Substituting this equation in <a href="ORHAnalysis.html#eq:VarThetaDot">(4.50)</a> yields,</p>
+<p>Substituting this equation in <a href="ORHAnalysis.html#eq:VarThetaDot">(4.47)</a> yields,</p>
 <p><span class="math display" id="eq:VarThetaDot">\[\begin{equation}
 \sigma_{\theta_{\bullet}}^{2}=\frac{1}{J}(E(MS(R))+JCov_2)
-\tag{4.50}
+\tag{4.47}
 \end{equation}\]</span></p>
 <p>An estimate of <span class="math inline">\(MS(R)\)</span> is given by (from here on it is understood that <span class="math inline">\(MSR\)</span> is an estimate defined by:</p>
 <p><span class="math display" id="eq:EstMsR1T">\[\begin{equation}
 MS(R)=\frac{1}{J-1}\sum_{j=1}^{J}(\theta_j - \theta_{\bullet})^2
-\tag{4.51}
+\tag{4.48}
 \end{equation}\]</span></p>
 <p>Replacing the expected mean-square value with the estimate and avoiding negative covariance, which could lead to a negative variance estimate, one has:</p>
 <p><span class="math display" id="eq:EstVarThetaDot">\[\begin{equation}
 \sigma_{\theta_{\bullet}}^{2}=\frac{1}{J}(MS(R)+J\max(Cov_2,0))
-\tag{4.52}
+\tag{4.49}
 \end{equation}\]</span></p>
 <p>The observed value of the t-statistic for testing the NH is <span class="math inline">\(t_{1T}\)</span> (the supbscript means that this statistic applies to single treatment analysis):</p>
 <p><span class="math display" id="eq:DefTStat1T">\[\begin{equation}
 t_{1T}=\frac{\mu-\mu_0}{\sigma_{\theta_{\bullet}}}=(\theta_{\bullet}-\mu_0)\sqrt{\frac{J}{(MS(R)+J\max(Cov_2,0)}}
-\tag{4.53}
+\tag{4.50}
 \end{equation}\]</span></p>
 <p>This is distributed as a t-statistic with <span class="math inline">\(df_{H}^{I=1}\)</span> degrees of freedom:</p>
 <p><span class="math display" id="eq:DistTStat1T">\[\begin{equation}
 t_{1T} \sim t_{df_{H}^{1T}}
-\tag{4.54}
+\tag{4.51}
 \end{equation}\]</span></p>
 <p>In the above equation, Hillis single-treatment degree of freedom <span class="math inline">\(t_{df_{H}^{1T}}\)</span> is defined by <span class="citation">(Hillis <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span>:</p>
 <p><span class="math display" id="eq:DefdfHI1">\[\begin{equation}
 df_{H}^{1T}=(J-1)\left [\frac{MS(R)+J \max(Cov_2,0)}{MS(R)} \right ]^2
-\tag{4.55}
+\tag{4.52}
 \end{equation}\]</span></p>
 <p>The p-value of the test is the probability that the a random sample from the specified t-distribution exceeds the magnitude of the observed value:</p>
 <p><span class="math display" id="eq:pValue1T">\[\begin{equation}
 p=\Pr(t&gt;\left | t \right |\mid t \sim t_{df_{H}^{1T}})
-\tag{4.56}
+\tag{4.53}
 \end{equation}\]</span></p>
 <p>Therefore, a <span class="math inline">\(100 \times (1-\alpha)\)</span> percent confidence interval for <span class="math inline">\(\theta_{\bullet}-\mu_0\)</span> is:</p>
 <p><span class="math display" id="eq:CIalpha1T">\[\begin{equation}
 \theta_{\bullet}-\mu_0 \pm t_{\alpha/2,df_{H}^{1T}} \sqrt{ \frac{MS(R)+\max(Cov_2,0)}{J}}
-\tag{4.57}
+\tag{4.54}
 \end{equation}\]</span></p>
 <p>The single treatment method is implemented in mainSingleTreatment.R. The relevant code is listed in Online Appendix 10.F. Source the code to get the following output.</p>
 </div>
