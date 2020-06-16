@@ -402,7 +402,7 @@ data.frame("ORHBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"],
            "ORHBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
            "ORHBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
 #>   ORHBoot.Chisq ORHBoot.ddf ORHBoot.P.val
-#> 1     1.4151751           1     0.2341992
+#> 1     1.1056709           1    0.29302495
 ```
 
 The DBMH and ORH-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBMH and $\infty$ for ORH. The F-statistics for ORH-bootstrap and ORH-DeLong are different.

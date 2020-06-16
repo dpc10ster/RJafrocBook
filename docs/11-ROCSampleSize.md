@@ -22,7 +22,7 @@ What determines clinical significance? A small effect-size, e.g., 0.01 AUC units
 
 Having developed a new imaging modality the R&D team wishes to compare it to the existing standard with the short-term goal of making a submission to the FDA to allow them to perform pre-market testing of the device. The long-term goal is to commercialize the device. Assume the R&D team has optimized the device based on physical measurements, (TBA Chapter 01), perhaps supplemented with anecdotal feedback from clinicians based on a few images. Needed at this point is a pilot study. A pilot study, conducted with a relatively small and practical sample size, is intended to provide estimates of different sources of variability and correlations. It also provides an initial estimate of the effect-size, termed the *observed effect-size*, $d$. Based on results from the pilot the sample-size tools described in this chapter permit estimation of the numbers of readers and cases that will reduce $\sigma(d)$  sufficiently to achieve the desired power for the larger "pivotal" study. [A distinction could be made in the notation between observed and anticipated effect sizes, but it will be clear from the context. Later, it will be shown how one can make an educated guess about the anticipated effect size from an observed effect size.]
   
-This chapter is concerned with multiple-reader MRMC studies that follow the fully crossed factorial design meaning that each reader interprets a common case-set in all treatments. Since the resulting pairings (i.e., correlations) tend to decrease $\sigma(d)$  (since the variations occur in tandem, they tend to cancel out in the difference, see (TBA Chapter 09, Introduction), for Dr. Robert Wagner's sailboat analogy) it yields more statistical power compared to an unpaired design, and consequently this design is frequently used. Two sample-size estimation procedures for MRMC are the Hillis-Berbaum method [@RN1476] and the Obuchowski-Rockette [@RN1971] method. With recent work by Hillis, the two methods have been shown to be substantially equivalent. 
+This chapter is concerned with multiple-reader MRMC studies that follow the fully crossed factorial design meaning that each reader interprets a common case-set in all treatments. Since the resulting pairings (i.e., correlations) tend to decrease $\sigma(d)$ (since the variations occur in tandem, they tend to cancel out in the difference, see (TBA Chapter 09, Introduction), for Dr. Robert Wagner's sailboat analogy) it yields more statistical power compared to an unpaired design, and consequently this design is frequently used. Two sample-size estimation procedures for MRMC are the Hillis-Berbaum method [@RN1476] and the Obuchowski-Rockette [@RN1971] method. With recent work by Hillis, the two methods have been shown to be substantially equivalent. 
 
 This chapter will focus on the DBMH approach. Since it is based on a standard ANOVA model, it is easier to extend the NH testing procedure described in Chapter 09 to the alternative hypothesis, which is relevant for sample size estimation. [TBA Online Appendix 11.A shows how to translate the DBMH formulae to the ORH method [@RN2137].] 
 
@@ -36,13 +36,75 @@ Power = 1 - \beta
 (\#eq:DefinitionStatPower)
 \end{equation}
 
-Thus, statistical power is defined as the probability of (correctly) rejecting the null hypothesis when the null hypothesis is false. Typically, one aims for $\beta = 0.2$  or less, i.e., a statistical power of 80% or more. Again, like $\alpha$ = 0.05, this is a convention, and more nuanced cost-benefit considerations may cause the researcher to adopt a different value in the study design.
+Thus, statistical power is defined as the probability of correctly rejecting the null hypothesis when the null hypothesis is false. Typically, one aims for $\beta = 0.2$  or less, i.e., a statistical power of 80% or more. Again, like $\alpha$ = 0.05, this is a convention, and more nuanced cost-benefit considerations may cause the researcher to adopt a different value in the study design.
 
 ### Sample size estimation for random-reader random-cases
+For convenience the DBMH model is repeated below with the case-set index suppressed:
 
-### Estimation of the covariance matrix
+\begin{equation}
+Y_{n(ijk)}=\mu+\tau_i+R_j+C_k+(\tau R)_{ij}+(\tau C)_{ik}+(RC)_{jk}+(\tau RC)_{ijk}+\epsilon_ {n(ijk)}
+(\#eq:DBMModel)
+\end{equation}
 
-### Meaning of the covariance matrix in \@ref(eq:ExampleSigma)
+As usual, the treatment effects $\tau_i$  are subject to the constraint that they sum to zero. The observed effect size (a random variable) is defined by:
+
+\begin{equation}
+d=\theta_{1\bullet}-\theta_{2\bullet}
+(\#eq:EffectSize)
+\end{equation}
+
+It is a realization of a random variable, so one has some leeway in the choice of anticipated effect size. In the significance-testing procedure described in TBA Chapter 09 interest was in the distribution of the F-statistic when the NH is true. For sample size estimation, one needs to know the distribution of the statistic when the NH is false. It was shown that then the observed F-statistic TBA Eqn. (9.35) is distributed as a non-central F-distribution  $F_{ndf,ddf,\Delta}$ with non-centrality parameter $\Delta$: 
+
+\begin{equation}
+F_{DBM|AH} \sim F_{ndf,ddf,\Delta}
+(\#eq:FDBMSampling)
+\end{equation}
+
+The non-centrality parameter   was defined, Eqn. TBA (9.34), by:
+
+\begin{equation}
+\Delta=\frac{JK\sigma_{Y;\tau}^2}{\left ( \sigma_{Y;\epsilon}^2 + \sigma_{Y;\tau RC}^2 \right )+K\sigma_{Y;\tau R}^2+J\sigma_{Y;\tau C}^2}
+(\#eq:DefDelta)
+\end{equation}
+
+To minimize confusion, this equation has been rewritten here using the subscript $Y$ to explicitly denote pseudo-value derived quantities (in TBA Chapter 09 this subscript was suppressed. 
+
+The estimate of $\sigma_{Y;\tau C}^2$ can turn out to bee negative. To avoid a negative denominator, Hillis suggests the following modification:
+
+\begin{equation}
+\Delta=\frac{JK\sigma_{Y;\tau}^2}{\left ( \sigma_{Y;\epsilon}^2 + \sigma_{Y;\tau RC}^2 \right )+K\sigma_{Y;\tau R}^2+\max \left (J\sigma_{Y;\tau C}^2 ,0 \right )}
+(\#eq:DefDeltaHillis)
+\end{equation}
+
+This expression depends on three variance components, $(\sigma_{Y;\epsilon}^2 + \sigma_{Y;\tau RC}^2)$ - the two terms are inseparable - $\sigma_{Y;\tau R}^2$ and $\sigma_{Y;\tau C}^2$. The $ddf$ term appearing in TBA Eqn. (11.4) was defined by TBA Eqn. (9.24) - this quantity does not change between NH and AH:
+
+\begin{equation}
+ddf_H=\frac{\left [MSTR+\max(MSTR-MSTRC,0)  \right ]^2}{\frac{[MSTR]^2}{(I-1)(J-1)}}
+(\#eq:ddfH)
+\end{equation}
+
+The mean squares in this expression can be expressed in terms of the three variance-components appearing in TBA Eqn. (11.6). Hillis and Berbaum [@RN1476] have derived these expression and they will not be repeated here (Eqn. 4 in the cited reference). RJafroc implements a function to calculate the mean squares, `UtilMeanSquares()`, which allows ddf to be calculated using Eqn. TBA (11.7). The sample size functions in this package need only the three variance-components (the formula for $ddf_H$ is implemented internally). 
+
+For two treatments, since the individual treatment effects must be the negatives of each other (because they sum to zero), it is easily shown that:
+
+\begin{equation}
+\sigma_{Y;\tau}^2=\frac{d^2}{2}
+(\#eq:sigma2Tau)
+\end{equation}
+ 
+Therefore, for two treatments the numerator of the expression for $\Delta$ becomes $JKd^2/2$. For three treatments, I = 3, assuming the reader-averaged FOMs are spaced at intervals of d, it is easily shown that the numerator of the expression for $\Delta$ becomes $2JKd^2$, which is 4 times the value for two treatments, meaning that power is expected to increase dramatically. This is consistent with the fact that with more treatment pairings, the chance that at least one pairing will turn out to be signficant increases. For the rest of the chapter it is assumed that one is limited to two treatments.
+
+### Observed vs. anticipated effect-size
+*Assuming no other similar studies have already been conducted with the treatments in question, the observed effect-size, although "merely an estimate", is the best information available at the end of the pilot study regarding the value of the true effect-size. From the two previous chapters one knows that the significance testing software will report not only the observed effect-size, but also a 95% confidence interval associate with it. It will be shown later how one can use this information to make an educated guess regarding the value of the anticipated effect-size.*
+
+### Dependence of statistical power on estimates of model parameters
+Examination of the expression for  , Eqn. (11.5), shows that statistical power increases if:
+* The numerator is large. This occurs if: (a) the anticipated effect-size $d$ is large. Since effect-size enters as the *square*, TBA Eqn. (11.8), it is has a particularly strong effect; (b) If $J \times K$ is large. Both of these results should be obvious, as a large effect size and a large sample size should result in increased probability of rejecting the NH. 
+* The denominator is small. The first term in the denominator is  $\left ( \sigma_{Y;\epsilon}^2 + \sigma_{Y;\tau RC}^2 \right )$. These two terms cannot be separated. This is the residual variability of the jackknife pseudovalues. It should make sense that the smaller the variability, the larger is the non-centrality parameter and the statistical power. 
+* The next term in the denominator is $K\sigma_{Y;\tau R}^2$, the treatment-reader variance component multiplied by the total number of cases. The reader variance $\sigma_{Y;R}^2$ has no effect on statistical power, because it has an equal effect on both treatments and cancels out in the difference. Instead, it is the treatment-reader variance $\sigma_{Y;R}^2$  that contributes "noise" tending to confound the estimate of the effect-size. 
+* The variance components estimated by the ANOVA procedure are realizations of random variables and as such subject to noise (there actually exists a beast such as variance of a variance). The presence of the $K$ term, usually large, can amplify the effect of noise in the estimate of $\sigma_{Y;R}^2$, making the sample size estimation procedure less accurate.
+* The final term in the denominator is  $J\sigma_{Y;\tau C}^2$. The variance $\sigma_{Y;C}^2$ has no impact on statistical power, as it cancels out in the difference. The treatment-case variance component introduces "noise" into the estimate of the effect size, thereby decreasing power. Since it is multiplied by J, the number of readers, and typically $J<<K$, the error amplification effect on accuracy of the sample size estimate is not as bad as with the treatment-reader variance component.
+* Accuracy of sample size estimation, essentially estimating confidence intervals for statistical power, is addressed in [@RN2027].
 
 ### Code illustrating the covariance matrix
 
@@ -54,10 +116,6 @@ Thus, statistical power is defined as the probability of (correctly) rejecting t
 
 
 ## Multiple-reader multiple-treatment ORH model
-
-### Structure of the covariance matrix {#StrCovMatrix}
-
-### Physical meanings of the covariance terms
 
 ### ORH random-reader random-case analysis
 
