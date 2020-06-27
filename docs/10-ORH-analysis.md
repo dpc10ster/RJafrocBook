@@ -370,25 +370,25 @@ Comparing \@ref(eq:CIalpha1RMT) to \@ref(eq:UsefulTheorem) shows that the term $
 ### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
 We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader random-case analysis described in §9.8 of the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor).
 
-Shown below are results obtained using `RJafroc` function `StSignificanceTesting` with `analysisOption = "FRRC"` for `method` = "DBMH" (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix for the one-reader analysis (i.e., $Cov_1$ and $Var$). 
+Shown below are results obtained using `RJafroc` function `StSignificanceTesting` with `analysisOption = "FRRC"` for `method` = "DBM" (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix for the one-reader analysis (i.e., $Cov_1$ and $Var$). 
 
 
 ```r
-ret1 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "DBMH", analysisOption = "FRRC")
+ret1 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "DBM", analysisOption = "FRRC")
 data.frame("DBMH:F" = ret1$FRRC$FTests["Treatment", "FStat"], 
            "DBMH:ddf" = ret1$FRRC$FTests["Treatment", "DF"], 
            "DBMH:P-val" = ret1$FRRC$FTests["Treatment", "p"])
 #>      DBMH.F DBMH.ddf DBMH.P.val
 #> 1 1.2201111        1 0.27168532
 
-ret2 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC")
+ret2 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC")
 data.frame("ORHJack:Chisq" = ret2$FRRC$FTests["Treatment", "Chisq"], 
            "ORHJack:ddf" = ret2$FRRC$FTests["Treatment", "DF"], 
            "ORHJack:P-val" = ret2$FRRC$FTests["Treatment", "p"])
 #>   ORHJack.Chisq ORHJack.ddf ORHJack.P.val
 #> 1     1.2201111           1    0.26933885
 
-ret3 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC", 
+ret3 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC", 
                               covEstMethod = "DeLong")
 data.frame("ORHDeLong:Chisq" = ret3$FRRC$FTests["Treatment", "Chisq"], 
            "ORHDeLong:ddf" = ret3$FRRC$FTests["Treatment", "DF"], 
@@ -396,13 +396,13 @@ data.frame("ORHDeLong:Chisq" = ret3$FRRC$FTests["Treatment", "Chisq"],
 #>   ORHDeLong.Chisq ORHDeLong.ddf ORHDeLong.P.val
 #> 1       1.2345017             1      0.26653335
 
-ret4 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC", 
+ret4 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC", 
                               covEstMethod = "bootstrap")
 data.frame("ORHBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"], 
            "ORHBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
            "ORHBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
 #>   ORHBoot.Chisq ORHBoot.ddf ORHBoot.P.val
-#> 1     1.1056709           1    0.29302495
+#> 1     1.2505402           1    0.26344933
 ```
 
 The DBMH and ORH-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBMH and $\infty$ for ORH. The F-statistics for ORH-bootstrap and ORH-DeLong are different.
@@ -457,7 +457,7 @@ TBA: the code has chisq not F; need to reconcile:
 
  
  ```r
- ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "ORH", analysisOption = "FRRC")
+ ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC")
  print(data.frame("theta_1" = ret_rj$FOMs$foms[1,1],
                  "theta_2" = ret_rj$FOMs$foms[2,1],
                  "Var" = ret_rj$ANOVA$VarCom["Var", "Estimates"],
@@ -947,15 +947,7 @@ The single treatment method is implemented in mainSingleTreatment.R. The relevan
 
 
 ## Discussion/Summary
-This chapter described the Obuchowski-Rockette method as modified by Hillis. As noted earlier, it has the same number of parameters as the DBMH method described in the preceding chapter, but the model \@ref(eq:ORModel) *appears* simpler as some terms are "hidden" in the structure of the error term. In this chapter the NH condition was considered. Extension to the alternative hypothesis, i.e., estimating statistical power, is deferred to online appendices to Chapter 11. The extension is a little simpler with the DBMH model, as it is a standard ANOVA model. For example the expressions for the DBMH non-centrality parameter was readily defined in Chapter 09, e.g., §9.7.4. Hillis has derived expressions allowing transformation between quantities in the two methods, and this is the approach adopted in this book and implemented in the cited online appendix.
 
-Since the main difficulty understanding, as far as I am concerned, the original OR method is conceptualizing the covariance matrix, the author has explained this at an elementary level, using a case-set index which is implicit in [@RN1450]. This was the reason for the "gentle introduction" of analyzing performance of a single reader in multiple treatments. The jackknife, bootstrap and the DeLong methods should reinforce understanding of the covariance matrix. The DBM and ORH methods are compared for this special case. A minimal implementation of the ORH method for MRMC data is given, which is a literal implementation of the relevant formulae. The special case of multiple readers in a single treatment is coded.
-
-The original publication [@RN204] and a subsequent one [@RN1450] were major advances. Hillis' work showing their equivalence unified the two apparently disparate analyses, and this was a major advance. The Hillis papers, while difficult reads, are ones the author goes to repeatedly. 
-
-This concludes two methods used to analyze ROC MRMC datasets. A third method, restricted to the empirical AUC, is also available [@RN2253;@RN2254; @RN2080;@RN2081]. As noted earlier, the author prefers methods that are applicable to other estimates of AUC, not just the empirical area, and to other data collection paradigms. 
-
-The next chapter takes on the subject of sample size estimation using either DBMH or the ORH method. 
 
 ## References  
 

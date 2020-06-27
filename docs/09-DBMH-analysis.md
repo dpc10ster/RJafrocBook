@@ -471,7 +471,7 @@ ndf <- (I-1)
 ddf_H <- F_DBMH_den^2/(retMS$msTR^2/((I-1)*(J-1))) # Eqn. (9.22)
 FCrit <- qf(1 - alpha, ndf, ddf_H)
 pValueH <- 1 - pf(F_DBMH, ndf, ddf_H)
-retRJafroc <- StSignificanceTesting(dataset = dataset02, FOM = "Wilcoxon", method = "DBMH")
+retRJafroc <- StSignificanceTesting(dataset = dataset02, FOM = "Wilcoxon", method = "DBM")
 data.frame("F_DBMH" = F_DBMH, "ddf_H"= ddf_H, "pValueH" = pValueH)
 #>      F_DBMH     ddf_H     pValueH
 #> 1 4.4563187 15.259675 0.051665686

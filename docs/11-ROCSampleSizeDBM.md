@@ -3,7 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Sample size estimation for ROC studies {#RocSampleSize}
+# Sample size estimation for ROC studies DBM method {#RocSampleSizeDBM}
 
 
 
@@ -164,7 +164,7 @@ Shown first is the "open" implementation.
 alpha <- 0.05;cat("alpha = ", alpha, "\n")
 #> alpha =  0.05
 rocData <- dataset02 # select Van Dyke dataset
-retDbm <- StSignificanceTesting(dataset = rocData, FOM = "Wilcoxon", method = "DBMH") 
+retDbm <- StSignificanceTesting(dataset = rocData, FOM = "Wilcoxon", method = "DBM") 
 varYTR <- retDbm$ANOVA$VarCom["VarTR","Estimates"]
 varYTC <- retDbm$ANOVA$VarCom["VarTC","Estimates"]
 varYEps <- retDbm$ANOVA$VarCom["VarErr","Estimates"]
@@ -175,7 +175,7 @@ cat("effect size = ", effectSize, "\n")
 #RRRC
 J <- 10; K <- 163
 ncp <- (0.5*J*K*(effectSize)^2)/(K*varYTR+max(J*varYTC,0)+varYEps)
-MS <- UtilMeanSquares(rocData, FOM = "Wilcoxon", method = "DBMH")
+MS <- UtilMeanSquares(rocData, FOM = "Wilcoxon", method = "DBM")
 ddf <- (MS$msTR+max(MS$msTC-MS$msTRC,0))^2/(MS$msTR^2)*(J-1)
 FCrit <- qf(1 - alpha, 1, ddf)
 Power <- 1-pf(FCrit, 1, ddf, ncp = ncp)
@@ -204,6 +204,7 @@ data.frame("J"= J,  "K" = K, "FCrit" = FCrit, "ddf" = ddf, "ncp" = ncp, "RRRCPow
 #> 1 10 53 5.117355   9 10.048716 0.80496663
 ```
 
+For 10 readers, the numbers of cases needed for 80% power is largest (163) for RRRC and least for RRFC (53). For all three analyses, the expectation of 80% power is met - the numbers of cases and readers were chosen to achieve close to 80% statistical power. Intermediate quantities such as the critical value of the F-statistic, `ddf` and `ncp` are shown. The reader should confirm that the code does in fact implement the relevant formulae. Shown next is the `RJafroc` implementation. The relevant file is mainSsDbmh.R, a listing of which follows: 
 
 ### Fixed-reader random-case (FRRC) analysis
 
