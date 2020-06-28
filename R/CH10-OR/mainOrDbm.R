@@ -1,4 +1,4 @@
-rm(list = ls()) #mainOrhDbmh.R
+rm(list = ls()) #mainOrDbm.R
 library(RJafroc)
 ROC <- FALSE
 if (ROC) {
@@ -12,7 +12,7 @@ if (ROC) {
   rm(frocData)
 }
 
-UtilOutputReport(dataset = rocData,fom = "Wilcoxon",method = "DBMH", 
-             reportFormat = "xlsx",reportFile = "DBMH.xlsx", showWarnings = FALSE)
-UtilOutputReport(dataset = rocData,fom = "Wilcoxon",method = "ORH", 
-             reportFormat = "xlsx",reportFile = "ORH.xlsx", showWarnings = FALSE)
+UtilOutputReport(dataset = rocData,fom = "Wilcoxon",method = "DBM", 
+             reportFormat = "xlsx",reportFile = "DBM.xlsx", showWarnings = FALSE)
+UtilOutputReport(dataset = rocData,fom = "Wilcoxon",method = "OR", 
+             reportFormat = "xlsx",reportFile = "OR.xlsx", showWarnings = FALSE)

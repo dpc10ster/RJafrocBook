@@ -3,27 +3,18 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Obuchowski Rockette Hillis (ORH) Analysis {#ORHAnalysis}
+# Obuchowski Rockette Hillis (OR) Analysis {#ORAnalysis}
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-library(kableExtra)
-library(ggplot2)
-library(RJafroc)
-library(here)
-```
+
 
 ## Introduction
 The previous chapter described the DBM significance testing procedure [@RN204] for analyzing MRMC ROC data, along with improvements suggested by Hillis. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been criticized by Hillis and others [@zhou2009statistical]. Hillis states that the method "works" but lacks firm statistical foundations [@RN1772; @RN1865; @RN1866]. The last section of the previous chapter, §9.13, gave a justification for why the method works for empirical AUC. Specifically, the empirical AUC pseudovalues qualify as case-level FOMs - this property has also been noted by [@RN1395]. However, this property applies only to the empirical AUC, so an alternate approach that applies to any figure of merit is highly desirable. 
 
-This chapter presents Hillis' preferred alternative to the DBMH approach. He has argued that the DBMH method can be regarded as a "working model that gives the right results", but a method based on an earlier publication [@RN1450] by Obuchowski and Rockette, which does not depend on pseudovalues, and predicts more or less the same results, is preferable from a conceptual viewpoint. Since, besides showing the correspondence, Hillis has made significant improvements to the original methodology, this chapter is named "ORH Analysis", where ORH stands for Obuchowski, Rockette and Hillis. The ORH method has advantages in being able to handle more complex study designs [@RN2508] that are outside the scope of this book (the author acknowledges a private communication from Dr. Obuchowski, ca. 2006, that demonstrated the flexibility afforded by the OR approach) and it is likely that applications to other FOMs (e.g., the FROC paradigm uses a rather different FOM from empirical ROC-AUC) are better performed with the ORH method.
+This chapter presents Hillis' preferred alternative to the DBM approach. He has argued that the DBM method can be regarded as a "working model that gives the right results", but a method based on an earlier publication [@RN1450] by Obuchowski and Rockette, which does not depend on pseudovalues, and predicts more or less the same results, is preferable from a conceptual viewpoint. Since, besides showing the correspondence, Hillis has made significant improvements to the original methodology, this chapter is named "OR Analysis", where OR stands for Obuchowski, Rockette and Hillis. The OR method has advantages in being able to handle more complex study designs [@RN2508] that are outside the scope of this book (the author acknowledges a private communication from Dr. Obuchowski, ca. 2006, that demonstrated the flexibility afforded by the OR approach) and it is likely that applications to other FOMs (e.g., the FROC paradigm uses a rather different FOM from empirical ROC-AUC) are better performed with the OR method.
 
-This chapter starts with a gentle introduction to the Obuchowski and Rockette method. The reason is that the method was rather opaque to me, and I suspect most users. Part of the problem, in my opinion, is the notation, namely lack of usage of the *case-set* index $\{c\}$. A key difference of the Obuchowski and Rockette method from DBMH is in how the error term is modeled by a non-diagonal covariance matrix. The structure of the covariance matrix is examined in some detail as it is key to understanding the ORH method.
+This chapter starts with a gentle introduction to the Obuchowski and Rockette method. The reason is that the method was rather opaque to me, and I suspect most users. Part of the problem, in my opinion, is the notation, namely lack of usage of the *case-set* index $\{c\}$. A key difference of the Obuchowski and Rockette method from DBM is in how the error term is modeled by a non-diagonal covariance matrix. The structure of the covariance matrix is examined in some detail as it is key to understanding the OR method.
 
-In the first step of the introduction a single reader interpreting a case-set in multiple treatments is modeled and the results compared to those obtained using DBMH fixed-reader analysis described in the previous chapter. In the second step multiple readers interpreting a case-set in multiple treatments is modeled. The two analyses, DBMH and ORH, are compared for the same dataset. The special cases of fixed-reader and fixed-case analyses are described. Single treatment analysis, where interest is in comparing average performance of readers to a fixed value, is described. Three methods of estimating the covariance matrix are described.
+In the first step of the introduction a single reader interpreting a case-set in multiple treatments is modeled and the results compared to those obtained using DBM fixed-reader analysis described in the previous chapter. In the second step multiple readers interpreting a case-set in multiple treatments is modeled. The two analyses, DBM and OR, are compared for the same dataset. The special cases of fixed-reader and fixed-case analyses are described. Single treatment analysis, where interest is in comparing average performance of readers to a fixed value, is described. Three methods of estimating the covariance matrix are described.
 
 ## Single-reader multiple-treatment model {#OR1RMTModel}
 Consider a single-reader providing ROC interpretations of a common case-set $\{c\}$ in multiple-treatments $i$ ($i$ = 1, 2, …, $I$). Before proceeding, we note that this is not homologous (i.e., formally equivalent) to multiple-readers providing ROC interpretations in a single treatment, §10.7; this is because reader is a random factor while treatment is not. The figure of merit $\theta$  is modeled as:
@@ -33,7 +24,7 @@ Consider a single-reader providing ROC interpretations of a common case-set $\{c
 (\#eq:ORModel1RMT)
 \end{equation}
 
-*In the [@RN1450] one models the figure-of-merit, not the pseudovalues, indeed this is one of the key differences from the DBMH method.*
+*In the [@RN1450] one models the figure-of-merit, not the pseudovalues, indeed this is one of the key differences from the DBM method.*
 
 Recall that $\{c\}$ denotes a *set of cases*. \@ref(eq:ORModel1RMT) models the observed figure-of-merit $\theta_{i\{c\}}$ as a constant term $\mu$ plus a treatment dependent term $\tau_i$ (the treatment-effect) with the constraint: 
 
@@ -48,7 +39,7 @@ The *c-index* was introduced in (book) Chapter 07. The left hand side of  \@ref(
 
 Obuchowski and Rockette use a *k-index*, defined as the “kth repetition of the study involving the same diagnostic test, reader and patient (sic)”. In the author's opinion, what is meant is a case-set index instead of a repetition index. Repeating a study with the same treatment, reader and cases yields *within-reader* variability, which is different from sampling the population of cases with new case-sets, which yields *case-sampling plus within-reader* variability [@RN412]. As noted earlier, within-reader variability cannot be "turned off" and affects the interpretations of all case-sets. 
 
-*Interest is in extrapolating to the population of cases and the only way to do this is to sample different case-sets. It is shown below that usage of the case-set index interpretation yields the same results using the DBMH or the ORH methods.*
+*Interest is in extrapolating to the population of cases and the only way to do this is to sample different case-sets. It is shown below that usage of the case-set index interpretation yields the same results using the DBM or the OR methods.*
 
 Finally, and this is where I had some difficulty understanding what is going on, there is an additive random error term $\epsilon_{i\{c\}}$ whose sampling behavior is described by a multivariate normal distribution with an I-dimensional zero mean vector and an $I \times I$ dimensional covariance matrix  $\Sigma$:
 
@@ -207,18 +198,20 @@ As indicated above, the covariance matrix can be estimated using the jackknife o
 
 * To minimize clutter, the `R` functions (for estimating `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not shown, but they are compiled. To display them `clone` the book repository and look at the `Rmd` file corresponding to this output and the sourced `R` files listed below:
 
-```{r}
-source(here("R/CH10-ORH/Wilcoxon.R"))
-source(here("R/CH10-ORH/VarCov1Bs.R"))
-source(here("R/CH10-ORH/VarCov1Bs.R"))
-source(here("R/CH10-ORH/VarCov1Jk.R")) 
-source(here("R/CH10-ORH/VarCovMtrxDLStr.R"))
-source(here("R/CH10-ORH/VarCovs.R"))
+
+```r
+source(here("R/CH10-OR/Wilcoxon.R"))
+source(here("R/CH10-OR/VarCov1Bs.R"))
+source(here("R/CH10-OR/VarCov1Bs.R"))
+source(here("R/CH10-OR/VarCov1Jk.R")) 
+source(here("R/CH10-OR/VarCovMtrxDLStr.R"))
+source(here("R/CH10-OR/VarCovs.R"))
 ```
 
 The following code chunk extracts (using the `DfExtractDataset` function) a single-reader multiple-treatment ROC dataset corresponding to the first reader from `dataset02`, i.e., the Van Dyke or `VD` dataset. 
 
-```{r}
+
+```r
 rocData1R <- DfExtractDataset(dataset02, rdrs = 1) #select the 1st reader to be analyzed
 zik1 <- rocData1R$ratings$NL[,1,,1];K <- dim(zik1)[2];I <- dim(zik1)[1]
 zik2 <- rocData1R$ratings$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
@@ -236,50 +229,70 @@ For example, `Cov1_jk` is the jackknife estimate of `Cov1`.
 
 Shown below are the results of the jackknife method, first using the code in this repository and next, as a cross-check, using `RJafroc` function `UtilVarComponentsOR`:
 
-```{r}
+
+```r
 ret1 <- VarCov1_Jk(zik1, zik2)
 Var <- ret1$Var
 Cov1 <- ret1$Cov1 # use these (i.e., jackknife) as default values in subsequent code
 data.frame ("Cov1_jk" = Cov1, "Var_jk" = Var)
+#>        Cov1_jk       Var_jk
+#> 1 0.0003734661 0.0006989006
 
 ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon") # default `covEstMethod` is jackknife
 data.frame ("Cov1_rj_jk" = ret4$VarCom["Cov1", "Estimates"], "Var_rj_jk" = ret4$VarCom["Var", "Estimates"])
+#>     Cov1_rj_jk    Var_rj_jk
+#> 1 0.0003734661 0.0006989006
 ```
 
-Note that the estimates are identical and that the $Cov_1$ estimate is smaller than the $Var$ estimate (their ratio is the correlation $\rho_1 = Cov_1/Var$ = `r Cov1/Var`). 
+Note that the estimates are identical and that the $Cov_1$ estimate is smaller than the $Var$ estimate (their ratio is the correlation $\rho_1 = Cov_1/Var$ = 0.5343623). 
 
 Shown next are bootstrap method estimates with increasing number of bootstraps (200, 2000 and 20,000):
-```{r}
+
+```r
 ret2 <- VarCov1_Bs(zik1, zik2, 200, seed = 100)
 data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) 
+#>        Cov_bs       Var_bs
+#> 1 0.000283905 0.0005845354
 
 ret2 <- VarCov1_Bs(zik1, zik2, 2000, seed = 100)
 data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) 
+#>         Cov_bs       Var_bs
+#> 1 0.0003466804 0.0006738506
 
 ret2 <- VarCov1_Bs(zik1, zik2, 20000, seed = 100)
 data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) 
+#>         Cov_bs       Var_bs
+#> 1 0.0003680714 0.0006862668
 ```
 
 With increasing number of bootstraps the values approach the jackknife estimates.
 
 Following, as a cross check, are results of bootstrap method as calculated by the `RJafroc` function `UtilVarComponentsOR`:
 
-```{r}
+
+```r
 ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000, seed = 100)
 data.frame ("Cov_rj_bs" = ret5$VarCom["Cov1", "Estimates"], "Var_rj_bs" = ret5$VarCom["Var", "Estimates"])
+#>      Cov_rj_bs    Var_rj_bs
+#> 1 0.0003466804 0.0006738506
 ```
 
 Note that the two estimates are identical *provided the seeds are identical*.
 
 Following are results of the DeLong covariance estimation method, the first output using this repository code and the second using the `RJafroc` function `UtilVarComponentsOR` with appropriate arguments:
 
-```{r}
+
+```r
 mtrxDLStr <- VarCovMtrxDLStr(rocData1R)
 ret3 <- VarCovs(mtrxDLStr)
 data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
+#>         Cov_dl       Var_dl
+#> 1 0.0003684357 0.0006900766
 
 ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "DeLong")
 data.frame ("Cov_rj_dl" = ret5$VarCom["Cov1", "Estimates"], "Var_rj_dl" = ret5$VarCom["Var", "Estimates"])
+#>      Cov_rj_dl    Var_rj_dl
+#> 1 0.0003684357 0.0006900766
 ```
 
 Note that the two estimates are identical and that the DeLong estimate are close to the bootstrap estimates using 20,000 bootstraps. The close correspondence is only expected when using the Wilcoxon figure of merit.
@@ -329,9 +342,12 @@ With definition \@ref(eq:DefQuantile), the $(1-\alpha)$ quantile of the $\chi_{I
 
 Here is an `R` illustration of this theorem for $I-1 = 4$ and $\alpha = 0.05$: 
 
-```{r}
+
+```r
 qf(0.05, 4, Inf)
+#> [1] 0.1776808
 qchisq(0.05,4)/4
+#> [1] 0.1776808
 ```
 
 ### p-value and confidence interval
@@ -352,38 +368,48 @@ CI_{1-\alpha,1RMT} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\i
 Comparing \@ref(eq:CIalpha1RMT) to \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(Var-Cov_1)}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.] 
 
 ### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
-We have shown two methods for analyzing a single reader in multiple treatments: the DBMH method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBMH one needs the fixed-reader random-case analysis described in §9.8 of the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor).
+We have shown two methods for analyzing a single reader in multiple treatments: the DBM method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBM one needs the fixed-reader random-case analysis described in §9.8 of the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor).
 
-Shown below are results obtained using `RJafroc` function `StSignificanceTesting` with `analysisOption = "FRRC"` for `method` = "DBM" (which uses the jackknife), and for ORH using 3 different ways of estimating the covarince matrix for the one-reader analysis (i.e., $Cov_1$ and $Var$). 
+Shown below are results obtained using `RJafroc` function `StSignificanceTesting` with `analysisOption = "FRRC"` for `method` = "DBM" (which uses the jackknife), and for OR using 3 different ways of estimating the covarince matrix for the one-reader analysis (i.e., $Cov_1$ and $Var$). 
 
-```{r}
+
+```r
 ret1 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "DBM", analysisOption = "FRRC")
-data.frame("DBMH:F" = ret1$FRRC$FTests["Treatment", "FStat"], 
-           "DBMH:ddf" = ret1$FRRC$FTests["Treatment", "DF"], 
-           "DBMH:P-val" = ret1$FRRC$FTests["Treatment", "p"])
+data.frame("DBM:F" = ret1$FRRC$FTests["Treatment", "FStat"], 
+           "DBM:ddf" = ret1$FRRC$FTests["Treatment", "DF"], 
+           "DBM:P-val" = ret1$FRRC$FTests["Treatment", "p"])
+#>       DBM.F DBM.ddf  DBM.P.val
+#> 1 1.2201111       1 0.27168532
 
 ret2 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC")
-data.frame("ORHJack:Chisq" = ret2$FRRC$FTests["Treatment", "Chisq"], 
-           "ORHJack:ddf" = ret2$FRRC$FTests["Treatment", "DF"], 
-           "ORHJack:P-val" = ret2$FRRC$FTests["Treatment", "p"])
+data.frame("ORJack:Chisq" = ret2$FRRC$FTests["Treatment", "Chisq"], 
+           "ORJack:ddf" = ret2$FRRC$FTests["Treatment", "DF"], 
+           "ORJack:P-val" = ret2$FRRC$FTests["Treatment", "p"])
+#>   ORJack.Chisq ORJack.ddf ORJack.P.val
+#> 1    1.2201111          1   0.26933885
 
 ret3 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC", 
                               covEstMethod = "DeLong")
-data.frame("ORHDeLong:Chisq" = ret3$FRRC$FTests["Treatment", "Chisq"], 
-           "ORHDeLong:ddf" = ret3$FRRC$FTests["Treatment", "DF"], 
-           "ORHDeLong:P-val" = ret3$FRRC$FTests["Treatment", "p"])
+data.frame("ORDeLong:Chisq" = ret3$FRRC$FTests["Treatment", "Chisq"], 
+           "ORDeLong:ddf" = ret3$FRRC$FTests["Treatment", "DF"], 
+           "ORDeLong:P-val" = ret3$FRRC$FTests["Treatment", "p"])
+#>   ORDeLong.Chisq ORDeLong.ddf ORDeLong.P.val
+#> 1      1.2345017            1     0.26653335
 
 ret4 <- StSignificanceTesting(rocData1R,FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC", 
                               covEstMethod = "bootstrap")
-data.frame("ORHBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"], 
-           "ORHBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
-           "ORHBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
+data.frame("ORBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"], 
+           "ORBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
+           "ORBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
+#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
+#> 1    1.4655706          1   0.22604586
 ```
 
-The DBMH and ORH-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBMH and $\infty$ for ORH. The F-statistics for ORH-bootstrap and ORH-DeLong are different.
+The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBM and $\infty$ for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
 
 Shown below is a first-principles implementation of signficance testing for the one-reader case.
-```{r}
+
+```r
 alpha <- 0.05
 theta_i <- c(0,0);for (i in 1:I) theta_i[i] <- Wilcoxon(zik1[i,], zik2[i,])
 
@@ -420,14 +446,19 @@ for (i in 1 : nDiffs) {
                    "Mid" = CI_DIFF_FOM_1RMT[i,2], 
                    "Upper" = CI_DIFF_FOM_1RMT[i,3]))
 }
+#>      theta_1    theta_2           Var         Cov1          MS_T      F_1R
+#> 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111
+#>       pValue        Lower          Mid       Upper
+#> 1 0.26933885 -0.078183215 -0.028180354 0.021822507
 ```
 
 How does this compare to `RJafroc` `FRRC` analysis using the `StSignificanceTesting` function?
 TBA: the code has chisq not F; need to reconcile:
 
- ```{r}
-ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC")
-print(data.frame("theta_1" = ret_rj$FOMs$foms[1,1],
+ 
+ ```r
+ ret_rj <- StSignificanceTesting(rocData1R, FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC")
+ print(data.frame("theta_1" = ret_rj$FOMs$foms[1,1],
                  "theta_2" = ret_rj$FOMs$foms[2,1],
                  "Var" = ret_rj$ANOVA$VarCom["Var", "Estimates"],
                  "Cov1" = ret_rj$ANOVA$VarCom["Cov1", "Estimates"],
@@ -437,7 +468,11 @@ print(data.frame("theta_1" = ret_rj$FOMs$foms[1,1],
                  "Lower" = ret_rj$FRRC$ciDiffTrt[1,"CILower"], 
                  "Mid" = ret_rj$FRRC$ciDiffTrt[1,"Estimate"], 
                  "Upper" = ret_rj$FRRC$ciDiffTrt[1,"CIUpper"]))
-```
+ #>      theta_1    theta_2           Var         Cov1          MS_T  Chisq_1R
+ #> 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111
+ #>       pValue        Lower          Mid       Upper
+ #> 1 0.26933885 -0.078183215 -0.028180354 0.021822507
+ ```
 
 The first-principles and the `RJafroc` values agree exactly with each other. This above code also shows how to extract the different estimates ($Var$, $Cov_1$, etc.) from the object `ret_rj` returned by `RJafroc`. 
 
@@ -471,7 +506,7 @@ If RRRC analysis were conducted, the values would be [one needs to analyze a dat
 
 And similarly, for `RRFC` analysis, one replaces `RRRC` with `RRFC`, etc.]
 
-## Multiple-reader multiple-treatment ORH model
+## Multiple-reader multiple-treatment OR model
 The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to \@ref(eq:ORModel1RMT), one needs an additional $j$ index to index readers, and additional random terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random reader factor. 
 
 The general Obuchowski and Rockette model for fully paired multiple-reader multiple-treatment interpretations is: 
@@ -481,7 +516,7 @@ The general Obuchowski and Rockette model for fully paired multiple-reader multi
 (\#eq:ORModel)
 \end{equation}
 
-The fixed treatment effect $\tau_i$ is subject to the usual constraint, \@ref(eq:ConstraintTau). The first two terms on the right hand side of \@ref(eq:ORModel) have their usual meanings: a constant term $\mu$ representing performance averaged over treatments and readers, and a treatment effect $\tau_i$ ($i$ = 1,2, ..., $I$). The following two terms are, by assumption, mutually independent random samples specified as follows: $R_j$ denotes the random treatment-independent contribution to the figure-of-merit of reader $j$ ($j$ = 1,2, ..., $J$), modeled as a sample from a zero-mean normal distribution with variance $\sigma_R^2$; $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance $\sigma_{\tau R}^2$. There could be a perceived notational clash with similar variance component terms defined for the DBMH model – except in that case they applied to pseudovalues. The meaning should be clear from the context. Summarizing:
+The fixed treatment effect $\tau_i$ is subject to the usual constraint, \@ref(eq:ConstraintTau). The first two terms on the right hand side of \@ref(eq:ORModel) have their usual meanings: a constant term $\mu$ representing performance averaged over treatments and readers, and a treatment effect $\tau_i$ ($i$ = 1,2, ..., $I$). The following two terms are, by assumption, mutually independent random samples specified as follows: $R_j$ denotes the random treatment-independent contribution to the figure-of-merit of reader $j$ ($j$ = 1,2, ..., $J$), modeled as a sample from a zero-mean normal distribution with variance $\sigma_R^2$; $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance $\sigma_{\tau R}^2$. There could be a perceived notational clash with similar variance component terms defined for the DBM model – except in that case they applied to pseudovalues. The meaning should be clear from the context. Summarizing:
 
 \begin{equation}
 \left\{\begin{matrix}
@@ -531,7 +566,7 @@ Apart from fixed effects, the model implied by \@ref(eq:ORModel) and \@ref(eq:OR
 
 $$\sigma_R^2,\sigma_{\tau R}^2,Var,Cov_1,Cov_2,Cov_3$$
 
-This is the same number of variance component parameters as in the DBMH model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model \@ref(eq:ORModel) "looks" simpler because four covariance terms are encapsulated in the $\epsilon$ term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader, as allowing treatment and reader dependencies would greatly increase the number of parameters that would need to be estimated. 
+This is the same number of variance component parameters as in the DBM model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model \@ref(eq:ORModel) "looks" simpler because four covariance terms are encapsulated in the $\epsilon$ term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader, as allowing treatment and reader dependencies would greatly increase the number of parameters that would need to be estimated. 
 
 *It is implicit in the Obuchowski-Rockette model that the $Var$, $Cov_1$, Cov_2$, and $Cov_3$,  estimates need to be averaged over all applicable treatment-reader combinations.*
 
@@ -653,8 +688,8 @@ Cov_3 < Cov_2 < Cov_1 < Var
 (\#eq:CovOrderings)
 \end{equation}
 
-### ORH random-reader random-case analysis
-A model such as \@ref(eq:ORModel) cannot be analyzed by standard analysis of variance (ANOVA) techniques. Because of the correlated structure of the error term a customized ANOVA is needed (in standard ANOVA models, such as used in DBMH, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented by the epsilon term in the DBM model). 
+### OR random-reader random-case analysis
+A model such as \@ref(eq:ORModel) cannot be analyzed by standard analysis of variance (ANOVA) techniques. Because of the correlated structure of the error term a customized ANOVA is needed (in standard ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented by the epsilon term in the DBM model). 
 
 One starts with the null hypothesis (NH) that the true figures-of-merit of all treatments are identical, i.e., 
 
@@ -663,14 +698,14 @@ NH:\tau_i=0\;\; (i=1,2,...,I)
 (\#eq:ORModelNH)
 \end{equation}
 
-The analysis described next considers both readers and cases as random effects. Because of the special nature of the covariance matrix, a modified F-statistic is needed 1-4,7, denoted $F_{ORH}$, defined by: 
+The analysis described next considers both readers and cases as random effects. Because of the special nature of the covariance matrix, a modified F-statistic is needed 1-4,7, denoted $F_{OR}$, defined by: 
 
 \begin{equation}
-F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
-(\#eq:F-ORH)
+F_{OR}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
+(\#eq:F-OR)
 \end{equation}
 
-\@ref(eq:F-ORH) incorporates Hillis’ modification, which ensures that the constraint \@ref(eq:CovOrderings) is always obeyed and avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated directly using FOM values, not pseudovalues):
+\@ref(eq:F-OR) incorporates Hillis’ modification, which ensures that the constraint \@ref(eq:CovOrderings) is always obeyed and avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated directly using FOM values, not pseudovalues):
 
 \begin{equation}
 \left.\begin{matrix}
@@ -678,12 +713,12 @@ MS(T)=\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
 \\ 
 MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})
 \end{matrix}\right\}
-(\#eq:MS-ORH)
+(\#eq:MS-OR)
 \end{equation}
 
-In their original paper [@RN1450] Obuchowski and Rockette state that their proposed test statistic F (basically \@ref(eq:F-ORH) without the constraint implied by the $\max$ function) is distributed as an F-statistic with numerator degree of freedom $ndf=I-1$ and denominator degree of freedom $ddf=(I-1)(J-1)$. It turns out that then the test is unduly conservative, meaning it is unusually reluctant to reject the null hypothesis.
+In their original paper [@RN1450] Obuchowski and Rockette state that their proposed test statistic F (basically \@ref(eq:F-OR) without the constraint implied by the $\max$ function) is distributed as an F-statistic with numerator degree of freedom $ndf=I-1$ and denominator degree of freedom $ddf=(I-1)(J-1)$. It turns out that then the test is unduly conservative, meaning it is unusually reluctant to reject the null hypothesis.
 
-In this connection the author has two historical anecdotes. The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski [@RN1971;@RN1972], using the unmodified version of \@ref(eq:F-ORH), predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study. 
+In this connection the author has two historical anecdotes. The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski [@RN1971;@RN1972], using the unmodified version of \@ref(eq:F-OR), predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study. 
 
 The second story is that the author once conducted NH simulations using the Roe-Metz simulator described in the preceding chapter and the significance testing as described in the Obuchowski-Rockette paper: the method did not reject the null hypothesis even once in 2000 trials! Recall that with $\alpha = 0.05$ a valid test should reject the null hypothesis about $100\pm20$ times in 2000 trials. The author recalls (ca. 2004) telling Dr. Steve Hillis about this issue, and he suggested a different value for the denominator degrees of freedom (ddf), substitution of which magically solved the problem, i.e., the simulations rejected the null hypothesis about 5% of the time; the new $ddf$ is defined below ($ndf$ is unchanged), with the subscript H denoting the Hillis modification:
 
@@ -697,21 +732,21 @@ ddf_H=\frac{\left [ MS(TR) + J \max(Cov_2-Cov_3)\right ]^2}{\frac{\left [ MS(TR)
 (\#eq:ddfH)
 \end{equation}
 
-If $Cov_2<Cov_3$ this reduces to the expression originally suggested by Obuchowski and Rockette. With these changes, under the null hypothesis, the observed statistic $F_{ORH}$, defined in \@ref(eq:F-ORH), is distributed as an F-statistic with $I-1$ and $ddf_H$ degrees of freedom [@RN1772;@RN1865;@RN1866]: 
+If $Cov_2<Cov_3$ this reduces to the expression originally suggested by Obuchowski and Rockette. With these changes, under the null hypothesis, the observed statistic $F_{OR}$, defined in \@ref(eq:F-OR), is distributed as an F-statistic with $I-1$ and $ddf_H$ degrees of freedom [@RN1772;@RN1865;@RN1866]: 
 
 \begin{equation}
-F_{ORH}\sim F_{ndf,ddf_H}
-(\#eq:SamplingDistrF-ORH)
+F_{OR}\sim F_{ndf,ddf_H}
+(\#eq:SamplingDistrF-OR)
 \end{equation}
 
 #### Decision rule, p-value and confidence interval
-The critical value of the F-statistic for rejection of the null hypothesis is $F_{1-\alpha,ndf,ddf_H}$, i.e., that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. From definition \@ref(eq:F-ORH), rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger; $MS(TR)$ decreases meaning there is less contamination of the treatment effect by treatment-reader variability; the greater of $Cov2$ or $Cov3$ decreases, meaning there is less contamination of the treatment effect by between-reader and treatment-reader variability, $\alpha$ increases, meaning one is allowing a greater probability of Type I errors, $ndf$ increases, meaning the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH or $ddf_H$ increases, as this lowers the critical value of the F-statistic. 
+The critical value of the F-statistic for rejection of the null hypothesis is $F_{1-\alpha,ndf,ddf_H}$, i.e., that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. From definition \@ref(eq:F-OR), rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger; $MS(TR)$ decreases meaning there is less contamination of the treatment effect by treatment-reader variability; the greater of $Cov2$ or $Cov3$ decreases, meaning there is less contamination of the treatment effect by between-reader and treatment-reader variability, $\alpha$ increases, meaning one is allowing a greater probability of Type I errors, $ndf$ increases, meaning the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH or $ddf_H$ increases, as this lowers the critical value of the F-statistic. 
 
-The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{ORH}$ could be observed by chance. In other words, it is the area under the F-distribution $F_{ndf,ddf_H}$ that lies above the observed value $F_{ORH}$:
+The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{OR}$ could be observed by chance. In other words, it is the area under the F-distribution $F_{ndf,ddf_H}$ that lies above the observed value $F_{OR}$:
 
 \begin{equation}
-p=\Pr(F>F_{ORH} \mid F\sim F_{ndf,ddf_H})
-(\#eq:pValueORHRRRC)
+p=\Pr(F>F_{OR} \mid F\sim F_{ndf,ddf_H})
+(\#eq:pValueORRRRC)
 \end{equation}
 
 The $(1-\alpha)$ confidence interval for $\theta_{i \bullet} - \theta_{i' \bullet}$ is given by (the average is over the reader index; the case-set index $\{1\}$ is suppressed):
@@ -725,34 +760,34 @@ CI_{1-\alpha,RRRC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, (
 Using the vertical bar notation $\mid R$ to denote that reader is regarded as a fixed effect [@RN1124], the appropriate F -statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is [@RN1865]: 
 
 \begin{equation}
-F_{ORH \mid R}=\frac{MS(T)}{Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0)}
+F_{OR \mid R}=\frac{MS(T)}{Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0)}
 (\#eq:DefFStatFRRC)
 \end{equation}
 
-$F_{ORH \mid R}$, a realization (i.e., observation) of a random variable, is distributed as an F-statistic with:
+$F_{OR \mid R}$, a realization (i.e., observation) of a random variable, is distributed as an F-statistic with:
 
 \begin{equation}
 \left.\begin{matrix}
 ndf=I-1\\ 
 ddf=\infty\\
-F_{ORH \mid R} \sim F_{ndf,ddf}
+F_{OR \mid R} \sim F_{ndf,ddf}
 \end{matrix}\right\}
 (\#eq:FStatFRRC)
 \end{equation}
 
 Alternatively, as with \@ref(eq:F-1RMT),
 
-$$(I-1)F_{ORH \mid R} \sim t_{I-1}$$
+$$(I-1)F_{OR \mid R} \sim t_{I-1}$$
 For $J$ = 1, \@ref(eq:DefFStatFRRC) reduces to \@ref(eq:DefF-1RMT). 
 
 The critical value of the statistic is $F_{1-\alpha,I-1,\infty}$ which is that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value, i.e.,:
 
-$$F_{ORH \mid R}>F_{1-\alpha,I-1,\infty}$$
+$$F_{OR \mid R}>F_{1-\alpha,I-1,\infty}$$
 
 The p-value of the test is the probability that a random sample from the distribution $F_{I-1,\infty}$ exceeds the observed value of the F statistic defined in \@ref(eq:DefFStatFRRC):
 
 \begin{equation}
-p=\Pr(F>F_{ORH \mid R} \mid F \sim F_{I-1,\infty})
+p=\Pr(F>F_{OR \mid R} \mid F \sim F_{I-1,\infty})
 (\#eq:pValueaphaFRRC)
 \end{equation}
 
@@ -777,29 +812,29 @@ Notice that for J = 1, \@ref(eq:CIalphaFRRC) reduces to \@ref(eq:CIalpha1RMT).
 When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is: 
 
 \begin{equation}
-F_{ORH \mid C}=\frac{MS(T)}{MS(TR)}
+F_{OR \mid C}=\frac{MS(T)}{MS(TR)}
 (\#eq:DefFStatRRFC)
 \end{equation}
 
-$F_{ORH \mid C}$ is distributed as an F-statistic with:
+$F_{OR \mid C}$ is distributed as an F-statistic with:
 
 \begin{equation}
 \left.\begin{matrix}
 ndf=I-1\\ 
 ddf=(I-1)(J-1)\\
-F_{ORH \mid C} \sim F_{ndf,ddf}
+F_{OR \mid C} \sim F_{ndf,ddf}
 \end{matrix}\right\}
 (\#eq:FStatRRFC)
 \end{equation}
 
 The critical value of the statistic is $F_{1-\alpha,I-1,(I-1)(J-1)}$, which is that value such that fraction $(1-\alpha)$ of the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:
 
-$$F_{ORH \mid C}>F_{1-\alpha,I-1,(I-1)(J-1)}$$
+$$F_{OR \mid C}>F_{1-\alpha,I-1,(I-1)(J-1)}$$
 
 The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:
 
 
-$$p=\Pr(F>F_{ORH \mid C} \mid F \sim F_{1-\alpha,I-1,(I-1)(J-1)})$$
+$$p=\Pr(F>F_{OR \mid C} \mid F \sim F_{1-\alpha,I-1,(I-1)(J-1)})$$
 
 The $(1-\alpha)$ confidence interval is given by:
 
@@ -817,7 +852,7 @@ In \@ref(OR1RMTModel) single-reader multiple-treatment analysis was described. I
 
 In the analysis described in this section reader is regarded as a random effect. The average performance of the readers is estimated and compared to a specified value. Hillis has described the appropriate modifications. [TBA Two approaches are described, one using the DBM pseudovalue based model and the other based on the OR model with appropriate modification. The second approach is summarized below. TBA]
 
-For single-treatment multiple-reader ORH analysis, the figure of merit model is (contrast the following equation to \@ref(eq:ORModel1RMT) noting the absence of an $i$ index. If multiple modalities are present the current analysis is applicable to data in each treatment analyzed one at a time): 
+For single-treatment multiple-reader OR analysis, the figure of merit model is (contrast the following equation to \@ref(eq:ORModel1RMT) noting the absence of an $i$ index. If multiple modalities are present the current analysis is applicable to data in each treatment analyzed one at a time): 
 
 \begin{equation}
 \theta_{j\{c\}}=\mu+R_j+\epsilon_{j\{c\}}

@@ -1,4 +1,4 @@
-rm(list = ls()) #mainORH.R
+rm(list = ls()) #mainOR.R
 library(RJafroc);library(ggplot2)
 source("VarCovMtrxJK.R")
 source("VarCovs.R")
@@ -44,12 +44,12 @@ msTR <- msTR / ((I - 1)*(J - 1))
 
 cat("\nRandom reader random case analysis\n")
 MS_DEN_DIFF_FOM_RRRC <- (msTR+max(J*(Cov2-Cov3),0))
-F_ORH <- msT / MS_DEN_DIFF_FOM_RRRC
+F_OR <- msT / MS_DEN_DIFF_FOM_RRRC
 ndf <- (I-1)
 ddfH <- MS_DEN_DIFF_FOM_RRRC^2/(msTR^2/((I-1)*(J-1)))
 cat("Hillis ddfH = ", ddfH, "\n")
-FCrit <- qf(1 - alpha, ndf, ddfH);cat("F statistic is ", F_ORH, "and critical value of F is ", FCrit, "\n")  
-pValue <- 1 - pf(F_ORH, ndf, ddfH);cat("pvalue = ", pValue, "\n")
+FCrit <- qf(1 - alpha, ndf, ddfH);cat("F statistic is ", F_OR, "and critical value of F is ", FCrit, "\n")  
+pValue <- 1 - pf(F_OR, ndf, ddfH);cat("pvalue = ", pValue, "\n")
 
 trtMeans <- array(dim = I)
 for (i in 1:I) trtMeans[i] <- mean(FOM[i,])

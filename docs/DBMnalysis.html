@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Dorfman Berbaum Metz Hillis (DBM) Analysis | The RJafroc Book</title>
+  <meta name="description" content="Extended RJafroc documentation." />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Dorfman Berbaum Metz Hillis (DBM) Analysis | The RJafroc Book" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Extended RJafroc documentation." />
+  <meta name="github-repo" content="dpc10ster/RJafrocBook" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Dorfman Berbaum Metz Hillis (DBM) Analysis | The RJafroc Book" />
+  
+  <meta name="twitter:description" content="Extended RJafroc documentation." />
+  
+
+<meta name="author" content="Dev P. Chakraborty, PhD" />
+
+
+<meta name="date" content="2020-06-28" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="HypothesisTesting.html"/>
+<link rel="next" href="ORAnalysis.html"/>
+<script src="libs/header-attrs-2.2/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">RJafroc documentation</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html"><i class="fa fa-check"></i><b>1</b> Hypothesis Testing</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#introduction"><i class="fa fa-check"></i><b>1.1</b> Introduction</a></li>
+<li class="chapter" data-level="1.2" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#hypothesis-testing-for-a-single-modality-single-reader-roc-study"><i class="fa fa-check"></i><b>1.2</b> Hypothesis testing for a single-modality single-reader ROC study</a></li>
+<li class="chapter" data-level="1.3" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#type-i-errors"><i class="fa fa-check"></i><b>1.3</b> Type-I errors</a></li>
+<li class="chapter" data-level="1.4" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#one-sided-vs.-two-sided-tests"><i class="fa fa-check"></i><b>1.4</b> One sided vs. two sided tests</a></li>
+<li class="chapter" data-level="1.5" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#statistical-power"><i class="fa fa-check"></i><b>1.5</b> Statistical power</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#factors-affecting-statistical-power"><i class="fa fa-check"></i><b>1.5.1</b> Factors affecting statistical power</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#comments"><i class="fa fa-check"></i><b>1.6</b> Comments</a></li>
+<li class="chapter" data-level="1.7" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#why-alpha-is-chosen-to-be-5"><i class="fa fa-check"></i><b>1.7</b> Why alpha is chosen to be 5%</a></li>
+<li class="chapter" data-level="1.8" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#discussion"><i class="fa fa-check"></i><b>1.8</b> Discussion</a></li>
+<li class="chapter" data-level="1.9" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references"><i class="fa fa-check"></i><b>1.9</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="DBMnalysis.html"><a href="DBMnalysis.html"><i class="fa fa-check"></i><b>2</b> Dorfman Berbaum Metz Hillis (DBM) Analysis</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="DBMnalysis.html"><a href="DBMnalysis.html#introduction-1"><i class="fa fa-check"></i><b>2.1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="DBMnalysis.html"><a href="DBMnalysis.html#historical-background"><i class="fa fa-check"></i><b>2.1.1</b> Historical background</a></li>
+<li class="chapter" data-level="2.1.2" data-path="DBMnalysis.html"><a href="DBMnalysis.html#the-wagner-analogy"><i class="fa fa-check"></i><b>2.1.2</b> The Wagner analogy</a></li>
+<li class="chapter" data-level="2.1.3" data-path="DBMnalysis.html"><a href="DBMnalysis.html#the-shortage-of-numbers-to-analyze-and-a-pivotal-breakthrough"><i class="fa fa-check"></i><b>2.1.3</b> The shortage of numbers to analyze and a pivotal breakthrough</a></li>
+<li class="chapter" data-level="2.1.4" data-path="DBMnalysis.html"><a href="DBMnalysis.html#organization-of-the-chapter"><i class="fa fa-check"></i><b>2.1.4</b> Organization of the chapter</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="DBMnalysis.html"><a href="DBMnalysis.html#random-and-fixed-factors"><i class="fa fa-check"></i><b>2.2</b> Random and fixed factors</a></li>
+<li class="chapter" data-level="2.3" data-path="DBMnalysis.html"><a href="DBMnalysis.html#reader-and-case-populations-and-data-correlations"><i class="fa fa-check"></i><b>2.3</b> Reader and case populations and data correlations</a></li>
+<li class="chapter" data-level="2.4" data-path="DBMnalysis.html"><a href="DBMnalysis.html#three-types-of-analyses"><i class="fa fa-check"></i><b>2.4</b> Three types of analyses</a></li>
+<li class="chapter" data-level="2.5" data-path="DBMnalysis.html"><a href="DBMnalysis.html#general-approach"><i class="fa fa-check"></i><b>2.5</b> General approach</a></li>
+<li class="chapter" data-level="2.6" data-path="DBMnalysis.html"><a href="DBMnalysis.html#the-dorfman-berbaum-metz-dbm-method"><i class="fa fa-check"></i><b>2.6</b> The Dorfman-Berbaum-Metz (DBM) method</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="DBMnalysis.html"><a href="DBMnalysis.html#explanation-of-terms-in-the-model"><i class="fa fa-check"></i><b>2.6.1</b> Explanation of terms in the model</a></li>
+<li class="chapter" data-level="2.6.2" data-path="DBMnalysis.html"><a href="DBMnalysis.html#meanings-of-variance-components-in-the-dbm-model-tba-this-section-can-be-improved"><i class="fa fa-check"></i><b>2.6.2</b> Meanings of variance components in the DBM model (<strong>TBA this section can be improved</strong>)</a></li>
+<li class="chapter" data-level="2.6.3" data-path="DBMnalysis.html"><a href="DBMnalysis.html#definitions-of-mean-squares"><i class="fa fa-check"></i><b>2.6.3</b> Definitions of mean-squares</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="DBMnalysis.html"><a href="DBMnalysis.html#expected-values-of-mean-squares"><i class="fa fa-check"></i><b>2.7</b> Expected values of mean squares</a></li>
+<li class="chapter" data-level="2.8" data-path="DBMnalysis.html"><a href="DBMnalysis.html#random-reader-random-case-rrrc-analysis"><i class="fa fa-check"></i><b>2.8</b> Random-reader random-case (RRRC) analysis</a>
+<ul>
+<li class="chapter" data-level="2.8.1" data-path="DBMnalysis.html"><a href="DBMnalysis.html#calculation-of-mean-squares-an-example"><i class="fa fa-check"></i><b>2.8.1</b> Calculation of mean squares: an example</a></li>
+<li class="chapter" data-level="2.8.2" data-path="DBMnalysis.html"><a href="DBMnalysis.html#significance-testing"><i class="fa fa-check"></i><b>2.8.2</b> Significance testing</a></li>
+<li class="chapter" data-level="2.8.3" data-path="DBMnalysis.html"><a href="DBMnalysis.html#the-satterthwaite-approximation"><i class="fa fa-check"></i><b>2.8.3</b> The Satterthwaite approximation</a></li>
+<li class="chapter" data-level="2.8.4" data-path="DBMnalysis.html"><a href="DBMnalysis.html#decision-rules-p-value-and-confidence-intervals"><i class="fa fa-check"></i><b>2.8.4</b> Decision rules, p-value and confidence intervals</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="DBMnalysis.html"><a href="DBMnalysis.html#fixed-reader-random-case-frrc-analysis"><i class="fa fa-check"></i><b>2.9</b> Fixed-reader random-case (FRRC) analysis</a>
+<ul>
+<li class="chapter" data-level="2.9.1" data-path="DBMnalysis.html"><a href="DBMnalysis.html#single-reader-multiple-treatment-analysis"><i class="fa fa-check"></i><b>2.9.1</b> Single-reader multiple-treatment analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="2.10" data-path="DBMnalysis.html"><a href="DBMnalysis.html#random-reader-fixed-case-rrfc-analysis"><i class="fa fa-check"></i><b>2.10</b> Random-reader fixed-case (RRFC) analysis</a></li>
+<li class="chapter" data-level="2.11" data-path="DBMnalysis.html"><a href="DBMnalysis.html#dbm-analysis-example-1-van-dyke-data"><i class="fa fa-check"></i><b>2.11</b> DBM analysis: Example 1, Van Dyke Data</a></li>
+<li class="chapter" data-level="2.12" data-path="DBMnalysis.html"><a href="DBMnalysis.html#dbm-analysis-example-2-volumerad-data"><i class="fa fa-check"></i><b>2.12</b> DBM analysis: Example 2, VolumeRad data</a></li>
+<li class="chapter" data-level="2.13" data-path="DBMnalysis.html"><a href="DBMnalysis.html#validation-of-dbm-analysis"><i class="fa fa-check"></i><b>2.13</b> Validation of DBM analysis</a></li>
+<li class="chapter" data-level="2.14" data-path="DBMnalysis.html"><a href="DBMnalysis.html#the-meaning-of-pseudovalues"><i class="fa fa-check"></i><b>2.14</b> The meaning of pseudovalues</a></li>
+<li class="chapter" data-level="2.15" data-path="DBMnalysis.html"><a href="DBMnalysis.html#summary"><i class="fa fa-check"></i><b>2.15</b> Summary</a></li>
+<li class="chapter" data-level="2.16" data-path="DBMnalysis.html"><a href="DBMnalysis.html#things-for-me-to-think-about"><i class="fa fa-check"></i><b>2.16</b> Things for me to think about</a>
+<ul>
+<li class="chapter" data-level="2.16.1" data-path="DBMnalysis.html"><a href="DBMnalysis.html#expected-values-of-mean-squares-1"><i class="fa fa-check"></i><b>2.16.1</b> Expected values of mean squares</a></li>
+</ul></li>
+<li class="chapter" data-level="2.17" data-path="DBMnalysis.html"><a href="DBMnalysis.html#references-1"><i class="fa fa-check"></i><b>2.17</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="ORAnalysis.html"><a href="ORAnalysis.html"><i class="fa fa-check"></i><b>3</b> Obuchowski Rockette Hillis (OR) Analysis</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="ORAnalysis.html"><a href="ORAnalysis.html#introduction-2"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2" data-path="ORAnalysis.html"><a href="ORAnalysis.html#OR1RMTModel"><i class="fa fa-check"></i><b>3.2</b> Single-reader multiple-treatment model</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="ORAnalysis.html"><a href="ORAnalysis.html#definitions-of-covariance-and-correlation"><i class="fa fa-check"></i><b>3.2.1</b> Definitions of covariance and correlation</a></li>
+<li class="chapter" data-level="3.2.2" data-path="ORAnalysis.html"><a href="ORAnalysis.html#special-case-when-variables-have-equal-variances"><i class="fa fa-check"></i><b>3.2.2</b> Special case when variables have equal variances</a></li>
+<li class="chapter" data-level="3.2.3" data-path="ORAnalysis.html"><a href="ORAnalysis.html#estimation-of-the-covariance-matrix"><i class="fa fa-check"></i><b>3.2.3</b> Estimation of the covariance matrix</a></li>
+<li class="chapter" data-level="3.2.4" data-path="ORAnalysis.html"><a href="ORAnalysis.html#meaning-of-the-covariance-matrix-in-refeqexamplesigma"><i class="fa fa-check"></i><b>3.2.4</b> Meaning of the covariance matrix in @ref(eq:ExampleSigma)</a></li>
+<li class="chapter" data-level="3.2.5" data-path="ORAnalysis.html"><a href="ORAnalysis.html#code-illustrating-the-covariance-matrix"><i class="fa fa-check"></i><b>3.2.5</b> Code illustrating the covariance matrix</a></li>
+<li class="chapter" data-level="3.2.6" data-path="ORAnalysis.html"><a href="ORAnalysis.html#significance-testing-1"><i class="fa fa-check"></i><b>3.2.6</b> Significance testing</a></li>
+<li class="chapter" data-level="3.2.7" data-path="ORAnalysis.html"><a href="ORAnalysis.html#p-value-and-confidence-interval"><i class="fa fa-check"></i><b>3.2.7</b> p-value and confidence interval</a></li>
+<li class="chapter" data-level="3.2.8" data-path="ORAnalysis.html"><a href="ORAnalysis.html#comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments"><i class="fa fa-check"></i><b>3.2.8</b> Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="ORAnalysis.html"><a href="ORAnalysis.html#multiple-reader-multiple-treatment-or-model"><i class="fa fa-check"></i><b>3.3</b> Multiple-reader multiple-treatment OR model</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="ORAnalysis.html"><a href="ORAnalysis.html#StrCovMatrix"><i class="fa fa-check"></i><b>3.3.1</b> Structure of the covariance matrix</a></li>
+<li class="chapter" data-level="3.3.2" data-path="ORAnalysis.html"><a href="ORAnalysis.html#physical-meanings-of-the-covariance-terms"><i class="fa fa-check"></i><b>3.3.2</b> Physical meanings of the covariance terms</a></li>
+<li class="chapter" data-level="3.3.3" data-path="ORAnalysis.html"><a href="ORAnalysis.html#or-random-reader-random-case-analysis"><i class="fa fa-check"></i><b>3.3.3</b> OR random-reader random-case analysis</a></li>
+<li class="chapter" data-level="3.3.4" data-path="ORAnalysis.html"><a href="ORAnalysis.html#fixed-reader-random-case-frrc-analysis-1"><i class="fa fa-check"></i><b>3.3.4</b> Fixed-reader random-case (FRRC) analysis</a></li>
+<li class="chapter" data-level="3.3.5" data-path="ORAnalysis.html"><a href="ORAnalysis.html#random-reader-fixed-case-rrfc-analysis-1"><i class="fa fa-check"></i><b>3.3.5</b> Random-reader fixed-case (RRFC) analysis</a></li>
+<li class="chapter" data-level="3.3.6" data-path="ORAnalysis.html"><a href="ORAnalysis.html#single-treatment-multiple-reader-analysis"><i class="fa fa-check"></i><b>3.3.6</b> Single-treatment multiple-reader analysis</a></li>
+<li class="chapter" data-level="3.3.7" data-path="ORAnalysis.html"><a href="ORAnalysis.html#connection-to-existing-literature"><i class="fa fa-check"></i><b>3.3.7</b> Connection to existing literature</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="ORAnalysis.html"><a href="ORAnalysis.html#discussionsummary"><i class="fa fa-check"></i><b>3.4</b> Discussion/Summary</a></li>
+<li class="chapter" data-level="3.5" data-path="ORAnalysis.html"><a href="ORAnalysis.html#references-2"><i class="fa fa-check"></i><b>3.5</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html"><i class="fa fa-check"></i><b>4</b> Sample size estimation for ROC studies DBM method</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#introduction-3"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#StatPower1"><i class="fa fa-check"></i><b>4.2</b> Statistical Power</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#sample-size-estimation-for-random-reader-random-cases"><i class="fa fa-check"></i><b>4.2.1</b> Sample size estimation for random-reader random-cases</a></li>
+<li class="chapter" data-level="4.2.2" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#observed-vs.-anticipated-effect-size"><i class="fa fa-check"></i><b>4.2.2</b> Observed vs. anticipated effect-size</a></li>
+<li class="chapter" data-level="4.2.3" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#dependence-of-statistical-power-on-estimates-of-model-parameters"><i class="fa fa-check"></i><b>4.2.3</b> Dependence of statistical power on estimates of model parameters</a></li>
+<li class="chapter" data-level="4.2.4" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#formulae-for-random-reader-random-case-rrrc-sample-size-estimation"><i class="fa fa-check"></i><b>4.2.4</b> Formulae for random-reader random-case (RRRC) sample size estimation</a></li>
+<li class="chapter" data-level="4.2.5" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#significance-testing-2"><i class="fa fa-check"></i><b>4.2.5</b> Significance testing</a></li>
+<li class="chapter" data-level="4.2.6" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#p-value-and-confidence-interval-1"><i class="fa fa-check"></i><b>4.2.6</b> p-value and confidence interval</a></li>
+<li class="chapter" data-level="4.2.7" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments-1"><i class="fa fa-check"></i><b>4.2.7</b> Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#formulae-for-fixed-reader-random-case-frrc-sample-size-estimation"><i class="fa fa-check"></i><b>4.3</b> Formulae for fixed-reader random-case (FRRC) sample size estimation</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#formulae-for-random-reader-fixed-case-rrfc-sample-size-estimation"><i class="fa fa-check"></i><b>4.3.1</b> Formulae for random-reader fixed-case (RRFC) sample size estimation</a></li>
+<li class="chapter" data-level="4.3.2" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#example-1"><i class="fa fa-check"></i><b>4.3.2</b> Example 1</a></li>
+<li class="chapter" data-level="4.3.3" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#fixed-reader-random-case-frrc-analysis-tba"><i class="fa fa-check"></i><b>4.3.3</b> Fixed-reader random-case (FRRC) analysis TBA</a></li>
+<li class="chapter" data-level="4.3.4" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#random-reader-fixed-case-rrfc-analysis-2"><i class="fa fa-check"></i><b>4.3.4</b> Random-reader fixed-case (RRFC) analysis</a></li>
+<li class="chapter" data-level="4.3.5" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#single-treatment-multiple-reader-analysis-1"><i class="fa fa-check"></i><b>4.3.5</b> Single-treatment multiple-reader analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#discussionsummary-1"><i class="fa fa-check"></i><b>4.4</b> Discussion/Summary</a></li>
+<li class="chapter" data-level="4.5" data-path="RocSampleSizeDBM.html"><a href="RocSampleSizeDBM.html#references-3"><i class="fa fa-check"></i><b>4.5</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html"><i class="fa fa-check"></i><b>5</b> Sample size estimation for ROC studies OR method</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#introduction-4"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#StatPower2"><i class="fa fa-check"></i><b>5.2</b> Statistical Power</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#sample-size-estimation-for-random-reader-random-cases-1"><i class="fa fa-check"></i><b>5.2.1</b> Sample size estimation for random-reader random-cases</a></li>
+<li class="chapter" data-level="5.2.2" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#dependence-of-statistical-power-on-estimates-of-model-parameters-1"><i class="fa fa-check"></i><b>5.2.2</b> Dependence of statistical power on estimates of model parameters</a></li>
+<li class="chapter" data-level="5.2.3" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#formulae-for-random-reader-random-case-rrrc-sample-size-estimation-1"><i class="fa fa-check"></i><b>5.2.3</b> Formulae for random-reader random-case (RRRC) sample size estimation</a></li>
+<li class="chapter" data-level="5.2.4" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#significance-testing-3"><i class="fa fa-check"></i><b>5.2.4</b> Significance testing</a></li>
+<li class="chapter" data-level="5.2.5" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#p-value-and-confidence-interval-2"><i class="fa fa-check"></i><b>5.2.5</b> p-value and confidence interval</a></li>
+<li class="chapter" data-level="5.2.6" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#comparing-dbm-to-obuchowski-and-rockette-for-single-reader-multiple-treatments-2"><i class="fa fa-check"></i><b>5.2.6</b> Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#formulae-for-fixed-reader-random-case-frrc-sample-size-estimation-1"><i class="fa fa-check"></i><b>5.3</b> Formulae for fixed-reader random-case (FRRC) sample size estimation</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#formulae-for-random-reader-fixed-case-rrfc-sample-size-estimation-1"><i class="fa fa-check"></i><b>5.3.1</b> Formulae for random-reader fixed-case (RRFC) sample size estimation</a></li>
+<li class="chapter" data-level="5.3.2" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#example-1-1"><i class="fa fa-check"></i><b>5.3.2</b> Example 1</a></li>
+<li class="chapter" data-level="5.3.3" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#fixed-reader-random-case-frrc-analysis-2"><i class="fa fa-check"></i><b>5.3.3</b> Fixed-reader random-case (FRRC) analysis</a></li>
+<li class="chapter" data-level="5.3.4" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#random-reader-fixed-case-rrfc-analysis-3"><i class="fa fa-check"></i><b>5.3.4</b> Random-reader fixed-case (RRFC) analysis</a></li>
+<li class="chapter" data-level="5.3.5" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#single-treatment-multiple-reader-analysis-2"><i class="fa fa-check"></i><b>5.3.5</b> Single-treatment multiple-reader analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#discussionsummary-2"><i class="fa fa-check"></i><b>5.4</b> Discussion/Summary</a></li>
+<li class="chapter" data-level="5.5" data-path="RocSampleSizeOR.html"><a href="RocSampleSizeOR.html#references-4"><i class="fa fa-check"></i><b>5.5</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-5.html"><a href="references-5.html"><i class="fa fa-check"></i>REFERENCES</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">The RJafroc Book</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="DBMnalysis" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Dorfman Berbaum Metz Hillis (DBM) Analysis</h1>
+<div id="introduction-1" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Introduction</h2>
+<p>In this chapter the term “treatment” is used as a generic for “imaging system”, “modality” or “image processing” and “reader” is used as a generic for “radiologist” or algorithmic observer, e.g., a computer aided detection (CAD) algorithm. In the context of illustrating hypothesis-testing methods the previous chapter described analysis of a single ROC dataset and comparing the observed area <span class="math inline">\(AUC\)</span> under the ROC plot to a specified value. Clinically this is not the most interesting problem; rather, interest is usually in comparing performance of a group of readers interpreting a common set of cases in two or more treatments. Such data is termed multiple reader multiple case (MRMC). [An argument could be made in favor of the term “multiple-treatment multiple-reader”, since “multiple-case” is implicit in any ROC analysis that takes into account correct and incorrect decisions on cases. However, the author will stick with existing terminology.] The basic idea is that by sampling a sufficiently large number of readers and a sufficiently large number of cases one might be able to draw conclusions that apply broadly to other readers of similar skill levels interpreting other similar case sets in the selected treatments. How one accomplishes this, termed MRMC analysis, is the subject of this chapter.</p>
+<p>This chapter describes the first truly successful method of analyzing MRMC ROC data, namely the Dorfman-Berbaum-Metz (DBM) method <span class="citation">(Dorfman, Berbaum, and Metz <a href="#ref-RN204" role="doc-biblioref">1992</a>)</span>. The other method, due to Obuchowski and Rockette <span class="citation">(Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span>, is the subject of Chapter 10. Both methods have been substantially improved by Hillis <span class="citation">(Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>; Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>, <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span>. Hence the title of this chapter: “Dorfman Berbaum Metz Hillis (DBM) Analysis”. It is not an overstatement that ROC analysis came of age with the methods described in this chapter. Prior to the techniques described here, one knew of the existence of sources of variability affecting a measured <span class="math inline">\(AUC\)</span> value, as discussed in (book) Chapter 07, but then-known techniques <span class="citation">(Swets and Pickett <a href="#ref-RN412" role="doc-biblioref">1982</a>)</span> for estimating the corresponding variances and correlations were impractical.</p>
+<div id="historical-background" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Historical background</h3>
+<p>The author was thrown (unprepared) into the methodology field ca. 1985 when, as a junior faculty member, he undertook comparing a prototype digital chest-imaging device (Picker International, ca. 1983) vs. an optimized analog chest-imaging device at the University of Alabama at Birmingham. At the outset a decision was made to use free-response ROC methodology instead of ROC, as the former accounted for lesion localization, and the author and his mentor, Prof. Gary T. Barnes, were influenced in that decision by a publication <span class="citation">(Bunch et al. <a href="#ref-RN2453" role="doc-biblioref">1978</a>)</span> to be described in (book) Chapter 12. Therefore, instead of ROC-AUC one had lesion-level sensitivity at a fixed number of location level false positives per case as the figure-of-merit (FOM). Details of the FOM are not relevant at this time. Suffice to state that methods described in this chapter, which had not been developed in 1983, while developed for analyzing reader-averaged inter-treatment ROC-AUC differences, <em>apply to any scalar FOM</em>. While the author was successful at calculating confidence intervals (this is the heart of what is loosely termed “statistical analysis”) and publishing the work <span class="citation">(Chakraborty et al. <a href="#ref-RN621" role="doc-biblioref">1986</a>)</span> using techniques described in a book <span class="citation">(Swets and Pickett <a href="#ref-RN412" role="doc-biblioref">1982</a>)</span> titled “Evaluation of Diagnostic Systems: Methods from Signal Detection Theory”, subsequent attempts at applying these methods in a follow-up paper <span class="citation">(Niklason et al. <a href="#ref-RN620" role="doc-biblioref">1986</a>)</span> led to negative variance estimates (private communication, Dr. Loren Niklason, ca. 1985). With the benefit of hindsight, negative variance estimates are not that uncommon and the method to be described in this chapter has to deal with that possibility.</p>
+<p>The methods <span class="citation">(Swets and Pickett <a href="#ref-RN412" role="doc-biblioref">1982</a>)</span> described in the cited book involved estimating the different variability components – case sampling, between-reader and within-reader variability. Between-reader and within-reader variability (the two cannot be separated as discussed in (book) Chapter 07) could be estimated from the variance of the <span class="math inline">\(AUC\)</span> values corresponding to the readers interpreting the cases within a treatment and then averaging the variances over all treatments. Estimating case-sampling and within-reader variability required splitting the dataset into a few smaller subsets (e.g., a case set with 60 cases might be split into 3 sub-sets of 20 cases each), analyzing each subset to get an <span class="math inline">\(AUC\)</span> estimate and calculating the variance of the resulting <span class="math inline">\(AUC\)</span> values <span class="citation">(Swets and Pickett <a href="#ref-RN412" role="doc-biblioref">1982</a>)</span> and scaling the result to the original case size. Because it was based on few values, the estimate was inaccurate, and the already case-starved original dataset made it difficult to estimate AUCs for the subsets; moreover, the division into subsets was at the discretion of the researcher, and therefore unlikely to be reproduced by others. Estimating within-reader variability required re-reading the entire case set, or at least a part of it. ROC studies have earned a deserved reputation for taking much time to complete, and having to re-read a case set was not a viable option. [Historical note: the author recalls a barroom conversation with Dr. Thomas Mertelmeir after the conclusion of an SPIE meeting ca. 2004, where Dr. Mertelmeir commiserated mightily, over several beers, about the impracticality of some of the ROC studies required of imaging device manufacturers by the FDA.]</p>
+</div>
+<div id="the-wagner-analogy" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> The Wagner analogy</h3>
+<p>An important objective of modality comparison studies is to estimate the variance of the difference in reader-averaged AUCs between the treatments. For two treatments one sums the reader-averaged variance in each treatment and subtracts twice the covariance (a scaled version of the correlation). Therefore, in addition to estimating variances, one needs to estimate correlations. Correlations are present due to the common case set interpreted by the readers in the different treatments. If the correlation is large, i.e., close to unity, then the individual treatment variances tend to cancel, making the constant treatment-induced difference easier to detect. The author recalls a vivid analogy used by the late Dr. Robert F. Wagner to illustrate this point at an SPIE meeting ca. 2008. To paraphrase him, <em>consider measuring from shore the heights of the masts on two adjacent boats in a turbulent ocean. Because of the waves, the heights, as measured from shore, are fluctuating wildly, so the variance of the individual height measurements is large. However, the difference between the two heights is likely to be relatively constant, i.e., have small variance. This is because the wave that causes one mast’s height to increase also increases the height of the other mast.</em></p>
+</div>
+<div id="the-shortage-of-numbers-to-analyze-and-a-pivotal-breakthrough" class="section level3" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> The shortage of numbers to analyze and a pivotal breakthrough</h3>
+<p><em>The basic issue was that the calculation of <span class="math inline">\(AUC\)</span> reduces the relatively large number of ratings of a set of non-diseased and diseased cases to a single number.</em> For example, after completion of an ROC study with 5 readers and 100 non-diseased and 100 diseased cases interpreted in two treatments, the data is reduced to just 10 numbers, i.e., five readers times two treatments. It is difficult to perform statistics with so few numbers. The author recalls a conversation with Prof. Kevin Berbaum at a Medical Image Perception Society meeting in Tucson, Arizona, ca. 1997, in which he described the basic idea that forms the subject of this chapter. Namely, using the jackknife pseudovalues (to be defined below) as individual case-level figures of merit. This, of course, greatly increases the amount of data that one can work with; instead of just 10 numbers one now has 2,000 pseudovalues (2 x 5 x 200). If one assumes the pseudovalues behave essentially as case-level data, then by assumption they are independent and identically distributed, and therefore they satisfy the conditions for application of standard analysis of variance (ANOVA) techniques. [This assumption has been much criticized and is the basis for some preferring alternate approaches - but, as Hillis has stated, and I paraphrase, the pseudovalue based method “works”, but lacks sufficient rigor.] The relevant paper had already been published in 1992 but other distractions and lack of formal statistical training kept the author from fully appreciating this work until later.</p>
+<p>Although methods are available for more complex study designs including partially paired data <span class="citation">(Metz, Herman, and Roe <a href="#ref-RN2128" role="doc-biblioref">1998</a>; Obuchowski <a href="#ref-RN1880" role="doc-biblioref">2009</a>)</span>, I will restrict to fully paired data (i.e., each case is interpreted by all readers in all treatments). There is a long history of how this field has evolved and the author cannot do justice to all methods that are currently available. Some of the methods <span class="citation">(Toledano <a href="#ref-RN1441" role="doc-biblioref">2003</a>; Ishwaran and Gatsonis <a href="#ref-RN2013" role="doc-biblioref">2000</a>; Toledano and Gatsonis <a href="#ref-RN1451" role="doc-biblioref">1996</a>)</span> have the advantage that they can handle explanatory variables (termed covariates) that could influence performance, e.g., years of experience, types of cases, etc. Other methods are restricted to specific choices of FOM. Specifically, the probabilistic approach <span class="citation">(Clarkson, Kupinski, and Barrett <a href="#ref-RN2253" role="doc-biblioref">2006</a>; Kupinski, Clarkson, and Barrett <a href="#ref-RN2254" role="doc-biblioref">2006</a>; Gallas, Pennello, and Myers <a href="#ref-RN2351" role="doc-biblioref">2007</a>; Gallas <a href="#ref-RN2080" role="doc-biblioref">2006</a>)</span> is restricted to the empirical <span class="math inline">\(AUC\)</span> under the ROC curve, and therefore are not applicable to other FOMs, e.g., parametrically fitted ROC AUCs or, more importantly, to location specific paradigm FOMs. Instead, the author will focus on methods for which software is readily available (i.e., freely on websites), which have been widely used (the method that the author is about to describe has been used in several hundred publications) and validated via simulations, and which apply to any scalar figure of merit, and therefore widely applicable, even to location specific paradigms.</p>
+</div>
+<div id="organization-of-the-chapter" class="section level3" number="2.1.4">
+<h3><span class="header-section-number">2.1.4</span> Organization of the chapter</h3>
+<p>The organization of the chapter is as follows. The concepts of reader and case populations, introduced in (book) Chapter 07, are recapitulated. A distinction is made between <em>fixed</em> and <em>random</em> factors – statistical terms with which one must become familiar. Described next are three types of analysis that are possible with MRMC data, depending on which factors are regarded as random and which as fixed. The general approach to the analysis is described. Two methods of analysis are possible: the jackknife pseudovalue-based approach detailed in this chapter and an alternative approach is detailed in Chapter 10. The Dorfman-Berbaum-Metz (DBM) model for the jackknife pseudovalues is described that incorporates different sources of variability and correlations possible with MRMC data. Calculation of ANOVA-related quantities, termed mean squares, from the pseudovalues, are described followed by the significance testing procedure for testing the null hypothesis of no treatment effect. A relevant distribution used in the analysis, namely the F-distribution, is illustrated with R examples. The decision rule, i.e., whether to reject the NH, calculation of the ubiquitous p-value, confidence intervals and how to handle multiple treatments is illustrated with two datasets, one an older ROC dataset that has been widely used to demonstrate advances in ROC analysis, and the other a recent dataset involving evaluation of digital chest tomosynthesis vs. conventional chest imaging. The approach to validation of DBM analysis is illustrated with an R example. The chapter concludes with a section on the meaning of the pseudovalues. The intent is to explain, at an intuitive level, why the DBM method “works”, even though use of pseudovalues has been questioned3 at the conceptual level. For organizational reasons and space limitations, details of the software are relegated to Online Appendices, but they are essential reading, preferably in front of a computer running the online software that is part of this book. The author has included material here that may be obvious to statisticians, e.g., an explanation of the Satterthwaite approximation, but are expected to be helpful to others from non-statistical backgrounds.</p>
+</div>
+</div>
+<div id="random-and-fixed-factors" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Random and fixed factors</h2>
+<p><em>This paragraph introduces some analysis of variance (ANOVA) terminology. Treatment, reader and case are factors with different numbers of levels corresponding to each factor. For an ROC study with two treatments, five readers and 200 cases, there are two levels of the treatment factor, five levels of the reader factor and 200 levels of the case factor. If a factor is regarded as fixed, then the conclusions of the analysis apply only to the specific levels of the factor used in the study. If a factor is regarded as random, the levels of the factor are regarded as random samples from a parent population of the corresponding factor and conclusions regarding specific levels are not allowed; rather, conclusions apply to the distribution from which the levels are, by assumption, sampled.</em></p>
+<p>ROC MRMC studies require a sample of cases and interpretations by one or more readers in one or more treatments (in this book the term “multiple” includes as a special case “one”). A study is never conducted on a sample of treatments. It would be nonsensical to image patients using a “sample” of all possible treatments known to exist. Every variation of an imaging technique (e.g., different kilovoltage or kVp) or display method (e.g., window-level setting) or image processing techniques qualifies as a distinct treatment. The number of possible treatments is very large, and, from a practical point of view, most of them are uninteresting. Rather, interest is in comparing two or more (a few at most) treatments that, based on preliminary studies, are clinically interesting. One treatment may be computed tomography, the other magnetic resonance imaging, or one may be interested in comparing a standard image processing method to a newly proposed one, or one may be interested in comparing CAD to a group of readers.</p>
+<p>This brings out an essential difference between how cases, readers and treatments have to be regarded in the variability estimation procedure. Cases and readers are usually regarded as random factors (there has to be at least one random factor – if not, there are no sources of variability and nothing to apply statistics to!), while treatments are regarded as fixed factors. The random factors contribute stochastic (i.e., random) variability, but the fixed factors do not, rather they contribute constant shifts in performance. The terms fixed and random factors are used in this specific sense, and are derived, in turn, from ANOVA methods in statistics10,25. With two or more treatments, there are shifts in performance of treatments relative to each other, that one seeks to assess the significance of against a background of noise contributed by the random factors. If the shifts are sufficiently large compared to the noise, then one can state, with some certainty, that they are real. Quantifying the last statement uses the methods of hypothesis testing introduced in Chapter <a href="HypothesisTesting.html#HypothesisTesting">1</a> or Chapter <a href="HypothesisTesting.html#HypothesisTesting">Hypothesis Testing</a>.</p>
+</div>
+<div id="reader-and-case-populations-and-data-correlations" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Reader and case populations and data correlations</h2>
+<p>As discussed in (book) §7.2, conceptually there is a reader-population, generally modeled as a normal distribution <span class="math inline">\(\theta_j \sim N\left ( \theta_{\bullet\{1\}}, \sigma_{br+wr}^{2} \right )\)</span>, describing the variation of skill-level of readers. The notation closely follows that in the cited section, the only change being that the binormal model estimate <span class="math inline">\(A_z\)</span> has been replaced by a generic FOM, denoted <span class="math inline">\(\theta\)</span>. Each reader <span class="math inline">\(j\)</span> is characterized by a different value of <span class="math inline">\(\theta_j\)</span>, <span class="math inline">\(j=1,2,...J\)</span> and one can conceptually think of a bell-shaped curve with variance <span class="math inline">\(\sigma_{br+wr}^{2}\)</span> describing between-reader variability of the readers. A large variance implies large spread in reader skill levels.</p>
+<p>Likewise, there is a case-population, also modeled as a normal distribution, describing the variations in difficulty levels of the patients. One actually has two unit-variance distributions, one per diseased state, characterized by a separation parameter and conceptually an easy case set has a larger than usual separation parameter while a difficult case set has a smaller than usual separation parameter. The distribution of the separation parameter can be modeled as a bell-shaped curve <span class="math inline">\(\theta_{\{c\}} \sim N\left ( \theta_{\{\bullet\}}, \sigma_{cs+wr}^{2} \right )\)</span> with variance <span class="math inline">\(\sigma_{cs+wr}^{2}\)</span> describing the variations in difficulty levels of different case samples. Note the need for the case-set index, introduced in Chapter 07, to specify the separation parameter for a specific case-set (in principle a <span class="math inline">\(j\)</span>-index is also needed as one cannot have an interpretation without a reader; for now it is suppressed; one can think of the stated equation as applying to the average reader). A small variance <span class="math inline">\(\sigma_{cs}^{2}\)</span> implies the different case sets have similar difficulty levels while a larger variance would imply a larger spread in difficulty levels.</p>
+<p><em>Anytime one has a common random component to two measurements, the measurements are correlated.</em> In the Wagner analogy, the common component is the random height, as a function of time, of a wave, which contributes the same amount to both height measurements (since the boats are adjacent). Since the readers interpret a common case set in all treatments one needs to account for various types of correlations that are potentially present. These occur due to the various types of pairings that can occur with MRMC data, where each pairing implies the presence of a common component to the measurements: (a) the same reader interpreting the same cases in different treatments, (b) different readers interpreting the same cases in the same treatment and (c) different readers interpreting the same cases in different treatments. These pairings are more clearly elucidated in (book) Chapter 10. The current chapter uses jackknife pseudovalue based analysis to model the variances and the correlations. Hillis has shown that the two approaches are essentially equivalent <span class="citation">(Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span>.</p>
+</div>
+<div id="three-types-of-analyses" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Three types of analyses</h2>
+<p><em>MRMC analysis attempts to draw conclusions regarding the significances of inter-treatment shifts in performance. Ideally a conclusion (i.e., a difference is significant: yes/no; the “yes” applies if the p-value is less than alpha) should generalize to the respective populations from which the random samples were obtained. In other words, the idea is to generalize from the observed samples to the underlying populations. Three types of analyses are possible depending on which factor(s) one regards as random and which as fixed: random-reader random-case (RRRC), fixed-reader random-case (FRRC) and random-reader fixed-case (RRFC). If a factor is regarded as random, then the conclusion of the study applies to the population from which the levels of the factor were sampled. If a factor is regarded as fixed, then the conclusion applies only to the specific levels of the sampled factor. For example, if reader is regarded as a random factor, the conclusion generalizes to the reader population from which the readers used in the study were obtained. If reader is regarded as a fixed factor, then the conclusion applies to the specific readers that participated in the study. Regarding a factor as fixed effectively “freezes out” the sampling variability of the population and interest then centers only on the specific levels of the factor used in the study. For fixed reader analysis, conclusions about the significances of differences between pairs of readers are allowed; these are not allowed if reader is treated as a random factor. Likewise, treating case as a fixed factor means the conclusion of the study is specific to the case-set used in the study.</em></p>
+</div>
+<div id="general-approach" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> General approach</h2>
+<p>This section provides an overview of the steps involved in analysis of MRMC data. Two approaches are described in parallel: a figure of merit (FOM) derived jackknife pseudovalue based approach, detailed in this chapter and an FOM based approach, detailed in the next chapter. The analysis proceeds as follows:</p>
+<ol style="list-style-type: decimal">
+<li>A FOM is selected: <em>the selection of FOM is the single-most critical aspect of analyzing an observer performance study</em>. The selected FOM is denoted <span class="math inline">\(\theta\)</span>. To keep the notation reasonably compact the usual circumflex “hat” symbol used previously to denote an estimate is suppressed. The FOM has to be an objective scalar measure of performance with larger values characterizing better performance. [The qualifier “larger” is trivially satisfied; if the figure of merit has the opposite characteristic, a sign change is all that is needed to bring it back to compliance with this requirement.] Examples are empirical <span class="math inline">\(AUC\)</span>, the binormal model-based estimate <span class="math inline">\(A_z\)</span> , other advance method based estimates of <span class="math inline">\(AUC\)</span>, sensitivity at a predefined value of specificity, etc. An example of a FOM requiring a sign-change is <span class="math inline">\(FPF\)</span> at a specified <span class="math inline">\(TPF\)</span>, where smaller values signify better performance.</li>
+<li>For each treatment <span class="math inline">\(i\)</span> and reader <span class="math inline">\(j\)</span> the figure of merit <span class="math inline">\(\theta_{ij}\)</span> is estimated from the ratings data. Repeating this over all treatments and readers yields a matrix of observed values <span class="math inline">\(\theta_{ij}\)</span>. This is averaged over all readers in each treatment yielding <span class="math inline">\(\theta_{i\bullet}\)</span>. The observed effect-size <span class="math inline">\(ES_{obs}\)</span> is defined as the difference between the reader-averaged FOMs in the two treatments, i.e., <span class="math inline">\(ES_{obs}\)</span> = <span class="math inline">\(\theta_{2\bullet}\)</span> - <span class="math inline">\(\theta_{1\bullet}\)</span>. While extensible to more than two treatments, the explanation is more transparent by restricting to two modalities.</li>
+<li>If the magnitude of <span class="math inline">\(ES_{obs}\)</span> is “large” one has reason to suspect that there might indeed be a significant difference in AUCs between the two treatments, where significant is used in the sense of (book) Chapter 08. Quantification of this statement, specifically how large is “large”, requires the conceptually more complex steps described next.</li>
+</ol>
+<ul>
+<li>In the DBM approach, the subject of this chapter, jackknife pseudovalues are calculated as described in Chapter 08. A standard ANOVA model with uncorrelated errors is used to model the pseudovalues.</li>
+<li>In the OR approach, the subject of the next chapter, the FOM is modeled directly using a custom ANOVA model with correlated errors.</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>Depending on the selected method of modeling the data (pseudovalue vs. FOM) a statistical model is used which includes parameters modeling the true values in each treatment, and expected variations due to different variability components in the model, e.g., between-reader variability, case-sampling variability, interactions (e.g., modeling the possibility that the random effect of a given reader could be treatment dependent) and the presence of correlations (between pseudovalues or FOMs) because of the pairings inherent in the interpretations.</li>
+<li>In RRRC analysis one accounts for randomness in readers and cases. In FRRC analysis one regards reader as a fixed factor. In RRFC analysis one regards case as a fixed factor. The statistical model depends on the type of analysis.</li>
+<li>The parameters of the statistical model are estimated from the observed data.</li>
+<li>The estimates are used to infer the statistical distribution of the observed effect size, <span class="math inline">\(ES_{obs}\)</span>, regarded as a realization of a random variable, under the null hypothesis (NH) that the true effect size is zero.</li>
+<li>Based on this statistical distribution, and assuming a two-sided test, the probability (this is the oft-quoted p-value) of obtaining an effect size at least as extreme as that actually observed, is calculated, as in Chapter 08.</li>
+<li>If the p-value is smaller than a preselected value, denoted <span class="math inline">\(\alpha\)</span>, one declares the treatments different at the <span class="math inline">\(\alpha\)</span> - significance level. The quantity <span class="math inline">\(\alpha\)</span> is the control (or cap) on the probability of making a Type I error, defined as rejecting the NH when it is true. It is common to set <span class="math inline">\(\alpha\)</span> = 0.05 but depending on the severity of the consequences of a Type I error, as discussed in (book) Chapter 08, one might consider choosing a different value. Notice that <span class="math inline">\(\alpha\)</span> is a pre-selected number while the p-value is a realization of a random variable.</li>
+<li>For a valid statistical analysis, the empirical probability <span class="math inline">\(\alpha_{emp}\)</span> over many (typically 2000) independent NH datasets, that the p-value is smaller than <span class="math inline">\(\alpha\)</span>, should equal <span class="math inline">\(\alpha\)</span> to within statistical uncertainty.</li>
+</ol>
+</div>
+<div id="the-dorfman-berbaum-metz-dbm-method" class="section level2" number="2.6">
+<h2><span class="header-section-number">2.6</span> The Dorfman-Berbaum-Metz (DBM) method</h2>
+<p>The figure-of-merit has three indices:<br />
+1. A treatment index <span class="math inline">\(i\)</span>, where <span class="math inline">\(i\)</span> runs from 1 to <span class="math inline">\(I\)</span>, where <span class="math inline">\(I\)</span> is the total number of treatments.
+1. A reader index <span class="math inline">\(j\)</span>, where <span class="math inline">\(j\)</span> runs from 1 to <span class="math inline">\(J\)</span>, where <span class="math inline">\(J\)</span> is the total number of readers.
+1. The often-suppressed case-sample index <span class="math inline">\(\{c\}\)</span>, where <span class="math inline">\(\{1\}\)</span> i.e., <span class="math inline">\(c\)</span> = 1, denotes a set of cases, <span class="math inline">\(K_1\)</span> non-diseased and <span class="math inline">\(K_2\)</span> diseased, interpreted by all readers in all treatments, and other integer values of <span class="math inline">\(c\)</span> correspond to other independent sets of cases that, although not in fact interpreted by the readers, could potentially be “interpreted” using resampling methods such as the bootstrap or the jackknife.</p>
+<p>The approach <span class="citation">(Dorfman, Berbaum, and Metz <a href="#ref-RN204" role="doc-biblioref">1992</a>)</span> taken by Dorfman-Berbaum-Metz (DBM) was to use the jackknife resampling method described in (book) Chapter 7 to calculate FOM pseudovalues <span class="math inline">\({Y&#39;}_{ijk}\)</span> defined by (the reason for the prime will become clear shortly):</p>
+<p><span class="math display" id="eq:pseudoValPrime">\[\begin{equation}
+Y&#39;_{ijk}=K\theta_{ij}-(K-1)\theta_{ij\{k\}}
+\tag{2.1}
+\end{equation}\]</span></p>
+<p>Here <span class="math inline">\(\theta_{ij}\)</span> is the estimate of the figure-of-merit for reader <span class="math inline">\(j\)</span> interpreting all cases in treatment <span class="math inline">\(i\)</span> and <span class="math inline">\(\theta_{ij\{k\}}\)</span> is the corresponding figure of merit with case <span class="math inline">\(k\)</span> <em>deleted</em> from the analysis. To adhere to convention and to keep the notation simple the <span class="math inline">\(\{1\}\)</span> index on every figure of merit symbol is suppressed (unless it is absolutely necessary for clarity).</p>
+<p>Recall from book Chapter 07 that the jackknife is a way of teasing out the case-dependence: the left hand side of Equation <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a> literally has a case index <span class="math inline">\(k\)</span>, with <span class="math inline">\(k\)</span> running from 1 to <span class="math inline">\(K\)</span>, where <span class="math inline">\(K\)</span> is the total number of cases: <span class="math inline">\(K=K_1+K_2\)</span>.</p>
+<p>Hillis has proposed a centering transformation on the pseudovalues (Hillis calls them “normalized” pseudovalues but to me “centering” is a more accurate and descriptive term - <em>Normalize: (In mathematics) multiply (a series, function, or item of data) by a factor that makes the norm or some associated quantity such as an integral equal to a desired value (usually 1). New Oxford American Dictionary, 2016</em>):</p>
+<p><span class="math display" id="eq:pValCentered">\[\begin{equation}
+Y_{ijk}=Y&#39;_{ijk}+\left (\theta_{ij} - Y&#39;_{ij\bullet}  \right )
+\tag{2.2}
+\end{equation}\]</span></p>
+<p><strong>Note: the bullet symbol denotes an average over the corresponding index.</strong></p>
+<p>The effect of this transformation is that the average of the centered pseudovalues over the case index is identical to the corresponding estimate of the figure of merit:</p>
+<p><span class="math display" id="eq:EffectOfCentering">\[\begin{equation}
+Y_{ij\bullet}=Y&#39;_{ij\bullet}+\left (\theta_{ij} - Y&#39;_{ij\bullet}  \right )=\theta_{ij}
+\tag{2.3}
+\end{equation}\]</span></p>
+<p>This has the advantage that all confidence intervals are properly centered. The transformation is unnecessary if one uses the Wilcoxon as the figure-of-merit, as the pseudovalues calculated using the Wilcoxon as the figure of merit are automatically centered (it is left as an exercise for the reader to show that this statement is true).</p>
+<p><em>It is understood that, unless explicitly stated otherwise, all calculations from now on will use centered pseudovalues.</em></p>
+<p>Consider <span class="math inline">\(N\)</span> replications of a MRMC study, where a replication means repetition of the study with the same treatments, readers and case-set <span class="math inline">\(\{1\}\)</span>. For <span class="math inline">\(N\)</span> replications per treatment-reader-case combination, the DBM model for the pseudovalues is (<span class="math inline">\(n\)</span> is the replication index, usually <span class="math inline">\(n\)</span> = 1, but kept here for now):</p>
+<p><span class="math display" id="eq:SamplingDbmModel">\[\begin{equation}
+Y_{n(ijk)}  = \mu + \tau_i+ R_j + C_k + (\tau R)_{ij}+ (\tau C)_{ik}+ (R C)_{jk} + (\tau RC)_{ijk}+ \epsilon_{n(ijk)} 
+\tag{2.4}
+\end{equation}\]</span></p>
+<p>The term <span class="math inline">\(\mu\)</span> is a constant. By definition, the treatment effect <span class="math inline">\(\tau_i\)</span> is subject to the constraint:</p>
+<p><span class="math display" id="eq:constraintTau">\[\begin{equation}
+\sum_{i=1}^{I}\tau_i=0\Rightarrow \tau_\bullet=0
+\tag{2.5}
+\end{equation}\]</span></p>
+<p>It is shown below, TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a>, that this constraint ensures that <span class="math inline">\(\mu\)</span> has the interpretation as the average of the pseudovalues over treatments, readers, cases and replications, if any.</p>
+<p>The notation for the replication index, i.e., <span class="math inline">\(n(ijk)\)</span>, implies <span class="math inline">\(n\)</span> observations for treatment-reader-case combination <span class="math inline">\(ijk\)</span>. With no replications (<span class="math inline">\(N\)</span> = 1) it is convenient to omit the n-symbol. As an example, the parameter <span class="math inline">\(\tau_i\)</span> is readily estimated as follows:</p>
+<p><span class="math display" id="eq:estimatingTau">\[\begin{equation}
+Y_{ijk} \equiv Y_{1(ijk)}\\
+\tau_i = Y_{i \bullet \bullet} -Y_{\bullet \bullet \bullet} 
+\tag{2.6}
+\end{equation}\]</span></p>
+<p><em>The basic assumption of the DBM model, TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a>, is that the pseudovalues can be regarded as independent and identically distributed observations. That being the case, the pseudovalues can be analyzed by standard ANOVA techniques.</em></p>
+<div id="explanation-of-terms-in-the-model" class="section level3" number="2.6.1">
+<h3><span class="header-section-number">2.6.1</span> Explanation of terms in the model</h3>
+<p>The right hand side of TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a> consists of one fixed and 7 random effects. The current analysis assumes readers and cases as random factors (RRRC), so by definition <span class="math inline">\(R_j\)</span> and <span class="math inline">\(C_k\)</span> are random effects, and moreover, any term that includes a random factor is a random effect; for example, <span class="math inline">\((\tau R)_{ij}\)</span> is a random effect because it includes the <span class="math inline">\(R\)</span> factor. Here is a list of the random terms:</p>
+<p><span class="math display" id="eq:termsInDbmModel">\[\begin{equation}
+R_j, C_k, (\tau R)_{ij}, (\tau C)_{ik}, (RC)_{jk},  (\tau RC)_{ijk},  \epsilon_{ijk}
+\tag{2.7}
+\end{equation}\]</span></p>
+<p><strong>Assumption:</strong> Each of the random effects is modeled as a random sample from mutually independent zero-mean normal distributions with variances as specified below:</p>
+<p><span class="math display" id="eq:samplingOfDbmTerms">\[\begin{equation}
+\left.\begin{matrix}
+R_j  \sim N\left ( 0,\sigma_{R}^{2} \right )\\ 
+C_k \sim N\left ( 0,\sigma_{C}^{2} \right )\\ 
+(\tau R)_{ij} \sim N\left ( 0,\sigma_{\tau R}^{2} \right )\\ 
+(\tau C)_{ik} \sim N\left ( 0,\sigma_{\tau C}^{2} \right )\\ 
+(RC)_{jk} \sim N\left ( 0,\sigma_{RC}^{2} \right )\\ 
+(\tau RC)_{ijk} \sim N\left ( 0,\sigma_{\tau RC}^{2} \right )\\
+\epsilon_{ijk} \sim N\left ( 0,\sigma_{\epsilon}^{2} \right ) 
+\end{matrix}\right\}
+\tag{2.8}
+\end{equation}\]</span></p>
+<p>Equation <a href="DBMnalysis.html#eq:samplingOfDbmTerms">(2.8)</a> defines the meanings of the variance components appearing in Equation <a href="DBMnalysis.html#eq:termsInDbmModel">(2.7)</a>. One could have placed a <span class="math inline">\(Y\)</span> subscript (or superscript) on each of the variances, as they describe fluctuations of the pseudovalues, not FOM values. However, this tends to clutter the notation. So here is the convention:</p>
+<p><strong>Unless explicitly stated otherwise, all variance symbols in this chapter refer to pseudovalues. </strong>
+Another convention: <span class="math inline">\((\tau R)_{ij}\)</span> is <em>not</em> the product of the treatment and reader factors, rather it is a single factor, namely the treatment-reader factor with <span class="math inline">\(IJ\)</span> levels, subscripted by the index <span class="math inline">\(ij\)</span> and similarly for the other product-like terms in Equation <a href="DBMnalysis.html#eq:samplingOfDbmTerms">(2.8)</a>.</p>
+</div>
+<div id="meanings-of-variance-components-in-the-dbm-model-tba-this-section-can-be-improved" class="section level3" number="2.6.2">
+<h3><span class="header-section-number">2.6.2</span> Meanings of variance components in the DBM model (<strong>TBA this section can be improved</strong>)</h3>
+<p>The variances defined in <a href="DBMnalysis.html#eq:samplingOfDbmTerms">(2.8)</a> are collectively termed <em>variance components</em>. Specifically, they are jackknife pseudovalue variance components, to be distinguished from figure of merit (FOM) variance components to be introduced in TBA Chapter 10. They are in order: <span class="math inline">\(\sigma_{R}^{2} ,\sigma_{C}^{2} \sigma_{\tau R}^{2},\sigma_{\tau C}^{2},\sigma_{RC}^{2}, \sigma_{\tau RC}^{2},\sigma_{\epsilon}^{2}\)</span>. They have the following meanings.</p>
+<ul>
+<li>The term <span class="math inline">\(\sigma_{R}^{2}\)</span> is the variance of readers that is independent of treatment or case, which are modeled separately. It is not to be confused with the terms <span class="math inline">\(\sigma_{br+wr}^{2}\)</span> and <span class="math inline">\(\sigma_{cs+wr}^{2}\)</span> used in §9.3, which describe the variability of <span class="math inline">\(\theta\)</span> measured under specified conditions. [A jackknife pseudovalue is a weighted difference of FOM like quantities, TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a>. Its meaning will be explored later. For now, <em>a pseudovalue variance is distinct from a FOM variance</em>.]</li>
+<li>The term <span class="math inline">\(\sigma_{C}^{2}\)</span> is the variance of cases that is independent of treatment or reader.</li>
+<li>The term <span class="math inline">\(\sigma_{\tau R}^{2}\)</span> is the treatment-dependent variance of readers that was excluded in the definition of <span class="math inline">\(\sigma_{R}^{2}\)</span>. If one were to sample readers and treatments for the same case-set, the net variance would be <span class="math inline">\(\sigma_{R}^{2}+\sigma_{\tau R}^{2}+\sigma_{\epsilon}^{2}\)</span>.</li>
+<li>The term <span class="math inline">\(\sigma_{\tau C}^{2}\)</span> is the treatment-dependent variance of cases that was excluded in the definition of <span class="math inline">\(\sigma_{C}^{2}\)</span>. So, if one were to sample cases and treatments for the same readers, the net variance would be <span class="math inline">\(\sigma_{C}^{2}+\sigma_{\tau C}^{2}+\sigma_{\epsilon}^{2}\)</span>.</li>
+<li>The term <span class="math inline">\(\sigma_{RC}^{2}\)</span> is the treatment-independent variance of readers and cases that were excluded in the definitions of <span class="math inline">\(\sigma_{R}^{2}\)</span> and <span class="math inline">\(\sigma_{C}^{2}\)</span>. So, if one were to sample readers and cases for the same treatment, the net variance would be <span class="math inline">\(\sigma_{R}^{2}+\sigma_{C}^{2}+\sigma_{RC}^{2}+\sigma_{\epsilon}^{2}\)</span>.</li>
+<li>The term <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> is the variance of treatments, readers and cases that were excluded in the definitions of all the preceding terms in TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a>. So, if one were to sample treatments, readers and cases the net variance would be <span class="math inline">\(\sigma_{R}^{2}+\sigma_{C}^{2}+\sigma_{\tau C}^{2}+\sigma_{RC}^{2}+\sigma_{\tau RC}^{2}+\sigma_{\epsilon}^{2}\)</span>.</li>
+<li>The last term, <span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> describes the variance arising from different replications of the study using the same treatments, readers and cases. Measuring this variance requires repeating the study several (<span class="math inline">\(N\)</span>) times with the same treatments, readers and cases, and computing the variance of <span class="math inline">\(Y_{n(ijk)}\)</span> , where the additional <span class="math inline">\(n\)</span>-index refers to true replications, <span class="math inline">\(n\)</span> = 1, 2, …, <span class="math inline">\(N\)</span>.</li>
+</ul>
+<p><span class="math display" id="eq:EstimatingEpsilon">\[\begin{equation}
+\sigma_{\epsilon}^{2}=\frac{1}{IJK}\sum_{i=1}^{I}\sum_{j=1}^{J}\sum_{k=1}^{k}\frac{1}{N-1}\sum_{n=1}^{N}\left ( Y_{n(ijk)} - Y_{\bullet (ijk)} \right )^2
+\tag{2.9}
+\end{equation}\]</span></p>
+<p>The right hand side of TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a> is the variance of <span class="math inline">\(Y_{n(ijk)}\)</span>, for specific <span class="math inline">\(ijk\)</span>, with respect to the replication index <span class="math inline">\(n\)</span>, averaged over all <span class="math inline">\(ijk\)</span>. In practice <span class="math inline">\(N\)</span> = 1 (i.e., there are no replications) and this variance cannot be estimated (it would imply dividing by zero). It has the meaning of <em>reader inconsistency</em>, usually termed <em>within-reader</em> variability. As will be shown later, the presence of this inestimable term does not limit ones ability to perform significance testing on the treatment effect without having to replicate the whole study, as implied in earlier work <span class="citation">(Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span>.</p>
+<p>An equation like TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a> is termed a <em>linear model</em> with the left hand side, the pseudovalue “observations”, modeled by a sum of fixed and random terms. Specifically it is a <em>mixed model</em>, because the right hand side has both fixed and random effects. Statistical methods have been developed for analysis of such linear models. One estimates the terms on the right hand side of TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a>, it being understood that for the random effects, one estimates the variances of the zero-mean normal distributions, TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a>Eqn. (9.7), from which the samples are obtained (by assumption).</p>
+<p>Estimating the fixed effects is trivial. The term <span class="math inline">\(\mu\)</span> is estimated by averaging the left hand side of TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a>Eqn. (9.4) over all three indices (since <span class="math inline">\(N\)</span> = 1): <span class="math inline">\(\mu=Y_{\bullet \bullet \bullet}\)</span></p>
+<p>Because of the way the treatment effect is defined, TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a> Eqn. (9.5), averaging, which involves summing, over the treatment-index <span class="math inline">\(i\)</span>, yields zero, and all of the remaining random terms yield zero upon averaging, because they are individually sampled from zero-mean normal distributions. To estimate the treatment effect one takes the difference <span class="math inline">\(\tau_i=Y_{\bullet \bullet \bullet}-\mu\)</span>.</p>
+<p>It can be easily seen that the reader and case averaged difference between two different treatments <span class="math inline">\(i\)</span> and <span class="math inline">\(i&#39;\)</span> is estimated by <span class="math inline">\(\tau_i-\tau_{i&#39;} = Y_{i \bullet \bullet} - Y_{i&#39; \bullet \bullet}\)</span>.</p>
+<p>Estimating the strengths of the random terms is a little more complicated. It involves methods adapted from least squares, or maximum likelihood, and more esoteric ways. I do not feel comfortable going into these methods. Instead, results are presented and arguments are made to make them plausible. The starting point is definitions of quantities called <strong>mean squares</strong> and their expected values.</p>
+</div>
+<div id="definitions-of-mean-squares" class="section level3" number="2.6.3">
+<h3><span class="header-section-number">2.6.3</span> Definitions of mean-squares</h3>
+<p>Again, to be clear, one chould put a <span class="math inline">\(Y\)</span> subscript (or superscript) on each of the following definitions, but that would make the notation unnecessarily cumbersome.</p>
+<p><em>In this chapter, all mean-square quantities are calculated using pseudovalues, not figure-of-merit values. The presence of three subscripts on Y should make this clear. Also the replication index and the nesting notation are suppressed. The notation is abbreviated so MST is the mean square corresponding to the treatment effect, etc.</em></p>
+<p>The definitions of the mean-squares below match those (where provided) in <span class="citation">(Hillis and Berbaum <a href="#ref-RN1476" role="doc-biblioref">2004</a>, 1261)</span>.</p>
+<p><span class="math display" id="eq:MeanSquares">\[\begin{equation}
+\left.\begin{matrix}
+\text{MST}=\frac{JK\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{I-1}\\ 
+\text{MSR}=\frac{IK\sum_{j=1}^{J}\left ( Y_{\bullet j \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{J-1}\\ 
+\text{MS(C)}=\frac{IJ\sum_{k=1}^{K}\left ( Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{K-1}\\ 
+\text{MSTR}=\frac{K\sum_{i=1}^{I}\sum_{j=1}^{J}\left ( Y_{i j \bullet} - Y_{i \bullet \bullet} - Y_{\bullet j \bullet} + Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(J-1)}\\ 
+\text{MSTC}=\frac{J\sum_{i=1}^{I}\sum_{k=1}^{K}\left ( Y_{i \bullet k} - Y_{i \bullet \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(K-1)}\\ 
+\text{MSRC}=\frac{I\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{\bullet j k} - Y_{\bullet j \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(J-1)(K-1)}\\ 
+\text{MSTRC}=\frac{\sum_{i=1}^{I}\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{i j k} - Y_{i j \bullet} - Y_{i \bullet k} - Y_{\bullet j k} + Y_{i \bullet \bullet} + Y_{\bullet j \bullet} + Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(J-1)K-1)}
+\end{matrix}\right\}
+\tag{2.10}
+\end{equation}\]</span></p>
+<p>Note the absence of <span class="math inline">\(MSE\)</span>, corresponding to the <span class="math inline">\(\epsilon\)</span> term on the right hand side of <a href="DBMnalysis.html#eq:MeanSquares">(2.10)</a>. With only one observation per treatment-reader-case combination, MSE cannot be estimated; it effectively gets absorbed into the <span class="math inline">\(MSTRC\)</span> term.</p>
+</div>
+</div>
+<div id="expected-values-of-mean-squares" class="section level2" number="2.7">
+<h2><span class="header-section-number">2.7</span> Expected values of mean squares</h2>
+<blockquote>
+<p>“In our original formulation [2], expected mean squares for the ANOVA were derived from a restricted parameterization in which mixed-factor interactions sum to zero over indexes of fixed effects. In the restricted parameterization, the mixed effects are correlated, parameters are sometimes awkward to define [17], and extension to unbalanced designs is dubious [17, 18]. In this article, we recommend the unrestricted parameterization. The restricted and unrestricted parameterizations are special cases of a general model by Scheffe [19] that allows an arbitrary covariance structure among experimental units within a level of a random factor. Tables 1 and 2 show the ANOVA tables with expected mean squares for the unrestricted formulation.”</p>
+<p>— <span class="citation">(Dorfman, Berbaum, and Lenth <a href="#ref-RN2079" role="doc-biblioref">1995</a>)</span></p>
+</blockquote>
+<p>The <em>observed</em> mean squares defined in Equation <a href="DBMnalysis.html#eq:MeanSquares">(2.10)</a> can be calculated directly from the <em>observed</em> pseudovalues. The next step in the analysis is to obtain expressions for their <em>expected</em> values in terms of the variances defined in <a href="DBMnalysis.html#eq:MeanSquares">(2.10)</a>. Assuming no replications, i.e., <span class="math inline">\(N\)</span> = 1, the expected mean squares are as follows, Table Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a>; understanding how this table is derived, would lead the author well outside his expertise and the scope of this book; suffice to say that these are <em>unconstrained</em> estimates (as summarized in the quotation above) which are different from the <em>constrained</em> estimates appearing in the original DBM publication <span class="citation">(Dorfman, Berbaum, and Metz <a href="#ref-RN204" role="doc-biblioref">1992</a>)</span>.</p>
+<table>
+<caption><span id="tab:ExpValMs">TABLE 2.1: </span> Unconstrained expected values of mean-squares, as in <span class="citation">(Dorfman, Berbaum, and Lenth <a href="#ref-RN2079" role="doc-biblioref">1995</a>)</span></caption>
+<thead>
+<tr class="header">
+<th align="left">Source</th>
+<th align="left">df</th>
+<th align="left">E(MS)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">T</td>
+<td align="left">(I-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span> + <span class="math inline">\(JK\sigma_{\tau}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">R</td>
+<td align="left">(J-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span> + <span class="math inline">\(IK\sigma_{R}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="left">(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span> + <span class="math inline">\(IJ\sigma_{C}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">TR</td>
+<td align="left">(I-1)(J-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">TC</td>
+<td align="left">(I-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">RC</td>
+<td align="left">(J-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">TRC</td>
+<td align="left">(I-1)(J-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\epsilon\)</span></td>
+<td align="left"><span class="math inline">\(N-1=0\)</span></td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>In Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a> the following notation is used as a shorthand:</li>
+</ul>
+<p><span class="math display" id="eq:defnVarTau">\[\begin{equation}
+\sigma_{\tau}^{2}=\frac{1}{I-1}\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{\bullet \bullet \bullet} \right )^2
+\tag{2.11}
+\end{equation}\]</span></p>
+<p>Since treatment is a fixed effect, the variance symbol <span class="math inline">\(\sigma_{\tau}^{2}\)</span>, which is used for notational consistency in Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a>, could cause confusion. The right hand side “looks like” a variance, indeed one that could be calculated for just two treatments but, of course, random sampling from a <em>distribution of treatments</em> is not the intent of the notation.</p>
+</div>
+<div id="random-reader-random-case-rrrc-analysis" class="section level2" number="2.8">
+<h2><span class="header-section-number">2.8</span> Random-reader random-case (RRRC) analysis</h2>
+<p>Both readers and cases are regarded as random factors. The expected mean squares in Table Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a> are variance-like quantities; specifically, they are weighted linear combinations of the variances appearing in <a href="DBMnalysis.html#eq:samplingOfDbmTerms">(2.8)</a>. For single factors the column headed “degrees of freedom” (<span class="math inline">\(df\)</span>) is one less than the number of levels of the corresponding factor; estimating a variance requires first estimating the mean, which imposes a constraint, thereby decreasing <span class="math inline">\(df\)</span> by one. For interaction terms, <span class="math inline">\(df\)</span> is the product of the degrees of freedom for the individual factors. As an example, the term <span class="math inline">\((\tau RC)_{ijk}\)</span> contains three individual factors, and therefore <span class="math inline">\(df = (I-1)(J-1)(K-1)\)</span>. The number of degrees of freedom can be thought of as the amount of information available in estimating a mean square. As a special case, with no replications, the <span class="math inline">\(\epsilon\)</span> term has zero <span class="math inline">\(df\)</span> as <span class="math inline">\(N-1 = 0\)</span>. With only one observation <span class="math inline">\(Y_{1(ijk)}\)</span> there is no information to estimate the variance corresponding to the <span class="math inline">\(\epsilon\)</span> term. To estimate this term one needs to replicate the study several times – each time the same readers interpret the same cases in all treatments – a very boring task for the reader and totally unnecessary from the researcher’s point of view.</p>
+<div id="calculation-of-mean-squares-an-example" class="section level3" number="2.8.1">
+<h3><span class="header-section-number">2.8.1</span> Calculation of mean squares: an example</h3>
+<ul>
+<li><p>We choose <code>dataset02</code> to illustrate calculation of mean squares for pseudovalues. This is referred to in the book as the “VD” dataset <span class="citation">(Van Dyke et al. <a href="#ref-RN1993" role="doc-biblioref">1993</a>)</span>. It consists of 114 cases, 45 of which are diseased, interpreted in two treatments by five radiologists using the ROC paradigm.</p></li>
+<li><p>The first line computes the pseudovalues using the <code>RJafroc</code> function <code>UtilPseudoValues()</code>, and the second line extracts the numbers of treatments, readers and cases. The following lines calculate, using Equation <a href="DBMnalysis.html#eq:MeanSquares">(2.10)</a> the mean-squares. After displaying the results of the calculation, the results are compared to those calculated by the <code>RJafroc</code> function <code>UtilMeanSquares()</code>.</p></li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="DBMnalysis.html#cb1-1"></a>Y &lt;-<span class="st"> </span><span class="kw">UtilPseudoValues</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>)<span class="op">$</span>jkPseudoValues</span>
+<span id="cb1-2"><a href="DBMnalysis.html#cb1-2"></a></span>
+<span id="cb1-3"><a href="DBMnalysis.html#cb1-3"></a>I &lt;-<span class="st"> </span><span class="kw">dim</span>(Y)[<span class="dv">1</span>];J &lt;-<span class="st"> </span><span class="kw">dim</span>(Y)[<span class="dv">2</span>];K &lt;-<span class="st"> </span><span class="kw">dim</span>(Y)[<span class="dv">3</span>]</span>
+<span id="cb1-4"><a href="DBMnalysis.html#cb1-4"></a></span>
+<span id="cb1-5"><a href="DBMnalysis.html#cb1-5"></a>msT &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-6"><a href="DBMnalysis.html#cb1-6"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I)  {</span>
+<span id="cb1-7"><a href="DBMnalysis.html#cb1-7"></a>  msT &lt;-<span class="st"> </span>msT <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-8"><a href="DBMnalysis.html#cb1-8"></a>}</span>
+<span id="cb1-9"><a href="DBMnalysis.html#cb1-9"></a>msT &lt;-<span class="st"> </span>msT <span class="op">*</span><span class="st"> </span>J <span class="op">*</span><span class="st"> </span>K<span class="op">/</span>(I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb1-10"><a href="DBMnalysis.html#cb1-10"></a></span>
+<span id="cb1-11"><a href="DBMnalysis.html#cb1-11"></a>msR &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-12"><a href="DBMnalysis.html#cb1-12"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) {</span>
+<span id="cb1-13"><a href="DBMnalysis.html#cb1-13"></a>  msR &lt;-<span class="st"> </span>msR <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-14"><a href="DBMnalysis.html#cb1-14"></a>}</span>
+<span id="cb1-15"><a href="DBMnalysis.html#cb1-15"></a>msR &lt;-<span class="st"> </span>msR <span class="op">*</span><span class="st"> </span>I <span class="op">*</span><span class="st"> </span>K<span class="op">/</span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb1-16"><a href="DBMnalysis.html#cb1-16"></a></span>
+<span id="cb1-17"><a href="DBMnalysis.html#cb1-17"></a>msC &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-18"><a href="DBMnalysis.html#cb1-18"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) {</span>
+<span id="cb1-19"><a href="DBMnalysis.html#cb1-19"></a>  msC &lt;-<span class="st"> </span>msC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-20"><a href="DBMnalysis.html#cb1-20"></a>}</span>
+<span id="cb1-21"><a href="DBMnalysis.html#cb1-21"></a>msC &lt;-<span class="st"> </span>msC <span class="op">*</span><span class="st"> </span>I <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb1-22"><a href="DBMnalysis.html#cb1-22"></a></span>
+<span id="cb1-23"><a href="DBMnalysis.html#cb1-23"></a>msTR &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-24"><a href="DBMnalysis.html#cb1-24"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
+<span id="cb1-25"><a href="DBMnalysis.html#cb1-25"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) {</span>
+<span id="cb1-26"><a href="DBMnalysis.html#cb1-26"></a>    msTR &lt;-<span class="st"> </span>msTR <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, ]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-27"><a href="DBMnalysis.html#cb1-27"></a>  }</span>
+<span id="cb1-28"><a href="DBMnalysis.html#cb1-28"></a>}</span>
+<span id="cb1-29"><a href="DBMnalysis.html#cb1-29"></a>msTR &lt;-<span class="st"> </span>msTR <span class="op">*</span><span class="st"> </span>K<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb1-30"><a href="DBMnalysis.html#cb1-30"></a></span>
+<span id="cb1-31"><a href="DBMnalysis.html#cb1-31"></a>msTC &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-32"><a href="DBMnalysis.html#cb1-32"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
+<span id="cb1-33"><a href="DBMnalysis.html#cb1-33"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) {</span>
+<span id="cb1-34"><a href="DBMnalysis.html#cb1-34"></a>    msTC &lt;-<span class="st"> </span>msTC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-35"><a href="DBMnalysis.html#cb1-35"></a>  }</span>
+<span id="cb1-36"><a href="DBMnalysis.html#cb1-36"></a>  msTC &lt;-<span class="st"> </span>msTC <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb1-37"><a href="DBMnalysis.html#cb1-37"></a>} </span>
+<span id="cb1-38"><a href="DBMnalysis.html#cb1-38"></a></span>
+<span id="cb1-39"><a href="DBMnalysis.html#cb1-39"></a>msTC &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-40"><a href="DBMnalysis.html#cb1-40"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
+<span id="cb1-41"><a href="DBMnalysis.html#cb1-41"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) { <span class="co"># OK</span></span>
+<span id="cb1-42"><a href="DBMnalysis.html#cb1-42"></a>    msTC &lt;-<span class="st"> </span>msTC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[i, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-43"><a href="DBMnalysis.html#cb1-43"></a>  }</span>
+<span id="cb1-44"><a href="DBMnalysis.html#cb1-44"></a>}</span>
+<span id="cb1-45"><a href="DBMnalysis.html#cb1-45"></a>msTC &lt;-<span class="st"> </span>msTC <span class="op">*</span><span class="st"> </span>J<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb1-46"><a href="DBMnalysis.html#cb1-46"></a></span>
+<span id="cb1-47"><a href="DBMnalysis.html#cb1-47"></a>msRC &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-48"><a href="DBMnalysis.html#cb1-48"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) {</span>
+<span id="cb1-49"><a href="DBMnalysis.html#cb1-49"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) {</span>
+<span id="cb1-50"><a href="DBMnalysis.html#cb1-50"></a>    msRC &lt;-<span class="st"> </span>msRC <span class="op">+</span><span class="st"> </span>(<span class="kw">mean</span>(Y[, j, k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, ]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, , k]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-51"><a href="DBMnalysis.html#cb1-51"></a>  }</span>
+<span id="cb1-52"><a href="DBMnalysis.html#cb1-52"></a>}</span>
+<span id="cb1-53"><a href="DBMnalysis.html#cb1-53"></a>msRC &lt;-<span class="st"> </span>msRC <span class="op">*</span><span class="st"> </span>I<span class="op">/</span>((J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb1-54"><a href="DBMnalysis.html#cb1-54"></a></span>
+<span id="cb1-55"><a href="DBMnalysis.html#cb1-55"></a>msTRC &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb1-56"><a href="DBMnalysis.html#cb1-56"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
+<span id="cb1-57"><a href="DBMnalysis.html#cb1-57"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J) {</span>
+<span id="cb1-58"><a href="DBMnalysis.html#cb1-58"></a>    <span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K) {</span>
+<span id="cb1-59"><a href="DBMnalysis.html#cb1-59"></a>      msTRC &lt;-<span class="st"> </span>msTRC <span class="op">+</span><span class="st"> </span>(Y[i, j, k] <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[i, j, ]) <span class="op">-</span><span class="st"> </span></span>
+<span id="cb1-60"><a href="DBMnalysis.html#cb1-60"></a><span class="st">                          </span><span class="kw">mean</span>(Y[i, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, k]) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1-61"><a href="DBMnalysis.html#cb1-61"></a><span class="st">                          </span><span class="kw">mean</span>(Y[i, , ]) <span class="op">+</span><span class="st"> </span><span class="kw">mean</span>(Y[, j, ]) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1-62"><a href="DBMnalysis.html#cb1-62"></a><span class="st">                          </span><span class="kw">mean</span>(Y[, , k]) <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Y))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb1-63"><a href="DBMnalysis.html#cb1-63"></a>    }</span>
+<span id="cb1-64"><a href="DBMnalysis.html#cb1-64"></a>  }</span>
+<span id="cb1-65"><a href="DBMnalysis.html#cb1-65"></a>}</span>
+<span id="cb1-66"><a href="DBMnalysis.html#cb1-66"></a>msTRC &lt;-<span class="st"> </span>msTRC<span class="op">/</span>((I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(J <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">*</span><span class="st"> </span>(K <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb1-67"><a href="DBMnalysis.html#cb1-67"></a></span>
+<span id="cb1-68"><a href="DBMnalysis.html#cb1-68"></a><span class="kw">data.frame</span>(<span class="st">&quot;msT&quot;</span> =<span class="st"> </span>msT, <span class="st">&quot;msR&quot;</span> =<span class="st"> </span>msR, <span class="st">&quot;msC&quot;</span> =<span class="st"> </span>msC, <span class="st">&quot;msTR&quot;</span> =<span class="st"> </span>msTR, <span class="st">&quot;msTC&quot;</span> =<span class="st"> </span>msTC, <span class="st">&quot;msRC&quot;</span> =<span class="st"> </span>msRC, <span class="st">&quot;msTRC&quot;</span> =<span class="st"> </span>msTRC)</span>
+<span id="cb1-69"><a href="DBMnalysis.html#cb1-69"></a><span class="co">#&gt;         msT       msR       msC       msTR       msTC       msRC     msTRC</span></span>
+<span id="cb1-70"><a href="DBMnalysis.html#cb1-70"></a><span class="co">#&gt; 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716</span></span>
+<span id="cb1-71"><a href="DBMnalysis.html#cb1-71"></a></span>
+<span id="cb1-72"><a href="DBMnalysis.html#cb1-72"></a><span class="kw">as.data.frame</span>(<span class="kw">UtilMeanSquares</span>(dataset02)[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>])</span>
+<span id="cb1-73"><a href="DBMnalysis.html#cb1-73"></a><span class="co">#&gt;         msT       msR       msC       msTR       msTC       msRC     msTRC</span></span>
+<span id="cb1-74"><a href="DBMnalysis.html#cb1-74"></a><span class="co">#&gt; 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716</span></span></code></pre></div>
+</div>
+<div id="significance-testing" class="section level3" number="2.8.2">
+<h3><span class="header-section-number">2.8.2</span> Significance testing</h3>
+<p>If the NH of no treatment effect is true, i.e., if <span class="math inline">\(\sigma_{\tau}^{2}\)</span> = 0, then according to Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a> the following holds (the last term in the row labeled <span class="math inline">\(T\)</span> in Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a> drops out):</p>
+<p><span class="math display" id="eq:ExpValMST">\[\begin{equation}
+E\left ( MST\mid NH \right ) = \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} + J\sigma_{\tau C}^{2}
+\tag{2.12}
+\end{equation}\]</span></p>
+<p>Also, the following linear combination is equal to <span class="math inline">\(E\left ( MST\mid NH \right )\)</span>:</p>
+<p><span class="math display" id="eq:linearComb">\[\begin{equation}
+E\left ( MSTR \right ) + E\left ( MSTC \right )  - E\left ( MSTRC \right ) \\ 
+= \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} \right ) + \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J\sigma_{\tau C}^{2} \right ) -\left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2}  \right ) \\
+= \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J \sigma_{\tau C}^{2} +  K\sigma_{\tau R}^{2} \\
+= E\left ( MST\mid NH \right )
+\tag{2.13}
+\end{equation}\]</span></p>
+<p>Therefore, under the NH, the ratio:</p>
+<p><span class="math display" id="eq:ConstrFRatio">\[\begin{equation}
+\frac{E\left ( MST\mid NH \right )}{E\left ( MSTR \right ) + E\left ( MSTC \right )  - E\left ( MSTRC \right )} = 1
+\tag{2.14}
+\end{equation}\]</span></p>
+<p>In practice, one does not know the expected values – that would require averaging each of these quantities, regarded as random variables, over their respective distributions. Therefore, one defines the following statistic, denoted <span class="math inline">\(F_{DBM}\)</span>, using the observed values of the mean squares, calculated almost trivially as in the previous example, using their definitions in Equation <a href="DBMnalysis.html#eq:MeanSquares">(2.10)</a>:</p>
+<p><span class="math display" id="eq:FStatRRRC">\[\begin{equation}
+F_{DBM} = \frac{MST}{MSTR + MSTC - MSTRC}
+\tag{2.15}
+\end{equation}\]</span></p>
+<p><span class="math inline">\(F_{DBM}\)</span> is a realization of a random variable. A non-zero treatment effect, i.e., <span class="math inline">\(\sigma_{\tau}^{2} &gt; 0\)</span>, will cause the ratio to be larger than one, because <span class="math inline">\(E\left ( MST \right)\)</span> will be larger, see row labeled <span class="math inline">\(T\)</span> in Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a>. Therefore values of <span class="math inline">\(F_{DBM} &gt; 1\)</span> will tend to reject the NH. Drawing on a theorem from statistics <span class="citation">(Larsen and Marx <a href="#ref-RN1492" role="doc-biblioref">2001</a>)</span>, under the NH the ratio of two independent mean squares is distributed as a (central) F-statistic with degrees of freedom corresponding to those of the mean squares forming the numerator and denominator of the ratio (Theorem 12.2.5 in “An Introduction to Mathematical Statistics and Its Applications”). Knowing the distribution of the statistic defined by (9.18) under the NH enables hypothesis testing. This is completely analogous to Chapter 08 where knowledge of the distribution of AUC under the NH enabled testing the null hypothesis that the observed value of AUC equals a pre-specified value.</p>
+<p>Under the NH the left hand side of by (9.18), i.e., <span class="math inline">\(F_{DBM|NH}\)</span>, is distributed according to the F-distribution characterized by two numbers:</p>
+<ul>
+<li>A numerator degrees of freedom (<span class="math inline">\(ndf\)</span>) – determined by the degrees of freedom of the numerator <span class="math inline">\(MST\)</span> of the ratio comprising the F-statistic, i.e., <span class="math inline">\(I – 1\)</span>, and</li>
+<li>A denominator degrees of freedom (<span class="math inline">\(ddf\)</span>) - determined by the degrees of freedom of the denominator of the ratio comprising the F-statistic, to be described below.</li>
+</ul>
+<p>Summarizing,</p>
+<p><span class="math display" id="eq:samplingFStat">\[\begin{equation}
+F_{DBM|NH} \sim F_{ndf,ddf} \\
+ndf=I-1
+\tag{2.16}
+\end{equation}\]</span></p>
+<p>The next topic is estimating <span class="math inline">\(ddf\)</span>.</p>
+</div>
+<div id="the-satterthwaite-approximation" class="section level3" number="2.8.3">
+<h3><span class="header-section-number">2.8.3</span> The Satterthwaite approximation</h3>
+<p>The denominator of the F-ratio is <span class="math inline">\(MSTR+MSTC-MSTRC\)</span>. This is not a <em>simple</em> mean square (I am using terminology in the Satterthwaite papers - he means any mean square defined by equations such as in Equation <a href="DBMnalysis.html#eq:MeanSquares">(2.10)</a>). Rather it is a <em>linear combination of mean squares</em> (with coefficients 1, 1 and -1), and the resulting value could even be negative leading to a negative <span class="math inline">\(F_{DBM|NH}\)</span>, which is an illegal value for a sample from an F-distribution (a ratio of two variances). In 1941 Satterthwaite <span class="citation">(Satterthwaite <a href="#ref-RN2359" role="doc-biblioref">1941</a>, <a href="#ref-RN2360" role="doc-biblioref">1946</a>)</span> proposed an approximate degree of freedom for a linear combination of simple mean square quantities. TBA Online Appendix 9.A explains the approximation in more detail. The end result is that the mean square quantity described in Equation <a href="DBMnalysis.html#eq:FStatRRRC">(2.15)</a> has an approximate degree of freedom defined by (this is called the <em>Satterthwaite’s approximation</em>):</p>
+<p><span class="math display" id="eq:ddfSatter">\[\begin{equation}
+ddf_{Sat}=\frac{\left ( MSTR + MSTC - MSTRC \right )^2}{\left ( \frac{MSTR^2}{(I-1)(J-1)} + \frac{MSTC^2}{(I-1)(K-1)} + \frac{MSTRC^2}{(I-1)(J-1)(K-1)}  \right )}
+\tag{2.17}
+\end{equation}\]</span></p>
+<p>The subscript <span class="math inline">\(Sat\)</span> is for Satterthwaite. From Equation <a href="DBMnalysis.html#eq:ddfSatter">(2.17)</a> it should be fairly obvious that in general <span class="math inline">\(ddf_{Sat}\)</span> is not an integer. To accommodate possible negative estimates of the denominator of Equation <a href="DBMnalysis.html#eq:ddfSatter">(2.17)</a>, the original DBM method <span class="citation">(Dorfman, Berbaum, and Metz <a href="#ref-RN204" role="doc-biblioref">1992</a>)</span> proposed, depending on the signs of <span class="math inline">\(\sigma_{\tau R}^2\)</span> and <span class="math inline">\(\sigma_{\tau C}^2\)</span>, four expressions for the F-statistic and corresponding expressions for <span class="math inline">\(ddf\)</span>. Rather than repeat them here, since they have been superseded by the method described below, the interested reader is referred to Eqn. 6 and Eqn. 7 in Reference <span class="citation">(Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span>.</p>
+<p>Instead Hillis <span class="citation">(Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>)</span> proposed the following statistic for testing the null hypothesis:</p>
+<p><span class="math display" id="eq:FStatHillis">\[\begin{equation}
+F_{DBM} = \frac{MST}{MSTR + \max \left (MSTC - MSTRC, 0  \right )}
+\tag{2.18}
+\end{equation}\]</span></p>
+<p>Now the denominator cannot be negative. One can think of the F-statistic <span class="math inline">\(F_{DBM}\)</span> as a signal-to-noise ratio like quantity, with the difference that both numerator and denominator are variance like quantities. If the “variance” represented by the treatment effect is larger than the variance of the noise tending to mask the treatment effect, then <span class="math inline">\(F_{DBM}\)</span> tends to be large, which makes the observed treatment “variance” stand out more clearly compared to the noise, and the NH is more likely to be rejected. Hillis in <span class="citation">(Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>)</span> has shown that the left hand side of Equation <a href="DBMnalysis.html#eq:FStatHillis">(2.18)</a> is distributed as an F-statistic with <span class="math inline">\(ndf = I-1\)</span> and denominator degrees of freedom <span class="math inline">\(ddf_H\)</span> defined by:</p>
+<p><span class="math display" id="eq:ddfH">\[\begin{equation}
+ddf_H =\frac{\left ( MSTR + \max \left (MSTC - MSTRC,0  \right ) \right )^2}{\text{MSTR}^2}(I-1)(J-1)
+\tag{2.19}
+\end{equation}\]</span></p>
+<p>Summarizing,</p>
+<p><span class="math display" id="eq:samplingFStatHillis">\[\begin{equation}
+F_{DBM} \sim F_{ndf,ddf} \\
+ndf=I-1
+\tag{2.20}
+\end{equation}\]</span></p>
+<p>Instead of 4 rules, as in the original DBM method, the Hillis modification involves just one rule, summarized by Equations <a href="DBMnalysis.html#eq:ddfH">(2.19)</a> through <a href="DBMnalysis.html#eq:samplingFStatHillis">(2.20)</a>. Moreover, the F-statistic is constrained to non-negative values. Using simulation testing <span class="citation">(Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span> he has been shown that the modified DBM method has better null hypothesis behavior than the original DBM method. The latter tended to be too conservative, typically yielding Type I error rates smaller than the expected 5% for <span class="math inline">\(\alpha\)</span> = 0.05.</p>
+</div>
+<div id="decision-rules-p-value-and-confidence-intervals" class="section level3" number="2.8.4">
+<h3><span class="header-section-number">2.8.4</span> Decision rules, p-value and confidence intervals</h3>
+<p>The <em>critical</em> value of the F-distribution, denoted <span class="math inline">\(F_{1-\alpha,ndf,ddf_H}\)</span>, is defined such that fraction <span class="math inline">\(1-\alpha\)</span> of the distribution lies to the left of the critical value, in other words it is the <span class="math inline">\(1-\alpha\)</span> <em>quantile</em> of the F-distribution:</p>
+<p><span class="math display" id="eq:critValFStat">\[\begin{equation}
+\Pr\left ( F\leq F_{1-\alpha,ndf,ddf_H} \mid F\sim F_{ndf,ddf_H}\right ) = 1 - \alpha
+\tag{2.21}
+\end{equation}\]</span></p>
+<p>The critical value <span class="math inline">\(F_{1-\alpha,ndf,ddf_H}\)</span> increases as <span class="math inline">\(\alpha\)</span> decreases. The value of <span class="math inline">\(\alpha\)</span>, generally chosen to be 0.05, termed the <em>nominal</em> <span class="math inline">\(\alpha\)</span>, is fixed. The decision rule is that if <span class="math inline">\(F_{DBM} &gt; F_{1-\alpha, ndf, ddf_H}\)</span> one rejects the NH and otherwise one does not. It follows, from the definition of <span class="math inline">\(F_{DBM}\)</span>, Equation <a href="DBMnalysis.html#eq:FStatHillis">(2.18)</a>, that rejection of the NH is more likely to occur if:
+* <span class="math inline">\(F_{DBM}\)</span> is large, which occurs if <span class="math inline">\(MST\)</span> is large, meaning the treatment effect is large
+* <span class="math inline">\(MSTR + \max \left (MSTC - MSTRC,0 \right )\)</span> is small, see comments following TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a> Eqn. (9.23).
+* <span class="math inline">\(\alpha\)</span> is large: for then <span class="math inline">\(F_{1-\alpha,ndf,ddf_H}\)</span> decreases and is more likely to be exceeded by the observed value of <span class="math inline">\(F_{DBM}\)</span>.
+* ndf is large: the more the number of treatment pairings, the greater the chance that at least one pairing will reject the NH. This is one reason sample size calculations are rarely conducted for more than 2-treatments.
+* <span class="math inline">\(ddf_H\)</span> is large: this causes the critical value to decrease, see below, and is more likely to be exceeded by the observed value of <span class="math inline">\(F_{DBM}\)</span>.</p>
+<div id="p-value-of-the-f-test" class="section level4" number="2.8.4.1">
+<h4><span class="header-section-number">2.8.4.1</span> p-value of the F-test</h4>
+<p>**The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than observed <span class="math inline">\(F_{DBM}\)</span> could occur by chance. In other words, it is the area under the (central) F-distribution <span class="math inline">\(F_{ndf,ddf}\)</span> that lies to the right of the observed value of <span class="math inline">\(F_{DBM}\)</span>:</p>
+<p><span class="math display" id="eq:pValueRRRC">\[\begin{equation}
+p=\Pr\left ( F &gt; F_{DBM} \mid F \sim F_{ndf,ddf_H} \right )
+\tag{2.22}
+\end{equation}\]</span></p>
+</div>
+<div id="confidence-intervals-for-inter-treatment-fom-differences" class="section level4" number="2.8.4.2">
+<h4><span class="header-section-number">2.8.4.2</span> Confidence intervals for inter-treatment FOM differences</h4>
+<p>If <span class="math inline">\(p &lt; \alpha\)</span> then the NH that all treatments are identical is rejected at significance level <span class="math inline">\(\alpha\)</span>. That informs the researcher that there exists at least one treatment-pair that has a difference significantly different from zero. To identify which pair(s) are different, one calculates confidence intervals for each paired difference. Hillis in <span class="citation">(Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>)</span> has shown that the <span class="math inline">\((1-\alpha)\)</span> confidence interval for <span class="math inline">\(Y_{i \bullet \bullet} - Y_{i&#39; \bullet \bullet}\)</span> is given by:</p>
+<p><span class="math display" id="eq:CIRRRCDBM">\[\begin{equation}
+CI_{1-\alpha}=\left ( Y_{i \bullet \bullet} - Y_{i&#39; \bullet \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MSTR + \max\left ( MSTC-MSTRC,0 \right ) \right )}
+\tag{2.23}
+\end{equation}\]</span></p>
+<p>Here <span class="math inline">\(t_{\alpha/2;ddf_H}\)</span> is that value such that <span class="math inline">\(\alpha/2\)</span> of the <em>central t-distribution</em> with <span class="math inline">\(ddf_H\)</span> degrees of freedom is contained in the upper tail of the distribution:</p>
+<p><span class="math display" id="eq:tDistTailProb">\[\begin{equation}
+\Pr\left ( T&gt;t_{\alpha/2;ddf_H} \right )=\alpha/2
+\tag{2.24}
+\end{equation}\]</span></p>
+<p>Since centered pseudovalues were used:</p>
+<p><span class="math display">\[\begin{equation}
+\left ( Y_{i \bullet \bullet} - Y_{i&#39; \bullet \bullet} \right )=\left ( \theta_{i \bullet } - \theta_{i&#39; \bullet} \right )
+\end{equation}\]</span></p>
+<p>Therefore, Equation <a href="DBMnalysis.html#eq:CIRRRCDBM">(2.23)</a> can be rewritten:</p>
+<p><span class="math display" id="eq:confIntervalRRRC">\[\begin{equation}
+CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i&#39; \bullet} \right ) \pm t_{\alpha/2;ddf_H} \sqrt{\frac{2}{JK}\left ( MSTR + \max\left ( MSTC-MSTRC,0 \right ) \right )}
+\tag{2.25}
+\end{equation}\]</span></p>
+<p>For two treatments any of the following equivalent rules could be adopted to reject the NH:</p>
+<ul>
+<li><span class="math inline">\(F_{DBM} &gt; F_{1-\alpha,ndf,ddf_H}\)</span></li>
+<li><span class="math inline">\(p &lt; \alpha\)</span></li>
+<li><span class="math inline">\(CI_{1-alpha}\)</span> excludes zero</li>
+</ul>
+<p>For more than two treatments the first two rules are equivalent and if a significant difference is found using either of them, then one can use the confidence intervals to determine which treatment pair differences are significantly different from zero. The first F-test is called the <em>overall F-test</em> and the subsequent tests the <em>treatment-pair t-tests</em>. One only conducts treatment pair t-tests if the overall F-test yields a significant result.</p>
+</div>
+<div id="code-illustrating-the-f-statistic-ddf-and-p-value-for-rrrc-analysis-van-dyke-data" class="section level4" number="2.8.4.3">
+<h4><span class="header-section-number">2.8.4.3</span> Code illustrating the F-statistic, ddf and p-value for RRRC analysis, Van Dyke data</h4>
+<p>Line 1 defines <span class="math inline">\(\alpha\)</span>. Line 2 forms a data frame from previously calculated mean-squares. Line 3 calculates the denominator appearing in Equation <a href="DBMnalysis.html#eq:FStatHillis">(2.18)</a>. Line 4 computes the observed value of <span class="math inline">\(F_{DBM}\)</span>, namely the ratio of the numerator and denominator in Equation <a href="DBMnalysis.html#eq:FStatHillis">(2.18)</a>. Line 5 sets <span class="math inline">\(ndf\)</span> to <span class="math inline">\(I - 1\)</span>. Line 6 computes <span class="math inline">\(ddf_H\)</span>. Line 7 computes the critical value of the F-distribution <span class="math inline">\(F_{crit}\equiv F_{ndf,ddf_H}\)</span>. Line 8 calculates the p-value, using the definition Equation <a href="DBMnalysis.html#eq:pValueRRRC">(2.22)</a>. Line 9 prints out the just calculated quantities. The next line uses the <code>RJafroc</code> function <code>StSignificanceTesting()</code> and the 2nd last line prints out corresponding <code>RJafroc</code>-computed quantities. Note the correspondences between the values just computed and those provide by <code>RJafroc</code>. Note that the FOM difference is not significant at the 5% level of significance as <span class="math inline">\(p &gt; \alpha\)</span>. The last line shows that <span class="math inline">\(F_{DBM}\)</span> does not exceed <span class="math inline">\(F_{crit}\)</span>. The two rules are equivalent.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="DBMnalysis.html#cb2-1"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
+<span id="cb2-2"><a href="DBMnalysis.html#cb2-2"></a>retMS &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="st">&quot;msT&quot;</span> =<span class="st"> </span>msT, <span class="st">&quot;msR&quot;</span> =<span class="st"> </span>msR, <span class="st">&quot;msC&quot;</span> =<span class="st"> </span>msC, <span class="st">&quot;msTR&quot;</span> =<span class="st"> </span>msTR, <span class="st">&quot;msTC&quot;</span> =<span class="st"> </span>msTC, <span class="st">&quot;msRC&quot;</span> =<span class="st"> </span>msRC, <span class="st">&quot;msTRC&quot;</span> =<span class="st"> </span>msTRC)</span>
+<span id="cb2-3"><a href="DBMnalysis.html#cb2-3"></a>F_DBM_den &lt;-<span class="st"> </span>retMS<span class="op">$</span>msTR<span class="op">+</span><span class="kw">max</span>(retMS<span class="op">$</span>msTC <span class="op">-</span><span class="st"> </span>retMS<span class="op">$</span>msTRC,<span class="dv">0</span>) </span>
+<span id="cb2-4"><a href="DBMnalysis.html#cb2-4"></a>F_DBM &lt;-<span class="st"> </span>retMS<span class="op">$</span>msT <span class="op">/</span><span class="st"> </span>F_DBM_den </span>
+<span id="cb2-5"><a href="DBMnalysis.html#cb2-5"></a>ndf &lt;-<span class="st"> </span>(I<span class="dv">-1</span>)</span>
+<span id="cb2-6"><a href="DBMnalysis.html#cb2-6"></a>ddf_H &lt;-<span class="st"> </span>(F_DBM_den<span class="op">^</span><span class="dv">2</span><span class="op">/</span>retMS<span class="op">$</span>msTR<span class="op">^</span><span class="dv">2</span>)<span class="op">*</span>(I<span class="dv">-1</span>)<span class="op">*</span>(J<span class="dv">-1</span>)</span>
+<span id="cb2-7"><a href="DBMnalysis.html#cb2-7"></a>FCrit &lt;-<span class="st"> </span><span class="kw">qf</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha, ndf, ddf_H)</span>
+<span id="cb2-8"><a href="DBMnalysis.html#cb2-8"></a>pValueH &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pf</span>(F_DBM, ndf, ddf_H)</span>
+<span id="cb2-9"><a href="DBMnalysis.html#cb2-9"></a><span class="kw">data.frame</span>(<span class="st">&quot;F_DBM&quot;</span> =<span class="st"> </span>F_DBM, <span class="st">&quot;ddf_H&quot;</span>=<span class="st"> </span>ddf_H, <span class="st">&quot;pValueH&quot;</span> =<span class="st"> </span>pValueH) <span class="co"># Line 9</span></span>
+<span id="cb2-10"><a href="DBMnalysis.html#cb2-10"></a><span class="co">#&gt;      F_DBM    ddf_H    pValueH</span></span>
+<span id="cb2-11"><a href="DBMnalysis.html#cb2-11"></a><span class="co">#&gt; 1 4.456319 15.25967 0.05166569</span></span>
+<span id="cb2-12"><a href="DBMnalysis.html#cb2-12"></a>retRJafroc &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;DBM&quot;</span>)</span>
+<span id="cb2-13"><a href="DBMnalysis.html#cb2-13"></a><span class="kw">data.frame</span>(<span class="st">&quot;F_DBM&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>RRRC<span class="op">$</span>FTests<span class="op">$</span>FStat[<span class="dv">1</span>], </span>
+<span id="cb2-14"><a href="DBMnalysis.html#cb2-14"></a>           <span class="st">&quot;ddf_H&quot;</span>=<span class="st"> </span>retRJafroc<span class="op">$</span>RRRC<span class="op">$</span>FTests<span class="op">$</span>DF[<span class="dv">2</span>], </span>
+<span id="cb2-15"><a href="DBMnalysis.html#cb2-15"></a>           <span class="st">&quot;pValueH&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>RRRC<span class="op">$</span>FTests<span class="op">$</span>p[<span class="dv">1</span>])</span>
+<span id="cb2-16"><a href="DBMnalysis.html#cb2-16"></a><span class="co">#&gt;       F_DBM     ddf_H     pValueH</span></span>
+<span id="cb2-17"><a href="DBMnalysis.html#cb2-17"></a><span class="co">#&gt; 1 4.4563187 15.259675 0.051665686</span></span>
+<span id="cb2-18"><a href="DBMnalysis.html#cb2-18"></a>F_DBM <span class="op">&gt;</span><span class="st"> </span>FCrit</span>
+<span id="cb2-19"><a href="DBMnalysis.html#cb2-19"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+</div>
+<div id="code-illustrating-the-inter-treatment-confidence-interval-calculations-for-rrrc-analysis-van-dyke-data" class="section level4" number="2.8.4.4">
+<h4><span class="header-section-number">2.8.4.4</span> Code illustrating the inter-treatment confidence interval calculations for RRRC analysis, Van Dyke data</h4>
+<p>Line 1 computes the FOM matrix using function <code>UtilFigureOfMerit</code>. The next 9 lines compute the treatment FOM differences. The next line <code>nDiffs</code> (for number of differences) evaluates to 1, as with two treatments, there is only one difference. The next line initializes <code>CI_DIFF_FOM_RRRC</code>, which stands for “confidence intervals, FOM differences, for RRRC analysis”. The next 8 lines evaluate, using Equation <a href="DBMnalysis.html#eq:confIntervalRRRC">(2.25)</a>, and prints the lower value, the mid-point and the upper value of the confidence interval. Finally, these values are compared to those yielded by <code>RJafroc</code>. The FOM difference is not significant, whether viewed from the point of view of the F-statistic not exceeding the critical value, the observed p-value being larger than alpha or the 95% CI for the FOM difference including zero.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="DBMnalysis.html#cb3-1"></a>theta &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">UtilFigureOfMerit</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>))</span>
+<span id="cb3-2"><a href="DBMnalysis.html#cb3-2"></a>theta_i_dot &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> I)</span>
+<span id="cb3-3"><a href="DBMnalysis.html#cb3-3"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) theta_i_dot[i] &lt;-<span class="st"> </span><span class="kw">mean</span>(theta[i,])</span>
+<span id="cb3-4"><a href="DBMnalysis.html#cb3-4"></a>trtDiff &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(I,I))</span>
+<span id="cb3-5"><a href="DBMnalysis.html#cb3-5"></a><span class="cf">for</span> (i1 <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(I<span class="dv">-1</span>)) {    </span>
+<span id="cb3-6"><a href="DBMnalysis.html#cb3-6"></a>  <span class="cf">for</span> (i2 <span class="cf">in</span> (i1<span class="op">+</span><span class="dv">1</span>)<span class="op">:</span>I) {</span>
+<span id="cb3-7"><a href="DBMnalysis.html#cb3-7"></a>    trtDiff[i1,i2] &lt;-<span class="st"> </span>theta_i_dot[i1]<span class="op">-</span><span class="st"> </span>theta_i_dot[i2]    </span>
+<span id="cb3-8"><a href="DBMnalysis.html#cb3-8"></a>  }</span>
+<span id="cb3-9"><a href="DBMnalysis.html#cb3-9"></a>}</span>
+<span id="cb3-10"><a href="DBMnalysis.html#cb3-10"></a>trtDiff &lt;-<span class="st"> </span>trtDiff[<span class="op">!</span><span class="kw">is.na</span>(trtDiff)]</span>
+<span id="cb3-11"><a href="DBMnalysis.html#cb3-11"></a>nDiffs &lt;-<span class="st"> </span>I<span class="op">*</span>(I<span class="dv">-1</span>)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb3-12"><a href="DBMnalysis.html#cb3-12"></a>CI_DIFF_FOM_RRRC &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nDiffs, <span class="dv">3</span>))</span>
+<span id="cb3-13"><a href="DBMnalysis.html#cb3-13"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> <span class="op">:</span><span class="st"> </span>nDiffs) {</span>
+<span id="cb3-14"><a href="DBMnalysis.html#cb3-14"></a>  CI_DIFF_FOM_RRRC[i,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">qt</span>(alpha<span class="op">/</span><span class="dv">2</span>,<span class="dt">df =</span> ddf_H)<span class="op">*</span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>F_DBM_den<span class="op">/</span>J<span class="op">/</span>K) <span class="op">+</span><span class="st"> </span>trtDiff[i]</span>
+<span id="cb3-15"><a href="DBMnalysis.html#cb3-15"></a>  CI_DIFF_FOM_RRRC[i,<span class="dv">2</span>] &lt;-<span class="st"> </span>trtDiff[i]</span>
+<span id="cb3-16"><a href="DBMnalysis.html#cb3-16"></a>  CI_DIFF_FOM_RRRC[i,<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span><span class="op">-</span>alpha<span class="op">/</span><span class="dv">2</span>,<span class="dt">df =</span> ddf_H)<span class="op">*</span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>F_DBM_den<span class="op">/</span>J<span class="op">/</span>K) <span class="op">+</span><span class="st"> </span>trtDiff[i]</span>
+<span id="cb3-17"><a href="DBMnalysis.html#cb3-17"></a>  <span class="kw">print</span>(<span class="kw">data.frame</span>(<span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_RRRC[i,<span class="dv">1</span>], </span>
+<span id="cb3-18"><a href="DBMnalysis.html#cb3-18"></a>                   <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_RRRC[i,<span class="dv">2</span>], </span>
+<span id="cb3-19"><a href="DBMnalysis.html#cb3-19"></a>                   <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_RRRC[i,<span class="dv">3</span>]))</span>
+<span id="cb3-20"><a href="DBMnalysis.html#cb3-20"></a>}</span>
+<span id="cb3-21"><a href="DBMnalysis.html#cb3-21"></a><span class="co">#&gt;          Lower          Mid         Upper</span></span>
+<span id="cb3-22"><a href="DBMnalysis.html#cb3-22"></a><span class="co">#&gt; 1 -0.087959499 -0.043800322 0.00035885444</span></span>
+<span id="cb3-23"><a href="DBMnalysis.html#cb3-23"></a><span class="kw">data.frame</span>(<span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>RRRC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;CILower&quot;</span>], </span>
+<span id="cb3-24"><a href="DBMnalysis.html#cb3-24"></a>           <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>RRRC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;Estimate&quot;</span>], </span>
+<span id="cb3-25"><a href="DBMnalysis.html#cb3-25"></a>           <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>RRRC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;CIUpper&quot;</span>])</span>
+<span id="cb3-26"><a href="DBMnalysis.html#cb3-26"></a><span class="co">#&gt;          Lower          Mid         Upper</span></span>
+<span id="cb3-27"><a href="DBMnalysis.html#cb3-27"></a><span class="co">#&gt; 1 -0.087959499 -0.043800322 0.00035885444</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="fixed-reader-random-case-frrc-analysis" class="section level2" number="2.9">
+<h2><span class="header-section-number">2.9</span> Fixed-reader random-case (FRRC) analysis</h2>
+<p>The model is the same as in TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a> Eqn. (9.4) except one puts <span class="math inline">\(\sigma_{R}^{2}\)</span> = <span class="math inline">\(\sigma_{\tau R}^{2}\)</span> = 0 in Table Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a>. The appropriate test statistic is:</p>
+<p><span class="math display">\[\begin{equation}
+\frac{E\left ( MST \right )}{E\left ( MSTC \right )} = \frac{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau C}^{2}+JK\sigma_{\tau}^{2}}{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau C}^{2}}
+\end{equation}\]</span></p>
+<p>Under the null hypothesis <span class="math inline">\(\sigma_{\tau}^{2} = 0\)</span>:</p>
+<p><span class="math display">\[\begin{equation}
+\frac{E\left ( MST \right )}{E\left ( MSTC \right )} = 1
+\end{equation}\]</span></p>
+<p>As before, one defines the F-statistic (by replacing <em>expected</em> with <em>observed</em> values) by</p>
+<p><span class="math display" id="eq:FStatFRRC">\[\begin{equation}
+F_{DBM|R}=\frac{MST}{MSTC}
+\tag{2.26}
+\end{equation}\]</span></p>
+<p>The observed value <span class="math inline">\(F_{DBM|R}\)</span> (the Roe-Metz notation <span class="citation">(Roe and Metz <a href="#ref-RN1124" role="doc-biblioref">1997</a>)</span> is used which indicates that the factor appearing to the right of the vertical bar is regarded as fixed) is distributed as an F-statistic with <span class="math inline">\(\text{ndf}\)</span> = <span class="math inline">\(I – 1\)</span> and <span class="math inline">\(ddf = (I-1)(K-1)\)</span>; the degrees of freedom follow from the rows labeled <span class="math inline">\(T\)</span> and <span class="math inline">\(TC\)</span> in TBA Table Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a>. Therefore, the distribution of the observed value is (no Satterthwaite approximation needed this time as both numerator and denominator are simple mean-squares):</p>
+<p><span class="math display" id="eq:SamplingFStatFRRC">\[\begin{equation}
+F_{DBM|R} \sim F_{I-1,(I-1)(K-1)}
+\tag{2.27}
+\end{equation}\]</span></p>
+<p>The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value:</p>
+<p><span class="math display" id="eq:NhRejectRuleFRRC">\[\begin{equation}
+F_{DBM|R} &gt; F_{1-\alpha,I-1,(I-1)(K-1)}
+\tag{2.28}
+\end{equation}\]</span></p>
+<p>The p-value of the test is the probability that a random sample from the F-distribution TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a> Eqn. (9.39), exceeds the observed value:</p>
+<p><span class="math display" id="eq:pFRRC">\[\begin{equation}
+p=\Pr\left ( F&gt; F_{DBM|R} \mid F \sim F_{I-1,(I-1)(K-1)} \right )
+\tag{2.29}
+\end{equation}\]</span></p>
+<p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval for the inter-treatment reader-averaged difference FOM is given by:</p>
+<p><span class="math display" id="eq:confIntervalFRRC">\[\begin{equation}
+CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i&#39; \bullet} \right ) \pm t_{\alpha/2,(I-1)(K-1)}\sqrt{2\frac{MST}{JK}}
+\tag{2.30}
+\end{equation}\]</span></p>
+<div id="single-reader-multiple-treatment-analysis" class="section level3" number="2.9.1">
+<h3><span class="header-section-number">2.9.1</span> Single-reader multiple-treatment analysis</h3>
+<p>With a single reader interpreting cases in two or more treatments, the reader factor must necessarily be regarded as fixed. The preceding analysis is applicable. One simply puts <span class="math inline">\(J = 1\)</span> in the equations above.</p>
+<div id="example-5-code-illustrating-p-values-for-frrc-analysis-van-dyke-data" class="section level4" number="2.9.1.1">
+<h4><span class="header-section-number">2.9.1.1</span> Example 5: Code illustrating p-values for FRRC analysis, Van Dyke data</h4>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="DBMnalysis.html#cb4-1"></a>FDbmFR &lt;-<span class="st"> </span>retMS<span class="op">$</span>msT <span class="op">/</span><span class="st"> </span>retMS<span class="op">$</span>msTC</span>
+<span id="cb4-2"><a href="DBMnalysis.html#cb4-2"></a>ndf &lt;-<span class="st"> </span>(I<span class="dv">-1</span>); ddf &lt;-<span class="st"> </span>(I<span class="dv">-1</span>)<span class="op">*</span>(K<span class="dv">-1</span>)</span>
+<span id="cb4-3"><a href="DBMnalysis.html#cb4-3"></a>pValue &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pf</span>(FDbmFR, ndf, ddf)</span>
+<span id="cb4-4"><a href="DBMnalysis.html#cb4-4"></a></span>
+<span id="cb4-5"><a href="DBMnalysis.html#cb4-5"></a>std_DIFF_FOM_FRRC &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>retMS<span class="op">$</span>msTC<span class="op">/</span>J<span class="op">/</span>K)</span>
+<span id="cb4-6"><a href="DBMnalysis.html#cb4-6"></a>nDiffs &lt;-<span class="st"> </span>I<span class="op">*</span>(I<span class="dv">-1</span>)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb4-7"><a href="DBMnalysis.html#cb4-7"></a>CI_DIFF_FOM_FRRC &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nDiffs, <span class="dv">3</span>))</span>
+<span id="cb4-8"><a href="DBMnalysis.html#cb4-8"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> <span class="op">:</span><span class="st"> </span>nDiffs) {</span>
+<span id="cb4-9"><a href="DBMnalysis.html#cb4-9"></a>  CI_DIFF_FOM_FRRC[i,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">qt</span>(alpha<span class="op">/</span><span class="dv">2</span>,<span class="dt">df =</span> ddf)<span class="op">*</span>std_DIFF_FOM_FRRC <span class="op">+</span><span class="st"> </span>trtDiff[i]</span>
+<span id="cb4-10"><a href="DBMnalysis.html#cb4-10"></a>  CI_DIFF_FOM_FRRC[i,<span class="dv">2</span>] &lt;-<span class="st"> </span>trtDiff[i]</span>
+<span id="cb4-11"><a href="DBMnalysis.html#cb4-11"></a>  CI_DIFF_FOM_FRRC[i,<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span><span class="op">-</span>alpha<span class="op">/</span><span class="dv">2</span>,<span class="dt">df =</span> ddf)<span class="op">*</span>std_DIFF_FOM_FRRC <span class="op">+</span><span class="st"> </span>trtDiff[i]</span>
+<span id="cb4-12"><a href="DBMnalysis.html#cb4-12"></a>  <span class="kw">print</span>(<span class="kw">data.frame</span>(<span class="st">&quot;pValue&quot;</span> =<span class="st"> </span>pValue, </span>
+<span id="cb4-13"><a href="DBMnalysis.html#cb4-13"></a>                   <span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_FRRC[i,<span class="dv">1</span>], </span>
+<span id="cb4-14"><a href="DBMnalysis.html#cb4-14"></a>                   <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_FRRC[i,<span class="dv">2</span>], </span>
+<span id="cb4-15"><a href="DBMnalysis.html#cb4-15"></a>                   <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_FRRC[i,<span class="dv">3</span>]))</span>
+<span id="cb4-16"><a href="DBMnalysis.html#cb4-16"></a>}</span>
+<span id="cb4-17"><a href="DBMnalysis.html#cb4-17"></a><span class="co">#&gt;        pValue        Lower          Mid         Upper</span></span>
+<span id="cb4-18"><a href="DBMnalysis.html#cb4-18"></a><span class="co">#&gt; 1 0.021034969 -0.080883031 -0.043800322 -0.0067176131</span></span>
+<span id="cb4-19"><a href="DBMnalysis.html#cb4-19"></a><span class="kw">data.frame</span>(<span class="st">&quot;pValue&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>FRRC<span class="op">$</span>FTests<span class="op">$</span>p[<span class="dv">1</span>],</span>
+<span id="cb4-20"><a href="DBMnalysis.html#cb4-20"></a>           <span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>FRRC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;CILower&quot;</span>], </span>
+<span id="cb4-21"><a href="DBMnalysis.html#cb4-21"></a>           <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>FRRC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;Estimate&quot;</span>], </span>
+<span id="cb4-22"><a href="DBMnalysis.html#cb4-22"></a>           <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>FRRC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;CIUpper&quot;</span>])</span>
+<span id="cb4-23"><a href="DBMnalysis.html#cb4-23"></a><span class="co">#&gt;        pValue        Lower          Mid         Upper</span></span>
+<span id="cb4-24"><a href="DBMnalysis.html#cb4-24"></a><span class="co">#&gt; 1 0.021034969 -0.080883031 -0.043800322 -0.0067176131</span></span></code></pre></div>
+<p>As one might expect, if one “freezes” reader variability, the FOM difference becomes significant, whether viewed from the point of view of the F-statistic exceeding the critical value, the observed p-value being smaller than alpha or the 95% CI for the difference FOM not including zero.</p>
+</div>
+</div>
+</div>
+<div id="random-reader-fixed-case-rrfc-analysis" class="section level2" number="2.10">
+<h2><span class="header-section-number">2.10</span> Random-reader fixed-case (RRFC) analysis</h2>
+<p>The model is the same as in TBA <a href="DBMnalysis.html#eq:pseudoValPrime">(2.1)</a> Eqn. (9.4) except one puts <span class="math inline">\(\sigma_C^2 = \sigma_{\tau C}^2 =0\)</span> in Table Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a>. It follows that:</p>
+<p><span class="math display">\[\begin{equation}
+\frac{E(MST)}{E(MSTR)}=\frac{\sigma_\epsilon^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+JK\sigma_{\tau}^2}{\sigma_\epsilon^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2}
+\end{equation}\]</span></p>
+<p>Under the null hypothesis <span class="math inline">\(\sigma_\tau^2 = 0\)</span>:</p>
+<p><span class="math display">\[\begin{equation}
+\frac{E(MST)}{E(MSTR)}=1
+\end{equation}\]</span></p>
+<p>Therefore, one defines the F-statistic (replacing expected values with observed values) by:</p>
+<p><span class="math display" id="eq:FStatRRFC">\[\begin{equation}
+F_{DBM|C} \sim \frac{MST}{MSTR}
+\tag{2.31}
+\end{equation}\]</span></p>
+<p>The observed value <span class="math inline">\(F_{DBM|C}\)</span> is distributed as an F-statistic with <span class="math inline">\(ndf = I – 1\)</span> and <span class="math inline">\(ddf = (I-1)(J-1)\)</span>, see rows labeled <span class="math inline">\(T\)</span> and <span class="math inline">\(TR\)</span> in Table Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a>.</p>
+<p><span class="math display" id="eq:SamplingFStatRRFC">\[\begin{equation}
+F_{DBM|C} \sim F_{I-1,(I-1)(J-1))}
+\tag{2.32}
+\end{equation}\]</span></p>
+<p>The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:</p>
+<p><span class="math display" id="eq:NhRejectRuleRRFC">\[\begin{equation}
+F_{DBM|C} &gt; F_{1-\alpha,I-1,(I-1)(J-1))}
+\tag{2.33}
+\end{equation}\]</span></p>
+<p>The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:</p>
+<p><span class="math display" id="eq:pRRFC">\[\begin{equation}
+p=\Pr\left ( F&gt;F_{DBM|C} \mid F \sim F_{I-1,(I-1)(J-1)} \right )
+\tag{2.34}
+\end{equation}\]</span></p>
+<p>The confidence interval for inter-treatment differences is given by (TBA check this):</p>
+<p><span class="math display" id="eq:confIntervalRRFC">\[\begin{equation}
+CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i&#39; \bullet} \right ) \pm t_{\alpha/2,(I-1)(J-1)}\sqrt{2\frac{MSTR}{JK}}
+\tag{2.35}
+\end{equation}\]</span></p>
+<div id="example-6-code-illustrating-analysis-for-rrfc-analysis-van-dyke-data" class="section level4" number="2.10.0.1">
+<h4><span class="header-section-number">2.10.0.1</span> Example 6: Code illustrating analysis for RRFC analysis, Van Dyke data</h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="DBMnalysis.html#cb5-1"></a>FDbmFC &lt;-<span class="st"> </span>retMS<span class="op">$</span>msT <span class="op">/</span><span class="st"> </span>retMS<span class="op">$</span>msTR</span>
+<span id="cb5-2"><a href="DBMnalysis.html#cb5-2"></a>ndf &lt;-<span class="st"> </span>(I<span class="dv">-1</span>)</span>
+<span id="cb5-3"><a href="DBMnalysis.html#cb5-3"></a>ddf &lt;-<span class="st"> </span>(I<span class="dv">-1</span>)<span class="op">*</span>(J<span class="dv">-1</span>)</span>
+<span id="cb5-4"><a href="DBMnalysis.html#cb5-4"></a>pValue &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pf</span>(FDbmFC, ndf, ddf)</span>
+<span id="cb5-5"><a href="DBMnalysis.html#cb5-5"></a></span>
+<span id="cb5-6"><a href="DBMnalysis.html#cb5-6"></a>nDiffs &lt;-<span class="st"> </span>I<span class="op">*</span>(I<span class="dv">-1</span>)<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb5-7"><a href="DBMnalysis.html#cb5-7"></a>CI_DIFF_FOM_RRFC &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nDiffs, <span class="dv">3</span>))</span>
+<span id="cb5-8"><a href="DBMnalysis.html#cb5-8"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span> <span class="op">:</span><span class="st"> </span>nDiffs) {</span>
+<span id="cb5-9"><a href="DBMnalysis.html#cb5-9"></a>  CI_DIFF_FOM_RRFC[i,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">qt</span>(alpha<span class="op">/</span><span class="dv">2</span>,<span class="dt">df =</span> ddf)<span class="op">*</span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>retMS<span class="op">$</span>msTR<span class="op">/</span>J<span class="op">/</span>K) <span class="op">+</span><span class="st"> </span>trtDiff[i]</span>
+<span id="cb5-10"><a href="DBMnalysis.html#cb5-10"></a>  CI_DIFF_FOM_RRFC[i,<span class="dv">2</span>] &lt;-<span class="st"> </span>trtDiff[i]</span>
+<span id="cb5-11"><a href="DBMnalysis.html#cb5-11"></a>  CI_DIFF_FOM_RRFC[i,<span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span><span class="op">-</span>alpha<span class="op">/</span><span class="dv">2</span>,<span class="dt">df =</span> ddf)<span class="op">*</span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>retMS<span class="op">$</span>msTR<span class="op">/</span>J<span class="op">/</span>K) <span class="op">+</span><span class="st"> </span>trtDiff[i]</span>
+<span id="cb5-12"><a href="DBMnalysis.html#cb5-12"></a>  <span class="kw">print</span>(<span class="kw">data.frame</span>(<span class="st">&quot;pValue&quot;</span> =<span class="st"> </span>pValue, </span>
+<span id="cb5-13"><a href="DBMnalysis.html#cb5-13"></a>                   <span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_RRFC[i,<span class="dv">1</span>], </span>
+<span id="cb5-14"><a href="DBMnalysis.html#cb5-14"></a>                   <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_RRFC[i,<span class="dv">2</span>], </span>
+<span id="cb5-15"><a href="DBMnalysis.html#cb5-15"></a>                   <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>CI_DIFF_FOM_RRFC[i,<span class="dv">3</span>]))</span>
+<span id="cb5-16"><a href="DBMnalysis.html#cb5-16"></a>}</span>
+<span id="cb5-17"><a href="DBMnalysis.html#cb5-17"></a><span class="co">#&gt;        pValue        Lower          Mid         Upper</span></span>
+<span id="cb5-18"><a href="DBMnalysis.html#cb5-18"></a><span class="co">#&gt; 1 0.041958752 -0.085020224 -0.043800322 -0.0025804202</span></span>
+<span id="cb5-19"><a href="DBMnalysis.html#cb5-19"></a><span class="kw">data.frame</span>(<span class="st">&quot;pValue&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>RRFC<span class="op">$</span>FTests<span class="op">$</span>p[<span class="dv">1</span>],</span>
+<span id="cb5-20"><a href="DBMnalysis.html#cb5-20"></a>           <span class="st">&quot;Lower&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>RRFC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;CILower&quot;</span>], </span>
+<span id="cb5-21"><a href="DBMnalysis.html#cb5-21"></a>           <span class="st">&quot;Mid&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>RRFC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;Estimate&quot;</span>], </span>
+<span id="cb5-22"><a href="DBMnalysis.html#cb5-22"></a>           <span class="st">&quot;Upper&quot;</span> =<span class="st"> </span>retRJafroc<span class="op">$</span>RRFC<span class="op">$</span>ciDiffTrt[<span class="dv">1</span>,<span class="st">&quot;CIUpper&quot;</span>])</span>
+<span id="cb5-23"><a href="DBMnalysis.html#cb5-23"></a><span class="co">#&gt;        pValue        Lower          Mid         Upper</span></span>
+<span id="cb5-24"><a href="DBMnalysis.html#cb5-24"></a><span class="co">#&gt; 1 0.041958752 -0.085020224 -0.043800322 -0.0025804202</span></span></code></pre></div>
+</div>
+</div>
+<div id="dbm-analysis-example-1-van-dyke-data" class="section level2" number="2.11">
+<h2><span class="header-section-number">2.11</span> DBM analysis: Example 1, Van Dyke Data</h2>
+</div>
+<div id="dbm-analysis-example-2-volumerad-data" class="section level2" number="2.12">
+<h2><span class="header-section-number">2.12</span> DBM analysis: Example 2, VolumeRad data</h2>
+</div>
+<div id="validation-of-dbm-analysis" class="section level2" number="2.13">
+<h2><span class="header-section-number">2.13</span> Validation of DBM analysis</h2>
+</div>
+<div id="the-meaning-of-pseudovalues" class="section level2" number="2.14">
+<h2><span class="header-section-number">2.14</span> The meaning of pseudovalues</h2>
+</div>
+<div id="summary" class="section level2" number="2.15">
+<h2><span class="header-section-number">2.15</span> Summary</h2>
+<p>This chapter has detailed analysis of MRMC ROC data using the DBM method. A reason for the level of detail is that almost all of the material carries over to other data collection paradigms, and a thorough understanding of the relatively simple ROC paradigm data is helpful to understanding the more complex ones.</p>
+<p>DBM has been used in several hundred ROC studies (Prof. Kevin Berbaum, private communication ca. 2010). While the method allows generalization of a study finding, e.g., rejection of the NH, to the population of readers and cases, the author believes this is sometimes taken too literally. If a study is done at a single hospital, then the radiologists tend to be more homogenous as compared to sampling radiologists from different hospitals. This is because close interactions between radiologists at a hospital tend to homogenize reading styles and performance. A similar issue applies to patient characteristics, which are also expected to vary more between different geographical locations than within a given location served by the hospital. This means is that single hospital study based p-values may tend to be biased downwards, declaring differences that may not be replicable if a wider sampling “net” were used using the same sample size. The price paid for a wider sampling net is that one must use more readers and cases to achieve the same sensitivity to genuine treatment effects, i.e., statistical power (i.e., there is no “free-lunch”).</p>
+<p>A third MRMC ROC method, due to Clarkson, Kupinski and Barrett19,20, implemented in open-source JAVA software by Gallas and colleagues22,44 (<a href="http://didsr.github.io/iMRMC/" class="uri">http://didsr.github.io/iMRMC/</a>) is available on the web. Clarkson et al19,20 provide a probabilistic rationale for the DBM model, provided the figure of merit is the empirical <span class="math inline">\(AUC\)</span>. The method is elegant but it is only applicable as long as one is using the empirical AUC as the figure of merit (FOM) for quantifying observer performance. In contrast the DBM approach outlined in this chapter, and the approach outlined in the following chapter, are applicable to any scalar FOM. Broader applicability ensures that significance-testing methods described in this, and the following chapter, apply to other ROC FOMs, such as binormal model or other fitted AUCs, and more importantly, to other observer performance paradigms, such as free-response ROC paradigm. An advantage of the Clarkson et al. approach is that it predicts truth-state dependence of the variance components. One knows from modeling ROC data that diseased cases tend to have greater variance than non-diseased ones, and there is no reason to suspect that similar differences do not exist between the variance components.</p>
+<p>Testing validity of an analysis method via simulation testing is only as good as the simulator used to generate the datasets, and this is where current research is at a bottleneck. The simulator plays a central role in ROC analysis. In the author’s opinion this is not widely appreciated. In contrast, simulators are taken very seriously in other disciplines, such as cosmology, high-energy physics and weather forecasting. The simulator used to validate3 DBM is that proposed by Roe and Metz39 in 1997. This simulator has several shortcomings. (a) It assumes that the ratings are distributed like an equal-variance binormal model, which is not true for most clinical datasets (recall that the b-parameter of the binormal model is usually less than one). Work extending this simulator to unequal variance has been published3. (b) It does not take into account that some lesions are not visible, which is the basis of the contaminated binormal model (CBM). A CBM model based simulator would use equal variance distributions with the difference that the distribution for diseased cases would be a mixture distribution with two peaks. The radiological search model (RSM) of free-response data, Chapter 16 &amp;17 also implies a mixture distribution for diseased cases, and it goes farther, as it predicts some cases yield no z-samples, which means they will always be rated in the lowest bin no matter how low the reporting threshold. Both CBM and RSM account for truth dependence by accounting for the underlying perceptual process. (c) The Roe-Metz simulator is out dated; the parameter values are based on datasets then available (prior to 1997). Medical imaging technology has changed substantially in the intervening decades. (d) Finally, the methodology used to arrive at the proposed parameter values is not clearly described. Needed is a more realistic simulator, incorporating knowledge from alternative ROC models and paradigms that is calibrated, by a clearly defined method, to current datasets.</p>
+<p>Since ROC studies in medical imaging have serious health-care related consequences, no method should be used unless it has been thoroughly validated. Much work still remains to be done in proper simulator design, on which validation is dependent.</p>
+</div>
+<div id="things-for-me-to-think-about" class="section level2" number="2.16">
+<h2><span class="header-section-number">2.16</span> Things for me to think about</h2>
+<div id="expected-values-of-mean-squares-1" class="section level3" number="2.16.1">
+<h3><span class="header-section-number">2.16.1</span> Expected values of mean squares</h3>
+<p>Assuming no replications the expected mean squares are as follows, Table Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a>; understanding how this table is derived, would lead the author well outside his expertise and the scope of this book; suffice to say that these are <em>unconstrained</em> estimates (as summarized in the quotation above) which are different from the <em>constrained</em> estimates appearing in the original DBM publication <span class="citation">(Dorfman, Berbaum, and Metz <a href="#ref-RN204" role="doc-biblioref">1992</a>)</span>, Table 9.2; the differences between these two types of estimates is summarized in <span class="citation">(Dorfman, Berbaum, and Lenth <a href="#ref-RN2079" role="doc-biblioref">1995</a>)</span>. For reference, Table 9.3 is the table published in the most recent paper that I am aware of <span class="citation">(Hillis <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span>. All three tables are different! <strong>In this chapter I will stick to Table Table <a href="DBMnalysis.html#tab:ExpValMs">2.1</a> for the subsequent development.</strong></p>
+<table>
+<caption>Table 9.1 Unconstrained expected values of mean-squares, as in <span class="citation">(Dorfman, Berbaum, and Lenth <a href="#ref-RN2079" role="doc-biblioref">1995</a>)</span></caption>
+<thead>
+<tr class="header">
+<th align="left">Source</th>
+<th align="left">df</th>
+<th align="left">E(MS)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">T</td>
+<td align="left">(I-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span> + <span class="math inline">\(JK\sigma_{\tau}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">R</td>
+<td align="left">(J-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span> + <span class="math inline">\(IK\sigma_{R}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="left">(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span> + <span class="math inline">\(IJ\sigma_{C}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">TR</td>
+<td align="left">(I-1)(J-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">TC</td>
+<td align="left">(I-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">RC</td>
+<td align="left">(J-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">TRC</td>
+<td align="left">(I-1)(J-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\epsilon\)</span></td>
+<td align="left"><span class="math inline">\(N-1=0\)</span></td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Table 9.2 Constrained expected values of mean-squares, as in <span class="citation">(Dorfman, Berbaum, and Metz <a href="#ref-RN204" role="doc-biblioref">1992</a>)</span></caption>
+<thead>
+<tr class="header">
+<th align="left">Source</th>
+<th align="left">df</th>
+<th align="left">E(MS)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">T</td>
+<td align="left">(I-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span> + <span class="math inline">\(JK\sigma_{\tau}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">R</td>
+<td align="left">(J-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span> + <span class="math inline">\(IK\sigma_{R}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="left">(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span> + <span class="math inline">\(IJ\sigma_{C}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">TR</td>
+<td align="left">(I-1)(J-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">TC</td>
+<td align="left">(I-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">RC</td>
+<td align="left">(J-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">TRC</td>
+<td align="left">(I-1)(J-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\epsilon\)</span></td>
+<td align="left">0</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Table 9.3 As in Hillis “marginal-means ANOVA paper” <span class="citation">(Hillis <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span></caption>
+<thead>
+<tr class="header">
+<th align="left">Source</th>
+<th align="left">df</th>
+<th align="left">E(MS)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">T</td>
+<td align="left">(I-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span> + <span class="math inline">\(JK\sigma_{\tau}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">R</td>
+<td align="left">(J-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span> + <span class="math inline">\(IK\sigma_{R}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="left">(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span> + <span class="math inline">\(IJ\sigma_{C}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">TR</td>
+<td align="left">(I-1)(J-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(K\sigma_{\tau R}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">TC</td>
+<td align="left">(I-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(J\sigma_{\tau C}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">RC</td>
+<td align="left">(J-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span> + <span class="math inline">\(I\sigma_{RC}^{2}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">TRC</td>
+<td align="left">(I-1)(J-1)(K-1)</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span> + <span class="math inline">\(\sigma_{\tau RC}^{2}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\epsilon\)</span></td>
+<td align="left">0</td>
+<td align="left"><span class="math inline">\(\sigma_{\epsilon}^{2}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="references-1" class="section level2" number="2.17">
+<h2><span class="header-section-number">2.17</span> References</h2>
+
+</div>
+</div>
+<h3>REFERENCES</h3>
+<div id="refs" class="references">
+<div id="ref-RN2453">
+<p>Bunch, PC, JF Hamilton, GK Sanderson, and AH Simmons. 1978. “Free Response Approach to Measurement and Characterization of Radiographic Observer Performance.” Journal Article. In <em>American Journal of Roentgenology</em>, 130:382–82. AMER ROENTGEN RAY SOC 1891 PRESTON WHITE DR, RESTON, VA 22091.</p>
+</div>
+<div id="ref-RN621">
+<p>Chakraborty, D. P., E. S. Breatnach, M. V. Yester, B. Soto, G. T. Barnes, and R. G. Fraser. 1986. “Digital and Conventional Chest Imaging: A Modified Roc Study of Observer Performance Using Simulated Nodules.” Journal Article. <em>Radiology</em> 158: 35–39.</p>
+</div>
+<div id="ref-RN2253">
+<p>Clarkson, Eric, Matthew A. Kupinski, and Harrison H. Barrett. 2006. “A Probabilistic Model for the Mrmc Method, Part 1: Theoretical Development.” Journal Article. <em>Academic Radiology</em> 13 (11): 1410–21. <a href="https://doi.org/10.1016/j.acra.2006.07.016">https://doi.org/10.1016/j.acra.2006.07.016</a>.</p>
+</div>
+<div id="ref-RN204">
+<p>Dorfman, D. D., K. S. Berbaum, and C. E. Metz. 1992. “ROC Characteristic Rating Analysis: Generalization to the Population of Readers and Patients with the Jackknife Method.” Journal Article. <em>Invest. Radiol.</em> 27 (9): 723–31.</p>
+</div>
+<div id="ref-RN2079">
+<p>Dorfman, Donald D., Kevin S. Berbaum, and Russell V. Lenth. 1995. “Multireader, Multicase Receiver Operating Characteristic Methodology: A Bootstrap Analysis.” Journal Article. <em>Academic Radiology</em> 2 (7): 626–33. <a href="http://www.sciencedirect.com/science/article/B75BK-4HNF68N-H/2/4b9d3ad6f0e11d2622af39e99b73eadf">http://www.sciencedirect.com/science/article/B75BK-4HNF68N-H/2/4b9d3ad6f0e11d2622af39e99b73eadf</a>.</p>
+</div>
+<div id="ref-RN2080">
+<p>Gallas, Brandon D. 2006. “One-Shot Estimate of Mrmc Variance: AUC.” Journal Article. <em>Academic Radiology</em> 13 (3): 353–62. <a href="http://www.sciencedirect.com/science/article/B75BK-4J915RW-C/2/11387ee9975e90e6ae25bef247c817de">http://www.sciencedirect.com/science/article/B75BK-4J915RW-C/2/11387ee9975e90e6ae25bef247c817de</a>.</p>
+</div>
+<div id="ref-RN2351">
+<p>Gallas, Brandon D., Gene a Pennello, and Kyle J. Myers. 2007. “Multireader Multicase Variance Analysis for Binary Data.” Journal Article. <em>Journal of the Optical Society of America. A, Optics, Image Science, and Vision</em> 24 (12): 70–80. <a href="http://www.ncbi.nlm.nih.gov/pubmed/18059916">http://www.ncbi.nlm.nih.gov/pubmed/18059916</a>.</p>
+</div>
+<div id="ref-RN1772">
+<p>Hillis, S. L., N. A. Obuchowski, K. M. Schartz, and K. S. Berbaum. 2005. “A Comparison of the Dorfman-Berbaum-Metz and Obuchowski-Rockette Methods for Receiver Operating Characteristic (Roc) Data.” Journal Article. <em>Statistics in Medicine</em> 24 (10): 1579–1607.</p>
+</div>
+<div id="ref-RN1865">
+<p>Hillis, Stephen L. 2007. “A Comparison of Denominator Degrees of Freedom Methods for Multiple Observer Roc Studies.” Journal Article. <em>Statistics in Medicine</em> 26: 596–619.</p>
+</div>
+<div id="ref-RN2508">
+<p>Hillis, Stephen L. 2014. “A Marginal‐mean Anova Approach for Analyzing Multireader Multicase Radiological Imaging Data.” Journal Article. <em>Statistics in Medicine</em> 33 (2): 330–60.</p>
+</div>
+<div id="ref-RN1476">
+<p>Hillis, Stephen L., and K. S. Berbaum. 2004. “Power Estimation for the Dorfman-Berbaum-Metz Method.” Journal Article. <em>Acad. Radiol.</em> 11 (11): 1260–73.</p>
+</div>
+<div id="ref-RN1866">
+<p>Hillis, Stephen L., K. S. Berbaum, and C. E. Metz. 2008. “Recent Developments in the Dorfman-Berbaum-Metz Procedure for Multireader Roc Study Analysis.” Journal Article. <em>Acad Radiol</em> 15 (5): 647–61.</p>
+</div>
+<div id="ref-RN2013">
+<p>Ishwaran, Hemant, and Constantine A. Gatsonis. 2000. “A General Class of Hierarchical Ordinal Regression Models with Applications to Correlated Roc Analysis.” Journal Article. <em>The Canadian Journal of Statistics</em> 28 (4): 731–50.</p>
+</div>
+<div id="ref-RN2254">
+<p>Kupinski, Matthew A., Eric Clarkson, and Harrison H. Barrett. 2006. “A Probabilistic Model for the Mrmc Method, Part 2: Validation and Applications.” Journal Article. <em>Academic Radiology</em> 13 (11): 1422–30. <a href="https://doi.org/10.1016/j.acra.2006.07.015">https://doi.org/10.1016/j.acra.2006.07.015</a>.</p>
+</div>
+<div id="ref-RN1492">
+<p>Larsen, Richard J., and Morris L. Marx. 2001. <em>An Introduction to Mathematical Statistics and Its Applications</em>. Book. 3rd ed. Upper Saddle River, NJ: Prentice-Hall Inc.</p>
+</div>
+<div id="ref-RN2128">
+<p>Metz, C. E., Benjamin A. Herman, and C. E. Roe. 1998. “Statistical Comparison of Two Roc-Curve Estimates Obtained from Partially-Paired Datasets.” Journal Article. <em>Med Decis Making</em> 18 (1): 110–21. <a href="https://doi.org/doi:%2010.1177/0272989X9801800118">https://doi.org/doi: 10.1177/0272989X9801800118</a>.</p>
+</div>
+<div id="ref-RN620">
+<p>Niklason, L. T., N. M. Hickey, Dev P. Chakraborty, E. A. Sabbagh, M. V. Yester, R. G. Fraser, and G. T. Barnes. 1986. “Simulated Pulmonary Nodules: Detection with Dual-Energy Digital Versus Conventional Radiography.” Journal Article. <em>Radiology</em> 160: 589–93.</p>
+</div>
+<div id="ref-RN1880">
+<p>Obuchowski, Nancy. 2009. “Reducing the Number of Reader Interpretations in Mrmc Studies.” Journal Article. <em>Acad Radiol</em> 16: 209–17.</p>
+</div>
+<div id="ref-RN1450">
+<p>Obuchowski, N. A., and H. E. Rockette. 1995. “Hypothesis Testing of the Diagnostic Accuracy for Multiple Diagnostic Tests: An Anova Approach with Dependent Observations.” Journal Article. <em>Communications in Statistics: Simulation and Computation</em> 24: 285–308.</p>
+</div>
+<div id="ref-RN1124">
+<p>Roe, C. A., and C. E. Metz. 1997. “Variance-Component Modeling in the Analysis of Receiver Operating Characteristic Index Estimates.” Journal Article. <em>Acad. Radiol.</em> 4 (8): 587–600.</p>
+</div>
+<div id="ref-RN2359">
+<p>Satterthwaite, F. E. 1941. “Synthesis of Variance.” Journal Article. <em>Psychometrika</em> 6 (5): 309–16.</p>
+</div>
+<div id="ref-RN2360">
+<p>Satterthwaite, F. 1946. “An Approximate Distribution of Estimates of Variance Components.” Journal Article. <em>Biometrics Bulletin</em> 2 (6): 110–14.</p>
+</div>
+<div id="ref-RN412">
+<p>Swets, John A., and Ronald M. Pickett. 1982. <em>Evaluation of Diagnostic Systems: Methods from Signal Detection Theory</em>. Book. First. Series in Cognition and Perception. New York: Academic Press.</p>
+</div>
+<div id="ref-RN1441">
+<p>Toledano, A. Y. 2003. “Three Methods for Analyzing Correlated Roc Curves: A Comparison in Real Data Sets.” Journal Article. <em>Statistics in Medicine</em> 22 (18): 2919–33.</p>
+</div>
+<div id="ref-RN1451">
+<p>Toledano, A. Y., and C. Gatsonis. 1996. “Ordinal Regression Methodology for Roc Curves Derived from Correlated Data.” Journal Article. <em>Stat Med</em> 15 (16): 1807–26.</p>
+</div>
+<div id="ref-RN1993">
+<p>Van Dyke, C. W., R. D. White, N. A. Obuchowski, M. A. Geisinger, R. J. Lorig, and M. A. Meziane. 1993. “Cine Mri in the Diagnosis of Thoracic Aortic Dissection.” Journal Article. <em>79th RSNA Meetings</em>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="HypothesisTesting.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ORAnalysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["RJafrocBook.pdf", "RJafrocBook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
