@@ -33,7 +33,7 @@ Here $\theta_{ij}$ is the estimate of the figure-of-merit for reader $j$ interpr
 
 Recall from book Chapter 07 that the jackknife is a way of teasing out the case-dependence: the left hand side of Equation  \@ref(eq:pseudoValPrime) literally has a case index $k$, with $k$ running from 1 to $K$, where $K$ is the total number of cases:  $K=K_1+K_2$. 
 
-Hillis et al [@RN1866] have proposed a centering transformation on the pseudovalues (termed "normalized" pseudovalues, but to me "centering" is a more accurate and descriptive term - *Normalize: (In mathematics) multiply (a series, function, or item of data) by a factor that makes the norm or some associated quantity such as an integral equal to a desired value (usually 1). New Oxford American Dictionary, 2016*):
+Hillis et al [@RN1866] proposed a centering transformation on the pseudovalues (termed "normalized" pseudovalues, but to me "centering" is a more accurate and descriptive term - *Normalize: (In mathematics) multiply (a series, function, or item of data) by a factor that makes the norm or some associated quantity such as an integral equal to a desired value (usually 1). New Oxford American Dictionary, 2016*):
 
 \begin{equation}
 Y_{ijk}=Y'_{ijk}+\left (\theta_{ij} - Y'_{ij\bullet}  \right )
@@ -57,7 +57,7 @@ Consider $N$ replications of a MRMC study, where a replication means repetition 
 
 \begin{equation}
 Y_{n(ijk)}  = \mu + \tau_i+ R_j + C_k + (\tau R)_{ij}+ (\tau C)_{ik}+ (R C)_{jk} + (\tau RC)_{ijk}+ \epsilon_{n(ijk)} 
-(\#eq:SamplingDbmModel)
+(\#eq:DefDBMModel)
 \end{equation}
 
 The term $\mu$ is a constant. By definition, the treatment effect $\tau_i$  is subject to the constraint:
@@ -273,7 +273,7 @@ If the NH of no treatment effect is true, i.e., if $\sigma_{\tau}^{2}$ = 0, then
 
 \begin{equation}
 E\left ( MST\mid NH \right ) = \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} + J\sigma_{\tau C}^{2}
-(\#eq:ExpValMST)
+(\#eq:ExpMST)
 \end{equation}
 
 Also, the following linear combination is equal to $E\left ( MST\mid NH \right )$:
@@ -297,7 +297,7 @@ In practice, one does not know the expected values – that would require averag
 
 \begin{equation}
 F_{DBM} = \frac{MST}{MSTR + MSTC - MSTRC}
-(\#eq:FStatRRRC)
+(\#eq:DefFStatRRRC)
 \end{equation}
 
 $F_{DBM}$ is a realization of a random variable. A non-zero treatment effect, i.e.,  $\sigma_{\tau}^{2} > 0$, will cause the ratio to be larger than one, because $E\left ( MST \right)$  will be larger, see row labeled $T$ in Table \@ref(tab:ExpValMs). Therefore values of $F_{DBM} > 1$  will tend to reject the NH. Drawing on a theorem from statistics [@RN1492], under the NH the ratio of two independent mean squares is distributed as a (central) F-statistic with degrees of freedom corresponding to those of the mean squares forming the numerator and denominator of the ratio (Theorem 12.2.5 in “An Introduction to Mathematical Statistics and Its Applications”).  Knowing the distribution of the statistic defined by (9.18) under the NH enables hypothesis testing. This is completely analogous to Chapter 08 where knowledge of the distribution of AUC under the NH enabled testing the null hypothesis that the observed value of AUC equals a pre-specified value. 
@@ -312,13 +312,13 @@ Summarizing,
 \begin{equation}
 F_{DBM|NH} \sim F_{ndf,ddf} \\
 ndf=I-1
-(\#eq:samplingFStat)
+(\#eq:NhDistrDBMDefFStatRRRC)
 \end{equation}
 
 The next topic is estimating $ddf$.
 
 ### The Satterthwaite approximation
-The denominator of the F-ratio is $MSTR+MSTC-MSTRC$. This is not a *simple* mean square (I am using terminology in the Satterthwaite papers - he means any mean square defined by equations such as in Equation \@ref(eq:MeanSquares)). Rather it is a *linear combination of mean squares* (with coefficients 1, 1 and -1), and the resulting value could even be negative leading to a negative $F_{DBM|NH}$, which is an illegal value for a sample from an F-distribution (a ratio of two variances). In 1941 Satterthwaite [@RN2359; @RN2360] proposed an approximate degree of freedom for a linear combination of simple mean square quantities. TBA Online Appendix 9.A explains the approximation in more detail. The end result is that the mean square quantity described in Equation \@ref(eq:FStatRRRC) has an approximate degree of freedom defined by (this is called the *Satterthwaite's approximation*):
+The denominator of the F-ratio is $MSTR+MSTC-MSTRC$. This is not a *simple* mean square (I am using terminology in the Satterthwaite papers - he means any mean square defined by equations such as in Equation \@ref(eq:MeanSquares)). Rather it is a *linear combination of mean squares* (with coefficients 1, 1 and -1), and the resulting value could even be negative leading to a negative $F_{DBM|NH}$, which is an illegal value for a sample from an F-distribution (a ratio of two variances). In 1941 Satterthwaite [@RN2359; @RN2360] proposed an approximate degree of freedom for a linear combination of simple mean square quantities. TBA Online Appendix 9.A explains the approximation in more detail. The end result is that the mean square quantity described in Equation \@ref(eq:DefFStatRRRC) has an approximate degree of freedom defined by (this is called the *Satterthwaite's approximation*):
 
 \begin{equation}
 ddf_{Sat}=\frac{\left ( MSTR + MSTC - MSTRC \right )^2}{\left ( \frac{MSTR^2}{(I-1)(J-1)} + \frac{MSTC^2}{(I-1)(K-1)} + \frac{MSTRC^2}{(I-1)(J-1)(K-1)}  \right )}
@@ -338,18 +338,18 @@ Now the denominator cannot be negative. One can think of the F-statistic $F_{DBM
 
 \begin{equation}
 ddf_H =\frac{\left ( MSTR + \max \left (MSTC - MSTRC,0  \right ) \right )^2}{\text{MSTR}^2}(I-1)(J-1)
-(\#eq:ddfH)
+(\#eq:DefddfH)
 \end{equation}
 
 Summarizing,
 
 \begin{equation}
-F_{DBM} \sim F_{ndf,ddf} \\
+F_{DBM} \sim F_{ndf,ddf_H} \\
 ndf=I-1
-(\#eq:samplingFStatHillis)
+(\#eq:NhDistrDBMDefFStatRRRCHillis)
 \end{equation}
 
-Instead of 4 rules, as in the original DBM method, the Hillis modification involves just one rule, summarized by Equations \@ref(eq:ddfH) through \@ref(eq:samplingFStatHillis). Moreover, the F-statistic is constrained to non-negative values. Using simulation testing [@RN1866] he has been shown that the modified DBM method has better null hypothesis behavior than the original DBM method. The latter tended to be too conservative, typically yielding Type I error rates smaller than the expected 5% for $\alpha$ = 0.05. 
+Instead of 4 rules, as in the original DBM method, the Hillis modification involves just one rule, summarized by Equations \@ref(eq:DefddfH) through \@ref(eq:NhDistrDBMDefFStatRRRCHillis). Moreover, the F-statistic is constrained to non-negative values. Using simulation testing [@RN1866] he has been shown that the modified DBM method has better null hypothesis behavior than the original DBM method. The latter tended to be too conservative, typically yielding Type I error rates smaller than the expected 5% for $\alpha$ = 0.05. 
 
 ### Decision rules, p-value and confidence intervals
 The *critical* value of the F-distribution, denoted $F_{1-\alpha,ndf,ddf_H}$, is defined such that fraction $1-\alpha$ of the distribution lies to the left of the critical value, in other words it is the $1-\alpha$ *quantile* of the F-distribution: 
@@ -459,283 +459,145 @@ data.frame("Lower" = retRJafroc$RRRC$ciDiffTrt[1,"CILower"],
 ```
 
 
-## Sample size estimation for random-reader random-cases
-The observed effect size (a random variable) is defined by (the bullet represents an average over the reader index):
+## Sample size estimation for random-reader random-case generalization
+### The non-centrality parameter
+In the significance-testing procedure just described, the relevant distribution was that of the F-statistic when the NH is true, Equation \@ref(eq:NhDistrDBMDefFStatRRRCHillis). *For sample size estimation, one needs to know the distribution of the statistic when the NH is false.* In the latter condition (i.e., the AH) the observed F-statistic, defined by Equation \@ref(eq:DefFStatRRRC), is distributed as a *non-central* F-distribution  $F_{ndf,ddf_H,\Delta}$ with *non-centrality parameter* $\Delta$: 
+
+\begin{equation}
+F_{DBM|AH} \sim F_{ndf,ddf_H,\Delta}
+(\#eq:AhDistrDBMFStatRRRC)
+\end{equation}
+
+The non-centrality parameter $\Delta$ is defined, compare [@RN1476] Eqn. 6, by:
+
+\begin{equation*}
+\Delta=\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}
+\end{equation*}
+
+The parameters $\sigma_{\tau}^2$, $\sigma_{\tau R}^2$ and $\sigma_{\tau C}^2$ appearing in this equation are identical to three of the six variances describing the DBM model, Equation \@ref(eq:DefDBMModel). The estimates of $\sigma_{\tau R}^2$ and/or $\sigma_{\tau C}^2$ can turn out to be negative (if either of these parameters is close to zero, an estimate from a small pilot study can be negative). To avoid a possibly negative denominator, [@RN1476] suggest the following modifications (see sentence following Eqn. 4 in cited paper):
+
+\begin{equation}
+\Delta=\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+\max(K\sigma_{\tau R}^2,0)+\max(J\sigma_{\tau C}^2,0)}
+(\#eq:DefDelta)
+\end{equation}
+
+The observed effect size $d$, a realization of a random variable, is defined by (the bullet represents an average over the reader index):
 
 \begin{equation}
 d=\theta_{1\bullet}-\theta_{2\bullet}
 (\#eq:EffectSize)
 \end{equation}
 
-In the significance-testing procedure described in TBA Chapter 09, interest was in the distribution of the F-statistic when the NH was true. *For sample size estimation, one needs to know the distribution of the statistic when the NH is false.* In the latter condition it was shown that then the observed F-statistic TBA Eqn. (9.35) is distributed as a *non-central* F-distribution  $F_{ndf,ddf,\Delta}$ with non-centrality parameter $\Delta$: 
-
-\begin{equation}
-F_{DBM|AH} \sim F_{ndf,ddf,\Delta}
-(\#eq:FDBMSampling)
-\end{equation}
-
-The non-centrality parameter $\Delta$ was defined, Eqn. TBA (9.34), and compare to [@RN1476] Eqn. 6, by:
-
-\begin{equation}
-\Delta=\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2}
-(\#eq:DefDelta)
-\end{equation}
-
-To be clear, in this chapter all variances are *pseudo-value* derived quantities (for notational compactness the additional Y subscript is suppressed). The estimate of $\sigma_{\tau C}^2$ can turn out to be negative. To avoid a negative denominator, Hillis suggests the following modification:
-
-\begin{equation}
-\Delta=\frac{JK\sigma_{\tau}^2}{\sigma_{\epsilon}^2+K\sigma_{\tau R}^2+\max(J\sigma_{\tau C}^2,0)}
-(\#eq:DefnDelta)
-\end{equation}
-
-This expression depends on three variance components, $\sigma_{\epsilon}^2$, $\sigma_{\tau R}^2$ and $\sigma_{\tau C}^2$. The $ddf$ term appearing in \@ref(eq:FDBMSampling) is defined in [@RN1866] Equation 12 (this overrides Eqn. 5 in [@RN1476] which was based on the Satterthwaite approximation:
-
-\begin{equation}
-ddf=\frac{\left [MSTR+\max(MSTC-MSTRC,0)  \right ]^2}{\frac{[MSTR]^2}{(I-1)(J-1)}}
-(\#eq:ddfH)
-\end{equation}
-
-The mean squares in this expression can be expressed in terms of the three variance-components appearing in TBA Eqn. (11.6). Here are the steps. From Hillis and Berbaum [@RN1476] Eqn. 4, 
-
-\begin{equation}
-\sigma_{\epsilon}^2=MSTRC\\
-\sigma_{\tau R}^2=\frac{MSTR-MSTRC}{K}\\
-\sigma_{\tau C}^2=\frac{MSTC-MSTRC}{J}
-(\#eq:HBEqn4)
-\end{equation}
-
-Denoting the denominator of $\Delta$ by $den$, one has from \@ref(eq:DefnDelta) and ignoring the max() functions:  
-
-\begin{equation}
-den=\sigma_{\epsilon}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2
-(\#eq:HBEqn4)
-\end{equation}
-
-Consider the quantity shown next (from the numerator of \@ref(eq:ddfH), the expression for $ddf$). 
-
-\begin{equation}
-MSTR+MSTR-MSTRC
-(\#eq:HBEqn4a)
-\end{equation}
-
-Substituting from \@ref(eq:HBEqn4) one has:
-
-\begin{equation}
-(K\sigma_{\tau R}^2+\sigma_{\epsilon}^2)+(J\sigma_{\tau C}^2+\sigma_{\epsilon}^2)-\sigma_{\epsilon}^2
-(\#eq:HBEqn4b)
-\end{equation}
-
-Likewise, substituting from \@ref(eq:HBEqn4) into the expression for MSTR, \@ref(eq:HBEqn4) reduces to:
-
-\begin{equation}
-ddf = \frac{(\sigma_{\epsilon}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2)^2}{K\sigma_{\tau R}^2+\sigma_{\epsilon}^2}(I-1)(J-1)
-(\#eq:HBEqn4c)
-\end{equation}
-
-For the special case $I = 2$ the effect size $d$ is related to $\sigma_\tau^2$` by:
-
-\begin{equation}
-\sigma_\tau^2 =d^{2}/2
-(\#eq:HBEqn4d)
-\end{equation}
-
-and the final expression, implemented in `RJafroc` are:
-
-\begin{equation}
-\Delta=\frac{JKd^2/2}{\sigma_{\epsilon}^2+K\sigma_{\tau R}^2+\max(J\sigma_{\tau C}^2,0)}
-(\#eq:DeltaCoded)
-\end{equation}
-
-and 
-
-\begin{equation}
-ddf = \frac{(\sigma_{\epsilon}^2+K\sigma_{\tau R}^2+J\sigma_{\tau C}^2)^2}{(K\sigma_{\tau R}^2+\sigma_{\epsilon}^2)^2}(I-1)(J-1)\\
-ddf = \frac{(\sigma_{\tau R}^2+(J\sigma_{\tau C}^2+\sigma_{\epsilon}^2)/K)^2}{(\sigma_{\tau R}^2+\sigma_{\epsilon}^2/K)^2}(I-1)(J-1)\\
-ddf = \frac{(\max(\sigma_{\tau R}^2,0)+(\max(J\sigma_{\tau C}^2,0)+\sigma_{\epsilon}^2)/K)^2}{(\max(\sigma_{\tau R}^2,0)+\sigma_{\epsilon}^2/K)^2}(J-1)
-(\#eq:ddfCoded)
-\end{equation}
-
-
-
-
-implements the following formulae for $\Delta$
-
-.  a function to calculate the mean squares, `UtilMeanSquares()`, which allows ddf to be calculated using Eqn. TBA (11.7). The sample size functions in this package need only the three variance-components (the formula for $ddf$ is implemented internally). 
-
-For two treatments, since the individual treatment effects must be the negatives of each other (because they sum to zero), it is easily shown that:
+For two treatments, since the individual treatment effects must be the negatives of each other (because they sum to zero, see \@ref(eq:constraintTau)), it follows that:
 
 \begin{equation}
 \sigma_{\tau}^2=\frac{d^2}{2}
 (\#eq:sigma2Tau)
 \end{equation}
  
-Therefore, for two treatments the numerator of the expression for $\Delta$ becomes $JKd^2/2$. For three treatments, I = 3, assuming the reader-averaged FOMs are spaced at intervals of d, it is easily shown that the numerator of the expression for $\Delta$ becomes $2JKd^2$, which is 4 times the value for two treatments, meaning that power is expected to increase dramatically. This is consistent with the fact that with more treatment pairings, the chance that at least one pairing will turn out to be signficant increases. For the rest of the chapter it is assumed that one is limited to two treatments.
-
-
-
-
-## Fixed-reader random-case (FRRC) analysis
-The model is the same as in TBA \@ref(eq:pseudoValPrime) Eqn. (9.4) except one puts $\sigma_{R}^{2}$ = $\sigma_{\tau R}^{2}$ = 0 in Table Table \@ref(tab:ExpValMs). The appropriate test statistic is: 
+Therefore, for two treatments the numerator of the expression for $\Delta$ is $JKd^2/2$. Dividing numerator and denominator of Equation \@ref(eq:DefDelta) by $K$, one gets the final expression for $\Delta$, as coded in `RJafroc`, namely:
 
 \begin{equation}
-\frac{E\left ( MST \right )}{E\left ( MSTC \right )} = \frac{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau C}^{2}+JK\sigma_{\tau}^{2}}{\sigma_{\epsilon}^{2}+\sigma_{\tau RC}^{2}+J\sigma_{\tau C}^{2}}
+\Delta=\frac{Jd^2/2}{\max(\sigma_{\tau R}^2,0)+(\sigma_{\epsilon}^2+\max(J\sigma_{\tau C}^2,0))/K}
+(\#eq:DeltaCoded)
 \end{equation}
 
-Under the null hypothesis $\sigma_{\tau}^{2} = 0$:
+The variances, $\sigma_{\tau}^2$, $\sigma_{\tau R}^2$ and $\sigma_{\tau C}^2$, appearing in Equation \@ref(eq:DeltaCoded), can be calculated from the observed mean squares using the following equations, see [@RN1476] Eqn. 4, 
 
 \begin{equation}
-\frac{E\left ( MST \right )}{E\left ( MSTC \right )} = 1
+\left.\begin{matrix}
+\sigma_{\epsilon}^2={\text{MSTRC}}^*\\ 
+\sigma_{\tau R}^2=\frac{{\text{MSTR}}^*-{\text{MSTRC}}^*}{K^*}\\ 
+\sigma_{\tau C}^2=\frac{{\text{MSTC}}^*-{\text{MSTRC}}^*}{J^*}
+\end{matrix}\right\}
+(\#eq:HBEqn4Pilot)
 \end{equation}
 
-As before, one defines the F-statistic (by replacing *expected* with *observed* values) by
+* Here the asterisk is used to consistently denote quantities, including the mean squares, pertaining to the pilot study. 
+* In particular, $J^*$ and $K^*$ denote the numbers of readers and cases, respectively, *in the pilot study*, while $J$ and $K$, appearing elsewhere, for example in Equation \@ref(eq:DeltaCoded), are the corresponding numbers for the *planned or pivotal study*. 
+* The three variances, determined from the pilot study via Equation \@ref(eq:HBEqn4Pilot), are assumed to apply unchanged to the pivotal study (they are sample-size independent parameters of the DBM sampling model). 
+
+### The denominator degrees of freedom
+* (The numerator degrees of freedom of the non-central $F$ distribution is always unity.) It remains to calculate the appropriate denominator degrees of freedom for the pivotal study. This is denoted $df_2$, to distinguish it from $ddf_H$, where the latter applies to the pilot study as in Equation \@ref(eq:DefddfH). 
+* The starting point is Equation \@ref(eq:HBEqn4Pilot), repeated here except that *all quantities appearing in it, in particular the mean-squares, apply to the pivotal study*. 
 
 \begin{equation}
-F_{DBM|R}=\frac{MST}{MSTC}
-(\#eq:FStatFRRC)
+df_2 =\frac{\left ( MSTR + \max \left (MSTC - MSTRC,0  \right ) \right )^2}{\text{MSTR}^2}(J-1)
+(\#eq:Defdf2)
 \end{equation}
 
-The observed value $F_{DBM|R}$ (the Roe-Metz notation [@RN1124] is used which indicates that the factor appearing to the right of the vertical bar is regarded as fixed) is distributed as an F-statistic with $\text{ndf}$ = $I – 1$ and $ddf = (I-1)(K-1)$; the degrees of freedom follow from the rows labeled $T$ and $TC$ in TBA Table Table \@ref(tab:ExpValMs). Therefore, the distribution of the observed value is (no Satterthwaite approximation needed this time as both numerator and denominator are simple mean-squares):
+The mean squares can be related to the variances by an equation analogous to Equation \@ref(eq:HBEqn4Pilot), except that all quantities in it apply to the pivotal study - as noted by the absence of asterisks. 
 
 \begin{equation}
-F_{DBM|R} \sim F_{I-1,(I-1)(K-1)}
-(\#eq:SamplingFStatFRRC)
+\left.\begin{matrix}
+\sigma_{\epsilon}^2=MSTRC\\ 
+\sigma_{\tau R}^2=\frac{MSTR-MSTRC}{K}\\ 
+\sigma_{\tau C}^2=\frac{MSTC-MSTRC}{J}
+\end{matrix}\right\}
+(\#eq:HBEqn4Pivotal)
 \end{equation}
 
-The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value:
+Substituting from Equation \@ref(eq:HBEqn4Pivotal) into Equation \@ref(eq:Defdf2) and dividing numerator and denominator by $K^2$, one has the final expression as coded in `RJafroc`:
 
 \begin{equation}
-F_{DBM|R} > F_{1-\alpha,I-1,(I-1)(K-1)}
-(\#eq:NhRejectRuleFRRC)
+df_2 = \frac{(\max(\sigma_{\tau R}^2,0)+(\max(J\sigma_{\tau C}^2,0)+\sigma_{\epsilon}^2)/K)^2}{(\max(\sigma_{\tau R}^2,0)+\sigma_{\epsilon}^2/K)^2}(J-1)
+(\#eq:ddfCoded)
 \end{equation}
 
-The p-value of the test is the probability that a random sample from the F-distribution TBA \@ref(eq:pseudoValPrime) Eqn. (9.39), exceeds the observed value:
+### Example of sample size estimation, RRRC generalization
+The Van Dyke dataset is regarded as a pilot study. In the first block of code function `StSignificanceTesting()` is used to get the DBM variances (i.e., `VarTR` = $\sigma_{\tau R}^2$, etc.) and the effect size $d$. 
 
-\begin{equation}
-p=\Pr\left ( F> F_{DBM|R} \mid F \sim F_{I-1,(I-1)(K-1)} \right )
-(\#eq:pFRRC)
-\end{equation}
-
-The $(1-\alpha)$  confidence interval for the inter-treatment reader-averaged difference FOM is given by:
-
-\begin{equation}
-CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2,(I-1)(K-1)}\sqrt{2\frac{MST}{JK}}
-(\#eq:confIntervalFRRC)
-\end{equation}
-
-### Single-reader multiple-treatment analysis
-With a single reader interpreting cases in two or more treatments, the reader factor must necessarily be regarded as fixed. The preceding analysis is applicable. One simply puts $J = 1$ in the equations above. 
-
-#### Example 5: Code illustrating p-values for FRRC analysis, Van Dyke data
 ```{r}
-FDbmFR <- retMS$msT / retMS$msTC
-ndf <- (I-1); ddf <- (I-1)*(K-1)
-pValue <- 1 - pf(FDbmFR, ndf, ddf)
-
-std_DIFF_FOM_FRRC <- sqrt(2*retMS$msTC/J/K)
-nDiffs <- I*(I-1)/2
-CI_DIFF_FOM_FRRC <- array(dim = c(nDiffs, 3))
-for (i in 1 : nDiffs) {
-  CI_DIFF_FOM_FRRC[i,1] <- qt(alpha/2,df = ddf)*std_DIFF_FOM_FRRC + trtDiff[i]
-  CI_DIFF_FOM_FRRC[i,2] <- trtDiff[i]
-  CI_DIFF_FOM_FRRC[i,3] <- qt(1-alpha/2,df = ddf)*std_DIFF_FOM_FRRC + trtDiff[i]
-  print(data.frame("pValue" = pValue, 
-                   "Lower" = CI_DIFF_FOM_FRRC[i,1], 
-                   "Mid" = CI_DIFF_FOM_FRRC[i,2], 
-                   "Upper" = CI_DIFF_FOM_FRRC[i,3]))
-}
-data.frame("pValue" = retRJafroc$FRRC$FTests$p[1],
-           "Lower" = retRJafroc$FRRC$ciDiffTrt[1,"CILower"], 
-           "Mid" = retRJafroc$FRRC$ciDiffTrt[1,"Estimate"], 
-           "Upper" = retRJafroc$FRRC$ciDiffTrt[1,"CIUpper"])
+rocData <- dataset02 # select Van Dyke dataset
+retDbm <- StSignificanceTesting(dataset = rocData, FOM = "Wilcoxon", method = "DBM") 
+VarTR <- retDbm$ANOVA$VarCom["VarTR","Estimates"]
+VarTC <- retDbm$ANOVA$VarCom["VarTC","Estimates"]
+VarErr <- retDbm$ANOVA$VarCom["VarErr","Estimates"]
+d <- retDbm$FOMs$trtMeanDiffs["trt0-trt1","Estimate"]
 ```
 
-As one might expect, if one "freezes" reader variability, the FOM difference becomes significant, whether viewed from the point of view of the F-statistic exceeding the critical value, the observed p-value being smaller than alpha or the 95% CI for the difference FOM not including zero. 
-
-## Random-reader fixed-case (RRFC) analysis
-The model is the same as in TBA \@ref(eq:pseudoValPrime) Eqn. (9.4) except one puts $\sigma_C^2 = \sigma_{\tau C}^2 =0$ in Table Table \@ref(tab:ExpValMs). It follows that: 
-
-\begin{equation}
-\frac{E(MST)}{E(MSTR)}=\frac{\sigma_\epsilon^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2+JK\sigma_{\tau}^2}{\sigma_\epsilon^2+\sigma_{\tau RC}^2+K\sigma_{\tau R}^2}
-\end{equation}
-
-Under the null hypothesis $\sigma_\tau^2 = 0$:
-
-\begin{equation}
-\frac{E(MST)}{E(MSTR)}=1
-\end{equation}
-
-Therefore, one defines the F-statistic (replacing expected values with observed values) by:
-
-\begin{equation}
-F_{DBM|C} \sim \frac{MST}{MSTR}
-(\#eq:FStatRRFC)
-\end{equation}
-
-The observed value $F_{DBM|C}$ is distributed as an F-statistic with $ndf = I – 1$ and $ddf = (I-1)(J-1)$, see rows labeled $T$ and $TR$ in Table Table \@ref(tab:ExpValMs).
-
-\begin{equation}
-F_{DBM|C} \sim F_{I-1,(I-1)(J-1))}
-(\#eq:SamplingFStatRRFC)
-\end{equation}
-
-The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:
-
-\begin{equation}
-F_{DBM|C} > F_{1-\alpha,I-1,(I-1)(J-1))}
-(\#eq:NhRejectRuleRRFC)
-\end{equation}
-
-The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:
-
-\begin{equation}
-p=\Pr\left ( F>F_{DBM|C} \mid F \sim F_{I-1,(I-1)(J-1)} \right )
-(\#eq:pRRFC)
-\end{equation}
-
-The confidence interval for inter-treatment differences is given by (TBA check this):
-
-\begin{equation}
-CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\alpha/2,(I-1)(J-1)}\sqrt{2\frac{MSTR}{JK}}
-(\#eq:confIntervalRRFC)
-\end{equation}
-
-#### Example 6: Code illustrating analysis for RRFC analysis, Van Dyke data
+The observed effect size is `r d`. The sign is negative as the reader-averaged second modality has greater FOM than the first. The next code block shows implementation of the RRRC formulae just presented. The values of $J$ and $K$ were preselected to achieve 80% power, as verified from the final line of the output. 
 
 ```{r}
-FDbmFC <- retMS$msT / retMS$msTR
-ndf <- (I-1)
-ddf <- (I-1)*(J-1)
-pValue <- 1 - pf(FDbmFC, ndf, ddf)
-
-nDiffs <- I*(I-1)/2
-CI_DIFF_FOM_RRFC <- array(dim = c(nDiffs, 3))
-for (i in 1 : nDiffs) {
-  CI_DIFF_FOM_RRFC[i,1] <- qt(alpha/2,df = ddf)*sqrt(2*retMS$msTR/J/K) + trtDiff[i]
-  CI_DIFF_FOM_RRFC[i,2] <- trtDiff[i]
-  CI_DIFF_FOM_RRFC[i,3] <- qt(1-alpha/2,df = ddf)*sqrt(2*retMS$msTR/J/K) + trtDiff[i]
-  print(data.frame("pValue" = pValue, 
-                   "Lower" = CI_DIFF_FOM_RRFC[i,1], 
-                   "Mid" = CI_DIFF_FOM_RRFC[i,2], 
-                   "Upper" = CI_DIFF_FOM_RRFC[i,3]))
-}
-data.frame("pValue" = retRJafroc$RRFC$FTests$p[1],
-           "Lower" = retRJafroc$RRFC$ciDiffTrt[1,"CILower"], 
-           "Mid" = retRJafroc$RRFC$ciDiffTrt[1,"Estimate"], 
-           "Upper" = retRJafroc$RRFC$ciDiffTrt[1,"CIUpper"])
+#RRRC
+J <- 10; K <- 163
+den <- max(VarTR, 0) + (VarErr + J * max(VarTC, 0)) / K 
+deltaRRRC <- (d^2 * J/2) / den
+df2 <- den^2 * (J - 1) / (max(VarTR, 0) + VarErr / K)^2
+FCrit <- qf(1 - alpha, 1, df2)
+Power <- 1-pf(FCrit, 1, df2, ncp = deltaRRRC)
+data.frame("J"= J,  "K" = K, "FCrit" = FCrit, "df2" = df2, "deltaRRRC" = deltaRRRC, "PowerRRRC" = Power)
 ```
 
 
-## DBM analysis: Example 1, Van Dyke Data
+```{r}
+#RRRC
+# J <- 10; K <- 163
+# Delta <- (0.5*J*K*d^2)/(K*VarTR+max(J*VarTC,0)+VarEps)
+# MS <- UtilMeanSquares(rocData, FOM = "Wilcoxon", method = "DBM")
+# ddf <- (MS$msTR+max(MS$msTC-MS$msTRC,0))^2/(MS$msTR^2)*(J-1)
+# FCrit <- qf(1 - alpha, 1, ddf)
+# Power <- 1-pf(FCrit, 1, ddf, ncp = Delta)
+# data.frame("J"= J,  "K" = K, "FCrit" = FCrit, "ddf" = ddf, "Delta" = Delta, "RRRCPower" = Power)
 
+#FRRC
+# J <- 10; K <- 133
+# Delta <- (0.5*J*K*d^2)/(max(J*VarTC,0)+VarEps)
+# ddf <- (K-1)
+# FCrit <- qf(1 - alpha, 1, ddf)
+# Power <- 1-pf(FCrit, 1, ddf, ncp = Delta)
+# data.frame("J"= J,  "K" = K, "FCrit" = FCrit, "ddf" = ddf, "Delta" = Delta, "RRRCPower" = Power)
 
-## DBM analysis: Example 2, VolumeRad data
+#RRFC
+# J <- 10; K <- 53
+# Delta <- (0.5*J*K*d^2)/(K*VarTR+VarEps)
+# ddf <- (J-1)
+# FCrit <- qf(1 - alpha, 1, ddf)
+# Power <- 1-pf(FCrit, 1, ddf, ncp = Delta)
+# data.frame("J"= J,  "K" = K, "FCrit" = FCrit, "ddf" = ddf, "Delta" = Delta, "RRRCPower" = Power)
+```
 
-
-## Validation of DBM analysis
-
-
-
-## The meaning of pseudovalues
+For 10 readers, the numbers of cases needed for 80% power is largest (163) for RRRC and least for RRFC (53). For all three analyses, the expectation of 80% power is met - the numbers of cases and readers were chosen to achieve close to 80% statistical power. Intermediate quantities such as the critical value of the F-statistic, `ddf` and `Delta` are shown. The reader should confirm that the code does in fact implement the relevant formulae. Shown next is the `RJafroc` implementation. The relevant file is mainSsDbm.R, a listing of which follows: 
 
 
 ## Summary
@@ -745,7 +607,7 @@ DBM has been used in several hundred ROC studies (Prof. Kevin Berbaum, private c
 
 A third MRMC ROC method, due to Clarkson, Kupinski and Barrett19,20, implemented in open-source JAVA software by Gallas and colleagues22,44 (http://didsr.github.io/iMRMC/) is available on the web. Clarkson et al19,20 provide a probabilistic rationale for the DBM model, provided the figure of merit is the empirical $AUC$. The method is elegant but it is only applicable as long as one is using the empirical AUC as the figure of merit (FOM) for quantifying observer performance. In contrast the DBM approach outlined in this chapter, and the approach outlined in the following chapter, are applicable to any scalar FOM. Broader applicability ensures that significance-testing methods described in this, and the following chapter, apply to other ROC FOMs, such as binormal model or other fitted AUCs, and more importantly, to other observer performance paradigms, such as free-response ROC paradigm. An advantage of the Clarkson et al. approach is that it predicts truth-state dependence of the variance components. One knows from modeling ROC data that diseased cases tend to have greater variance than non-diseased ones, and there is no reason to suspect that similar differences do not exist between the variance components. 
 
-Testing validity of an analysis method via simulation testing is only as good as the simulator used to generate the datasets, and this is where current research is at a bottleneck. The simulator plays a central role in ROC analysis. In the author's opinion this is not widely appreciated. In contrast, simulators are taken very seriously in other disciplines, such as cosmology, high-energy physics and weather forecasting. The simulator used to validate3 DBM is that proposed by Roe and Metz39 in 1997. This simulator has several shortcomings. (a) It assumes that the ratings are distributed like an equal-variance binormal model, which is not true for most clinical datasets (recall that the b-parameter of the binormal model is usually less than one). Work extending this simulator to unequal variance has been published3. (b) It does not take into account that some lesions are not visible, which is the basis of the contaminated binormal model (CBM). A CBM model based simulator would use equal variance distributions with the difference that the distribution for diseased cases would be a mixture distribution with two peaks. The radiological search model (RSM) of free-response data, Chapter 16 &17 also implies a mixture distribution for diseased cases, and it goes farther, as it predicts some cases yield no z-samples, which means they will always be rated in the lowest bin no matter how low the reporting threshold. Both CBM and RSM account for truth dependence by accounting for the underlying perceptual process. (c) The Roe-Metz simulator is out dated; the parameter values are based on datasets then available (prior to 1997). Medical imaging technology has changed substantially in the intervening decades. (d) Finally, the methodology used to arrive at the proposed parameter values is not clearly described. Needed is a more realistic simulator, incorporating knowledge from alternative ROC models and paradigms that is calibrated, by a clearly defined method, to current datasets. 
+Testing validity of an analysis method via simulation testing is only as good as the simulator used to generate the datasets, and this is where current research is at a bottleneck. The simulator plays a central role in ROC analysis. In the author's opinion this is not widely appreciated. In contrast, simulators are taken very seriously in other disciplines, such as cosmology, high-energy physics and weather forecasting. The simulator used to validate3 DBM is that proposed by Roe and Metz39 in 1997. This simulator has several shortcomings. (a) It assumes that the ratings are distributed like an equal-variance binormal model, which is not true for most clinical datasets (recall that the b-parameter of the binormal model is usually less than one). Work extending this simulator to unequal variance has been published3. (b) It does not take into account that some lesions are not visible, which is the basis of the contaminated binormal model (CBM). A CBM model based simulator would use equal variance distributions with the difference that the distribution for diseased cases would be a mixture distribution with two peaks. The radiological search model (RSM) of free-response data, Chapter 16 &17 also implies a mixture distribution for diseased cases, and it goes farther, as it predicts some cases yield no z-samples, which means they will always be rated in the lowest bin no matter how low the reporting threshold. Both CBM and RSM account for truth dependence by accounting for the underlying perceptual process. (c) The Roe-Metz simulator is out dated; the parameter values are based on datasets then available (prior to 1997). Medical imaging technology has changed substantially in the intervening decades. d Finally, the methodology used to arrive at the proposed parameter values is not clearly described. Needed is a more realistic simulator, incorporating knowledge from alternative ROC models and paradigms that is calibrated, by a clearly defined method, to current datasets. 
 
 Since ROC studies in medical imaging have serious health-care related consequences, no method should be used unless it has been thoroughly validated. Much work still remains to be done in proper simulator design, on which validation is dependent.
 

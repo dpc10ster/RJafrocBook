@@ -100,58 +100,6 @@ F_{AH|C}\equiv \frac{MST}{MSTR}\sim F_{I-1,(I-1)(J-1),\Delta}
 (\#eq:SamplingFRRFC)
 \end{equation}
 
-### Example 1
-In the first example the Van Dyke dataset is regarded as a pilot study. Two implementations are shown, a direct application of the relevant formulae, including usage of the mean squares, which in principle can be calculated from the three variance-components. This is then compared to the `RJafroc` implementation. 
-
-Shown first is the "open" implementation. 
-
-
-```r
-alpha <- 0.05;cat("alpha = ", alpha, "\n")
-#> alpha =  0.05
-rocData <- dataset02 # select Van Dyke dataset
-retDbm <- StSignificanceTesting(dataset = rocData, FOM = "Wilcoxon", method = "DBM") 
-varYTR <- retDbm$ANOVA$VarCom["VarTR","Estimates"]
-varYTC <- retDbm$ANOVA$VarCom["VarTC","Estimates"]
-varYEps <- retDbm$ANOVA$VarCom["VarErr","Estimates"]
-effectSize <- retDbm$FOMs$trtMeanDiffs["trt0-trt1","Estimate"]
-cat("effect size = ", effectSize, "\n")
-#> effect size =  -0.043800322
-
-#RRRC
-J <- 10; K <- 163
-ncp <- (0.5*J*K*(effectSize)^2)/(K*varYTR+max(J*varYTC,0)+varYEps)
-MS <- UtilMeanSquares(rocData, FOM = "Wilcoxon", method = "DBM")
-ddf <- (MS$msTR+max(MS$msTC-MS$msTRC,0))^2/(MS$msTR^2)*(J-1)
-FCrit <- qf(1 - alpha, 1, ddf)
-Power <- 1-pf(FCrit, 1, ddf, ncp = ncp)
-data.frame("J"= J,  "K" = K, "FCrit" = FCrit, "ddf" = ddf, "ncp" = ncp, "RRRCPower" = Power)
-#>    J   K     FCrit       ddf       ncp  RRRCPower
-#> 1 10 163 4.1270572 34.334268 8.1269825 0.79111255
-
-#FRRC
-J <- 10; K <- 133
-ncp <- (0.5*J*K*(effectSize)^2)/(max(J*varYTC,0)+varYEps)
-ddf <- (K-1)
-FCrit <- qf(1 - alpha, 1, ddf)
-Power <- 1-pf(FCrit, 1, ddf, ncp = ncp)
-data.frame("J"= J,  "K" = K, "FCrit" = FCrit, "ddf" = ddf, "ncp" = ncp, "RRRCPower" = Power)
-#>    J   K    FCrit ddf       ncp  RRRCPower
-#> 1 10 133 3.912875 132 7.9873835 0.80111671
-
-#RRFC
-J <- 10; K <- 53
-ncp <- (0.5*J*K*(effectSize)^2)/(K*varYTR+varYEps)
-ddf <- (J-1)
-FCrit <- qf(1 - alpha, 1, ddf)
-Power <- 1-pf(FCrit, 1, ddf, ncp = ncp)
-data.frame("J"= J,  "K" = K, "FCrit" = FCrit, "ddf" = ddf, "ncp" = ncp, "RRRCPower" = Power)
-#>    J  K    FCrit ddf       ncp  RRRCPower
-#> 1 10 53 5.117355   9 10.048716 0.80496663
-```
-
-For 10 readers, the numbers of cases needed for 80% power is largest (163) for RRRC and least for RRFC (53). For all three analyses, the expectation of 80% power is met - the numbers of cases and readers were chosen to achieve close to 80% statistical power. Intermediate quantities such as the critical value of the F-statistic, `ddf` and `ncp` are shown. The reader should confirm that the code does in fact implement the relevant formulae. Shown next is the `RJafroc` implementation. The relevant file is mainSsDbm.R, a listing of which follows: 
-
 ### Fixed-reader random-case (FRRC) analysis TBA
 It is a realization of a random variable, so one has some leeway in the choice of anticipated effect size - more on this later. 
 Here $J^*$ and $K^*$ refer to the number of readers and cases in the *pilot* study. 
