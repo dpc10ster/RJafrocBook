@@ -8,47 +8,49 @@ output:
 
 
 ## Introduction
-The previous chapter described the DBM significance testing procedure [@RN204] for analyzing MRMC ROC data, along with improvements suggested by Hillis. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been criticized by Hillis and others [@zhou2009statistical]. Hillis states that the method "works" but lacks firm statistical foundations [@RN1772; @RN1865; @RN1866]. The last section of the previous chapter, §9.13, gave a justification for why the method works for empirical AUC. Specifically, the empirical AUC pseudovalues qualify as case-level FOMs - this property has also been noted by [@RN1395]. However, this property applies only to the empirical AUC, so an alternate approach that applies to any figure of merit is highly desirable. 
+In previous chapters the DBM significance testing procedure [@RN204] for analyzing MRMC ROC data, along with improvements [@RN2508], has been described. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been criticized by Hillis and others [@zhou2009statistical]. Hillis states that the method "works" but lacks firm statistical foundations [@RN1772; @RN1865; @RN1866]. In my bood I gave a justification for why the method "works". Specifically, the empirical AUC pseudovalues qualify as case-level FOMs - this property has also been noted by [@RN1395]. However, this property applies only to the empirical AUC, so an alternate approach that applies to any figure of merit is highly desirable. 
 
-This chapter presents Hillis' preferred alternative to the DBM approach. He has argued that the DBM method can be regarded as a "working model that gives the right results", but a method based on an earlier publication [@RN1450] by Obuchowski and Rockette, which does not depend on pseudovalues, and predicts more or less the same results, is preferable from a conceptual viewpoint. Since, besides showing the correspondence, Hillis has made significant improvements to the original methodology, this chapter is named "OR Analysis", where OR stands for Obuchowski, Rockette and Hillis. The OR method has advantages in being able to handle more complex study designs [@RN2508] that are outside the scope of this book (the author acknowledges a private communication from Dr. Obuchowski, ca. 2006, that demonstrated the flexibility afforded by the OR approach) and it is likely that applications to other FOMs (e.g., the FROC paradigm uses a rather different FOM from empirical ROC-AUC) are better performed with the OR method.
+This chapter presents Hillis' preferred alternative to the DBM approach. He has proposed that a method based on an earlier publication [@RN1450], which does not depend on pseudovalues is preferable. This chapter is named "OR Analysis", where OR stands for Obuchowski and Rockette. The OR method has advantages in being able to handle more complex study designs [@RN2508] that are addressed in subsequent chapters, and it is likely that applications to other FOMs (e.g., the FROC paradigm uses a rather different FOM from empirical ROC-AUC) are better performed with the OR method.
 
-This chapter starts with a gentle introduction to the Obuchowski and Rockette method. The reason is that the method was rather opaque to me, and I suspect most users. Part of the problem, in my opinion, is the notation, namely lack of usage of the *case-set* index $\{c\}$. A key difference of the Obuchowski and Rockette method from DBM is in how the error term is modeled by a non-diagonal covariance matrix. The structure of the covariance matrix is examined in some detail as it is key to understanding the OR method.
+This chapter starts with a gentle introduction to the Obuchowski and Rockette method. The reason is that the method was rather opaque to me, and I suspect most non-statistician users. Part of the problem, in my opinion, is the notation, namely lack of the *case-set* index $\{c\}$. While this may seem like a trivial point to statisticians, it did present a problem for me. A key difference of the Obuchowski and Rockette method from DBM is in how the error term is modeled by a non-diagonal covariance matrix. Therefore, the structure of the covariance matrix is examined in some detail.
 
-In the first step of the introduction a single reader interpreting a case-set in multiple treatments is modeled and the results compared to those obtained using DBM fixed-reader analysis described in the previous chapter. In the second step multiple readers interpreting a case-set in multiple treatments is modeled. The two analyses, DBM and OR, are compared for the same dataset. The special cases of fixed-reader and fixed-case analyses are described. Single treatment analysis, where interest is in comparing average performance of readers to a fixed value, is described. Three methods of estimating the covariance matrix are described.
+In the first step of the "gentle" introduction a single reader interpreting a case-set in multiple treatments is analyzed and the results compared to that using DBM fixed-reader analysis described in the previous chapter. In the second step multiple readers interpreting a case-set in multiple treatments is analyzed and the two results, DBM and OR, are compared for the same dataset. The special cases of fixed-reader and fixed-case analyses are described. Single treatment analysis, where interest is in comparing average performance of readers to a fixed value, is described. Three methods of estimating the covariance matrix are described.
+
+Before proceeding, it is understood that datasets analyzed in this chapter follow a _factorial_ design, sometimes call fully-factorial or fully-crossed design. Basically, the data structure is symmetric, e.g., all readers interpret all cases in all modalities. The next chapter will describe the analysis of _split-plot_ datasets, where, for example, some readers interpret all cases in one modality, while the remaining readers interpret all cases in the other modality.
 
 ## Single-reader multiple-treatment model {#OR1RMTModel}
-Consider a single-reader providing ROC interpretations of a common case-set $\{c\}$ in multiple-treatments $i$ ($i$ = 1, 2, …, $I$). Before proceeding, we note that this is not homologous (i.e., formally equivalent) to multiple-readers providing ROC interpretations in a single treatment, §10.7; this is because reader is a random factor while treatment is not. The figure of merit $\theta$  is modeled as:
+Consider a single-reader providing ROC interpretations of a common case-set $\{c\}$ in multiple-treatments $i$ ($i$ = 1, 2, …, $I$). Before proceeding, we note that this is not homologous (i.e., formally equivalent) to multiple-readers providing ROC interpretations in a single treatment. This is because reader is a random factor while treatment is a fixed factor. 
+
+The figure of merit $\theta$ is modeled as:
 
 \begin{equation}
 \theta_{i\{c\}}=\mu+\tau_i+\epsilon_{i\{c\}}
 (\#eq:ORModel1RMT)
 \end{equation}
 
-*In the [@RN1450] one models the figure-of-merit, not the pseudovalues, indeed this is one of the key differences from the DBM method.*
+*In the OR method one models the figure-of-merit, not the pseudovalues; indeed this is a key differences from the DBM method.*
 
-Recall that $\{c\}$ denotes a *set of cases*. \@ref(eq:ORModel1RMT) models the observed figure-of-merit $\theta_{i\{c\}}$ as a constant term $\mu$ plus a treatment dependent term $\tau_i$ (the treatment-effect) with the constraint: 
+Eqn. \@ref(eq:ORModel1RMT) models the observed figure-of-merit $\theta_{i\{c\}}$ as a constant term $\mu$ plus a treatment dependent term $\tau_i$ (the treatment-effect) with the constraint: 
 
 \begin{equation}
 \sum_{i=1}^{I}\tau_i=0
 (\#eq:ConstraintTau)
 \end{equation}
 
-The *c-index* was introduced in (book) Chapter 07. The left hand side of  \@ref(eq:ORModel1RMT) is the figure-of-merit $\theta_i\{c\}$ for treatment $i$ and case-set index $\{c\}$, where $c$ = 1, 2, ..., $C$ denotes different independent case-sets sampled from the population, i.e., different collections of $K_1$ non-diseased and $K_2$ diseased cases, *not individual cases*.
+The left hand side of Eqn. \@ref(eq:ORModel1RMT) is the figure-of-merit $\theta_i\{c\}$ for treatment $i$ and case-set index $\{c\}$, where $c$ = 1, 2, ..., $C$ denotes different independent case-sets sampled from the population, i.e., different *collections* of $K_1$ non-diseased and $K_2$ diseased cases.
 
-*This is one place the case-set index is essential for clarity; without it $\theta_i$ is a fixed quantity - the figure of merit estimate for treatment $i$ - lacking any index allowing for sampling related variability.* 
+*In my opinion, the case-set index is essential for clarity; without it $\theta_i$ is a fixed quantity - the figure of merit estimate for treatment $i$ - lacking an index allowing for sampling related variability.* Obuchowski and Rockette define a *k-index*, the “kth repetition of the study involving the same diagnostic test, reader and patient (sic)”. In my opinion, what is meant is a case-set index instead of a repetition index. Repeating a study with the same treatment, reader and cases yields *within-reader* variability, which is different from sampling the population of cases with new case-sets, which yields *case-sampling plus within-reader* variability [@RN412]. As noted earlier, within-reader variability cannot be "turned off" and affects the interpretations of all case-sets. 
 
-Obuchowski and Rockette use a *k-index*, defined as the “kth repetition of the study involving the same diagnostic test, reader and patient (sic)”. In the author's opinion, what is meant is a case-set index instead of a repetition index. Repeating a study with the same treatment, reader and cases yields *within-reader* variability, which is different from sampling the population of cases with new case-sets, which yields *case-sampling plus within-reader* variability [@RN412]. As noted earlier, within-reader variability cannot be "turned off" and affects the interpretations of all case-sets. 
+*It is shown below that usage of the case-set index interpretation yields the same results using the DBM or the OR methods.*
 
-*Interest is in extrapolating to the population of cases and the only way to do this is to sample different case-sets. It is shown below that usage of the case-set index interpretation yields the same results using the DBM or the OR methods.*
-
-Finally, and this is where I had some difficulty understanding what is going on, there is an additive random error term $\epsilon_{i\{c\}}$ whose sampling behavior is described by a multivariate normal distribution with an I-dimensional zero mean vector and an $I \times I$ dimensional covariance matrix  $\Sigma$:
+Finally, and this is where I had some difficulty understanding what was going on, Eqn. \@ref(eq:ORModel1RMT) has an additive random error term $\epsilon_{i\{c\}}$ whose sampling behavior is described by a multivariate normal distribution with an I-dimensional zero mean vector and an $I \times I$ dimensional covariance matrix $\Sigma$:
 
 \begin{equation}
 \epsilon_{i\{c\}} \sim N_I\left ( \vec{0} ,  \Sigma\right )
 (\#eq:DefinitionEpsilon)
 \end{equation}
 
-Here $N_I$ is the I-variate normal distribution (i.e., each sample yields $I$ random numbers). Obuchowski and Rockette assumed the following structure for the covariance matrix (they describe a more general multi-reader model, but here one restricts to the simpler single-reader case):
+Here $N_I$ is the I-variate normal distribution (i.e., each sample yields $I$ random numbers). For the single-reader model Eqn. \@ref(eq:ORModel1RMT), the covariance matrix has the following structure :
 
 \begin{equation}
 \Sigma_{ii'}=Cov\left ( \epsilon_{i\{c\}}, \epsilon_{i'\{c\}} \right )=\left\{\begin{matrix}
@@ -85,22 +87,22 @@ The covariance of two scalar random variables X and Y is defined by:
 
 \begin{equation}
 Cov(X,Y) =\frac{\sum_{i=1}^{N}(x_{i}-x_{\bullet})(y_{i}-y_{\bullet})}{N-1}=E(XY)-E(X)-E(Y)
-(\#eq:DefinitionCovariance)
+(\#eq:DefCov)
 \end{equation}
 
-Here $E(X)$ is the expectation value of the random variable $X$, i.e., the integral of x multiplied by its $pdf$ over the range of $x$: 
+Here $E(X)$ is the expectation value of the random variable $X$, i.e., the integral of x multiplied by its $\text{pdf}$ over the range of $x$: 
 
-$$E(X)=\int pdf(x) x dx$$
+$$E(X)=\int \text{pdf(x)} x dx$$
 
 The covariance can be thought of as the *common* part of the variance of two random variables. The variance, a special case of covariance, of $X$ is defined by:
 
-$$Var(X,Y) = Cov(X,X)=E(X^2)-(E(X))^2=\sigma_x^2$$
+$$Var(X,X) = Cov(X,X)=E(X^2)-(E(X))^2=\sigma_x^2$$
 
-It can be shown, using the Cauchy–Schwarz inequality, that:
+It can be shown, this is the Cauchy–Schwarz inequality, that:
 
 $$\mid Cov(X,Y) \mid^2 \le Var(X)Var(Y)$$
 
-A related quantity, the correlation $\rho$  is defined by (the $\sigma$s  are standard deviations):
+A related quantity, namely the correlation $\rho$ is defined by (the $\sigma$s  are standard deviations):
 
 $$\rho_{XY} \equiv Cor(X,Y)=\frac{Cov(X,Y)}{\sigma_X \sigma_Y}$$
 
@@ -121,11 +123,11 @@ Var(X-Y)=Var(X)+Var(Y)-2Cov(X,Y)=2(Var-Cov)
 (\#eq:UsefulTheorem)
 \end{equation}
 
-The left part of the above equation is general, the right part specializes to the OR single-reader multiple-treatment model where the variances are equal and likewise all covariances in \@ref(eq:ExampleSigma) are equal) The correlation  $\rho_1$ is defined by (the reason for the subscript 1 on $\rho$  is the same as the reason for the subscript 1 on  $Cov_1$, which will be explained later): 
+The right hand side specializes to the OR single-reader multiple-treatment model where the variances (for different treatments) are equal and likewise the covariances in Eqn. \@ref(eq:ExampleSigma) are equal) The correlation  $\rho_1$ is defined by (the reason for the subscript 1 on $\rho$ is the same as the reason for the subscript 1 on $Cov_1$, which will be explained later): 
 
 $$\rho_1=\frac{Cov_1}{Var}$$
 
-The I x I covariance matrix $\Sigma$  can be written alternatively as (shown below is the matrix for I = 5; as the matrix is symmetric elements at and above the diagonal are shown): 
+The I x I covariance matrix $\Sigma$  can be written alternatively as (shown below is the matrix for I = 5; as the matrix is symmetric, only elements at and above the diagonal are shown): 
 
 \begin{equation}
 \Sigma = 
@@ -140,39 +142,41 @@ The I x I covariance matrix $\Sigma$  can be written alternatively as (shown bel
 \end{equation}
 
 ### Estimation of the covariance matrix
-An unbiased estimate of the covariance \@ref(eq:DefinitionSigma) follows from:
+An unbiased estimate of the covariance matrix Eqn. \@ref(eq:DefinitionSigma) follows from:
 
 \begin{equation}
 \Sigma_{ii'}=\frac{1}{C-1}\sum_{c=1}^{C} \left ( \theta_{i\{c\}} - \theta_{i\{\bullet\}} \right) \left ( \theta_{i'\{c\}} - \theta_{i'\{\bullet\}} \right)
 (\#eq:EstimateSigmaPopulation)
 \end{equation}
 
-Sampling different case-sets, as required \@ref(eq:EstimateSigmaPopulation), is unrealistic and in reality one is stuck with $C$ = 1, i.e., a single dataset. Therefore, direct application of this formula is impossible. However, as seen when this situation was encountered before in (book) Chapter 07, one can use resampling methods to realize, for example, different bootstrap samples, which are resampling-based “stand-ins” for actual case-sets. If $B$ is the total number of bootstraps, then the estimation formula is:
+Sampling different case-sets, as required Eqn. \@ref(eq:EstimateSigmaPopulation), is unrealistic. In reality one is stuck with $C$ = 1, i.e., a single dataset. Therefore, direct application of this formula is impossible. However, as seen when this situation was encountered before in (book) Chapter 07, one can use resampling methods to realize, for example, different bootstrap samples, which are resampling-based “stand-ins” for actual case-sets. If $B$ is the total number of bootstraps, then the estimation formula is:
 
 \begin{equation}
 \Sigma_{ii'}\mid_{bs} =\frac{1}{B-1}\sum_{b=1}^{B} \left ( \theta_{i\{b\}} - \theta_{i\{\bullet\}} \right) \left ( \theta_{i'\{b\}} - \theta_{i'\{\bullet\}} \right)
 (\#eq:EstimateSigmaBootstrap)
 \end{equation}
 
-\@ref(eq:EstimateSigmaBootstrap), the bootstrap method of estimating the covariance matrix, is a direct translation of \@ref(eq:EstimateSigmaPopulation). Alternatively, one could have used the jackknife FOM values $\theta_{i(k)}$, i.e., the figure of merit with a particular case removed, for all cases, to estimate the covariance matrix:
+Eqn. \@ref(eq:EstimateSigmaBootstrap), the bootstrap method of estimating the covariance matrix, is a direct translation of Eqn. \@ref(eq:EstimateSigmaPopulation). Alternatively, one could have used the jackknife FOM values $\theta_{i(k)}$, i.e., the figure of merit with a case $k$ removed, repeated for all $k$, to estimate the covariance matrix:
 
 \begin{equation}
 \Sigma_{ii'}\mid_{jk} =\frac{(K-1)^2}{K} \left [ \frac{1}{K-1}\sum_{k=1}^{K} \left ( \theta_{i(k)} - \theta_{i(\bullet)} \right) \left ( \theta_{i'(k)} - \theta_{i'(\bullet)} \right) \right ]
 (\#eq:EstimateSigmaJackknife)
 \end{equation}
 
-Note the subtle difference in notation between  \@ref(eq:EstimateSigmaPopulation) and EstimateSigmaJackknife and. In the former, the subscript $\{c\}$ denotes a set of $K$ cases while in the latter, $(k)$ denotes the original case set with a particular case $k$ removed, leaving $K-1$ cases.  
+Note the subtle difference in parentheses between Eqn. \@ref(eq:EstimateSigmaPopulation) and  Eqn. \@ref(eq:EstimateSigmaJackknife). In the former, the subscript $\{c\}$ denotes a set of $K$ cases while in the latter, $(k)$ denotes the original case set with a particular case $k$ removed, leaving $K-1$ cases.  
 
-For simplicity, in this section we depart from the usual two-subscript convention to index each case. So $k$ ranges from 1 to $K$, where the first $K_1$ values represent non-diseased and the following $K_2$  values represent diseased cases. Jackknife figure of merit values are not to be confused with jackknife pseudovalues. The jackknife FOM value corresponding to a particular case is the FOM with the particular case removed. Unlike pseudovalues, jackknife FOM values cannot be regarded as independent and identically distributed. Notice the use of the subscript enclosed in parenthesis $(k)$ to denote the FOM with case $k$ removed, i.e., a single case, while in the bootstrap equation one uses the curly brackets  $\{b\}$ to denote the bth bootstrap *case-set*, i.e., a whole set of $K_1$ non-diseased and $K_2$ diseased cases, sampled with replacement from the original dataset. Furthermore, the expression for the jackknife covariance contains a *variance inflation factor*:
+The index $k$ ranges from 1 to $K$, where the first $K_1$ values represent non-diseased cases and the following $K_2$ values represent diseased cases. Jackknife figure of merit values, such as $\theta_{i(k)}$, are not to be confused with jackknife pseudovalues, used in the DBM chapters. The jackknife FOM value corresponding to a particular case is the FOM with the particular case removed. Unlike pseudovalues, jackknife FOM values cannot be regarded as independent and identically distributed, even for empirical AUC. Notice the use of the subscript enclosed in parenthesis $(k)$ to denote the FOM with case $k$ removed, i.e., a single case, while in the bootstrap equation one uses the curly brackets  $\{b\}$ to denote the bth bootstrap *case-set*, i.e., a whole set of $K_1$ non-diseased and $K_2$ diseased cases, sampled with replacement from the original dataset. Furthermore, in Eqn. \@ref(eq:EstimateSigmaJackknife), the expression for the jackknife covariance estimate contains a *variance inflation factor*:
 
 \begin{equation}
 \frac{(K-1)^2}{K}
 (\#eq:JKVarianceInflationFactor)
 \end{equation}
 
-This factor multiplies the traditional expression for the covariance, shown in square brackets in \@ref(eq:EstimateSigmaJackknife). A third method of estimating the covariance, namely the DeLong et al. method [@RN112], applicable only to the empirical AUC, is described later.
+This factor multiplies the traditional expression for the covariance, shown in square brackets in Eqn. \@ref(eq:EstimateSigmaJackknife). It is only needed for the jackknife estimate. The bootstrap and the DeLong estimate, see next, do not require this factor.
 
-### Meaning of the covariance matrix in \@ref(eq:ExampleSigma)
+A third method of estimating the covariance, namely the DeLong et al. method [@RN112], applicable only to the empirical AUC, is described later.
+
+### Meaning of the covariance matrix in Eqn. \@ref(eq:ExampleSigma)
 Suppose one has the luxury of repeatedly sampling case-sets, each consisting of $K$ cases from the population. A single radiologist interprets these cases in $I$ treatments. Therefore, each case-set $\{c\}$ yields $I$ figures of merit. The final numbers at ones disposal are $\theta_{i\{c\}}$, where $i$ = 1,2,...,$I$ and $c$ = 1,2,...,$C$. Considering treatment $i$, the variance of the FOM-values for the different case-sets $c$ = 1,2,...,$C$, is an estimate of $Var_i$ for this treatment: 
 
 \begin{equation}
@@ -180,7 +184,7 @@ Suppose one has the luxury of repeatedly sampling case-sets, each consisting of 
 (\#eq:EstimateVari)
 \end{equation}
 
-The process is repeated for all treatments and the $I$-variance values are averaged. This is the final estimate of $Var$ appearing in \@ref(eq:DefinitionEpsilon). 
+The process is repeated for all treatments and the $I$-variance values are averaged. This is the final estimate of $Var$ appearing in Eqn. \@ref(eq:DefinitionEpsilon). 
 
 To estimate the covariance matrix one considers pairs of FOM values for the same case-set $\{c\}$  but different treatments, i.e., $\theta_{i\{c\}}$ and $\theta_{i'\{c\}}$; *by definition primed and un-primed indices are different*. Since they are derived from the same case-set, one expects the values to be correlated. For a particularly easy case-set one expects all I-estimates to be collectively higher than usual. The process is repeated for different case-sets and one calculates the correlation $\rho_{1;ii'}$  between the two $C$-length arrays $\theta_{i\{c\}}$ and $\theta_{i'\{c\}}$: 
 
@@ -189,12 +193,12 @@ To estimate the covariance matrix one considers pairs of FOM values for the same
 (\#eq:EstimateRho)
 \end{equation}
 
-The entire process is repeated for different treatment pairings and the resulting $I(I-1)/2$  distinct values are averaged yielding the final estimate of $\rho_1$  in \@ref(eq:ExampleSigmaRho). According to \@ref(eq: EstimateRho) one expects the covariance to be smaller than the variance determined as in the previous paragraph. 
+The entire process is repeated for different treatment pairings and the resulting $I(I-1)/2$  distinct values are averaged yielding the final estimate of $\rho_1$ in Eqn. \@ref(eq:ExampleSigmaRho). According to Eqn. \@ref(eq: EstimateRho) one expects the covariance to be smaller than the variance determined as in the previous paragraph. 
 
 In most situations one expects $\rho_1$ (for ROC studies) to be positive. There is, perhaps unlikely, a scenario that could lead to anti-correlation and negative. This could occur, with "complementary" treatments, e.g., CT vs. MRI, where one treatment is good for bone imaging and the other for soft-tissue imaging. In this situation what constitutes an easy case-set in one treatment could be a difficult case-set in the other treatment.
 
 ### Code illustrating the covariance matrix
-As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method [@RN112]. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. \@ref(eq:EstimateSigmaBootstrap) and \@ref(eq:EstimateSigmaJackknife) extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is implemented in `VarCovMtrxDLStr.R`. The file name stands for "variance covariance matrix according to the DeLong structural components method" *described in five unnumbered equations following Eqn. 4 in the cited reference*.
+As indicated above, the covariance matrix can be estimated using the jackknife or the bootstrap. If the figure of merit is the Wilcoxon statistic, then one can also use the DeLong et al method [@RN112]. In (book) Chapter 07, these methods were described in the context of estimating the variance of AUC. Eqn. \@ref(eq:EstimateSigmaBootstrap) and Eqn. \@ref(eq:EstimateSigmaJackknife) extend the jackknife and the bootstrap methods, respectively, to estimating the covariance of AUC (whose diagonal elements are the variances estimated in the earlier chapter). The extension of the DeLong method to covariances is implemented in `VarCovMtrxDLStr.R`. The file name stands for "variance covariance matrix according to the DeLong structural components method" *described in five unnumbered equations following Eqn. 4 in the cited reference*.
 
 * To minimize clutter, the `R` functions (for estimating `Var` and `Cov1` using bootstrap, jackknife, and the DeLong methods) are not shown, but they are compiled. To display them `clone` the book repository and look at the `Rmd` file corresponding to this output and the sourced `R` files listed below:
 
@@ -227,7 +231,7 @@ The following notation is used in the code below:
 
 For example, `Cov1_jk` is the jackknife estimate of `Cov1`.
 
-Shown below are the results of the jackknife method, first using the code in this repository and next, as a cross-check, using `RJafroc` function `UtilVarComponentsOR`:
+Shown below are the results of the jackknife method, first using the code in this repository and next, as a cross-check, using `RJafroc` function `UtilORVarComponentsFactorial`:
 
 
 ```r
@@ -238,7 +242,7 @@ data.frame ("Cov1_jk" = Cov1, "Var_jk" = Var)
 #>        Cov1_jk       Var_jk
 #> 1 0.0003734661 0.0006989006
 
-ret4 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon") # default `covEstMethod` is jackknife
+ret4 <- UtilORVarComponentsFactorial(rocData1R, FOM = "Wilcoxon") # default `covEstMethod` is jackknife
 data.frame ("Cov1_rj_jk" = ret4$VarCom["Cov1", "Estimates"], "Var_rj_jk" = ret4$VarCom["Var", "Estimates"])
 #>     Cov1_rj_jk    Var_rj_jk
 #> 1 0.0003734661 0.0006989006
@@ -267,11 +271,11 @@ data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var)
 
 With increasing number of bootstraps the values approach the jackknife estimates.
 
-Following, as a cross check, are results of bootstrap method as calculated by the `RJafroc` function `UtilVarComponentsOR`:
+Following, as a cross check, are results of bootstrap method as calculated by the `RJafroc` function `UtilORVarComponentsFactorial`:
 
 
 ```r
-ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000, seed = 100)
+ret5 <- UtilORVarComponentsFactorial(rocData1R, FOM = "Wilcoxon", covEstMethod = "bootstrap", nBoots = 2000, seed = 100)
 data.frame ("Cov_rj_bs" = ret5$VarCom["Cov1", "Estimates"], "Var_rj_bs" = ret5$VarCom["Var", "Estimates"])
 #>      Cov_rj_bs    Var_rj_bs
 #> 1 0.0003466804 0.0006738506
@@ -279,7 +283,7 @@ data.frame ("Cov_rj_bs" = ret5$VarCom["Cov1", "Estimates"], "Var_rj_bs" = ret5$V
 
 Note that the two estimates are identical *provided the seeds are identical*.
 
-Following are results of the DeLong covariance estimation method, the first output using this repository code and the second using the `RJafroc` function `UtilVarComponentsOR` with appropriate arguments:
+Following are results of the DeLong covariance estimation method, the first output using this repository code and the second using the `RJafroc` function `UtilORVarComponentsFactorial` with appropriate arguments:
 
 
 ```r
@@ -289,7 +293,7 @@ data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
 #>         Cov_dl       Var_dl
 #> 1 0.0003684357 0.0006900766
 
-ret5 <- UtilVarComponentsOR(rocData1R, FOM = "Wilcoxon", covEstMethod = "DeLong")
+ret5 <- UtilORVarComponentsFactorial(rocData1R, FOM = "Wilcoxon", covEstMethod = "DeLong")
 data.frame ("Cov_rj_dl" = ret5$VarCom["Cov1", "Estimates"], "Var_rj_dl" = ret5$VarCom["Var", "Estimates"])
 #>      Cov_rj_dl    Var_rj_dl
 #> 1 0.0003684357 0.0006900766
@@ -314,7 +318,7 @@ It can be shown that under the null hypothesis (that all treatments have identic
 (\#eq:F-1RMT)
 \end{equation}
 
-\@ref(eq:F-1RMT) is from §5.4 [@RN1865] with two covariance terms "zeroed out" because they are multiplied by $J-1 = 0$ (since, in this example, we are restricting to $J=1$). 
+Eqn. \@ref(eq:F-1RMT) is from §5.4 [@RN1865] with two covariance terms "zeroed out" because they are multiplied by $J-1 = 0$ (since, in this example, we are restricting to $J=1$). 
 
 Or equivalently, in terms of the F-distribution [@RN1772]:
 
@@ -331,14 +335,14 @@ Define $D_{1-\alpha}$, the $(1-\alpha)$ quantile of distribution $D$, as that "c
 (\#eq:DefQuantile)
 \end{equation}
 
-With definition \@ref(eq:DefQuantile), the $(1-\alpha)$ quantile of the $\chi_{I-1}^2$ distribution, i.e., $\chi_{1-\alpha,I-1}^2$, is related to the $(1-\alpha)$ quantile of the $F_{I-1,\infty}$ distribution, i.e., $F_{1-\alpha,I-1,\infty}$, as follows [see @RN1772, Eq. 22]:
+With definition Eqn. \@ref(eq:DefQuantile), the $(1-\alpha)$ quantile of the $\chi_{I-1}^2$ distribution, i.e., $\chi_{1-\alpha,I-1}^2$, is related to the $(1-\alpha)$ quantile of the $F_{I-1,\infty}$ distribution, i.e., $F_{1-\alpha,I-1,\infty}$, as follows [see @RN1772, Eq. 22]:
 
 \begin{equation}
 \frac{\chi_{1-\alpha,I-1}^{2}}{I-1} = F_{1-\alpha,I-1,\infty}
 (\#eq:Chisqr2F)
 \end{equation}
 
-\@ref(eq:Chisqr2F) implies that the $(1-\alpha)$ quantile of the F-distribution with $ndf=(I-1)$ and $ddf=\infty$ equals the $(1-\alpha)$ quantile of the $\chi_{I-1}^2$ distribution *divided by $(I-1)$*. 
+Eqn. \@ref(eq:Chisqr2F) implies that the $(1-\alpha)$ quantile of the F-distribution with $ndf=(I-1)$ and $ddf=\infty$ equals the $(1-\alpha)$ quantile of the $\chi_{I-1}^2$ distribution *divided by $(I-1)$*. 
 
 Here is an `R` illustration of this theorem for $I-1 = 4$ and $\alpha = 0.05$: 
 
@@ -365,7 +369,7 @@ CI_{1-\alpha,1RMT} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\i
 (\#eq:CIalpha1RMT)
 \end{equation}
 
-Comparing \@ref(eq:CIalpha1RMT) to \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(Var-Cov_1)}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.] 
+Comparing Eqn. \@ref(eq:CIalpha1RMT) to Eqn. \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(Var-Cov_1)}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.] 
 
 ### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
 We have shown two methods for analyzing a single reader in multiple treatments: the DBM method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap to get the covariance matrix, or some other methods such as the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit (empirical ROC-AUC). Since one is dealing with a single reader in multiple treatments, for DBM one needs the fixed-reader random-case analysis described in §9.8 of the previous chapter (with one reader the conclusions obviousl apply to the specific reader, so reader must be regarded as a fixed factor).
@@ -402,7 +406,7 @@ data.frame("ORBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"],
            "ORBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
            "ORBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
 #>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-#> 1    1.1154199          1   0.29090681
+#> 1    1.0363714          1   0.30866689
 ```
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBM and $\infty$ for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
@@ -507,7 +511,7 @@ If RRRC analysis were conducted, the values would be [one needs to analyze a dat
 And similarly, for `RRFC` analysis, one replaces `RRRC` with `RRFC`, etc.]
 
 ## Multiple-reader multiple-treatment OR model
-The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to \@ref(eq:ORModel1RMT), one needs an additional $j$ index to index readers, and additional random terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random reader factor. 
+The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to Eqn. \@ref(eq:ORModel1RMT), one needs an additional $j$ index to index readers, and additional random terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random reader factor. 
 
 The general Obuchowski and Rockette model for fully paired multiple-reader multiple-treatment interpretations is: 
 
@@ -516,7 +520,7 @@ The general Obuchowski and Rockette model for fully paired multiple-reader multi
 (\#eq:ORModel)
 \end{equation}
 
-The fixed treatment effect $\tau_i$ is subject to the usual constraint, \@ref(eq:ConstraintTau). The first two terms on the right hand side of \@ref(eq:ORModel) have their usual meanings: a constant term $\mu$ representing performance averaged over treatments and readers, and a treatment effect $\tau_i$ ($i$ = 1,2, ..., $I$). The following two terms are, by assumption, mutually independent random samples specified as follows: $R_j$ denotes the random treatment-independent contribution to the figure-of-merit of reader $j$ ($j$ = 1,2, ..., $J$), modeled as a sample from a zero-mean normal distribution with variance $\sigma_R^2$; $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance $\sigma_{\tau R}^2$. There could be a perceived notational clash with similar variance component terms defined for the DBM model – except in that case they applied to pseudovalues. The meaning should be clear from the context. Summarizing:
+The fixed treatment effect $\tau_i$ is subject to the usual constraint, Eqn. \@ref(eq:ConstraintTau). The first two terms on the right hand side of Eqn. \@ref(eq:ORModel) have their usual meanings: a constant term $\mu$ representing performance averaged over treatments and readers, and a treatment effect $\tau_i$ ($i$ = 1,2, ..., $I$). The following two terms are, by assumption, mutually independent random samples specified as follows: $R_j$ denotes the random treatment-independent contribution to the figure-of-merit of reader $j$ ($j$ = 1,2, ..., $J$), modeled as a sample from a zero-mean normal distribution with variance $\sigma_R^2$; $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance $\sigma_{\tau R}^2$. There could be a perceived notational clash with similar variance component terms defined for the DBM model – except in that case they applied to pseudovalues. The meaning should be clear from the context. Summarizing:
 
 \begin{equation}
 \left\{\begin{matrix}
@@ -540,9 +544,9 @@ As before the dot subscript denotes an average over the replaced index. Averagin
 (\#eq:ORtauEstimate)
 \end{equation}
 
-The $\tau_i$ estimates obey the constraint \@ref(eq:ConstraintTau). For example, with two treatments, the values of $\tau_i$ must be the negatives of each other: $\tau_1=-\tau_2$. 
+The $\tau_i$ estimates obey the constraint Eqn. \@ref(eq:ConstraintTau). For example, with two treatments, the values of $\tau_i$ must be the negatives of each other: $\tau_1=-\tau_2$. 
 
-The error term on the right hand side of \@ref(eq:ORModel) is more complex than the corresponding DBM model error term. Obuchowski and Rockette model this term with a multivariate normal distribution with a length $(IJ)$ zero-mean vector and a $(IJ \times IJ)$ dimensional covariance matrix $\Sigma$. In other words, 
+The error term on the right hand side of Eqn. \@ref(eq:ORModel) is more complex than the corresponding DBM model error term. Obuchowski and Rockette model this term with a multivariate normal distribution with a length $(IJ)$ zero-mean vector and a $(IJ \times IJ)$ dimensional covariance matrix $\Sigma$. In other words, 
 
 \begin{equation}
 \epsilon_{ij\{c\}} \sim N_{IJ}(\vec{0},\Sigma)
@@ -562,11 +566,11 @@ Cov3 \; (i\ne i',j \ne j')
 (\#eq:ORVarCov)
 \end{equation}
 
-Apart from fixed effects, the model implied by \@ref(eq:ORModel) and \@ref(eq:ORVarCov) contains 6 parameters: 
+Apart from fixed effects, the model implied by Eqn. \@ref(eq:ORModel) and Eqn. \@ref(eq:ORVarCov) contains 6 parameters: 
 
 $$\sigma_R^2,\sigma_{\tau R}^2,Var,Cov_1,Cov_2,Cov_3$$
 
-This is the same number of variance component parameters as in the DBM model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model \@ref(eq:ORModel) "looks" simpler because four covariance terms are encapsulated in the $\epsilon$ term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader, as allowing treatment and reader dependencies would greatly increase the number of parameters that would need to be estimated. 
+This is the same number of variance component parameters as in the DBM model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model Eqn. \@ref(eq:ORModel) "looks" simpler because four covariance terms are encapsulated in the $\epsilon$ term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader, as allowing treatment and reader dependencies would greatly increase the number of parameters that would need to be estimated. 
 
 *It is implicit in the Obuchowski-Rockette model that the $Var$, $Cov_1$, Cov_2$, and $Cov_3$,  estimates need to be averaged over all applicable treatment-reader combinations.*
 
@@ -587,7 +591,7 @@ $$
 
 Shown in each cell of the matrix is a pair of ij-values, serving as column indices, followed by a pair of ij-values serving as row indices, and a comma separates the pairs. For example, the first column is labeled by (11,xx), where xx depends on the row. The second column is labeled (12,xx), the third column is labeled (13,xx), and the remaining columns are successively labeled (21,xx), (22,xx) and (23,xx). Likewise, the first row is labeled by (yy,11), where yy depends on the column. The following rows are labeled (yy,12), (yy,13), (yy,21), (yy,22)and (yy,23). Note that the reader index increments faster than the treatment index.
 
-The diagonal elements are evidently those cells where the row and column index-pairs are equal. These are (11,11), (12,12), (13,13), (21,21), (22,22) and (23,23). According to \@ref(eq:ORVarCov) the entries in these cells would be $Var$. 
+The diagonal elements are evidently those cells where the row and column index-pairs are equal. These are (11,11), (12,12), (13,13), (21,21), (22,22) and (23,23). According to Eqn. \@ref(eq:ORVarCov) the entries in these cells would be $Var$. 
 
 $$
 \Sigma=
@@ -601,7 +605,7 @@ Var & (12,11) & (13,11) & (21,11) & (22,11) & (23,11) \\
 \end{bmatrix}
 $$
 
-According to \@ref(eq:ORVarCov) the entries in cells with *different treatment index pairs but identical reader index pairs* would be $Cov_1$ (as an example, the cell (21,11) has the same reader index, namely reader 1, but different treatment indices, namely 2 and 1, so it is replaced by $Cov_1$):
+According to Eqn. \@ref(eq:ORVarCov) the entries in cells with *different treatment index pairs but identical reader index pairs* would be $Cov_1$ (as an example, the cell (21,11) has the same reader index, namely reader 1, but different treatment indices, namely 2 and 1, so it is replaced by $Cov_1$):
 
 $$
 \Sigma=
@@ -652,7 +656,7 @@ Var=
 (\#eq:EstVariance)
 \end{equation}
 
-Of course, in practice one would use the bootstrap or the jackknife as a stand-in for the c-index, but for pedagogic purpose, one maintains the fiction that one has a large number of case-sets at one's disposal (not to mention the time spent by the readers interpreting them). Notice that the left-hand-side of \@ref(eq:EstVariance) lacks treatment or reader indices. This is because implicit in the notation is averaging the observed variances over all treatments and readers, as implied by $\left \langle \right \rangle _{ij}$. Likewise, the covariance terms are estimated as follows:
+Of course, in practice one would use the bootstrap or the jackknife as a stand-in for the c-index, but for pedagogic purpose, one maintains the fiction that one has a large number of case-sets at one's disposal (not to mention the time spent by the readers interpreting them). Notice that the left-hand-side of Eqn. \@ref(eq:EstVariance) lacks treatment or reader indices. This is because implicit in the notation is averaging the observed variances over all treatments and readers, as implied by $\left \langle \right \rangle _{ij}$. Likewise, the covariance terms are estimated as follows:
 
 \begin{equation}
 Cov=\left\{\begin{matrix}
@@ -663,7 +667,7 @@ Cov_3=\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\b
 (\#eq:EstCov)
 \end{equation}
 
-*In \@ref(eq:EstCov) the convention is that primed and unprimed variables are always different.*
+*In Eqn. \@ref(eq:EstCov) the convention is that primed and unprimed variables are always different.*
 
 Since there are no treatment and reader dependencies on the left-hand-sides of the above equations, one averages the estimates as follows: 
 
@@ -673,7 +677,7 @@ Since there are no treatment and reader dependencies on the left-hand-sides of t
 
 
 ### Physical meanings of the covariance terms
-The meanings of the different terms follow a similar description to that given in \@ref(StrCovMatrix). The diagonal term $Var$ of the covariance matrix $\Sigma$ is the variance of the figure-of-merit values obtained when reader $j$ interprets different case-sets in treatment $i$: each case-set yields a number $\theta_{ij\{c\}}$ and the variance of the $C$ numbers, averaged over the $I \times J$ treatments and readers, is $Var$. It captures the total variability due to varying difficulty levels of the case-sets and within-reader variability. 
+The meanings of the different terms follow a similar description to that given in Eqn. \@ref(StrCovMatrix). The diagonal term $Var$ of the covariance matrix $\Sigma$ is the variance of the figure-of-merit values obtained when reader $j$ interprets different case-sets in treatment $i$: each case-set yields a number $\theta_{ij\{c\}}$ and the variance of the $C$ numbers, averaged over the $I \times J$ treatments and readers, is $Var$. It captures the total variability due to varying difficulty levels of the case-sets and within-reader variability. 
 
 $\rho_{1;ii'jj}$ is the correlation of the figure-of-merit values obtained when the same reader $j$ interprets a case-set in different treatment $i,i'$. Each case-set, starting with $c = 1$, yields two numbers $\theta_{ij\{1\}}$ and $\theta_{i'j\{1\}}$; the process is repeated for $C$ case-sets. The correlation of the two pairs of C-length arrays, averaged over all pairings of different treatments and same readers, is $\rho_1$. Because of the common contribution due to the shared reader, $\rho_1$ will be non-zero. For large common variation, the two arrays become almost perfectly correlated, and $\rho_1$ approaches unity. For zero common variation, the two arrays become independent, and $\rho_1$ equals zero. Translating to covariances, one has $Cov_1 < Var$.
 
@@ -689,7 +693,7 @@ Cov_3 < Cov_2 < Cov_1 < Var
 \end{equation}
 
 ### OR random-reader random-case analysis
-A model such as \@ref(eq:ORModel) cannot be analyzed by standard analysis of variance (ANOVA) techniques. Because of the correlated structure of the error term a customized ANOVA is needed (in standard ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented by the epsilon term in the DBM model). 
+A model such as Eqn. \@ref(eq:ORModel) cannot be analyzed by standard analysis of variance (ANOVA) techniques. Because of the correlated structure of the error term a customized ANOVA is needed (in standard ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented by the epsilon term in the DBM model). 
 
 One starts with the null hypothesis (NH) that the true figures-of-merit of all treatments are identical, i.e., 
 
@@ -705,7 +709,7 @@ F_{OR}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
 (\#eq:F-OR)
 \end{equation}
 
-\@ref(eq:F-OR) incorporates Hillis’ modification, which ensures that the constraint \@ref(eq:CovOrderings) is always obeyed and avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated directly using FOM values, not pseudovalues):
+Eqn. \@ref(eq:F-OR) incorporates Hillis’ modification, which ensures that the constraint Eqn. \@ref(eq:CovOrderings) is always obeyed and avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated directly using FOM values, not pseudovalues):
 
 \begin{equation}
 \left.\begin{matrix}
@@ -716,9 +720,9 @@ MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bu
 (\#eq:MS-OR)
 \end{equation}
 
-In their original paper [@RN1450] Obuchowski and Rockette state that their proposed test statistic F (basically \@ref(eq:F-OR) without the constraint implied by the $\max$ function) is distributed as an F-statistic with numerator degree of freedom $ndf=I-1$ and denominator degree of freedom $ddf=(I-1)(J-1)$. It turns out that then the test is unduly conservative, meaning it is unusually reluctant to reject the null hypothesis.
+In their original paper [@RN1450] Obuchowski and Rockette state that their proposed test statistic F (basically, Eqn. \@ref(eq:F-OR) without the constraint implied by the $\max$ function) is distributed as an F-statistic with numerator degree of freedom $ndf=I-1$ and denominator degree of freedom $ddf=(I-1)(J-1)$. It turns out that then the test is unduly conservative, meaning it is unusually reluctant to reject the null hypothesis.
 
-In this connection the author has two historical anecdotes. The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski [@RN1971;@RN1972], using the unmodified version of \@ref(eq:F-OR), predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study. 
+In this connection the author has two historical anecdotes. The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski [@RN1971;@RN1972], using the unmodified version of Eqn. \@ref(eq:F-OR), predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study. 
 
 The second story is that the author once conducted NH simulations using the Roe-Metz simulator described in the preceding chapter and the significance testing as described in the Obuchowski-Rockette paper: the method did not reject the null hypothesis even once in 2000 trials! Recall that with $\alpha = 0.05$ a valid test should reject the null hypothesis about $100\pm20$ times in 2000 trials. The author recalls (ca. 2004) telling Dr. Steve Hillis about this issue, and he suggested a different value for the denominator degrees of freedom (ddf), substitution of which magically solved the problem, i.e., the simulations rejected the null hypothesis about 5% of the time; the new $ddf$ is defined below ($ndf$ is unchanged), with the subscript H denoting the Hillis modification:
 
@@ -732,7 +736,7 @@ ddf_H=\frac{\left [ MS(TR) + J \max(Cov_2-Cov_3)\right ]^2}{\frac{\left [ MS(TR)
 (\#eq:ddfH)
 \end{equation}
 
-If $Cov_2<Cov_3$ this reduces to the expression originally suggested by Obuchowski and Rockette. With these changes, under the null hypothesis, the observed statistic $F_{OR}$, defined in \@ref(eq:F-OR), is distributed as an F-statistic with $I-1$ and $ddf_H$ degrees of freedom [@RN1772;@RN1865;@RN1866]: 
+If $Cov_2<Cov_3$ this reduces to the expression originally suggested by Obuchowski and Rockette. With these changes, under the null hypothesis, the observed statistic $F_{OR}$, defined in Eqn. \@ref(eq:F-OR), is distributed as an F-statistic with $I-1$ and $ddf_H$ degrees of freedom [@RN1772;@RN1865;@RN1866]: 
 
 \begin{equation}
 F_{OR}\sim F_{ndf,ddf_H}
@@ -740,7 +744,7 @@ F_{OR}\sim F_{ndf,ddf_H}
 \end{equation}
 
 #### Decision rule, p-value and confidence interval
-The critical value of the F-statistic for rejection of the null hypothesis is $F_{1-\alpha,ndf,ddf_H}$, i.e., that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. From definition \@ref(eq:F-OR), rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger; $MS(TR)$ decreases meaning there is less contamination of the treatment effect by treatment-reader variability; the greater of $Cov2$ or $Cov3$ decreases, meaning there is less contamination of the treatment effect by between-reader and treatment-reader variability, $\alpha$ increases, meaning one is allowing a greater probability of Type I errors, $ndf$ increases, meaning the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH or $ddf_H$ increases, as this lowers the critical value of the F-statistic. 
+The critical value of the F-statistic for rejection of the null hypothesis is $F_{1-\alpha,ndf,ddf_H}$, i.e., that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. From definition Eqn. \@ref(eq:F-OR), rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger; $MS(TR)$ decreases meaning there is less contamination of the treatment effect by treatment-reader variability; the greater of $Cov2$ or $Cov3$ decreases, meaning there is less contamination of the treatment effect by between-reader and treatment-reader variability, $\alpha$ increases, meaning one is allowing a greater probability of Type I errors, $ndf$ increases, meaning the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH or $ddf_H$ increases, as this lowers the critical value of the F-statistic. 
 
 The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{OR}$ could be observed by chance. In other words, it is the area under the F-distribution $F_{ndf,ddf_H}$ that lies above the observed value $F_{OR}$:
 
@@ -775,16 +779,16 @@ F_{OR \mid R} \sim F_{ndf,ddf}
 (\#eq:FStatFRRC)
 \end{equation}
 
-Alternatively, as with \@ref(eq:F-1RMT),
+Alternatively, as with Eqn. \@ref(eq:F-1RMT),
 
 $$(I-1)F_{OR \mid R} \sim t_{I-1}$$
-For $J$ = 1, \@ref(eq:DefFStatFRRC) reduces to \@ref(eq:DefF-1RMT). 
+For $J$ = 1, Eqn. \@ref(eq:DefFStatFRRC) reduces to Eqn. \@ref(eq:DefF-1RMT). 
 
 The critical value of the statistic is $F_{1-\alpha,I-1,\infty}$ which is that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value, i.e.,:
 
 $$F_{OR \mid R}>F_{1-\alpha,I-1,\infty}$$
 
-The p-value of the test is the probability that a random sample from the distribution $F_{I-1,\infty}$ exceeds the observed value of the F statistic defined in \@ref(eq:DefFStatFRRC):
+The p-value of the test is the probability that a random sample from the distribution $F_{I-1,\infty}$ exceeds the observed value of the F statistic defined in Eqn. \@ref(eq:DefFStatFRRC):
 
 \begin{equation}
 p=\Pr(F>F_{OR \mid R} \mid F \sim F_{I-1,\infty})
@@ -798,15 +802,15 @@ CI_{1-\alpha,FRRC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, \
 (\#eq:CIalphaFRRC)
 \end{equation}
 
-One can think of the numerator terms on the right hand side of \@ref(eq:CIalphaFRRC) as the variance of the inter-treatment FOM difference per reader, and the division by $J$ is needed as the readers, as a group, have smaller variance in inverse proportion to their numbers. 
+One can think of the numerator terms on the right hand side of Eqn. \@ref(eq:CIalphaFRRC) as the variance of the inter-treatment FOM difference per reader, and the division by $J$ is needed as the readers, as a group, have smaller variance in inverse proportion to their numbers. 
 
 The NH is rejected if any of the following equivalent conditions is met:
 
 * The observed value of the F-statistic exceeds the critical value $F_{1-\alpha,I-1,\infty}$.
-* The p-value defined by \@ref(eq:pValueaphaFRRC) is less than $\alpha$.
+* The p-value defined by Eqn. \@ref(eq:pValueaphaFRRC) is less than $\alpha$.
 * The $(1-\alpha)$ confidence interval does not include zero.
 
-Notice that for J = 1, \@ref(eq:CIalphaFRRC) reduces to \@ref(eq:CIalpha1RMT).
+Notice that for J = 1, Eqn. \@ref(eq:CIalphaFRRC) reduces to Eqn. \@ref(eq:CIalpha1RMT).
 
 ### Random-reader fixed-case (RRFC) analysis
 When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is: 
@@ -848,11 +852,11 @@ It is time to reinforce the formulae with examples.
 ### Single-treatment multiple-reader analysis
 Suppose one has data in a single treatment $i$ and multiple readers are involved. One wishes to determine if the performance of the readers as a group equals some specified value. *Since only a single treatment is involved, an implicit $i$ dependence, in subsequent formulae, is ignored.*
 
-In \@ref(OR1RMTModel) single-reader multiple-treatment analysis was described. It is not identical to single-treatment multiple-reader analysis. Treatment is a fixed factor while reader is a random factor. Therefore, one cannot simply use the previous analysis with reader and treatment interchanged (a graduate student tried to do just that, and he is quite smart, hence the reason for this warning). 
+In Eqn. \@ref(OR1RMTModel) single-reader multiple-treatment analysis was described. It is not identical to single-treatment multiple-reader analysis. Treatment is a fixed factor while reader is a random factor. Therefore, one cannot simply use the previous analysis with reader and treatment interchanged (a graduate student tried to do just that, and he is quite smart, hence the reason for this warning). 
 
 In the analysis described in this section reader is regarded as a random effect. The average performance of the readers is estimated and compared to a specified value. Hillis has described the appropriate modifications. [TBA Two approaches are described, one using the DBM pseudovalue based model and the other based on the OR model with appropriate modification. The second approach is summarized below. TBA]
 
-For single-treatment multiple-reader OR analysis, the figure of merit model is (contrast the following equation to \@ref(eq:ORModel1RMT) noting the absence of an $i$ index. If multiple modalities are present the current analysis is applicable to data in each treatment analyzed one at a time): 
+For single-treatment multiple-reader OR analysis, the figure of merit model is (contrast the following equation to Eqn. \@ref(eq:ORModel1RMT) noting the absence of an $i$ index. If multiple modalities are present the current analysis is applicable to data in each treatment analyzed one at a time): 
 
 \begin{equation}
 \theta_{j\{c\}}=\mu+R_j+\epsilon_{j\{c\}}
@@ -883,11 +887,11 @@ Var(\theta_{i \bullet \bullet}) =\frac{1}{J}(\sigma_{b}^{2}+\sigma_{ab}^{2}+(\si
 
 In the OR notation, the FOM has three indices, $\theta_{ijk}$. One deletes the $i$ index as one is dealing with a single treatment and one can drop the average over the $k$ index, as one is dealing with a single dataset; $\sigma_{b}^{2}$ in the OR notation is what we are calling $\sigma_{R}^{2}$; for single treatment the treatment-reader interaction term $\sigma_{ab}^{2}$ is absent; and for single "replication" the term $\sigma_{w}^{2}/K$ (in OR notation $K$ is the number of replications) is absent, or, more accurately, the within-reader variance $\sigma_{w}^{2}$ is absorbed into the case sampling variance $\sigma_{c}^{2}$ as the two are inseparable); the term $\sigma_{\epsilon}^{2}$ is what we are calling $Var$; and $\sigma_{c}^{2}r_2$ in OR paper is what we are calling $Cov_2$.
 
-One needs to replace $\sigma_{R}^{2}$ in \@ref(eq:VarThetaDot) with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature [@RN2508]. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to the expected mean squares table in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, $t$ = 1 and the treatment-reader variance component goes away and the term $\sigma_{\epsilon}^{2}$ is what we are calling $Var$), it follows that:
+One needs to replace $\sigma_{R}^{2}$ in Eqn. \@ref(eq:VarThetaDot) with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature [@RN2508]. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to the expected mean squares table in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, $t$ = 1 and the treatment-reader variance component goes away and the term $\sigma_{\epsilon}^{2}$ is what we are calling $Var$), it follows that:
 
 $$E(MS(R))=\sigma_{R}^{2}+Var=Cov_2$$
 
-Substituting this equation in \@ref(eq:VarThetaDot) yields,
+Substituting this equation in Eqn. \@ref(eq:VarThetaDot) yields,
 
 \begin{equation}
 \sigma_{\theta_{\bullet}}^{2}=\frac{1}{J}(E(MS(R))+JCov_2)
