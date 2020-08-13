@@ -138,7 +138,7 @@ The I x I covariance matrix $\Sigma$  can be written alternatively as (shown bel
 &  &  & \sigma^2 & \rho_1\sigma^2\\
 &  &  &  & \sigma^2
 \end{bmatrix}
-(\#eq:ExampleSigmaRho)
+(\#eq:CovMtrxSigmaRhoForm)
 \end{equation}
 
 ### Estimating the variance-covariance matrix
@@ -371,7 +371,7 @@ With definition Eqn. \@ref(eq:DefQuantile), the $(1-\alpha)$ quantile of the $\c
 (\#eq:Chisqr2F)
 \end{equation}
 
-Eqn. \@ref(eq:Chisqr2F) implies that the $(1-\alpha)$ quantile of the F-distribution with $ndf=(I-1)$ and $ddf=\infty$ equals the $(1-\alpha)$ quantile of the $\chi_{I-1}^2$ distribution *divided by $(I-1)$*. 
+Eqn. \@ref(eq:Chisqr2F) implies that the $(1-\alpha)$ quantile of the F-distribution with $ndf=(I-1)$ and $ddf =\infty$ equals the $(1-\alpha)$ quantile of the $\chi_{I-1}^2$ distribution *divided by $(I-1)$*. 
 
 Here is an `R` illustration of this theorem for $I-1 = 4$ and $\alpha = 0.05$: 
 
@@ -439,7 +439,7 @@ data.frame("ORBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"],
            "ORBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
            "ORBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
 #>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-#> 1     1.242343          1   0.26501998
+#> 1      1.02674          1   0.31092558
 ```
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBM and $\infty$ for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
@@ -716,74 +716,99 @@ Since there are no treatment and reader dependencies on the left-hand-sides of t
 
 
 ### Physical meanings of the covariance terms {#PhysicalMeaningsOfCovMatrix}
-The meanings of the different terms follow a similar description to that given in Eqn. \@ref(StrCovMatrix). The diagonal term $Var$ of the covariance matrix $\Sigma$ is the variance of the figure-of-merit values obtained when reader $j$ interprets different case-sets in treatment $i$: each case-set yields a number $\theta_{ij\{c\}}$ and the variance of the $C$ numbers, averaged over the $I \times J$ treatments and readers, is $Var$. It captures the total variability due to varying difficulty levels of the case-sets and within-reader variability. 
+The meanings of the different terms follow a similar description to that given in Eqn. \@ref(StrCovMatrix). The diagonal term $Var$ is the variance of the figures-of-merit when reader $j$ interprets different case-sets $\{c\}$ in treatment $i$. Each case-set yields a number $\theta_{ij\{c\}}$ and the variance of the $C$ numbers, averaged over the $I \times J$ treatments and readers, is $Var$. It captures the total variability due to varying difficulty levels of the case-sets, inter-reader and within-reader variability. 
 
-$\rho_{1;ii'jj}$ is the correlation of the figure-of-merit values obtained when the same reader $j$ interprets a case-set in different treatment $i,i'$. Each case-set, starting with $c = 1$, yields two numbers $\theta_{ij\{1\}}$ and $\theta_{i'j\{1\}}$; the process is repeated for $C$ case-sets. The correlation of the two pairs of C-length arrays, averaged over all pairings of different treatments and same readers, is $\rho_1$. Because of the common contribution due to the shared reader, $\rho_1$ will be non-zero. For large common variation, the two arrays become almost perfectly correlated, and $\rho_1$ approaches unity. For zero common variation, the two arrays become independent, and $\rho_1$ equals zero. Translating to covariances, one has $Cov_1 < Var$.
+It is easier to see the physical meanings of $Cov_1, Cov_2, Cov_3$ if one starts with the correlations. 
 
-$\rho_{2;iijj'}$ is the correlation of the figure-of-merit values obtained when different readers $j,j'$ interpret the same case-set in the same treatment $i$. As before this yields two numbers and upon repeating over $C$ case-sets one has two C-length arrays, whose correlation, upon averaging over all distinct treatment pairings and same readers, yields $\rho_2$. If one assumes that common variation between different-reader same-treatment FOMs is smaller than the common variation between same-reader different-treatment FOMs, then $\rho_2$ will be smaller than $\rho_1$. This is equivalent to stating that readers agree more with themselves on different treatments than they do with other readers on the same treatment. Translating to covariances, one has $Cov_2 < Cov_1 < Var$.
+* $\rho_{1;ii'jj}$ is the correlation of the figures-of-merit when reader $j$ interprets case-sets in different treatments $i,i'$. Each case-set, starting with $c = 1$, yields two numbers $\theta_{ij\{1\}}$ and $\theta_{i'j\{1\}}$. The correlation of the two pairs of C-length arrays, averaged over all pairings of different treatments and same readers, is $\rho_1$. The correlation exists due to the common contribution of the shared reader. When the common variation is large, the two arrays become more correlated and $\rho_1$ approaches unity. If there is no common variation, the two arrays become independent, and $\rho_1$ equals zero. Converting from correlation to covariance, see Eqn. \@ref(eq:CovMtrxSigmaRhoForm), one has $Cov_1 < Var$.
 
-$\rho_{3;ii'jj'}$ is the correlation of the figure-of-merit values obtained when different readers $j,j'$ interpret the same case set in different treatments $i,i'$, etc., yielding $\rho_3$. This is expected to yield the least correlation. 
+* $\rho_{2;iijj'}$ is the correlation of the figures-of-merit values when different readers $j,j'$ interpret the same case-sets in the same treatment $i$. As before this yields two C-length arrays, whose correlation, upon averaging over all distinct treatment pairings and same readers, yields $\rho_2$. If one assumes that common variation between different-reader same-treatment FOMs is smaller than the common variation between same-reader different-treatment FOMs, then $\rho_2$ will be smaller than $\rho_1$. This is equivalent to stating that readers agree more with themselves in different treatments than they do with other readers in the same treatment. Translating to covariances, one has $Cov_2 < Cov_1 < Var$.
+
+* $\rho_{3;ii'jj'}$ is the correlation of the figure-of-merit values when different readers $j,j'$ interpret the same case set in different treatments $i,i'$, etc., yielding $\rho_3$. This is expected to yield the least correlation. 
 
 Summarizing, one expects the following ordering for the terms in the covariance matrix:
 
 \begin{equation}
-Cov_3 < Cov_2 < Cov_1 < Var
+Cov_3 < Cov_2 < Cov_1 < VarCov_3 \leq  Cov_2 \leq  Cov_1 \leq  Var
 (\#eq:CovOrderings)
 \end{equation}
 
-### OR random-reader random-case analysis
+### OR random-reader random-case analysis  {#OR_RRRC}
 A model such as Eqn. \@ref(eq:ORModel) cannot be analyzed by standard analysis of variance (ANOVA) techniques. Because of the correlated structure of the error term a customized ANOVA is needed (in standard ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented by the epsilon term in the DBM model). 
 
-One starts with the null hypothesis (NH) that the true figures-of-merit of all treatments are identical, i.e., 
+The null hypothesis (NH) is that the true figures-of-merit of all treatments are identical, i.e., 
 
 \begin{equation}
 NH:\tau_i=0\;\; (i=1,2,...,I)
 (\#eq:ORModelNH)
 \end{equation}
 
-The analysis described next considers both readers and cases as random effects. Because of the special nature of the covariance matrix, a modified F-statistic is needed 1-4,7, denoted $F_{OR}$, defined by: 
+The analysis described next considers both readers and cases as random effects. A modified F-statistic is needed, denoted $F_{OR_H}$, and defined by: 
 
 \begin{equation}
-F_{OR}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
-(\#eq:F-OR)
+F_{OR_H}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
+(\#eq:F-OR-H)
 \end{equation}
 
-Eqn. \@ref(eq:F-OR) incorporates Hillis’ modification, which ensures that the constraint Eqn. \@ref(eq:CovOrderings) is always obeyed and avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated directly using FOM values, not pseudovalues):
+Eqn. \@ref(eq:F-OR-H) incorporates Hillis’ modification, which ensures that the constraint Eqn. \@ref(eq:CovOrderings) is always obeyed and also avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated using FOM values, not pseudovalues):
 
 \begin{equation}
 \left.\begin{matrix}
 MS(T)=\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
 \\ 
+MS(R)=\frac{I}{J-1}\sum_{j=1}^{J}(\theta_{\bullet j}-\theta_{\bullet\bullet})^2\\
+\\
 MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})
 \end{matrix}\right\}
 (\#eq:MS-OR)
 \end{equation}
 
-In their original paper [@RN1450] Obuchowski and Rockette state that their proposed test statistic F (basically, Eqn. \@ref(eq:F-OR) without the constraint implied by the $\max$ function) is distributed as an F-statistic with numerator degree of freedom $ndf=I-1$ and denominator degree of freedom $ddf=(I-1)(J-1)$. It turns out that then the test is unduly conservative, meaning it is unusually reluctant to reject the null hypothesis.
+In their original paper [@RN1450] Obuchowski and Rockette state that their proposed test statistic F (basically, Eqn. \@ref(eq:F-OR-H) without the constraint implied by the $\text{max}$ function) is distributed as an F-statistic with numerator degree of freedom $\text{ndf}=I-1$ and denominator degree of freedom *ddf* = $(I-1)(J-1)$. Their test turns out to be very conservative, meaning it is highly biased against rejecting the null hypothesis.
 
-In this connection the author has two historical anecdotes. The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski [@RN1971;@RN1972], using the unmodified version of Eqn. \@ref(eq:F-OR), predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study. 
 
-The second story is that the author once conducted NH simulations using the Roe-Metz simulator described in the preceding chapter and the significance testing as described in the Obuchowski-Rockette paper: the method did not reject the null hypothesis even once in 2000 trials! Recall that with $\alpha = 0.05$ a valid test should reject the null hypothesis about $100\pm20$ times in 2000 trials. The author recalls (ca. 2004) telling Dr. Steve Hillis about this issue, and he suggested a different value for the denominator degrees of freedom (ddf), substitution of which magically solved the problem, i.e., the simulations rejected the null hypothesis about 5% of the time; the new $ddf$ is defined below ($ndf$ is unchanged), with the subscript H denoting the Hillis modification:
+## Two anecdotes {#TwoAnecdotes}
+The author has two anecdotes. 
+
+* The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski [@RN1971;@RN1972], using the version of Eqn. \@ref(eq:F-OR-H) with the *ddf* as originally suggested by Obuchowski and Rockette, predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study! 
+
+* The second story is that the author once conducted NH simulations using a Roe-Metz simulator and the significance testing as described in the Obuchowski-Rockette paper: the method did not reject the null hypothesis even once in 2000 trials! Recall that with $\alpha = 0.05$ a valid test should reject the null hypothesis about $100\pm20$ times in 2000 trials. The author recalls (ca. 2004) telling Dr. Steve Hillis about this issue, and he suggested a different value for the denominator degrees of freedom *ddf*, substitution of which magically solved the problem, i.e., the simulations rejected the null hypothesis 5% of the time. 
+
+## Back to the main story {#MainStoryRRRC}
+Hillis' proposed new *ddf* is shown below (*ndf* is unchanged), with the subscript $H$ denoting the Hillis modification:
 
 \begin{equation}
-ndf=I-1
+\text{ndf}=I-1
 (\#eq:ndf)
 \end{equation}
 
 \begin{equation}
-ddf_H=\frac{\left [ MS(TR) + J \max(Cov_2-Cov_3)\right ]^2}{\frac{\left [ MS(TR) \right ]^2}{(I-1)(J-1)}}
+\text{ddf_H}=\frac{\left [ MS(TR) + J \max(Cov_2-Cov_3,0)\right ]^2}{\frac{\left [ MS(TR) \right ]^2}{(I-1)(J-1)}}
 (\#eq:ddfH)
 \end{equation}
 
-If $Cov_2<Cov_3$ this reduces to the expression originally suggested by Obuchowski and Rockette. With these changes, under the null hypothesis, the observed statistic $F_{OR}$, defined in Eqn. \@ref(eq:F-OR), is distributed as an F-statistic with $I-1$ and $ddf_H$ degrees of freedom [@RN1772;@RN1865;@RN1866]: 
+If $Cov_2 < Cov_3$ (which is the *exact opposite* of the expected ordering, Eqn. \@ref(eq:CovOrderings)) this reduces to $(I-1)\times(J-1)$, the value originally proposed by Obuchowski and Rockette. With Hillis' proposed changes, under the null hypothesis the observed statistic $F_{OR_H}$, defined in Eqn. \@ref(eq:F-OR-H), is distributed as an F-statistic with $\text{ndf} = I-1$ and *ddf* $= ddf_H$ degrees of freedom [@RN1772;@RN1865;@RN1866]: 
 
 \begin{equation}
-F_{OR}\sim F_{ndf,ddf_H}
-(\#eq:SamplingDistrF-OR)
+F_{OR_H}\sim F_{ndf,ddf_H}
+(\#eq:SamplingDistr-F-OR-H)
 \end{equation}
 
+If the expected ordering is true, i.e., $Cov_2 > Cov_3$ , which is the more likely situation, then $ddf_H$ is *larger* than $(I-1)\times(J-1)$, i.e., that stated in Obuchowski-Rockette's original paper, and the p-value decreases, i.e., there is a larger probability of rejecting the NH. With the new degrees of freedom the OR method is more likely to have the correct NH behavior, i.e, it will reject the NH 5% of the time when alpha is set to 0.05 (statisticians refer to this as "the 5% test"). This has been confirmed in simulation testing (@RN1866).
+
 #### Decision rule, p-value and confidence interval
-The critical value of the F-statistic for rejection of the null hypothesis is $F_{1-\alpha,ndf,ddf_H}$, i.e., that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. From definition Eqn. \@ref(eq:F-OR), rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger; $MS(TR)$ decreases meaning there is less contamination of the treatment effect by treatment-reader variability; the greater of $Cov2$ or $Cov3$ decreases, meaning there is less contamination of the treatment effect by between-reader and treatment-reader variability, $\alpha$ increases, meaning one is allowing a greater probability of Type I errors, $ndf$ increases, meaning the more the number of treatment pairings, the greater the chance that at least one pair will reject the NH or $ddf_H$ increases, as this lowers the critical value of the F-statistic. 
+The critical value of the F-statistic for rejection of the null hypothesis is $F_{1-\alpha,ndf,ddf_H}$, i.e., that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. From definition Eqn. \@ref(eq:F-OR-H):
+
+* Rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger; 
+
+* $MS(TR)$ is smaller meaning there is less contamination of the treatment effect by treatment-reader variability; 
+
+* The greater of $Cov2$ or $Cov3$, which is usually $Cov2$, decreases, meaning there is less "noise" in the measurement due to between-reader variability. Recall that $Cov_2$ involves different-reader same-treatment pairings.  
+
+* $\alpha$ increases, meaning one is allowing a greater probability of Type I errors; 
+
+* $ndf$ increases, meaning that with more treatment pairings, the chance that at least one pair will reject the NH is larger; 
+
+* $ddf_H$ increases, as this lowers the critical value of the F-statistic. 
 
 The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{OR}$ could be observed by chance. In other words, it is the area under the F-distribution $F_{ndf,ddf_H}$ that lies above the observed value $F_{OR}$:
 
