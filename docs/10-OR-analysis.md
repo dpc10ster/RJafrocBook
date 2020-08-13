@@ -439,7 +439,7 @@ data.frame("ORBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"],
            "ORBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
            "ORBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
 #>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-#> 1      1.02674          1   0.31092558
+#> 1    1.2428867          1   0.26491545
 ```
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBM and $\infty$ for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
@@ -782,7 +782,7 @@ Hillis' proposed new *ddf* is shown below (*ndf* is unchanged), with the subscri
 \end{equation}
 
 \begin{equation}
-\text{ddf_H}=\frac{\left [ MS(TR) + J \max(Cov_2-Cov_3,0)\right ]^2}{\frac{\left [ MS(TR) \right ]^2}{(I-1)(J-1)}}
+\text{ddf}_H = \frac{\left [ MS(TR) + J \max(Cov_2-Cov_3,0)\right ]^2}{\frac{\left [ MS(TR) \right ]^2}{(I-1)(J-1)}}
 (\#eq:ddfH)
 \end{equation}
 
