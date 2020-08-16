@@ -18,7 +18,7 @@ In the first step of the "gentle" introduction a single reader interpreting a ca
 
 Before proceeding, it is understood that datasets analyzed in this chapter follow a _factorial_ design, sometimes call fully-factorial or fully-crossed design. Basically, the data structure is symmetric, e.g., all readers interpret all cases in all modalities. The next chapter will describe the analysis of _split-plot_ datasets, where, for example, some readers interpret all cases in one modality, while the remaining readers interpret all cases in the other modality.
 
-## Single-reader multiple-treatment model {#OR1RMTModel}
+## Single-reader multiple-treatment OR model {#OR1RMTModel}
 Consider a single-reader providing ROC interpretations of a common case-set $\{c\}$ in multiple-treatments $i$ ($i$ = 1, 2, …, $I$). Before proceeding, we note that this is not homologous (i.e., formally equivalent) to multiple-readers providing ROC interpretations in a single treatment. This is because reader is a random factor while treatment is a fixed factor. 
 
 The figure of merit $\theta$ is modeled as:
@@ -439,7 +439,7 @@ data.frame("ORBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"],
            "ORBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
            "ORBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
 #>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-#> 1    1.2428867          1   0.26491545
+#> 1    1.2655704          1   0.26059932
 ```
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBM and $\infty$ for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
@@ -729,12 +729,12 @@ It is easier to see the physical meanings of $Cov_1, Cov_2, Cov_3$ if one starts
 Summarizing, one expects the following ordering for the terms in the covariance matrix:
 
 \begin{equation}
-Cov_3 < Cov_2 < Cov_1 < VarCov_3 \leq  Cov_2 \leq  Cov_1 \leq  Var
+Cov_3 \leq  Cov_2 \leq  Cov_1 \leq  Var
 (\#eq:CovOrderings)
 \end{equation}
 
-### OR random-reader random-case analysis  {#OR_RRRC}
-A model such as Eqn. \@ref(eq:ORModel) cannot be analyzed by standard analysis of variance (ANOVA) techniques. Because of the correlated structure of the error term a customized ANOVA is needed (in standard ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented by the epsilon term in the DBM model). 
+## OR random-reader random-case (RRRC) analysis {#OR_RRRC}
+In conventional ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented in the DBM model by the scalar $\epsilon$ term. In OR analysis, because of the correlated structure of the error term, a customized ANOVA is needed. 
 
 The null hypothesis (NH) is that the true figures-of-merit of all treatments are identical, i.e., 
 
@@ -743,14 +743,14 @@ NH:\tau_i=0\;\; (i=1,2,...,I)
 (\#eq:ORModelNH)
 \end{equation}
 
-The analysis described next considers both readers and cases as random effects. A modified F-statistic is needed, denoted $F_{OR_H}$, and defined by: 
+The analysis described next considers both readers and cases as random effects. The modified F-statistic is denoted $F_{ORH}$, defined by: 
 
 \begin{equation}
-F_{OR_H}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
+F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
 (\#eq:F-OR-H)
 \end{equation}
 
-Eqn. \@ref(eq:F-OR-H) incorporates Hillis’ modification, which ensures that the constraint Eqn. \@ref(eq:CovOrderings) is always obeyed and also avoids a possibly negative (hence illegal) F-statistic. The mean square (MS) terms are defined by (these are calculated using FOM values, not pseudovalues):
+Eqn. \@ref(eq:F-OR-H) incorporates Hillis’ modification of the original OR model, which ensures that the constraint Eqn. \@ref(eq:CovOrderings) is always obeyed and also avoids a possibly negative (and hence illegal) F-statistic. The relevant mean squares are defined by (note that these are calculated using FOM values, not pseudovalues):
 
 \begin{equation}
 \left.\begin{matrix}
@@ -763,39 +763,54 @@ MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bu
 (\#eq:MS-OR)
 \end{equation}
 
-In their original paper [@RN1450] Obuchowski and Rockette state that their proposed test statistic F (basically, Eqn. \@ref(eq:F-OR-H) without the constraint implied by the $\text{max}$ function) is distributed as an F-statistic with numerator degree of freedom $\text{ndf}=I-1$ and denominator degree of freedom *ddf* = $(I-1)(J-1)$. Their test turns out to be very conservative, meaning it is highly biased against rejecting the null hypothesis.
+In their original paper [@RN1450] Obuchowski and Rockette proposed the following test statistic $F_{OR}$:
 
+\begin{equation}
+F_{OR}=\frac{MS(T)}{MS(TR)+J(Cov_2-Cov_3)}
+(\#eq:F-OR-H-ORG)
+\end{equation}
 
-## Two anecdotes {#TwoAnecdotes}
-The author has two anecdotes. 
+Note that Eqn. \@ref(eq:F-OR) lacks the constraint which ensures that the denominator cannot be negative. The following distribution was proposed for the test statistic. 
+
+\begin{equation}
+F_{ORH}\sim F_{ndf,ddf}
+(\#eq:SamplingDistr-F-OR)
+\end{equation}
+
+The degrees of freedom are defined by:
+
+\begin{equation}
+\text{ndf}=I-1\\
+\text{ddf} = (I-1)\times(J-1)
+(\#eq:ORdegreesOfFreedom)
+\end{equation}
+
+Their test statistic turns out to be very conservative, meaning it is highly biased against rejecting the null hypothesis. Because of this the predicted sample sizes tended to be quite large. In this connection I have two informative anecdotes.
+
+### Two anecdotes {#TwoAnecdotes}
 
 * The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski [@RN1971;@RN1972], using the version of Eqn. \@ref(eq:F-OR-H) with the *ddf* as originally suggested by Obuchowski and Rockette, predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study! 
 
 * The second story is that the author once conducted NH simulations using a Roe-Metz simulator and the significance testing as described in the Obuchowski-Rockette paper: the method did not reject the null hypothesis even once in 2000 trials! Recall that with $\alpha = 0.05$ a valid test should reject the null hypothesis about $100\pm20$ times in 2000 trials. The author recalls (ca. 2004) telling Dr. Steve Hillis about this issue, and he suggested a different value for the denominator degrees of freedom *ddf*, substitution of which magically solved the problem, i.e., the simulations rejected the null hypothesis 5% of the time. 
 
-## Back to the main story {#MainStoryRRRC}
+### Hillis ddf {#Hills-ddf}
 Hillis' proposed new *ddf* is shown below (*ndf* is unchanged), with the subscript $H$ denoting the Hillis modification:
-
-\begin{equation}
-\text{ndf}=I-1
-(\#eq:ndf)
-\end{equation}
 
 \begin{equation}
 \text{ddf}_H = \frac{\left [ MS(TR) + J \max(Cov_2-Cov_3,0)\right ]^2}{\frac{\left [ MS(TR) \right ]^2}{(I-1)(J-1)}}
 (\#eq:ddfH)
 \end{equation}
 
-If $Cov_2 < Cov_3$ (which is the *exact opposite* of the expected ordering, Eqn. \@ref(eq:CovOrderings)) this reduces to $(I-1)\times(J-1)$, the value originally proposed by Obuchowski and Rockette. With Hillis' proposed changes, under the null hypothesis the observed statistic $F_{OR_H}$, defined in Eqn. \@ref(eq:F-OR-H), is distributed as an F-statistic with $\text{ndf} = I-1$ and *ddf* $= ddf_H$ degrees of freedom [@RN1772;@RN1865;@RN1866]: 
+If $Cov_2 < Cov_3$ (which is the *exact opposite* of the expected ordering, Eqn. \@ref(eq:CovOrderings)), this reduces to $(I-1)\times(J-1)$, the value originally proposed by Obuchowski and Rockette. With Hillis' proposed changes, under the null hypothesis the observed statistic $F_{ORH}$, defined in Eqn. \@ref(eq:F-OR-H), is distributed as an F-statistic with $\text{ndf} = I-1$ and *ddf* $= ddf_H$ degrees of freedom [@RN1772;@RN1865;@RN1866]: 
 
 \begin{equation}
-F_{OR_H}\sim F_{ndf,ddf_H}
+F_{ORH}\sim F_{ndf,ddf_H}
 (\#eq:SamplingDistr-F-OR-H)
 \end{equation}
 
-If the expected ordering is true, i.e., $Cov_2 > Cov_3$ , which is the more likely situation, then $ddf_H$ is *larger* than $(I-1)\times(J-1)$, i.e., that stated in Obuchowski-Rockette's original paper, and the p-value decreases, i.e., there is a larger probability of rejecting the NH. With the new degrees of freedom the OR method is more likely to have the correct NH behavior, i.e, it will reject the NH 5% of the time when alpha is set to 0.05 (statisticians refer to this as "the 5% test"). This has been confirmed in simulation testing (@RN1866).
+If the expected ordering is true, i.e., $Cov_2 > Cov_3$ , which is the more likely situation, then $ddf_H$ is *larger* than $(I-1)\times(J-1)$, i.e., the Obuchowski-Rockette's *ddf*, and the p-value decreases, i.e., there is a larger probability of rejecting the NH. The modified OR method is more likely to have the correct NH behavior, i.e, it will reject the NH 5% of the time when alpha is set to 0.05 (statisticians refer to this as "the 5% test"). This has been confirmed in simulation testing (@RN1866).
 
-#### Decision rule, p-value and confidence interval
+### Decision rule, p-value and confidence interval
 The critical value of the F-statistic for rejection of the null hypothesis is $F_{1-\alpha,ndf,ddf_H}$, i.e., that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. From definition Eqn. \@ref(eq:F-OR-H):
 
 * Rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger; 
@@ -824,7 +839,7 @@ CI_{1-\alpha,RRRC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, (
 (\#eq:CIalpha-RRRC)
 \end{equation}
 
-### Fixed-reader random-case (FRRC) analysis
+## Fixed-reader random-case (FRRC) analysis
 Using the vertical bar notation $\mid R$ to denote that reader is regarded as a fixed effect [@RN1124], the appropriate F -statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is [@RN1865]: 
 
 \begin{equation}
@@ -876,7 +891,7 @@ The NH is rejected if any of the following equivalent conditions is met:
 
 Notice that for J = 1, Eqn. \@ref(eq:CIalphaFRRC) reduces to Eqn. \@ref(eq:CIalpha1RMT).
 
-### Random-reader fixed-case (RRFC) analysis
+## Random-reader fixed-case (RRFC) analysis
 When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is: 
 
 \begin{equation}
@@ -913,7 +928,7 @@ CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, (
 
 It is time to reinforce the formulae with examples.
 
-### Single-treatment multiple-reader analysis
+## Single-treatment multiple-reader analysis
 Suppose one has data in a single treatment $i$ and multiple readers are involved. One wishes to determine if the performance of the readers as a group equals some specified value. *Since only a single treatment is involved, an implicit $i$ dependence, in subsequent formulae, is ignored.*
 
 In Eqn. \@ref(OR1RMTModel) single-reader multiple-treatment analysis was described. It is not identical to single-treatment multiple-reader analysis. Treatment is a fixed factor while reader is a random factor. Therefore, one cannot simply use the previous analysis with reader and treatment interchanged (a graduate student tried to do just that, and he is quite smart, hence the reason for this warning). 

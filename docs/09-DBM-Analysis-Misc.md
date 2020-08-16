@@ -4,11 +4,12 @@ output:
   html_document: default
 ---
 
-# Miscellaneous Testing using the Dorfman Berbaum Metz (DBM) Method {#DBMAnalysisMiscellaneous}
+# DBM Method special cases {#SpecialCasesDBMAnalysis}
+Special cases of DBM analysis are described here, namely fixed-reader random-case (FRRC), sub-special case of which is Single-reader multiple-treatment analysis, and random-reader fixed-case (RRFC). 
 
 
 
-## Fixed-reader random-case (FRRC) analysis
+## Fixed-reader random-case (FRRC) analysis {#FRRCDBMAnalysis}
 The model is the same as in TBA \@ref(eq:pseudoValPrime) Eqn. (9.4) except one puts $\sigma_{R}^{2}$ = $\sigma_{\tau R}^{2}$ = 0 in Table Table \@ref(tab:ExpValMs). The appropriate test statistic is: 
 
 \begin{equation}
@@ -21,7 +22,7 @@ Under the null hypothesis $\sigma_{\tau}^{2} = 0$:
 \frac{E\left ( MST \right )}{E\left ( MSTC \right )} = 1
 \end{equation}
 
-As before, one defines the F-statistic (by replacing *expected* with *observed* values) by
+The F-statistic is (replacing *expected* with *observed* values):
 
 \begin{equation}
 F_{DBM|R}=\frac{MST}{MSTC}
@@ -56,7 +57,7 @@ CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\
 (\#eq:confIntervalFRRC)
 \end{equation}
 
-### Single-reader multiple-treatment analysis
+### Single-reader multiple-treatment analysis {#FRRCSingleReaderDBMAnalysis}
 With a single reader interpreting cases in two or more treatments, the reader factor must necessarily be regarded as fixed. The preceding analysis is applicable. One simply puts $J = 1$ in the equations above. 
 
 #### Example 5: Code illustrating p-values for FRRC analysis, Van Dyke data
@@ -111,7 +112,7 @@ data.frame("pValue" = retRJafroc$FRRC$FTests$p[1],
 
 As one might expect, if one "freezes" reader variability, the FOM difference becomes significant, whether viewed from the point of view of the F-statistic exceeding the critical value, the observed p-value being smaller than alpha or the 95% CI for the difference FOM not including zero. 
 
-## Random-reader fixed-case (RRFC) analysis
+## Random-reader fixed-case (RRFC) analysis {#RRFCDBMAnalysis}
 The model is the same as in TBA \@ref(eq:pseudoValPrime) Eqn. (9.4) except one puts $\sigma_C^2 = \sigma_{\tau C}^2 =0$ in Table Table \@ref(tab:ExpValMs). It follows that: 
 
 \begin{equation}
