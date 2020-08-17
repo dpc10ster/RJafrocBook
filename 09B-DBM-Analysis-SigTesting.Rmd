@@ -3,11 +3,20 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Significance Testing using the Dorfman Berbaum Metz (DBM) Method {#DBMAnalysisSigtesting}
+# Significance Testing using the DBM Method {#DBMAnalysisSigtesting}
+DBM = Dorfman Berbaum Metz
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(kableExtra)
+library(ggplot2)
+library(RJafroc)
+library(here)
+```
 
-
-
-## The Dorfman-Berbaum-Metz (DBM) sampling model
+## The DBM sampling model
 The figure-of-merit has three indices:  
 * A treatment index $i$, where $i$ runs from 1 to $I$, where $I$ is the total number of treatments.  
 * A reader index $j$, where $j$ runs from 1 to $J$, where $J$ is the total number of readers.  
@@ -190,8 +199,7 @@ Both readers and cases are regarded as random factors. The expected mean squares
 
 * The first line computes the pseudovalues using the `RJafroc` function `UtilPseudoValues()`, and the second line extracts the numbers of treatments, readers and cases. The following lines calculate, using Equation \@ref(eq:MeanSquares) the mean-squares. After displaying the results of the calculation, the results are compared to those calculated by the `RJafroc` function `UtilMeanSquares()`.
 
-
-```r
+```{r}
 Y <- UtilPseudoValues(dataset02, FOM = "Wilcoxon")$jkPseudoValues
 
 I <- dim(Y)[1];J <- dim(Y)[2];K <- dim(Y)[3]
@@ -260,12 +268,8 @@ for (i in 1:I) {
 msTRC <- msTRC/((I - 1) * (J - 1) * (K - 1))
 
 data.frame("msT" = msT, "msR" = msR, "msC" = msC, "msTR" = msTR, "msTC" = msTC, "msRC" = msRC, "msTRC" = msTRC)
-#>         msT       msR       msC       msTR       msTC       msRC     msTRC
-#> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
 
 as.data.frame(UtilMeanSquares(dataset02)[1:7])
-#>         msT       msR       msC       msTR       msTC       msRC     msTRC
-#> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
 ```
 
 ### Significance testing
@@ -413,8 +417,7 @@ For more than two treatments the first two rules are equivalent and if a signifi
 #### Code illustrating the F-statistic, ddf and p-value for RRRC analysis, Van Dyke data
 Line 1 defines $\alpha$. Line 2 forms a data frame from previously calculated mean-squares. Line 3 calculates the denominator appearing in Equation \@ref(eq:FStatHillis). Line 4 computes the observed value of $F_{DBM}$, namely the ratio of the numerator and denominator in Equation \@ref(eq:FStatHillis). Line 5 sets $\text{ndf}$ to $I - 1$. Line 6 computes $\text{ddf}_H$. Line 7 computes the critical value of the F-distribution $F_{crit}\equiv F_{\text{ndf},\text{ddf}_H}$. Line 8 calculates the p-value, using the definition Equation \@ref(eq:pValueRRRC). Line 9 prints out the just calculated quantities. The next line uses the `RJafroc` function `StSignificanceTesting()` and the 2nd last line prints out corresponding `RJafroc`-computed quantities. Note the correspondences between the values just computed and those provide by `RJafroc`. Note that the FOM difference is not significant at the 5% level of significance as $p > \alpha$. The last line shows that $F_{DBM}$ does not exceed $F_{crit}$. The two rules are equivalent.
 
-
-```r
+```{r}
 alpha <- 0.05
 retMS <- data.frame("msT" = msT, "msR" = msR, "msC" = msC, "msTR" = msTR, "msTC" = msTC, "msRC" = msRC, "msTRC" = msTRC)
 F_DBM_den <- retMS$msTR+max(retMS$msTC - retMS$msTRC,0) 
@@ -424,22 +427,16 @@ ddf_H <- (F_DBM_den^2/retMS$msTR^2)*(I-1)*(J-1)
 FCrit <- qf(1 - alpha, ndf, ddf_H)
 pValueH <- 1 - pf(F_DBM, ndf, ddf_H)
 data.frame("F_DBM" = F_DBM, "ddf_H"= ddf_H, "pValueH" = pValueH) # Line 9
-#>      F_DBM    ddf_H    pValueH
-#> 1 4.456319 15.25967 0.05166569
 retRJafroc <- StSignificanceTesting(dataset02, FOM = "Wilcoxon", method = "DBM")
 data.frame("F_DBM" = retRJafroc$RRRC$FTests$FStat[1], 
            "ddf_H"= retRJafroc$RRRC$FTests$DF[2], 
            "pValueH" = retRJafroc$RRRC$FTests$p[1])
-#>       F_DBM     ddf_H     pValueH
-#> 1 4.4563187 15.259675 0.051665686
 F_DBM > FCrit
-#> [1] FALSE
 ```
 
 #### Code illustrating the inter-treatment confidence interval for RRRC analysis, Van Dyke data
 Line 1 computes the FOM matrix using function `UtilFigureOfMerit`. The next 9 lines compute the treatment FOM differences. The next line `nDiffs` (for "number of differences") evaluates to 1, as with two treatments, there is only one difference. The next line initializes `CI_DIFF_FOM_RRRC`, which stands for "confidence intervals, FOM differences, for RRRC analysis". The next 8 lines evaluate, using Equation \@ref(eq:confIntervalRRRC), and prints the lower value, the mid-point and the upper value of the confidence interval. Finally, these values are compared to those yielded by `RJafroc`. The FOM difference is not significant, whether viewed from the point of view of the F-statistic not exceeding the critical value, the observed p-value being larger than alpha or the 95% CI for the FOM difference including zero. 
-
-```r
+```{r}
 theta <- as.matrix(UtilFigureOfMerit(dataset02, FOM = "Wilcoxon"))
 theta_i_dot <- array(dim = I)
 for (i in 1:I) theta_i_dot[i] <- mean(theta[i,])
@@ -460,13 +457,9 @@ for (i in 1 : nDiffs) {
                    "Mid" = CI_DIFF_FOM_RRRC[i,2], 
                    "Upper" = CI_DIFF_FOM_RRRC[i,3]))
 }
-#>          Lower          Mid         Upper
-#> 1 -0.087959499 -0.043800322 0.00035885444
 data.frame("Lower" = retRJafroc$RRRC$ciDiffTrt[1,"CILower"], 
            "Mid" = retRJafroc$RRRC$ciDiffTrt[1,"Estimate"], 
            "Upper" = retRJafroc$RRRC$ciDiffTrt[1,"CIUpper"])
-#>          Lower          Mid         Upper
-#> 1 -0.087959499 -0.043800322 0.00035885444
 ```
 
 
@@ -552,8 +545,7 @@ df_2 = \frac{(\max(\sigma_{\tau R}^2,0)+(\max(J\sigma_{\tau C}^2,0)+\sigma_{\eps
 ### Example of sample size estimation, RRRC generalization
 The Van Dyke dataset is regarded as a pilot study. In the first block of code function `StSignificanceTesting()` is used to get the DBM variances (i.e., `VarTR` = $\sigma_{\tau R}^2$, etc.) and the effect size $d$. 
 
-
-```r
+```{r}
 rocData <- dataset02 # select Van Dyke dataset
 retDbm <- StSignificanceTesting(dataset = rocData, FOM = "Wilcoxon", method = "DBM") 
 VarTR <- retDbm$ANOVA$VarCom["VarTR","Estimates"]
@@ -562,10 +554,9 @@ VarErr <- retDbm$ANOVA$VarCom["VarErr","Estimates"]
 d <- retDbm$FOMs$trtMeanDiffs["trt0-trt1","Estimate"]
 ```
 
-The observed effect size is -0.04380032. The sign is negative as the reader-averaged second modality has greater FOM than the first. The next code block shows implementation of the RRRC formulae just presented. The values of $J$ and $K$ were preselected to achieve 80% power, as verified from the final line of the output. 
+The observed effect size is `r d`. The sign is negative as the reader-averaged second modality has greater FOM than the first. The next code block shows implementation of the RRRC formulae just presented. The values of $J$ and $K$ were preselected to achieve 80% power, as verified from the final line of the output. 
 
-
-```r
+```{r}
 #RRRC
 J <- 10; K <- 163
 den <- max(VarTR, 0) + (VarErr + J * max(VarTC, 0)) / K 
@@ -574,8 +565,6 @@ df2 <- den^2 * (J - 1) / (max(VarTR, 0) + VarErr / K)^2
 fvalueRRRC <- qf(1 - alpha, 1, df2)
 Power <- 1-pf(fvalueRRRC, 1, df2, ncp = deltaRRRC)
 data.frame("J"= J,  "K" = K, "fvalueRRRC" = fvalueRRRC, "df2" = df2, "deltaRRRC" = deltaRRRC, "PowerRRRC" = Power)
-#>    J   K fvalueRRRC       df2 deltaRRRC  PowerRRRC
-#> 1 10 163  3.9930236 63.137871 8.1269825 0.80156249
 ```
 
 ## Significance testing and sample size estimation for fixed-reader random-case generalization
@@ -595,8 +584,7 @@ The NH is rejected if the observed value of $F$ exceeds the critical value defin
 
 These equations are coded in the following code-chunk:
 
-
-```r
+```{r}
 #FRRC
 # set VarTC = 0 in RRRC formulae
 J <- 10; K <- 133
@@ -606,8 +594,6 @@ df2FRRC <- K - 1
 fvalueFRRC <- qf(1 - alpha, 1, df2FRRC)
 powerFRRC <- pf(fvalueFRRC, 1, df2FRRC, ncp = deltaFRRC, FALSE)
 data.frame("J"= J,  "K" = K, "fvalueFRRC" = fvalueFRRC, "df2" = df2FRRC, "deltaFRRC" = deltaFRRC, "powerFRRC" = powerFRRC)
-#>    J   K fvalueFRRC df2 deltaFRRC  powerFRRC
-#> 1 10 133   3.912875 132 7.9873835 0.80111671
 ```
 
 ## Significance testing and sample size estimation for random-reader fixed-case generalization
@@ -627,8 +613,7 @@ The NH is rejected if the observed value of $F$ exceeds the critical value defin
 
 These equations are coded in the following code-chunk:
 
-
-```r
+```{r}
 #RRFC
 # set VarTR = 0 in RRRC formulae
 J <- 10; K <- 53
@@ -638,8 +623,6 @@ df2RRFC <- J - 1
 fvalueRRFC <- qf(1 - alpha, 1, df2RRFC)
 powerRRFC <- pf(fvalueRRFC, 1, df2RRFC, ncp = deltaRRFC, FALSE)
 data.frame("J"= J,  "K" = K, "fvalueRRFC" = fvalueRRFC, "df2" = df2RRFC, "deltaRRFC" = deltaRRFC, "powerRRFC" = powerRRFC)
-#>    J  K fvalueRRFC df2 deltaRRFC  powerRRFC
-#> 1 10 53   5.117355   9 10.048716 0.80496663
 ```
 
 It is evident that for this dataset, for 10 readers, the numbers of cases needed for 80% power is largest (163) for RRRC and least for RRFC (53). For all three analyses, the expectation of 80% power is met - the numbers of cases and readers were deliberately chosen to achieve close to 80% statistical power.  

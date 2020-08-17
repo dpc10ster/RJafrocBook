@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Contributing to this book | The RJafroc Book</title>
+  <title>Chapter 6 Obuchowski Rockette (OR) Analysis | The RJafroc Book</title>
   <meta name="description" content="Extended RJafroc documentation." />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Contributing to this book | The RJafroc Book" />
+  <meta property="og:title" content="Chapter 6 Obuchowski Rockette (OR) Analysis | The RJafroc Book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Contributing to this book | The RJafroc Book" />
+  <meta name="twitter:title" content="Chapter 6 Obuchowski Rockette (OR) Analysis | The RJafroc Book" />
   
   <meta name="twitter:description" content="Extended RJafroc documentation." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="a-note-on-the-online-distribution-mechanism-of-the-book.html"/>
-<link rel="next" href="is-this-book-relevant-to-you-and-what-are-the-alternatives.html"/>
+<link rel="prev" href="ORAnalysisIntro.html"/>
+<link rel="next" href="ORAnalysisCodingExamples.html"/>
 <script src="libs/header-attrs-2.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -322,23 +322,216 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="contributing-to-this-book" class="section level1 unnumbered" number="">
-<h1>Contributing to this book</h1>
+<div id="ORAnalysisSigTesting" class="section level1" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Obuchowski Rockette (OR) Analysis</h1>
+<div id="introduction" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Introduction</h2>
+<p>In previous chapters the DBM significance testing procedure <span class="citation">(Dorfman, Berbaum, and Metz <a href="#ref-RN204" role="doc-biblioref">1992</a>)</span> for analyzing MRMC ROC data, along with improvements <span class="citation">(Hillis <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span>, has been described. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been rightly criticized by Hillis and others <span class="citation">(Zhou, McClish, and Obuchowski <a href="#ref-zhou2009statistical" role="doc-biblioref">2009</a>)</span>. Hillis states that the method “works” but lacks firm statistical foundations <span class="citation">(Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>; Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>; Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span>. I would add that it “works” as long as one restricts to the empirical AUC figure of merit. In my book I gave a justification for why the method “works”. Specifically, the <em>empirical AUC pseudovalues qualify as case-level FOMs</em> - this property has also been noted by <span class="citation">(Hajian-Tilaki et al. <a href="#ref-RN1395" role="doc-biblioref">1997</a>)</span>. However, this property applies <em>only</em> to the empirical AUC, so an alternate approach that applies to any figure of merit is highly desirable.</p>
+<p>Hillis’ has proposed that a method based on an earlier publication <span class="citation">(Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span>, which does not depend on pseudovalues, is preferable from both conceptual and practical points of view. This chapter is named “OR Analysis”, where OR stands for Obuchowski and Rockette. The OR method has advantages in being able to handle more complex study designs <span class="citation">(Hillis <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span> that are addressed in subsequent chapters, and applications to other FOMs (e.g., the FROC paradigm uses a rather different FOM from empirical ROC-AUC) are best performed with the OR method.</p>
+<p>This chapter delves into the significance testing procedure employed in OR analysis.</p>
+<p>Multiple readers interpreting a case-set in multiple treatments is analyzed and the results, DBM vs. OR, are compared for the same dataset. The special cases of fixed-reader and fixed-case analyses are described. Single treatment analysis, where interest is in comparing average performance of readers to a fixed value, is described. Three methods of estimating the covariance matrix are described.</p>
+<p>Before proceeding, it is understood that datasets analyzed in this chapter follow a <em>factorial</em> design, sometimes call fully-factorial or fully-crossed design. Basically, the data structure is symmetric, e.g., all readers interpret all cases in all modalities. The next chapter will describe the analysis of <em>split-plot</em> datasets, where, for example, some readers interpret all cases in one modality, while the remaining readers interpret all cases in the other modality.</p>
+</div>
+<div id="OR_RRRC" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Random-reader random-case (RRRC) analysis</h2>
+<p>In conventional ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented in the DBM model by the scalar <span class="math inline">\(\epsilon\)</span> term. Because of the correlated structure of the error term, in OR analysis, a customized ANOVA is needed. The null hypothesis (NH) is that the true figures-of-merit of all treatments are identical, i.e.,</p>
+<p><span class="math display" id="eq:ORModelNH">\[\begin{equation}
+NH:\tau_i=0\;\; (i=1,2,...,I)
+\tag{6.1}
+\end{equation}\]</span></p>
+<p>The analysis described next considers both readers and cases as random effects. The F-statistic is denoted <span class="math inline">\(F_{ORH}\)</span>, defined by:</p>
+<p><span class="math display" id="eq:F-OR-H">\[\begin{equation}
+F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
+\tag{6.2}
+\end{equation}\]</span></p>
+<p>Eqn. <a href="ORAnalysisSigTesting.html#eq:F-OR-H">(6.2)</a> incorporates Hillis’ modification of the original OR F-statistic. The modification ensures that the constraint Eqn. <a href="ORAnalysisIntro.html#eq:CovOrderings">(5.32)</a> is always obeyed and also avoids a possibly negative (and hence illegal) F-statistic. The relevant mean squares are defined by (note that these are calculated using <em>FOM</em> values, not <em>pseudovalues</em>):</p>
+<p><span class="math display" id="eq:MS-OR">\[\begin{equation}
+\left.\begin{matrix}
+MS(T)=\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
+\\ 
+MS(R)=\frac{I}{J-1}\sum_{j=1}^{J}(\theta_{\bullet j}-\theta_{\bullet\bullet})^2\\
+\\
+MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})
+\end{matrix}\right\}
+\tag{6.3}
+\end{equation}\]</span></p>
+<p>The original paper <span class="citation">(Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span> actually proposed a different test statistic <span class="math inline">\(F_{OR}\)</span>:</p>
+<p><span class="math display" id="eq:F-OR">\[\begin{equation}
+F_{OR}=\frac{MS(T)}{MS(TR)+J(Cov_2-Cov_3)}
+\tag{6.4}
+\end{equation}\]</span></p>
+<p>Note that Eqn. <a href="ORAnalysisSigTesting.html#eq:F-OR">(6.4)</a> lacks the constraint, subsequently proposed by Hillis, which ensures that the denominator cannot be negative. The following distribution was proposed for the test statistic.</p>
+<p><span class="math display" id="eq:SamplingDistr-F-OR">\[\begin{equation}
+F_{ORH}\sim F_{ndf,ddf}
+\tag{6.5}
+\end{equation}\]</span></p>
+<p>The original degrees of freedom were defined by:</p>
+<p><span class="math display" id="eq:ORdegreesOfFreedom">\[\begin{equation}
+\text{ndf}=I-1\\
+\text{ddf} = (I-1)\times(J-1)
+\tag{6.6}
+\end{equation}\]</span></p>
+<p>Their test statistic turns out to be very conservative, meaning it is highly biased against rejecting the null hypothesis. Because of this the predicted sample sizes tended to be quite large. In this connection I have two informative anecdotes.</p>
+<div id="TwoAnecdotes" class="section level3" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> Two anecdotes</h3>
 <ul>
-<li>I appreciate constructive feedback on this document, e.g., corrections, comments, etc.<br />
-</li>
-<li>To do this raise an <code>Issue</code> on the <code>GitHub</code> <a href="https://github.com/dpc10ster/RJafrocBook">interface</a>.</li>
-<li>Click on the <code>Issues</code> tab under <code>dpc10ster/RJafrocBook</code>, then click on <code>New issue</code>.</li>
-<li>When done this way, contributions from users automatically become part of the <code>GitHub</code> documentation/history of the book.</li>
+<li><p>The late Dr. Robert F. Wagner once stated to the author (ca. 2001) that the sample-size tables published by Obuchowski <span class="citation">(Obuchowski <a href="#ref-RN1971" role="doc-biblioref">1998</a>, <a href="#ref-RN1972" role="doc-biblioref">2000</a>)</span>, using the version of Eqn. <a href="ORAnalysisSigTesting.html#eq:F-OR-H">(6.2)</a> with the <em>ddf</em> as originally suggested by Obuchowski and Rockette, predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study!</p></li>
+<li><p>The second story is that the author once conducted NH simulations using a Roe-Metz simulator and the significance testing as described in the Obuchowski-Rockette paper: the method did not reject the null hypothesis even once in 2000 trials! Recall that with <span class="math inline">\(\alpha = 0.05\)</span> a valid test should reject the null hypothesis about <span class="math inline">\(100\pm20\)</span> times in 2000 trials. The author recalls (ca. 2004) telling Dr. Steve Hillis about this issue, and he suggested a different denominator degrees of freedom <em>ddf</em>, see next, substitution of which magically solved the problem, i.e., the simulations rejected the null hypothesis 5% of the time.</p></li>
 </ul>
+</div>
+<div id="Hills-ddf" class="section level3" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> Hillis ddf</h3>
+<p>Hillis’ proposed new <em>ddf</em> is shown below (<em>ndf</em> is unchanged), with the subscript <span class="math inline">\(H\)</span> denoting the Hillis modification:</p>
+<p><span class="math display" id="eq:ddfH">\[\begin{equation}
+\text{ddf}_H = \frac{\left [ MS(TR) + J \max(Cov_2-Cov_3,0)\right ]^2}{\frac{\left [ MS(TR) \right ]^2}{(I-1)(J-1)}}
+\tag{6.7}
+\end{equation}\]</span></p>
+<p>If <span class="math inline">\(Cov_2 &lt; Cov_3\)</span> (which is the <em>exact opposite</em> of the expected ordering, Eqn. <a href="ORAnalysisIntro.html#eq:CovOrderings">(5.32)</a>), this reduces to <span class="math inline">\((I-1)\times(J-1)\)</span>, the value originally proposed by Obuchowski and Rockette. With Hillis’ proposed changes, under the null hypothesis the observed statistic <span class="math inline">\(F_{ORH}\)</span>, defined in Eqn. <a href="ORAnalysisSigTesting.html#eq:F-OR-H">(6.2)</a>, is distributed as an F-statistic with <span class="math inline">\(\text{ndf} = I-1\)</span> and <em>ddf</em> <span class="math inline">\(= ddf_H\)</span> degrees of freedom <span class="citation">(Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>; Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>; Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span>:</p>
+<p><span class="math display" id="eq:SamplingDistr-F-OR-H">\[\begin{equation}
+F_{ORH}\sim F_{ndf,ddf_H}
+\tag{6.8}
+\end{equation}\]</span></p>
+<p>If the expected ordering is true, i.e., <span class="math inline">\(Cov_2 &gt; Cov_3\)</span> , which is the more likely situation, then <span class="math inline">\(ddf_H\)</span> is <em>larger</em> than <span class="math inline">\((I-1)\times(J-1)\)</span>, i.e., the Obuchowski-Rockette’s <em>ddf</em>, and the p-value decreases, i.e., there is a larger probability of rejecting the NH. The modified OR method is more likely to have the correct NH behavior, i.e, it will reject the NH 5% of the time when alpha is set to 0.05 (statisticians refer to this as “the 5% test”). This has been confirmed in simulation testing (<span class="citation">Hillis, Berbaum, and Metz (<a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span>).</p>
+</div>
+<div id="decision-rule-p-value-and-confidence-interval" class="section level3" number="6.2.3">
+<h3><span class="header-section-number">6.2.3</span> Decision rule, p-value and confidence interval</h3>
+<p>The critical value of the F-statistic for rejection of the null hypothesis is <span class="math inline">\(F_{1-\alpha,ndf,ddf_H}\)</span>, i.e., that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the area under the distribution lies to the left of the critical value. From definition Eqn. <a href="ORAnalysisSigTesting.html#eq:F-OR-H">(6.2)</a>:</p>
+<ul>
+<li><p>Rejection of the NH is more likely if <span class="math inline">\(MS(T)\)</span> increases, meaning the treatment effect is larger;</p></li>
+<li><p><span class="math inline">\(MS(TR)\)</span> is smaller meaning there is less contamination of the treatment effect by treatment-reader variability;</p></li>
+<li><p>The greater of <span class="math inline">\(Cov2\)</span> or <span class="math inline">\(Cov3\)</span>, which is usually <span class="math inline">\(Cov2\)</span>, decreases, meaning there is less “noise” in the measurement due to between-reader variability. Recall that <span class="math inline">\(Cov_2\)</span> involves different-reader same-treatment pairings.</p></li>
+<li><p><span class="math inline">\(\alpha\)</span> increases, meaning one is allowing a greater probability of Type I errors;</p></li>
+<li><p><span class="math inline">\(ndf\)</span> increases, meaning that with more treatment pairings, the chance that at least one pair will reject the NH is larger;</p></li>
+<li><p><span class="math inline">\(ddf_H\)</span> increases, as this lowers the critical value of the F-statistic.</p></li>
+</ul>
+<p>The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than <span class="math inline">\(F_{OR}\)</span> could be observed by chance. In other words, it is the area under the F-distribution <span class="math inline">\(F_{ndf,ddf_H}\)</span> that lies above the observed value <span class="math inline">\(F_{OR}\)</span>:</p>
+<p><span class="math display" id="eq:pValueORRRRC">\[\begin{equation}
+p=\Pr(F&gt;F_{OR} \mid F\sim F_{ndf,ddf_H})
+\tag{6.9}
+\end{equation}\]</span></p>
+<p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval for <span class="math inline">\(\theta_{i \bullet} - \theta_{i&#39; \bullet}\)</span> is given by (the average is over the reader index):</p>
+<p><span class="math display" id="eq:CIalpha-RRRC">\[\begin{equation}
+CI_{1-\alpha,RRRC}=\theta_{i \bullet} - \theta_{i&#39; \bullet} \pm t_{\alpha/2, ddf_H}\sqrt{\frac{2}{J}(MS(TR)+J\max(Cov_2-Cov_3,0))}
+\tag{6.10}
+\end{equation}\]</span></p>
+</div>
+</div>
+<div id="fixed-reader-random-case-frrc-analysis" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Fixed-reader random-case (FRRC) analysis</h2>
+<p>Using the Roe and Metz vertical bar notation <span class="math inline">\(\mid R\)</span> to denote that reader is regarded as a fixed effect <span class="citation">(Roe and Metz <a href="#ref-RN1124" role="doc-biblioref">1997</a>)</span>, the F -statistic for testing the null hypothesis <span class="math inline">\(NH: \tau_i = 0 \; (i=1,1,2,...I)\)</span> is <span class="citation">(Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>)</span>:</p>
+<p><span class="math display" id="eq:DefFStatFRRC">\[\begin{equation}
+F_{OR \mid R}=\frac{MS(T)}{Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0)}
+\tag{3.34}
+\end{equation}\]</span></p>
+<p><span class="math inline">\(F_{OR \mid R}\)</span> is distributed as an F-statistic with:</p>
+<p><span class="math display" id="eq:FStatFRRC">\[\begin{equation}
+\left.\begin{matrix}
+ndf=I-1\\ 
+ddf=\infty\\
+F_{OR \mid R} \sim F_{ndf,ddf}
+\end{matrix}\right\}
+\tag{4.1}
+\end{equation}\]</span></p>
+<p>Alternatively, as with Eqn. <a href="ORAnalysisIntro.html#eq:F-1RMT">(5.18)</a>,</p>
+<p><span class="math display">\[(I-1)F_{OR \mid R} \sim \chi^2_{I-1}\]</span>
+For <span class="math inline">\(J\)</span> = 1, Eqn. <a href="DBMAnalysisSigtesting.html#eq:DefFStatFRRC">(3.34)</a> reduces to Eqn. <a href="ORAnalysisIntro.html#eq:DefF-1RMT">(5.19)</a>.</p>
+<p>The critical value of the statistic is <span class="math inline">\(F_{1-\alpha,I-1,\infty}\)</span> which is that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the area under the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value, i.e.,:</p>
+<p><span class="math display">\[F_{OR \mid R}&gt;F_{1-\alpha,I-1,\infty}\]</span></p>
+<p>The p-value of the test is the probability that a random sample from the distribution <span class="math inline">\(F_{I-1,\infty}\)</span> exceeds the observed value of the F statistic defined in Eqn. <a href="DBMAnalysisSigtesting.html#eq:DefFStatFRRC">(3.34)</a>:</p>
+<p><span class="math display" id="eq:pValueaphaFRRC">\[\begin{equation}
+p=\Pr(F&gt;F_{OR \mid R} \mid F \sim F_{I-1,\infty})
+\tag{6.11}
+\end{equation}\]</span></p>
+<p>The <span class="math inline">\((1-\alpha)\)</span> (symmetric) confidence interval for the difference figure of merit is given by:</p>
+<p><span class="math display" id="eq:CIalphaFRRC">\[\begin{equation}
+CI_{1-\alpha,FRRC}=(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/2, \infty}\sqrt{\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
+\tag{6.12}
+\end{equation}\]</span></p>
+<p>The NH is rejected if any of the following equivalent conditions is met:</p>
+<ul>
+<li>The observed value of the F-statistic exceeds the critical value <span class="math inline">\(F_{1-\alpha,I-1,\infty}\)</span>.</li>
+<li>The p-value defined by Eqn. <a href="ORAnalysisSigTesting.html#eq:pValueaphaFRRC">(6.11)</a> is less than <span class="math inline">\(\alpha\)</span>.</li>
+<li>The <span class="math inline">\((1-\alpha)\)</span> confidence interval does not include zero.</li>
+</ul>
+<p>Notice that for J = 1, Eqn. <a href="ORAnalysisSigTesting.html#eq:CIalphaFRRC">(6.12)</a> reduces to Eqn. <a href="ORAnalysisIntro.html#eq:CIalpha1R">(5.23)</a>.</p>
+</div>
+<div id="random-reader-fixed-case-rrfc-analysis" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> Random-reader fixed-case (RRFC) analysis</h2>
+<p>When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis <span class="math inline">\(NH: \tau_i = 0 \; (i=1,1,2,...I)\)</span> is:</p>
+<p><span class="math display" id="eq:DefFStatRRFC">\[\begin{equation}
+F_{OR \mid C}=\frac{MS(T)}{MS(TR)}
+\tag{6.13}
+\end{equation}\]</span></p>
+<p><span class="math inline">\(F_{OR \mid C}\)</span> is distributed as an F-statistic with:</p>
+<p><span class="math display" id="eq:FStatRRFC">\[\begin{equation}
+\left.\begin{matrix}
+ndf=I-1\\ 
+ddf=(I-1)(J-1)\\
+F_{OR \mid C} \sim F_{ndf,ddf}
+\end{matrix}\right\}
+\tag{4.6}
+\end{equation}\]</span></p>
+<p>The critical value of the statistic is <span class="math inline">\(F_{1-\alpha,I-1,(I-1)(J-1)}\)</span>, which is that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:</p>
+<p><span class="math display">\[F_{OR \mid C}&gt;F_{1-\alpha,I-1,(I-1)(J-1)}\]</span></p>
+<p>The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:</p>
+<p><span class="math display">\[p=\Pr(F&gt;F_{OR \mid C} \mid F \sim F_{1-\alpha,I-1,(I-1)(J-1)})\]</span></p>
+<p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval is given by:</p>
+<p><span class="math display" id="eq:CIalphaRRFC">\[\begin{equation}
+CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/2, (I-1)(J-1)}\sqrt{\frac{2}{J}MS(TR)}
+\tag{6.14}
+\end{equation}\]</span></p>
+</div>
+<div id="discussionsummary" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> Discussion/Summary</h2>
+</div>
+<div id="references" class="section level2" number="6.6">
+<h2><span class="header-section-number">6.6</span> References</h2>
+
+</div>
+</div>
+<h3>REFERENCES</h3>
+<div id="refs" class="references">
+<div id="ref-RN204">
+<p>Dorfman, D. D., K. S. Berbaum, and C. E. Metz. 1992. “ROC Characteristic Rating Analysis: Generalization to the Population of Readers and Patients with the Jackknife Method.” Journal Article. <em>Invest. Radiol.</em> 27 (9): 723–31.</p>
+</div>
+<div id="ref-RN1395">
+<p>Hajian-Tilaki, K. O., James A. Hanley, L. Joseph, and J. P. Collet. 1997. “Extension of Receiver Operating Characteristic Analysis to Data Concerning Multiple Signal Detection Tasks.” Journal Article. <em>Acad Radiol</em> 4: 222–29.</p>
+</div>
+<div id="ref-RN1772">
+<p>Hillis, S. L., N. A. Obuchowski, K. M. Schartz, and K. S. Berbaum. 2005. “A Comparison of the Dorfman-Berbaum-Metz and Obuchowski-Rockette Methods for Receiver Operating Characteristic (Roc) Data.” Journal Article. <em>Statistics in Medicine</em> 24 (10): 1579–1607.</p>
+</div>
+<div id="ref-RN1865">
+<p>Hillis, Stephen L. 2007. “A Comparison of Denominator Degrees of Freedom Methods for Multiple Observer Roc Studies.” Journal Article. <em>Statistics in Medicine</em> 26: 596–619.</p>
+</div>
+<div id="ref-RN2508">
+<p>Hillis, Stephen L. 2014. “A Marginal‐mean Anova Approach for Analyzing Multireader Multicase Radiological Imaging Data.” Journal Article. <em>Statistics in Medicine</em> 33 (2): 330–60.</p>
+</div>
+<div id="ref-RN1866">
+<p>Hillis, Stephen L., K. S. Berbaum, and C. E. Metz. 2008. “Recent Developments in the Dorfman-Berbaum-Metz Procedure for Multireader Roc Study Analysis.” Journal Article. <em>Acad Radiol</em> 15 (5): 647–61.</p>
+</div>
+<div id="ref-RN1971">
+<p>Obuchowski, Nancy A. 1998. “Sample Size Calculations in Studies of Test Accuracy.” Journal Article. <em>Statistical Methods in Medical Research</em> 7 (4): 371–92. <a href="https://doi.org/10.1177/096228029800700405">https://doi.org/10.1177/096228029800700405</a>.</p>
+</div>
+<div id="ref-RN1972">
+<p>Obuchowski, Nancy A. 2000. “Sample Size Tables for Receiver Operating Characteristic Studies.” Journal Article. <em>Am. J. Roentgenol.</em> 175 (3): 603–8. <a href="http://www.ajronline.org/cgi/content/abstract/175/3/603">http://www.ajronline.org/cgi/content/abstract/175/3/603</a>.</p>
+</div>
+<div id="ref-RN1450">
+<p>Obuchowski, N. A., and H. E. Rockette. 1995. “Hypothesis Testing of the Diagnostic Accuracy for Multiple Diagnostic Tests: An Anova Approach with Dependent Observations.” Journal Article. <em>Communications in Statistics: Simulation and Computation</em> 24: 285–308.</p>
+</div>
+<div id="ref-RN1124">
+<p>Roe, C. A., and C. E. Metz. 1997. “Variance-Component Modeling in the Analysis of Receiver Operating Characteristic Index Estimates.” Journal Article. <em>Acad. Radiol.</em> 4 (8): 587–600.</p>
+</div>
+<div id="ref-zhou2009statistical">
+<p>Zhou, Xiao-Hua, Donna K McClish, and Nancy A Obuchowski. 2009. <em>Statistical Methods in Diagnostic Medicine</em>. Vol. 569. John Wiley &amp; Sons.</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="a-note-on-the-online-distribution-mechanism-of-the-book.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="is-this-book-relevant-to-you-and-what-are-the-alternatives.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="ORAnalysisIntro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ORAnalysisCodingExamples.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

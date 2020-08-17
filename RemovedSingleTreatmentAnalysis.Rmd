@@ -1,0 +1,108 @@
+---
+title: "SingleTreatmentAnalysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Single-treatment multiple-reader analysis
+Suppose one has data in a single treatment $i$ and multiple readers are involved. One wishes to determine if the performance of the readers as a group equals some specified value. *Since only a single treatment is involved, an implicit $i$ dependence, in subsequent formulae, is ignored.*
+
+In Eqn. \@ref(OR1RMTModel) single-reader multiple-treatment analysis was described. It is not identical to single-treatment multiple-reader analysis. Treatment is a fixed factor while reader is a random factor. Therefore, one cannot simply use the previous analysis with reader and treatment interchanged (a graduate student tried to do just that, and he is quite smart, hence the reason for this warning). 
+
+In the analysis described in this section reader is regarded as a random effect. The average performance of the readers is estimated and compared to a specified value. Hillis has described the appropriate modifications. [TBA Two approaches are described, one using the DBM pseudovalue based model and the other based on the OR model with appropriate modification. The second approach is summarized below. TBA]
+
+For single-treatment multiple-reader OR analysis, the figure of merit model is (contrast the following equation to Eqn. \@ref(eq:ORModel1RMT) noting the absence of an $i$ index. If multiple modalities are present the current analysis is applicable to data in each treatment analyzed one at a time): 
+
+\begin{equation}
+\theta_{j\{c\}}=\mu+R_j+\epsilon_{j\{c\}}
+(\#eq:OrModel1T)
+\end{equation}
+
+One wishes to test the NH: $\mu=\mu_0$ where $\mu_0$ is some pre-specified value. (since $C$ = 1, in the interest of brevity one can suppress the $c$ index):
+
+\begin{equation}
+\mu=\theta_{\bullet}
+(\#eq:OrModel1REstmu)
+\end{equation}
+
+The variance of the reader-averaged FOM can be shown [@RN1450] to be given by (the reference is to the original OR publication, specifically Eqn. 2.3):
+
+\begin{equation}
+\sigma_{\theta_{\bullet}}^{2}=\frac{1}{J}(\sigma_{R}^{2}+Var+(J-1)Cov_2)
+(\#eq:VarThetaiDot)
+\end{equation}
+
+Rather than attempting to derive the preceding equation, it is shown how it follows from the existing literature [@RN1450]. For convenience Eqn. 2.3 in cited reference is reproduced below.
+
+\begin{equation}
+Var(\theta_{i \bullet \bullet}) =\frac{1}{J}(\sigma_{b}^{2}+\sigma_{ab}^{2}+(\sigma_{w}^{2}/K) + \sigma_{c}^{2}(1+J(J-1)r_2))
+(\#eq:VarThetaiDotDot)
+\end{equation}
+
+In the OR notation, the FOM has three indices, $\theta_{ijk}$. One deletes the $i$ index as one is dealing with a single treatment and one can drop the average over the $k$ index, as one is dealing with a single dataset; $\sigma_{b}^{2}$ in the OR notation is what we are calling $\sigma_{R}^{2}$; for single treatment the treatment-reader interaction term $\sigma_{ab}^{2}$ is absent; and for single "replication" the term $\sigma_{w}^{2}/K$ (in OR notation $K$ is the number of replications) is absent, or, more accurately, the within-reader variance $\sigma_{w}^{2}$ is absorbed into the case sampling variance $\sigma_{c}^{2}$ as the two are inseparable); the term $\sigma_{\epsilon}^{2}$ is what we are calling $Var$; and $\sigma_{c}^{2}r_2$ in OR paper is what we are calling $Cov_2$.
+
+One needs to replace $\sigma_{R}^{2}$ in Eqn. \@ref(eq:VarThetaDot) with an expected value. Again, rather than attempt to derive the following equation, it is shown how it follows from the existing literature [@RN2508]. We start with Table I ibid: this is a table of expected means squares for the OR model, analogous to the expected mean squares table in Chapter 09, for the DBM model. For a single treatment (in the notation of the cited reference, $t$ = 1 and the treatment-reader variance component goes away and the term $\sigma_{\epsilon}^{2}$ is what we are calling $Var$), it follows that:
+
+$$E(MS(R))=\sigma_{R}^{2}+Var=Cov_2$$
+
+Substituting this equation in Eqn. \@ref(eq:VarThetaDot) yields,
+
+\begin{equation}
+\sigma_{\theta_{\bullet}}^{2}=\frac{1}{J}(E(MS(R))+JCov_2)
+(\#eq:VarThetaDot)
+\end{equation}
+
+An estimate of $MS(R)$ is given by (from here on it is understood that $MSR$ is an estimate defined by:
+
+\begin{equation}
+MS(R)=\frac{1}{J-1}\sum_{j=1}^{J}(\theta_j - \theta_{\bullet})^2
+(\#eq:EstMsR1T)
+\end{equation}
+
+Replacing the expected mean-square value with the estimate and avoiding negative covariance, which could lead to a negative variance estimate, one has:
+
+\begin{equation}
+\sigma_{\theta_{\bullet}}^{2}=\frac{1}{J}(MS(R)+J\max(Cov_2,0))
+(\#eq:EstVarThetaDot)
+\end{equation}
+
+The observed value of the t-statistic for testing the NH is $t_{1T}$ (the supbscript means that this statistic applies to single treatment analysis): 
+
+\begin{equation}
+t_{1T}=\frac{\mu-\mu_0}{\sigma_{\theta_{\bullet}}}=(\theta_{\bullet}-\mu_0)\sqrt{\frac{J}{(MS(R)+J\max(Cov_2,0)}}
+(\#eq:DefTStat1T)
+\end{equation}
+
+This is distributed as a t-statistic with $df_{H}^{I=1}$ degrees of freedom: 
+
+\begin{equation}
+t_{1T} \sim t_{df_{H}^{1T}}
+(\#eq:DistTStat1T)
+\end{equation}
+
+In the above equation, Hillis single-treatment degree of freedom $t_{df_{H}^{1T}}$ is defined by [@RN2508]:
+
+\begin{equation}
+df_{H}^{1T}=(J-1)\left [\frac{MS(R)+J \max(Cov_2,0)}{MS(R)} \right ]^2
+(\#eq:DefdfHI1)
+\end{equation}
+
+The p-value of the test is the probability that the a random sample from the specified t-distribution exceeds the magnitude of the observed value:
+
+\begin{equation}
+p=\Pr(t>\left | t \right |\mid t \sim t_{df_{H}^{1T}})
+(\#eq:pValue1T)
+\end{equation}
+
+Therefore, a $100 \times (1-\alpha)$ percent confidence interval for $\theta_{\bullet}-\mu_0$ is:
+
+\begin{equation}
+\theta_{\bullet}-\mu_0 \pm t_{\alpha/2,df_{H}^{1T}} \sqrt{ \frac{MS(R)+\max(Cov_2,0)}{J}}
+(\#eq:CIalpha1T)
+\end{equation}
+
+The single treatment method is implemented in mainSingleTreatment.R. The relevant code is listed in Online Appendix 10.F. Source the code to get the following output.
+

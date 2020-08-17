@@ -3,37 +3,28 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Significance Testing using the Dorfman Berbaum Metz (DBM) Method {#DBMAnalysisSigtesting}
+# Significance Testing using the DBM Method {#DBMAnalysisSigtesting}
+DBM = Dorfman Berbaum Metz
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-library(kableExtra)
-library(ggplot2)
-library(RJafroc)
-library(here)
-```
 
-## The Dorfman-Berbaum-Metz (DBM) sampling model
+## The DBM sampling model
 The figure-of-merit has three indices:  
-1. A treatment index $i$, where $i$ runs from 1 to $I$, where $I$ is the total number of treatments.  
-2. A reader index $j$, where $j$ runs from 1 to $J$, where $J$ is the total number of readers.  
-3. The often-suppressed case-sample index $\{c\}$, where  $\{1\}$  i.e., $c$ = 1, denotes a set of cases,   $K_1$ non-diseased and $K_2$ diseased, interpreted by all readers in all treatments, and other integer values of $c$ correspond to other independent sets of cases that, although not in fact interpreted by the readers, could potentially be “interpreted” using resampling methods such as the bootstrap or the jackknife. 
+* A treatment index $i$, where $i$ runs from 1 to $I$, where $I$ is the total number of treatments.  
+* A reader index $j$, where $j$ runs from 1 to $J$, where $J$ is the total number of readers.  
+* The case-sample index $\{c\}$, where  $\{1\}$  i.e., $c$ = 1, denotes a set of cases, $K_1$ non-diseased and $K_2$ diseased, interpreted by all readers in all treatments, and other integer values of $c$ correspond to other independent sets of cases that, although not in fact interpreted by the readers, could potentially be “interpreted” using resampling methods such as the bootstrap or the jackknife. 
 
 The approach [@RN204] taken by DBM was to use the jackknife resampling method to calculate FOM pseudovalues ${Y'}_{ijk}$ defined by (the reason for the prime will become clear shortly):
 
 \begin{equation}
-Y'_{ijk}=K\theta_{ij}-(K-1)\theta_{ij\{k\}}
+Y'_{ijk}=K\theta_{ij}-(K-1)\theta_{ij(k)}
 (\#eq:pseudoValPrime)
 \end{equation}
 
-Here $\theta_{ij}$ is the estimate of the figure-of-merit for reader $j$ interpreting all cases in treatment $i$ and $\theta_{ij\{k\}}$ is the corresponding figure of merit with case $k$ *deleted* from the analysis. To adhere to convention and to keep the notation simple the case-sample index $\{1\}$ on every figure of merit symbol is suppressed (it will be needed later in connection with the Obuchowski-Rockette method). 
+Here $\theta_{ij}$ is the estimate of the figure-of-merit for reader $j$ interpreting all cases in treatment $i$ and $\theta_{ij(k)}$ is the corresponding figure of merit with case $k$ *deleted* from the analysis. To keep the notation compact the case-sample index $\{1\}$ on every figure of merit symbol is suppressed. 
 
-Recall from book Chapter 07 that the jackknife is a way of teasing out the case-dependence: the left hand side of Equation  \@ref(eq:pseudoValPrime) literally has a case index $k$, with $k$ running from 1 to $K$, where $K$ is the total number of cases:  $K=K_1+K_2$. 
+Recall from book Chapter 07 that the jackknife is a way of teasing out the case-dependence: the left hand side of Equation  \@ref(eq:pseudoValPrime) has a case index $k$, with $k$ running from 1 to $K$, where $K$ is the total number of cases:  $K=K_1+K_2$. 
 
-Hillis et al [@RN1866] proposed a centering transformation on the pseudovalues (termed "normalized" pseudovalues, but to me "centering" is a more accurate and descriptive term - *Normalize: (In mathematics) multiply (a series, function, or item of data) by a factor that makes the norm or some associated quantity such as an integral equal to a desired value (usually 1). New Oxford American Dictionary, 2016*):
+Hillis et al [@RN1866] proposed a centering transformation on the pseudovalues (he terms it "normalized" pseudovalues, but to me "centering" is a more accurate and descriptive term - *Normalize: (In mathematics) multiply (a series, function, or item of data) by a factor that makes the norm or some associated quantity such as an integral equal to a desired value (usually 1). New Oxford American Dictionary, 2016*):
 
 \begin{equation}
 Y_{ijk}=Y'_{ijk}+\left (\theta_{ij} - Y'_{ij\bullet}  \right )
@@ -49,7 +40,9 @@ Y_{ij\bullet}=Y'_{ij\bullet}+\left (\theta_{ij} - Y'_{ij\bullet}  \right )=\thet
 (\#eq:EffectOfCentering)
 \end{equation}
 
-This has the advantage that all confidence intervals are properly centered. The transformation is unnecessary if one uses the Wilcoxon as the figure-of-merit, as the pseudovalues calculated using the Wilcoxon as the figure of merit are automatically centered (it is left as an exercise for the reader to show that this statement is true).
+This has the advantage that all confidence intervals are properly centered. The transformation is unnecessary if one uses the Wilcoxon as the figure-of-merit, as the pseudovalues calculated using the Wilcoxon as the figure of merit are "naturally" centered, i.e.,
+
+$\theta_{ij} - Y'_{ij\bullet} = 0$
 
 *It is understood that, unless explicitly stated otherwise, all calculations from now on will use centered pseudovalues.*
 
@@ -67,9 +60,11 @@ The term $\mu$ is a constant. By definition, the treatment effect $\tau_i$  is s
 (\#eq:constraintTau)
 \end{equation}
 
-It is shown below, TBA \@ref(eq:pseudoValPrime), that this constraint ensures that $\mu$  has the interpretation as the average of the pseudovalues over treatments, readers, cases and replications, if any. 
+This constraint ensures that $\mu$ has the interpretation of the average of the pseudovalues over treatments, readers and cases. 
 
-The notation for the replication index, i.e., $n(ijk)$, implies $n$ observations for treatment-reader-case combination $ijk$. With no replications ($N$ = 1) it is convenient to omit the n-symbol. As an example, the parameter $\tau_i$ is readily estimated as follows: 
+The (nesting) notation for the replication index, i.e., $n(ijk)$, implies $n$ observations for treatment-reader-case combination $ijk$. With no replications ($N$ = 1) it is convenient to omit the n-symbol.
+
+The parameter $\tau_i$ is estimated as follows: 
 
 \begin{equation}
 Y_{ijk} \equiv Y_{1(ijk)}\\
@@ -77,14 +72,14 @@ Y_{ijk} \equiv Y_{1(ijk)}\\
 (\#eq:estimatingTau)
 \end{equation}
 
-*The basic assumption of the DBM model, TBA \@ref(eq:pseudoValPrime), is that the pseudovalues can be regarded as independent and identically distributed observations. That being the case, the pseudovalues can be analyzed by standard ANOVA techniques.*
+*The basic assumption of the DBM model is that the pseudovalues can be regarded as independent and identically distributed observations. That being the case, the pseudovalues can be analyzed by standard ANOVA techniques.* Since pseduovalues are computed from a common dataset, this assumption is, non-intuitive. However, for the special case of Wilcoxon figure of merit, it is justified.
 
 ### Explanation of terms in the model 
-The right hand side of TBA \@ref(eq:pseudoValPrime) consists of one fixed and 7 random effects. The current analysis assumes readers and cases as random factors (RRRC), so by definition $R_j$ and $C_k$ are random effects, and moreover, any term that includes a random factor is a random effect; for example, $(\tau R)_{ij}$ is a random effect because it includes the $R$ factor. Here is a list of the random terms: 
+The right hand side of Eqn. \@ref(eq:pseudoValPrime) consists of one fixed and 7 random effects. The current analysis assumes readers and cases as random factors (RRRC), so by definition $R_j$ and $C_k$ are random effects, and moreover, any term that includes a random factor is a random effect; for example, $(\tau R)_{ij}$ is a random effect because it includes the $R$ factor. Here is a list of the random terms: 
 
 \begin{equation}
 R_j, C_k, (\tau R)_{ij}, (\tau C)_{ik}, (RC)_{jk},  (\tau RC)_{ijk},  \epsilon_{ijk}
-(\#eq:termsInDbmModel)
+(\#eq:DBMRandomTerms)
 \end{equation}
 
 
@@ -103,7 +98,7 @@ C_k \sim N\left ( 0,\sigma_{C}^{2} \right )\\
 (\#eq:samplingOfDbmTerms)
 \end{equation}
 
-Equation \@ref(eq:samplingOfDbmTerms) defines the meanings of the variance components appearing in Equation \@ref(eq:termsInDbmModel). One could have placed a $Y$ subscript (or superscript) on each of the variances, as they describe fluctuations of the pseudovalues, not FOM values. However, this tends to clutter the notation. So here is the convention:
+Equation \@ref(eq:samplingOfDbmTerms) defines the meanings of the variance components appearing in Equation \@ref(eq:DBMRandomTerms). One could have placed a $Y$ subscript (or superscript) on each of the variances, as they describe fluctuations of the pseudovalues, not FOM values. However, this tends to clutter the notation. So here is the convention:
 
 **Unless explicitly stated otherwise, all variance symbols in this chapter refer to pseudovalues. ** 
 Another convention: $(\tau R)_{ij}$ is *not* the product of the treatment and reader factors, rather it is a single factor, namely the treatment-reader factor with $IJ$ levels, subscripted by the index $ij$ and similarly for the other product-like terms in Equation \@ref(eq:samplingOfDbmTerms).
@@ -195,7 +190,8 @@ Both readers and cases are regarded as random factors. The expected mean squares
 
 * The first line computes the pseudovalues using the `RJafroc` function `UtilPseudoValues()`, and the second line extracts the numbers of treatments, readers and cases. The following lines calculate, using Equation \@ref(eq:MeanSquares) the mean-squares. After displaying the results of the calculation, the results are compared to those calculated by the `RJafroc` function `UtilMeanSquares()`.
 
-```{r}
+
+```r
 Y <- UtilPseudoValues(dataset02, FOM = "Wilcoxon")$jkPseudoValues
 
 I <- dim(Y)[1];J <- dim(Y)[2];K <- dim(Y)[3]
@@ -264,8 +260,12 @@ for (i in 1:I) {
 msTRC <- msTRC/((I - 1) * (J - 1) * (K - 1))
 
 data.frame("msT" = msT, "msR" = msR, "msC" = msC, "msTR" = msTR, "msTC" = msTC, "msRC" = msRC, "msTRC" = msTRC)
+#>         msT       msR       msC       msTR       msTC       msRC     msTRC
+#> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
 
 as.data.frame(UtilMeanSquares(dataset02)[1:7])
+#>         msT       msR       msC       msTR       msTC       msRC     msTRC
+#> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
 ```
 
 ### Significance testing
@@ -413,7 +413,8 @@ For more than two treatments the first two rules are equivalent and if a signifi
 #### Code illustrating the F-statistic, ddf and p-value for RRRC analysis, Van Dyke data
 Line 1 defines $\alpha$. Line 2 forms a data frame from previously calculated mean-squares. Line 3 calculates the denominator appearing in Equation \@ref(eq:FStatHillis). Line 4 computes the observed value of $F_{DBM}$, namely the ratio of the numerator and denominator in Equation \@ref(eq:FStatHillis). Line 5 sets $\text{ndf}$ to $I - 1$. Line 6 computes $\text{ddf}_H$. Line 7 computes the critical value of the F-distribution $F_{crit}\equiv F_{\text{ndf},\text{ddf}_H}$. Line 8 calculates the p-value, using the definition Equation \@ref(eq:pValueRRRC). Line 9 prints out the just calculated quantities. The next line uses the `RJafroc` function `StSignificanceTesting()` and the 2nd last line prints out corresponding `RJafroc`-computed quantities. Note the correspondences between the values just computed and those provide by `RJafroc`. Note that the FOM difference is not significant at the 5% level of significance as $p > \alpha$. The last line shows that $F_{DBM}$ does not exceed $F_{crit}$. The two rules are equivalent.
 
-```{r}
+
+```r
 alpha <- 0.05
 retMS <- data.frame("msT" = msT, "msR" = msR, "msC" = msC, "msTR" = msTR, "msTC" = msTC, "msRC" = msRC, "msTRC" = msTRC)
 F_DBM_den <- retMS$msTR+max(retMS$msTC - retMS$msTRC,0) 
@@ -423,16 +424,22 @@ ddf_H <- (F_DBM_den^2/retMS$msTR^2)*(I-1)*(J-1)
 FCrit <- qf(1 - alpha, ndf, ddf_H)
 pValueH <- 1 - pf(F_DBM, ndf, ddf_H)
 data.frame("F_DBM" = F_DBM, "ddf_H"= ddf_H, "pValueH" = pValueH) # Line 9
+#>      F_DBM    ddf_H    pValueH
+#> 1 4.456319 15.25967 0.05166569
 retRJafroc <- StSignificanceTesting(dataset02, FOM = "Wilcoxon", method = "DBM")
 data.frame("F_DBM" = retRJafroc$RRRC$FTests$FStat[1], 
            "ddf_H"= retRJafroc$RRRC$FTests$DF[2], 
            "pValueH" = retRJafroc$RRRC$FTests$p[1])
+#>       F_DBM     ddf_H     pValueH
+#> 1 4.4563187 15.259675 0.051665686
 F_DBM > FCrit
+#> [1] FALSE
 ```
 
 #### Code illustrating the inter-treatment confidence interval for RRRC analysis, Van Dyke data
 Line 1 computes the FOM matrix using function `UtilFigureOfMerit`. The next 9 lines compute the treatment FOM differences. The next line `nDiffs` (for "number of differences") evaluates to 1, as with two treatments, there is only one difference. The next line initializes `CI_DIFF_FOM_RRRC`, which stands for "confidence intervals, FOM differences, for RRRC analysis". The next 8 lines evaluate, using Equation \@ref(eq:confIntervalRRRC), and prints the lower value, the mid-point and the upper value of the confidence interval. Finally, these values are compared to those yielded by `RJafroc`. The FOM difference is not significant, whether viewed from the point of view of the F-statistic not exceeding the critical value, the observed p-value being larger than alpha or the 95% CI for the FOM difference including zero. 
-```{r}
+
+```r
 theta <- as.matrix(UtilFigureOfMerit(dataset02, FOM = "Wilcoxon"))
 theta_i_dot <- array(dim = I)
 for (i in 1:I) theta_i_dot[i] <- mean(theta[i,])
@@ -453,9 +460,13 @@ for (i in 1 : nDiffs) {
                    "Mid" = CI_DIFF_FOM_RRRC[i,2], 
                    "Upper" = CI_DIFF_FOM_RRRC[i,3]))
 }
+#>          Lower          Mid         Upper
+#> 1 -0.087959499 -0.043800322 0.00035885444
 data.frame("Lower" = retRJafroc$RRRC$ciDiffTrt[1,"CILower"], 
            "Mid" = retRJafroc$RRRC$ciDiffTrt[1,"Estimate"], 
            "Upper" = retRJafroc$RRRC$ciDiffTrt[1,"CIUpper"])
+#>          Lower          Mid         Upper
+#> 1 -0.087959499 -0.043800322 0.00035885444
 ```
 
 
@@ -541,7 +552,8 @@ df_2 = \frac{(\max(\sigma_{\tau R}^2,0)+(\max(J\sigma_{\tau C}^2,0)+\sigma_{\eps
 ### Example of sample size estimation, RRRC generalization
 The Van Dyke dataset is regarded as a pilot study. In the first block of code function `StSignificanceTesting()` is used to get the DBM variances (i.e., `VarTR` = $\sigma_{\tau R}^2$, etc.) and the effect size $d$. 
 
-```{r}
+
+```r
 rocData <- dataset02 # select Van Dyke dataset
 retDbm <- StSignificanceTesting(dataset = rocData, FOM = "Wilcoxon", method = "DBM") 
 VarTR <- retDbm$ANOVA$VarCom["VarTR","Estimates"]
@@ -550,9 +562,10 @@ VarErr <- retDbm$ANOVA$VarCom["VarErr","Estimates"]
 d <- retDbm$FOMs$trtMeanDiffs["trt0-trt1","Estimate"]
 ```
 
-The observed effect size is `r d`. The sign is negative as the reader-averaged second modality has greater FOM than the first. The next code block shows implementation of the RRRC formulae just presented. The values of $J$ and $K$ were preselected to achieve 80% power, as verified from the final line of the output. 
+The observed effect size is -0.04380032. The sign is negative as the reader-averaged second modality has greater FOM than the first. The next code block shows implementation of the RRRC formulae just presented. The values of $J$ and $K$ were preselected to achieve 80% power, as verified from the final line of the output. 
 
-```{r}
+
+```r
 #RRRC
 J <- 10; K <- 163
 den <- max(VarTR, 0) + (VarErr + J * max(VarTC, 0)) / K 
@@ -561,6 +574,8 @@ df2 <- den^2 * (J - 1) / (max(VarTR, 0) + VarErr / K)^2
 fvalueRRRC <- qf(1 - alpha, 1, df2)
 Power <- 1-pf(fvalueRRRC, 1, df2, ncp = deltaRRRC)
 data.frame("J"= J,  "K" = K, "fvalueRRRC" = fvalueRRRC, "df2" = df2, "deltaRRRC" = deltaRRRC, "PowerRRRC" = Power)
+#>    J   K fvalueRRRC       df2 deltaRRRC  PowerRRRC
+#> 1 10 163  3.9930236 63.137871 8.1269825 0.80156249
 ```
 
 ## Significance testing and sample size estimation for fixed-reader random-case generalization
@@ -580,7 +595,8 @@ The NH is rejected if the observed value of $F$ exceeds the critical value defin
 
 These equations are coded in the following code-chunk:
 
-```{r}
+
+```r
 #FRRC
 # set VarTC = 0 in RRRC formulae
 J <- 10; K <- 133
@@ -590,6 +606,8 @@ df2FRRC <- K - 1
 fvalueFRRC <- qf(1 - alpha, 1, df2FRRC)
 powerFRRC <- pf(fvalueFRRC, 1, df2FRRC, ncp = deltaFRRC, FALSE)
 data.frame("J"= J,  "K" = K, "fvalueFRRC" = fvalueFRRC, "df2" = df2FRRC, "deltaFRRC" = deltaFRRC, "powerFRRC" = powerFRRC)
+#>    J   K fvalueFRRC df2 deltaFRRC  powerFRRC
+#> 1 10 133   3.912875 132 7.9873835 0.80111671
 ```
 
 ## Significance testing and sample size estimation for random-reader fixed-case generalization
@@ -609,7 +627,8 @@ The NH is rejected if the observed value of $F$ exceeds the critical value defin
 
 These equations are coded in the following code-chunk:
 
-```{r}
+
+```r
 #RRFC
 # set VarTR = 0 in RRRC formulae
 J <- 10; K <- 53
@@ -619,6 +638,8 @@ df2RRFC <- J - 1
 fvalueRRFC <- qf(1 - alpha, 1, df2RRFC)
 powerRRFC <- pf(fvalueRRFC, 1, df2RRFC, ncp = deltaRRFC, FALSE)
 data.frame("J"= J,  "K" = K, "fvalueRRFC" = fvalueRRFC, "df2" = df2RRFC, "deltaRRFC" = deltaRRFC, "powerRRFC" = powerRRFC)
+#>    J  K fvalueRRFC df2 deltaRRFC  powerRRFC
+#> 1 10 53   5.117355   9 10.048716 0.80496663
 ```
 
 It is evident that for this dataset, for 10 readers, the numbers of cases needed for 80% power is largest (163) for RRRC and least for RRFC (53). For all three analyses, the expectation of 80% power is met - the numbers of cases and readers were deliberately chosen to achieve close to 80% statistical power.  
