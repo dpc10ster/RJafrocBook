@@ -157,10 +157,13 @@ for (trial in 1:length(reject)) {
 
 CI <- c(0,0); width <- -qnorm(alpha/2)
 ObsvdTypeIErrRate <- sum(reject)/length(reject)
-CI[1] <- ObsvdTypeIErrRate - width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/nTrials)
-CI[2] <- ObsvdTypeIErrRate + width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/nTrials)
+CI[1] <- ObsvdTypeIErrRate - 
+  width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/nTrials)
+CI[2] <- ObsvdTypeIErrRate + 
+  width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/nTrials)
 cat("alpha = ", alpha, "\n")
-cat("ObsvdTypeIErrRate = ", ObsvdTypeIErrRate, ", 95% confidence interval = ", CI, "\n")
+cat("ObsvdTypeIErrRate = ", ObsvdTypeIErrRate, "\n")
+cat("95% confidence interval = ", CI, "\n")
 exact <- binom.test(sum(reject),n = 2000,p = alpha)
 cat("exact 95% CI = ", as.numeric(exact$conf.int), "\n")
 ```             
@@ -242,7 +245,8 @@ sigmaAUC <- sqrt(var(AUC));meanAUC <- mean(AUC) # Line 14
 T <- 2000  # Line 16
 mu <- c(muNH,muAH) # Line 17
 alphaArr <- seq(0.05, 0.95, length.out = 10)
-EmpAlpha <- array(dim = length(alphaArr));EmpPower <- array(dim = length(alphaArr))
+EmpAlpha <- array(dim = length(alphaArr))
+EmpPower <- array(dim = length(alphaArr))
 for (a in 1:length(alphaArr)) { # Line 20
   alpha <- alphaArr[a] 
   reject <- array(0, dim = c(2, T))
@@ -263,8 +267,11 @@ EmpAlpha <- c(0,EmpAlpha,1); EmpPower <- c(0,EmpPower,1) # Line 19
 pointData <- data.frame(EmpAlpha = EmpAlpha, EmpPower = EmpPower)
 zetas <- seq(-5, 5, by = 0.01)
 muRoc <- 1.8
-curveData <- data.frame(EmpAlpha = pnorm(-zetas), EmpPower = pnorm(muRoc - zetas))
-alphaPowerPlot <- ggplot(mapping = aes(x = EmpAlpha, y = EmpPower)) + geom_point(data = pointData, shape = 1, size = 3) + geom_line(data = curveData)
+curveData <- data.frame(EmpAlpha = pnorm(-zetas),
+  EmpPower = pnorm(muRoc - zetas))
+alphaPowerPlot <- ggplot(mapping = aes(x = EmpAlpha, y = EmpPower)) + 
+  geom_point(data = pointData, shape = 1, size = 3) + 
+  geom_line(data = curveData)
 print(alphaPowerPlot)
 ```
 
@@ -314,8 +321,10 @@ for (t in 1:length(reject)) {
 
 ObsvdTypeIErrRate <- sum(reject)/length(reject)
 CI <- c(0,0);width <- -qnorm(alpha/2)
-CI[1] <- ObsvdTypeIErrRate - width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/T)
-CI[2] <- ObsvdTypeIErrRate + width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/T)
+CI[1] <- ObsvdTypeIErrRate - 
+  width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/T)
+CI[2] <- ObsvdTypeIErrRate + 
+  width*sqrt(ObsvdTypeIErrRate*(1-ObsvdTypeIErrRate)/T)
 cat("obsvdPower = ", ObsvdTypeIErrRate, "\n")
 cat("95% confidence interval = ", CI, "\n")
 cat("Effect Size = ", EffectSize(mu, sigma, muAH, sigma), "\n")
