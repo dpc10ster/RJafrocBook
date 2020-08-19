@@ -18,8 +18,6 @@ Multiple readers interpreting a case-set in multiple treatments is analyzed and 
 
 Before proceeding, it is understood that datasets analyzed in this chapter follow a _factorial_ design, sometimes call fully-factorial or fully-crossed design. Basically, the data structure is symmetric, e.g., all readers interpret all cases in all modalities. The next chapter will describe the analysis of _split-plot_ datasets, where, for example, some readers interpret all cases in one modality, while the remaining readers interpret all cases in the other modality.
 
-
-
 ## Random-reader random-case (RRRC) analysis {#OR_RRRC}
 In conventional ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented in the DBM model by the scalar $\epsilon$ term. Because of the correlated structure of the error term, in OR analysis, a customized ANOVA is needed. The null hypothesis (NH) is that the true figures-of-merit of all treatments are identical, i.e., 
 
@@ -70,7 +68,7 @@ The original degrees of freedom were defined by:
 (\#eq:ORdegreesOfFreedom)
 \end{equation}
 
-Their test statistic turns out to be very conservative, meaning it is highly biased against rejecting the null hypothesis. Because of this the predicted sample sizes tended to be quite large. In this connection I have two informative anecdotes.
+It turns out that the Obuchowski-Rockette test statistic is very conservative, meaning it is highly biased against rejecting the null hypothesis (the data simulator used in their validation did not detect this behavior). Because of this the predicted sample sizes tended to be quite large. In this connection I have two informative anecdotes.
 
 ### Two anecdotes {#TwoAnecdotes}
 
@@ -106,7 +104,7 @@ The critical value of the F-statistic for rejection of the null hypothesis is $F
 
 * $\alpha$ increases, meaning one is allowing a greater probability of Type I errors; 
 
-* $ndf$ increases, meaning that with more treatment pairings, the chance that at least one pair will reject the NH is larger; 
+* $ndf$ increases, as this lowers the critical value of the F-statistic. With more treatment pairings, the chance that at least one paired-difference will reject the NH is larger. 
 
 * $ddf_H$ increases, as this lowers the critical value of the F-statistic. 
 

@@ -3,7 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Obuchowski Rockette (OR) Analysis {#ORAnalysisCodingExamples}
+# Coding the OR method {#ORAnalysisCodingExamples}
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -17,8 +17,97 @@ library(here)
 ```
 
 ## Introduction
-TBA
-It is time to reinforce the formulae with examples.
+It is time to reinforce the formulae with examples. We illustrate for the VanDyke dataset, i.e., `dataset02`. 
+
+### Calculate figures of merit
+```{r}
+foms <- UtilFigureOfMerit(dataset02, FOM = "Wilcoxon")
+print(foms)
+```
+
+### Calculate variance covariance and mean-squares
+```{r}
+ret <- UtilORVarComponentsFactorial(dataset02, FOM = "Wilcoxon", covEstMethod = "jackknife")
+print(ret)
+```
+
+### Calculate F-statistic
+From the previous chapter, the F-statistic is calculated using:
+
+\begin{equation}
+F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
+(\#eq:F-OR-H-Code)
+\end{equation}
+
+* MS(T) is in `ret$TRanova["T", "MS"]`, whose value is `r ret$TRanova["T", "MS"]`. 
+* MS(TR) is in `ret$TRanova["TR", "MS"]`, whose value is `r ret$TRanova["TR", "MS"]`. 
+* The value of `J`, the number of readers, is the length of the second dimension of `dataset02$ratings$NL[1,,1,1]`, which is 5. 
+* The value of `Cov2` is in `ret$VarCom["Cov2", "Estimates"]`, whose value is `r ret$VarCom["Cov2", "Estimates"]`. 
+* The value of `Cov3` is in `ret$VarCom["Cov3", "Estimates"]`, whose value is `r ret$VarCom["Cov3", "Estimates"]`. 
+
+Applying Eqn. \@ref(eq:F-OR-H-Code) one gets (`den` is the denominator in Eqn. \@ref(eq:F-OR-H-Code)):
+
+```{r}
+J <- length(dataset02$ratings$NL[1,,1,1])
+den <- ret$TRanova["TR", "MS"] + J* max(ret$VarCom["Cov2", "Estimates"] - ret$VarCom["Cov3", "Estimates"],0)
+F_ORH <- ret$TRanova["T", "MS"]/den
+print(F_ORH)
+```
+
+### Calculate ddf_H
+From the previous chapter, the Hillis `ddf` is calculated using:
+
+\begin{equation}
+\text{ddf}_H = \frac{\left [ MS(TR) + J \max(Cov_2-Cov_3,0)\right ]^2}{\frac{\left [ MS(TR) \right ]^2}{(I-1)(J-1)}}
+(\#eq:ddfH-Code)
+\end{equation}
+
+The numerator of `ddf` is seen to be identical to `den^2`. Therefore, the implementation is as follows:
+
+```{r}
+I <- length(dataset02$ratings$NL[,1,1,1])
+ddf <- den^2*(I-1)*(J-1)/(ret$TRanova["TR", "MS"])^2
+print(ddf)
+```
+
+### Calculate the p-value
+This is the probability that a sample from $F_{I-1,ddf}$ exceeds the observed value of the statistic, `F_ORH` =  `r F_ORH`. This is calculated as follows:
+
+```{r}
+p <- 1 - pf(F_ORH, I - 1, ddf)
+print(p)
+```
+
+The difference is not significant at $\alpha$ = 0.05.
+
+### Calculate confidence intervals for reader-averaged inter-treatment differences
+Since `I` = 2, their is only one difference in reader-averaged FOMs, namely, the first treatment minus the second:
+
+```{r}
+trtMeans <- rowMeans(foms)
+trtMeanDiffs <- trtMeans[1] - trtMeans[2]
+print(trtMeanDiffs)
+```
+
+From the previous chapter, the $(1-\alpha)$ confidence interval for $\theta_{i \bullet} - \theta_{i' \bullet}$ is given by (the average is over the reader index):
+
+\begin{equation}
+CI_{1-\alpha,RRRC}=\theta_{i \bullet} - \theta_{i' \bullet} \pm t_{\alpha/2, ddf_H}\sqrt{\frac{2}{J}(MS(TR)+J\max(Cov_2-Cov_3,0))}
+(\#eq:CIalpha-RRRC)
+\end{equation}
+
+The expression inside the square-root symbol is `2/J*den`. The implementation follows:
+
+```{r}
+alpha <- 0.05
+stdErr <- sqrt(2 * den/J)
+t_crit <- abs(qt(alpha/2, ddf))
+CI <- c(trtMeanDiffs - t_crit*stdErr, trtMeanDiffs + t_crit*stdErr)
+names(CI) <- c("Lower", "Right")
+print(CI)
+```
+
+The confidence interval, shown as `[Lower, Right]`, includes zero, which confirms that the reader-averaged FOM difference between treatments is not significant. 
 
 ## Discussion/Summary
 

@@ -24,7 +24,7 @@
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2020-08-17" />
+<meta name="date" content="2020-08-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -246,9 +246,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.5" data-path="ORAnalysisIntro.html"><a href="ORAnalysisIntro.html#discussionsummary"><i class="fa fa-check"></i><b>6.5</b> Discussion/Summary</a></li>
 <li class="chapter" data-level="6.6" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references"><i class="fa fa-check"></i><b>6.6</b> References</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="ORAnalysisCodingExamples.html"><a href="ORAnalysisCodingExamples.html"><i class="fa fa-check"></i><b>7</b> Obuchowski Rockette (OR) Analysis</a>
+<li class="chapter" data-level="7" data-path="ORAnalysisCodingExamples.html"><a href="ORAnalysisCodingExamples.html"><i class="fa fa-check"></i><b>7</b> Coding the OR method</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#introduction"><i class="fa fa-check"></i><b>7.1</b> Introduction</a></li>
+<li class="chapter" data-level="7.1" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#introduction"><i class="fa fa-check"></i><b>7.1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="ORAnalysisCodingExamples.html"><a href="ORAnalysisCodingExamples.html#calculate-figures-of-merit"><i class="fa fa-check"></i><b>7.1.1</b> Calculate figures of merit</a></li>
+<li class="chapter" data-level="7.1.2" data-path="ORAnalysisCodingExamples.html"><a href="ORAnalysisCodingExamples.html#calculate-variance-covariance-and-mean-squares"><i class="fa fa-check"></i><b>7.1.2</b> Calculate variance covariance and mean-squares</a></li>
+<li class="chapter" data-level="7.1.3" data-path="ORAnalysisCodingExamples.html"><a href="ORAnalysisCodingExamples.html#calculate-f-statistic"><i class="fa fa-check"></i><b>7.1.3</b> Calculate F-statistic</a></li>
+<li class="chapter" data-level="7.1.4" data-path="ORAnalysisCodingExamples.html"><a href="ORAnalysisCodingExamples.html#calculate-ddf_h"><i class="fa fa-check"></i><b>7.1.4</b> Calculate ddf_H</a></li>
+<li class="chapter" data-level="7.1.5" data-path="ORAnalysisCodingExamples.html"><a href="ORAnalysisCodingExamples.html#calculate-the-p-value"><i class="fa fa-check"></i><b>7.1.5</b> Calculate the p-value</a></li>
+<li class="chapter" data-level="7.1.6" data-path="ORAnalysisCodingExamples.html"><a href="ORAnalysisCodingExamples.html#calculate-confidence-intervals-for-reader-averaged-inter-treatment-differences"><i class="fa fa-check"></i><b>7.1.6</b> Calculate confidence intervals for reader-averaged inter-treatment differences</a></li>
+</ul></li>
 <li class="chapter" data-level="7.2" data-path="ORAnalysisIntro.html"><a href="ORAnalysisIntro.html#discussionsummary"><i class="fa fa-check"></i><b>7.2</b> Discussion/Summary</a></li>
 <li class="chapter" data-level="7.3" data-path="HypothesisTesting.html"><a href="HypothesisTesting.html#references"><i class="fa fa-check"></i><b>7.3</b> References</a></li>
 </ul></li>
@@ -371,7 +379,7 @@ F_{ORH}\sim F_{ndf,ddf}
 \text{ddf} = (I-1)\times(J-1)
 \tag{6.6}
 \end{equation}\]</span></p>
-<p>Their test statistic turns out to be very conservative, meaning it is highly biased against rejecting the null hypothesis. Because of this the predicted sample sizes tended to be quite large. In this connection I have two informative anecdotes.</p>
+<p>It turns out that the Obuchowski-Rockette test statistic is very conservative, meaning it is highly biased against rejecting the null hypothesis (the data simulator used in their validation did not detect this behavior). Because of this the predicted sample sizes tended to be quite large. In this connection I have two informative anecdotes.</p>
 <div id="TwoAnecdotes" class="section level3" number="6.2.1">
 <h3><span class="header-section-number">6.2.1</span> Two anecdotes</h3>
 <ul>
@@ -401,7 +409,7 @@ F_{ORH}\sim F_{ndf,ddf_H}
 <li><p><span class="math inline">\(MS(TR)\)</span> is smaller meaning there is less contamination of the treatment effect by treatment-reader variability;</p></li>
 <li><p>The greater of <span class="math inline">\(Cov2\)</span> or <span class="math inline">\(Cov3\)</span>, which is usually <span class="math inline">\(Cov2\)</span>, decreases, meaning there is less “noise” in the measurement due to between-reader variability. Recall that <span class="math inline">\(Cov_2\)</span> involves different-reader same-treatment pairings.</p></li>
 <li><p><span class="math inline">\(\alpha\)</span> increases, meaning one is allowing a greater probability of Type I errors;</p></li>
-<li><p><span class="math inline">\(ndf\)</span> increases, meaning that with more treatment pairings, the chance that at least one pair will reject the NH is larger;</p></li>
+<li><p><span class="math inline">\(ndf\)</span> increases, as this lowers the critical value of the F-statistic. With more treatment pairings, the chance that at least one paired-difference will reject the NH is larger.</p></li>
 <li><p><span class="math inline">\(ddf_H\)</span> increases, as this lowers the critical value of the F-statistic.</p></li>
 </ul>
 <p>The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than <span class="math inline">\(F_{OR}\)</span> could be observed by chance. In other words, it is the area under the F-distribution <span class="math inline">\(F_{ndf,ddf_H}\)</span> that lies above the observed value <span class="math inline">\(F_{OR}\)</span>:</p>
