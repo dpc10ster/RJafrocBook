@@ -312,8 +312,8 @@ $F_{DBM}$ is a realization of a random variable. A non-zero treatment effect, i.
 
 Under the NH, $F_{DBM|NH}$ is distributed according to the F-distribution characterized by two numbers: 
 
-* A numerator degrees of freedom ($\text{ndf}$) – determined by the degrees of freedom of the numerator $MST$ of the ratio comprising the F-statistic, i.e., $I – 1$, and 
-* A denominator degrees of freedom ($\text{ddf}$) - determined by the degrees of freedom of the denominator of the ratio comprising the F-statistic, to be described in the next section. 
+* A numerator degrees of freedom ($\text{ndf}$) – determined by the degrees of freedom of the numerator, $MST$, of the ratio comprising the F-statistic, i.e., $I – 1$, and 
+* A denominator degrees of freedom ($\text{ddf}$) - determined by the degrees of freedom of the denominator, $MSTR + MSTC - MSTRC$, of the ratio comprising the F-statistic, to be described in the next section. 
 
 Summarizing,
 
