@@ -85,18 +85,18 @@ R_j, C_k, (\tau R)_{ij}, (\tau C)_{ik}, (RC)_{jk},  (\tau RC)_{ijk},  \epsilon_{
 
 **Assumption:** Each of the random effects is modeled as a random sample from mutually independent zero-mean normal distributions with variances as specified below:
 
-\begin{equation}
-\left.\begin{matrix}
-R_j  \sim N\left ( 0,\sigma_{R}^{2} \right )\\ 
-C_k \sim N\left ( 0,\sigma_{C}^{2} \right )\\ 
-(\tau R)_{ij} \sim N\left ( 0,\sigma_{\tau R}^{2} \right )\\ 
-(\tau C)_{ik} \sim N\left ( 0,\sigma_{\tau C}^{2} \right )\\ 
-(RC)_{jk} \sim N\left ( 0,\sigma_{RC}^{2} \right )\\ 
-(\tau RC)_{ijk} \sim N\left ( 0,\sigma_{\tau RC}^{2} \right )\\
-\epsilon_{ijk} \sim N\left ( 0,\sigma_{\epsilon}^{2} \right ) 
-\end{matrix}\right\}
+\begin{align}
+\left.\begin{array}{rll}
+{R_j}&\sim& N\left ( 0,\sigma_{R}^{2} \right ) \\[0.5em]
+{C_k}&\sim& N\left ( 0,\sigma_{C}^{2} \right ) \\[0.5em]
+{(\tau R)_{ij}}&\sim& N\left ( 0,\sigma_{\tau R}^{2} \right ) \\[0.5em]
+{(\tau C)_{ik}}&\sim& N\left ( 0,\sigma_{\tau C}^{2} \right ) \\[0.5em]
+{(RC)_{jk}}&\sim& N\left ( 0,\sigma_{RC}^{2} \right ) \\[0.5em]
+{(\tau RC)_{ijk}}&\sim& N\left ( 0,\sigma_{\tau RC}^{2} \right ) \\[0.5em]
+\epsilon_{ijk} &\sim& N\left ( 0,\sigma_{\epsilon}^{2} \right )
+\end{array}\right\}
 (\#eq:samplingOfDbmTerms)
-\end{equation}
+\end{align}
 
 Equation \@ref(eq:samplingOfDbmTerms) defines the meanings of the variance components appearing in Equation \@ref(eq:DBMRandomTerms). One could have placed a $Y$ subscript (or superscript) on each of the variances, as they describe fluctuations of the pseudovalues, not FOM values. However, this tends to clutter the notation. So here is the convention:
 
@@ -138,18 +138,18 @@ Again, to be clear, one chould put a $Y$ subscript (or superscript) on each of t
 
 The definitions of the mean-squares below match those (where provided) in [@RN1476, page 1261]. 
 
-\begin{equation}
-\left.\begin{matrix}
-\text{MST}=\frac{JK\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{I-1}\\ 
-\text{MSR}=\frac{IK\sum_{j=1}^{J}\left ( Y_{\bullet j \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{J-1}\\ 
-\text{MS(C)}=\frac{IJ\sum_{k=1}^{K}\left ( Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{K-1}\\ 
-\text{MSTR}=\frac{K\sum_{i=1}^{I}\sum_{j=1}^{J}\left ( Y_{i j \bullet} - Y_{i \bullet \bullet} - Y_{\bullet j \bullet} + Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(J-1)}\\ 
-\text{MSTC}=\frac{J\sum_{i=1}^{I}\sum_{k=1}^{K}\left ( Y_{i \bullet k} - Y_{i \bullet \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(K-1)}\\ 
-\text{MSRC}=\frac{I\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{\bullet j k} - Y_{\bullet j \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(J-1)(K-1)}\\ 
-\text{MSTRC}=\frac{\sum_{i=1}^{I}\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{i j k} - Y_{i j \bullet} - Y_{i \bullet k} - Y_{\bullet j k} + Y_{i \bullet \bullet} + Y_{\bullet j \bullet} + Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(J-1)K-1)}
-\end{matrix}\right\}
+\begin{align}
+\left.\begin{array}{rll}
+\text{MST}&=&\frac{JK\sum_{i=1}^{I}\left ( Y_{i \bullet \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{I-1}\\[0.5em]
+\text{MSR}&=&\frac{IK\sum_{j=1}^{J}\left ( Y_{\bullet j \bullet} - Y_{ \bullet \bullet \bullet} \right )^2}{J-1}\\[0.5em] 
+\text{MS(C)}&=&\frac{IJ\sum_{k=1}^{K}\left ( Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{K-1}\\[0.5em] 
+\text{MSTR}&=&\frac{K\sum_{i=1}^{I}\sum_{j=1}^{J}\left ( Y_{i j \bullet} - Y_{i \bullet \bullet} - Y_{\bullet j \bullet} + Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(J-1)}\\[0.5em] 
+\text{MSTC}&=&\frac{J\sum_{i=1}^{I}\sum_{k=1}^{K}\left ( Y_{i \bullet k} - Y_{i \bullet \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(K-1)}\\[0.5em] 
+\text{MSRC}&=&\frac{I\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{\bullet j k} - Y_{\bullet j \bullet} - Y_{\bullet \bullet k} + Y_{ \bullet \bullet \bullet} \right )^2}{(J-1)(K-1)}\\[0.5em] 
+\text{MSTRC}&=&\frac{\sum_{i=1}^{I}\sum_{j=1}^{J}\sum_{k=1}^{K}\left ( Y_{i j k} - Y_{i j \bullet} - Y_{i \bullet k} - Y_{\bullet j k} + Y_{i \bullet \bullet} + Y_{\bullet j \bullet} + Y_{\bullet \bullet k} - Y_{ \bullet \bullet \bullet} \right )^2}{(I-1)(J-1)K-1)}
+\end{array}\right\}
 (\#eq:MeanSquares)
-\end{equation}
+\end{align}
 
 Note the absence of $MSE$, corresponding to the $\epsilon$ term on the right hand side of \@ref(eq:MeanSquares). With only one observation per treatment-reader-case combination, MSE cannot be estimated; it effectively gets absorbed into the $MSTRC$ term. 
 
@@ -217,7 +217,8 @@ msC <- msC * I * J/(K - 1)
 msTR <- 0
 for (i in 1:I) {
   for (j in 1:J) {
-    msTR <- msTR + (mean(Y[i, j, ]) - mean(Y[i, , ]) - mean(Y[, j, ]) + mean(Y))^2
+    msTR <- msTR + 
+      (mean(Y[i, j, ]) - mean(Y[i, , ]) - mean(Y[, j, ]) + mean(Y))^2
   }
 }
 msTR <- msTR * K/((I - 1) * (J - 1))
@@ -225,7 +226,8 @@ msTR <- msTR * K/((I - 1) * (J - 1))
 msTC <- 0
 for (i in 1:I) {
   for (k in 1:K) {
-    msTC <- msTC + (mean(Y[i, , k]) - mean(Y[i, , ]) - mean(Y[, , k]) + mean(Y))^2
+    msTC <- msTC + 
+      (mean(Y[i, , k]) - mean(Y[i, , ]) - mean(Y[, , k]) + mean(Y))^2
   }
   msTC <- msTC * J/((I - 1) * (K - 1))
 } 
@@ -233,7 +235,8 @@ for (i in 1:I) {
 msTC <- 0
 for (i in 1:I) {
   for (k in 1:K) { # OK
-    msTC <- msTC + (mean(Y[i, , k]) - mean(Y[i, , ]) - mean(Y[, , k]) + mean(Y))^2
+    msTC <- msTC + 
+      (mean(Y[i, , k]) - mean(Y[i, , ]) - mean(Y[, , k]) + mean(Y))^2
   }
 }
 msTC <- msTC * J/((I - 1) * (K - 1))
@@ -241,7 +244,8 @@ msTC <- msTC * J/((I - 1) * (K - 1))
 msRC <- 0
 for (j in 1:J) {
   for (k in 1:K) {
-    msRC <- msRC + (mean(Y[, j, k]) - mean(Y[, j, ]) - mean(Y[, , k]) + mean(Y))^2
+    msRC <- msRC + 
+      (mean(Y[, j, k]) - mean(Y[, j, ]) - mean(Y[, , k]) + mean(Y))^2
   }
 }
 msRC <- msRC * I/((J - 1) * (K - 1))
@@ -259,7 +263,9 @@ for (i in 1:I) {
 }
 msTRC <- msTRC/((I - 1) * (J - 1) * (K - 1))
 
-data.frame("msT" = msT, "msR" = msR, "msC" = msC, "msTR" = msTR, "msTC" = msTC, "msRC" = msRC, "msTRC" = msTRC)
+data.frame("msT" = msT, "msR" = msR, "msC" = msC, 
+           "msTR" = msTR, "msTC" = msTC, 
+           "msRC" = msRC, "msTRC" = msTRC)
 #>         msT       msR       msC       msTR       msTC       msRC     msTRC
 #> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
 
@@ -278,13 +284,15 @@ E\left ( MST\mid NH \right ) = \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\
 
 Also, the following linear combination is equal to $E\left ( MST\mid NH \right )$:
 
-\begin{equation}
-E\left ( MSTR \right ) + E\left ( MSTC \right )  - E\left ( MSTRC \right ) \\ 
-= \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} \right ) + \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J\sigma_{\tau C}^{2} \right ) -\left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2}  \right ) \\
-= \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J \sigma_{\tau C}^{2} +  K\sigma_{\tau R}^{2} \\
-= E\left ( MST\mid NH \right )
+\begin{align}
+\begin{split}
+&E\left ( MSTR \right ) + E\left ( MSTC \right )  - E\left ( MSTRC \right ) \\
+&= \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + K\sigma_{\tau R}^{2} \right ) + \left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J\sigma_{\tau C}^{2} \right ) -\left (\sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2}  \right ) \\
+&= \sigma_{\epsilon}^{2} + \sigma_{\tau RC}^{2} + J \sigma_{\tau C}^{2} +  K\sigma_{\tau R}^{2} \\
+&= E\left ( MST\mid NH \right )
+\end{split}
 (\#eq:linearComb)
-\end{equation}
+\end{align}
 
 Therefore, under the NH, the ratio: 
 
@@ -300,20 +308,22 @@ F_{DBM} = \frac{MST}{MSTR + MSTC - MSTRC}
 (\#eq:DefFStatRRRC)
 \end{equation}
 
-$F_{DBM}$ is a realization of a random variable. A non-zero treatment effect, i.e.,  $\sigma_{\tau}^{2} > 0$, will cause the ratio to be larger than one, because $E\left ( MST \right)$  will be larger, see row labeled $T$ in Table \@ref(tab:ExpValMs). Therefore values of $F_{DBM} > 1$  will tend to reject the NH. Drawing on a theorem from statistics [@RN1492], under the NH the ratio of two independent mean squares is distributed as a (central) F-statistic with degrees of freedom corresponding to those of the mean squares forming the numerator and denominator of the ratio (Theorem 12.2.5 in “An Introduction to Mathematical Statistics and Its Applications”).  Knowing the distribution of the statistic defined by (9.18) under the NH enables hypothesis testing. This is completely analogous to Chapter 08 where knowledge of the distribution of AUC under the NH enabled testing the null hypothesis that the observed value of AUC equals a pre-specified value. 
+$F_{DBM}$ is a realization of a random variable. A non-zero treatment effect, i.e.,  $\sigma_{\tau}^{2} > 0$, will cause the ratio to be larger than one, because $E\left ( MST \right)$  will be larger, see row labeled $T$ in Table \@ref(tab:ExpValMs). Therefore values of $F_{DBM} > 1$  will tend to reject the NH. Drawing on a theorem from statistics [@RN1492], under the NH the ratio of two independent mean squares is distributed as a (central) F-statistic with degrees of freedom corresponding to those of the mean squares forming the numerator and denominator of the ratio (Theorem 12.2.5 in “An Introduction to Mathematical Statistics and Its Applications”). To perform  hypothesis testing one needs the distribution,  under the NH, of the statistic defined by Eqn. \@ref(eq:DefFStatRRRC). This is completely analogous to Chapter 08 where knowledge of the distribution of AUC under the NH enabled testing the null hypothesis that the observed value of AUC equals a pre-specified value. 
 
-Under the NH the left hand side of by (9.18), i.e., $F_{DBM|NH}$, is distributed according to the F-distribution characterized by two numbers: 
+Under the NH, $F_{DBM|NH}$ is distributed according to the F-distribution characterized by two numbers: 
 
 * A numerator degrees of freedom ($\text{ndf}$) – determined by the degrees of freedom of the numerator $MST$ of the ratio comprising the F-statistic, i.e., $I – 1$, and 
-* A denominator degrees of freedom ($ddf$) - determined by the degrees of freedom of the denominator of the ratio comprising the F-statistic, to be described below. 
+* A denominator degrees of freedom ($\text{ddf}$) - determined by the degrees of freedom of the denominator of the ratio comprising the F-statistic, to be described in the next section. 
 
 Summarizing,
 
-\begin{equation}
-F_{DBM|NH} \sim F_{\text{ndf},ddf} \\
+\begin{align}
+\left.\begin{array}{rll}
+F_{DBM|NH} \sim F_{\text{ndf},\text{ddf}} \\
 \text{ndf}=I-1
+\end{array}\right\}
 (\#eq:NhDistrDBMDefFStatRRRC)
-\end{equation}
+\end{align}
 
 The next topic is estimating $ddf$.
 
@@ -366,8 +376,8 @@ The critical value $F_{1-\alpha,\text{ndf},\text{ddf}_H}$ increases as $\alpha$ 
 *	\text{ndf} is large: the more the number of treatment pairings, the greater the chance that at least one pairing will reject the NH. This is one reason sample size calculations are rarely conducted for more than 2-treatments. 
 * $\text{ddf}_H$	is large: this causes the critical value to decrease, see below, and is more likely to be exceeded by the observed value of $F_{DBM}$. 
 
-#### p-value of the F-test
-**The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than observed $F_{DBM}$ could occur by chance. In other words, it is the area under the (central) F-distribution $F_{\text{ndf},\text{ddf}}$ that lies to the right of the observed value of $F_{DBM}$:
+#### p-value of the F-test 
+**The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than observed $F_{DBM}$ could occur by chance.** In other words, it is the area under the (central) F-distribution $F_{\text{ndf},\text{ddf}}$ that lies to the right of the observed value of $F_{DBM}$:
 
 \begin{equation}
 p=\Pr\left ( F > F_{DBM} \mid F \sim F_{\text{ndf},\text{ddf}_H} \right )
@@ -416,7 +426,9 @@ Line 1 defines $\alpha$. Line 2 forms a data frame from previously calculated me
 
 ```r
 alpha <- 0.05
-retMS <- data.frame("msT" = msT, "msR" = msR, "msC" = msC, "msTR" = msTR, "msTC" = msTC, "msRC" = msRC, "msTRC" = msTRC)
+retMS <- data.frame("msT" = msT, "msR" = msR, "msC" = msC, 
+                    "msTR" = msTR, "msTC" = msTC, 
+                    "msRC" = msRC, "msTRC" = msTRC)
 F_DBM_den <- retMS$msTR+max(retMS$msTC - retMS$msTRC,0) 
 F_DBM <- retMS$msT / F_DBM_den 
 ndf <- (I-1)
@@ -426,7 +438,9 @@ pValueH <- 1 - pf(F_DBM, ndf, ddf_H)
 data.frame("F_DBM" = F_DBM, "ddf_H"= ddf_H, "pValueH" = pValueH) # Line 9
 #>      F_DBM    ddf_H    pValueH
 #> 1 4.456319 15.25967 0.05166569
-retRJafroc <- StSignificanceTesting(dataset02, FOM = "Wilcoxon", method = "DBM")
+retRJafroc <- StSignificanceTesting(dataset02, 
+                                    FOM = "Wilcoxon",
+                                    method = "DBM")
 data.frame("F_DBM" = retRJafroc$RRRC$FTests$FStat[1], 
            "ddf_H"= retRJafroc$RRRC$FTests$DF[2], 
            "pValueH" = retRJafroc$RRRC$FTests$p[1])
@@ -516,11 +530,11 @@ Therefore, for two treatments the numerator of the expression for $\Delta$ is $J
 The variances, $\sigma_{\tau}^2$, $\sigma_{\tau R}^2$ and $\sigma_{\tau C}^2$, appearing in Equation \@ref(eq:DeltaCoded), can be calculated from the observed mean squares using the following equations, see [@RN1476] Eqn. 4, 
 
 \begin{equation}
-\left.\begin{matrix}
-\sigma_{\epsilon}^2={\text{MSTRC}}^*\\ 
-\sigma_{\tau R}^2=\frac{{\text{MSTR}}^*-{\text{MSTRC}}^*}{K^*}\\ 
-\sigma_{\tau C}^2=\frac{{\text{MSTC}}^*-{\text{MSTRC}}^*}{J^*}
-\end{matrix}\right\}
+\left.\begin{array}{rl}
+\sigma_{\epsilon}^2&={\text{MSTRC}}^*\\[1em] 
+\sigma_{\tau R}^2&=\displaystyle\frac{{\text{MSTR}}^*-{\text{MSTRC}}^*}{K^*}\\[1em]
+\sigma_{\tau C}^2&=\displaystyle\frac{{\text{MSTC}}^*-{\text{MSTRC}}^*}{J^*}
+\end{array}\right\}
 (\#eq:HBEqn4Pilot)
 \end{equation}
 
@@ -534,11 +548,11 @@ The variances, $\sigma_{\tau}^2$, $\sigma_{\tau R}^2$ and $\sigma_{\tau C}^2$, a
 * The mean squares appearing in Equation \@ref(eq:DefddfH) can be related to the variances by an equation analogous to Equation \@ref(eq:HBEqn4Pilot), except that, again, all quantities in it apply to the *pivotal* study (note the absence of asterisks): 
 
 \begin{equation}
-\left.\begin{matrix}
-\sigma_{\epsilon}^2=MSTRC\\ 
-\sigma_{\tau R}^2=\frac{MSTR-MSTRC}{K}\\ 
-\sigma_{\tau C}^2=\frac{MSTC-MSTRC}{J}
-\end{matrix}\right\}
+\left.\begin{array}{rl}
+\sigma_{\epsilon}^2&=MSTRC\\[1em]
+\sigma_{\tau R}^2&=\displaystyle\frac{MSTR-MSTRC}{K}\\[1em]
+\sigma_{\tau C}^2&=\displaystyle\frac{MSTC-MSTRC}{J}
+\end{array}\right\}
 (\#eq:HBEqn4Pivotal)
 \end{equation}
 
@@ -555,7 +569,9 @@ The Van Dyke dataset is regarded as a pilot study. In the first block of code fu
 
 ```r
 rocData <- dataset02 # select Van Dyke dataset
-retDbm <- StSignificanceTesting(dataset = rocData, FOM = "Wilcoxon", method = "DBM") 
+retDbm <- StSignificanceTesting(dataset = rocData,
+                                FOM = "Wilcoxon",
+                                method = "DBM") 
 VarTR <- retDbm$ANOVA$VarCom["VarTR","Estimates"]
 VarTC <- retDbm$ANOVA$VarCom["VarTC","Estimates"]
 VarErr <- retDbm$ANOVA$VarCom["VarErr","Estimates"]
@@ -583,7 +599,7 @@ The extension to FRRC generalization is as follows. One sets $\sigma_R^2 = 0$ an
 
 \begin{equation}
 F=\frac{\text{MST}}{\text{MSTC}} \sim F_{I-1,(I-1)(K-1)}
-(\#eq:DefFStatFRRC)
+(\#eq:DefFStatFRRC-DBM1)
 \end{equation}
 
 The NH is rejected if the observed value of $F$ exceeds the critical value defined by $F_{\alpha, I-1,(I-1)(K-1)}$. For two modalities the denominator degrees of freedom is $df_2 = K-1$. The expression for the non-centrality parameter follows from \@ref(eq:DeltaCoded) upon setting $\sigma_{\tau R}^2 = 0$.
@@ -615,7 +631,7 @@ The extension to RRFC generalization is as follows. One sets $\sigma_C^2 = 0$ an
 
 \begin{equation}
 F=\frac{\text{MST}}{\text{MSTR}} \sim F_{I-1,(I-1)(J-1)}
-(\#eq:DefFStatFRRC)
+(\#eq:DefFStatFRRC-DBM2)
 \end{equation}
 
 The NH is rejected if the observed value of $F$ exceeds the critical value defined by $F_{\alpha, I-1,(I-1)(J-1)}$. For two modalities the denominator degrees of freedom is $df_2 = J-1$. The expression for the non-centrality parameter follows from \@ref(eq:DeltaCoded) upon setting $\sigma_{\tau C}^2 = 0$.

@@ -3,7 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Coding the OR method {#ORAnalysisCodingExamples}
+# Coding illustrations of the OR method {#ORAnalysisCodingExamples}
 
 
 
@@ -63,12 +63,12 @@ F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
 \end{equation}
 
 * MS(T) is in `ret$TRanova["T", "MS"]`, whose value is 0.0047962. 
-* MS(TR) is in `ret$TRanova["TR", "MS"]`, whose value is 5.5103062\times 10^{-4}. 
+* MS(TR) is in `ret$TRanova["TR", "MS"]`, whose value is \ensuremath{5.5103062\times 10^{-4}}. 
 * The value of `J`, the number of readers, is the length of the second dimension of `dataset02$ratings$NL[1,,1,1]`, which is 5. 
-* The value of `Cov2` is in `ret$VarCom["Cov2", "Estimates"]`, whose value is 3.4407483\times 10^{-4}. 
-* The value of `Cov3` is in `ret$VarCom["Cov3", "Estimates"]`, whose value is 2.3902837\times 10^{-4}. 
+* The value of `Cov2` is in `ret$VarCom["Cov2", "Estimates"]`, whose value is \ensuremath{3.4407483\times 10^{-4}}. 
+* The value of `Cov3` is in `ret$VarCom["Cov3", "Estimates"]`, whose value is \ensuremath{2.3902837\times 10^{-4}}. 
 
-Applying Eqn. \@ref(eq:F-OR-H-Code) one gets (den stands for the denomination in Eqn. \@ref(eq:F-OR-H-Code)):
+Applying Eqn. \@ref(eq:F-OR-H-Code) one gets (`den` is the denominator in Eqn. \@ref(eq:F-OR-H-Code)):
 
 
 ```r
@@ -125,7 +125,7 @@ From the previous chapter, the $(1-\alpha)$ confidence interval for $\theta_{i \
 
 \begin{equation}
 CI_{1-\alpha,RRRC}=\theta_{i \bullet} - \theta_{i' \bullet} \pm t_{\alpha/2, ddf_H}\sqrt{\frac{2}{J}(MS(TR)+J\max(Cov_2-Cov_3,0))}
-(\#eq:CIalpha-RRRC)
+(\#eq:CIalpha-RRRC-Code)
 \end{equation}
 
 The expression inside the square-root symbol is `2/J*den`. The implementation follows:
@@ -142,9 +142,9 @@ print(CI)
 #> -0.0879594986  0.0003588544
 ```
 
-The confidence interval, shown as `[Lower, Right]`, includes zero, which confirms that the difference is not significant. 
+The confidence interval, shown as `[Lower, Right]`, includes zero, which confirms that the reader-averaged FOM difference between treatments is not significant. 
 
-## Discussion/Summary
+## Discussion/Summary/5
 
 
 ## References  

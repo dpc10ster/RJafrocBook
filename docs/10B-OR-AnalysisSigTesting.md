@@ -127,7 +127,7 @@ Using the Roe and Metz vertical bar notation $\mid R$ to denote that reader is r
 
 \begin{equation}
 F_{OR \mid R}=\frac{MS(T)}{Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0)}
-(\#eq:DefFStatFRRC)
+(\#eq:DefFStatFRRC-OR)
 \end{equation}
 
 $F_{OR \mid R}$ is distributed as an F-statistic with:
@@ -138,19 +138,19 @@ ndf=I-1\\
 ddf=\infty\\
 F_{OR \mid R} \sim F_{ndf,ddf}
 \end{matrix}\right\}
-(\#eq:FStatFRRC)
+(\#eq:FStatFRRC-OR)
 \end{equation}
 
 Alternatively, as with Eqn. \@ref(eq:F-1RMT),
 
 $$(I-1)F_{OR \mid R} \sim \chi^2_{I-1}$$
-For $J$ = 1, Eqn. \@ref(eq:DefFStatFRRC) reduces to Eqn. \@ref(eq:DefF-1RMT). 
+For $J$ = 1, Eqn. \@ref(eq:DefFStatFRRC-OR) reduces to Eqn. \@ref(eq:DefF-1RMT). 
 
 The critical value of the statistic is $F_{1-\alpha,I-1,\infty}$ which is that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value, i.e.,:
 
 $$F_{OR \mid R}>F_{1-\alpha,I-1,\infty}$$
 
-The p-value of the test is the probability that a random sample from the distribution $F_{I-1,\infty}$ exceeds the observed value of the F statistic defined in Eqn. \@ref(eq:DefFStatFRRC):
+The p-value of the test is the probability that a random sample from the distribution $F_{I-1,\infty}$ exceeds the observed value of the F statistic defined in Eqn. \@ref(eq:DefFStatFRRC-OR):
 
 \begin{equation}
 p=\Pr(F>F_{OR \mid R} \mid F \sim F_{I-1,\infty})
@@ -206,7 +206,7 @@ CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, (
 (\#eq:CIalphaRRFC)
 \end{equation}
 
-## Discussion/Summary
+## Discussion/Summary/4
 
 
 ## References  

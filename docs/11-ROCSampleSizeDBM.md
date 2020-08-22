@@ -108,7 +108,7 @@ Here $J^*$ and $K^*$ refer to the number of readers and cases in the *pilot* stu
 
 ### Single-treatment multiple-reader analysis
 
-## Discussion/Summary
+## Discussion/Summary/2
 
 ## References  
 

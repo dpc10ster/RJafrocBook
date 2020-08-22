@@ -25,7 +25,7 @@ For convenience the OR model is repeated below with the case-set index suppresse
 
 \begin{equation}
 Y_{n(ijk)}=\mu+\tau_i+R_j+C_k+(\tau R)_{ij}+(\tau C)_{ik}+(RC)_{jk}+(\tau RC)_{ijk}+\epsilon_ {n(ijk)}
-(\#eq:ORModel)
+(\#eq:ORModelSsOR)
 \end{equation}
 
 As usual, the treatment effects $\tau_i$  are subject to the constraint that they sum to zero. The observed effect size (a random variable) is defined by:
@@ -190,7 +190,7 @@ For 10 readers, the numbers of cases needed for 80% power is largest (163) for R
 
 ### Single-treatment multiple-reader analysis
 
-## Discussion/Summary
+## Discussion/Summary/3
 
 ## References  
 
