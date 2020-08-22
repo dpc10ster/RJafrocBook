@@ -63,10 +63,10 @@ F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
 \end{equation}
 
 * MS(T) is in `ret$TRanova["T", "MS"]`, whose value is 0.0047962. 
-* MS(TR) is in `ret$TRanova["TR", "MS"]`, whose value is \ensuremath{5.5103062\times 10^{-4}}. 
+* MS(TR) is in `ret$TRanova["TR", "MS"]`, whose value is 5.5103062\times 10^{-4}. 
 * The value of `J`, the number of readers, is the length of the second dimension of `dataset02$ratings$NL[1,,1,1]`, which is 5. 
-* The value of `Cov2` is in `ret$VarCom["Cov2", "Estimates"]`, whose value is \ensuremath{3.4407483\times 10^{-4}}. 
-* The value of `Cov3` is in `ret$VarCom["Cov3", "Estimates"]`, whose value is \ensuremath{2.3902837\times 10^{-4}}. 
+* The value of `Cov2` is in `ret$VarCom["Cov2", "Estimates"]`, whose value is 3.4407483\times 10^{-4}. 
+* The value of `Cov3` is in `ret$VarCom["Cov3", "Estimates"]`, whose value is 2.3902837\times 10^{-4}. 
 
 Applying Eqn. \@ref(eq:F-OR-H-Code) one gets (`den` is the denominator in Eqn. \@ref(eq:F-OR-H-Code)):
 
