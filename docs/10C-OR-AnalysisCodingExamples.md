@@ -7,7 +7,7 @@ output:
 
 
 
-## Introduction
+## Introduction {#ORAnalysisCodingExamples-introduction}
 It is time to reinforce the formulae with examples. We illustrate for the VanDyke dataset, i.e., `dataset02`. 
 
 ### Calculate figures of merit
@@ -147,5 +147,5 @@ The confidence interval, shown as `[Lower, Right]`, includes zero, which confirm
 ## Discussion/Summary/5
 
 
-## References  
+## References {#ORAnalysisCodingExamples-references}
 

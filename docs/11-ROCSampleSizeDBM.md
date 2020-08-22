@@ -7,7 +7,7 @@ output:
 
 
 
-## Introduction
+## Introduction {#RocSampleSizeDBM-introduction}
 The question addressed here is "how many readers and cases", usually abbreviated to "sample-size", should one employ to conduct a "well-planned" ROC study. The reasons for the quotes around "well-planned" will shortly become clear. If cost were no concern, the reply would be: "as many readers and cases as one can get". There are other causes affecting sample-size, e.g., the data collection paradigm and analysis, however, this chapter is restricted to the MRMC ROC data collection paradigm, with data analyzed by the DBM method described in a previous chapter. The next chapter will deal with data analyzed by the OR method.
 
 It turns out that provided one can specify conceptually valid effect-sizes between different paradigms (i.e., in the same "units"), the methods described in this chapter are extensible to other paradigms; see TBA Chapter 19 for sample size estimation for FROC studies. *For this reason it is important to understand the concepts of sample-size estimation in the simpler ROC context.*
@@ -110,5 +110,5 @@ Here $J^*$ and $K^*$ refer to the number of readers and cases in the *pilot* stu
 
 ## Discussion/Summary/2
 
-## References  
+## References {#RocSampleSizeDBM-references}
 

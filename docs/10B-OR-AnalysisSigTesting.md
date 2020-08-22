@@ -7,7 +7,7 @@ output:
 
 
 
-## Introduction
+## Introduction {#ORAnalysisSigTesting-introduction}
 In previous chapters the DBM significance testing procedure [@RN204] for analyzing MRMC ROC data, along with improvements [@RN2508], has been described. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been rightly criticized by Hillis and others [@zhou2009statistical]. Hillis states that the method "works" but lacks firm statistical foundations [@RN1772; @RN1865; @RN1866]. I would add that it "works" as long as one restricts to the empirical AUC figure of merit. In my book I gave a justification for why the method "works". Specifically, the *empirical AUC pseudovalues qualify as case-level FOMs* - this property has also been noted by [@RN1395]. However, this property applies *only* to the empirical AUC, so an alternate approach that applies to any figure of merit is highly desirable. 
 
 Hillis' has proposed that a method based on an earlier publication [@RN1450], which does not depend on pseudovalues, is preferable from both conceptual and practical points of view. This chapter is named "OR Analysis", where OR stands for Obuchowski and Rockette. The OR method has advantages in being able to handle more complex study designs [@RN2508] that are addressed in subsequent chapters, and applications to other FOMs (e.g., the FROC paradigm uses a rather different FOM from empirical ROC-AUC) are best performed with the OR method.
@@ -216,5 +216,5 @@ CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, (
 ## Discussion/Summary/4
 
 
-## References  
+## References {#ORAnalysisSigTesting-references}
 
