@@ -136,50 +136,48 @@ F_{ORH \mid R}=\frac{MS(T)}{Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0)}
 (\#eq:DefFStatFRRC-OR)
 \end{equation}
 
-$F_{ORH \mid R}$ is distributed as an F-statistic with:
+[For $J$ = 1, Eqn. \@ref(eq:DefFStatFRRC-OR) reduces to Eqn. \@ref(eq:DefF-1RMT).] 
+
+$F_{ORH \mid R}$ is distributed as an F-statistic with $\text{ndf} = I-1$ and $\text{ddf} = \infty$:
 
 \begin{equation}
-\left.\begin{matrix}
-\text{ndf}=I-1\\ 
-\text{ddf}=\infty\\
-F_{ORH \mid R} \sim F_{\text{ndf},\text{ddf}}
-\end{matrix}\right\}
-(\#eq:FStatFRRC-OR)
+F_{ORH \mid R} \sim F_{I-1,\infty}
+(\#eq:FStatDistrFRRC-OR)
 \end{equation}
 
-Alternatively, as with Eqn. \@ref(eq:F-1RMT),
-
-$$(I-1)F_{ORH \mid R} \sim \chi^2_{I-1}$$
-
-For $J$ = 1, Eqn. \@ref(eq:DefFStatFRRC-OR) reduces to Eqn. \@ref(eq:DefF-1RMT). 
-
-The critical value of the statistic is $F_{1-\alpha,I-1,\infty}$ which is that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value, i.e.,:
-
-$$F_{ORH \mid R}>F_{1-\alpha,I-1,\infty}$$
-
-The p-value of the test is the probability that a random sample from the distribution $F_{I-1,\infty}$ exceeds the observed value of the F statistic defined in Eqn. \@ref(eq:DefFStatFRRC-OR):
+One can get rid of the infinite denominator degrees of freedom by recognizing, as in the previous chapter, that $(I-1) F_{I-1,\infty}$ is distributed as a $\chi^2$ distribution with $I-1$ degrees of freedom, i.e., as $\chi^2_{I-1}$. Therefore, one has, analogous to Eqn. \@ref(eq:F-1RMT),
 
 \begin{equation}
-p=\Pr(F>F_{ORH \mid R} \mid F \sim F_{I-1,\infty})
-(\#eq:pValueaphaFRRC)
+\chi^2_{ORH \mid R} \equiv (I-1)F_{ORH \mid R} \sim \chi^2_{I-1}
+(\#eq:ChisqStatFRRC-OR)
+\end{equation}
+
+The critical value of the $\chi^2$ statistic is $\chi^2_{1-\alpha,I-1}$, which is that value such that fraction $(1-\alpha)$ of the area under the $\chi^2_{I-1}$ distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the $\chi^2$ statistic exceeds the critical value, i.e.,
+
+$\chi^2_{ORH \mid R} \gt \chi^2_{1-\alpha,I-1}$
+
+The p-value of the test is the probability that a random sample from the chi-square distribution $\chi^2_{I-1}$ exceeds the observed value of the test statistic $\chi^2_{ORH \mid R}$ statistic defined in Eqn. \@ref(eq:ChisqStatFRRC-OR):
+
+\begin{equation}
+p=\Pr(\chi^2 > \chi^2_{ORH \mid R} \mid \chi^2 \sim \chi^2_{I-1})
+(\#eq:pValueFRRC)
 \end{equation}
 
 The $(1-\alpha)$ (symmetric) confidence interval for the difference figure of merit is given by:
 
-\begin{equation}
-CI_{1-\alpha,FRRC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, \infty}\sqrt{\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
+\begin{align}
+CI_{1-\alpha,FRRC}&=&(\theta_{i \bullet} - \theta_{i' \bullet}) \\
+&\pm& t_{\alpha/2, \infty}\sqrt{\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
 (\#eq:CIalphaFRRC)
-\end{equation}
+\end{align}
 
 The NH is rejected if any of the following equivalent conditions is met:
 
-* The observed value of the F-statistic exceeds the critical value $F_{1-\alpha,I-1,\infty}$.
-* The p-value defined by Eqn. \@ref(eq:pValueaphaFRRC) is less than $\alpha$.
+* The observed value of the $\chi^2$ statistic exceeds the critical value $\chi^2_{1-\alpha,I-1}$.
+* The p-value is less than $\alpha$.
 * The $(1-\alpha)$ confidence interval does not include zero.
 
-Notice that for J = 1, Eqn. \@ref(eq:CIalphaFRRC) reduces to Eqn. \@ref(eq:CIalpha1R).
-
-## Random-reader fixed-case (RRFC) analysis
+## Random-reader fixed-case (RRFC) analysis {#ORAnalysisSigTesting-RRFCAnalysis}
 When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is: 
 
 \begin{equation}

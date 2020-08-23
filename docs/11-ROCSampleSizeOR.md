@@ -75,7 +75,7 @@ For two treatments, since the individual treatment effects must be the negatives
 \end{equation}
  
 
-### Dependence of statistical power on estimates of model parameters
+### Dependence of statistical power on estimates of model parameters {#RocSampleSizeOR-dependence-of-stats-power}
 Examination of the expression for  , Eqn. (11.5), shows that statistical power increases if:
 * The numerator is large. This occurs if: (a) the anticipated effect-size $d$ is large. Since effect-size enters as the *square*, TBA Eqn. (11.8), it is has a particularly strong effect; (b) If $J \times K$ is large. Both of these results should be obvious, as a large effect size and a large sample size should result in increased probability of rejecting the NH. 
 * The denominator is small. The first term in the denominator is  $\left ( \sigma_{Y;\epsilon}^2 + \sigma_{Y;\tau RC}^2 \right )$. These two terms cannot be separated. This is the residual variability of the jackknife pseudovalues. It should make sense that the smaller the variability, the larger is the non-centrality parameter and the statistical power. 
@@ -84,14 +84,14 @@ Examination of the expression for  , Eqn. (11.5), shows that statistical power i
 * The final term in the denominator is  $J\sigma_{Y;\tau C}^2$. The variance $\sigma_{Y;C}^2$ has no impact on statistical power, as it cancels out in the difference. The treatment-case variance component introduces "noise" into the estimate of the effect size, thereby decreasing power. Since it is multiplied by J, the number of readers, and typically $J<<K$, the error amplification effect on accuracy of the sample size estimate is not as bad as with the treatment-reader variance component.
 * Accuracy of sample size estimation, essentially estimating confidence intervals for statistical power, is addressed in [@RN2027].
 
-### Formulae for random-reader random-case (RRRC) sample size estimation
+### Formulae for random-reader random-case (RRRC) sample size estimation {#RocSampleSizeOR-RRRC-sample-size-estimation}
 
 
-### Significance testing
+### Significance testing {#RocSampleSizeOR-sig-testing}
 
-### p-value and confidence interval
+### p-value and confidence interval {#RocSampleSizeOR-pvalue-ci}
 
-### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments
+### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments {#RocSampleSizeOR-CompareDBM2OR}
 Having performed a pilot study and planning to perform a pivotal study, sample size estimation follows the following procedure, which assumes that both reader and case are treated as random factors. Different formulae, described later, apply when either reader or case is treated as a fixed factor.
 
 * Perform OR analysis on the pilot data. This yields the observed effect size as well as estimates of all relevant variance components and mean squares appearing in TBA Eqn. (11.5) and Eqn. (11.7).
@@ -102,7 +102,7 @@ Having performed a pilot study and planning to perform a pivotal study, sample s
 * If power is below the desired or "target" power, one tries successively larger value of $J$ and / or $K$ until the target power is reached. 
 
 
-## Formulae for fixed-reader random-case (FRRC) sample size estimation
+## Formulae for fixed-reader random-case (FRRC) sample size estimation {#RocSampleSizeOR-FRRC-sample-size-estimation}
 It was shown in TBA §9.8.2 that for fixed-reader analysis the non-centrality parameter is defined by:
 
 \begin{equation}
@@ -117,7 +117,7 @@ F_{AH|R}\equiv \frac{MST}{MSTC}\sim F_{I-1,(I-1)(K-1),\Delta}
 (\#eq:SamplingFFRRC1)
 \end{equation}
 
-### Formulae for random-reader fixed-case (RRFC) sample size estimation
+### Formulae for random-reader fixed-case (RRFC) sample size estimation {#RocSampleSizeOR-RRFC-sample-size-estimation}
 It is shown in TBA §9.9 that for fixed-case analysis the non-centrality parameter is defined by:
 
 \begin{equation}
@@ -184,11 +184,11 @@ data.frame("J"= J,  "K" = K, "FCrit" = FCrit, "ddf" = ddf, "ncp" = ncp, "RRRCPow
 
 For 10 readers, the numbers of cases needed for 80% power is largest (163) for RRRC and least for RRFC (53). For all three analyses, the expectation of 80% power is met - the numbers of cases and readers were chosen to achieve close to 80% statistical power. Intermediate quantities such as the critical value of the F-statistic, `ddf` and `ncp` are shown. The reader should confirm that the code does in fact implement the relevant formulae. Shown next is the `RJafroc` implementation. The relevant file is mainSsDbm.R, a listing of which follows: 
 
-### Fixed-reader random-case (FRRC) analysis
+### Fixed-reader random-case (FRRC) analysis {#RocSampleSizeOR-FRRCAnalysis}
 
-### Random-reader fixed-case (RRFC) analysis
+### Random-reader fixed-case (RRFC) analysis {#RocSampleSizeOR-RRFCAnalysis}
 
-### Single-treatment multiple-reader analysis
+### Single-treatment multiple-reader analysis {#RocSampleSizeOR-STMRAnalysis}
 
 ## Discussion/Summary/3
 

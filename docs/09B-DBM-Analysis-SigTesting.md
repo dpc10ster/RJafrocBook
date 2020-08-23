@@ -274,7 +274,7 @@ as.data.frame(UtilMeanSquares(dataset02)[1:7])
 #> 1 0.5467634 0.4373268 0.3968699 0.06281749 0.09984808 0.06450106 0.0399716
 ```
 
-### Significance testing
+### Significance testing {#DBMAnalysisSigtesting-sig-testing}
 If the NH of no treatment effect is true, i.e., if $\sigma_{\tau}^{2}$ = 0, then according to Table \@ref(tab:ExpValMs) the following holds (the last term in the row labeled $T$ in Table \@ref(tab:ExpValMs) drops out):
 
 \begin{equation}

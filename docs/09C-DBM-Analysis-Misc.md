@@ -112,7 +112,7 @@ data.frame("pValue" = retRJafroc$FRRC$FTests$p[1],
 
 As one might expect, if one "freezes" reader variability, the FOM difference becomes significant, whether viewed from the point of view of the F-statistic exceeding the critical value, the observed p-value being smaller than alpha or the 95% CI for the difference FOM not including zero. 
 
-## Random-reader fixed-case (RRFC) analysis {#RRFCDBMAnalysis}
+## Random-reader fixed-case (RRFC) analysis {#DBMSpecialCases-RRFCAnalysis}
 The model is the same as in TBA \@ref(eq:pseudoValPrime) Eqn. (9.4) except one puts $\sigma_C^2 = \sigma_{\tau C}^2 =0$ in Table Table \@ref(tab:ExpValMs). It follows that: 
 
 \begin{equation}
