@@ -35,16 +35,16 @@ F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
 
 Eqn. \@ref(eq:F-OR-H) incorporates Hillis’ modification of the original OR F-statistic. The modification ensures that the constraint Eqn. \@ref(eq:CovOrderings) is always obeyed and also avoids a possibly negative (and hence illegal) F-statistic. The relevant mean squares are defined by (note that these are calculated using *FOM* values, not *pseudovalues*):
 
-\begin{equation}
-\left.\begin{matrix}
-MS(T)=\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
+\begin{align}
+\left.\begin{array}{rcl}
+MS(T)&=&\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
 \\ 
-MS(R)=\frac{I}{J-1}\sum_{j=1}^{J}(\theta_{\bullet j}-\theta_{\bullet\bullet})^2\\
+MS(R)&=&\frac{I}{J-1}\sum_{j=1}^{J}(\theta_{\bullet j}-\theta_{\bullet\bullet})^2\\
 \\
-MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})
-\end{matrix}\right\}
+MS(TR)&=&\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})
+\end{array}\right\}
 (\#eq:MS-OR)
-\end{equation}
+\end{align}
 
 The original paper [@RN1450] actually proposed a different test statistic $F_{OR}$:
 
@@ -62,11 +62,13 @@ F_{OR}\sim F_{\text{ndf},\text{ddf}}
 
 The original degrees of freedom were defined by:
 
-\begin{equation}
-\text{ndf}=I-1\\
-\text{ddf} = (I-1)\times(J-1)
+\begin{align}
+\begin{split}
+\text{ndf}&=I-1\\
+\text{ddf}&=(I-1)\times(J-1)
+\end{split}
 (\#eq:ORdegreesOfFreedom)
-\end{equation}
+\end{align}
 
 It turns out that the Obuchowski-Rockette test statistic is very conservative, meaning it is highly biased against rejecting the null hypothesis (the data simulator used in the validation described in their publication did not detect this behavior). Because of the conservative behavior, the predicted sample sizes tended to be quite large (if the test statistic does not reject the NH as often as it should, one way to overcome this tendency is to use a larger sample size). In this connection I have two informative anecdotes.
 
@@ -124,7 +126,10 @@ p=\Pr(F>F_{ORH} \mid F\sim F_{\text{ndf},\text{ddf}_H})
 The $(1-\alpha)$ confidence interval for $\theta_{i \bullet} - \theta_{i' \bullet}$ is given by (the average is over the reader index):
 
 \begin{equation}
-CI_{1-\alpha,RRRC}=\theta_{i \bullet} - \theta_{i' \bullet} \pm t_{\alpha/2, \text{ddf}_H}\sqrt{\frac{2}{J}(MS(TR)+J\max(Cov_2-Cov_3,0))}
+\begin{split}
+CI_{1-\alpha,RRRC} =&( \theta_{i \bullet} - \theta_{i' \bullet}) \\ 
+&\pm t_{\alpha/2, \text{ddf}_H}\sqrt{\textstyle\frac{2}{J}(MS(TR)+J\max(Cov_2-Cov_3,0))}
+\end{split}
 (\#eq:CIalpha-RRRC)
 \end{equation}
 
@@ -154,7 +159,7 @@ One can get rid of the infinite denominator degrees of freedom by recognizing, a
 
 The critical value of the $\chi^2$ statistic is $\chi^2_{1-\alpha,I-1}$, which is that value such that fraction $(1-\alpha)$ of the area under the $\chi^2_{I-1}$ distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the $\chi^2$ statistic exceeds the critical value, i.e.,
 
-$\chi^2_{ORH \mid R} > \chi^2_{1-\alpha,I-1}$
+$$\chi^2_{ORH \mid R} > \chi^2_{1-\alpha,I-1}$$
 
 The p-value of the test is the probability that a random sample from the chi-square distribution $\chi^2_{I-1}$ exceeds the observed value of the test statistic $\chi^2_{ORH \mid R}$ statistic defined in Eqn. \@ref(eq:ChisqStatFRRC-OR):
 
@@ -165,11 +170,13 @@ p=\Pr(\chi^2 > \chi^2_{ORH \mid R} \mid \chi^2 \sim \chi^2_{I-1})
 
 The $(1-\alpha)$ (symmetric) confidence interval for the difference figure of merit is given by:
 
-\begin{align}
-CI_{1-\alpha,FRRC}&=&(\theta_{i \bullet} - \theta_{i' \bullet}) \\
-&\pm& t_{\alpha/2, \infty}\sqrt{\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
+\begin{equation}
+\begin{split}
+CI_{1-\alpha,FRRC} =&(\theta_{i \bullet} - \theta_{i' \bullet}) \\ 
+&\pm t_{\alpha/2, \infty}\sqrt{\textstyle\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
+\end{split}
 (\#eq:CIalphaFRRC)
-\end{align}
+\end{equation}
 
 The NH is rejected if any of the following equivalent conditions is met (these statements are also true for `RRRC` analysis, and the `RRFC` analysis to be described next):
 
@@ -188,15 +195,15 @@ F_{ORH \mid C}=\frac{MS(T)}{MS(TR)}
 $F_{ORH \mid C}$ is distributed as an F-statistic with:
 
 \begin{equation}
-\left.\begin{matrix}
-\text{ndf}=I-1\\ 
-\text{ddf}=(I-1)(J-1)\\
-F_{ORH \mid C} \sim F_{\text{ndf},\text{ddf}}
-\end{matrix}\right\}
+\left.\begin{array}{rcl}
+\text{ndf}&=&I-1\\ 
+\text{ddf}&=&(I-1)(J-1)\\
+F_{ORH \mid C} &\sim& F_{\text{ndf},\text{ddf}}
+\end{array}\right\}
 (\#eq:FStatRRFC)
 \end{equation}
 
-The critical value of the statistic is $F_{1-\alpha,I-1,(I-1)(J-1)}$, which is that value such that fraction $(1-\alpha)$ of the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:
+Here is a situation where the degrees of freedom agree with those originally proposed by Obuchowski-Rockette. The critical value of the statistic is $F_{1-\alpha,I-1,(I-1)(J-1)}$, which is that value such that fraction $(1-\alpha)$ of the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:
 
 $$F_{ORH \mid C}>F_{1-\alpha,I-1,(I-1)(J-1)}$$
 
@@ -207,7 +214,7 @@ $$p=\Pr(F>F_{ORH \mid C} \mid F \sim F_{1-\alpha,I-1,(I-1)(J-1)})$$
 The $(1-\alpha)$ confidence interval is given by:
 
 \begin{equation}
-CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, (I-1)(J-1)}\sqrt{\frac{2}{J}MS(TR)}
+CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i' \bullet}) \pm t_{\alpha/2, (I-1)(J-1)}\sqrt{\textstyle\frac{2}{J}MS(TR)}
 (\#eq:CIalphaRRFC)
 \end{equation}
 

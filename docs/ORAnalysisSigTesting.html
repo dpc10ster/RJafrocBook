@@ -24,7 +24,7 @@
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2020-08-22" />
+<meta name="date" content="2020-08-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -354,16 +354,16 @@ F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(Cov_2-Cov_3,0)}
 \tag{6.2}
 \end{equation}\]</span></p>
 <p>Eqn. <a href="ORAnalysisSigTesting.html#eq:F-OR-H">(6.2)</a> incorporates Hillis’ modification of the original OR F-statistic. The modification ensures that the constraint Eqn. <a href="ORMethodIntro.html#eq:CovOrderings">(5.32)</a> is always obeyed and also avoids a possibly negative (and hence illegal) F-statistic. The relevant mean squares are defined by (note that these are calculated using <em>FOM</em> values, not <em>pseudovalues</em>):</p>
-<p><span class="math display" id="eq:MS-OR">\[\begin{equation}
-\left.\begin{matrix}
-MS(T)=\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
+<p><span class="math display" id="eq:MS-OR">\[\begin{align}
+\left.\begin{array}{rcl}
+MS(T)&amp;=&amp;\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
 \\ 
-MS(R)=\frac{I}{J-1}\sum_{j=1}^{J}(\theta_{\bullet j}-\theta_{\bullet\bullet})^2\\
+MS(R)&amp;=&amp;\frac{I}{J-1}\sum_{j=1}^{J}(\theta_{\bullet j}-\theta_{\bullet\bullet})^2\\
 \\
-MS(TR)=\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})
-\end{matrix}\right\}
+MS(TR)&amp;=&amp;\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})
+\end{array}\right\}
 \tag{6.3}
-\end{equation}\]</span></p>
+\end{align}\]</span></p>
 <p>The original paper <span class="citation">(Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span> actually proposed a different test statistic <span class="math inline">\(F_{OR}\)</span>:</p>
 <p><span class="math display" id="eq:F-OR">\[\begin{equation}
 F_{OR}=\frac{MS(T)}{MS(TR)+J(Cov_2-Cov_3)}
@@ -375,11 +375,13 @@ F_{OR}\sim F_{\text{ndf},\text{ddf}}
 \tag{6.5}
 \end{equation}\]</span></p>
 <p>The original degrees of freedom were defined by:</p>
-<p><span class="math display" id="eq:ORdegreesOfFreedom">\[\begin{equation}
-\text{ndf}=I-1\\
-\text{ddf} = (I-1)\times(J-1)
+<p><span class="math display" id="eq:ORdegreesOfFreedom">\[\begin{align}
+\begin{split}
+\text{ndf}&amp;=I-1\\
+\text{ddf}&amp;=(I-1)\times(J-1)
+\end{split}
 \tag{6.6}
-\end{equation}\]</span></p>
+\end{align}\]</span></p>
 <p>It turns out that the Obuchowski-Rockette test statistic is very conservative, meaning it is highly biased against rejecting the null hypothesis (the data simulator used in the validation described in their publication did not detect this behavior). Because of the conservative behavior, the predicted sample sizes tended to be quite large (if the test statistic does not reject the NH as often as it should, one way to overcome this tendency is to use a larger sample size). In this connection I have two informative anecdotes.</p>
 <div id="TwoAnecdotes" class="section level3" number="6.2.1">
 <h3><span class="header-section-number">6.2.1</span> Two anecdotes</h3>
@@ -424,7 +426,10 @@ p=\Pr(F&gt;F_{ORH} \mid F\sim F_{\text{ndf},\text{ddf}_H})
 \end{equation}\]</span></p>
 <p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval for <span class="math inline">\(\theta_{i \bullet} - \theta_{i&#39; \bullet}\)</span> is given by (the average is over the reader index):</p>
 <p><span class="math display" id="eq:CIalpha-RRRC">\[\begin{equation}
-CI_{1-\alpha,RRRC}=\theta_{i \bullet} - \theta_{i&#39; \bullet} \pm t_{\alpha/2, \text{ddf}_H}\sqrt{\frac{2}{J}(MS(TR)+J\max(Cov_2-Cov_3,0))}
+\begin{split}
+CI_{1-\alpha,RRRC} =&amp;( \theta_{i \bullet} - \theta_{i&#39; \bullet}) \\ 
+&amp;\pm t_{\alpha/2, \text{ddf}_H}\sqrt{\textstyle\frac{2}{J}(MS(TR)+J\max(Cov_2-Cov_3,0))}
+\end{split}
 \tag{6.10}
 \end{equation}\]</span></p>
 </div>
@@ -448,18 +453,20 @@ F_{ORH \mid R} \sim F_{I-1,\infty}
 \tag{6.13}
 \end{equation}\]</span></p>
 <p>The critical value of the <span class="math inline">\(\chi^2\)</span> statistic is <span class="math inline">\(\chi^2_{1-\alpha,I-1}\)</span>, which is that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the area under the <span class="math inline">\(\chi^2_{I-1}\)</span> distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the <span class="math inline">\(\chi^2\)</span> statistic exceeds the critical value, i.e.,</p>
-<p><span class="math inline">\(\chi^2_{ORH \mid R} &gt; \chi^2_{1-\alpha,I-1}\)</span></p>
+<p><span class="math display">\[\chi^2_{ORH \mid R} &gt; \chi^2_{1-\alpha,I-1}\]</span></p>
 <p>The p-value of the test is the probability that a random sample from the chi-square distribution <span class="math inline">\(\chi^2_{I-1}\)</span> exceeds the observed value of the test statistic <span class="math inline">\(\chi^2_{ORH \mid R}\)</span> statistic defined in Eqn. <a href="ORAnalysisSigTesting.html#eq:ChisqStatFRRC-OR">(6.13)</a>:</p>
 <p><span class="math display" id="eq:pValueFRRC">\[\begin{equation}
 p=\Pr(\chi^2 &gt; \chi^2_{ORH \mid R} \mid \chi^2 \sim \chi^2_{I-1})
 \tag{6.14}
 \end{equation}\]</span></p>
 <p>The <span class="math inline">\((1-\alpha)\)</span> (symmetric) confidence interval for the difference figure of merit is given by:</p>
-<p><span class="math display" id="eq:CIalphaFRRC">\[\begin{align}
-CI_{1-\alpha,FRRC}&amp;=&amp;(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \\
-&amp;\pm&amp; t_{\alpha/2, \infty}\sqrt{\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
+<p><span class="math display" id="eq:CIalphaFRRC">\[\begin{equation}
+\begin{split}
+CI_{1-\alpha,FRRC} =&amp;(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \\ 
+&amp;\pm t_{\alpha/2, \infty}\sqrt{\textstyle\frac{2}{J}(Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0))}
+\end{split}
 \tag{6.15}
-\end{align}\]</span></p>
+\end{equation}\]</span></p>
 <p>The NH is rejected if any of the following equivalent conditions is met (these statements are also true for <code>RRRC</code> analysis, and the <code>RRFC</code> analysis to be described next):</p>
 <ul>
 <li>The observed value of the <span class="math inline">\(\chi^2\)</span> statistic exceeds the critical value <span class="math inline">\(\chi^2_{1-\alpha,I-1}\)</span>.</li>
@@ -476,20 +483,20 @@ F_{ORH \mid C}=\frac{MS(T)}{MS(TR)}
 \end{equation}\]</span></p>
 <p><span class="math inline">\(F_{ORH \mid C}\)</span> is distributed as an F-statistic with:</p>
 <p><span class="math display" id="eq:FStatRRFC">\[\begin{equation}
-\left.\begin{matrix}
-\text{ndf}=I-1\\ 
-\text{ddf}=(I-1)(J-1)\\
-F_{ORH \mid C} \sim F_{\text{ndf},\text{ddf}}
-\end{matrix}\right\}
+\left.\begin{array}{rcl}
+\text{ndf}&amp;=&amp;I-1\\ 
+\text{ddf}&amp;=&amp;(I-1)(J-1)\\
+F_{ORH \mid C} &amp;\sim&amp; F_{\text{ndf},\text{ddf}}
+\end{array}\right\}
 \tag{6.17}
 \end{equation}\]</span></p>
-<p>The critical value of the statistic is <span class="math inline">\(F_{1-\alpha,I-1,(I-1)(J-1)}\)</span>, which is that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:</p>
+<p>Here is a situation where the degrees of freedom agree with those originally proposed by Obuchowski-Rockette. The critical value of the statistic is <span class="math inline">\(F_{1-\alpha,I-1,(I-1)(J-1)}\)</span>, which is that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:</p>
 <p><span class="math display">\[F_{ORH \mid C}&gt;F_{1-\alpha,I-1,(I-1)(J-1)}\]</span></p>
 <p>The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:</p>
 <p><span class="math display">\[p=\Pr(F&gt;F_{ORH \mid C} \mid F \sim F_{1-\alpha,I-1,(I-1)(J-1)})\]</span></p>
 <p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval is given by:</p>
 <p><span class="math display" id="eq:CIalphaRRFC">\[\begin{equation}
-CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/2, (I-1)(J-1)}\sqrt{\frac{2}{J}MS(TR)}
+CI_{1-\alpha,RRFC}=(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/2, (I-1)(J-1)}\sqrt{\textstyle\frac{2}{J}MS(TR)}
 \tag{6.18}
 \end{equation}\]</span></p>
 </div>
