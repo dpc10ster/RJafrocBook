@@ -136,7 +136,7 @@ F_{ORH \mid R}=\frac{MS(T)}{Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0)}
 (\#eq:DefFStatFRRC-OR)
 \end{equation}
 
-[For $J$ = 1, Eqn. \@ref(eq:DefFStatFRRC-OR) reduces to Eqn. \@ref(eq:DefF-1RMT).] 
+[Note that for $J$ = 1, Eqn. \@ref(eq:DefFStatFRRC-OR) reduces to Eqn. \@ref(eq:DefF-1RMT), i.e., the single-reader analysis described in the previous chapter.] 
 
 $F_{ORH \mid R}$ is distributed as an F-statistic with $\text{ndf} = I-1$ and $\text{ddf} = \infty$:
 
@@ -171,11 +171,11 @@ CI_{1-\alpha,FRRC}&=&(\theta_{i \bullet} - \theta_{i' \bullet}) \\
 (\#eq:CIalphaFRRC)
 \end{align}
 
-The NH is rejected if any of the following equivalent conditions is met:
+The NH is rejected if any of the following equivalent conditions is met (these statements are also true for `RRRC` analysis, and the `RRFC` analysis to be described next):
 
 * The observed value of the $\chi^2$ statistic exceeds the critical value $\chi^2_{1-\alpha,I-1}$.
 * The p-value is less than $\alpha$.
-* The $(1-\alpha)$ confidence interval does not include zero.
+* The $(1-\alpha)$ confidence interval for at least one treatment-pairing does not include zero.
 
 ## Random-reader fixed-case (RRFC) analysis {#ORAnalysisSigTesting-RRFCAnalysis}
 When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is: 
