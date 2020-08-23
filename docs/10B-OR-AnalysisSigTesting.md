@@ -154,7 +154,7 @@ One can get rid of the infinite denominator degrees of freedom by recognizing, a
 
 The critical value of the $\chi^2$ statistic is $\chi^2_{1-\alpha,I-1}$, which is that value such that fraction $(1-\alpha)$ of the area under the $\chi^2_{I-1}$ distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the $\chi^2$ statistic exceeds the critical value, i.e.,
 
-$\chi^2_{ORH \mid R} \gt \chi^2_{1-\alpha,I-1}$
+$\chi^2_{ORH \mid R} > \chi^2_{1-\alpha,I-1}$
 
 The p-value of the test is the probability that a random sample from the chi-square distribution $\chi^2_{I-1}$ exceeds the observed value of the test statistic $\chi^2_{ORH \mid R}$ statistic defined in Eqn. \@ref(eq:ChisqStatFRRC-OR):
 
