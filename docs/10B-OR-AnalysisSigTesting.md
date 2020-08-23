@@ -114,7 +114,7 @@ The critical value of the F-statistic for rejection of the null hypothesis is $F
 
 * $\text{ddf}_H$ increases, as this lowers the critical value of the F-statistic. 
 
-The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{OR}$ could be observed by chance. In other words, it is the area under the F-distribution $F_{\text{ndf},\text{ddf}_H}$ that lies above the observed value $F_{OR}$:
+The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{ORH}$ could be observed by chance. In other words, it is the area under the F-distribution $F_{\text{ndf},\text{ddf}_H}$ that lies above the observed value $F_{ORH}$:
 
 \begin{equation}
 p=\Pr(F>F_{ORH} \mid F\sim F_{\text{ndf},\text{ddf}_H})
@@ -132,35 +132,35 @@ CI_{1-\alpha,RRRC}=\theta_{i \bullet} - \theta_{i' \bullet} \pm t_{\alpha/2, \te
 Using the vertical bar notation $\mid R$ to denote that reader is regarded as a fixed effect [@RN1124], the F -statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is [@RN1865]: 
 
 \begin{equation}
-F_{OR \mid R}=\frac{MS(T)}{Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0)}
+F_{ORH \mid R}=\frac{MS(T)}{Var-Cov_1+(J-1)\max(Cov_2-Cov_3,0)}
 (\#eq:DefFStatFRRC-OR)
 \end{equation}
 
-$F_{OR \mid R}$ is distributed as an F-statistic with:
+$F_{ORH \mid R}$ is distributed as an F-statistic with:
 
 \begin{equation}
 \left.\begin{matrix}
 \text{ndf}=I-1\\ 
 \text{ddf}=\infty\\
-F_{OR \mid R} \sim F_{\text{ndf},\text{ddf}}
+F_{ORH \mid R} \sim F_{\text{ndf},\text{ddf}}
 \end{matrix}\right\}
 (\#eq:FStatFRRC-OR)
 \end{equation}
 
-Alternatively, as with Eqn. \@ref(eq:F-1RMT),[DPC: here is an example where referring to a label defined in a previous chapter fails],
+Alternatively, as with Eqn. \@ref(eq:F-1RMT),
 
-$$(I-1)F_{OR \mid R} \sim \chi^2_{I-1}$$
+$$(I-1)F_{ORH \mid R} \sim \chi^2_{I-1}$$
 
 For $J$ = 1, Eqn. \@ref(eq:DefFStatFRRC-OR) reduces to Eqn. \@ref(eq:DefF-1RMT). 
 
 The critical value of the statistic is $F_{1-\alpha,I-1,\infty}$ which is that value such that fraction $(1-\alpha)$ of the area under the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F- statistic exceeds the critical value, i.e.,:
 
-$$F_{OR \mid R}>F_{1-\alpha,I-1,\infty}$$
+$$F_{ORH \mid R}>F_{1-\alpha,I-1,\infty}$$
 
 The p-value of the test is the probability that a random sample from the distribution $F_{I-1,\infty}$ exceeds the observed value of the F statistic defined in Eqn. \@ref(eq:DefFStatFRRC-OR):
 
 \begin{equation}
-p=\Pr(F>F_{OR \mid R} \mid F \sim F_{I-1,\infty})
+p=\Pr(F>F_{ORH \mid R} \mid F \sim F_{I-1,\infty})
 (\#eq:pValueaphaFRRC)
 \end{equation}
 
@@ -183,28 +183,28 @@ Notice that for J = 1, Eqn. \@ref(eq:CIalphaFRRC) reduces to Eqn. \@ref(eq:CIalp
 When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is: 
 
 \begin{equation}
-F_{OR \mid C}=\frac{MS(T)}{MS(TR)}
+F_{ORH \mid C}=\frac{MS(T)}{MS(TR)}
 (\#eq:DefFStatRRFC)
 \end{equation}
 
-$F_{OR \mid C}$ is distributed as an F-statistic with:
+$F_{ORH \mid C}$ is distributed as an F-statistic with:
 
 \begin{equation}
 \left.\begin{matrix}
 \text{ndf}=I-1\\ 
 \text{ddf}=(I-1)(J-1)\\
-F_{OR \mid C} \sim F_{\text{ndf},\text{ddf}}
+F_{ORH \mid C} \sim F_{\text{ndf},\text{ddf}}
 \end{matrix}\right\}
 (\#eq:FStatRRFC)
 \end{equation}
 
 The critical value of the statistic is $F_{1-\alpha,I-1,(I-1)(J-1)}$, which is that value such that fraction $(1-\alpha)$ of the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:
 
-$$F_{OR \mid C}>F_{1-\alpha,I-1,(I-1)(J-1)}$$
+$$F_{ORH \mid C}>F_{1-\alpha,I-1,(I-1)(J-1)}$$
 
 The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:
 
-$$p=\Pr(F>F_{OR \mid C} \mid F \sim F_{1-\alpha,I-1,(I-1)(J-1)})$$
+$$p=\Pr(F>F_{ORH \mid C} \mid F \sim F_{1-\alpha,I-1,(I-1)(J-1)})$$
 
 The $(1-\alpha)$ confidence interval is given by:
 
