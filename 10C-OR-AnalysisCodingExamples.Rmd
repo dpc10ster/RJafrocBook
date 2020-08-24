@@ -3,7 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Illustrations of the OR method {#ORExamples}
+# Illustration of the Obuchowski Rockette method {#ORExamples}
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -17,63 +17,81 @@ library(here)
 ```
 
 ## Introduction {#ORExamples-introduction}
-* Two examples are given. In the first example we use the VanDyke dataset, i.e., `dataset02`. 
-* The analysis involves the following steps: calculate the figure of merit, calculate the variance-covariance matrix and the mean-squares, and calculate the NH statistic, p-value and confidence interval(s).
+* Four examples are given. The first three use OR analysis, while the last one uses the pseudovalue-based DBM analysis.
+* The first example uses a two-treatment five-reader **ROC** dataset, a well-know and widely used dataset in the literature [@RN1993]. 
+* The second example uses a five-treatment four-reader **ROC** dataset, showing the effect of multiple treatment pairings. 
+* The third example uses a five-treatment four-reader **FROC** dataset, showing the key difference involved in FROC analysis, namely the choice of figure of merit. 
+* The fourth example uses a five-treatment four-reader **FROC** dataset, showing the key difference involved in DBM vs. OR analysis. 
+* Each analysis involves the following steps: 
+    + Calculate the figure of merit, 
+    + Calculate the variance-covariance matrix and the mean-squares, and 
+    + Calculate the NH statistic, p-value and confidence interval(s).
 
-### Figures of merit
+## Illustration with dataset02 {#ORExamples-dataset02}
+* `dataset02` has two modalities and five readers. 
+
+```{r}
+I <- length(dataset02$ratings$NL[,1,1,1])
+J <- length(dataset02$ratings$NL[1,,1,1])
+cat("I = ", I, ", J = ", J, "\n")
+```
+
+### Random-Reader Random-Case (RRRC) analysis {#ORExamples-RRRC-dataset02}
+* The first step is to calculate the figures of merit. 
+* The following code uses `UtilFigureOfMerit()` to this end. Note that `FOM` has to be explicitly specified as "Wilcoxon".
+
 ```{r}
 foms <- UtilFigureOfMerit(dataset02, FOM = "Wilcoxon")
 print(foms)
 ```
 
-### Variance covariance and mean-squares
+* For example, for the first treatment, `trt0`, the second reader's figure of merit is `r foms["trt0", "rdr1"]`.
+* The next step is to calculate the variance-covariance matrix and the mean-squares.
+* The function `UtilORVarComponentsFactorial()` returns these quantities. The `Factorial` in the function name is due to the fact that this code applies to the factorial design. A different function is used for a split-plot design.
+* For compactness only the first two members of the returned object are displayed. The remaining members are used in single-treatment and single-reader analyses.
+
 ```{r}
 ret <- UtilORVarComponentsFactorial(dataset02, FOM = "Wilcoxon", covEstMethod = "jackknife")
-print(ret)
+print(ret$TRanova)
+print(ret$VarCom)
 ```
 
-## Random-Reader Random-Case (RRRC) analysis {#ORExamples-RRRC-analysis}
-Illustrated next are the results of random-reader random-case analysis.
+* The next step is the calculate the NH testing statistic. 
+* The relevant equation is Eqn. \@ref(eq:F-ORH-RRRC). 
+* `ret` contains the values needed in this equation, as follows:
+   + MS(T) is in `ret$TRanova["T", "MS"]`, whose value is `r ret$TRanova["T", "MS"]`. 
+   + MS(TR) is in `ret$TRanova["TR", "MS"]`, whose value is `r ret$TRanova["TR", "MS"]`. 
+   + `J`, the number of readers, is the length of the second dimension of `dataset02$ratings$NL`, i.e., 5. 
+   + `Cov2` is in `ret$VarCom["Cov2", "Estimates"]`, whose value is `r ret$VarCom["Cov2", "Estimates"]`. 
+   + `Cov3` is in `ret$VarCom["Cov3", "Estimates"]`, whose value is `r ret$VarCom["Cov3", "Estimates"]`. 
 
-### Calculate F-statistic
-The F-statistic is calculated using \@ref(eq:F-ORH-RRRC). The function `UtilORVarComponentsFactorial()` returns `ret`, which contains the values needed in this equation, as follows:
-
-* MS(T) is in `ret$TRanova["T", "MS"]`, whose value is `r ret$TRanova["T", "MS"]`. 
-* MS(TR) is in `ret$TRanova["TR", "MS"]`, whose value is `r ret$TRanova["TR", "MS"]`. 
-* `J`, the number of readers, is the length of the second dimension of `dataset02$ratings$NL`, i.e., 5. 
-* `Cov2` is in `ret$VarCom["Cov2", "Estimates"]`, whose value is `r ret$VarCom["Cov2", "Estimates"]`. 
-* `Cov3` is in `ret$VarCom["Cov3", "Estimates"]`, whose value is `r ret$VarCom["Cov3", "Estimates"]`. 
-
-Applying Eqn. \@ref(eq:F-ORH-RRRC) one gets (`den` is the denominator on the right hand side of this equation):
+Applying Eqn. \@ref(eq:F-ORH-RRRC) one gets (`den` is the denominator on the right hand side of the referenced equation):
 
 ```{r}
-J <- length(dataset02$ratings$NL[1,,1,1])
 den <- ret$TRanova["TR", "MS"] + J* max(ret$VarCom["Cov2", "Estimates"] - ret$VarCom["Cov3", "Estimates"],0)
 F_ORH_RRRC <- ret$TRanova["T", "MS"]/den
 print(F_ORH_RRRC)
 ```
 
-### Calculate ddf_H
-From the previous chapter, the Hillis `ddf` is calculated using Eqn. \@ref(eq:ddfH-RRRC)). The numerator of `ddf` is seen to be identical to `den^2`, where `den` was calculated in the preceding code block. The implementation follows:
+* The next step is calculation of the denominator degrees of freedom.
+* From the previous chapter, `ddf` is calculated using Eqn. \@ref(eq:ddfH-RRRC)). The numerator of `ddf` is seen to be identical to `den^2`, where `den` was calculated in the preceding code block. The implementation follows:
 
 ```{r}
-I <- length(dataset02$ratings$NL[,1,1,1])
 ddf <- den^2*(I-1)*(J-1)/(ret$TRanova["TR", "MS"])^2
 print(ddf)
 ```
 
-### Calculate the p-value
-The relevant equation is Eqn. \@ref(eq:pValueOR-RRRC) whose implementation is shown next: 
+* The next step is calculation of the p-value for rejecting the NH
+* The relevant equation is Eqn. \@ref(eq:pValueOR-RRRC) whose implementation follows: 
 
 ```{r}
 p <- 1 - pf(F_ORH_RRRC, I - 1, ddf)
 print(p)
 ```
 
-The difference is not significant at $\alpha$ = 0.05.
-
-### Confidence intervals for reader-averaged inter-treatment FOM differences
-Since `I` = 2, their is only one paired difference in reader-averaged FOMs, namely, the first treatment minus the second:
+* The difference is not significant at $\alpha$ = 0.05. 
+* The next step is calculation of confidence intervals.
+* Since `I` = 2, their is only one paired difference in reader-averaged FOMs, namely, the first treatment minus the second:
 
 ```{r}
 trtMeans <- rowMeans(foms)
@@ -81,7 +99,8 @@ trtMeanDiffs <- trtMeans[1] - trtMeans[2]
 print(trtMeanDiffs)
 ```
 
-From the previous chapter, the $(1-\alpha)$ confidence interval for $\theta_{1 \bullet} - \theta_{2 \bullet}$ is given by Eqn. \@ref(eq:CI-RRRC). The expression inside the square-root symbol is `2/J*den`. The implementation follows:
+* From the previous chapter, the $(1-\alpha)$ confidence interval for $\theta_{1 \bullet} - \theta_{2 \bullet}$ is given by Eqn. \@ref(eq:CI-RRRC).
+* The expression inside the square-root symbol is `2/J*den`. The implementation follows:
 
 ```{r}
 alpha <- 0.05
@@ -92,12 +111,11 @@ names(CI_RRRC) <- c("Lower", "Right")
 print(CI_RRRC)
 ```
 
-The confidence interval, shown as `[Lower, Right]`, includes zero, which confirms that the reader-averaged FOM difference between treatments is not significant. 
-
-## Comparison to RJafroc
-* This is accomplished using the significance testing function of `RJafroc`, namely `StSignificanceTesting()`. 
+* The confidence interval includes zero, which confirms that the reader-averaged FOM difference between treatments is not significant. 
+* Finally, the preceding results are next compared to `RJafroc`.
+* This is accomplished using the significance testing function `StSignificanceTesting()`. 
 * This function takes as arguments the `dataset`, the `FOM`, set to "Wilcoxon", the method of analysis, set to "OR" and `analysisOption`, set to "RRRC". The significance level of the test, also an argument, `alpha`, defaults to 0.05. 
-* The code below applies this function and saves the returned object to `st`. 
+* The code below applies this function and saves the returned object to `st1`. 
 * The first member of this object, a  `list` object named `FOMs`, is then displayed. 
 * `FOMs` contains three data frames: 
    + `FOMS$foms`, the figures of merit for each treatment and reader, 
@@ -105,8 +123,8 @@ The confidence interval, shown as `[Lower, Right]`, includes zero, which confirm
    + `FOMS$trtMeanDiffs`, the inter-treatment difference figures of merit averaged over readers. The difference is always the first treatment minus the second, etc., in this example, `trt0` minus `trt1`.
 
 ```{r}
-st <- StSignificanceTesting(dataset02, FOM = "Wilcoxon", method = "OR", analysisOption = "RRRC")
-print(st$FOMs)
+st1 <- StSignificanceTesting(dataset02, FOM = "Wilcoxon", method = "OR", analysisOption = "RRRC")
+print(st1$FOMs)
 ```
 
 * Displayed next are the variance components and mean-squares. 
@@ -117,17 +135,234 @@ print(st$FOMs)
 * `ANOVA$IndividualRdr` contains the quantities necessary for individual reader analyses.
 
 ```{r}
-print(st$ANOVA)
+print(st1$ANOVA)
 ```
 
-* Displayed next are the results of RRRC analysis.
-* These are contained in the `RRRC` `list` object.
+* Displayed next are the results of RRRC analysis, contained in the `RRRC` `list` object.
 * `RRRC$FTests` contains the results of the F-tests.
 * `RRRC$ciDiffTrt` contains the results of the confidence intervals for the inter-treatment difference FOMs, averaged over readers.
 * `RRRC$ciAvgRdrEachTrt` contains the results of the confidence intervals for the treatments, averaged over readers.
 
 ```{r}
-print(st$RRRC)
+print(st1$RRRC)
+```
+
+### Fixed-Reader Random-Case (FRRC) analysis {#ORExamples-FRRC-dataset02}
+
+```{r}
+st1 <- StSignificanceTesting(dataset02, FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC")
+print(st1$FRRC)
+```
+
+### Random-Reader Fixed-Case (RRFC) analysis {#ORExamples-RRFC-dataset02}
+
+```{r}
+st1 <- StSignificanceTesting(dataset02, FOM = "Wilcoxon", method = "OR", analysisOption = "RRFC")
+print(st1$RRFC)
+```
+
+## Illustration with dataset04 {#ORExamples-dataset04}
+* The second example uses the Federica Zanca dataset [@RN1882], i.e., `dataset04`, which has five modalities and four readers. 
+* This illustrates the situation when multiple treatment pairings are involved. In contrast, the previous example had only one treatment pairing.
+* Since this is an FROC dataset, in order to keep this comparable with the previous example, one converts it to an inferred-ROC dataset.
+* The function `DfFroc2Roc(dataset04)` converts, using the highest-rating, the FROC dataset to an inferred-ROC dataset.
+* Since `analysisOption` is not explicitly specified in the following code, the function `StSignificanceTesting` performs all three analyses: `RRRC`, `FRRC` and `RRFC`.
+* These are contained in the returned `list` object `st2`.
+
+```{r}
+ds <- DfFroc2Roc(dataset04) # convert to ROC
+I <- length(ds$ratings$NL[,1,1,1])
+J <- length(ds$ratings$NL[1,,1,1])
+cat("I = ", I, ", J = ", J, "\n")
+st2 <- StSignificanceTesting(ds, FOM = "Wilcoxon", method = "OR")
+print(st2$FOMs)
+print(st2$ANOVA$TRanova)
+print(st2$ANOVA$VarCom)
+```
+
+### Random-Reader Random-Case (RRRC) analysis {#ORExamples-RRRC-dataset04}
+
+```{r}
+print(st2$RRRC$FTests)
+```
+
+* TBA
+
+```{r}
+print(st2$RRRC$ciDiffTrt)
+```
+
+* TBA
+
+```{r}
+print(st2$RRRC$ciAvgRdrEachTrt)
+```
+
+* TBA
+
+### Fixed-Reader Random-Case (FRRC) analysis {#ORExamples-FRRC-dataset04}
+
+```{r}
+print(st2$FRRC$FTests)
+```
+
+* TBA
+
+```{r}
+print(st2$FRRC$ciDiffTrt)
+```
+
+* TBA
+
+```{r}
+print(st2$FRRC$ciAvgRdrEachTrt)
+```
+
+* TBA
+
+```{r}
+print(st2$FRRC$FTests)
+```
+
+* TBA
+
+### Random-Reader Fixed-Case (RRFC) analysis {#ORExamples-RRFC-dataset04}
+
+```{r}
+print(st2$RRFC)
+```
+
+
+## Illustration with dataset04, FROC analysis {#ORExamples-dataset04-FROC}
+* The third example uses `dataset04`, but this time we use the FROC data, i.e, we do not convert it to inferred-ROC. 
+* Since this is an FROC dataset, one needs to use an FROC figure of merit. 
+* In this example the weighted AFROC figure of merit `FOM = "wAFROC"` is specified. This is the recommended figure of merit when both normal and abnormal cases are present in the dataset.
+* If the dataset does not contain normal cases, then the weighted AFROC1 figure of merit `FOM = "wAFROC1"` should be specified. 
+
+```{r}
+ds <- dataset04 # do NOT convert to ROC
+st3 <- StSignificanceTesting(ds, FOM = "wAFROC", method = "OR")
+print(st3$FOMs)
+print(st3$ANOVA$TRanova)
+print(st3$ANOVA$VarCom)
+```
+
+### Random-Reader Random-Case (RRRC) analysis {#ORExamples-RRRC-dataset04-FROC}
+
+```{r}
+print(st3$RRRC$FTests)
+```
+
+* TBA
+
+```{r}
+print(st3$RRRC$ciDiffTrt)
+```
+
+* TBA
+
+```{r}
+print(st3$RRRC$ciAvgRdrEachTrt)
+```
+
+* TBA
+
+### Fixed-Reader Random-Case (FRRC) analysis {#ORExamples-FRRC-dataset04-FROC}
+
+```{r}
+print(st3$FRRC$FTests)
+```
+
+* TBA
+
+```{r}
+print(st3$FRRC$ciDiffTrt)
+```
+
+* TBA
+
+```{r}
+print(st3$FRRC$ciAvgRdrEachTrt)
+```
+
+* TBA
+
+```{r}
+print(st3$FRRC$FTests)
+```
+
+* TBA
+
+### Random-Reader Fixed-Case (RRFC) analysis {#ORExamples-RRFC-dataset04-FROC}
+
+```{r}
+print(st3$RRFC)
+```
+
+
+## Illustration with dataset04, FROC analysis, DBM significance testing {#ORExamples-dataset04-FROC-DBM}
+* The fourth example again uses `dataset04`, i.e., FROC data, *but this time we use DBM analysis*.
+* The key difference below is in the call to `StSignificanceTesting()` function, where we set `method = "DBM"`.
+* Since DBM analysis is pseudovalue based, and the figure of merit is not the empirical AUC under the ROC, one expects to see differences from the previously presented OR analysis, contained in `st3`.
+
+```{r}
+ds <- dataset04 # do NOT convert to ROC
+st4 <- StSignificanceTesting(ds, FOM = "wAFROC", method = "DBM") # Note we are using DBM analysis
+print(st4$FOMs)
+print(st4$ANOVA$TRCanova)
+print(st4$ANOVA$VarCom)
+```
+
+### Random-Reader Random-Case (RRRC) analysis {#ORExamples-RRRC-dataset04-FROC-DBM}
+
+```{r}
+print(st4$RRRC$FTests)
+```
+
+* TBA
+
+```{r}
+print(st4$RRRC$ciDiffTrt)
+```
+
+* TBA
+
+```{r}
+print(st4$RRRC$ciAvgRdrEachTrt)
+```
+
+* TBA
+
+### Fixed-Reader Random-Case (FRRC) analysis {#ORExamples-FRRC-dataset04-FROC-DBM}
+
+```{r}
+print(st4$FRRC$FTests)
+```
+
+* TBA
+
+```{r}
+print(st4$FRRC$ciDiffTrt)
+```
+
+* TBA
+
+```{r}
+print(st4$FRRC$ciAvgRdrEachTrt)
+```
+
+* TBA
+
+```{r}
+print(st4$FRRC$FTests)
+```
+
+* TBA
+
+### Random-Reader Fixed-Case (RRFC) analysis {#ORExamples-RRFC-dataset04-FROC-DBM}
+
+```{r}
+print(st4$RRFC)
 ```
 
 
