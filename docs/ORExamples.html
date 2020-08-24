@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>REFERENCES | The RJafroc Book</title>
+  <title>Chapter 7 Illustrations of the OR method | The RJafroc Book</title>
   <meta name="description" content="Extended RJafroc documentation." />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="REFERENCES | The RJafroc Book" />
+  <meta property="og:title" content="Chapter 7 Illustrations of the OR method | The RJafroc Book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="REFERENCES | The RJafroc Book" />
+  <meta name="twitter:title" content="Chapter 7 Illustrations of the OR method | The RJafroc Book" />
   
   <meta name="twitter:description" content="Extended RJafroc documentation." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="SplitPlotChapter.html"/>
-
+<link rel="prev" href="ORAnalysisSigTesting.html"/>
+<link rel="next" href="RocSampleSizeDBM.html"/>
 <script src="libs/header-attrs-2.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -335,121 +335,206 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered" number="">
-<h1>REFERENCES</h1>
+<div id="ORExamples" class="section level1" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Illustrations of the OR method</h1>
+<div id="ORExamples-introduction" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Introduction</h2>
+<ul>
+<li>Two examples are given. In the first example we use the VanDyke dataset, i.e., <code>dataset02</code>.</li>
+<li>The analysis involves the following steps: calculate the figure of merit, calculate the variance-covariance matrix and the mean-squares, and calculate the NH statistic, p-value and confidence interval(s).</li>
+</ul>
+<div id="figures-of-merit" class="section level3" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> Figures of merit</h3>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="ORExamples.html#cb29-1"></a>foms &lt;-<span class="st"> </span><span class="kw">UtilFigureOfMerit</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>)</span>
+<span id="cb29-2"><a href="ORExamples.html#cb29-2"></a><span class="kw">print</span>(foms)</span>
+<span id="cb29-3"><a href="ORExamples.html#cb29-3"></a><span class="co">#&gt;           rdr0      rdr1      rdr2      rdr3      rdr4</span></span>
+<span id="cb29-4"><a href="ORExamples.html#cb29-4"></a><span class="co">#&gt; trt0 0.9196457 0.8587762 0.9038647 0.9731079 0.8297907</span></span>
+<span id="cb29-5"><a href="ORExamples.html#cb29-5"></a><span class="co">#&gt; trt1 0.9478261 0.9053140 0.9217391 0.9993559 0.9299517</span></span></code></pre></div>
+</div>
+<div id="variance-covariance-and-mean-squares" class="section level3" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> Variance covariance and mean-squares</h3>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="ORExamples.html#cb30-1"></a>ret &lt;-<span class="st"> </span><span class="kw">UtilORVarComponentsFactorial</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">covEstMethod =</span> <span class="st">&quot;jackknife&quot;</span>)</span>
+<span id="cb30-2"><a href="ORExamples.html#cb30-2"></a><span class="kw">print</span>(ret)</span>
+<span id="cb30-3"><a href="ORExamples.html#cb30-3"></a><span class="co">#&gt; $TRanova</span></span>
+<span id="cb30-4"><a href="ORExamples.html#cb30-4"></a><span class="co">#&gt;             SS DF           MS</span></span>
+<span id="cb30-5"><a href="ORExamples.html#cb30-5"></a><span class="co">#&gt; T  0.004796171  1 0.0047961705</span></span>
+<span id="cb30-6"><a href="ORExamples.html#cb30-6"></a><span class="co">#&gt; R  0.015344800  4 0.0038362000</span></span>
+<span id="cb30-7"><a href="ORExamples.html#cb30-7"></a><span class="co">#&gt; TR 0.002204122  4 0.0005510306</span></span>
+<span id="cb30-8"><a href="ORExamples.html#cb30-8"></a><span class="co">#&gt; </span></span>
+<span id="cb30-9"><a href="ORExamples.html#cb30-9"></a><span class="co">#&gt; $VarCom</span></span>
+<span id="cb30-10"><a href="ORExamples.html#cb30-10"></a><span class="co">#&gt;          Estimates      Rhos</span></span>
+<span id="cb30-11"><a href="ORExamples.html#cb30-11"></a><span class="co">#&gt; VarR  0.0015349993        NA</span></span>
+<span id="cb30-12"><a href="ORExamples.html#cb30-12"></a><span class="co">#&gt; VarTR 0.0002004025        NA</span></span>
+<span id="cb30-13"><a href="ORExamples.html#cb30-13"></a><span class="co">#&gt; Cov1  0.0003466137 0.4320314</span></span>
+<span id="cb30-14"><a href="ORExamples.html#cb30-14"></a><span class="co">#&gt; Cov2  0.0003440748 0.4288668</span></span>
+<span id="cb30-15"><a href="ORExamples.html#cb30-15"></a><span class="co">#&gt; Cov3  0.0002390284 0.2979333</span></span>
+<span id="cb30-16"><a href="ORExamples.html#cb30-16"></a><span class="co">#&gt; Var   0.0008022883        NA</span></span>
+<span id="cb30-17"><a href="ORExamples.html#cb30-17"></a><span class="co">#&gt; </span></span>
+<span id="cb30-18"><a href="ORExamples.html#cb30-18"></a><span class="co">#&gt; $IndividualTrt</span></span>
+<span id="cb30-19"><a href="ORExamples.html#cb30-19"></a><span class="co">#&gt;      DF  msREachTrt   varEachTrt  cov2EachTrt</span></span>
+<span id="cb30-20"><a href="ORExamples.html#cb30-20"></a><span class="co">#&gt; trt0  4 0.003082629 0.0010141028 0.0004839618</span></span>
+<span id="cb30-21"><a href="ORExamples.html#cb30-21"></a><span class="co">#&gt; trt1  4 0.001304602 0.0005904738 0.0002041879</span></span>
+<span id="cb30-22"><a href="ORExamples.html#cb30-22"></a><span class="co">#&gt; </span></span>
+<span id="cb30-23"><a href="ORExamples.html#cb30-23"></a><span class="co">#&gt; $IndividualRdr</span></span>
+<span id="cb30-24"><a href="ORExamples.html#cb30-24"></a><span class="co">#&gt;      DF   msTEachRdr   varEachRdr  cov1EachRdr</span></span>
+<span id="cb30-25"><a href="ORExamples.html#cb30-25"></a><span class="co">#&gt; rdr0  1 0.0003970662 0.0006989006 3.734661e-04</span></span>
+<span id="cb30-26"><a href="ORExamples.html#cb30-26"></a><span class="co">#&gt; rdr1  1 0.0010828854 0.0011060528 7.601598e-04</span></span>
+<span id="cb30-27"><a href="ORExamples.html#cb30-27"></a><span class="co">#&gt; rdr2  1 0.0001597470 0.0008423434 3.553224e-04</span></span>
+<span id="cb30-28"><a href="ORExamples.html#cb30-28"></a><span class="co">#&gt; rdr3  1 0.0003444784 0.0001505777 1.083399e-06</span></span>
+<span id="cb30-29"><a href="ORExamples.html#cb30-29"></a><span class="co">#&gt; rdr4  1 0.0050161160 0.0012135668 2.430368e-04</span></span></code></pre></div>
+</div>
+</div>
+<div id="random-reader-random-case-rrrc-analysis" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Random-Reader Random-Case (RRRC) analysis</h2>
+<p>Illustrated next are the results of random-reader random-case analysis.</p>
+<div id="calculate-f-statistic" class="section level3" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> Calculate F-statistic</h3>
+<p>The F-statistic is calculated using <a href="ORAnalysisSigTesting.html#eq:F-ORH-RRRC">(6.2)</a>. The function <code>UtilORVarComponentsFactorial()</code> returns <code>ret</code>, which contains the values needed in this equation, as follows:</p>
+<ul>
+<li>MS(T) is in <code>ret$TRanova["T", "MS"]</code>, whose value is 0.0047962.</li>
+<li>MS(TR) is in <code>ret$TRanova["TR", "MS"]</code>, whose value is 5.5103062^{-4}.</li>
+<li><code>J</code>, the number of readers, is the length of the second dimension of <code>dataset02$ratings$NL</code>, i.e., 5.</li>
+<li><code>Cov2</code> is in <code>ret$VarCom["Cov2", "Estimates"]</code>, whose value is 3.4407483^{-4}.</li>
+<li><code>Cov3</code> is in <code>ret$VarCom["Cov3", "Estimates"]</code>, whose value is 2.3902837^{-4}.</li>
+</ul>
+<p>Applying Eqn. <a href="ORAnalysisSigTesting.html#eq:F-ORH-RRRC">(6.2)</a> one gets (<code>den</code> is the denominator on the right hand side of this equation):</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="ORExamples.html#cb31-1"></a>J &lt;-<span class="st"> </span><span class="kw">length</span>(dataset02<span class="op">$</span>ratings<span class="op">$</span>NL[<span class="dv">1</span>,,<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb31-2"><a href="ORExamples.html#cb31-2"></a>den &lt;-<span class="st"> </span>ret<span class="op">$</span>TRanova[<span class="st">&quot;TR&quot;</span>, <span class="st">&quot;MS&quot;</span>] <span class="op">+</span><span class="st"> </span>J<span class="op">*</span><span class="st"> </span><span class="kw">max</span>(ret<span class="op">$</span>VarCom[<span class="st">&quot;Cov2&quot;</span>, <span class="st">&quot;Estimates&quot;</span>] <span class="op">-</span><span class="st"> </span>ret<span class="op">$</span>VarCom[<span class="st">&quot;Cov3&quot;</span>, <span class="st">&quot;Estimates&quot;</span>],<span class="dv">0</span>)</span>
+<span id="cb31-3"><a href="ORExamples.html#cb31-3"></a>F_ORH_RRRC &lt;-<span class="st"> </span>ret<span class="op">$</span>TRanova[<span class="st">&quot;T&quot;</span>, <span class="st">&quot;MS&quot;</span>]<span class="op">/</span>den</span>
+<span id="cb31-4"><a href="ORExamples.html#cb31-4"></a><span class="kw">print</span>(F_ORH_RRRC)</span>
+<span id="cb31-5"><a href="ORExamples.html#cb31-5"></a><span class="co">#&gt; [1] 4.456319</span></span></code></pre></div>
+</div>
+<div id="calculate-ddf_h" class="section level3" number="7.2.2">
+<h3><span class="header-section-number">7.2.2</span> Calculate ddf_H</h3>
+<p>From the previous chapter, the Hillis <code>ddf</code> is calculated using Eqn. <a href="ORAnalysisSigTesting.html#eq:ddfH-RRRC">(6.7)</a>). The numerator of <code>ddf</code> is seen to be identical to <code>den^2</code>, where <code>den</code> was calculated in the preceding code block. The implementation follows:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="ORExamples.html#cb32-1"></a>I &lt;-<span class="st"> </span><span class="kw">length</span>(dataset02<span class="op">$</span>ratings<span class="op">$</span>NL[,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb32-2"><a href="ORExamples.html#cb32-2"></a>ddf &lt;-<span class="st"> </span>den<span class="op">^</span><span class="dv">2</span><span class="op">*</span>(I<span class="dv">-1</span>)<span class="op">*</span>(J<span class="dv">-1</span>)<span class="op">/</span>(ret<span class="op">$</span>TRanova[<span class="st">&quot;TR&quot;</span>, <span class="st">&quot;MS&quot;</span>])<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb32-3"><a href="ORExamples.html#cb32-3"></a><span class="kw">print</span>(ddf)</span>
+<span id="cb32-4"><a href="ORExamples.html#cb32-4"></a><span class="co">#&gt; [1] 15.25967</span></span></code></pre></div>
+</div>
+<div id="calculate-the-p-value" class="section level3" number="7.2.3">
+<h3><span class="header-section-number">7.2.3</span> Calculate the p-value</h3>
+<p>The relevant equation is Eqn. <a href="ORAnalysisSigTesting.html#eq:pValueOR-RRRC">(6.9)</a> whose implementation is shown next:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="ORExamples.html#cb33-1"></a>p &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pf</span>(F_ORH_RRRC, I <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, ddf)</span>
+<span id="cb33-2"><a href="ORExamples.html#cb33-2"></a><span class="kw">print</span>(p)</span>
+<span id="cb33-3"><a href="ORExamples.html#cb33-3"></a><span class="co">#&gt; [1] 0.05166569</span></span></code></pre></div>
+<p>The difference is not significant at <span class="math inline">\(\alpha\)</span> = 0.05.</p>
+</div>
+<div id="confidence-intervals-for-reader-averaged-inter-treatment-fom-differences" class="section level3" number="7.2.4">
+<h3><span class="header-section-number">7.2.4</span> Confidence intervals for reader-averaged inter-treatment FOM differences</h3>
+<p>Since <code>I</code> = 2, their is only one paired difference in reader-averaged FOMs, namely, the first treatment minus the second:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="ORExamples.html#cb34-1"></a>trtMeans &lt;-<span class="st"> </span><span class="kw">rowMeans</span>(foms)</span>
+<span id="cb34-2"><a href="ORExamples.html#cb34-2"></a>trtMeanDiffs &lt;-<span class="st"> </span>trtMeans[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>trtMeans[<span class="dv">2</span>]</span>
+<span id="cb34-3"><a href="ORExamples.html#cb34-3"></a><span class="kw">print</span>(trtMeanDiffs)</span>
+<span id="cb34-4"><a href="ORExamples.html#cb34-4"></a><span class="co">#&gt;        trt0 </span></span>
+<span id="cb34-5"><a href="ORExamples.html#cb34-5"></a><span class="co">#&gt; -0.04380032</span></span></code></pre></div>
+<p>From the previous chapter, the <span class="math inline">\((1-\alpha)\)</span> confidence interval for <span class="math inline">\(\theta_{1 \bullet} - \theta_{2 \bullet}\)</span> is given by Eqn. <a href="ORAnalysisSigTesting.html#eq:CI-RRRC">(6.10)</a>. The expression inside the square-root symbol is <code>2/J*den</code>. The implementation follows:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="ORExamples.html#cb35-1"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
+<span id="cb35-2"><a href="ORExamples.html#cb35-2"></a>stdErr &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>den<span class="op">/</span>J)</span>
+<span id="cb35-3"><a href="ORExamples.html#cb35-3"></a>t_crit &lt;-<span class="st"> </span><span class="kw">abs</span>(<span class="kw">qt</span>(alpha<span class="op">/</span><span class="dv">2</span>, ddf))</span>
+<span id="cb35-4"><a href="ORExamples.html#cb35-4"></a>CI_RRRC &lt;-<span class="st"> </span><span class="kw">c</span>(trtMeanDiffs <span class="op">-</span><span class="st"> </span>t_crit<span class="op">*</span>stdErr, trtMeanDiffs <span class="op">+</span><span class="st"> </span>t_crit<span class="op">*</span>stdErr)</span>
+<span id="cb35-5"><a href="ORExamples.html#cb35-5"></a><span class="kw">names</span>(CI_RRRC) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Lower&quot;</span>, <span class="st">&quot;Right&quot;</span>)</span>
+<span id="cb35-6"><a href="ORExamples.html#cb35-6"></a><span class="kw">print</span>(CI_RRRC)</span>
+<span id="cb35-7"><a href="ORExamples.html#cb35-7"></a><span class="co">#&gt;         Lower         Right </span></span>
+<span id="cb35-8"><a href="ORExamples.html#cb35-8"></a><span class="co">#&gt; -0.0879594986  0.0003588544</span></span></code></pre></div>
+<p>The confidence interval, shown as <code>[Lower, Right]</code>, includes zero, which confirms that the reader-averaged FOM difference between treatments is not significant.</p>
+</div>
+</div>
+<div id="comparison-to-rjafroc" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> Comparison to RJafroc</h2>
+<ul>
+<li>This is accomplished using the significance testing function of <code>RJafroc</code>, namely <code>StSignificanceTesting()</code>.</li>
+<li>This function takes as arguments the <code>dataset</code>, the <code>FOM</code>, set to “Wilcoxon”, the method of analysis, set to “OR” in this example, and <code>analysisOption</code>, set to “RRRC”. The significance level of the test, <code>alpha</code>, defaults to 0.05.</li>
+<li>The code below applies this function and saves the returned object to <code>st</code>.</li>
+<li>The first member of this object, a <code>list</code> object named <code>FOMs</code>, is then displayed.</li>
+<li><code>FOMs</code> contains three data frames:
+<ul>
+<li><code>FOMS$foms</code>, the figures of merit for each treatment and reader,</li>
+<li><code>FOMS$trtMeans</code>, the figures of merit for each treatment averaged over readers, and</li>
+<li><code>FOMS$trtMeanDiffs</code>, the inter-treatment difference figures of merit averaged over readers. The difference is always the first treatment minus the second, etc., in this example, <code>trt0</code> minus <code>trt1</code>.</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="ORExamples.html#cb36-1"></a>st &lt;-<span class="st"> </span><span class="kw">StSignificanceTesting</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;OR&quot;</span>, <span class="dt">analysisOption =</span> <span class="st">&quot;RRRC&quot;</span>)</span>
+<span id="cb36-2"><a href="ORExamples.html#cb36-2"></a><span class="kw">print</span>(st<span class="op">$</span>FOMs)</span>
+<span id="cb36-3"><a href="ORExamples.html#cb36-3"></a><span class="co">#&gt; $foms</span></span>
+<span id="cb36-4"><a href="ORExamples.html#cb36-4"></a><span class="co">#&gt;            rdr0       rdr1       rdr2       rdr3       rdr4</span></span>
+<span id="cb36-5"><a href="ORExamples.html#cb36-5"></a><span class="co">#&gt; trt0 0.91964573 0.85877617 0.90386473 0.97310789 0.82979066</span></span>
+<span id="cb36-6"><a href="ORExamples.html#cb36-6"></a><span class="co">#&gt; trt1 0.94782609 0.90531401 0.92173913 0.99935588 0.92995169</span></span>
+<span id="cb36-7"><a href="ORExamples.html#cb36-7"></a><span class="co">#&gt; </span></span>
+<span id="cb36-8"><a href="ORExamples.html#cb36-8"></a><span class="co">#&gt; $trtMeans</span></span>
+<span id="cb36-9"><a href="ORExamples.html#cb36-9"></a><span class="co">#&gt;        Estimate</span></span>
+<span id="cb36-10"><a href="ORExamples.html#cb36-10"></a><span class="co">#&gt; trt0 0.89703704</span></span>
+<span id="cb36-11"><a href="ORExamples.html#cb36-11"></a><span class="co">#&gt; trt1 0.94083736</span></span>
+<span id="cb36-12"><a href="ORExamples.html#cb36-12"></a><span class="co">#&gt; </span></span>
+<span id="cb36-13"><a href="ORExamples.html#cb36-13"></a><span class="co">#&gt; $trtMeanDiffs</span></span>
+<span id="cb36-14"><a href="ORExamples.html#cb36-14"></a><span class="co">#&gt;               Estimate</span></span>
+<span id="cb36-15"><a href="ORExamples.html#cb36-15"></a><span class="co">#&gt; trt0-trt1 -0.043800322</span></span></code></pre></div>
+<ul>
+<li>Displayed next are the variance components and mean-squares.</li>
+<li>These are contained in the <code>ANOVA</code> <code>list</code> object.</li>
+<li><code>ANOVA$TRanova</code> contains the treatment-reader ANOVA table, i.e. the sum of squares, the degrees of freedom and the mean-squares, listed for the treatment, reader and treatment-reader factors, i.e., <code>T</code>, <code>R</code> and <code>TR</code>.</li>
+<li><code>ANOVA$VarCom</code> contains the OR variance components and the correlations.</li>
+<li><code>ANOVA$IndividualTrt</code> contains the quantities necessary for individual treatment analyses.</li>
+<li><code>ANOVA$IndividualRdr</code> contains the quantities necessary for individual reader analyses.</li>
+</ul>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="ORExamples.html#cb37-1"></a><span class="kw">print</span>(st<span class="op">$</span>ANOVA)</span>
+<span id="cb37-2"><a href="ORExamples.html#cb37-2"></a><span class="co">#&gt; $TRanova</span></span>
+<span id="cb37-3"><a href="ORExamples.html#cb37-3"></a><span class="co">#&gt;              SS DF            MS</span></span>
+<span id="cb37-4"><a href="ORExamples.html#cb37-4"></a><span class="co">#&gt; T  0.0047961705  1 0.00479617053</span></span>
+<span id="cb37-5"><a href="ORExamples.html#cb37-5"></a><span class="co">#&gt; R  0.0153448000  4 0.00383619999</span></span>
+<span id="cb37-6"><a href="ORExamples.html#cb37-6"></a><span class="co">#&gt; TR 0.0022041225  4 0.00055103062</span></span>
+<span id="cb37-7"><a href="ORExamples.html#cb37-7"></a><span class="co">#&gt; </span></span>
+<span id="cb37-8"><a href="ORExamples.html#cb37-8"></a><span class="co">#&gt; $VarCom</span></span>
+<span id="cb37-9"><a href="ORExamples.html#cb37-9"></a><span class="co">#&gt;           Estimates       Rhos</span></span>
+<span id="cb37-10"><a href="ORExamples.html#cb37-10"></a><span class="co">#&gt; VarR  0.00153499935         NA</span></span>
+<span id="cb37-11"><a href="ORExamples.html#cb37-11"></a><span class="co">#&gt; VarTR 0.00020040252         NA</span></span>
+<span id="cb37-12"><a href="ORExamples.html#cb37-12"></a><span class="co">#&gt; Cov1  0.00034661371 0.43203138</span></span>
+<span id="cb37-13"><a href="ORExamples.html#cb37-13"></a><span class="co">#&gt; Cov2  0.00034407483 0.42886683</span></span>
+<span id="cb37-14"><a href="ORExamples.html#cb37-14"></a><span class="co">#&gt; Cov3  0.00023902837 0.29793328</span></span>
+<span id="cb37-15"><a href="ORExamples.html#cb37-15"></a><span class="co">#&gt; Var   0.00080228827         NA</span></span>
+<span id="cb37-16"><a href="ORExamples.html#cb37-16"></a><span class="co">#&gt; </span></span>
+<span id="cb37-17"><a href="ORExamples.html#cb37-17"></a><span class="co">#&gt; $IndividualTrt</span></span>
+<span id="cb37-18"><a href="ORExamples.html#cb37-18"></a><span class="co">#&gt;      DF   msREachTrt    varEachTrt   cov2EachTrt</span></span>
+<span id="cb37-19"><a href="ORExamples.html#cb37-19"></a><span class="co">#&gt; trt0  4 0.0030826287 0.00101410277 0.00048396180</span></span>
+<span id="cb37-20"><a href="ORExamples.html#cb37-20"></a><span class="co">#&gt; trt1  4 0.0013046019 0.00059047376 0.00020418785</span></span>
+<span id="cb37-21"><a href="ORExamples.html#cb37-21"></a><span class="co">#&gt; </span></span>
+<span id="cb37-22"><a href="ORExamples.html#cb37-22"></a><span class="co">#&gt; $IndividualRdr</span></span>
+<span id="cb37-23"><a href="ORExamples.html#cb37-23"></a><span class="co">#&gt;      DF    msTEachRdr    varEachRdr   cov1EachRdr</span></span>
+<span id="cb37-24"><a href="ORExamples.html#cb37-24"></a><span class="co">#&gt; rdr0  1 0.00039706618 0.00069890056 3.7346610e-04</span></span>
+<span id="cb37-25"><a href="ORExamples.html#cb37-25"></a><span class="co">#&gt; rdr1  1 0.00108288538 0.00110605283 7.6015978e-04</span></span>
+<span id="cb37-26"><a href="ORExamples.html#cb37-26"></a><span class="co">#&gt; rdr2  1 0.00015974702 0.00084234345 3.5532241e-04</span></span>
+<span id="cb37-27"><a href="ORExamples.html#cb37-27"></a><span class="co">#&gt; rdr3  1 0.00034447841 0.00015057773 1.0833995e-06</span></span>
+<span id="cb37-28"><a href="ORExamples.html#cb37-28"></a><span class="co">#&gt; rdr4  1 0.00501611603 0.00121356676 2.4303685e-04</span></span></code></pre></div>
+<ul>
+<li>Displayed next are the results of RRRC analysis.</li>
+<li>These are contained in the <code>RRRC</code> <code>list</code> object.</li>
+<li><code>RRRC$FTests</code> contains the results of the F-tests.</li>
+<li><code>RRRC$ciDiffTrt</code> contains the results of the confidence intervals for the inter-treatment difference FOMs, averaged over readers.</li>
+<li><code>RRRC$ciAvgRdrEachTrt</code> contains the results of the confidence intervals for the treatments, averaged over readers.</li>
+</ul>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="ORExamples.html#cb38-1"></a><span class="kw">print</span>(st<span class="op">$</span>RRRC)</span>
+<span id="cb38-2"><a href="ORExamples.html#cb38-2"></a><span class="co">#&gt; $FTests</span></span>
+<span id="cb38-3"><a href="ORExamples.html#cb38-3"></a><span class="co">#&gt;                  DF           MS     FStat           p</span></span>
+<span id="cb38-4"><a href="ORExamples.html#cb38-4"></a><span class="co">#&gt; Treatment  1.000000 0.0047961705 4.4563187 0.051665686</span></span>
+<span id="cb38-5"><a href="ORExamples.html#cb38-5"></a><span class="co">#&gt; Error     15.259675 0.0010762629        NA          NA</span></span>
+<span id="cb38-6"><a href="ORExamples.html#cb38-6"></a><span class="co">#&gt; </span></span>
+<span id="cb38-7"><a href="ORExamples.html#cb38-7"></a><span class="co">#&gt; $ciDiffTrt</span></span>
+<span id="cb38-8"><a href="ORExamples.html#cb38-8"></a><span class="co">#&gt;               Estimate      StdErr        DF          t       PrGTt</span></span>
+<span id="cb38-9"><a href="ORExamples.html#cb38-9"></a><span class="co">#&gt; trt0-trt1 -0.043800322 0.020748618 15.259675 -2.1109995 0.051665686</span></span>
+<span id="cb38-10"><a href="ORExamples.html#cb38-10"></a><span class="co">#&gt;                CILower       CIUpper</span></span>
+<span id="cb38-11"><a href="ORExamples.html#cb38-11"></a><span class="co">#&gt; trt0-trt1 -0.087959499 0.00035885444</span></span>
+<span id="cb38-12"><a href="ORExamples.html#cb38-12"></a><span class="co">#&gt; </span></span>
+<span id="cb38-13"><a href="ORExamples.html#cb38-13"></a><span class="co">#&gt; $ciAvgRdrEachTrt</span></span>
+<span id="cb38-14"><a href="ORExamples.html#cb38-14"></a><span class="co">#&gt;        Estimate      StdErr        DF    CILower    CIUpper          Cov2</span></span>
+<span id="cb38-15"><a href="ORExamples.html#cb38-15"></a><span class="co">#&gt; trt0 0.89703704 0.033173597 12.744648 0.82522360 0.96885048 0.00048396180</span></span>
+<span id="cb38-16"><a href="ORExamples.html#cb38-16"></a><span class="co">#&gt; trt1 0.94083736 0.021566368 12.710190 0.89413783 0.98753689 0.00020418785</span></span></code></pre></div>
+</div>
+<div id="discussionsummary5" class="section level2" number="7.4">
+<h2><span class="header-section-number">7.4</span> Discussion/Summary/5</h2>
+</div>
+<div id="ORExamples-references" class="section level2" number="7.5">
+<h2><span class="header-section-number">7.5</span> References</h2>
 
-<div id="refs" class="references hanging-indent">
-<div>
-<p>Bunch, P. C., J. F. Hamilton, G. K. Sanderson, and A. H. Simmons. 1977. “Free Response Approach to Measurement and Characterization of Radiographic Observer Performance.” Journal Article. In <em>Application of Optical Instrumentation in Medicine Vi</em>, edited by Joel E. Gray and William R. Hendee, 0127:124–35. International Society for Optics; Photonics; SPIE. <a href="https://doi.org/10.1117/12.955926">https://doi.org/10.1117/12.955926</a>.</p>
-</div>
-<div>
-<p>Chakraborty, Dev P. 2017. <em>Observer Performance Methods for Diagnostic Imaging - Foundations, Modeling, and Applications with R-Based Examples</em>. Book. Boca Raton, FL: CRC Press.</p>
-</div>
-<div>
-<p>Chakraborty, Dev Prasad. 2010. “Prediction Accuracy of a Sample-Size Estimation Method for ROC Studies.” Journal Article. <em>Academic Radiology</em> 17: 628–38. <a href="https://doi.org/10.1016/j.acra.2010.01.007">https://doi.org/10.1016/j.acra.2010.01.007</a>.</p>
-</div>
-<div>
-<p>Chakraborty, D. P., E. S. Breatnach, M. V. Yester, B. Soto, G. T. Barnes, and R. G. Fraser. 1986. “Digital and Conventional Chest Imaging: A Modified ROC Study of Observer Performance Using Simulated Nodules.” Journal Article. <em>Radiology</em> 158: 35–39. <a href="https://doi.org/10.1148/radiology.158.1.3940394">https://doi.org/10.1148/radiology.158.1.3940394</a>.</p>
-</div>
-<div>
-<p>Clarkson, Eric, Matthew A. Kupinski, and Harrison H. Barrett. 2006. “A Probabilistic Model for the MRMC Method, Part 1: Theoretical Development.” Journal Article. <em>Academic Radiology</em> 13 (11): 1410–21. <a href="https://doi.org/10.1016/j.acra.2006.07.016">https://doi.org/10.1016/j.acra.2006.07.016</a>.</p>
-</div>
-<div>
-<p>Cohen, Jacob. 1988. “Statistical Power Analysis for the Social Sciences. 1988.” <em>Google Scholar</em>.</p>
-</div>
-<div>
-<p>DeLong, E. R., D. M. DeLong, and D. L. Clarke-Pearson. 1988. “Comparing the Areas Under Two or More Correlated Receiver Operating Characteristic Curves: A Nonparametric Approach.” Journal Article. <em>Biometrics</em> 44: 837–45.</p>
-</div>
-<div>
-<p>Dorfman, D. D., K. S. Berbaum, and C. E. Metz. 1992. “ROC Characteristic Rating Analysis: Generalization to the Population of Readers and Patients with the Jackknife Method.” Journal Article. <em>Invest. Radiol.</em> 27 (9): 723–31. <a href="https://pubmed.ncbi.nlm.nih.gov/1399456">https://pubmed.ncbi.nlm.nih.gov/1399456</a>.</p>
-</div>
-<div>
-<p>Dorfman, Donald D., Kevin S. Berbaum, and Russell V. Lenth. 1995. “Multireader, Multicase Receiver Operating Characteristic Methodology: A Bootstrap Analysis.” Journal Article. <em>Academic Radiology</em> 2 (7): 626–33. <a href="http://www.sciencedirect.com/science/article/B75BK-4HNF68N-H/2/4b9d3ad6f0e11d2622af39e99b73eadf">http://www.sciencedirect.com/science/article/B75BK-4HNF68N-H/2/4b9d3ad6f0e11d2622af39e99b73eadf</a>.</p>
-</div>
-<div>
-<p>Gallas, Brandon D. 2006. “One-Shot Estimate of MRMC Variance: AUC.” Journal Article. <em>Academic Radiology</em> 13 (3): 353–62. <a href="https://doi.org/10.1016/j.acra.2005.11.030">https://doi.org/10.1016/j.acra.2005.11.030</a>.</p>
-</div>
-<div>
-<p>Gallas, Brandon D., Gene a Pennello, and Kyle J. Myers. 2007. “Multireader Multicase Variance Analysis for Binary Data.” Journal Article. <em>Journal of the Optical Society of America. A, Optics, Image Science, and Vision</em> 24 (12): 70–80. <a href="https://doi.org/10.1364/josaa.24.000b70">https://doi.org/10.1364/josaa.24.000b70</a>.</p>
-</div>
-<div>
-<p>Hajian-Tilaki, K. O., James A. Hanley, L. Joseph, and J. P. Collet. 1997. “Extension of Receiver Operating Characteristic Analysis to Data Concerning Multiple Signal Detection Tasks.” Journal Article. <em>Acad Radiol</em> 4: 222–29. <a href="https://doi.org/10.1016/S1076-6332(05)80295-8">https://doi.org/10.1016/S1076-6332(05)80295-8</a>.</p>
-</div>
-<div>
-<p>Hillis, S. L., N. A. Obuchowski, K. M. Schartz, and K. S. Berbaum. 2005. “A Comparison of the Dorfman-Berbaum-Metz and Obuchowski-Rockette Methods for Receiver Operating Characteristic (ROC) Data.” Journal Article. <em>Statistics in Medicine</em> 24 (10): 1579–1607. <a href="https://doi.org/10.1002/sim.2024">https://doi.org/10.1002/sim.2024</a>.</p>
-</div>
-<div>
-<p>Hillis, Stephen L. 2007. “A Comparison of Denominator Degrees of Freedom Methods for Multiple Observer ROC Studies.” Journal Article. <em>Statistics in Medicine</em> 26: 596–619. <a href="https://doi.org/10.1002/sim.2532">https://doi.org/10.1002/sim.2532</a>.</p>
-</div>
-<div>
-<p>Hillis, Stephen L. 2014. “A Marginal‐mean ANOVA Approach for Analyzing Multireader Multicase Radiological Imaging Data.” Journal Article. <em>Statistics in Medicine</em> 33 (2): 330–60. <a href="https://doi.org/10.1002/sim.5926">https://doi.org/10.1002/sim.5926</a>.</p>
-</div>
-<div>
-<p>Hillis, Stephen L., and K. S. Berbaum. 2004. “Power Estimation for the Dorfman-Berbaum-Metz Method.” Journal Article. <em>Acad. Radiol.</em> 11 (11): 1260–73. <a href="https://doi.org/10.1016/j.acra.2004.08.009">https://doi.org/10.1016/j.acra.2004.08.009</a>.</p>
-</div>
-<div>
-<p>Hillis, Stephen L., K. S. Berbaum, and C. E. Metz. 2008. “Recent Developments in the Dorfman-Berbaum-Metz Procedure for Multireader ROC Study Analysis.” Journal Article. <em>Acad Radiol</em> 15 (5): 647–61. <a href="https://doi.org/10.1016/j.acra.2007.12.015">https://doi.org/10.1016/j.acra.2007.12.015</a>.</p>
-</div>
-<div>
-<p>Hillis, Stephen L., Nancy A. Obuchowski, and Kevin S. Berbaum. 2011. “Power Estimation for Multireader ROC Methods: An Updated and Unified Approach.” Journal Article. <em>Academic Radiology</em> 18 (2): 129–42. <a href="https://doi.org/10.1016/j.acra.2010.09.007">https://doi.org/10.1016/j.acra.2010.09.007</a>.</p>
-</div>
-<div>
-<p>ICRU. 1996. “Medical Imaging: The Assessment of Image Quality.” Journal Article. <em>JOURNAL OF THE ICRU</em> 54 (1): 37–40.</p>
-</div>
-<div>
-<p>Ishwaran, Hemant, and Constantine A. Gatsonis. 2000. “A General Class of Hierarchical Ordinal Regression Models with Applications to Correlated ROC Analysis.” Journal Article. <em>The Canadian Journal of Statistics</em> 28 (4): 731–50. <a href="https://doi.org/10.2307/3315913">https://doi.org/10.2307/3315913</a>.</p>
-</div>
-<div>
-<p>Kupinski, Matthew A., Eric Clarkson, and Harrison H. Barrett. 2006. “A Probabilistic Model for the MRMC Method, Part 2: Validation and Applications.” Journal Article. <em>Academic Radiology</em> 13 (11): 1422–30. <a href="https://doi.org/10.1016/j.acra.2006.07.015">https://doi.org/10.1016/j.acra.2006.07.015</a>.</p>
-</div>
-<div>
-<p>Larsen, Richard J., and Morris L. Marx. 2001. <em>An Introduction to Mathematical Statistics and Its Applications</em>. Book. 3rd ed. Upper Saddle River, NJ: Prentice-Hall Inc.</p>
-</div>
-<div>
-<p>Metz, C. E., Benjamin A. Herman, and C. E. Roe. 1998. “Statistical Comparison of Two ROC-Curve Estimates Obtained from Partially-Paired Datasets.” Journal Article. <em>Med Decis Making</em> 18 (1): 110–21. <a href="https://doi.org/10.1177/0272989X9801800118">https://doi.org/10.1177/0272989X9801800118</a>.</p>
-</div>
-<div>
-<p>Niklason, L. T., N. M. Hickey, Dev P. Chakraborty, E. A. Sabbagh, M. V. Yester, R. G. Fraser, and G. T. Barnes. 1986. “Simulated Pulmonary Nodules: Detection with Dual-Energy Digital Versus Conventional Radiography.” Journal Article. <em>Radiology</em> 160: 589–93. <a href="https://doi.org/10.1148/radiology.160.3.3526398">https://doi.org/10.1148/radiology.160.3.3526398</a>.</p>
-</div>
-<div>
-<p>Obuchowski, Nancy. 2009. “Reducing the Number of Reader Interpretations in MRMC Studies.” Journal Article. <em>Acad Radiol</em> 16: 209–17. <a href="https://doi.org/10.1016/j.acra.2008.05.014">https://doi.org/10.1016/j.acra.2008.05.014</a>.</p>
-</div>
-<div>
-<p>Obuchowski, Nancy A. 1998. “Sample Size Calculations in Studies of Test Accuracy.” Journal Article. <em>Statistical Methods in Medical Research</em> 7 (4): 371–92. <a href="https://doi.org/10.1177/096228029800700405">https://doi.org/10.1177/096228029800700405</a>.</p>
-</div>
-<div>
-<p>———. 2000. “Sample Size Tables for Receiver Operating Characteristic Studies.” Journal Article. <em>Am. J. Roentgenol.</em> 175 (3): 603–8. <a href="http://www.ajronline.org/cgi/content/abstract/175/3/603">http://www.ajronline.org/cgi/content/abstract/175/3/603</a>.</p>
-</div>
-<div>
-<p>Obuchowski, N. A., and H. E. Rockette. 1995. “Hypothesis Testing of the Diagnostic Accuracy for Multiple Diagnostic Tests: An ANOVA Approach with Dependent Observations.” Journal Article. <em>Communications in Statistics: Simulation and Computation</em> 24: 285–308. <a href="https://doi.org/10.1080/03610919508813243">https://doi.org/10.1080/03610919508813243</a>.</p>
-</div>
-<div>
-<p>Roe, C. A., and C. E. Metz. 1997a. “Dorfman-Berbaum-Metz Method for Statistical Analysis of Multireader, Multimodality Receiver Operating Characteristic Data: Validation with Computer Simulation.” Journal Article. <em>Acad Radiol</em> 4: 298–303.</p>
-</div>
-<div>
-<p>———. 1997b. “Variance-Component Modeling in the Analysis of Receiver Operating Characteristic Index Estimates.” Journal Article. <em>Acad. Radiol.</em> 4 (8): 587–600. <a href="https://doi.org/10.1016/S1076-6332(97)80210-3">https://doi.org/10.1016/S1076-6332(97)80210-3</a>.</p>
-</div>
-<div>
-<p>Satterthwaite, F. E. 1941. “Synthesis of Variance.” Journal Article. <em>Psychometrika</em> 6 (5): 309–16.</p>
-</div>
-<div>
-<p>———. 1946. “An Approximate Distribution of Estimates of Variance Components.” Journal Article. <em>Biometrics Bulletin</em> 2 (6): 110–14.</p>
-</div>
-<div>
-<p>Swets, John A., and Ronald M. Pickett. 1982. <em>Evaluation of Diagnostic Systems: Methods from Signal Detection Theory</em>. Book. First. Series in Cognition and Perception. New York: Academic Press.</p>
-</div>
-<div>
-<p>Toledano, A. Y. 2003. “Three Methods for Analyzing Correlated ROC Curves: A Comparison in Real Data Sets.” Journal Article. <em>Statistics in Medicine</em> 22 (18): 2919–33. <a href="https://doi.org/10.1002/sim.1518">https://doi.org/10.1002/sim.1518</a>.</p>
-</div>
-<div>
-<p>Toledano, A. Y., and C. Gatsonis. 1996. “Ordinal Regression Methodology for ROC Curves Derived from Correlated Data.” Journal Article. <em>Stat Med</em> 15 (16): 1807–26. <a href="https://doi.org/10.1002/(SICI)1097-0258(19960830)15:16%3C1807::AID-SIM333%3E3.0.CO;2-U">https://doi.org/10.1002/(SICI)1097-0258(19960830)15:16&lt;1807::AID-SIM333&gt;3.0.CO;2-U</a>.</p>
-</div>
-<div>
-<p>Van Dyke, C. W., R. D. White, N. A. Obuchowski, M. A. Geisinger, R. J. Lorig, and M. A. Meziane. 1993. “Cine Mri in the Diagnosis of Thoracic Aortic Dissection.” Journal Article. <em>79th RSNA Meetings</em>.</p>
-</div>
-<div>
-<p>Zhou, Xiao-Hua, Donna K McClish, and Nancy A Obuchowski. 2009. <em>Statistical Methods in Diagnostic Medicine</em>. Vol. 569. John Wiley &amp; Sons.</p>
-</div>
 </div>
 </div>
             </section>
@@ -457,8 +542,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="SplitPlotChapter.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="ORAnalysisSigTesting.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="RocSampleSizeDBM.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
