@@ -110,9 +110,14 @@ trtMeanDiffs <- trtMeans[1] - trtMeans[2]
 ```{r}
 alpha <- 0.05
 stdErr <- sqrt(2 * den/J)
-t_crit <- abs(qt(alpha/2, ddf))
-CI_RRRC <- c(trtMeanDiffs - t_crit*stdErr, trtMeanDiffs + t_crit*stdErr)
-names(CI_RRRC) <- c("Lower", "Upper")
+tStat <- vector()
+PrGTt <- vector()
+CI_RRRC <- array(dim = c(length(trtMeanDiffs), 2))
+for (i in 1:length(trtMeanDiffs)) {
+  tStat[i] <- trtMeanDiffs[i]/stdErr
+  PrGTt[i] <- 2*pt(abs(tStat[i]), ddf, lower.tail = FALSE)
+  CI_RRRC[i, ] <- sort(c(trtMeanDiffs[i] - qt(alpha/2, ddf) * stdErr, trtMeanDiffs[i] + qt(alpha/2, ddf) * stdErr))
+}
 print(CI_RRRC)
 ```
 
@@ -152,13 +157,19 @@ p_FRRC <- 1 - pchisq(F_ORH_FRRC * (I - 1), I - 1)
 stdErr <- sqrt(2/J * (vc$VarCom["Var", "Estimates"] - 
                         vc$VarCom["Cov1", "Estimates"] + 
                         (J-1)*max(vc$VarCom["Cov2", "Estimates"]-vc$VarCom["Cov3", "Estimates"],0)))
-t_crit <- abs(qt(alpha/2, Inf))
-CI_FRRC <- c(trtMeanDiffs - t_crit*stdErr, trtMeanDiffs + t_crit*stdErr)
-names(CI_FRRC) <- c("Lower", "Upper")
+zStat <- vector()
+PrGTz <- vector()
+CI_FRRC <- array(dim = c(choose(I,2),2))
+for (i in 1:choose(I,2)) {
+  zStat[i] <- trtMeanDiffs[i]/stdErr
+  PrGTz[i] <- 2 * pnorm(abs(zStat[i]), lower.tail = FALSE)
+  CI_FRRC[i, ] <- c(trtMeanDiffs[i] + qnorm(alpha/2) * stdErr, 
+                    trtMeanDiffs[i] + qnorm(1-alpha/2) * stdErr)
+}
 print(CI_FRRC)
 ```
 
-Note that this time the confidence interval does not include zero, consistent with the p-value finding.
+Note that this time, consistent with the p-value finding, the confidence interval does not include zero.
 
 One can calculate confidence intervals for each treatment, using data from that treatment only, Eqn.  \@ref(eq:CIIndTrtFomFRRC-OR). The required `Var_i` and `Cov2_i`, calculated over each treatment, are in `vc$IndividualTrt`. The implementation follows.
 
