@@ -2272,7 +2272,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.4016463          1   0.23644812}
+\CommentTok{\#\textgreater{} 1    1.3219774          1   0.25023748}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2774,7 +2774,7 @@ The \((1-\alpha)\) confidence interval for \(\theta_{i \bullet} - \theta_{i' \bu
 CI_{1-\alpha,RRRC,\theta_{i \bullet} - \theta_{i' \bullet}} =& \theta_{i \bullet} - \theta_{i' \bullet} \\ 
 &\pm t_{\alpha/2, \text{ddf}_H}\sqrt{\textstyle\frac{2}{J}(MS(TR)+J\max(\text{Cov2}-\text{Cov3},0))}
 \end{split}
-\label{eq:CI-diffFomRRRC}
+\label{eq:CI-DiffFomRRRC}
 \end{equation}
 
 The \((1-\alpha)\) confidence interval for \(\theta_{i \bullet}\) is given by:
@@ -2928,22 +2928,31 @@ Here \(\text{MS(R)}_i\) is the reader mean-square for modality \(i\).
 \hypertarget{ORAnalysisSigTesting-references}{%
 \section{References}\label{ORAnalysisSigTesting-references}}
 
-\hypertarget{ORExamples}{%
-\chapter{Illustrations using the Obuchowski Rockette method}\label{ORExamples}}
+\hypertarget{ORApplications}{%
+\chapter{Applications using the Obuchowski Rockette method}\label{ORApplications}}
 
-\hypertarget{ORExamples-introduction}{%
-\section{Introduction}\label{ORExamples-introduction}}
+\hypertarget{ORApplications-introduction}{%
+\section{Introduction}\label{ORApplications-introduction}}
 
 \begin{itemize}
 \tightlist
 \item
-  Four examples are given. The first is a hand-calculation (i.e., from first principles, using the relevant formulae in the previous chapter). The next three examples use OR analysis as implemented in the \texttt{RJafroc} package.
+  Four examples are given. The first three use OR analysis, while the last one uses the pseudovalue-based DBM analysis.
 \item
-  The first example uses a two-treatment five-reader \textbf{ROC} dataset, well-know in the literature \citep{RN1993}, as it has been used to illustrate advances in ROC methodology.
+  The first example uses a two-treatment five-reader \textbf{ROC} dataset, a well-know and widely used dataset in the literature \citep{RN1993}.
 \item
-  The second example uses a five-treatment four-reader \textbf{ROC} dataset, showing the effect of multiple treatment pairings on the significance testing (the first dataset has only one treatment pairing).
+  The second example uses a five-treatment four-reader \textbf{ROC} dataset, showing the effect of multiple treatment pairings.
 \item
-  The third example uses a five-treatment four-reader \textbf{FROC} dataset, showing the key difference involved in FROC analysis.
+  The third example uses a five-treatment four-reader \textbf{FROC} dataset, showing the key difference involved in FROC analysis, namely the choice of figure of merit.
+\item
+  The fourth example uses a five-treatment four-reader \textbf{FROC} dataset, showing the key difference involved in DBM vs.~OR analysis.
+\end{itemize}
+
+\hypertarget{ORApplications-steps}{%
+\section{Steps in the analysis}\label{ORApplications-steps}}
+
+\begin{itemize}
+\tightlist
 \item
   Each analysis involves the following steps:
 \item
@@ -2952,34 +2961,35 @@ Here \(\text{MS(R)}_i\) is the reader mean-square for modality \(i\).
   Calculate the variance-covariance matrix and the mean-squares, and
 \item
   Calculate the NH statistic, p-value and confidence interval(s).
-\item
-  Each analysis is illustrated with three generalizations, namely RRRC, FRRC and RRFC.
 \end{itemize}
 
-\hypertarget{ORExamples-dataset02-hand}{%
-\section{Hand calculation using dataset02}\label{ORExamples-dataset02-hand}}
+\hypertarget{ORApplications-dataset02-hand}{%
+\section{Hand calculation using dataset02}\label{ORApplications-dataset02-hand}}
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{dataset02} has 2 modalities and 5 readers.
+  \texttt{dataset02} has two modalities and five readers.
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{I \textless{}{-}}\StringTok{ }\KeywordTok{length}\NormalTok{(dataset02}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{])}
 \NormalTok{J \textless{}{-}}\StringTok{ }\KeywordTok{length}\NormalTok{(dataset02}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{])}
-\NormalTok{modalityID \textless{}{-}}\StringTok{ }\NormalTok{dataset02}\OperatorTok{$}\NormalTok{descriptions}\OperatorTok{$}\NormalTok{modalityID}
-\NormalTok{readerID \textless{}{-}}\StringTok{ }\NormalTok{dataset02}\OperatorTok{$}\NormalTok{descriptions}\OperatorTok{$}\NormalTok{readerID}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"I = "}\NormalTok{, I, }\StringTok{", J = "}\NormalTok{, J, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} I =  2 , J =  5}
 \end{Highlighting}
 \end{Shaded}
+
+\hypertarget{ORApplications-RRRC-dataset02-hand}{%
+\subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORApplications-RRRC-dataset02-hand}}
 
 \begin{itemize}
 \tightlist
 \item
   The first step is to calculate the figures of merit.
 \item
-  The following code uses \texttt{UtilFigureOfMerit()} to this end. Note that \texttt{FOM} is explicitly specified as ``Wilcoxon''.
+  The following code uses \texttt{UtilFigureOfMerit()} to this end. Note that \texttt{FOM} has to be explicitly specified as ``Wilcoxon''.
 \end{itemize}
 
 \begin{Shaded}
@@ -2995,26 +3005,16 @@ Here \(\text{MS(R)}_i\) is the reader mean-square for modality \(i\).
 \begin{itemize}
 \tightlist
 \item
-  For example, for the first treatment, \texttt{trt0}, the second reader, \texttt{rdr1}, figure of merit is 0.8587762.
+  For example, for the first treatment, \texttt{trt0}, the second reader's figure of merit is 0.8587762.
 \item
   The next step is to calculate the variance-covariance matrix and the mean-squares.
 \item
-  The function \texttt{UtilORVarComponentsFactorial()} returns these quantities, which are saved to \texttt{vc}. The \texttt{Factorial} in the function name is due to the fact that this code applies to the factorial design. A different function is used for a split-plot design.
-\item
-  Only the first two members of the returned object are displayed in full. The remaining members, \texttt{vc\$IndividualTrt} and \texttt{vc\$IndividualRdr}, are used in single-treatment and single-reader analyses.
+  The function \texttt{UtilORVarComponentsFactorial()} returns these quantities. The \texttt{Factorial} in the function name is due to the fact that this code applies to the factorial design. A different function is used for a split-plot design.
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{vc \textless{}{-}}\StringTok{ }\KeywordTok{UtilORVarComponentsFactorial}\NormalTok{(}
-\NormalTok{  dataset02, }
-  \DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"jackknife"}\NormalTok{)}
-\KeywordTok{summary}\NormalTok{(vc)}
-\CommentTok{\#\textgreater{}               Length Class      Mode}
-\CommentTok{\#\textgreater{} TRanova       3      data.frame list}
-\CommentTok{\#\textgreater{} VarCom        2      data.frame list}
-\CommentTok{\#\textgreater{} IndividualTrt 4      data.frame list}
-\CommentTok{\#\textgreater{} IndividualRdr 4      data.frame list}
+\NormalTok{vc \textless{}{-}}\StringTok{ }\KeywordTok{UtilORVarComponentsFactorial}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{covEstMethod =} \StringTok{"jackknife"}\NormalTok{)}
 \KeywordTok{print}\NormalTok{(vc}\OperatorTok{$}\NormalTok{TRanova)}
 \CommentTok{\#\textgreater{}             SS DF           MS}
 \CommentTok{\#\textgreater{} T  0.004796171  1 0.0047961705}
@@ -3028,35 +3028,45 @@ Here \(\text{MS(R)}_i\) is the reader mean-square for modality \(i\).
 \CommentTok{\#\textgreater{} Cov2  0.0003440748 0.4288668}
 \CommentTok{\#\textgreater{} Cov3  0.0002390284 0.2979333}
 \CommentTok{\#\textgreater{} Var   0.0008022883        NA}
+\KeywordTok{print}\NormalTok{(vc}\OperatorTok{$}\NormalTok{IndividualTrt)}
+\CommentTok{\#\textgreater{}      DF  msREachTrt   varEachTrt  cov2EachTrt}
+\CommentTok{\#\textgreater{} trt0  4 0.003082629 0.0010141028 0.0004839618}
+\CommentTok{\#\textgreater{} trt1  4 0.001304602 0.0005904738 0.0002041879}
+\KeywordTok{print}\NormalTok{(vc}\OperatorTok{$}\NormalTok{IndividualRdr)}
+\CommentTok{\#\textgreater{}      DF   msTEachRdr   varEachRdr  cov1EachRdr}
+\CommentTok{\#\textgreater{} rdr0  1 0.0003970662 0.0006989006 3.734661e{-}04}
+\CommentTok{\#\textgreater{} rdr1  1 0.0010828854 0.0011060528 7.601598e{-}04}
+\CommentTok{\#\textgreater{} rdr2  1 0.0001597470 0.0008423434 3.553224e{-}04}
+\CommentTok{\#\textgreater{} rdr3  1 0.0003444784 0.0001505777 1.083399e{-}06}
+\CommentTok{\#\textgreater{} rdr4  1 0.0050161160 0.0012135668 2.430368e{-}04}
 \end{Highlighting}
 \end{Shaded}
-
-\hypertarget{ORExamples-RRRC-dataset02-hand}{%
-\subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORExamples-RRRC-dataset02-hand}}
 
 \begin{itemize}
 \tightlist
 \item
-  The next step is the calculate the NH testing statistic. The relevant equation is Eqn. \eqref{eq:F-ORH-RRRC}. \texttt{vc} contains the values needed in this equation, as follows:
+  The next step is the calculate the NH testing statistic.
 \item
-  MS(T) is contained in \texttt{vc\$TRanova{[}"T",\ "MS"{]}}, whose value is 0.0047962.
+  The relevant equation is Eqn. \eqref{eq:F-ORH-RRRC}.
 \item
-  MS(TR) is contained in \texttt{vc\$TRanova{[}"TR",\ "MS"{]}}, whose value is \ensuremath{5.5103062\times 10^{-4}}.
+  \texttt{vc} contains the values needed in this equation, as follows:
 \item
-  \texttt{Cov2} is contained in \texttt{vc\$VarCom{[}"Cov2",\ "Estimates"{]}}, whose value is \ensuremath{3.4407483\times 10^{-4}}.
+  MS(T) is in \texttt{vc\$TRanova{[}"T",\ "MS"{]}}, whose value is 0.0047962.
 \item
-  \texttt{Cov3} is contained in \texttt{vc\$VarCom{[}"Cov3",\ "Estimates"{]}}, whose value is \ensuremath{2.3902837\times 10^{-4}}.
+  MS(TR) is in \texttt{vc\$TRanova{[}"TR",\ "MS"{]}}, whose value is \ensuremath{5.5103062\times 10^{-4}}.
+\item
+  \texttt{J}, the number of readers, is the length of the second dimension of \texttt{dataset02\$ratings\$NL}, i.e., 5.
+\item
+  \texttt{Cov2} is in \texttt{vc\$VarCom{[}"Cov2",\ "Estimates"{]}}, whose value is \ensuremath{3.4407483\times 10^{-4}}.
+\item
+  \texttt{Cov3} is in \texttt{vc\$VarCom{[}"Cov3",\ "Estimates"{]}}, whose value is \ensuremath{2.3902837\times 10^{-4}}.
 \end{itemize}
-
-{[}\texttt{Cov1}, contained in \texttt{vc\$VarCom{[}"Cov2",\ "Estimates"{]}} is not needed in the current calculation.{]}
 
 Applying Eqn. \eqref{eq:F-ORH-RRRC} one gets (\texttt{den} is the denominator on the right hand side of the referenced equation):
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{den \textless{}{-}}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{TRanova[}\StringTok{"TR"}\NormalTok{, }\StringTok{"MS"}\NormalTok{] }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\NormalTok{J}\OperatorTok{*}\StringTok{ }\KeywordTok{max}\NormalTok{(vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov2"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{] }\OperatorTok{{-}}\StringTok{ }
-\StringTok{           }\NormalTok{vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov3"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{],}\DecValTok{0}\NormalTok{)}
+\NormalTok{den \textless{}{-}}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{TRanova[}\StringTok{"TR"}\NormalTok{, }\StringTok{"MS"}\NormalTok{] }\OperatorTok{+}\StringTok{ }\NormalTok{J}\OperatorTok{*}\StringTok{ }\KeywordTok{max}\NormalTok{(vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov2"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{] }\OperatorTok{{-}}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov3"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{],}\DecValTok{0}\NormalTok{)}
 \NormalTok{F\_ORH\_RRRC \textless{}{-}}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{TRanova[}\StringTok{"T"}\NormalTok{, }\StringTok{"MS"}\NormalTok{]}\OperatorTok{/}\NormalTok{den}
 \KeywordTok{print}\NormalTok{(F\_ORH\_RRRC)}
 \CommentTok{\#\textgreater{} [1] 4.456319}
@@ -3066,264 +3076,93 @@ Applying Eqn. \eqref{eq:F-ORH-RRRC} one gets (\texttt{den} is the denominator on
 \begin{itemize}
 \tightlist
 \item
-  The numerator degrees of freedom is \(I-1\).
+  The next step is calculation of the denominator degrees of freedom.
 \item
-  The denominator degrees of freedom, \texttt{ddf}, is calculated using Eqn. \eqref{eq:ddfH-RRRC}).
-\item
-  The numerator of \texttt{ddf} is seen to be identical to \texttt{den\^{}2}, where \texttt{den} was calculated in the preceding code block. The implementation follows:
+  From the previous chapter, \texttt{ddf} is calculated using Eqn. \eqref{eq:ddfH-RRRC}). The numerator of \texttt{ddf} is seen to be identical to \texttt{den\^{}2}, where \texttt{den} was calculated in the preceding code block. The implementation follows:
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{ddf \textless{}{-}}\StringTok{ }\NormalTok{den}\OperatorTok{\^{}}\DecValTok{2}\OperatorTok{*}\NormalTok{(I}\DecValTok{{-}1}\NormalTok{)}\OperatorTok{*}\NormalTok{(J}\DecValTok{{-}1}\NormalTok{)}\OperatorTok{/}\NormalTok{(vc}\OperatorTok{$}\NormalTok{TRanova[}\StringTok{"TR"}\NormalTok{, }\StringTok{"MS"}\NormalTok{])}\OperatorTok{\^{}}\DecValTok{2}
+\KeywordTok{print}\NormalTok{(ddf)}
+\CommentTok{\#\textgreater{} [1] 15.25967}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{itemize}
 \tightlist
 \item
-  The value of \texttt{ddf} is 15.2596746.
-\item
-  The next step is calculation of the p-value for rejecting the NH.
+  The next step is calculation of the p-value for rejecting the NH
 \item
   The relevant equation is Eqn. \eqref{eq:pValueOR-RRRC} whose implementation follows:
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{p\_RRRC \textless{}{-}}\StringTok{ }\DecValTok{1} \OperatorTok{{-}}\StringTok{ }\KeywordTok{pf}\NormalTok{(F\_ORH\_RRRC, I }\OperatorTok{{-}}\StringTok{ }\DecValTok{1}\NormalTok{, ddf)}
+\NormalTok{p \textless{}{-}}\StringTok{ }\DecValTok{1} \OperatorTok{{-}}\StringTok{ }\KeywordTok{pf}\NormalTok{(F\_ORH\_RRRC, I }\OperatorTok{{-}}\StringTok{ }\DecValTok{1}\NormalTok{, ddf)}
+\KeywordTok{print}\NormalTok{(p)}
+\CommentTok{\#\textgreater{} [1] 0.05166569}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{itemize}
 \tightlist
 \item
-  The p-value is 0.0516657. The difference is not significant at \(\alpha\) = 0.05.
+  The difference is not significant at \(\alpha\) = 0.05.
 \item
-  The next step is calculation of the confidence interval for paired FOM differences. Since \texttt{I} = 2, their is only one paired difference in reader-averaged FOMs, namely, the first treatment minus the second:
+  The next step is calculation of confidence intervals.
+\item
+  Since \texttt{I} = 2, their is only one paired difference in reader-averaged FOMs, namely, the first treatment minus the second:
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{trtMeans \textless{}{-}}\StringTok{ }\KeywordTok{rowMeans}\NormalTok{(foms)}
 \NormalTok{trtMeanDiffs \textless{}{-}}\StringTok{ }\NormalTok{trtMeans[}\DecValTok{1}\NormalTok{] }\OperatorTok{{-}}\StringTok{ }\NormalTok{trtMeans[}\DecValTok{2}\NormalTok{]}
+\KeywordTok{print}\NormalTok{(trtMeanDiffs)}
+\CommentTok{\#\textgreater{}        trt0 }
+\CommentTok{\#\textgreater{} {-}0.04380032}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{itemize}
 \tightlist
 \item
-  The difference in reader-averaged FOM,s i.e., \(\theta_{1 \bullet} - \theta_{2 \bullet}\), is -0.0438003.
+  From the previous chapter, the \((1-\alpha)\) confidence interval for \(\theta_{1 \bullet} - \theta_{2 \bullet}\) is given by Eqn. \eqref{eq:CI-DiffFomRRRC}.
 \item
-  The \((1-\alpha)\) confidence interval the difference is given by Eqn. \eqref{eq:CI-diffFomRRRC}.
-\item
-  The expression inside the square-root symbol in this equation is \texttt{2/J*den}.
-\item
-  The implementation follows:
+  The expression inside the square-root symbol is \texttt{2/J*den}. The implementation follows:
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{alpha \textless{}{-}}\StringTok{ }\FloatTok{0.05}
 \NormalTok{stdErr \textless{}{-}}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2} \OperatorTok{*}\StringTok{ }\NormalTok{den}\OperatorTok{/}\NormalTok{J)}
-\NormalTok{tStat \textless{}{-}}\StringTok{ }\KeywordTok{vector}\NormalTok{()}
-\NormalTok{PrGTt \textless{}{-}}\StringTok{ }\KeywordTok{vector}\NormalTok{()}
-\NormalTok{CI\_RRRC \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\KeywordTok{length}\NormalTok{(trtMeanDiffs), }\DecValTok{2}\NormalTok{))}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(trtMeanDiffs)) \{}
-\NormalTok{  tStat[i] \textless{}{-}}\StringTok{ }\NormalTok{trtMeanDiffs[i]}\OperatorTok{/}\NormalTok{stdErr}
-\NormalTok{  PrGTt[i] \textless{}{-}}\StringTok{ }\DecValTok{2}\OperatorTok{*}\KeywordTok{pt}\NormalTok{(}\KeywordTok{abs}\NormalTok{(tStat[i]), ddf, }\DataTypeTok{lower.tail =} \OtherTok{FALSE}\NormalTok{)}
-\NormalTok{  CI\_RRRC[i, ] \textless{}{-}}\StringTok{ }\KeywordTok{sort}\NormalTok{(}\KeywordTok{c}\NormalTok{(trtMeanDiffs[i] }\OperatorTok{{-}}\StringTok{ }\KeywordTok{qt}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{, ddf) }\OperatorTok{*}\StringTok{ }\NormalTok{stdErr, trtMeanDiffs[i] }\OperatorTok{+}\StringTok{ }\KeywordTok{qt}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{, ddf) }\OperatorTok{*}\StringTok{ }\NormalTok{stdErr))}
-\NormalTok{\}}
+\NormalTok{t\_crit \textless{}{-}}\StringTok{ }\KeywordTok{abs}\NormalTok{(}\KeywordTok{qt}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{, ddf))}
+\NormalTok{CI\_RRRC \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(trtMeanDiffs }\OperatorTok{{-}}\StringTok{ }\NormalTok{t\_crit}\OperatorTok{*}\NormalTok{stdErr, trtMeanDiffs }\OperatorTok{+}\StringTok{ }\NormalTok{t\_crit}\OperatorTok{*}\NormalTok{stdErr)}
+\KeywordTok{names}\NormalTok{(CI\_RRRC) \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Lower"}\NormalTok{, }\StringTok{"Upper"}\NormalTok{)}
 \KeywordTok{print}\NormalTok{(CI\_RRRC)}
-\CommentTok{\#\textgreater{}            [,1]         [,2]}
-\CommentTok{\#\textgreater{} [1,] {-}0.0879595 0.0003588544}
+\CommentTok{\#\textgreater{}         Lower         Upper }
+\CommentTok{\#\textgreater{} {-}0.0879594986  0.0003588544}
 \end{Highlighting}
 \end{Shaded}
 
 The confidence interval includes zero, which confirms that the reader-averaged FOM difference between treatments is not significant.
 
-\hypertarget{ORExamples-FRRC-dataset02-hand}{%
-\subsection{Fixed-Reader Random-Case (FRRC) analysis}\label{ORExamples-FRRC-dataset02-hand}}
-
-\begin{itemize}
-\tightlist
-\item
-  The F-statistic for testing the NH of no treatment effect was stated in \eqref{eq:DefFStatFRRC-OR}.
-\item
-  The quantities needed to evaluate the right hand side are:
-\item
-  \texttt{MS(T)}, which is contained in vc\$TRanova{[}``T'', ``MS''{]};
-\item
-  \texttt{Var}, which is contained in vc\$VarCom{[}``Var'', ``Estimates''{]};
-\item
-  \texttt{Cov1}, which is contained in vc\$VarCom{[}``Cov1'', ``Estimates''{]};
-\item
-  \texttt{Cov2}, which is contained in vc\$VarCom{[}``Cov2'', ``Estimates''{]};
-\item
-  \texttt{Cov3}, which is contained in vc\$VarCom{[}``Cov3'', ``Estimates''{]}.
-\item
-  The implementation follows:
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{den \textless{}{-}}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Var"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{] }\OperatorTok{{-}}\StringTok{ }
-\StringTok{  }\NormalTok{vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov1"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{] }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\NormalTok{(J}\DecValTok{{-}1}\NormalTok{) }\OperatorTok{*}\StringTok{ }\KeywordTok{max}\NormalTok{(vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov2"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{]}\OperatorTok{{-}}\NormalTok{vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov3"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{],}\DecValTok{0}\NormalTok{)}
-\NormalTok{F\_ORH\_FRRC \textless{}{-}}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{TRanova[}\StringTok{"T"}\NormalTok{, }\StringTok{"MS"}\NormalTok{]}\OperatorTok{/}\NormalTok{den}
-\KeywordTok{print}\NormalTok{(F\_ORH\_FRRC)}
-\CommentTok{\#\textgreater{} [1] 5.475953}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  \texttt{F\_ORH\_FRRC} is distributed as an F-statistic with \texttt{ndf} = I-1 and \texttt{ddf} = infinity.
-\item
-  \texttt{F\_ORH\_FRRC} times (I-1) is distributed as a chi-square-statistic with \(I-1\) degrees of freedom.
-\item
-  The observed value of the chi-square statistic is 5.4759532.
-\item
-  The p-value is calculated using \eqref{eq:pValueFRRC-OR}, whose implementation follows:
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{p\_FRRC \textless{}{-}}\StringTok{ }\DecValTok{1} \OperatorTok{{-}}\StringTok{ }\KeywordTok{pchisq}\NormalTok{(F\_ORH\_FRRC }\OperatorTok{*}\StringTok{ }\NormalTok{(I }\OperatorTok{{-}}\StringTok{ }\DecValTok{1}\NormalTok{), I }\OperatorTok{{-}}\StringTok{ }\DecValTok{1}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  The p-value is 0.0192798, which is significant at \(\alpha\) = 0.05.
-\item
-  The confidence interval for the difference FOM is in Eqn. \eqref{eq:CIDiffFomFRRC-OR}. Its implementation follows:
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{stdErr \textless{}{-}}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{/}\NormalTok{J }\OperatorTok{*}\StringTok{ }\NormalTok{(vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Var"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{] }\OperatorTok{{-}}\StringTok{ }
-\StringTok{                        }\NormalTok{vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov1"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{] }\OperatorTok{+}\StringTok{ }
-\StringTok{                        }\NormalTok{(J}\DecValTok{{-}1}\NormalTok{)}\OperatorTok{*}\KeywordTok{max}\NormalTok{(vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov2"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{]}\OperatorTok{{-}}\NormalTok{vc}\OperatorTok{$}\NormalTok{VarCom[}\StringTok{"Cov3"}\NormalTok{, }\StringTok{"Estimates"}\NormalTok{],}\DecValTok{0}\NormalTok{)))}
-\NormalTok{zStat \textless{}{-}}\StringTok{ }\KeywordTok{vector}\NormalTok{()}
-\NormalTok{PrGTz \textless{}{-}}\StringTok{ }\KeywordTok{vector}\NormalTok{()}
-\NormalTok{CI\_FRRC \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\KeywordTok{choose}\NormalTok{(I,}\DecValTok{2}\NormalTok{),}\DecValTok{2}\NormalTok{))}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{choose}\NormalTok{(I,}\DecValTok{2}\NormalTok{)) \{}
-\NormalTok{  zStat[i] \textless{}{-}}\StringTok{ }\NormalTok{trtMeanDiffs[i]}\OperatorTok{/}\NormalTok{stdErr}
-\NormalTok{  PrGTz[i] \textless{}{-}}\StringTok{ }\DecValTok{2} \OperatorTok{*}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(}\KeywordTok{abs}\NormalTok{(zStat[i]), }\DataTypeTok{lower.tail =} \OtherTok{FALSE}\NormalTok{)}
-\NormalTok{  CI\_FRRC[i, ] \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(trtMeanDiffs[i] }\OperatorTok{+}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{) }\OperatorTok{*}\StringTok{ }\NormalTok{stdErr, }
-\NormalTok{                    trtMeanDiffs[i] }\OperatorTok{+}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{) }\OperatorTok{*}\StringTok{ }\NormalTok{stdErr)}
-\NormalTok{\}}
-\KeywordTok{print}\NormalTok{(CI\_FRRC)}
-\CommentTok{\#\textgreater{}             [,1]        [,2]}
-\CommentTok{\#\textgreater{} [1,] {-}0.08048591 {-}0.00711473}
-\end{Highlighting}
-\end{Shaded}
-
-Note that this time, consistent with the p-value finding, the confidence interval does not include zero.
-
-One can calculate confidence intervals for each treatment, using data from that treatment only, Eqn. \eqref{eq:CIIndTrtFomFRRC-OR}. The required \texttt{Var\_i} and \texttt{Cov2\_i}, calculated over each treatment, are in \texttt{vc\$IndividualTrt}. The implementation follows.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{CI \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(I,}\DecValTok{2}\NormalTok{))}
-\NormalTok{ci \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{()}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{I) \{}
-\NormalTok{  stdErr \textless{}{-}}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\NormalTok{J }\OperatorTok{*}\StringTok{ }\NormalTok{(vc}\OperatorTok{$}\NormalTok{IndividualTrt[i, }\StringTok{"varEachTrt"}\NormalTok{] }\OperatorTok{+}\StringTok{ }
-\StringTok{                          }\NormalTok{(J}\DecValTok{{-}1}\NormalTok{)}\OperatorTok{*}\KeywordTok{max}\NormalTok{(vc}\OperatorTok{$}\NormalTok{IndividualTrt[i, }\StringTok{"cov2EachTrt"}\NormalTok{],}\DecValTok{0}\NormalTok{)))}
-\NormalTok{  t\_crit \textless{}{-}}\StringTok{ }\KeywordTok{abs}\NormalTok{(}\KeywordTok{qt}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{, }\OtherTok{Inf}\NormalTok{))}
-\NormalTok{  CI[i,] \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(trtMeans[i] }\OperatorTok{{-}}\StringTok{ }\NormalTok{t\_crit}\OperatorTok{*}\NormalTok{stdErr, trtMeans[i] }\OperatorTok{+}\StringTok{ }\NormalTok{t\_crit}\OperatorTok{*}\NormalTok{stdErr)}
-\NormalTok{  rowName \textless{}{-}}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"trt"}\NormalTok{, modalityID[i])}
-\NormalTok{  ci \textless{}{-}}\StringTok{ }\KeywordTok{rbind}\NormalTok{(ci, }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Estimate =}\NormalTok{ trtMeans[i], }
-                             \DataTypeTok{CILower =}\NormalTok{ CI[i,}\DecValTok{1}\NormalTok{],}
-                             \DataTypeTok{CIUpper =}\NormalTok{ CI[i,}\DecValTok{2}\NormalTok{],}
-                             \DataTypeTok{row.names =}\NormalTok{ rowName,}
-                             \DataTypeTok{stringsAsFactors =} \OtherTok{FALSE}\NormalTok{))}
-\NormalTok{\}}
-\KeywordTok{print}\NormalTok{(ci)}
-\CommentTok{\#\textgreater{}       Estimate   CILower   CIUpper}
-\CommentTok{\#\textgreater{} trt0 0.8970370 0.8494301 0.9446440}
-\CommentTok{\#\textgreater{} trt1 0.9408374 0.9079564 0.9737183}
-\end{Highlighting}
-\end{Shaded}
-
-One can calculate confidence intervals for inter-treatment FOM differences for individual readers. Each analysis is based only on data for the specified reader, i.e, on the reader-specific \texttt{AUC}, variance and \texttt{Cov1} estimates. The required \texttt{Var\_j} and \texttt{Cov1\_j} are in \texttt{vc\$IndividualRdr}. The implementation follows.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{diffTRName \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{choose}\NormalTok{(I, }\DecValTok{2}\NormalTok{))}
-\NormalTok{ii \textless{}{-}}\StringTok{ }\DecValTok{1}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{I) \{}
-  \ControlFlowTok{if}\NormalTok{ (i }\OperatorTok{==}\StringTok{ }\NormalTok{I) }
-    \ControlFlowTok{break}
-  \ControlFlowTok{for}\NormalTok{ (ip }\ControlFlowTok{in}\NormalTok{ (i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{:}\NormalTok{I) \{}
-\NormalTok{    diffTRName[ii] \textless{}{-}}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"trt"}\NormalTok{, modalityID[i], }\DataTypeTok{sep =} \StringTok{"{-}"}\NormalTok{, }\StringTok{"trt"}\NormalTok{, modalityID[ip]) }\CommentTok{\# !sic}
-\NormalTok{    ii \textless{}{-}}\StringTok{ }\NormalTok{ii }\OperatorTok{+}\StringTok{ }\DecValTok{1}
-\NormalTok{  \}}
-\NormalTok{\}}
-
-\NormalTok{trtMeanDiffs \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(J, }\KeywordTok{choose}\NormalTok{(I, }\DecValTok{2}\NormalTok{)))}
-\NormalTok{Reader \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(J, }\KeywordTok{choose}\NormalTok{(I, }\DecValTok{2}\NormalTok{)))}
-\NormalTok{stdErr \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(J, }\KeywordTok{choose}\NormalTok{(I, }\DecValTok{2}\NormalTok{)))}
-\NormalTok{zStat \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(J, }\KeywordTok{choose}\NormalTok{(I, }\DecValTok{2}\NormalTok{)))}
-\NormalTok{trDiffNames \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(J, }\KeywordTok{choose}\NormalTok{(I, }\DecValTok{2}\NormalTok{)))}
-\NormalTok{PrGTz \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(J, }\KeywordTok{choose}\NormalTok{(I, }\DecValTok{2}\NormalTok{)))}
-\NormalTok{CIReader \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(J, }\KeywordTok{choose}\NormalTok{(I, }\DecValTok{2}\NormalTok{),}\DecValTok{2}\NormalTok{))}
-\NormalTok{ci \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{()}
-\ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{J) \{}
-\NormalTok{  Reader[j,] \textless{}{-}}\StringTok{ }\KeywordTok{rep}\NormalTok{(readerID[j], }\KeywordTok{choose}\NormalTok{(I, }\DecValTok{2}\NormalTok{))}
-\NormalTok{  stdErr[j,] \textless{}{-}}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2} \OperatorTok{*}\StringTok{ }\NormalTok{(vc}\OperatorTok{$}\NormalTok{IndividualRdr[j,}\StringTok{"varEachRdr"}\NormalTok{] }\OperatorTok{{-}}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualRdr[j,}\StringTok{"cov1EachRdr"}\NormalTok{]))}
-\NormalTok{  pair \textless{}{-}}\StringTok{ }\DecValTok{1}
-  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{I) \{}
-    \ControlFlowTok{if}\NormalTok{ (i }\OperatorTok{==}\StringTok{ }\NormalTok{I) }\ControlFlowTok{break}
-    \ControlFlowTok{for}\NormalTok{ (ip }\ControlFlowTok{in}\NormalTok{ (i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{:}\NormalTok{I) \{}
-\NormalTok{      trtMeanDiffs[j, pair] \textless{}{-}}\StringTok{ }\NormalTok{foms[i, j] }\OperatorTok{{-}}\StringTok{ }\NormalTok{foms[ip, j]}
-\NormalTok{      trDiffNames[j,pair] \textless{}{-}}\StringTok{ }\NormalTok{diffTRName[pair]}
-\NormalTok{      zStat[j,pair] \textless{}{-}}\StringTok{ }\NormalTok{trtMeanDiffs[j,pair]}\OperatorTok{/}\NormalTok{stdErr[j,pair]}
-\NormalTok{      PrGTz[j,pair] \textless{}{-}}\StringTok{ }\DecValTok{2} \OperatorTok{*}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(}\KeywordTok{abs}\NormalTok{(zStat[j,pair]), }\DataTypeTok{lower.tail =} \OtherTok{FALSE}\NormalTok{)}
-\NormalTok{      CIReader[j, pair,] \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(trtMeanDiffs[j,pair] }\OperatorTok{+}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{) }\OperatorTok{*}\StringTok{ }\NormalTok{stdErr[j,pair], }
-\NormalTok{                              trtMeanDiffs[j,pair] }\OperatorTok{+}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{) }\OperatorTok{*}\StringTok{ }\NormalTok{stdErr[j,pair])}
-\NormalTok{      rowName \textless{}{-}}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"rdr"}\NormalTok{, Reader[j,pair], }\StringTok{"::"}\NormalTok{, trDiffNames[j, pair])}
-\NormalTok{      ci \textless{}{-}}\StringTok{ }\KeywordTok{rbind}\NormalTok{(ci, }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Estimate =}\NormalTok{ trtMeanDiffs[j, pair], }
-                                 \DataTypeTok{StdErr =}\NormalTok{ stdErr[j,pair], }
-                                 \DataTypeTok{z =}\NormalTok{ zStat[j, pair], }
-                                 \DataTypeTok{PrGTz =}\NormalTok{ PrGTz[j, pair], }
-                                 \DataTypeTok{CILower =}\NormalTok{ CIReader[j, pair,}\DecValTok{1}\NormalTok{],}
-                                 \DataTypeTok{CIUpper =}\NormalTok{ CIReader[j, pair,}\DecValTok{2}\NormalTok{],}
-                                 \DataTypeTok{row.names =}\NormalTok{ rowName,}
-                                 \DataTypeTok{stringsAsFactors =} \OtherTok{FALSE}\NormalTok{))}
-\NormalTok{      pair \textless{}{-}}\StringTok{ }\NormalTok{pair }\OperatorTok{+}\StringTok{ }\DecValTok{1}
-\NormalTok{    \}}
-\NormalTok{  \}}
-\NormalTok{\}}
-\KeywordTok{print}\NormalTok{(ci)}
-\CommentTok{\#\textgreater{}                    Estimate     StdErr          z      PrGTz     CILower}
-\CommentTok{\#\textgreater{} rdr0::trt0{-}trt1 {-}0.02818035 0.02551213 {-}1.1045864 0.26933885 {-}0.07818322}
-\CommentTok{\#\textgreater{} rdr1::trt0{-}trt1 {-}0.04653784 0.02630183 {-}1.7693768 0.07683102 {-}0.09808848}
-\CommentTok{\#\textgreater{} rdr2::trt0{-}trt1 {-}0.01787440 0.03120965 {-}0.5727202 0.56683414 {-}0.07904418}
-\CommentTok{\#\textgreater{} rdr3::trt0{-}trt1 {-}0.02624799 0.01729129 {-}1.5179891 0.12901715 {-}0.06013829}
-\CommentTok{\#\textgreater{} rdr4::trt0{-}trt1 {-}0.10016103 0.04405746 {-}2.2734182 0.02300099 {-}0.18651207}
-\CommentTok{\#\textgreater{}                      CIUpper}
-\CommentTok{\#\textgreater{} rdr0::trt0{-}trt1  0.021822507}
-\CommentTok{\#\textgreater{} rdr1::trt0{-}trt1  0.005012792}
-\CommentTok{\#\textgreater{} rdr2::trt0{-}trt1  0.043295388}
-\CommentTok{\#\textgreater{} rdr3::trt0{-}trt1  0.007642316}
-\CommentTok{\#\textgreater{} rdr4::trt0{-}trt1 {-}0.013809995}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{ORExamples-RRFC-dataset02-hand}{%
-\subsection{Random-Reader Fixed-Case (RRFC) analysis}\label{ORExamples-RRFC-dataset02-hand}}
+\hypertarget{ORApplications-FRRC-dataset02-hand}{%
+\subsection{Fixed-Reader Random-Case (FRRC) analysis}\label{ORApplications-FRRC-dataset02-hand}}
 
 TBA
 
-\hypertarget{ORExamples-dataset02-RJafroc}{%
-\section{Using RJafroc: dataset02}\label{ORExamples-dataset02-RJafroc}}
+\hypertarget{ORApplications-RRFC-dataset02-hand}{%
+\subsection{Random-Reader Fixed-Case (RRFC) analysis}\label{ORApplications-RRFC-dataset02-hand}}
 
-\hypertarget{ORExamples-RRRC-dataset02-RJafroc}{%
-\subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORExamples-RRRC-dataset02-RJafroc}}
+TBA
+
+\hypertarget{ORApplications-dataset02-RJafroc}{%
+\section{Using RJafroc: dataset02}\label{ORApplications-dataset02-RJafroc}}
+
+\hypertarget{ORApplications-RRRC-dataset02-RJafroc}{%
+\subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORApplications-RRRC-dataset02-RJafroc}}
 
 \begin{itemize}
 \tightlist
@@ -3472,8 +3311,8 @@ TBA
   TBA
 \end{itemize}
 
-\hypertarget{ORExamples-FRRC-dataset02-RJafroc}{%
-\subsection{Fixed-Reader Random-Case (FRRC) analysis}\label{ORExamples-FRRC-dataset02-RJafroc}}
+\hypertarget{ORApplications-FRRC-dataset02-RJafroc}{%
+\subsection{Fixed-Reader Random-Case (FRRC) analysis}\label{ORApplications-FRRC-dataset02-RJafroc}}
 
 \begin{itemize}
 \tightlist
@@ -3519,8 +3358,8 @@ TBA
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{ORExamples-RRFC-dataset02-RJafroc}{%
-\subsection{Random-Reader Fixed-Case (RRFC) analysis}\label{ORExamples-RRFC-dataset02-RJafroc}}
+\hypertarget{ORApplications-RRFC-dataset02-RJafroc}{%
+\subsection{Random-Reader Fixed-Case (RRFC) analysis}\label{ORApplications-RRFC-dataset02-RJafroc}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3545,8 +3384,8 @@ TBA
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{ORExamples-dataset04-RJafroc}{%
-\section{Using RJafroc: dataset04}\label{ORExamples-dataset04-RJafroc}}
+\hypertarget{ORApplications-dataset04-RJafroc}{%
+\section{Using RJafroc: dataset04}\label{ORApplications-dataset04-RJafroc}}
 
 \begin{itemize}
 \tightlist
@@ -3615,8 +3454,8 @@ TBA
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{ORExamples-RRRC-dataset04}{%
-\subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORExamples-RRRC-dataset04}}
+\hypertarget{ORApplications-RRRC-dataset04}{%
+\subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORApplications-RRRC-dataset04}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3674,8 +3513,8 @@ TBA
   TBA
 \end{itemize}
 
-\hypertarget{ORExamples-FRRC-dataset04}{%
-\subsection{Fixed-Reader Random-Case (FRRC) analysis}\label{ORExamples-FRRC-dataset04}}
+\hypertarget{ORApplications-FRRC-dataset04}{%
+\subsection{Fixed-Reader Random-Case (FRRC) analysis}\label{ORApplications-FRRC-dataset04}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3748,8 +3587,8 @@ TBA
   TBA
 \end{itemize}
 
-\hypertarget{ORExamples-RRFC-dataset04}{%
-\subsection{Random-Reader Fixed-Case (RRFC) analysis}\label{ORExamples-RRFC-dataset04}}
+\hypertarget{ORApplications-RRFC-dataset04}{%
+\subsection{Random-Reader Fixed-Case (RRFC) analysis}\label{ORApplications-RRFC-dataset04}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3783,8 +3622,8 @@ TBA
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{ORExamples-dataset04-FROC-RJafroc}{%
-\section{Using RJafroc: dataset04, FROC analysis}\label{ORExamples-dataset04-FROC-RJafroc}}
+\hypertarget{ORApplications-dataset04-FROC-RJafroc}{%
+\section{Using RJafroc: dataset04, FROC analysis}\label{ORApplications-dataset04-FROC-RJafroc}}
 
 \begin{itemize}
 \tightlist
@@ -3862,8 +3701,8 @@ TBA
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{ORExamples-RRRC-dataset04-FROC}{%
-\subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORExamples-RRRC-dataset04-FROC}}
+\hypertarget{ORApplications-RRRC-dataset04-FROC}{%
+\subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORApplications-RRRC-dataset04-FROC}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3921,8 +3760,8 @@ TBA
   TBA
 \end{itemize}
 
-\hypertarget{ORExamples-FRRC-dataset04-FROC}{%
-\subsection{Fixed-Reader Random-Case (FRRC) analysis}\label{ORExamples-FRRC-dataset04-FROC}}
+\hypertarget{ORApplications-FRRC-dataset04-FROC}{%
+\subsection{Fixed-Reader Random-Case (FRRC) analysis}\label{ORApplications-FRRC-dataset04-FROC}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3995,8 +3834,8 @@ TBA
   TBA
 \end{itemize}
 
-\hypertarget{ORExamples-RRFC-dataset04-FROC}{%
-\subsection{Random-Reader Fixed-Case (RRFC) analysis}\label{ORExamples-RRFC-dataset04-FROC}}
+\hypertarget{ORApplications-RRFC-dataset04-FROC}{%
+\subsection{Random-Reader Fixed-Case (RRFC) analysis}\label{ORApplications-RRFC-dataset04-FROC}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4030,11 +3869,235 @@ TBA
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{ORApplications-dataset04-FROC-DBM-RJafroc}{%
+\section{Using RJafroc for dataset04, FROC analysis, DBM method}\label{ORApplications-dataset04-FROC-DBM-RJafroc}}
+
+\begin{itemize}
+\tightlist
+\item
+  The fourth example again uses \texttt{dataset04}, i.e., FROC data, \emph{but this time we use DBM analysis}.
+\item
+  The key difference below is in the call to \texttt{StSignificanceTesting()} function, where we set \texttt{method\ =\ "DBM"}.
+\item
+  Since DBM analysis is pseudovalue based, and the figure of merit is not the empirical AUC under the ROC, one expects to see differences from the previously presented OR analysis, contained in \texttt{st3}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{st4 \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(ds, }\DataTypeTok{FOM =}\NormalTok{ FOM, }\DataTypeTok{method =} \StringTok{"DBM"}\NormalTok{) }\CommentTok{\# Note: using DBM analysis}
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{FOMs)}
+\CommentTok{\#\textgreater{} $foms}
+\CommentTok{\#\textgreater{}            rdr1       rdr3       rdr4       rdr5}
+\CommentTok{\#\textgreater{} trt1 0.77926667 0.72489167 0.70362500 0.80509167}
+\CommentTok{\#\textgreater{} trt2 0.78700000 0.72690000 0.72261667 0.80378333}
+\CommentTok{\#\textgreater{} trt3 0.72969167 0.71575833 0.67230833 0.77265833}
+\CommentTok{\#\textgreater{} trt4 0.81013333 0.74311667 0.69435833 0.82940833}
+\CommentTok{\#\textgreater{} trt5 0.74880000 0.68227500 0.65517500 0.77125000}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $trtMeans}
+\CommentTok{\#\textgreater{}        Estimate}
+\CommentTok{\#\textgreater{} trt1 0.75321875}
+\CommentTok{\#\textgreater{} trt2 0.76007500}
+\CommentTok{\#\textgreater{} trt3 0.72260417}
+\CommentTok{\#\textgreater{} trt4 0.76925417}
+\CommentTok{\#\textgreater{} trt5 0.71437500}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $trtMeanDiffs}
+\CommentTok{\#\textgreater{}                Estimate}
+\CommentTok{\#\textgreater{} trt1{-}trt2 {-}0.0068562500}
+\CommentTok{\#\textgreater{} trt1{-}trt3  0.0306145833}
+\CommentTok{\#\textgreater{} trt1{-}trt4 {-}0.0160354167}
+\CommentTok{\#\textgreater{} trt1{-}trt5  0.0388437500}
+\CommentTok{\#\textgreater{} trt2{-}trt3  0.0374708333}
+\CommentTok{\#\textgreater{} trt2{-}trt4 {-}0.0091791667}
+\CommentTok{\#\textgreater{} trt2{-}trt5  0.0457000000}
+\CommentTok{\#\textgreater{} trt3{-}trt4 {-}0.0466500000}
+\CommentTok{\#\textgreater{} trt3{-}trt5  0.0082291667}
+\CommentTok{\#\textgreater{} trt4{-}trt5  0.0548791667}
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{ANOVA}\OperatorTok{$}\NormalTok{TRCanova)}
+\CommentTok{\#\textgreater{}                 SS   DF          MS}
+\CommentTok{\#\textgreater{} T       1.85323319    4 0.463308298}
+\CommentTok{\#\textgreater{} R       7.08087324    3 2.360291078}
+\CommentTok{\#\textgreater{} C     289.60188783  199 1.455285868}
+\CommentTok{\#\textgreater{} TR      0.40704839   12 0.033920699}
+\CommentTok{\#\textgreater{} TC     95.77167376  796 0.120316173}
+\CommentTok{\#\textgreater{} RC    126.90154272  597 0.212565398}
+\CommentTok{\#\textgreater{} TRC   226.47948201 2388 0.094840654}
+\CommentTok{\#\textgreater{} Total 748.09574113 3999          NA}
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{ANOVA}\OperatorTok{$}\NormalTok{VarCom)}
+\CommentTok{\#\textgreater{}             Estimates}
+\CommentTok{\#\textgreater{} VarR    0.00220864564}
+\CommentTok{\#\textgreater{} VarC    0.06086224757}
+\CommentTok{\#\textgreater{} VarTR  {-}0.00030459978}
+\CommentTok{\#\textgreater{} VarTC   0.00636887974}
+\CommentTok{\#\textgreater{} VarRC   0.02354494882}
+\CommentTok{\#\textgreater{} VarErr  0.09484065411}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{ORApplications-RRRC-dataset04-FROC-DBM}{%
+\subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORApplications-RRRC-dataset04-FROC-DBM}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{FTests)}
+\CommentTok{\#\textgreater{}                  DF          MS     FStat           p}
+\CommentTok{\#\textgreater{} Treatment  4.000000 0.463308298 7.8002997 0.000117105}
+\CommentTok{\#\textgreater{} Error     36.793343 0.059396218        NA          NA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  TBA
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{ciDiffTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\OperatorTok{:}\DecValTok{5}\NormalTok{)])}
+\CommentTok{\#\textgreater{}                Estimate       CILower       CIUpper}
+\CommentTok{\#\textgreater{} trt1{-}trt2 {-}0.0068562500 {-}0.0315514439  0.0178389439}
+\CommentTok{\#\textgreater{} trt1{-}trt3  0.0306145833  0.0059193894  0.0553097773}
+\CommentTok{\#\textgreater{} trt1{-}trt4 {-}0.0160354167 {-}0.0407306106  0.0086597773}
+\CommentTok{\#\textgreater{} trt1{-}trt5  0.0388437500  0.0141485561  0.0635389439}
+\CommentTok{\#\textgreater{} trt2{-}trt3  0.0374708333  0.0127756394  0.0621660273}
+\CommentTok{\#\textgreater{} trt2{-}trt4 {-}0.0091791667 {-}0.0338743606  0.0155160273}
+\CommentTok{\#\textgreater{} trt2{-}trt5  0.0457000000  0.0210048061  0.0703951939}
+\CommentTok{\#\textgreater{} trt3{-}trt4 {-}0.0466500000 {-}0.0713451939 {-}0.0219548061}
+\CommentTok{\#\textgreater{} trt3{-}trt5  0.0082291667 {-}0.0164660273  0.0329243606}
+\CommentTok{\#\textgreater{} trt4{-}trt5  0.0548791667  0.0301839727  0.0795743606}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  TBA
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{6}\NormalTok{)])}
+\CommentTok{\#\textgreater{}        Estimate    CILower    CIUpper}
+\CommentTok{\#\textgreater{} trt1 0.75321875 0.68413193 0.82230557}
+\CommentTok{\#\textgreater{} trt2 0.76007500 0.69727167 0.82287833}
+\CommentTok{\#\textgreater{} trt3 0.72260417 0.66128414 0.78392420}
+\CommentTok{\#\textgreater{} trt4 0.76925417 0.67869638 0.85981195}
+\CommentTok{\#\textgreater{} trt5 0.71437500 0.63473415 0.79401585}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  TBA
+\end{itemize}
+
+\hypertarget{ORApplications-FRRC-dataset04-FROC-DBM}{%
+\subsection{Fixed-Reader Random-Case (FRRC) analysis}\label{ORApplications-FRRC-dataset04-FROC-DBM}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests)}
+\CommentTok{\#\textgreater{}            DF         MS     FStat           p}
+\CommentTok{\#\textgreater{} Treatment   4 0.46330830 3.8507566 0.004163522}
+\CommentTok{\#\textgreater{} Error     796 0.12031617        NA          NA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  TBA
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciDiffTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\OperatorTok{:}\DecValTok{4}\NormalTok{)])}
+\CommentTok{\#\textgreater{}                Estimate        PrGTt       CILower      CIUpper}
+\CommentTok{\#\textgreater{} trt1{-}trt2 {-}0.0068562500 0.6927087308 {-}0.0409002793  0.027187779}
+\CommentTok{\#\textgreater{} trt1{-}trt3  0.0306145833 0.0779118871 {-}0.0034294460  0.064658613}
+\CommentTok{\#\textgreater{} trt1{-}trt4 {-}0.0160354167 0.3554604706 {-}0.0500794460  0.018008613}
+\CommentTok{\#\textgreater{} trt1{-}trt5  0.0388437500 0.0253859867  0.0047997207  0.072887779}
+\CommentTok{\#\textgreater{} trt2{-}trt3  0.0374708333 0.0310289993  0.0034268040  0.071514863}
+\CommentTok{\#\textgreater{} trt2{-}trt4 {-}0.0091791667 0.5967708242 {-}0.0432231960  0.024864863}
+\CommentTok{\#\textgreater{} trt2{-}trt5  0.0457000000 0.0085768050  0.0116559707  0.079744029}
+\CommentTok{\#\textgreater{} trt3{-}trt4 {-}0.0466500000 0.0072992573 {-}0.0806940293 {-}0.012605971}
+\CommentTok{\#\textgreater{} trt3{-}trt5  0.0082291667 0.6352831698 {-}0.0258148626  0.042273196}
+\CommentTok{\#\textgreater{} trt4{-}trt5  0.0548791667 0.0016137424  0.0208351374  0.088923196}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  TBA
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{)])}
+\CommentTok{\#\textgreater{}        Estimate    CILower}
+\CommentTok{\#\textgreater{} trt1 0.75321875 0.71050187}
+\CommentTok{\#\textgreater{} trt2 0.76007500 0.71511208}
+\CommentTok{\#\textgreater{} trt3 0.72260417 0.68006466}
+\CommentTok{\#\textgreater{} trt4 0.76925417 0.72752547}
+\CommentTok{\#\textgreater{} trt5 0.71437500 0.66947702}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  TBA
+\end{itemize}
+
+\hypertarget{ORApplications-RRFC-dataset04-FROC-DBM}{%
+\subsection{Random-Reader Fixed-Case (RRFC) analysis}\label{ORApplications-RRFC-dataset04-FROC-DBM}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{RRFC}\OperatorTok{$}\NormalTok{FTests)}
+\CommentTok{\#\textgreater{}           DF          MS     FStat             p}
+\CommentTok{\#\textgreater{} Treatment  4 0.463308298 13.658572 0.00020192224}
+\CommentTok{\#\textgreater{} Error     12 0.033920699        NA            NA}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  TBA
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(st4}\OperatorTok{$}\NormalTok{RRFC}\OperatorTok{$}\NormalTok{ciDiffTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{)])}
+\CommentTok{\#\textgreater{}                Estimate      CILower       CIUpper}
+\CommentTok{\#\textgreater{} trt1{-}trt2 {-}0.0068562500 {-}0.026920472  0.0132079720}
+\CommentTok{\#\textgreater{} trt1{-}trt3  0.0306145833  0.010550361  0.0506788053}
+\CommentTok{\#\textgreater{} trt1{-}trt4 {-}0.0160354167 {-}0.036099639  0.0040288053}
+\CommentTok{\#\textgreater{} trt1{-}trt5  0.0388437500  0.018779528  0.0589079720}
+\CommentTok{\#\textgreater{} trt2{-}trt3  0.0374708333  0.017406611  0.0575350553}
+\CommentTok{\#\textgreater{} trt2{-}trt4 {-}0.0091791667 {-}0.029243389  0.0108850553}
+\CommentTok{\#\textgreater{} trt2{-}trt5  0.0457000000  0.025635778  0.0657642220}
+\CommentTok{\#\textgreater{} trt3{-}trt4 {-}0.0466500000 {-}0.066714222 {-}0.0265857780}
+\CommentTok{\#\textgreater{} trt3{-}trt5  0.0082291667 {-}0.011835055  0.0282933886}
+\CommentTok{\#\textgreater{} trt4{-}trt5  0.0548791667  0.034814945  0.0749433886}
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{discussionsummary5}{%
 \section{Discussion/Summary/5}\label{discussionsummary5}}
 
-\hypertarget{ORExamples-references}{%
-\section{References}\label{ORExamples-references}}
+\hypertarget{ToMullOver1-tentative}{%
+\section{Tentative, need to think over}\label{ToMullOver1-tentative}}
+
+A comparison was run between results of OR and DBM for the FROC dataset. Except for \texttt{FRRC}, where differences are expected (because \texttt{ddf} in the former is \(\infty\), while that in the later is \((I-1)\times(J-1))\), the results for the p-values were identical. This was true for the following FOMs: \texttt{wAFROC}, with equal and unequal weights, and \texttt{MaxLLF}. The confidence intervals (again, excluding \texttt{FRRC}) were identical for \texttt{FOM} = \texttt{wAFROC}. Slight differences were observed for \texttt{FOM} = \texttt{MaxLLF}.
+
+\hypertarget{ORApplications-references}{%
+\section{References}\label{ORApplications-references}}
 
 \hypertarget{RocSampleSizeDBM}{%
 \chapter{Sample size estimation for ROC studies DBM method}\label{RocSampleSizeDBM}}

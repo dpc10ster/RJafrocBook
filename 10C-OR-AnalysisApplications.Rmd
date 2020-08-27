@@ -22,7 +22,9 @@ library(here)
 * The second example uses a five-treatment four-reader **ROC** dataset, showing the effect of multiple treatment pairings. 
 * The third example uses a five-treatment four-reader **FROC** dataset, showing the key difference involved in FROC analysis, namely the choice of figure of merit. 
 * The fourth example uses a five-treatment four-reader **FROC** dataset, showing the key difference involved in DBM vs. OR analysis. 
-* Each analysis involves the following steps: 
+
+## Steps in the analysis {#ORApplications-steps}
+* Each analysis involves the following steps:
 + Calculate the figure of merit, 
 + Calculate the variance-covariance matrix and the mean-squares, and 
 + Calculate the NH statistic, p-value and confidence interval(s).
@@ -48,28 +50,29 @@ print(foms)
 * For example, for the first treatment, `trt0`, the second reader's figure of merit is `r foms["trt0", "rdr1"]`.
 * The next step is to calculate the variance-covariance matrix and the mean-squares.
 * The function `UtilORVarComponentsFactorial()` returns these quantities. The `Factorial` in the function name is due to the fact that this code applies to the factorial design. A different function is used for a split-plot design.
-* For compactness only the first two members of the returned object are displayed. The remaining members are used in single-treatment and single-reader analyses.
 
 ```{r}
-ret <- UtilORVarComponentsFactorial(dataset02, FOM = "Wilcoxon", covEstMethod = "jackknife")
-print(ret$TRanova)
-print(ret$VarCom)
+vc <- UtilORVarComponentsFactorial(dataset02, FOM = "Wilcoxon", covEstMethod = "jackknife")
+print(vc$TRanova)
+print(vc$VarCom)
+print(vc$IndividualTrt)
+print(vc$IndividualRdr)
 ```
 
 * The next step is the calculate the NH testing statistic. 
 * The relevant equation is Eqn. \@ref(eq:F-ORH-RRRC). 
-* `ret` contains the values needed in this equation, as follows:
-+ MS(T) is in `ret$TRanova["T", "MS"]`, whose value is `r ret$TRanova["T", "MS"]`. 
-+ MS(TR) is in `ret$TRanova["TR", "MS"]`, whose value is `r ret$TRanova["TR", "MS"]`. 
+* `vc` contains the values needed in this equation, as follows:
++ MS(T) is in `vc$TRanova["T", "MS"]`, whose value is `r vc$TRanova["T", "MS"]`. 
++ MS(TR) is in `vc$TRanova["TR", "MS"]`, whose value is `r vc$TRanova["TR", "MS"]`. 
 + `J`, the number of readers, is the length of the second dimension of `dataset02$ratings$NL`, i.e., 5. 
-+ `Cov2` is in `ret$VarCom["Cov2", "Estimates"]`, whose value is `r ret$VarCom["Cov2", "Estimates"]`. 
-+ `Cov3` is in `ret$VarCom["Cov3", "Estimates"]`, whose value is `r ret$VarCom["Cov3", "Estimates"]`. 
++ `Cov2` is in `vc$VarCom["Cov2", "Estimates"]`, whose value is `r vc$VarCom["Cov2", "Estimates"]`. 
++ `Cov3` is in `vc$VarCom["Cov3", "Estimates"]`, whose value is `r vc$VarCom["Cov3", "Estimates"]`. 
 
 Applying Eqn. \@ref(eq:F-ORH-RRRC) one gets (`den` is the denominator on the right hand side of the referenced equation):
 
 ```{r}
-den <- ret$TRanova["TR", "MS"] + J* max(ret$VarCom["Cov2", "Estimates"] - ret$VarCom["Cov3", "Estimates"],0)
-F_ORH_RRRC <- ret$TRanova["T", "MS"]/den
+den <- vc$TRanova["TR", "MS"] + J* max(vc$VarCom["Cov2", "Estimates"] - vc$VarCom["Cov3", "Estimates"],0)
+F_ORH_RRRC <- vc$TRanova["T", "MS"]/den
 print(F_ORH_RRRC)
 ```
 
@@ -77,7 +80,7 @@ print(F_ORH_RRRC)
 * From the previous chapter, `ddf` is calculated using Eqn. \@ref(eq:ddfH-RRRC)). The numerator of `ddf` is seen to be identical to `den^2`, where `den` was calculated in the preceding code block. The implementation follows:
 
 ```{r}
-ddf <- den^2*(I-1)*(J-1)/(ret$TRanova["TR", "MS"])^2
+ddf <- den^2*(I-1)*(J-1)/(vc$TRanova["TR", "MS"])^2
 print(ddf)
 ```
 
@@ -99,7 +102,7 @@ trtMeanDiffs <- trtMeans[1] - trtMeans[2]
 print(trtMeanDiffs)
 ```
 
-* From the previous chapter, the $(1-\alpha)$ confidence interval for $\theta_{1 \bullet} - \theta_{2 \bullet}$ is given by Eqn. \@ref(eq:CI-RRRC).
+* From the previous chapter, the $(1-\alpha)$ confidence interval for $\theta_{1 \bullet} - \theta_{2 \bullet}$ is given by Eqn. \@ref(eq:CI-DiffFomRRRC).
 * The expression inside the square-root symbol is `2/J*den`. The implementation follows:
 
 ```{r}

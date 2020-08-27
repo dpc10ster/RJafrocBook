@@ -130,7 +130,7 @@ The $(1-\alpha)$ confidence interval for $\theta_{i \bullet} - \theta_{i' \bulle
 CI_{1-\alpha,RRRC,\theta_{i \bullet} - \theta_{i' \bullet}} =& \theta_{i \bullet} - \theta_{i' \bullet} \\ 
 &\pm t_{\alpha/2, \text{ddf}_H}\sqrt{\textstyle\frac{2}{J}(MS(TR)+J\max(\text{Cov2}-\text{Cov3},0))}
 \end{split}
-(\#eq:CI-diffFomRRRC)
+(\#eq:CI-DiffFomRRRC)
 \end{equation}
 
 The $(1-\alpha)$ confidence interval for $\theta_{i \bullet}$ is given by:
