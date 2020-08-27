@@ -121,7 +121,7 @@ trtMeanDiffs <- trtMeans[1] - trtMeans[2]
 ```
 
 * The difference in reader-averaged FOM,s i.e., $\theta_{1 \bullet} - \theta_{2 \bullet}$, is -0.0438003.
-* The $(1-\alpha)$ confidence interval the difference is given by Eqn. \@ref(eq:CI-RRRC).
+* The $(1-\alpha)$ confidence interval the difference is given by Eqn. \@ref(eq:CI-diffFomRRRC).
 * The expression inside the square-root symbol in this equation is `2/J*den`. 
 * The implementation follows:
 
