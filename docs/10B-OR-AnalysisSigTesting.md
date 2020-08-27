@@ -133,14 +133,17 @@ CI_{1-\alpha,RRRC,\theta_{i \bullet} - \theta_{i' \bullet}} =& \theta_{i \bullet
 (\#eq:CI-DiffFomRRRC)
 \end{equation}
 
-The $(1-\alpha)$ confidence interval for $\theta_{i \bullet}$ is given by:
+Define $\text{df}_i$, the degrees of freedom for modality $i$: 
 
 \begin{equation}
-\begin{split}
-\text{df}_i =& (\text{MS(R)}_i + J\max(\text{Cov2}_{i}, 0))^2/\text{MS(R)}_i^2 * (J - 1) \\
-CI_{1-\alpha,RRRC,\theta_{i \bullet}} =& \theta_{i \bullet} \\ 
-&\pm t_{\alpha/2, \text{df}_i}\sqrt{\textstyle\frac{1}{J}(\text{MS(R)}_i + J\max(\text{Cov2}_{i}, 0))}
-\end{split}
+\text{df}_i = (\text{MS(R)}_i + J\max(\text{Cov2}_{i}, 0))^2/\text{MS(R)}_i^2 * (J - 1)
+(\#eq:CI-RRRC-df-IndvlTrt)
+\end{equation}
+
+Then, the $(1-\alpha)$ confidence interval for $\theta_{i \bullet}$ is given by:
+
+\begin{equation}
+CI_{1-\alpha,RRRC,\theta_{i \bullet}} = \theta_{i \bullet} \pm t_{\alpha/2, \text{df}_i}\sqrt{\textstyle\frac{1}{J}(\text{MS(R)}_i + J\max(\text{Cov2}_{i}, 0))}
 (\#eq:CI-RRRC-IndvlTrt)
 \end{equation}
 
@@ -203,18 +206,12 @@ Additional confidence intervals are stated below:
 * The confidence interval for treatment FOM differences for each reader, denoted $CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}}$.  
 
 \begin{equation}
-\begin{split}
-CI_{1-\alpha,FRRC,\theta_{i \bullet}} =&\theta_{i \bullet} \\ 
-&\pm z_{\alpha/2}\sqrt{\textstyle\frac{1}{J}(\text{Var}_i+(J-1)\max(\text{Cov2}_i,0)}
-\end{split}
+CI_{1-\alpha,FRRC,\theta_{i \bullet}} = \theta_{i \bullet} \pm z_{\alpha/2}\sqrt{\textstyle\frac{1}{J}(\text{Var}_i+(J-1)\max(\text{Cov2}_i,0)}
 (\#eq:CIIndTrtFomFRRC-OR)
 \end{equation}
 
 \begin{equation}
-\begin{split}
-CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}} =&(\theta_{i j} - \theta_{i' j}) \\ 
-&\pm z_{\alpha/2}\sqrt{2(\text{Var}_j - \text{Cov1}_j)}
-\end{split}
+CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}} = (\theta_{i j} - \theta_{i' j}) \pm z_{\alpha/2}\sqrt{2(\text{Var}_j - \text{Cov1}_j)}
 (\#eq:CIIndRdrDiffFomFRRC-OR)
 \end{equation}
 

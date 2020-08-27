@@ -7,33 +7,50 @@ output:
 
 
 
-## Introduction {#ORApplications-introduction}
-* Four examples are given. The first three use OR analysis, while the last one uses the pseudovalue-based DBM analysis.
-* The first example uses a two-treatment five-reader **ROC** dataset, a well-know and widely used dataset in the literature [@RN1993]. 
-* The second example uses a five-treatment four-reader **ROC** dataset, showing the effect of multiple treatment pairings. 
-* The third example uses a five-treatment four-reader **FROC** dataset, showing the key difference involved in FROC analysis, namely the choice of figure of merit. 
-* The fourth example uses a five-treatment four-reader **FROC** dataset, showing the key difference involved in DBM vs. OR analysis. 
+## Introduction {#ORApplications-introduction}  
 
-## Steps in the analysis {#ORApplications-steps}
-* Each analysis involves the following steps:
-+ Calculate the figure of merit, 
-+ Calculate the variance-covariance matrix and the mean-squares, and 
-+ Calculate the NH statistic, p-value and confidence interval(s).
+This chapter illustrates Obuchowski-Rockette analysis with several examples. The first example is a full-blown "hand-calculation" for `dataset02`, showing explicit implementations of formulae presented in the previous chapter. The second example shows application of the `RJafroc` package function `StSignificanceTesting()` to the same dataset: this function encapsulates all formulae and accomplishes all analyses with one function call. The third example shows application of the `StSignificanceTesting() function to an ROC dataset derived from the Federica Zanca dataset [@RN1882], which has five modalities and four readers. This illustrates multiple treatment pairings (in contrast, `dataset02` has only one treatment pairing). The fourth example shows application of `StSignificanceTesting()` to `dataset04`, which is an **FROC** dataset (in contrast to the previous examples, which employed **ROC** datasets). It illustrates the key difference involved in FROC analysis, namely the choice of figure of merit. The final example again uses `dataset04`, i.e., FROC data, *but this time we use DBM analysis*. Since DBM analysis is pseudovalue based, and the figure of merit is not the empirical AUC under the ROC, one may expect to see differences from the previously presented OR analysis on the same dataset.
+
+Each analysis involves the following steps: 
+
+* Calculate the figure of merit; 
+* Calculate the variance-covariance matrix and mean-squares;
+* Calculate the NH statistic, p-value and confidence interval(s).
+* For each analysis, three sub-analyses are shown: 
+    + random-reader random-case (RRRC),
+    + fixed-reader random-case (FRRC), and
+    + random-reader fixed-case (RRFC).
 
 ## Hand calculation using dataset02 {#ORApplications-dataset02-hand}
-* `dataset02` has two modalities and five readers. 
+
+Dataset `dataset02 is well-know in the literature [@RN1993] as it has been widely used to illustrate advances in ROC methodology. The following code extract the numbers of modalities, readers and cases for `dataset02` and defines strings `modalityID`, `readerID` and `diffTRName` that will be needed later on.
 
 
 ```r
 I <- length(dataset02$ratings$NL[,1,1,1])
 J <- length(dataset02$ratings$NL[1,,1,1])
-cat("I = ", I, ", J = ", J, "\n")
-#> I =  2 , J =  5
+K <- length(dataset02$ratings$NL[1,1,,1])
+modalityID <- dataset02$descriptions$modalityID
+readerID <- dataset02$descriptions$readerID
+diffTRName <- array(dim = choose(I, 2))
+ii <- 1
+for (i in 1:I) {
+  if (i == I) 
+    break
+  for (ip in (i + 1):I) {
+    diffTRName[ii] <- 
+      paste0("trt", modalityID[i], 
+             sep = "-", "trt", modalityID[ip])
+    ii <- ii + 1
+  }
+}
 ```
 
-### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset02-hand}
+The dataset consists of I = 2 treatments,  J = 5 readers and  K = 114 cases.
+
+### Random-Reader Random-Case (RRRC) analysis hand calculation {#ORApplications-RRRC-dataset02-hand}
 * The first step is to calculate the figures of merit. 
-* The following code uses `UtilFigureOfMerit()` to this end. Note that `FOM` has to be explicitly specified as "Wilcoxon".
+* The following code uses `UtilFigureOfMerit()` to this end. Note that `FOM = "Wilcoxon"` has to be explicitly specified.
 
 
 ```r
@@ -44,19 +61,23 @@ print(foms)
 #> trt1 0.9478261 0.9053140 0.9217391 0.9993559 0.9299517
 ```
 
-* For example, for the first treatment, `trt0`, the second reader's figure of merit is 0.8587762.
+* For example, for the first treatment, `"trt0"`, the second reader `"rdr1"` figure of merit is 0.8587762.
 * The next step is to calculate the variance-covariance matrix and the mean-squares.
-* The function `UtilORVarComponentsFactorial()` returns these quantities. The `Factorial` in the function name is due to the fact that this code applies to the factorial design. A different function is used for a split-plot design.
+* The function `UtilORVarComponentsFactorial()` returns these quantities, which are saved to `vc`. 
+* The `Factorial` in the function name is because this code applies to the factorial design. A different function is used for a split-plot design.
 
 
 ```r
-vc <- UtilORVarComponentsFactorial(dataset02, FOM = "Wilcoxon", covEstMethod = "jackknife")
-print(vc$TRanova)
+vc <- UtilORVarComponentsFactorial(
+  dataset02, FOM = "Wilcoxon", covEstMethod = "jackknife")
+print(vc)
+#> $TRanova
 #>             SS DF           MS
 #> T  0.004796171  1 0.0047961705
 #> R  0.015344800  4 0.0038362000
 #> TR 0.002204122  4 0.0005510306
-print(vc$VarCom)
+#> 
+#> $VarCom
 #>          Estimates      Rhos
 #> VarR  0.0015349993        NA
 #> VarTR 0.0002004025        NA
@@ -64,11 +85,13 @@ print(vc$VarCom)
 #> Cov2  0.0003440748 0.4288668
 #> Cov3  0.0002390284 0.2979333
 #> Var   0.0008022883        NA
-print(vc$IndividualTrt)
+#> 
+#> $IndividualTrt
 #>      DF  msREachTrt   varEachTrt  cov2EachTrt
 #> trt0  4 0.003082629 0.0010141028 0.0004839618
 #> trt1  4 0.001304602 0.0005904738 0.0002041879
-print(vc$IndividualRdr)
+#> 
+#> $IndividualRdr
 #>      DF   msTEachRdr   varEachRdr  cov1EachRdr
 #> rdr0  1 0.0003970662 0.0006989006 3.734661e-04
 #> rdr1  1 0.0010828854 0.0011060528 7.601598e-04
@@ -82,22 +105,23 @@ print(vc$IndividualRdr)
 * `vc` contains the values needed in this equation, as follows:
 + MS(T) is in `vc$TRanova["T", "MS"]`, whose value is 0.0047962. 
 + MS(TR) is in `vc$TRanova["TR", "MS"]`, whose value is \ensuremath{5.5103062\times 10^{-4}}. 
-+ `J`, the number of readers, is the length of the second dimension of `dataset02$ratings$NL`, i.e., 5. 
 + `Cov2` is in `vc$VarCom["Cov2", "Estimates"]`, whose value is \ensuremath{3.4407483\times 10^{-4}}. 
 + `Cov3` is in `vc$VarCom["Cov3", "Estimates"]`, whose value is \ensuremath{2.3902837\times 10^{-4}}. 
 
-Applying Eqn. \@ref(eq:F-ORH-RRRC) one gets (`den` is the denominator on the right hand side of the referenced equation):
+Applying Eqn. \@ref(eq:F-ORH-RRRC) one gets (`den` is the denominator on the right hand side of the referenced equation) and F_ORH_RRRC is the value of the F-statistic:
 
 
 ```r
-den <- vc$TRanova["TR", "MS"] + J* max(vc$VarCom["Cov2", "Estimates"] - vc$VarCom["Cov3", "Estimates"],0)
+den <- vc$TRanova["TR", "MS"] + 
+  J* max(vc$VarCom["Cov2", "Estimates"] - 
+           vc$VarCom["Cov3", "Estimates"],0)
 F_ORH_RRRC <- vc$TRanova["T", "MS"]/den
 print(F_ORH_RRRC)
 #> [1] 4.456319
 ```
 
-* The next step is calculation of the denominator degrees of freedom.
-* From the previous chapter, `ddf` is calculated using Eqn. \@ref(eq:ddfH-RRRC)). The numerator of `ddf` is seen to be identical to `den^2`, where `den` was calculated in the preceding code block. The implementation follows:
+* The F-statistic has numerator degrees of freedom $\text{ndf} = I - 1$ and denominator degrees of freedom, `ddf`, to be calculated next.
+* From the previous chapter, `ddf` is calculated using Eqn. \@ref(eq:ddfH-RRRC)). The numerator of `ddf` is identical to `den^2`, where `den` was calculated in the preceding code block. The implementation follows:
 
 
 ```r
@@ -118,39 +142,295 @@ print(p)
 
 * The difference is not significant at $\alpha$ = 0.05. 
 * The next step is calculation of confidence intervals.
-* Since `I` = 2, their is only one paired difference in reader-averaged FOMs, namely, the first treatment minus the second:
+* Since `I` = 2, their is only one paired difference in reader-averaged FOMs, namely, the first treatment minus the second.
 
 
 ```r
 trtMeans <- rowMeans(foms)
 trtMeanDiffs <- trtMeans[1] - trtMeans[2]
+names(trtMeanDiffs) <- "trt0-trt1"
+print(trtMeans)
+#>      trt0      trt1 
+#> 0.8970370 0.9408374
 print(trtMeanDiffs)
-#>        trt0 
+#>   trt0-trt1 
 #> -0.04380032
 ```
 
-* From the previous chapter, the $(1-\alpha)$ confidence interval for $\theta_{1 \bullet} - \theta_{2 \bullet}$ is given by Eqn. \@ref(eq:CI-DiffFomRRRC).
-* The expression inside the square-root symbol is `2/J*den`. The implementation follows:
+* `trtMeans`contains the reader-averaged figures of merit for each treatment.
+* `trtMeanDiffs`contains the reader-averaged difference figure of merit.
+* From the previous chapter, the $(1-\alpha)$ confidence interval for $\theta_{1 \bullet} - \theta_{2 \bullet}$ is given by Eqn. \@ref(eq:CI-DiffFomRRRC), in which equation the expression inside the square-root symbol is `2/J*den`. 
+* $\alpha$, the significance level of the test, is set to 0.05. 
+* The implementation follows:
 
 
 ```r
 alpha <- 0.05
-stdErr <- sqrt(2 * den/J)
+stdErr <- sqrt(2/J*den)
 t_crit <- abs(qt(alpha/2, ddf))
-CI_RRRC <- c(trtMeanDiffs - t_crit*stdErr, trtMeanDiffs + t_crit*stdErr)
+CI_RRRC <- c(trtMeanDiffs - t_crit*stdErr, 
+             trtMeanDiffs + t_crit*stdErr)
 names(CI_RRRC) <- c("Lower", "Upper")
 print(CI_RRRC)
 #>         Lower         Upper 
 #> -0.0879594986  0.0003588544
 ```
 
-The confidence interval includes zero, which confirms that the reader-averaged FOM difference between treatments is not significant. 
+The confidence interval includes zero, which confirms the F-statistic finding that the reader-averaged FOM difference between treatments is not significant. 
+
+Calculated next is the confidence interval for the reader-averaged FOM for each treatment. The relevant equations are Eqn. \@ref(eq:CI-RRRC-df-IndvlTrt) and Eqn. \@ref(eq:CI-RRRC-IndvlTrt). The implementation follows:
+
+
+```r
+df_i <- array(dim = I)
+den_i <- array(dim = I)
+stdErr_i <- array(dim = I)
+ci <- array(dim = c(I, 2))
+CI_RRRC_IndvlTrt <- data.frame()
+for (i in 1:I) {
+  den_i[i] <- vc$IndividualTrt[i, "msREachTrt"] + 
+    J * max(vc$IndividualTrt[i, "cov2EachTrt"], 0)
+  df_i[i] <- 
+    (den_i[i])^2/(vc$IndividualTrt[i, "msREachTrt"])^2 * (J - 1)
+  stdErr_i[i] <- sqrt(den_i[i]/J)
+  ci[i,] <- 
+    c(trtMeans[i] + qt(alpha/2, df_i[i]) * stdErr_i[i], 
+      trtMeans[i] + qt(1-alpha/2, df_i[i]) * stdErr_i[i])
+  rowName <- paste0("trt", modalityID[i])
+  CI_RRRC_IndvlTrt <- rbind(
+    CI_RRRC_IndvlTrt, 
+    data.frame(Estimate = trtMeans[i], 
+               StdErr = stdErr_i[i],
+               DFi = df_i[i],
+               CILower = ci[i,1],
+               CIUpper = ci[i,2],
+               Cov2i = vc$IndividualTrt[i,"cov2EachTrt"],
+               row.names = rowName,
+               stringsAsFactors = FALSE))
+}
+print(CI_RRRC_IndvlTrt)
+#>       Estimate     StdErr      DFi   CILower   CIUpper        Cov2i
+#> trt0 0.8970370 0.03317360 12.74465 0.8252236 0.9688505 0.0004839618
+#> trt1 0.9408374 0.02156637 12.71019 0.8941378 0.9875369 0.0002041879
+```
+
 
 ### Fixed-Reader Random-Case (FRRC) analysis {#ORApplications-FRRC-dataset02-hand}
-TBA
+* The chi-square statistic is calculated using Eqn. \@ref(eq:DefFStatFRRC-OR) and Eqn. \@ref(eq:ChisqStatFRRC-OR). 
+* The needed quantities are in `vc`. 
+* For example, MS(T) is in vc$TRanova["T", "MS"], see above. Likewise for `Cov2` and `Cov3`.
+* The remaining needed quantities are:
++ `Var` is in `vc$VarCom["Var", "Estimates"]`, whose value is \ensuremath{8.0228827\times 10^{-4}}. 
++ `Cov1` is in `vc$VarCom["Cov1", "Estimates"]`, whose value is \ensuremath{3.4661371\times 10^{-4}}. 
+* The degree of freedom is $I-1$.
+* The implementation follows:
+
+
+```r
+den_FRRC <- vc$VarCom["Var","Estimates"] - 
+  vc$VarCom["Cov1","Estimates"] + 
+  (J - 1) * max(vc$VarCom["Cov2","Estimates"] - 
+                  vc$VarCom["Cov3","Estimates"] ,0)
+chisqVal <- (I-1)*vc$TRanova["T","MS"]/den_FRRC
+p <- 1 - pchisq(chisqVal, I - 1)
+FTests <- data.frame(MS = c(vc$TRanova["T", "MS"], den_FRRC),
+                     Chisq = c(chisqVal,NA),
+                     DF = c(I - 1, NA),
+                     p = c(p,NA),
+                     row.names = c("Treatment", "Error"),
+                     stringsAsFactors = FALSE)
+print(FTests)
+#>                     MS    Chisq DF          p
+#> Treatment 0.0047961705 5.475953  1 0.01927984
+#> Error     0.0008758604       NA NA         NA
+```
+
+* Since p < 0.05, one has a significant finding. 
+* Freezing reader variability shows a significant difference between the treatments. 
+* The downside is that the conclusion applies only to the readers used in the study.
+* The next step is to calculate the confidence interval for the reader-averaged FOM difference.
+* The relevant equation is Eqn. \@ref(eq:CIDiffFomFRRC-OR), whose implementation follows.
+
+
+```r
+stdErr <- sqrt(2 * den_FRRC/J)
+zStat <- vector()
+PrGTz <- vector()
+CI <- array(dim = c(choose(I,2),2))
+for (i in 1:choose(I,2)) {
+  zStat[i] <- trtMeanDiffs[i]/stdErr
+  PrGTz[i] <- 2 * pnorm(abs(zStat[i]), lower.tail = FALSE)
+  CI[i, ] <- c(trtMeanDiffs[i] + qnorm(alpha/2) * stdErr, 
+               trtMeanDiffs[i] + qnorm(1-alpha/2) * stdErr)
+}
+ciDiffTrtFRRC <- data.frame(Estimate = trtMeanDiffs, 
+                            StdErr = rep(stdErr, choose(I, 2)),
+                            z = zStat, 
+                            PrGTz = PrGTz, 
+                            CILower = CI[,1],
+                            CIUpper = CI[,2], 
+                            row.names = diffTRName,
+                            stringsAsFactors = FALSE)
+print(ciDiffTrtFRRC)
+#>              Estimate     StdErr         z      PrGTz     CILower     CIUpper
+#> trt0-trt1 -0.04380032 0.01871748 -2.340075 0.01927984 -0.08048591 -0.00711473
+```
+
+* Consistent with the chi-square statistic significant finding, one finds that the treatment difference confidence interval does not include zero.
+* The next step is to calculate the confidence interval for the reader-averaged figures of merit for each treatment.
+* The relevant formula is in Eqn. \@ref(eq:CIIndTrtFomFRRC-OR), whose implementation follows:
+
+
+```r
+stdErr <- vector()
+df <- vector()
+CI <- array(dim = c(I,2))
+ciAvgRdrEachTrt <- data.frame()
+for (i in 1:I) {
+  df[i] <- K - 1
+  stdErr[i] <- 
+    sqrt((vc$IndividualTrt[i,"varEachTrt"] + 
+            (J-1)*max(vc$IndividualTrt[i,"cov2EachTrt"],0))/J)
+  CI[i, ] <- c(trtMeans[i] + qnorm(alpha/2) * stdErr[i],
+               trtMeans[i] + qnorm(1-alpha/2) * stdErr[i])
+  rowName <- paste0("trt", modalityID[i])
+  ciAvgRdrEachTrt <- 
+    rbind(ciAvgRdrEachTrt, 
+          data.frame(Estimate = trtMeans[i], 
+                     StdErr = stdErr[i],
+                     DF = df[i],
+                     CILower = CI[i,1],
+                     CIUpper = CI[i,2],
+                     row.names = rowName,
+                     stringsAsFactors = FALSE))
+}
+print(ciAvgRdrEachTrt)
+#>       Estimate     StdErr  DF   CILower   CIUpper
+#> trt0 0.8970370 0.02428971 113 0.8494301 0.9446440
+#> trt1 0.9408374 0.01677632 113 0.9079564 0.9737183
+```
+* Finally, one calculates confidence intervals for the FOM differences for individual readers. 
+* The relevant formula is in Eqn. \@ref(eq:CIIndRdrDiffFomFRRC-OR), whose implementation follows:
+
+
+```r
+trtMeanDiffs1 <- array(dim = c(J, choose(I, 2)))
+Reader <- array(dim = c(J, choose(I, 2)))
+stdErr <- array(dim = c(J, choose(I, 2)))
+zStat <- array(dim = c(J, choose(I, 2)))
+trDiffNames <- array(dim = c(J, choose(I, 2)))
+PrGTz <- array(dim = c(J, choose(I, 2)))
+CIReader <- array(dim = c(J, choose(I, 2),2))
+ciDiffTrtEachRdr <- data.frame()
+for (j in 1:J) {
+  Reader[j,] <- rep(readerID[j], choose(I, 2))
+  stdErr[j,] <- 
+    sqrt(
+      2 * 
+        (vc$IndividualRdr[j,"varEachRdr"] - 
+           vc$IndividualRdr[j,"cov1EachRdr"]))
+  pair <- 1
+  for (i in 1:I) {
+    if (i == I) break
+    for (ip in (i + 1):I) {
+      trtMeanDiffs1[j, pair] <- foms[i, j] - foms[ip, j]
+      trDiffNames[j,pair] <- diffTRName[pair]
+      zStat[j,pair] <- trtMeanDiffs1[j,pair]/stdErr[j,pair]
+      PrGTz[j,pair] <- 
+        2 * pnorm(abs(zStat[j,pair]), lower.tail = FALSE)
+      CIReader[j, pair,] <- 
+        c(trtMeanDiffs1[j,pair] + 
+            qnorm(alpha/2) * stdErr[j,pair], 
+          trtMeanDiffs1[j,pair] + 
+            qnorm(1-alpha/2) * stdErr[j,pair])
+      rowName <- 
+        paste0("rdr", Reader[j,pair], "::", trDiffNames[j, pair])
+      ciDiffTrtEachRdr <- rbind(
+        ciDiffTrtEachRdr, 
+        data.frame(Estimate = trtMeanDiffs1[j, pair], 
+                   StdErr = stdErr[j,pair], 
+                   z = zStat[j, pair], 
+                   PrGTz = PrGTz[j, pair], 
+                   CILower = CIReader[j, pair,1],
+                   CIUpper = CIReader[j, pair,2],
+                   row.names = rowName,
+                   stringsAsFactors = FALSE))
+      pair <- pair + 1
+    }
+  }
+}
+print(ciDiffTrtEachRdr)
+#>                    Estimate     StdErr          z      PrGTz     CILower
+#> rdr0::trt0-trt1 -0.02818035 0.02551213 -1.1045864 0.26933885 -0.07818322
+#> rdr1::trt0-trt1 -0.04653784 0.02630183 -1.7693768 0.07683102 -0.09808848
+#> rdr2::trt0-trt1 -0.01787440 0.03120965 -0.5727202 0.56683414 -0.07904418
+#> rdr3::trt0-trt1 -0.02624799 0.01729129 -1.5179891 0.12901715 -0.06013829
+#> rdr4::trt0-trt1 -0.10016103 0.04405746 -2.2734182 0.02300099 -0.18651207
+#>                      CIUpper
+#> rdr0::trt0-trt1  0.021822507
+#> rdr1::trt0-trt1  0.005012792
+#> rdr2::trt0-trt1  0.043295388
+#> rdr3::trt0-trt1  0.007642316
+#> rdr4::trt0-trt1 -0.013809995
+```
+
+The notation in the first column shows the reader and the treatment pairing. For example, `rdr1::trt0-trt1` means the FOM difference for reader `rdr1`. Only the fifth reader, i.e., `rdr4`, shows a significant difference between the treatments: the p-value is 0.023001 and the confidence interval also does not include zero. The large FOM difference for this reader, -0.100161, was enough to result in a significant finding for FRRC analysis. The FOM differences for the other readers are about a factor of 2.1522491 or more smaller than that for this reader.
 
 ### Random-Reader Fixed-Case (RRFC) analysis {#ORApplications-RRFC-dataset02-hand}
-TBA
+The F-statistic is shown in Eqn. \@ref(eq:DefFStatRRFC). This time `ndf` = $I-1$ and `ddf` = $(I-1) \times (J-1)$, the values proposed in the Obuchowski-Rockette paper. The implementation follows:
+
+
+```r
+den <- vc$TRanova["TR","MS"]
+f <- vc$TRanova["T","MS"]/den
+ddf <- ((I - 1) * (J - 1))
+p <- 1 - pf(f, I - 1, ddf)
+FTests_RRFC <- 
+  data.frame(DF = c(I-1,(I-1)*(J-1)), 
+             MS = c(vc$TRanova["T","MS"],vc$TRanova["TR","MS"]), 
+             F = c(f,NA),  p = c(p,NA), 
+             row.names = c("T","TR"), 
+             stringsAsFactors = FALSE)
+print(FTests_RRFC)
+#>    DF           MS     F          p
+#> T   1 0.0047961705 8.704 0.04195875
+#> TR  4 0.0005510306    NA         NA
+```
+
+Freezing case variability also results in a significant finding, but the conclusion is only applicable to the specific case set used in the study. Next one calculates confidence intervals for the reader-averaged FOM differences, the relevant formula is in Eqn. \@ref(eq:CIDiffFomRRFC), whose implementation follows.
+
+
+```r
+stdErr <- sqrt(2 * den/J)
+tStat <- vector()
+PrGTt <- vector()
+CI <- array(dim = c(choose(I,2), 2))
+for (i in 1:choose(I,2)) {
+  tStat[i] <- trtMeanDiffs[i]/stdErr
+  PrGTt[i] <- 2 * 
+    pt(abs(tStat[i]), ddf, lower.tail = FALSE)
+  CI[i, ] <- c(trtMeanDiffs[i] + qt(alpha/2, ddf) * stdErr, 
+               trtMeanDiffs[i] + qt(1-alpha/2, ddf) * stdErr)
+}
+ciDiffTrt_RRFC <- 
+  data.frame(Estimate = trtMeanDiffs, 
+             StdErr = rep(stdErr, choose(I, 2)), 
+             DF = rep(ddf, choose(I, 2)), 
+             t = tStat, 
+             PrGTt = PrGTt, 
+             CILower = CI[,1],
+             CIUpper = CI[,2],
+             row.names = diffTRName, 
+             stringsAsFactors = FALSE)
+
+print(ciDiffTrt_RRFC)
+#>              Estimate     StdErr DF         t      PrGTt     CILower
+#> trt0-trt1 -0.04380032 0.01484629  4 -2.950254 0.04195875 -0.08502022
+#>               CIUpper
+#> trt0-trt1 -0.00258042
+```
+* As expected because the overall F-test showed significance, the confidence interval does not include zero (the p-value is identical to that found by the F-test). 
+* This completes the hand calculations.
 
 ## Using RJafroc: dataset02 {#ORApplications-dataset02-RJafroc}
 ### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset02-RJafroc}
