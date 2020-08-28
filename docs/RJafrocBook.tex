@@ -2272,7 +2272,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.2404051          1     0.265393}
+\CommentTok{\#\textgreater{} 1     1.079472          1   0.29881571}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2931,7 +2931,7 @@ Here \(\text{MS(R)}_i\) is the reader mean-square for modality \(i\).
 \hypertarget{ORApplications-introduction}{%
 \section{Introduction}\label{ORApplications-introduction}}
 
-This chapter illustrates Obuchowski-Rockette analysis with several examples. The first example is a full-blown ``hand-calculation'' for \texttt{dataset02}, showing explicit implementations of formulae presented in the previous chapter. The second example shows application of the \texttt{RJafroc} package function \texttt{StSignificanceTesting()} to the same dataset: this function encapsulates all formulae and accomplishes all analyses with one function call. The third example shows application of the \texttt{StSignificanceTesting()\ function\ to\ an\ ROC\ dataset\ derived\ from\ the\ Federica\ Zanca\ dataset\ {[}@RN1882{]},\ which\ has\ five\ modalities\ and\ four\ readers.\ This\ illustrates\ multiple\ treatment\ pairings\ (in\ contrast,}dataset02\texttt{has\ only\ one\ treatment\ pairing).\ The\ fourth\ example\ shows\ application\ of}StSignificanceTesting()\texttt{to}dataset04\texttt{,\ which\ is\ an\ **FROC**\ dataset\ (in\ contrast\ to\ the\ previous\ examples,\ which\ employed\ **ROC**\ datasets).\ It\ illustrates\ the\ key\ difference\ involved\ in\ FROC\ analysis,\ namely\ the\ choice\ of\ figure\ of\ merit.\ The\ final\ example\ again\ uses}dataset04`, i.e., FROC data, \emph{but this time we use DBM analysis}. Since DBM analysis is pseudovalue based, and the figure of merit is not the empirical AUC under the ROC, one may expect to see differences from the previously presented OR analysis on the same dataset.
+This chapter illustrates Obuchowski-Rockette analysis with several examples. The first example is a full-blown ``hand-calculation'' for \texttt{dataset02}, showing explicit implementations of formulae presented in the previous chapter. The second example shows application of the \texttt{RJafroc} package function \texttt{StSignificanceTesting()} to the same dataset: this function encapsulates all formulae and accomplishes all analyses with one function call. The third example shows application of the \texttt{StSignificanceTesting()} function to an ROC dataset derived from the Federica Zanca dataset \citep{RN1882}, which has five modalities and four readers. This illustrates multiple treatment pairings (in contrast, \texttt{dataset02} has only one treatment pairing). The fourth example shows application of \texttt{StSignificanceTesting()} to \texttt{dataset04}, which is an \textbf{FROC} dataset (in contrast to the previous examples, which employed \textbf{ROC} datasets). It illustrates the key difference involved in FROC analysis, namely the choice of figure of merit. The final example again uses \texttt{dataset04}, i.e., FROC data, \emph{but this time we use DBM analysis}. Since DBM analysis is pseudovalue based, and the figure of merit is not the empirical AUC under the ROC, one may expect to see differences from the previously presented OR analysis on the same dataset.
 
 Each analysis involves the following steps:
 
@@ -2960,7 +2960,7 @@ Each analysis involves the following steps:
 \hypertarget{ORApplications-dataset02-hand}{%
 \section{Hand calculation using dataset02}\label{ORApplications-dataset02-hand}}
 
-Dataset \texttt{dataset02\ is\ well-know\ in\ the\ literature\ {[}@RN1993{]}\ as\ it\ has\ been\ widely\ used\ to\ illustrate\ advances\ in\ ROC\ methodology.\ The\ following\ code\ extract\ the\ numbers\ of\ modalities,\ readers\ and\ cases\ for}dataset02\texttt{and\ defines\ strings}modalityID\texttt{,}readerID\texttt{and}diffTRName` that will be needed later on.
+Dataset \texttt{dataset02} is well-know in the literature \citep{RN1993} as it has been widely used to illustrate advances in ROC methodology. The following code extract the numbers of modalities, readers and cases for \texttt{dataset02} and defines strings \texttt{modalityID}, \texttt{readerID} and \texttt{diffTRName} that will be needed later on.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2987,7 +2987,7 @@ Dataset \texttt{dataset02\ is\ well-know\ in\ the\ literature\ {[}@RN1993{]}\ as
 The dataset consists of I = 2 treatments, J = 5 readers and K = 114 cases.
 
 \hypertarget{ORApplications-RRRC-dataset02-hand}{%
-\subsection{Random-Reader Random-Case (RRRC) analysis hand calculation}\label{ORApplications-RRRC-dataset02-hand}}
+\subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORApplications-RRRC-dataset02-hand}}
 
 \begin{itemize}
 \tightlist
@@ -3122,7 +3122,7 @@ Applying Eqn. \eqref{eq:F-ORH-RRRC} one gets (\texttt{den} is the denominator on
 \item
   The difference is not significant at \(\alpha\) = 0.05.
 \item
-  The next step is calculation of confidence intervals.
+  The next step is to calculate confidence intervals.
 \item
   Since \texttt{I} = 2, their is only one paired difference in reader-averaged FOMs, namely, the first treatment minus the second.
 \end{itemize}
@@ -3171,7 +3171,7 @@ Applying Eqn. \eqref{eq:F-ORH-RRRC} one gets (\texttt{den} is the denominator on
 
 The confidence interval includes zero, which confirms the F-statistic finding that the reader-averaged FOM difference between treatments is not significant.
 
-Calculated next is the confidence interval for the reader-averaged FOM for each treatment. The relevant equations are Eqn. \eqref{eq:CI-RRRC-df-IndvlTrt} and Eqn. \eqref{eq:CI-RRRC-IndvlTrt}. The implementation follows:
+Calculated next is the confidence interval for the reader-averaged FOM for each treatment, i.e.~\(CI_{1-\alpha,RRRC,\theta_{i \bullet}}\). The relevant equations are Eqn. \eqref{eq:CI-RRRC-df-IndvlTrt} and Eqn. \eqref{eq:CI-RRRC-IndvlTrt}. The implementation follows:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3261,7 +3261,7 @@ Calculated next is the confidence interval for the reader-averaged FOM for each 
 \item
   The downside is that the conclusion applies only to the readers used in the study.
 \item
-  The next step is to calculate the confidence interval for the reader-averaged FOM difference.
+  The next step is to calculate the confidence interval for the reader-averaged FOM difference, i.e., \(CI_{1-\alpha,FRRC,\theta_{i \bullet} - \theta_{i' \bullet}}\).
 \item
   The relevant equation is Eqn. \eqref{eq:CIDiffFomFRRC-OR}, whose implementation follows.
 \end{itemize}
@@ -3297,7 +3297,7 @@ Calculated next is the confidence interval for the reader-averaged FOM for each 
 \item
   Consistent with the chi-square statistic significant finding, one finds that the treatment difference confidence interval does not include zero.
 \item
-  The next step is to calculate the confidence interval for the reader-averaged figures of merit for each treatment.
+  The next step is to calculate the confidence interval for the reader-averaged figures of merit for each treatment, i.e., \(CI_{1-\alpha,FRRC,\theta_{i \bullet}}\).
 \item
   The relevant formula is in Eqn. \eqref{eq:CIIndTrtFomFRRC-OR}, whose implementation follows:
 \end{itemize}
@@ -3336,7 +3336,7 @@ Calculated next is the confidence interval for the reader-averaged FOM for each 
 \begin{itemize}
 \tightlist
 \item
-  Finally, one calculates confidence intervals for the FOM differences for individual readers.
+  Finally, one calculates confidence intervals for the FOM differences for individual readers, i.e., \(CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}}\).
 \item
   The relevant formula is in Eqn. \eqref{eq:CIIndRdrDiffFomFRRC-OR}, whose implementation follows:
 \end{itemize}
@@ -3475,19 +3475,19 @@ Freezing case variability also results in a significant finding, but the conclus
 \hypertarget{ORApplications-dataset02-RJafroc}{%
 \section{Using RJafroc: dataset02}\label{ORApplications-dataset02-RJafroc}}
 
+The second example shows application of the \texttt{RJafroc} package function \texttt{StSignificanceTesting()} to \texttt{dataset02}: this function encapsulates all formulae discussed previously and accomplishes all analyses with one function call.
+
 \hypertarget{ORApplications-RRRC-dataset02-RJafroc}{%
 \subsection{Random-Reader Random-Case (RRRC) analysis}\label{ORApplications-RRRC-dataset02-RJafroc}}
 
 \begin{itemize}
 \tightlist
 \item
-  This is accomplished using the significance testing function \texttt{StSignificanceTesting()}.
-\item
   Since \texttt{analysisOption} is not explicitly specified in the following code, the function \texttt{StSignificanceTesting} performs all three analyses: \texttt{RRRC}, \texttt{FRRC} and \texttt{RRFC}.
 \item
-  The significance level of the test, also an argument, \texttt{alpha}, defaults to 0.05.
+  Likewise, the significance level of the test, also an argument, \texttt{alpha}, defaults to 0.05.
 \item
-  The code below applies this function and saves the returned object to \texttt{st1}.
+  The code below applies \texttt{StSignificanceTesting()} and saves the returned object to \texttt{st1}.
 \item
   The first member of this object, a \texttt{list} object named \texttt{FOMs}, is then displayed.
 \item
@@ -3523,11 +3523,9 @@ Freezing case variability also results in a significant finding, but the conclus
 \begin{itemize}
 \tightlist
 \item
-  Displayed next are the variance components and mean-squares.
+  Displayed next are the variance components and mean-squares contained in the \texttt{ANOVA} \texttt{list} object.
 \item
-  These are contained in the \texttt{ANOVA} \texttt{list} object.
-\item
-  \texttt{ANOVA\$TRanova} contains the treatment-reader ANOVA table, i.e.~the sum of squares, the degrees of freedom and the mean-squares, listed for the treatment, reader and treatment-reader factors, i.e., \texttt{T}, \texttt{R} and \texttt{TR}.
+  \texttt{ANOVA\$TRanova} contains the treatment-reader ANOVA table, i.e.~the sum of squares, the degrees of freedom and the mean-squares, for treatment, reader and treatment-reader factors, i.e., \texttt{T}, \texttt{R} and \texttt{TR}.
 \item
   \texttt{ANOVA\$VarCom} contains the OR variance components and the correlations.
 \item
@@ -3572,13 +3570,7 @@ Freezing case variability also results in a significant finding, but the conclus
 \begin{itemize}
 \tightlist
 \item
-  Displayed next are the results of RRRC analysis, contained in the \texttt{RRRC} \texttt{list} object.
-\item
-  \texttt{RRRC\$FTests} contains the results of the F-tests.
-\item
-  \texttt{RRRC\$ciDiffTrt} contains the results of the confidence intervals for the inter-treatment difference FOMs, averaged over readers.
-\item
-  \texttt{RRRC\$ciAvgRdrEachTrt} contains the results of the confidence intervals for the treatments, averaged over readers.
+  Displayed next are the results of the RRRC significance test, contained in \texttt{st1\$RRRC}.
 \end{itemize}
 
 \begin{Shaded}
@@ -3593,7 +3585,9 @@ Freezing case variability also results in a significant finding, but the conclus
 \begin{itemize}
 \tightlist
 \item
-  TBA
+  \texttt{st1\$RRRC\$FTests} contains the results of the F-tests: the degrees of freedom, the mean-squares, the observed value of the F-statistic and the p-value for rejecting the NH, listed separately, where applicable, for the treatment and error terms.
+\item
+  For example, the treatment mean squares is \texttt{st1\$RRRC\$FTests{[}"Treatment",\ "MS"{]}} whose value is 0.00479617.
 \end{itemize}
 
 \begin{Shaded}
@@ -3607,22 +3601,22 @@ Freezing case variability also results in a significant finding, but the conclus
 \begin{itemize}
 \tightlist
 \item
-  TBA
+  \texttt{st1\$RRRC\$ciDiffTrt} contains the results of the confidence intervals for the inter-treatment difference FOMs, averaged over readers, i.e., \(CI_{1-\alpha,RRRC,\theta_{i \bullet} - \theta_{i' \bullet}}\).
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(st1}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{6}\NormalTok{)])}
-\CommentTok{\#\textgreater{}        Estimate    CILower    CIUpper}
-\CommentTok{\#\textgreater{} trt0 0.89703704 0.82522360 0.96885048}
-\CommentTok{\#\textgreater{} trt1 0.94083736 0.89413783 0.98753689}
+\KeywordTok{print}\NormalTok{(st1}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt)}
+\CommentTok{\#\textgreater{}        Estimate      StdErr        DF    CILower    CIUpper          Cov2}
+\CommentTok{\#\textgreater{} trt0 0.89703704 0.033173597 12.744648 0.82522360 0.96885048 0.00048396180}
+\CommentTok{\#\textgreater{} trt1 0.94083736 0.021566368 12.710190 0.89413783 0.98753689 0.00020418785}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{itemize}
 \tightlist
 \item
-  TBA
+  \texttt{RRRC\$ciAvgRdrEachTrt} contains confidence intervals for each treatment, averaged over readers, i.e., \(CI_{1-\alpha,RRRC,\theta_{i \bullet}}\).
 \end{itemize}
 
 \hypertarget{ORApplications-FRRC-dataset02-RJafroc}{%
@@ -3631,7 +3625,11 @@ Freezing case variability also results in a significant finding, but the conclus
 \begin{itemize}
 \tightlist
 \item
-  TBA
+  Displayed next are the results of FRRC analysis, contained in the \texttt{st1\$FRRC} \texttt{list} object.
+\item
+  \texttt{st1\$FRRC\$FTests} contains the results of the F-tests: the degrees of freedom, the mean-squares, the observed value of the F-statistic and the p-value for rejecting the NH, listed separately, where applicable, for the treatment and error terms.
+\item
+  For example, the treatment mean squares is \texttt{st1\$FRRC\$FTests{[}"Treatment",\ "MS"{]}} whose value is 0.00479617.
 \end{itemize}
 
 \begin{Shaded}
@@ -3646,31 +3644,71 @@ Freezing case variability also results in a significant finding, but the conclus
 \begin{itemize}
 \tightlist
 \item
-  TBA
+  Note that this time the output lists a chi-square distribution observed value, 5.47595324, with degree of freedom \(df = I -1 = 1\).
+\item
+  The listed mean-squares and the p-value agree with the previously performed hand calculations.
+\item
+  For FRRC analysis the value of the chi-square statistic is significant and the p-value is smaller than \(\alpha\).
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(st1}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciDiffTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\OperatorTok{:}\DecValTok{4}\NormalTok{)])}
-\CommentTok{\#\textgreater{}               Estimate      CILower       CIUpper}
-\CommentTok{\#\textgreater{} trt0{-}trt1 {-}0.043800322 {-}0.080485914 {-}0.0071147303}
+\KeywordTok{print}\NormalTok{(st1}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciDiffTrt)}
+\CommentTok{\#\textgreater{}               Estimate      StdErr          z       PrGTz      CILower}
+\CommentTok{\#\textgreater{} trt0{-}trt1 {-}0.043800322 0.018717483 {-}2.3400755 0.019279843 {-}0.080485914}
+\CommentTok{\#\textgreater{}                 CIUpper}
+\CommentTok{\#\textgreater{} trt0{-}trt1 {-}0.0071147303}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{itemize}
 \tightlist
 \item
-  TBA
+  \texttt{st1\$FRRC\$ciDiffTrt} contains confidence intervals for inter-treatment difference FOMs, averaged over readers, i.e., \(CI_{1-\alpha,FRRC,\theta_{i \bullet} - \theta_{i' \bullet}}\).
+\item
+  The confidence interval excludes zero, and the p-value, listed under \texttt{PrGTz} (for probability greater than \texttt{z}) is smaller than 0.05.
+\item
+  One could be using the t-distribution with infinite degrees of freedom, but this is identical to the normal distribution. Hence the listed value is a \texttt{z} statistic, i.e., \texttt{z\ =\ -0.043800322/0.018717483} = -2.34007543.
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(st1}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{)])}
-\CommentTok{\#\textgreater{}        Estimate    CILower}
-\CommentTok{\#\textgreater{} trt0 0.89703704 0.84943008}
-\CommentTok{\#\textgreater{} trt1 0.94083736 0.90795637}
+\KeywordTok{print}\NormalTok{(st1}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt)}
+\CommentTok{\#\textgreater{}        Estimate      StdErr  DF    CILower    CIUpper}
+\CommentTok{\#\textgreater{} trt0 0.89703704 0.024289710 113 0.84943008 0.94464399}
+\CommentTok{\#\textgreater{} trt1 0.94083736 0.016776324 113 0.90795637 0.97371835}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{st1\$FRRC\$st1\$FRRC\$ciAvgRdrEachTrt} contains confidence intervals for individual treatment FOMs, averaged over readers, i.e., \(CI_{1-\alpha,FRRC,\theta_{i \bullet}}\).
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(st1}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciDiffTrtEachRdr)}
+\CommentTok{\#\textgreater{}                     Estimate      StdErr           z       PrGTz      CILower}
+\CommentTok{\#\textgreater{} rdr0::trt0{-}trt1 {-}0.028180354 0.025512133 {-}1.10458638 0.269338854 {-}0.078183215}
+\CommentTok{\#\textgreater{} rdr1::trt0{-}trt1 {-}0.046537842 0.026301827 {-}1.76937679 0.076831017 {-}0.098088476}
+\CommentTok{\#\textgreater{} rdr2::trt0{-}trt1 {-}0.017874396 0.031209647 {-}0.57272023 0.566834139 {-}0.079044180}
+\CommentTok{\#\textgreater{} rdr3::trt0{-}trt1 {-}0.026247987 0.017291289 {-}1.51798907 0.129017153 {-}0.060138290}
+\CommentTok{\#\textgreater{} rdr4::trt0{-}trt1 {-}0.100161031 0.044057460 {-}2.27341816 0.023000993 {-}0.186512066}
+\CommentTok{\#\textgreater{}                       CIUpper}
+\CommentTok{\#\textgreater{} rdr0::trt0{-}trt1  0.0218225068}
+\CommentTok{\#\textgreater{} rdr1::trt0{-}trt1  0.0050127916}
+\CommentTok{\#\textgreater{} rdr2::trt0{-}trt1  0.0432953879}
+\CommentTok{\#\textgreater{} rdr3::trt0{-}trt1  0.0076423157}
+\CommentTok{\#\textgreater{} rdr4::trt0{-}trt1 {-}0.0138099949}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{st1\$FRRC\$st1\$FRRC\$ciDiffTrtEachRdr} contains confidence intervals for inter-treatment difference FOMs, for each reader, i.e., \(CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}}\).
+\end{itemize}
 
 \hypertarget{ORApplications-RRFC-dataset02-RJafroc}{%
 \subsection{Random-Reader Fixed-Case (RRFC) analysis}\label{ORApplications-RRFC-dataset02-RJafroc}}
@@ -3687,16 +3725,41 @@ Freezing case variability also results in a significant finding, but the conclus
 \begin{itemize}
 \tightlist
 \item
-  TBA
+  \texttt{st1\$RRFC\$FTests} contains results of the F-test: the degrees of freedom, the mean-squares, the observed value of the F-statistic and the p-value for rejecting the NH, listed separately, where applicable, for the treatment and treatment-reader terms. The latter is also termed the error term.
+\item
+  For example, the treatment-reader mean squares is \texttt{st1\$RRFC\$FTests{[}"TR",\ "MS"{]}} whose value is \ensuremath{5.51030622\times 10^{-4}}.
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(st1}\OperatorTok{$}\NormalTok{RRFC}\OperatorTok{$}\NormalTok{ciDiffTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{)])}
-\CommentTok{\#\textgreater{}               Estimate      CILower       CIUpper}
-\CommentTok{\#\textgreater{} trt0{-}trt1 {-}0.043800322 {-}0.085020224 {-}0.0025804202}
+\KeywordTok{print}\NormalTok{(st1}\OperatorTok{$}\NormalTok{RRFC}\OperatorTok{$}\NormalTok{ciDiffTrt)}
+\CommentTok{\#\textgreater{}               Estimate      StdErr DF          t       PrGTt      CILower}
+\CommentTok{\#\textgreater{} trt0{-}trt1 {-}0.043800322 0.014846287  4 {-}2.9502542 0.041958752 {-}0.085020224}
+\CommentTok{\#\textgreater{}                 CIUpper}
+\CommentTok{\#\textgreater{} trt0{-}trt1 {-}0.0025804202}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{st1\$RRFC\$ciDiffTrt} contains confidence intervals for the inter-treatment difference FOMs, averaged over readers, i.e., \(CI_{1-\alpha,RRFC,\theta_{i \bullet} - \theta_{i' \bullet}}\).
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(st1}\OperatorTok{$}\NormalTok{RRFC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt)}
+\CommentTok{\#\textgreater{}        Estimate      StdErr DF    CILower    CIUpper}
+\CommentTok{\#\textgreater{} Trt0 0.89703704 0.024829936  4 0.82809808 0.96597599}
+\CommentTok{\#\textgreater{} Trt1 0.94083736 0.016153030  4 0.89598936 0.98568536}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{st1\$RRFC\$ciAvgRdrEachTrt} contains confidence intervals for each treatment, averaged over readers, i.e., \(CI_{1-\alpha,RRFC,\theta_{i \bullet}}\).
+\end{itemize}
 
 \hypertarget{ORApplications-dataset04-RJafroc}{%
 \section{Using RJafroc: dataset04}\label{ORApplications-dataset04-RJafroc}}
@@ -3712,7 +3775,7 @@ Freezing case variability also results in a significant finding, but the conclus
 \item
   The function \texttt{DfFroc2Roc(dataset04)} converts, using the highest-rating, the FROC dataset to an inferred-ROC dataset.
 \item
-  The results are contained in the returned \texttt{list} object \texttt{st2}.
+  The results are contained in \texttt{st2}.
 \end{itemize}
 
 \begin{Shaded}
@@ -3783,48 +3846,63 @@ Freezing case variability also results in a significant finding, but the conclus
 \begin{itemize}
 \tightlist
 \item
-  TBA
+  In this example \texttt{ndf} = 4 because there are I = 5 treatments. Since the p-value is less than 0.05, at least one treatment-pairing is guaranteed to be significantly different from zero.
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(st2}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{ciDiffTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\OperatorTok{:}\DecValTok{5}\NormalTok{)])}
-\CommentTok{\#\textgreater{}             Estimate        CILower       CIUpper}
-\CommentTok{\#\textgreater{} trt1{-}trt2 {-}0.0051000 {-}0.04002130451  0.0298213045}
-\CommentTok{\#\textgreater{} trt1{-}trt3  0.0353250  0.00040369549  0.0702463045}
-\CommentTok{\#\textgreater{} trt1{-}trt4 {-}0.0054125 {-}0.04033380451  0.0295088045}
-\CommentTok{\#\textgreater{} trt1{-}trt5  0.0367750  0.00185369549  0.0716963045}
-\CommentTok{\#\textgreater{} trt2{-}trt3  0.0404250  0.00550369549  0.0753463045}
-\CommentTok{\#\textgreater{} trt2{-}trt4 {-}0.0003125 {-}0.03523380451  0.0346088045}
-\CommentTok{\#\textgreater{} trt2{-}trt5  0.0418750  0.00695369549  0.0767963045}
-\CommentTok{\#\textgreater{} trt3{-}trt4 {-}0.0407375 {-}0.07565880451 {-}0.0058161955}
-\CommentTok{\#\textgreater{} trt3{-}trt5  0.0014500 {-}0.03347130451  0.0363713045}
-\CommentTok{\#\textgreater{} trt4{-}trt5  0.0421875  0.00726619549  0.0771088045}
+\KeywordTok{print}\NormalTok{(st2}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{ciDiffTrt)}
+\CommentTok{\#\textgreater{}             Estimate      StdErr        DF            t       PrGTt}
+\CommentTok{\#\textgreater{} trt1{-}trt2 {-}0.0051000 0.016537103 16.803749 {-}0.308397420 0.761570284}
+\CommentTok{\#\textgreater{} trt1{-}trt3  0.0353250 0.016537103 16.803749  2.136105659 0.047689094}
+\CommentTok{\#\textgreater{} trt1{-}trt4 {-}0.0054125 0.016537103 16.803749 {-}0.327294321 0.747487331}
+\CommentTok{\#\textgreater{} trt1{-}trt5  0.0367750 0.016537103 16.803749  2.223787278 0.040173758}
+\CommentTok{\#\textgreater{} trt2{-}trt3  0.0404250 0.016537103 16.803749  2.444503079 0.025841064}
+\CommentTok{\#\textgreater{} trt2{-}trt4 {-}0.0003125 0.016537103 16.803749 {-}0.018896901 0.985145919}
+\CommentTok{\#\textgreater{} trt2{-}trt5  0.0418750 0.016537103 16.803749  2.532184698 0.021613616}
+\CommentTok{\#\textgreater{} trt3{-}trt4 {-}0.0407375 0.016537103 16.803749 {-}2.463399980 0.024868769}
+\CommentTok{\#\textgreater{} trt3{-}trt5  0.0014500 0.016537103 16.803749  0.087681619 0.931166167}
+\CommentTok{\#\textgreater{} trt4{-}trt5  0.0421875 0.016537103 16.803749  2.551081599 0.020792673}
+\CommentTok{\#\textgreater{}                  CILower       CIUpper}
+\CommentTok{\#\textgreater{} trt1{-}trt2 {-}0.04002130451  0.0298213045}
+\CommentTok{\#\textgreater{} trt1{-}trt3  0.00040369549  0.0702463045}
+\CommentTok{\#\textgreater{} trt1{-}trt4 {-}0.04033380451  0.0295088045}
+\CommentTok{\#\textgreater{} trt1{-}trt5  0.00185369549  0.0716963045}
+\CommentTok{\#\textgreater{} trt2{-}trt3  0.00550369549  0.0753463045}
+\CommentTok{\#\textgreater{} trt2{-}trt4 {-}0.03523380451  0.0346088045}
+\CommentTok{\#\textgreater{} trt2{-}trt5  0.00695369549  0.0767963045}
+\CommentTok{\#\textgreater{} trt3{-}trt4 {-}0.07565880451 {-}0.0058161955}
+\CommentTok{\#\textgreater{} trt3{-}trt5 {-}0.03347130451  0.0363713045}
+\CommentTok{\#\textgreater{} trt4{-}trt5  0.00726619549  0.0771088045}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{itemize}
 \tightlist
 \item
-  TBA
+  With I = 5 treatments there are 10 distinct comparisons listed above.
+\item
+  Looking at the \texttt{PrGTt} (for probability greater than \texttt{t}) column, one finds six pairings that are significant: \texttt{trt1-trt3}, \texttt{trt1-trt5}, etc. The smallest p-value is for the \texttt{trt4-trt5} pairing.
 \end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(st2}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt[,}\OperatorTok{{-}}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{6}\NormalTok{)])}
-\CommentTok{\#\textgreater{}       Estimate    CILower    CIUpper}
-\CommentTok{\#\textgreater{} trt1 0.8451625 0.77351391 0.91681109}
-\CommentTok{\#\textgreater{} trt2 0.8502625 0.80942311 0.89110189}
-\CommentTok{\#\textgreater{} trt3 0.8098375 0.74689261 0.87278239}
-\CommentTok{\#\textgreater{} trt4 0.8505750 0.77664342 0.92450658}
-\CommentTok{\#\textgreater{} trt5 0.8083875 0.74706746 0.86970754}
+\KeywordTok{print}\NormalTok{(st2}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt)}
+\CommentTok{\#\textgreater{}       Estimate      StdErr         DF    CILower    CIUpper          Cov2}
+\CommentTok{\#\textgreater{} trt1 0.8451625 0.028578244  5.4574766 0.77351391 0.91681109 0.00021118589}
+\CommentTok{\#\textgreater{} trt2 0.8502625 0.019928157 27.7225775 0.80942311 0.89110189 0.00026649085}
+\CommentTok{\#\textgreater{} trt3 0.8098375 0.026647889  7.0371428 0.74689261 0.87278239 0.00024646233}
+\CommentTok{\#\textgreater{} trt4 0.8505750 0.029408701  5.4032614 0.77664342 0.92450658 0.00022042897}
+\CommentTok{\#\textgreater{} trt5 0.8083875 0.025758346  6.7756525 0.74706746 0.86970754 0.00022200226}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{itemize}
 \tightlist
 \item
-  TBA
+  \texttt{st2\$RRRC\$ciAvgRdrEachTrt} contains confidence intervals for each treatment, averaged over readers, i.e., \(CI_{1-\alpha,RRRC,\theta_{i \bullet}}\).
+\item
+  Looking at the \texttt{Estimate} column one confirms that \texttt{trt5} has the smallest FOM while \texttt{trt4} has the highest.
 \end{itemize}
 
 \hypertarget{ORApplications-FRRC-dataset04}{%

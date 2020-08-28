@@ -9,7 +9,7 @@ output:
 
 ## Introduction {#ORApplications-introduction}  
 
-This chapter illustrates Obuchowski-Rockette analysis with several examples. The first example is a full-blown "hand-calculation" for `dataset02`, showing explicit implementations of formulae presented in the previous chapter. The second example shows application of the `RJafroc` package function `StSignificanceTesting()` to the same dataset: this function encapsulates all formulae and accomplishes all analyses with one function call. The third example shows application of the `StSignificanceTesting() function to an ROC dataset derived from the Federica Zanca dataset [@RN1882], which has five modalities and four readers. This illustrates multiple treatment pairings (in contrast, `dataset02` has only one treatment pairing). The fourth example shows application of `StSignificanceTesting()` to `dataset04`, which is an **FROC** dataset (in contrast to the previous examples, which employed **ROC** datasets). It illustrates the key difference involved in FROC analysis, namely the choice of figure of merit. The final example again uses `dataset04`, i.e., FROC data, *but this time we use DBM analysis*. Since DBM analysis is pseudovalue based, and the figure of merit is not the empirical AUC under the ROC, one may expect to see differences from the previously presented OR analysis on the same dataset.
+This chapter illustrates Obuchowski-Rockette analysis with several examples. The first example is a full-blown "hand-calculation" for `dataset02`, showing explicit implementations of formulae presented in the previous chapter. The second example shows application of the `RJafroc` package function `StSignificanceTesting()` to the same dataset: this function encapsulates all formulae and accomplishes all analyses with one function call. The third example shows application of the `StSignificanceTesting()` function to an ROC dataset derived from the Federica Zanca dataset [@RN1882], which has five modalities and four readers. This illustrates multiple treatment pairings (in contrast, `dataset02` has only one treatment pairing). The fourth example shows application of `StSignificanceTesting()` to `dataset04`, which is an **FROC** dataset (in contrast to the previous examples, which employed **ROC** datasets). It illustrates the key difference involved in FROC analysis, namely the choice of figure of merit. The final example again uses `dataset04`, i.e., FROC data, *but this time we use DBM analysis*. Since DBM analysis is pseudovalue based, and the figure of merit is not the empirical AUC under the ROC, one may expect to see differences from the previously presented OR analysis on the same dataset.
 
 Each analysis involves the following steps: 
 
@@ -23,7 +23,7 @@ Each analysis involves the following steps:
 
 ## Hand calculation using dataset02 {#ORApplications-dataset02-hand}
 
-Dataset `dataset02 is well-know in the literature [@RN1993] as it has been widely used to illustrate advances in ROC methodology. The following code extract the numbers of modalities, readers and cases for `dataset02` and defines strings `modalityID`, `readerID` and `diffTRName` that will be needed later on.
+Dataset `dataset02` is well-know in the literature [@RN1993] as it has been widely used to illustrate advances in ROC methodology. The following code extract the numbers of modalities, readers and cases for `dataset02` and defines strings `modalityID`, `readerID` and `diffTRName` that will be needed later on.
 
 
 ```r
@@ -48,7 +48,7 @@ for (i in 1:I) {
 
 The dataset consists of I = 2 treatments,  J = 5 readers and  K = 114 cases.
 
-### Random-Reader Random-Case (RRRC) analysis hand calculation {#ORApplications-RRRC-dataset02-hand}
+### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset02-hand}
 * The first step is to calculate the figures of merit. 
 * The following code uses `UtilFigureOfMerit()` to this end. Note that `FOM = "Wilcoxon"` has to be explicitly specified.
 
@@ -141,7 +141,7 @@ print(p)
 ```
 
 * The difference is not significant at $\alpha$ = 0.05. 
-* The next step is calculation of confidence intervals.
+* The next step is to calculate confidence intervals.
 * Since `I` = 2, their is only one paired difference in reader-averaged FOMs, namely, the first treatment minus the second.
 
 
@@ -178,7 +178,7 @@ print(CI_RRRC)
 
 The confidence interval includes zero, which confirms the F-statistic finding that the reader-averaged FOM difference between treatments is not significant. 
 
-Calculated next is the confidence interval for the reader-averaged FOM for each treatment. The relevant equations are Eqn. \@ref(eq:CI-RRRC-df-IndvlTrt) and Eqn. \@ref(eq:CI-RRRC-IndvlTrt). The implementation follows:
+Calculated next is the confidence interval for the reader-averaged FOM for each treatment, i.e. $CI_{1-\alpha,RRRC,\theta_{i \bullet}}$. The relevant equations are Eqn. \@ref(eq:CI-RRRC-df-IndvlTrt) and Eqn. \@ref(eq:CI-RRRC-IndvlTrt). The implementation follows:
 
 
 ```r
@@ -248,7 +248,7 @@ print(FTests)
 * Since p < 0.05, one has a significant finding. 
 * Freezing reader variability shows a significant difference between the treatments. 
 * The downside is that the conclusion applies only to the readers used in the study.
-* The next step is to calculate the confidence interval for the reader-averaged FOM difference.
+* The next step is to calculate the confidence interval for the reader-averaged FOM difference, i.e., $CI_{1-\alpha,FRRC,\theta_{i \bullet} - \theta_{i' \bullet}}$.
 * The relevant equation is Eqn. \@ref(eq:CIDiffFomFRRC-OR), whose implementation follows.
 
 
@@ -277,7 +277,7 @@ print(ciDiffTrtFRRC)
 ```
 
 * Consistent with the chi-square statistic significant finding, one finds that the treatment difference confidence interval does not include zero.
-* The next step is to calculate the confidence interval for the reader-averaged figures of merit for each treatment.
+* The next step is to calculate the confidence interval for the reader-averaged figures of merit for each treatment, i.e., $CI_{1-\alpha,FRRC,\theta_{i \bullet}}$.
 * The relevant formula is in Eqn. \@ref(eq:CIIndTrtFomFRRC-OR), whose implementation follows:
 
 
@@ -309,7 +309,7 @@ print(ciAvgRdrEachTrt)
 #> trt0 0.8970370 0.02428971 113 0.8494301 0.9446440
 #> trt1 0.9408374 0.01677632 113 0.9079564 0.9737183
 ```
-* Finally, one calculates confidence intervals for the FOM differences for individual readers. 
+* Finally, one calculates confidence intervals for the FOM differences for individual readers, i.e., $CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}}$. 
 * The relevant formula is in Eqn. \@ref(eq:CIIndRdrDiffFomFRRC-OR), whose implementation follows:
 
 
@@ -433,11 +433,13 @@ print(ciDiffTrt_RRFC)
 * This completes the hand calculations.
 
 ## Using RJafroc: dataset02 {#ORApplications-dataset02-RJafroc}
+
+The second example shows application of the `RJafroc` package function `StSignificanceTesting()` to `dataset02`: this function encapsulates all formulae discussed previously and accomplishes all analyses with one function call. 
+
 ### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset02-RJafroc}
-* This is accomplished using the significance testing function `StSignificanceTesting()`. 
 * Since `analysisOption` is not explicitly specified in the following code, the function `StSignificanceTesting` performs all three analyses: `RRRC`, `FRRC` and `RRFC`.
-* The significance level of the test, also an argument, `alpha`, defaults to 0.05. 
-* The code below applies this function and saves the returned object to `st1`. 
+* Likewise, the significance level of the test, also an argument, `alpha`, defaults to 0.05. 
+* The code below applies `StSignificanceTesting()` and saves the returned object to `st1`. 
 * The first member of this object, a  `list` object named `FOMs`, is then displayed. 
 * `FOMs` contains three data frames: 
 + `FOMS$foms`, the figures of merit for each treatment and reader, 
@@ -463,9 +465,8 @@ print(st1$FOMs)
 #> trt0-trt1 -0.043800322
 ```
 
-* Displayed next are the variance components and mean-squares. 
-* These are contained in the `ANOVA` `list` object. 
-* `ANOVA$TRanova` contains the treatment-reader ANOVA table, i.e. the sum of squares, the degrees of freedom and the mean-squares, listed for the treatment, reader and treatment-reader factors, i.e., `T`, `R` and `TR`.
+* Displayed next are the variance components and mean-squares contained in the `ANOVA` `list` object. 
+* `ANOVA$TRanova` contains the treatment-reader ANOVA table, i.e. the sum of squares, the degrees of freedom and the mean-squares, for treatment, reader and treatment-reader factors, i.e., `T`, `R` and `TR`.
 * `ANOVA$VarCom` contains the OR variance components and the correlations.
 * `ANOVA$IndividualTrt` contains the quantities necessary for individual treatment analyses.
 * `ANOVA$IndividualRdr` contains the quantities necessary for individual reader analyses.
@@ -502,10 +503,7 @@ print(st1$ANOVA)
 #> rdr4  1 0.00501611603 0.00121356676 2.4303685e-04
 ```
 
-* Displayed next are the results of RRRC analysis, contained in the `RRRC` `list` object.
-* `RRRC$FTests` contains the results of the F-tests.
-* `RRRC$ciDiffTrt` contains the results of the confidence intervals for the inter-treatment difference FOMs, averaged over readers.
-* `RRRC$ciAvgRdrEachTrt` contains the results of the confidence intervals for the treatments, averaged over readers.
+* Displayed next are the results of the RRRC significance test, contained in `st1$RRRC`.
 
 
 ```r
@@ -515,7 +513,8 @@ print(st1$RRRC$FTests)
 #> Error     15.259675 0.0010762629        NA          NA
 ```
 
-* TBA
+* `st1$RRRC$FTests` contains the results of the F-tests: the degrees of freedom, the mean-squares, the observed value of the F-statistic and the p-value for rejecting the NH, listed separately, where applicable, for the treatment and error terms. 
+* For example, the treatment mean squares is `st1$RRRC$FTests["Treatment", "MS"]` whose value is 0.00479617.
 
 
 ```r
@@ -524,21 +523,23 @@ print(st1$RRRC$ciDiffTrt[,-c(2:5)])
 #> trt0-trt1 -0.043800322 -0.087959499 0.00035885444
 ```
 
-* TBA
+* `st1$RRRC$ciDiffTrt` contains the results of the confidence intervals for the inter-treatment difference FOMs, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet} - \theta_{i' \bullet}}$.
 
 
 ```r
-print(st1$RRRC$ciAvgRdrEachTrt[,-c(2,3,6)])
-#>        Estimate    CILower    CIUpper
-#> trt0 0.89703704 0.82522360 0.96885048
-#> trt1 0.94083736 0.89413783 0.98753689
+print(st1$RRRC$ciAvgRdrEachTrt)
+#>        Estimate      StdErr        DF    CILower    CIUpper          Cov2
+#> trt0 0.89703704 0.033173597 12.744648 0.82522360 0.96885048 0.00048396180
+#> trt1 0.94083736 0.021566368 12.710190 0.89413783 0.98753689 0.00020418785
 ```
 
-* TBA
+* `RRRC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet}}$.
 
 ### Fixed-Reader Random-Case (FRRC) analysis {#ORApplications-FRRC-dataset02-RJafroc}
 
-* TBA
+* Displayed next are the results of FRRC analysis, contained in the `st1$FRRC` `list` object.
+* `st1$FRRC$FTests` contains the results of the F-tests: the degrees of freedom, the mean-squares, the observed value of the F-statistic and the p-value for rejecting the NH, listed separately, where applicable, for the treatment and error terms. 
+* For example, the treatment mean squares is `st1$FRRC$FTests["Treatment", "MS"]` whose value is 0.00479617.
 
 
 ```r
@@ -548,24 +549,52 @@ print(st1$FRRC$FTests)
 #> Error     0.00087586039        NA NA          NA
 ```
 
-* TBA
+* Note that this time the output lists a chi-square distribution observed value, 5.47595324, with degree of freedom $df = I -1 = 1$.
+* The listed mean-squares and the p-value agree with the previously performed hand calculations.
+* For FRRC analysis the value of the chi-square statistic is significant and the p-value is smaller than $\alpha$.
 
 
 ```r
-print(st1$FRRC$ciDiffTrt[,-c(2:4)])
-#>               Estimate      CILower       CIUpper
-#> trt0-trt1 -0.043800322 -0.080485914 -0.0071147303
+print(st1$FRRC$ciDiffTrt)
+#>               Estimate      StdErr          z       PrGTz      CILower
+#> trt0-trt1 -0.043800322 0.018717483 -2.3400755 0.019279843 -0.080485914
+#>                 CIUpper
+#> trt0-trt1 -0.0071147303
 ```
 
-* TBA
+* `st1$FRRC$ciDiffTrt` contains confidence intervals for inter-treatment difference FOMs, averaged over readers, i.e., $CI_{1-\alpha,FRRC,\theta_{i \bullet} - \theta_{i' \bullet}}$.
+* The confidence interval excludes zero, and the p-value, listed under `PrGTz` (for probability greater than `z`) is smaller than 0.05.
+* One could be using the t-distribution with infinite degrees of freedom, but this is identical to the normal distribution. Hence the listed value is a `z` statistic, i.e., `z = -0.043800322/0.018717483` = -2.34007543.
 
 
 ```r
-print(st1$FRRC$ciAvgRdrEachTrt[,-c(2,3,5)])
-#>        Estimate    CILower
-#> trt0 0.89703704 0.84943008
-#> trt1 0.94083736 0.90795637
+print(st1$FRRC$ciAvgRdrEachTrt)
+#>        Estimate      StdErr  DF    CILower    CIUpper
+#> trt0 0.89703704 0.024289710 113 0.84943008 0.94464399
+#> trt1 0.94083736 0.016776324 113 0.90795637 0.97371835
 ```
+
+* `st1$FRRC$st1$FRRC$ciAvgRdrEachTrt` contains confidence intervals for individual treatment FOMs, averaged over readers, i.e., $CI_{1-\alpha,FRRC,\theta_{i \bullet}}$.
+
+
+
+```r
+print(st1$FRRC$ciDiffTrtEachRdr)
+#>                     Estimate      StdErr           z       PrGTz      CILower
+#> rdr0::trt0-trt1 -0.028180354 0.025512133 -1.10458638 0.269338854 -0.078183215
+#> rdr1::trt0-trt1 -0.046537842 0.026301827 -1.76937679 0.076831017 -0.098088476
+#> rdr2::trt0-trt1 -0.017874396 0.031209647 -0.57272023 0.566834139 -0.079044180
+#> rdr3::trt0-trt1 -0.026247987 0.017291289 -1.51798907 0.129017153 -0.060138290
+#> rdr4::trt0-trt1 -0.100161031 0.044057460 -2.27341816 0.023000993 -0.186512066
+#>                       CIUpper
+#> rdr0::trt0-trt1  0.0218225068
+#> rdr1::trt0-trt1  0.0050127916
+#> rdr2::trt0-trt1  0.0432953879
+#> rdr3::trt0-trt1  0.0076423157
+#> rdr4::trt0-trt1 -0.0138099949
+```
+
+* `st1$FRRC$st1$FRRC$ciDiffTrtEachRdr` contains confidence intervals for inter-treatment difference FOMs, for each reader, i.e., $CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}}$.
 
 ### Random-Reader Fixed-Case (RRFC) analysis {#ORApplications-RRFC-dataset02-RJafroc}
 
@@ -577,21 +606,37 @@ print(st1$RRFC$FTests)
 #> TR  4 0.00055103062    NA          NA
 ```
 
-* TBA
+* `st1$RRFC$FTests` contains results of the F-test: the degrees of freedom, the mean-squares, the observed value of the F-statistic and the p-value for rejecting the NH, listed separately, where applicable, for the treatment and treatment-reader terms. The latter is also termed the error term. 
+* For example, the treatment-reader mean squares is `st1$RRFC$FTests["TR", "MS"]` whose value is \ensuremath{5.51030622\times 10^{-4}}.
 
 
 ```r
-print(st1$RRFC$ciDiffTrt[,-c(2,3,4,5)])
-#>               Estimate      CILower       CIUpper
-#> trt0-trt1 -0.043800322 -0.085020224 -0.0025804202
+print(st1$RRFC$ciDiffTrt)
+#>               Estimate      StdErr DF          t       PrGTt      CILower
+#> trt0-trt1 -0.043800322 0.014846287  4 -2.9502542 0.041958752 -0.085020224
+#>                 CIUpper
+#> trt0-trt1 -0.0025804202
 ```
+
+* `st1$RRFC$ciDiffTrt` contains confidence intervals for the inter-treatment difference FOMs, averaged over readers, i.e., $CI_{1-\alpha,RRFC,\theta_{i \bullet} - \theta_{i' \bullet}}$.
+
+
+
+```r
+print(st1$RRFC$ciAvgRdrEachTrt)
+#>        Estimate      StdErr DF    CILower    CIUpper
+#> Trt0 0.89703704 0.024829936  4 0.82809808 0.96597599
+#> Trt1 0.94083736 0.016153030  4 0.89598936 0.98568536
+```
+
+* `st1$RRFC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRFC,\theta_{i \bullet}}$.
 
 ## Using RJafroc: dataset04 {#ORApplications-dataset04-RJafroc}
 * The second example uses the Federica Zanca dataset [@RN1882], i.e., `dataset04`, which has five modalities and four readers. 
 * This illustrates the situation when multiple treatment pairings are involved. In contrast, the previous example had only one treatment pairing.
 * Since this is an FROC dataset, in order to keep this comparable with the previous example, one converts it to an inferred-ROC dataset.
 * The function `DfFroc2Roc(dataset04)` converts, using the highest-rating, the FROC dataset to an inferred-ROC dataset.
-* The results are contained in the returned `list` object `st2`.
+* The results are contained in `st2`.
 
 
 ```r
@@ -655,38 +700,51 @@ print(st2$RRRC$FTests)
 #> Error     16.803749 0.00054695157        NA          NA
 ```
 
-* TBA
+* In this example `ndf` = 4 because there are I = 5 treatments. Since the p-value is less than 0.05, at least one treatment-pairing is guaranteed to be significantly different from zero.
 
 
 ```r
-print(st2$RRRC$ciDiffTrt[,-c(2:5)])
-#>             Estimate        CILower       CIUpper
-#> trt1-trt2 -0.0051000 -0.04002130451  0.0298213045
-#> trt1-trt3  0.0353250  0.00040369549  0.0702463045
-#> trt1-trt4 -0.0054125 -0.04033380451  0.0295088045
-#> trt1-trt5  0.0367750  0.00185369549  0.0716963045
-#> trt2-trt3  0.0404250  0.00550369549  0.0753463045
-#> trt2-trt4 -0.0003125 -0.03523380451  0.0346088045
-#> trt2-trt5  0.0418750  0.00695369549  0.0767963045
-#> trt3-trt4 -0.0407375 -0.07565880451 -0.0058161955
-#> trt3-trt5  0.0014500 -0.03347130451  0.0363713045
-#> trt4-trt5  0.0421875  0.00726619549  0.0771088045
+print(st2$RRRC$ciDiffTrt)
+#>             Estimate      StdErr        DF            t       PrGTt
+#> trt1-trt2 -0.0051000 0.016537103 16.803749 -0.308397420 0.761570284
+#> trt1-trt3  0.0353250 0.016537103 16.803749  2.136105659 0.047689094
+#> trt1-trt4 -0.0054125 0.016537103 16.803749 -0.327294321 0.747487331
+#> trt1-trt5  0.0367750 0.016537103 16.803749  2.223787278 0.040173758
+#> trt2-trt3  0.0404250 0.016537103 16.803749  2.444503079 0.025841064
+#> trt2-trt4 -0.0003125 0.016537103 16.803749 -0.018896901 0.985145919
+#> trt2-trt5  0.0418750 0.016537103 16.803749  2.532184698 0.021613616
+#> trt3-trt4 -0.0407375 0.016537103 16.803749 -2.463399980 0.024868769
+#> trt3-trt5  0.0014500 0.016537103 16.803749  0.087681619 0.931166167
+#> trt4-trt5  0.0421875 0.016537103 16.803749  2.551081599 0.020792673
+#>                  CILower       CIUpper
+#> trt1-trt2 -0.04002130451  0.0298213045
+#> trt1-trt3  0.00040369549  0.0702463045
+#> trt1-trt4 -0.04033380451  0.0295088045
+#> trt1-trt5  0.00185369549  0.0716963045
+#> trt2-trt3  0.00550369549  0.0753463045
+#> trt2-trt4 -0.03523380451  0.0346088045
+#> trt2-trt5  0.00695369549  0.0767963045
+#> trt3-trt4 -0.07565880451 -0.0058161955
+#> trt3-trt5 -0.03347130451  0.0363713045
+#> trt4-trt5  0.00726619549  0.0771088045
 ```
 
-* TBA
+* With I = 5 treatments there are 10 distinct comparisons listed above. 
+* Looking at the `PrGTt` (for probability greater than `t`) column, one finds six pairings that are significant: `trt1-trt3`, `trt1-trt5`, etc. The smallest p-value is for the `trt4-trt5` pairing. 
 
 
 ```r
-print(st2$RRRC$ciAvgRdrEachTrt[,-c(2,3,6)])
-#>       Estimate    CILower    CIUpper
-#> trt1 0.8451625 0.77351391 0.91681109
-#> trt2 0.8502625 0.80942311 0.89110189
-#> trt3 0.8098375 0.74689261 0.87278239
-#> trt4 0.8505750 0.77664342 0.92450658
-#> trt5 0.8083875 0.74706746 0.86970754
+print(st2$RRRC$ciAvgRdrEachTrt)
+#>       Estimate      StdErr         DF    CILower    CIUpper          Cov2
+#> trt1 0.8451625 0.028578244  5.4574766 0.77351391 0.91681109 0.00021118589
+#> trt2 0.8502625 0.019928157 27.7225775 0.80942311 0.89110189 0.00026649085
+#> trt3 0.8098375 0.026647889  7.0371428 0.74689261 0.87278239 0.00024646233
+#> trt4 0.8505750 0.029408701  5.4032614 0.77664342 0.92450658 0.00022042897
+#> trt5 0.8083875 0.025758346  6.7756525 0.74706746 0.86970754 0.00022200226
 ```
 
-* TBA
+* `st2$RRRC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet}}$.
+* Looking at the `Estimate` column one confirms that `trt5` has the smallest FOM while `trt4` has the highest.
 
 ### Fixed-Reader Random-Case (FRRC) analysis {#ORApplications-FRRC-dataset04}
 
