@@ -107,13 +107,9 @@ The critical value of the F-statistic for rejection of the null hypothesis is $F
 * Rejection of the NH is more likely if $MS(T)$ increases, meaning the treatment effect is larger; 
 
 * $MS(TR)$ is smaller, meaning there is less contamination of the treatment effect by treatment-reader variability; 
-
 * The greater of $\text{Cov2}$ or $\text{Cov3}$, which is usually $\text{Cov2}$, decreases, meaning there is less "noise" in the measurement due to between-reader variability. Recall that $\text{Cov2}$ involves different-reader same-treatment pairings.  
-
 * $\alpha$ increases, meaning one is allowing a greater probability of Type I errors; 
-
 * $\text{ndf}$ increases, as this lowers the critical value of the F-statistic. With more treatment pairings, the chance that at least one paired-difference will reject the NH is larger. 
-
 * $\text{ddf}_H$ increases, as this lowers the critical value of the F-statistic. 
 
 The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than $F_{ORH}$ could be observed by chance. In other words, it is the area under the F-distribution $F_{\text{ndf},\text{ddf}_H}$ that lies above the observed value $F_{ORH}$:
@@ -140,14 +136,14 @@ Define $\text{df}_i$, the degrees of freedom for modality $i$:
 (\#eq:CI-RRRC-df-IndvlTrt)
 \end{equation}
 
-Then, the $(1-\alpha)$ confidence interval for $\theta_{i \bullet}$ is given by:
+Here $\text{MS(R)}_i$ is the reader mean-square for modality $i$, and $\text{Cov2}_i$ is $\text{Cov2}$ for modality $i$. Note that all quantities with an $i$ index are calculated using data from modality $i$ only.
+
+The $(1-\alpha)$ confidence interval for $\theta_{i \bullet}$, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet}}$, is given by:
 
 \begin{equation}
 CI_{1-\alpha,RRRC,\theta_{i \bullet}} = \theta_{i \bullet} \pm t_{\alpha/2, \text{df}_i}\sqrt{\textstyle\frac{1}{J}(\text{MS(R)}_i + J\max(\text{Cov2}_{i}, 0))}
 (\#eq:CI-RRRC-IndvlTrt)
 \end{equation}
-
-Here $\text{df}_i$ is the degrees of freedom for modality $i$, $\text{MS(R)}_i$ is the reader mean-square for modality $i$, and $\text{Cov2}_i$ is $\text{Cov2}$ for modality $i$. Note that all quantities are calculated using data from modality $i$ only.
 
 ## Fixed-reader random-case (FRRC) analysis
 Using the vertical bar notation $\mid R$ to denote that reader is regarded as a fixed effect [@RN1124], the F -statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is [@RN1865]: 

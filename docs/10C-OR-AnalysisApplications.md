@@ -23,7 +23,7 @@ Each analysis involves the following steps:
 
 ## Hand calculation using dataset02 {#ORApplications-dataset02-hand}
 
-Dataset `dataset02` is well-know in the literature [@RN1993] as it has been widely used to illustrate advances in ROC methodology. The following code extract the numbers of modalities, readers and cases for `dataset02` and defines strings `modalityID`, `readerID` and `diffTRName` that will be needed later on.
+Dataset `dataset02` is well-know in the literature [@RN1993] as it has been widely used to illustrate advances in ROC methodology. The following code extract the numbers of modalities, readers and cases for `dataset02` and defines strings `modalityID`, `readerID` and `diffTRName` that are needed for the hand-calculations.
 
 
 ```r
@@ -49,8 +49,8 @@ for (i in 1:I) {
 The dataset consists of I = 2 treatments,  J = 5 readers and  K = 114 cases.
 
 ### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset02-hand}
-* The first step is to calculate the figures of merit. 
-* The following code uses `UtilFigureOfMerit()` to this end. Note that `FOM = "Wilcoxon"` has to be explicitly specified.
+* The first step is to calculate the figures of merit using `UtilFigureOfMerit()`. 
+* Note that the `FOM` argument has to be explicitly specified as there is no default.
 
 
 ```r
@@ -103,10 +103,10 @@ print(vc)
 * The next step is the calculate the NH testing statistic. 
 * The relevant equation is Eqn. \@ref(eq:F-ORH-RRRC). 
 * `vc` contains the values needed in this equation, as follows:
-+ MS(T) is in `vc$TRanova["T", "MS"]`, whose value is 0.0047962. 
-+ MS(TR) is in `vc$TRanova["TR", "MS"]`, whose value is \ensuremath{5.5103062\times 10^{-4}}. 
-+ `Cov2` is in `vc$VarCom["Cov2", "Estimates"]`, whose value is \ensuremath{3.4407483\times 10^{-4}}. 
-+ `Cov3` is in `vc$VarCom["Cov3", "Estimates"]`, whose value is \ensuremath{2.3902837\times 10^{-4}}. 
+    + MS(T) is in `vc$TRanova["T", "MS"]`, whose value is 0.0047962. 
+    + MS(TR) is in `vc$TRanova["TR", "MS"]`, whose value is \ensuremath{5.5103062\times 10^{-4}}. 
+    + `Cov2` is in `vc$VarCom["Cov2", "Estimates"]`, whose value is \ensuremath{3.4407483\times 10^{-4}}. 
+    + `Cov3` is in `vc$VarCom["Cov3", "Estimates"]`, whose value is \ensuremath{2.3902837\times 10^{-4}}. 
 
 Applying Eqn. \@ref(eq:F-ORH-RRRC) one gets (`den` is the denominator on the right hand side of the referenced equation) and F_ORH_RRRC is the value of the F-statistic:
 
@@ -434,7 +434,7 @@ print(ciDiffTrt_RRFC)
 
 ## Using RJafroc: dataset02 {#ORApplications-dataset02-RJafroc}
 
-The second example shows application of the `RJafroc` package function `StSignificanceTesting()` to `dataset02`. This function encapsulates all formulae discussed previously and accomplishes the analyses with a single function call. It returns an object, denoted `st1` below, that contains all results of the analysis. It is a `list` object with the following components:
+The second example shows application of the `RJafroc` package function `StSignificanceTesting()` to `dataset02`. This function encapsulates all formulae discussed previously and accomplishes the analyses with a single function call. It returns an object, denoted `st1` below, that contains all results of the analysis. It is a `list` with the following components:
 
 * `FOMs`, this in turn is a `list` containing the following data frames: 
     + `foms`, the individual treatment-reader figures of merit, i.e., $\theta_{i j}$, 
@@ -459,7 +459,7 @@ The second example shows application of the `RJafroc` package function `StSignif
     + `ciDiffTrtEachRdr`, the confidence intervals for inter-treatment FOM differences for individual readers, denoted $CI_{1-\alpha,FRRC,\theta_{ij} - \theta_{i'j}}$ in the previous chapter,
     + `IndividualRdrVarCov1`, the individual reader variance-covariances and means squares.
 
-* `RRFC`, which in turn is a `list` object containing the following data frames: 
+* `RRFC`, a `list` containing the following data frames: 
     + `FTests`, the results of the F-tests, which in this case specializes to chi-square tests,
     + `ciDiffTrt`, the confidence intervals for inter-treatment FOM differences, averaged over readers, denoted $CI_{1-\alpha,RRFC,\theta_{i \bullet} - \theta_{i' \bullet}}$ in the previous chapter,
     + `ciAvgRdrEachTrt`, the confidence intervals for indvidual treatment FOMs, averaged over readers, denoted $CI_{1-\alpha,RRFC,\theta_{i \bullet}}$ in the previous chapter.
@@ -479,11 +479,11 @@ The lower right `RStudio` panel contains the online description. Click on the sm
 * Since `analysisOption` is not explicitly specified in the following code, the function `StSignificanceTesting` performs all three analyses: `RRRC`, `FRRC` and `RRFC`.
 * Likewise, the significance level of the test, also an argument, `alpha`, defaults to 0.05. 
 * The code below applies `StSignificanceTesting()` and saves the returned object to `st1`. 
-* The first member of this object, a  `list` object named `FOMs`, is then displayed. 
+* The first member of this object, a  `list` named `FOMs`, is then displayed. 
 * `FOMs` contains three data frames: 
-+ `FOMS$foms`, the figures of merit for each treatment and reader, 
-+ `FOMS$trtMeans`, the figures of merit for each treatment averaged over readers, and 
-+ `FOMS$trtMeanDiffs`, the inter-treatment difference figures of merit averaged over readers. The difference is always the first treatment minus the second, etc., in this example, `trt0` minus `trt1`.
+    + `FOMS$foms`, the figures of merit for each treatment and reader, 
+    + `FOMS$trtMeans`, the figures of merit for each treatment averaged over readers, and 
+    + `FOMS$trtMeanDiffs`, the inter-treatment difference figures of merit averaged over readers. The difference is always the first treatment minus the second, etc., in this example, `trt0` minus `trt1`.
 
 
 ```r
@@ -504,11 +504,11 @@ print(st1$FOMs)
 #> trt0-trt1 -0.043800322
 ```
 
-* Displayed next are the variance components and mean-squares contained in the `ANOVA` `list` object. 
-* `ANOVA$TRanova` contains the treatment-reader ANOVA table, i.e. the sum of squares, the degrees of freedom and the mean-squares, for treatment, reader and treatment-reader factors, i.e., `T`, `R` and `TR`.
-* `ANOVA$VarCom` contains the OR variance components and the correlations.
-* `ANOVA$IndividualTrt` contains the quantities necessary for individual treatment analyses.
-* `ANOVA$IndividualRdr` contains the quantities necessary for individual reader analyses.
+* Displayed next are the variance components and mean-squares contained in the `ANOVA` `list`. 
+    * `ANOVA$TRanova` contains the treatment-reader ANOVA table, i.e. the sum of squares, the degrees of freedom and the mean-squares, for treatment, reader and treatment-reader factors, i.e., `T`, `R` and `TR`.
+    * `ANOVA$VarCom` contains the OR variance components and the correlations.
+    * `ANOVA$IndividualTrt` contains the quantities necessary for individual treatment analyses.
+    * `ANOVA$IndividualRdr` contains the quantities necessary for individual reader analyses.
 
 
 ```r
@@ -1283,7 +1283,7 @@ print(st3)
 
 * `st3$RRRC$FTests` contains the results of the F-tests.
 * The p-value is much smaller than that obtained after converting to an ROC dataset. Specifically, for FROC analysis, the p-value is \ensuremath{1.17105004\times 10^{-4}} while that for ROC analysis is 0.03054456. The F-statistic and the `ddf` are both larger for FROC analysis, both of of which result in increased probability of rejecting the NH, i.e., FROC analysis has greater power than ROC analysis.
-* The increased power of FROC analysis has been confirmed in several simulation studies.
+* The increased power of FROC analysis has been confirmed in simulation studies [@RN1331].
 
 * `st3$RRRC$ciDiffTrt` contains the confidence intervals for the inter-treatment difference FOMs, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet} - \theta_{i' \bullet}}$.
 * With I = 5 treatments there are 10 distinct treatment-pairings. 
@@ -1319,7 +1319,7 @@ print(st3)
 * The `Estimate` column confirms that `trt5` has the smallest FOM while `trt4` has the highest (the `Estimates` column is identical for RRRC, FRRC and RRFC analyses).
 
 ## Using RJafroc for dataset04, FROC analysis, DBM method {#ORApplications-dataset04-FROC-DBM-RJafroc}
-* The fourth example again uses `dataset04`, i.e., FROC data, *but this time we use DBM analysis*.
+* The fourth example again uses `dataset04`, i.e., FROC data, *but this time using DBM analysis*.
 * The key difference below is in the call to `StSignificanceTesting()` function, where we set `method = "DBM"`.
 * Since DBM analysis is pseudovalue based, and the figure of merit is not the empirical AUC under the ROC, one expects to see differences from the previously presented OR analysis, contained in `st3`.
 
@@ -1647,275 +1647,6 @@ ds <- ds1
 FOM <- "wAFROC" # also try wAFROC1, MaxLLF and MaxNLF
 st5 <- StSignificanceTesting(ds, FOM = FOM, method = "OR")
 print(st5)
-#> $FOMs
-#> $FOMs$foms
-#>            rdr1       rdr3       rdr4       rdr5
-#> trt1 0.77926667 0.72489167 0.70362500 0.80509167
-#> trt2 0.78700000 0.72690000 0.72261667 0.80378333
-#> trt3 0.72969167 0.71575833 0.67230833 0.77265833
-#> trt4 0.81013333 0.74311667 0.69435833 0.82940833
-#> trt5 0.74880000 0.68227500 0.65517500 0.77125000
-#> 
-#> $FOMs$trtMeans
-#>        Estimate
-#> trt1 0.75321875
-#> trt2 0.76007500
-#> trt3 0.72260417
-#> trt4 0.76925417
-#> trt5 0.71437500
-#> 
-#> $FOMs$trtMeanDiffs
-#>                Estimate
-#> trt1-trt2 -0.0068562500
-#> trt1-trt3  0.0306145833
-#> trt1-trt4 -0.0160354167
-#> trt1-trt5  0.0388437500
-#> trt2-trt3  0.0374708333
-#> trt2-trt4 -0.0091791667
-#> trt2-trt5  0.0457000000
-#> trt3-trt4 -0.0466500000
-#> trt3-trt5  0.0082291667
-#> trt4-trt5  0.0548791667
-#> 
-#> 
-#> $ANOVA
-#> $ANOVA$TRanova
-#>              SS DF            MS
-#> T  0.0092661660  4 0.00231654149
-#> R  0.0354043662  3 0.01180145539
-#> TR 0.0020352419 12 0.00016960349
-#> 
-#> $ANOVA$VarCom
-#>            Estimates       Rhos
-#> VarR   0.00220864564         NA
-#> VarTR -0.00030459978         NA
-#> Cov1   0.00042203598 0.45473916
-#> Cov2   0.00033615564 0.36220403
-#> Cov3   0.00030431124 0.32789204
-#> Var    0.00092808365         NA
-#> 
-#> $ANOVA$IndividualTrt
-#>      DF   msREachTrt    varEachTrt   cov2EachTrt
-#> trt1  3 0.0022104190 0.00087740343 0.00033319886
-#> trt2  3 0.0017130271 0.00093887326 0.00038023350
-#> trt3  3 0.0017107295 0.00096971478 0.00029724350
-#> trt4  3 0.0038607283 0.00085902596 0.00031071226
-#> trt5  3 0.0029849654 0.00099540083 0.00035939006
-#> 
-#> $ANOVA$IndividualRdr
-#>      DF    msTEachRdr    varEachRdr   cov1EachRdr
-#> rdr1  4 0.00101374290 0.00088314868 0.00041224847
-#> rdr3  4 0.00050928051 0.00089655670 0.00043556997
-#> rdr4  4 0.00069838090 0.00117090526 0.00049516987
-#> rdr5  4 0.00060394766 0.00076172396 0.00034515562
-#> 
-#> 
-#> $RRRC
-#> $RRRC$FTests
-#>                  DF            MS     FStat           p
-#> Treatment  4.000000 0.00231654149 7.8002997 0.000117105
-#> Error     36.793343 0.00029698109        NA          NA
-#> 
-#> $RRRC$ciDiffTrt
-#>                Estimate     StdErr        DF           t         PrGTt
-#> trt1-trt2 -0.0068562500 0.01218567 36.793343 -0.56264860 5.7708666e-01
-#> trt1-trt3  0.0306145833 0.01218567 36.793343  2.51234312 1.6509287e-02
-#> trt1-trt4 -0.0160354167 0.01218567 36.793343 -1.31592413 1.9633987e-01
-#> trt1-trt5  0.0388437500 0.01218567 36.793343  3.18765822 2.9246461e-03
-#> trt2-trt3  0.0374708333 0.01218567 36.793343  3.07499173 3.9557451e-03
-#> trt2-trt4 -0.0091791667 0.01218567 36.793343 -0.75327552 4.5607767e-01
-#> trt2-trt5  0.0457000000 0.01218567 36.793343  3.75030682 6.0697106e-04
-#> trt3-trt4 -0.0466500000 0.01218567 36.793343 -3.82826725 4.8459540e-04
-#> trt3-trt5  0.0082291667 0.01218567 36.793343  0.67531510 5.0369787e-01
-#> trt4-trt5  0.0548791667 0.01218567 36.793343  4.50358235 6.5228142e-05
-#>                 CILower       CIUpper
-#> trt1-trt2 -0.0315514439  0.0178389439
-#> trt1-trt3  0.0059193894  0.0553097773
-#> trt1-trt4 -0.0407306106  0.0086597773
-#> trt1-trt5  0.0141485561  0.0635389439
-#> trt2-trt3  0.0127756394  0.0621660273
-#> trt2-trt4 -0.0338743606  0.0155160273
-#> trt2-trt5  0.0210048061  0.0703951939
-#> trt3-trt4 -0.0713451939 -0.0219548061
-#> trt3-trt5 -0.0164660273  0.0329243606
-#> trt4-trt5  0.0301839727  0.0795743606
-#> 
-#> $RRRC$ciAvgRdrEachTrt
-#>        Estimate      StdErr         DF    CILower    CIUpper          Cov2
-#> trt1 0.75321875 0.029762453  7.7084474 0.68413193 0.82230557 0.00033319886
-#> trt2 0.76007500 0.028433963 10.6920840 0.69727167 0.82287833 0.00038023350
-#> trt3 0.72260417 0.026924448  8.6191761 0.66128414 0.78392420 0.00029724350
-#> trt4 0.76925417 0.035719663  5.2424244 0.67869638 0.85981195 0.00031071226
-#> trt5 0.71437500 0.033251036  6.5854184 0.63473415 0.79401585 0.00035939006
-#> 
-#> 
-#> $FRRC
-#> $FRRC$FTests
-#>                      MS     Chisq DF            p
-#> Treatment 0.00231654149 15.403026  4 0.0039343238
-#> Error     0.00060158087        NA NA           NA
-#> 
-#> $FRRC$ciDiffTrt
-#>                Estimate      StdErr           z        PrGTz       CILower
-#> trt1-trt2 -0.0068562500 0.017343311 -0.39532532 0.6926028123 -0.0408485147
-#> trt1-trt3  0.0306145833 0.017343311  1.76520986 0.0775285026 -0.0033776814
-#> trt1-trt4 -0.0160354167 0.017343311 -0.92458797 0.3551802713 -0.0500276814
-#> trt1-trt5  0.0388437500 0.017343311  2.23969634 0.0251106431  0.0048514853
-#> trt2-trt3  0.0374708333 0.017343311  2.16053518 0.0307312632  0.0034785686
-#> trt2-trt4 -0.0091791667 0.017343311 -0.52926265 0.5966232621 -0.0431714314
-#> trt2-trt5  0.0457000000 0.017343311  2.63502167 0.0084131912  0.0117077353
-#> trt3-trt4 -0.0466500000 0.017343311 -2.68979783 0.0071495318 -0.0806422647
-#> trt3-trt5  0.0082291667 0.017343311  0.47448649 0.6351530315 -0.0257630981
-#> trt4-trt5  0.0548791667 0.017343311  3.16428432 0.0015546484  0.0208869019
-#>                CIUpper
-#> trt1-trt2  0.027136015
-#> trt1-trt3  0.064606848
-#> trt1-trt4  0.017956848
-#> trt1-trt5  0.072836015
-#> trt2-trt3  0.071463098
-#> trt2-trt4  0.024813098
-#> trt2-trt5  0.079692265
-#> trt3-trt4 -0.012657735
-#> trt3-trt5  0.042221431
-#> trt4-trt5  0.088871431
-#> 
-#> $FRRC$ciAvgRdrEachTrt
-#>        Estimate      StdErr  DF    CILower    CIUpper
-#> trt1 0.75321875 0.021662179 199 0.71076166 0.79567584
-#> trt2 0.76007500 0.022801172 199 0.71538552 0.80476448
-#> trt3 0.72260417 0.021572235 199 0.68032336 0.76488497
-#> trt4 0.76925417 0.021161065 199 0.72777924 0.81072909
-#> trt5 0.71437500 0.022768240 199 0.66975007 0.75899993
-#> 
-#> $FRRC$ciDiffTrtEachRdr
-#>                      Estimate      StdErr            z        PrGTz
-#> rdr1::trt1-trt2 -0.0077333333 0.030688767 -0.251992312 0.8010470065
-#> rdr1::trt1-trt3  0.0495750000 0.030688767  1.615411921 0.1062215205
-#> rdr1::trt1-trt4 -0.0308666667 0.030688767 -1.005796899 0.3145132792
-#> rdr1::trt1-trt5  0.0304666667 0.030688767  0.992762814 0.3208255556
-#> rdr1::trt2-trt3  0.0573083333 0.030688767  1.867404232 0.0618451592
-#> rdr1::trt2-trt4 -0.0231333333 0.030688767 -0.753804588 0.4509665689
-#> rdr1::trt2-trt5  0.0382000000 0.030688767  1.244755126 0.2132217757
-#> rdr1::trt3-trt4 -0.0804416667 0.030688767 -2.621208820 0.0087618575
-#> rdr1::trt3-trt5 -0.0191083333 0.030688767 -0.622649106 0.5335151338
-#> rdr1::trt4-trt5  0.0613333333 0.030688767  1.998559713 0.0456560130
-#> rdr3::trt1-trt2 -0.0020083333 0.030364016 -0.066141888 0.9472648623
-#> rdr3::trt1-trt3  0.0091333333 0.030364016  0.300794643 0.7635710940
-#> rdr3::trt1-trt4 -0.0182250000 0.030364016 -0.600217047 0.5483615943
-#> rdr3::trt1-trt5  0.0426166667 0.030364016  1.403525367 0.1604602331
-#> rdr3::trt2-trt3  0.0111416667 0.030364016  0.366936530 0.7136663620
-#> rdr3::trt2-trt4 -0.0162166667 0.030364016 -0.534075159 0.5932895354
-#> rdr3::trt2-trt5  0.0446250000 0.030364016  1.469667254 0.1416518956
-#> rdr3::trt3-trt4 -0.0273583333 0.030364016 -0.901011689 0.3675821046
-#> rdr3::trt3-trt5  0.0334833333 0.030364016  1.102730724 0.2701441201
-#> rdr3::trt4-trt5  0.0608416667 0.030364016  2.003742413 0.0450976604
-#> rdr4::trt1-trt2 -0.0189916667 0.036762356 -0.516606359 0.6054309755
-#> rdr4::trt1-trt3  0.0313166667 0.036762356  0.851867792 0.3942874746
-#> rdr4::trt1-trt4  0.0092666667 0.036762356  0.252069448 0.8009873847
-#> rdr4::trt1-trt5  0.0484500000 0.036762356  1.317924254 0.1875290058
-#> rdr4::trt2-trt3  0.0503083333 0.036762356  1.368474152 0.1711637075
-#> rdr4::trt2-trt4  0.0282583333 0.036762356  0.768675807 0.4420857903
-#> rdr4::trt2-trt5  0.0674416667 0.036762356  1.834530613 0.0665752679
-#> rdr4::trt3-trt4 -0.0220500000 0.036762356 -0.599798344 0.5486406368
-#> rdr4::trt3-trt5  0.0171333333 0.036762356  0.466056461 0.6411750868
-#> rdr4::trt4-trt5  0.0391833333 0.036762356  1.065854806 0.2864892816
-#> rdr5::trt1-trt2  0.0013083333 0.028864107  0.045327345 0.9638463920
-#> rdr5::trt1-trt3  0.0324333333 0.028864107  1.123656212 0.2611588993
-#> rdr5::trt1-trt4 -0.0243166667 0.028864107 -0.842453450 0.3995341855
-#> rdr5::trt1-trt5  0.0338416667 0.028864107  1.172448067 0.2410172108
-#> rdr5::trt2-trt3  0.0311250000 0.028864107  1.078328867 0.2808870188
-#> rdr5::trt2-trt4 -0.0256250000 0.028864107 -0.887780794 0.3746586757
-#> rdr5::trt2-trt5  0.0325333333 0.028864107  1.127120723 0.2596914430
-#> rdr5::trt3-trt4 -0.0567500000 0.028864107 -1.966109662 0.0492859446
-#> rdr5::trt3-trt5  0.0014083333 0.028864107  0.048791855 0.9610851732
-#> rdr5::trt4-trt5  0.0581583333 0.028864107  2.014901517 0.0439149690
-#>                       CILower        CIUpper
-#> rdr1::trt1-trt2 -0.0678822113  0.05241554467
-#> rdr1::trt1-trt3 -0.0105738780  0.10972387800
-#> rdr1::trt1-trt4 -0.0910155447  0.02928221134
-#> rdr1::trt1-trt5 -0.0296822113  0.09061554467
-#> rdr1::trt2-trt3 -0.0028405447  0.11745721134
-#> rdr1::trt2-trt4 -0.0832822113  0.03701554467
-#> rdr1::trt2-trt5 -0.0219488780  0.09834887800
-#> rdr1::trt3-trt4 -0.1405905447 -0.02029278866
-#> rdr1::trt3-trt5 -0.0792572113  0.04104054467
-#> rdr1::trt4-trt5  0.0011844553  0.12148221134
-#> rdr3::trt1-trt2 -0.0615207111  0.05750404442
-#> rdr3::trt1-trt3 -0.0503790444  0.06864571108
-#> rdr3::trt1-trt4 -0.0777373778  0.04128737775
-#> rdr3::trt1-trt5 -0.0168957111  0.10212904442
-#> rdr3::trt2-trt3 -0.0483707111  0.07065404442
-#> rdr3::trt2-trt4 -0.0757290444  0.04329571108
-#> rdr3::trt2-trt5 -0.0148873778  0.10413737775
-#> rdr3::trt3-trt4 -0.0868707111  0.03215404442
-#> rdr3::trt3-trt5 -0.0260290444  0.09299571108
-#> rdr3::trt4-trt5  0.0013292889  0.12035404442
-#> rdr4::trt1-trt2 -0.0910445595  0.05306122620
-#> rdr4::trt1-trt3 -0.0407362262  0.10336955954
-#> rdr4::trt1-trt4 -0.0627862262  0.08131955954
-#> rdr4::trt1-trt5 -0.0236028929  0.12050289287
-#> rdr4::trt2-trt3 -0.0217445595  0.12236122620
-#> rdr4::trt2-trt4 -0.0437945595  0.10031122620
-#> rdr4::trt2-trt5 -0.0046112262  0.13949455954
-#> rdr4::trt3-trt4 -0.0941028929  0.05000289287
-#> rdr4::trt3-trt5 -0.0549195595  0.08918622620
-#> rdr4::trt4-trt5 -0.0328695595  0.11123622620
-#> rdr5::trt1-trt2 -0.0552642772  0.05788094384
-#> rdr5::trt1-trt3 -0.0241392772  0.08900594384
-#> rdr5::trt1-trt4 -0.0808892772  0.03225594384
-#> rdr5::trt1-trt5 -0.0227309438  0.09041427718
-#> rdr5::trt2-trt3 -0.0254476105  0.08769761051
-#> rdr5::trt2-trt4 -0.0821976105  0.03094761051
-#> rdr5::trt2-trt5 -0.0240392772  0.08910594384
-#> rdr5::trt3-trt4 -0.1133226105 -0.00017738949
-#> rdr5::trt3-trt5 -0.0551642772  0.05798094384
-#> rdr5::trt4-trt5  0.0015857228  0.11473094384
-#> 
-#> $FRRC$IndividualRdrVarCov1
-#>         varEachRdr   cov1EachRdr
-#> rdr1 0.00088314868 0.00041224847
-#> rdr3 0.00089655670 0.00043556997
-#> rdr4 0.00117090526 0.00049516987
-#> rdr5 0.00076172396 0.00034515562
-#> 
-#> 
-#> $RRFC
-#> $RRFC$FTests
-#>    DF            MS         F             p
-#> T   4 0.00231654149 13.658572 0.00020192224
-#> TR 12 0.00016960349        NA            NA
-#> 
-#> $RRFC$ciDiffTrt
-#>                Estimate       StdErr DF           t         PrGTt      CILower
-#> trt1-trt2 -0.0068562500 0.0092087864 12 -0.74453350 4.7088356e-01 -0.026920472
-#> trt1-trt3  0.0306145833 0.0092087864 12  3.32449706 6.0595183e-03  0.010550361
-#> trt1-trt4 -0.0160354167 0.0092087864 12 -1.74131704 1.0717825e-01 -0.036099639
-#> trt1-trt5  0.0388437500 0.0092087864 12  4.21811825 1.1928824e-03  0.018779528
-#> trt2-trt3  0.0374708333 0.0092087864 12  4.06903056 1.5563074e-03  0.017406611
-#> trt2-trt4 -0.0091791667 0.0092087864 12 -0.99678353 3.3854538e-01 -0.029243389
-#> trt2-trt5  0.0457000000 0.0092087864 12  4.96265175 3.2930420e-04  0.025635778
-#> trt3-trt4 -0.0466500000 0.0092087864 12 -5.06581410 2.7711820e-04 -0.066714222
-#> trt3-trt5  0.0082291667 0.0092087864 12  0.89362119 3.8909518e-01 -0.011835055
-#> trt4-trt5  0.0548791667 0.0092087864 12  5.95943529 6.6167481e-05  0.034814945
-#>                 CIUpper
-#> trt1-trt2  0.0132079720
-#> trt1-trt3  0.0506788053
-#> trt1-trt4  0.0040288053
-#> trt1-trt5  0.0589079720
-#> trt2-trt3  0.0575350553
-#> trt2-trt4  0.0108850553
-#> trt2-trt5  0.0657642220
-#> trt3-trt4 -0.0265857780
-#> trt3-trt5  0.0282933886
-#> trt4-trt5  0.0749433886
-#> 
-#> $RRFC$ciAvgRdrEachTrt
-#>        Estimate      StdErr DF    CILower    CIUpper
-#> Trt1 0.75321875 0.023507547  3 0.67840724 0.82803026
-#> Trt2 0.76007500 0.020694366  3 0.69421629 0.82593371
-#> Trt3 0.72260417 0.020680483  3 0.65678964 0.78841869
-#> Trt4 0.76925417 0.031067379  3 0.67038390 0.86812443
-#> Trt5 0.71437500 0.027317419  3 0.62743878 0.80131122
 ```
 
 A comparison was run between results of OR and DBM for the FROC dataset. Except for `FRRC`, where differences are expected (because `ddf` in the former is $\infty$, while that in the later is $(I-1)\times(J-1))$, the results for the p-values were identical. This was true for the following FOMs: `wAFROC`, with equal and unequal weights, and `MaxLLF`. The confidence intervals (again, excluding `FRRC`) were identical for `FOM` = `wAFROC`. Slight differences were observed for `FOM` = `MaxLLF`.  

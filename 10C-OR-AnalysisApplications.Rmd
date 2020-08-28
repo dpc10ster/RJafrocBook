@@ -359,7 +359,7 @@ print(ciDiffTrt_RRFC)
 
 ## Using RJafroc: dataset02 {#ORApplications-dataset02-RJafroc}
 
-The second example shows application of the `RJafroc` package function `StSignificanceTesting()` to `dataset02`. This function encapsulates all formulae discussed previously and accomplishes the analyses with a single function call. It returns an object, denoted `st1` below, that contains all results of the analysis. It is a `list` object with the following components:
+The second example shows application of the `RJafroc` package function `StSignificanceTesting()` to `dataset02`. This function encapsulates all formulae discussed previously and accomplishes the analyses with a single function call. It returns an object, denoted `st1` below, that contains all results of the analysis. It is a `list` with the following components:
 
 * `FOMs`, this in turn is a `list` containing the following data frames: 
     + `foms`, the individual treatment-reader figures of merit, i.e., $\theta_{i j}$, 
@@ -384,7 +384,7 @@ The second example shows application of the `RJafroc` package function `StSignif
     + `ciDiffTrtEachRdr`, the confidence intervals for inter-treatment FOM differences for individual readers, denoted $CI_{1-\alpha,FRRC,\theta_{ij} - \theta_{i'j}}$ in the previous chapter,
     + `IndividualRdrVarCov1`, the individual reader variance-covariances and means squares.
 
-* `RRFC`, which in turn is a `list` object containing the following data frames: 
+* `RRFC`, a `list` containing the following data frames: 
     + `FTests`, the results of the F-tests, which in this case specializes to chi-square tests,
     + `ciDiffTrt`, the confidence intervals for inter-treatment FOM differences, averaged over readers, denoted $CI_{1-\alpha,RRFC,\theta_{i \bullet} - \theta_{i' \bullet}}$ in the previous chapter,
     + `ciAvgRdrEachTrt`, the confidence intervals for indvidual treatment FOMs, averaged over readers, denoted $CI_{1-\alpha,RRFC,\theta_{i \bullet}}$ in the previous chapter.
@@ -403,22 +403,22 @@ The lower right `RStudio` panel contains the online description. Click on the sm
 * Since `analysisOption` is not explicitly specified in the following code, the function `StSignificanceTesting` performs all three analyses: `RRRC`, `FRRC` and `RRFC`.
 * Likewise, the significance level of the test, also an argument, `alpha`, defaults to 0.05. 
 * The code below applies `StSignificanceTesting()` and saves the returned object to `st1`. 
-* The first member of this object, a  `list` object named `FOMs`, is then displayed. 
+* The first member of this object, a  `list` named `FOMs`, is then displayed. 
 * `FOMs` contains three data frames: 
-+ `FOMS$foms`, the figures of merit for each treatment and reader, 
-+ `FOMS$trtMeans`, the figures of merit for each treatment averaged over readers, and 
-+ `FOMS$trtMeanDiffs`, the inter-treatment difference figures of merit averaged over readers. The difference is always the first treatment minus the second, etc., in this example, `trt0` minus `trt1`.
+    + `FOMS$foms`, the figures of merit for each treatment and reader, 
+    + `FOMS$trtMeans`, the figures of merit for each treatment averaged over readers, and 
+    + `FOMS$trtMeanDiffs`, the inter-treatment difference figures of merit averaged over readers. The difference is always the first treatment minus the second, etc., in this example, `trt0` minus `trt1`.
 
 ```{r}
 st1 <- StSignificanceTesting(dataset02, FOM = "Wilcoxon", method = "OR")
 print(st1$FOMs)
 ```
 
-* Displayed next are the variance components and mean-squares contained in the `ANOVA` `list` object. 
-* `ANOVA$TRanova` contains the treatment-reader ANOVA table, i.e. the sum of squares, the degrees of freedom and the mean-squares, for treatment, reader and treatment-reader factors, i.e., `T`, `R` and `TR`.
-* `ANOVA$VarCom` contains the OR variance components and the correlations.
-* `ANOVA$IndividualTrt` contains the quantities necessary for individual treatment analyses.
-* `ANOVA$IndividualRdr` contains the quantities necessary for individual reader analyses.
+* Displayed next are the variance components and mean-squares contained in the `ANOVA` `list`. 
+    * `ANOVA$TRanova` contains the treatment-reader ANOVA table, i.e. the sum of squares, the degrees of freedom and the mean-squares, for treatment, reader and treatment-reader factors, i.e., `T`, `R` and `TR`.
+    * `ANOVA$VarCom` contains the OR variance components and the correlations.
+    * `ANOVA$IndividualTrt` contains the quantities necessary for individual treatment analyses.
+    * `ANOVA$IndividualRdr` contains the quantities necessary for individual reader analyses.
 
 ```{r}
 print(st1$ANOVA)
@@ -574,7 +574,7 @@ print(st3)
 
 * `st3$RRRC$FTests` contains the results of the F-tests.
 * The p-value is much smaller than that obtained after converting to an ROC dataset. Specifically, for FROC analysis, the p-value is `r st3$RRRC$FTests["Treatment", "p"]` while that for ROC analysis is `r st2$RRRC$FTests["Treatment", "p"]`. The F-statistic and the `ddf` are both larger for FROC analysis, both of of which result in increased probability of rejecting the NH, i.e., FROC analysis has greater power than ROC analysis.
-* The increased power of FROC analysis has been confirmed in several simulation studies.
+* The increased power of FROC analysis has been confirmed in simulation studies [@RN1331].
 
 * `st3$RRRC$ciDiffTrt` contains the confidence intervals for the inter-treatment difference FOMs, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet} - \theta_{i' \bullet}}$.
 * With I = 5 treatments there are 10 distinct treatment-pairings. 
@@ -653,7 +653,7 @@ print(st4)
 
 ## Tentative, need to think over {#ToMullOver1-tentative}
 
-```{r}
+```{r eval = FALSE}
 ds1 <- dataset04 # do NOT convert to ROC
 # comment/uncomment following code to disable/enable unequal weights
 # K2 <- length(ds1$ratings$LL[1,1,,1])
