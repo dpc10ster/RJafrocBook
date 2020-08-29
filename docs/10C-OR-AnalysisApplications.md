@@ -55,10 +55,10 @@ The dataset consists of I = 2 treatments,  J = 5 readers and  K = 114 cases.
 
 ```r
 foms <- UtilFigureOfMerit(dataset02, FOM = "Wilcoxon")
-print(foms)
-#>           rdr0      rdr1      rdr2      rdr3      rdr4
-#> trt0 0.9196457 0.8587762 0.9038647 0.9731079 0.8297907
-#> trt1 0.9478261 0.9053140 0.9217391 0.9993559 0.9299517
+print(foms, digits = 4)
+#>        rdr0   rdr1   rdr2   rdr3   rdr4
+#> trt0 0.9196 0.8588 0.9039 0.9731 0.8298
+#> trt1 0.9478 0.9053 0.9217 0.9994 0.9300
 ```
 
 * For example, for the first treatment, `"trt0"`, the second reader `"rdr1"` figure of merit is 0.8587762.
@@ -70,34 +70,34 @@ print(foms)
 ```r
 vc <- UtilORVarComponentsFactorial(
   dataset02, FOM = "Wilcoxon", covEstMethod = "jackknife")
-print(vc)
+print(vc, digits = 4)
 #> $TRanova
-#>             SS DF           MS
-#> T  0.004796171  1 0.0047961705
-#> R  0.015344800  4 0.0038362000
-#> TR 0.002204122  4 0.0005510306
+#>          SS DF       MS
+#> T  0.004796  1 0.004796
+#> R  0.015345  4 0.003836
+#> TR 0.002204  4 0.000551
 #> 
 #> $VarCom
-#>          Estimates      Rhos
-#> VarR  0.0015349993        NA
-#> VarTR 0.0002004025        NA
-#> Cov1  0.0003466137 0.4320314
-#> Cov2  0.0003440748 0.4288668
-#> Cov3  0.0002390284 0.2979333
-#> Var   0.0008022883        NA
+#>       Estimates   Rhos
+#> VarR  0.0015350     NA
+#> VarTR 0.0002004     NA
+#> Cov1  0.0003466 0.4320
+#> Cov2  0.0003441 0.4289
+#> Cov3  0.0002390 0.2979
+#> Var   0.0008023     NA
 #> 
 #> $IndividualTrt
-#>      DF  msREachTrt   varEachTrt  cov2EachTrt
-#> trt0  4 0.003082629 0.0010141028 0.0004839618
-#> trt1  4 0.001304602 0.0005904738 0.0002041879
+#>      DF msREachTrt varEachTrt cov2EachTrt
+#> trt0  4   0.003083  0.0010141   0.0004840
+#> trt1  4   0.001305  0.0005905   0.0002042
 #> 
 #> $IndividualRdr
-#>      DF   msTEachRdr   varEachRdr  cov1EachRdr
-#> rdr0  1 0.0003970662 0.0006989006 3.734661e-04
-#> rdr1  1 0.0010828854 0.0011060528 7.601598e-04
-#> rdr2  1 0.0001597470 0.0008423434 3.553224e-04
-#> rdr3  1 0.0003444784 0.0001505777 1.083399e-06
-#> rdr4  1 0.0050161160 0.0012135668 2.430368e-04
+#>      DF msTEachRdr varEachRdr cov1EachRdr
+#> rdr0  1  0.0003971  0.0006989   3.735e-04
+#> rdr1  1  0.0010829  0.0011061   7.602e-04
+#> rdr2  1  0.0001597  0.0008423   3.553e-04
+#> rdr3  1  0.0003445  0.0001506   1.083e-06
+#> rdr4  1  0.0050161  0.0012136   2.430e-04
 ```
 
 * The next step is the calculate the NH testing statistic. 
@@ -116,8 +116,8 @@ den <- vc$TRanova["TR", "MS"] +
   J* max(vc$VarCom["Cov2", "Estimates"] - 
            vc$VarCom["Cov3", "Estimates"],0)
 F_ORH_RRRC <- vc$TRanova["T", "MS"]/den
-print(F_ORH_RRRC)
-#> [1] 4.456319
+print(F_ORH_RRRC, digits = 4)
+#> [1] 4.456
 ```
 
 * The F-statistic has numerator degrees of freedom $\text{ndf} = I - 1$ and denominator degrees of freedom, `ddf`, to be calculated next.
@@ -126,8 +126,8 @@ print(F_ORH_RRRC)
 
 ```r
 ddf <- den^2*(I-1)*(J-1)/(vc$TRanova["TR", "MS"])^2
-print(ddf)
-#> [1] 15.25967
+print(ddf, digits = 4)
+#> [1] 15.26
 ```
 
 * The next step is calculation of the p-value for rejecting the NH
@@ -136,8 +136,8 @@ print(ddf)
 
 ```r
 p <- 1 - pf(F_ORH_RRRC, I - 1, ddf)
-print(p)
-#> [1] 0.05166569
+print(p, digits = 4)
+#> [1] 0.05167
 ```
 
 * The difference is not significant at $\alpha$ = 0.05. 
@@ -149,12 +149,12 @@ print(p)
 trtMeans <- rowMeans(foms)
 trtMeanDiffs <- trtMeans[1] - trtMeans[2]
 names(trtMeanDiffs) <- "trt0-trt1"
-print(trtMeans)
-#>      trt0      trt1 
-#> 0.8970370 0.9408374
-print(trtMeanDiffs)
-#>   trt0-trt1 
-#> -0.04380032
+print(trtMeans, digits = 4)
+#>   trt0   trt1 
+#> 0.8970 0.9408
+print(trtMeanDiffs, digits = 4)
+#> trt0-trt1 
+#>   -0.0438
 ```
 
 * `trtMeans`contains the reader-averaged figures of merit for each treatment.
@@ -171,9 +171,9 @@ t_crit <- abs(qt(alpha/2, ddf))
 CI_RRRC <- c(trtMeanDiffs - t_crit*stdErr, 
              trtMeanDiffs + t_crit*stdErr)
 names(CI_RRRC) <- c("Lower", "Upper")
-print(CI_RRRC)
-#>         Lower         Upper 
-#> -0.0879594986  0.0003588544
+print(CI_RRRC, digits = 4)
+#>      Lower      Upper 
+#> -0.0879595  0.0003589
 ```
 
 The confidence interval includes zero, which confirms the F-statistic finding that the reader-averaged FOM difference between treatments is not significant. 
@@ -208,10 +208,10 @@ for (i in 1:I) {
                row.names = rowName,
                stringsAsFactors = FALSE))
 }
-print(CI_RRRC_IndvlTrt)
-#>       Estimate     StdErr      DFi   CILower   CIUpper        Cov2i
-#> trt0 0.8970370 0.03317360 12.74465 0.8252236 0.9688505 0.0004839618
-#> trt1 0.9408374 0.02156637 12.71019 0.8941378 0.9875369 0.0002041879
+print(CI_RRRC_IndvlTrt, digits = 4)
+#>      Estimate  StdErr   DFi CILower CIUpper     Cov2i
+#> trt0   0.8970 0.03317 12.74  0.8252  0.9689 0.0004840
+#> trt1   0.9408 0.02157 12.71  0.8941  0.9875 0.0002042
 ```
 
 
@@ -239,10 +239,10 @@ FTests <- data.frame(MS = c(vc$TRanova["T", "MS"], den_FRRC),
                      p = c(p,NA),
                      row.names = c("Treatment", "Error"),
                      stringsAsFactors = FALSE)
-print(FTests)
-#>                     MS    Chisq DF          p
-#> Treatment 0.0047961705 5.475953  1 0.01927984
-#> Error     0.0008758604       NA NA         NA
+print(FTests, digits = 4)
+#>                  MS Chisq DF       p
+#> Treatment 0.0047962 5.476  1 0.01928
+#> Error     0.0008759    NA NA      NA
 ```
 
 * Since p < 0.05, one has a significant finding. 
@@ -271,9 +271,9 @@ ciDiffTrtFRRC <- data.frame(Estimate = trtMeanDiffs,
                             CIUpper = CI[,2], 
                             row.names = diffTRName,
                             stringsAsFactors = FALSE)
-print(ciDiffTrtFRRC)
-#>              Estimate     StdErr         z      PrGTz     CILower     CIUpper
-#> trt0-trt1 -0.04380032 0.01871748 -2.340075 0.01927984 -0.08048591 -0.00711473
+print(ciDiffTrtFRRC, digits = 4)
+#>           Estimate  StdErr     z   PrGTz  CILower   CIUpper
+#> trt0-trt1  -0.0438 0.01872 -2.34 0.01928 -0.08049 -0.007115
 ```
 
 * Consistent with the chi-square statistic significant finding, one finds that the treatment difference confidence interval does not include zero.
@@ -304,10 +304,10 @@ for (i in 1:I) {
                      row.names = rowName,
                      stringsAsFactors = FALSE))
 }
-print(ciAvgRdrEachTrt)
-#>       Estimate     StdErr  DF   CILower   CIUpper
-#> trt0 0.8970370 0.02428971 113 0.8494301 0.9446440
-#> trt1 0.9408374 0.01677632 113 0.9079564 0.9737183
+print(ciAvgRdrEachTrt, digits = 4)
+#>      Estimate  StdErr  DF CILower CIUpper
+#> trt0   0.8970 0.02429 113  0.8494  0.9446
+#> trt1   0.9408 0.01678 113  0.9080  0.9737
 ```
 * Finally, one calculates confidence intervals for the FOM differences for individual readers, i.e., $CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}}$. 
 * The relevant formula is in Eqn. \@ref(eq:CIIndRdrDiffFomFRRC-OR), whose implementation follows:
@@ -359,19 +359,13 @@ for (j in 1:J) {
     }
   }
 }
-print(ciDiffTrtEachRdr)
-#>                    Estimate     StdErr          z      PrGTz     CILower
-#> rdr0::trt0-trt1 -0.02818035 0.02551213 -1.1045864 0.26933885 -0.07818322
-#> rdr1::trt0-trt1 -0.04653784 0.02630183 -1.7693768 0.07683102 -0.09808848
-#> rdr2::trt0-trt1 -0.01787440 0.03120965 -0.5727202 0.56683414 -0.07904418
-#> rdr3::trt0-trt1 -0.02624799 0.01729129 -1.5179891 0.12901715 -0.06013829
-#> rdr4::trt0-trt1 -0.10016103 0.04405746 -2.2734182 0.02300099 -0.18651207
-#>                      CIUpper
-#> rdr0::trt0-trt1  0.021822507
-#> rdr1::trt0-trt1  0.005012792
-#> rdr2::trt0-trt1  0.043295388
-#> rdr3::trt0-trt1  0.007642316
-#> rdr4::trt0-trt1 -0.013809995
+print(ciDiffTrtEachRdr, digits = 3)
+#>                 Estimate StdErr      z  PrGTz CILower  CIUpper
+#> rdr0::trt0-trt1  -0.0282 0.0255 -1.105 0.2693 -0.0782  0.02182
+#> rdr1::trt0-trt1  -0.0465 0.0263 -1.769 0.0768 -0.0981  0.00501
+#> rdr2::trt0-trt1  -0.0179 0.0312 -0.573 0.5668 -0.0790  0.04330
+#> rdr3::trt0-trt1  -0.0262 0.0173 -1.518 0.1290 -0.0601  0.00764
+#> rdr4::trt0-trt1  -0.1002 0.0441 -2.273 0.0230 -0.1865 -0.01381
 ```
 
 The notation in the first column shows the reader and the treatment pairing. For example, `rdr1::trt0-trt1` means the FOM difference for reader `rdr1`. Only the fifth reader, i.e., `rdr4`, shows a significant difference between the treatments: the p-value is 0.023001 and the confidence interval also does not include zero. The large FOM difference for this reader, -0.100161, was enough to result in a significant finding for FRRC analysis. The FOM differences for the other readers are about a factor of 2.1522491 or more smaller than that for this reader.
@@ -391,10 +385,10 @@ FTests_RRFC <-
              F = c(f,NA),  p = c(p,NA), 
              row.names = c("T","TR"), 
              stringsAsFactors = FALSE)
-print(FTests_RRFC)
-#>    DF           MS     F          p
-#> T   1 0.0047961705 8.704 0.04195875
-#> TR  4 0.0005510306    NA         NA
+print(FTests_RRFC, digits = 4)
+#>    DF       MS     F       p
+#> T   1 0.004796 8.704 0.04196
+#> TR  4 0.000551    NA      NA
 ```
 
 Freezing case variability also results in a significant finding, but the conclusion is only applicable to the specific case set used in the study. Next one calculates confidence intervals for the reader-averaged FOM differences, the relevant formula is in Eqn. \@ref(eq:CIDiffFomRRFC), whose implementation follows.
@@ -423,11 +417,9 @@ ciDiffTrt_RRFC <-
              row.names = diffTRName, 
              stringsAsFactors = FALSE)
 
-print(ciDiffTrt_RRFC)
-#>              Estimate     StdErr DF         t      PrGTt     CILower
-#> trt0-trt1 -0.04380032 0.01484629  4 -2.950254 0.04195875 -0.08502022
-#>               CIUpper
-#> trt0-trt1 -0.00258042
+print(ciDiffTrt_RRFC, digits = 4)
+#>           Estimate  StdErr DF     t   PrGTt  CILower  CIUpper
+#> trt0-trt1  -0.0438 0.01485  4 -2.95 0.04196 -0.08502 -0.00258
 ```
 * As expected because the overall F-test showed significance, the confidence interval does not include zero (the p-value is identical to that found by the F-test). 
 * This completes the hand calculations.
@@ -488,20 +480,20 @@ The lower right `RStudio` panel contains the online description. Click on the sm
 
 ```r
 st1 <- StSignificanceTesting(dataset02, FOM = "Wilcoxon", method = "OR")
-print(st1$FOMs)
+print(st1$FOMs, digits = 4)
 #> $foms
-#>            rdr0       rdr1       rdr2       rdr3       rdr4
-#> trt0 0.91964573 0.85877617 0.90386473 0.97310789 0.82979066
-#> trt1 0.94782609 0.90531401 0.92173913 0.99935588 0.92995169
+#>        rdr0   rdr1   rdr2   rdr3   rdr4
+#> trt0 0.9196 0.8588 0.9039 0.9731 0.8298
+#> trt1 0.9478 0.9053 0.9217 0.9994 0.9300
 #> 
 #> $trtMeans
-#>        Estimate
-#> trt0 0.89703704
-#> trt1 0.94083736
+#>      Estimate
+#> trt0   0.8970
+#> trt1   0.9408
 #> 
 #> $trtMeanDiffs
-#>               Estimate
-#> trt0-trt1 -0.043800322
+#>           Estimate
+#> trt0-trt1  -0.0438
 ```
 
 * Displayed next are the variance components and mean-squares contained in the `ANOVA` `list`. 
@@ -512,44 +504,44 @@ print(st1$FOMs)
 
 
 ```r
-print(st1$ANOVA)
+print(st1$ANOVA, digits = 4)
 #> $TRanova
-#>              SS DF            MS
-#> T  0.0047961705  1 0.00479617053
-#> R  0.0153448000  4 0.00383619999
-#> TR 0.0022041225  4 0.00055103062
+#>          SS DF       MS
+#> T  0.004796  1 0.004796
+#> R  0.015345  4 0.003836
+#> TR 0.002204  4 0.000551
 #> 
 #> $VarCom
-#>           Estimates       Rhos
-#> VarR  0.00153499935         NA
-#> VarTR 0.00020040252         NA
-#> Cov1  0.00034661371 0.43203138
-#> Cov2  0.00034407483 0.42886683
-#> Cov3  0.00023902837 0.29793328
-#> Var   0.00080228827         NA
+#>       Estimates   Rhos
+#> VarR  0.0015350     NA
+#> VarTR 0.0002004     NA
+#> Cov1  0.0003466 0.4320
+#> Cov2  0.0003441 0.4289
+#> Cov3  0.0002390 0.2979
+#> Var   0.0008023     NA
 #> 
 #> $IndividualTrt
-#>      DF   msREachTrt    varEachTrt   cov2EachTrt
-#> trt0  4 0.0030826287 0.00101410277 0.00048396180
-#> trt1  4 0.0013046019 0.00059047376 0.00020418785
+#>      DF msREachTrt varEachTrt cov2EachTrt
+#> trt0  4   0.003083  0.0010141   0.0004840
+#> trt1  4   0.001305  0.0005905   0.0002042
 #> 
 #> $IndividualRdr
-#>      DF    msTEachRdr    varEachRdr   cov1EachRdr
-#> rdr0  1 0.00039706618 0.00069890056 3.7346610e-04
-#> rdr1  1 0.00108288538 0.00110605283 7.6015978e-04
-#> rdr2  1 0.00015974702 0.00084234345 3.5532241e-04
-#> rdr3  1 0.00034447841 0.00015057773 1.0833995e-06
-#> rdr4  1 0.00501611603 0.00121356676 2.4303685e-04
+#>      DF msTEachRdr varEachRdr cov1EachRdr
+#> rdr0  1  0.0003971  0.0006989   3.735e-04
+#> rdr1  1  0.0010829  0.0011061   7.602e-04
+#> rdr2  1  0.0001597  0.0008423   3.553e-04
+#> rdr3  1  0.0003445  0.0001506   1.083e-06
+#> rdr4  1  0.0050161  0.0012136   2.430e-04
 ```
 
 * Displayed next are the results of the RRRC significance test, contained in `st1$RRRC`.
 
 
 ```r
-print(st1$RRRC$FTests)
-#>                  DF           MS     FStat           p
-#> Treatment  1.000000 0.0047961705 4.4563187 0.051665686
-#> Error     15.259675 0.0010762629        NA          NA
+print(st1$RRRC$FTests, digits = 4)
+#>              DF       MS FStat       p
+#> Treatment  1.00 0.004796 4.456 0.05167
+#> Error     15.26 0.001076    NA      NA
 ```
 
 * `st1$RRRC$FTests` contains the results of the F-tests: the degrees of freedom, the mean-squares, the observed value of the F-statistic and the p-value for rejecting the NH, listed separately, where applicable, for the treatment and error terms. 
@@ -557,19 +549,19 @@ print(st1$RRRC$FTests)
 
 
 ```r
-print(st1$RRRC$ciDiffTrt[,-c(2:5)])
-#>               Estimate      CILower       CIUpper
-#> trt0-trt1 -0.043800322 -0.087959499 0.00035885444
+print(st1$RRRC$ciDiffTrt, digits = 3)
+#>           Estimate StdErr   DF     t  PrGTt CILower  CIUpper
+#> trt0-trt1  -0.0438 0.0207 15.3 -2.11 0.0517  -0.088 0.000359
 ```
 
 * `st1$RRRC$ciDiffTrt` contains the results of the confidence intervals for the inter-treatment difference FOMs, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet} - \theta_{i' \bullet}}$.
 
 
 ```r
-print(st1$RRRC$ciAvgRdrEachTrt)
-#>        Estimate      StdErr        DF    CILower    CIUpper          Cov2
-#> trt0 0.89703704 0.033173597 12.744648 0.82522360 0.96885048 0.00048396180
-#> trt1 0.94083736 0.021566368 12.710190 0.89413783 0.98753689 0.00020418785
+print(st1$RRRC$ciAvgRdrEachTrt, digits = 4)
+#>      Estimate  StdErr    DF CILower CIUpper      Cov2
+#> trt0   0.8970 0.03317 12.74  0.8252  0.9689 0.0004840
+#> trt1   0.9408 0.02157 12.71  0.8941  0.9875 0.0002042
 ```
 
 * `st1$RRRC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet}}$.
@@ -582,10 +574,10 @@ print(st1$RRRC$ciAvgRdrEachTrt)
 
 
 ```r
-print(st1$FRRC$FTests)
-#>                      MS     Chisq DF           p
-#> Treatment 0.00479617053 5.4759532  1 0.019279843
-#> Error     0.00087586039        NA NA          NA
+print(st1$FRRC$FTests, digits = 4)
+#>                  MS Chisq DF       p
+#> Treatment 0.0047962 5.476  1 0.01928
+#> Error     0.0008759    NA NA      NA
 ```
 
 * Note that this time the output lists a chi-square distribution observed value, 5.47595324, with degree of freedom $df = I -1 = 1$.
@@ -594,11 +586,9 @@ print(st1$FRRC$FTests)
 
 
 ```r
-print(st1$FRRC$ciDiffTrt)
-#>               Estimate      StdErr          z       PrGTz      CILower
-#> trt0-trt1 -0.043800322 0.018717483 -2.3400755 0.019279843 -0.080485914
-#>                 CIUpper
-#> trt0-trt1 -0.0071147303
+print(st1$FRRC$ciDiffTrt, digits = 4)
+#>           Estimate  StdErr     z   PrGTz  CILower   CIUpper
+#> trt0-trt1  -0.0438 0.01872 -2.34 0.01928 -0.08049 -0.007115
 ```
 
 * `st1$FRRC$ciDiffTrt` contains confidence intervals for inter-treatment difference FOMs, averaged over readers, i.e., $CI_{1-\alpha,FRRC,\theta_{i \bullet} - \theta_{i' \bullet}}$.
@@ -607,10 +597,10 @@ print(st1$FRRC$ciDiffTrt)
 
 
 ```r
-print(st1$FRRC$ciAvgRdrEachTrt)
-#>        Estimate      StdErr  DF    CILower    CIUpper
-#> trt0 0.89703704 0.024289710 113 0.84943008 0.94464399
-#> trt1 0.94083736 0.016776324 113 0.90795637 0.97371835
+print(st1$FRRC$ciAvgRdrEachTrt, digits = 4)
+#>      Estimate  StdErr  DF CILower CIUpper
+#> trt0   0.8970 0.02429 113  0.8494  0.9446
+#> trt1   0.9408 0.01678 113  0.9080  0.9737
 ```
 
 * `st1$FRRC$st1$FRRC$ciAvgRdrEachTrt` contains confidence intervals for individual treatment FOMs, averaged over readers, i.e., $CI_{1-\alpha,FRRC,\theta_{i \bullet}}$.
@@ -618,19 +608,13 @@ print(st1$FRRC$ciAvgRdrEachTrt)
 
 
 ```r
-print(st1$FRRC$ciDiffTrtEachRdr)
-#>                     Estimate      StdErr           z       PrGTz      CILower
-#> rdr0::trt0-trt1 -0.028180354 0.025512133 -1.10458638 0.269338854 -0.078183215
-#> rdr1::trt0-trt1 -0.046537842 0.026301827 -1.76937679 0.076831017 -0.098088476
-#> rdr2::trt0-trt1 -0.017874396 0.031209647 -0.57272023 0.566834139 -0.079044180
-#> rdr3::trt0-trt1 -0.026247987 0.017291289 -1.51798907 0.129017153 -0.060138290
-#> rdr4::trt0-trt1 -0.100161031 0.044057460 -2.27341816 0.023000993 -0.186512066
-#>                       CIUpper
-#> rdr0::trt0-trt1  0.0218225068
-#> rdr1::trt0-trt1  0.0050127916
-#> rdr2::trt0-trt1  0.0432953879
-#> rdr3::trt0-trt1  0.0076423157
-#> rdr4::trt0-trt1 -0.0138099949
+print(st1$FRRC$ciDiffTrtEachRdr, digits = 3)
+#>                 Estimate StdErr      z  PrGTz CILower  CIUpper
+#> rdr0::trt0-trt1  -0.0282 0.0255 -1.105 0.2693 -0.0782  0.02182
+#> rdr1::trt0-trt1  -0.0465 0.0263 -1.769 0.0768 -0.0981  0.00501
+#> rdr2::trt0-trt1  -0.0179 0.0312 -0.573 0.5668 -0.0790  0.04330
+#> rdr3::trt0-trt1  -0.0262 0.0173 -1.518 0.1290 -0.0601  0.00764
+#> rdr4::trt0-trt1  -0.1002 0.0441 -2.273 0.0230 -0.1865 -0.01381
 ```
 
 * `st1$FRRC$st1$FRRC$ciDiffTrtEachRdr` contains confidence intervals for inter-treatment difference FOMs, for each reader, i.e., $CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}}$.
@@ -639,10 +623,10 @@ print(st1$FRRC$ciDiffTrtEachRdr)
 
 
 ```r
-print(st1$RRFC$FTests)
-#>    DF            MS     F           p
-#> T   1 0.00479617053 8.704 0.041958752
-#> TR  4 0.00055103062    NA          NA
+print(st1$RRFC$FTests, digits = 4)
+#>    DF       MS     F       p
+#> T   1 0.004796 8.704 0.04196
+#> TR  4 0.000551    NA      NA
 ```
 
 * `st1$RRFC$FTests` contains results of the F-test: the degrees of freedom, the mean-squares, the observed value of the F-statistic and the p-value for rejecting the NH, listed separately, where applicable, for the treatment and treatment-reader terms. The latter is also termed the "error term". 
@@ -650,11 +634,9 @@ print(st1$RRFC$FTests)
 
 
 ```r
-print(st1$RRFC$ciDiffTrt)
-#>               Estimate      StdErr DF          t       PrGTt      CILower
-#> trt0-trt1 -0.043800322 0.014846287  4 -2.9502542 0.041958752 -0.085020224
-#>                 CIUpper
-#> trt0-trt1 -0.0025804202
+print(st1$RRFC$ciDiffTrt, digits = 4)
+#>           Estimate  StdErr DF     t   PrGTt  CILower  CIUpper
+#> trt0-trt1  -0.0438 0.01485  4 -2.95 0.04196 -0.08502 -0.00258
 ```
 
 * `st1$RRFC$ciDiffTrt` contains confidence intervals for the inter-treatment paired difference FOMs, averaged over readers, i.e., $CI_{1-\alpha,RRFC,\theta_{i \bullet} - \theta_{i' \bullet}}$.
@@ -662,10 +644,10 @@ print(st1$RRFC$ciDiffTrt)
 
 
 ```r
-print(st1$RRFC$ciAvgRdrEachTrt)
-#>        Estimate      StdErr DF    CILower    CIUpper
-#> Trt0 0.89703704 0.024829936  4 0.82809808 0.96597599
-#> Trt1 0.94083736 0.016153030  4 0.89598936 0.98568536
+print(st1$RRFC$ciAvgRdrEachTrt, digits = 4)
+#>      Estimate  StdErr DF CILower CIUpper
+#> Trt0   0.8970 0.02483  4  0.8281  0.9660
+#> Trt1   0.9408 0.01615  4  0.8960  0.9857
 ```
 
 * `st1$RRFC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRFC,\theta_{i \bullet}}$.
@@ -686,276 +668,202 @@ J <- length(ds$ratings$NL[1,,1,1])
 cat("I = ", I, ", J = ", J, "\n")
 #> I =  5 , J =  4
 st2 <- StSignificanceTesting(ds, FOM = "Wilcoxon", method = "OR")
-print(st2)
+print(st2, digits = 3)
 #> $FOMs
 #> $FOMs$foms
-#>         rdr1    rdr2    rdr3    rdr4
-#> trt1 0.90425 0.79820 0.81175 0.86645
-#> trt2 0.86425 0.84470 0.82050 0.87160
-#> trt3 0.81295 0.81635 0.75275 0.85730
-#> trt4 0.90235 0.83150 0.78865 0.87980
-#> trt5 0.84140 0.77300 0.77115 0.84800
+#>       rdr1  rdr2  rdr3  rdr4
+#> trt1 0.904 0.798 0.812 0.866
+#> trt2 0.864 0.845 0.821 0.872
+#> trt3 0.813 0.816 0.753 0.857
+#> trt4 0.902 0.832 0.789 0.880
+#> trt5 0.841 0.773 0.771 0.848
 #> 
 #> $FOMs$trtMeans
-#>       Estimate
-#> trt1 0.8451625
-#> trt2 0.8502625
-#> trt3 0.8098375
-#> trt4 0.8505750
-#> trt5 0.8083875
+#>      Estimate
+#> trt1    0.845
+#> trt2    0.850
+#> trt3    0.810
+#> trt4    0.851
+#> trt5    0.808
 #> 
 #> $FOMs$trtMeanDiffs
-#>             Estimate
-#> trt1-trt2 -0.0051000
-#> trt1-trt3  0.0353250
-#> trt1-trt4 -0.0054125
-#> trt1-trt5  0.0367750
-#> trt2-trt3  0.0404250
-#> trt2-trt4 -0.0003125
-#> trt2-trt5  0.0418750
-#> trt3-trt4 -0.0407375
-#> trt3-trt5  0.0014500
-#> trt4-trt5  0.0421875
+#>            Estimate
+#> trt1-trt2 -0.005100
+#> trt1-trt3  0.035325
+#> trt1-trt4 -0.005412
+#> trt1-trt5  0.036775
+#> trt2-trt3  0.040425
+#> trt2-trt4 -0.000312
+#> trt2-trt5  0.041875
+#> trt3-trt4 -0.040737
+#> trt3-trt5  0.001450
+#> trt4-trt5  0.042187
 #> 
 #> 
 #> $ANOVA
 #> $ANOVA$TRanova
-#>              SS DF            MS
-#> T  0.0075878295  4 0.00189695737
-#> R  0.0218825325  3 0.00729417750
-#> TR 0.0055464825 12 0.00046220687
+#>         SS DF       MS
+#> T  0.00759  4 0.001897
+#> R  0.02188  3 0.007294
+#> TR 0.00555 12 0.000462
 #> 
 #> $ANOVA$VarCom
-#>            Estimates       Rhos
-#> VarR   1.2837211e-03         NA
-#> VarTR -1.0925227e-05         NA
-#> Cov1   2.9480096e-04 0.37358228
-#> Cov2   2.3331406e-04 0.29566389
-#> Cov3   2.1212789e-04 0.26881601
-#> Var    7.8911924e-04         NA
+#>       Estimates  Rhos
+#> VarR   1.28e-03    NA
+#> VarTR -1.09e-05    NA
+#> Cov1   2.95e-04 0.374
+#> Cov2   2.33e-04 0.296
+#> Cov3   2.12e-04 0.269
+#> Var    7.89e-04    NA
 #> 
 #> $ANOVA$IndividualTrt
-#>      DF    msREachTrt    varEachTrt   cov2EachTrt
-#> trt1  3 0.00242212063 0.00071052519 0.00021118589
-#> trt2  3 0.00052256229 0.00075105717 0.00026649085
-#> trt3  3 0.00185459062 0.00087586914 0.00024646233
-#> trt4  3 0.00257777083 0.00072651505 0.00022042897
-#> trt5  3 0.00176596062 0.00088162963 0.00022200226
+#>      DF msREachTrt varEachTrt cov2EachTrt
+#> trt1  3   0.002422   0.000711    0.000211
+#> trt2  3   0.000523   0.000751    0.000266
+#> trt3  3   0.001855   0.000876    0.000246
+#> trt4  3   0.002578   0.000727    0.000220
+#> trt5  3   0.001766   0.000882    0.000222
 #> 
 #> $ANOVA$IndividualRdr
-#>      DF   msTEachRdr    varEachRdr   cov1EachRdr
-#> rdr1  4 0.0015505755 0.00068948369 0.00021527296
-#> rdr2  4 0.0007942725 0.00082356314 0.00034557909
-#> rdr3  4 0.0007856530 0.00100854171 0.00035359299
-#> rdr4  4 0.0001530770 0.00063488840 0.00026475880
+#>      DF msTEachRdr varEachRdr cov1EachRdr
+#> rdr1  4   0.001551   0.000689    0.000215
+#> rdr2  4   0.000794   0.000824    0.000346
+#> rdr3  4   0.000786   0.001009    0.000354
+#> rdr4  4   0.000153   0.000635    0.000265
 #> 
 #> 
 #> $RRRC
 #> $RRRC$FTests
-#>                  DF            MS     FStat           p
-#> Treatment  4.000000 0.00189695737 3.4682364 0.030544556
-#> Error     16.803749 0.00054695157        NA          NA
+#>             DF       MS FStat      p
+#> Treatment  4.0 0.001897  3.47 0.0305
+#> Error     16.8 0.000547    NA     NA
 #> 
 #> $RRRC$ciDiffTrt
-#>             Estimate      StdErr        DF            t       PrGTt
-#> trt1-trt2 -0.0051000 0.016537103 16.803749 -0.308397420 0.761570284
-#> trt1-trt3  0.0353250 0.016537103 16.803749  2.136105659 0.047689094
-#> trt1-trt4 -0.0054125 0.016537103 16.803749 -0.327294321 0.747487331
-#> trt1-trt5  0.0367750 0.016537103 16.803749  2.223787278 0.040173758
-#> trt2-trt3  0.0404250 0.016537103 16.803749  2.444503079 0.025841064
-#> trt2-trt4 -0.0003125 0.016537103 16.803749 -0.018896901 0.985145919
-#> trt2-trt5  0.0418750 0.016537103 16.803749  2.532184698 0.021613616
-#> trt3-trt4 -0.0407375 0.016537103 16.803749 -2.463399980 0.024868769
-#> trt3-trt5  0.0014500 0.016537103 16.803749  0.087681619 0.931166167
-#> trt4-trt5  0.0421875 0.016537103 16.803749  2.551081599 0.020792673
-#>                  CILower       CIUpper
-#> trt1-trt2 -0.04002130451  0.0298213045
-#> trt1-trt3  0.00040369549  0.0702463045
-#> trt1-trt4 -0.04033380451  0.0295088045
-#> trt1-trt5  0.00185369549  0.0716963045
-#> trt2-trt3  0.00550369549  0.0753463045
-#> trt2-trt4 -0.03523380451  0.0346088045
-#> trt2-trt5  0.00695369549  0.0767963045
-#> trt3-trt4 -0.07565880451 -0.0058161955
-#> trt3-trt5 -0.03347130451  0.0363713045
-#> trt4-trt5  0.00726619549  0.0771088045
+#>            Estimate StdErr   DF       t  PrGTt   CILower  CIUpper
+#> trt1-trt2 -0.005100 0.0165 16.8 -0.3084 0.7616 -0.040021  0.02982
+#> trt1-trt3  0.035325 0.0165 16.8  2.1361 0.0477  0.000404  0.07025
+#> trt1-trt4 -0.005412 0.0165 16.8 -0.3273 0.7475 -0.040334  0.02951
+#> trt1-trt5  0.036775 0.0165 16.8  2.2238 0.0402  0.001854  0.07170
+#> trt2-trt3  0.040425 0.0165 16.8  2.4445 0.0258  0.005504  0.07535
+#> trt2-trt4 -0.000312 0.0165 16.8 -0.0189 0.9851 -0.035234  0.03461
+#> trt2-trt5  0.041875 0.0165 16.8  2.5322 0.0216  0.006954  0.07680
+#> trt3-trt4 -0.040737 0.0165 16.8 -2.4634 0.0249 -0.075659 -0.00582
+#> trt3-trt5  0.001450 0.0165 16.8  0.0877 0.9312 -0.033471  0.03637
+#> trt4-trt5  0.042187 0.0165 16.8  2.5511 0.0208  0.007266  0.07711
 #> 
 #> $RRRC$ciAvgRdrEachTrt
-#>       Estimate      StdErr         DF    CILower    CIUpper          Cov2
-#> trt1 0.8451625 0.028578244  5.4574766 0.77351391 0.91681109 0.00021118589
-#> trt2 0.8502625 0.019928157 27.7225775 0.80942311 0.89110189 0.00026649085
-#> trt3 0.8098375 0.026647889  7.0371428 0.74689261 0.87278239 0.00024646233
-#> trt4 0.8505750 0.029408701  5.4032614 0.77664342 0.92450658 0.00022042897
-#> trt5 0.8083875 0.025758346  6.7756525 0.74706746 0.86970754 0.00022200226
+#>      Estimate StdErr    DF CILower CIUpper     Cov2
+#> trt1    0.845 0.0286  5.46   0.774   0.917 0.000211
+#> trt2    0.850 0.0199 27.72   0.809   0.891 0.000266
+#> trt3    0.810 0.0266  7.04   0.747   0.873 0.000246
+#> trt4    0.851 0.0294  5.40   0.777   0.925 0.000220
+#> trt5    0.808 0.0258  6.78   0.747   0.870 0.000222
 #> 
 #> 
 #> $FRRC
 #> $FRRC$FTests
-#>                     MS     Chisq DF            p
-#> Treatment 0.0018969574 13.601264  4 0.0086826618
-#> Error     0.0005578768        NA NA           NA
+#>                 MS Chisq DF       p
+#> Treatment 0.001897  13.6  4 0.00868
+#> Error     0.000558    NA NA      NA
 #> 
 #> $FRRC$ciDiffTrt
-#>             Estimate      StdErr            z       PrGTz       CILower
-#> trt1-trt2 -0.0051000 0.016701449 -0.305362726 0.760089908 -0.0378342386
-#> trt1-trt3  0.0353250 0.016701449  2.115085938 0.034422624  0.0025907614
-#> trt1-trt4 -0.0054125 0.016701449 -0.324073677 0.745882255 -0.0381467386
-#> trt1-trt5  0.0367750 0.016701449  2.201904752 0.027672037  0.0040407614
-#> trt2-trt3  0.0404250 0.016701449  2.420448663 0.015501368  0.0076907614
-#> trt2-trt4 -0.0003125 0.016701449 -0.018710951 0.985071692 -0.0330467386
-#> trt2-trt5  0.0418750 0.016701449  2.507267477 0.012166860  0.0091407614
-#> trt3-trt4 -0.0407375 0.016701449 -2.439159615 0.014721464 -0.0734717386
-#> trt3-trt5  0.0014500 0.016701449  0.086818814 0.930815533 -0.0312842386
-#> trt4-trt5  0.0421875 0.016701449  2.525978429 0.011537657  0.0094532614
-#>                 CIUpper
-#> trt1-trt2  0.0276342386
-#> trt1-trt3  0.0680592386
-#> trt1-trt4  0.0273217386
-#> trt1-trt5  0.0695092386
-#> trt2-trt3  0.0731592386
-#> trt2-trt4  0.0324217386
-#> trt2-trt5  0.0746092386
-#> trt3-trt4 -0.0080032614
-#> trt3-trt5  0.0341842386
-#> trt4-trt5  0.0749217386
+#>            Estimate StdErr       z  PrGTz  CILower CIUpper
+#> trt1-trt2 -0.005100 0.0167 -0.3054 0.7601 -0.03783  0.0276
+#> trt1-trt3  0.035325 0.0167  2.1151 0.0344  0.00259  0.0681
+#> trt1-trt4 -0.005412 0.0167 -0.3241 0.7459 -0.03815  0.0273
+#> trt1-trt5  0.036775 0.0167  2.2019 0.0277  0.00404  0.0695
+#> trt2-trt3  0.040425 0.0167  2.4204 0.0155  0.00769  0.0732
+#> trt2-trt4 -0.000312 0.0167 -0.0187 0.9851 -0.03305  0.0324
+#> trt2-trt5  0.041875 0.0167  2.5073 0.0122  0.00914  0.0746
+#> trt3-trt4 -0.040737 0.0167 -2.4392 0.0147 -0.07347 -0.0080
+#> trt3-trt5  0.001450 0.0167  0.0868 0.9308 -0.03128  0.0342
+#> trt4-trt5  0.042187 0.0167  2.5260 0.0115  0.00945  0.0749
 #> 
 #> $FRRC$ciAvgRdrEachTrt
-#>       Estimate      StdErr  DF    CILower    CIUpper
-#> trt1 0.8451625 0.018330868 199 0.80923466 0.88109034
-#> trt2 0.8502625 0.019688383 199 0.81167398 0.88885102
-#> trt3 0.8098375 0.020095125 199 0.77045178 0.84922322
-#> trt4 0.8505750 0.018626607 199 0.81406752 0.88708248
-#> trt5 0.8083875 0.019670005 199 0.76983500 0.84694000
+#>      Estimate StdErr  DF CILower CIUpper
+#> trt1    0.845 0.0183 199   0.809   0.881
+#> trt2    0.850 0.0197 199   0.812   0.889
+#> trt3    0.810 0.0201 199   0.770   0.849
+#> trt4    0.851 0.0186 199   0.814   0.887
+#> trt5    0.808 0.0197 199   0.770   0.847
 #> 
 #> $FRRC$ciDiffTrtEachRdr
-#>                 Estimate      StdErr            z        PrGTz       CILower
-#> rdr1::trt1-trt2  0.04000 0.030796452  1.298850908 0.1939950999 -0.0203599373
-#> rdr1::trt1-trt3  0.09130 0.030796452  2.964627198 0.0030304993  0.0309400627
-#> rdr1::trt1-trt4  0.00190 0.030796452  0.061695418 0.9508053888 -0.0584599373
-#> rdr1::trt1-trt5  0.06285 0.030796452  2.040819490 0.0412687726  0.0024900627
-#> rdr1::trt2-trt3  0.05130 0.030796452  1.665776290 0.0957579803 -0.0090599373
-#> rdr1::trt2-trt4 -0.03810 0.030796452 -1.237155490 0.2160293623 -0.0984599373
-#> rdr1::trt2-trt5  0.02285 0.030796452  0.741968581 0.4581063718 -0.0375099373
-#> rdr1::trt3-trt4 -0.08940 0.030796452 -2.902931780 0.0036968716 -0.1497599373
-#> rdr1::trt3-trt5 -0.02845 0.030796452 -0.923807708 0.3555864411 -0.0888099373
-#> rdr1::trt4-trt5  0.06095 0.030796452  1.979124071 0.0478020389  0.0005900627
-#> rdr2::trt1-trt2 -0.04650 0.030918734 -1.503942569 0.1325961549 -0.1070996048
-#> rdr2::trt1-trt3 -0.01815 0.030918734 -0.587022745 0.5571884312 -0.0787496048
-#> rdr2::trt1-trt4 -0.03330 0.030918734 -1.077016936 0.2814726994 -0.0938996048
-#> rdr2::trt1-trt5  0.02520 0.030918734  0.815039844 0.4150495035 -0.0353996048
-#> rdr2::trt2-trt3  0.02835 0.030918734  0.916919824 0.3591846549 -0.0322496048
-#> rdr2::trt2-trt4  0.01320 0.030918734  0.426925632 0.6694334951 -0.0473996048
-#> rdr2::trt2-trt5  0.07170 0.030918734  2.318982413 0.0203959900  0.0111003952
-#> rdr2::trt3-trt4 -0.01515 0.030918734 -0.489994192 0.6241380088 -0.0757496048
-#> rdr2::trt3-trt5  0.04335 0.030918734  1.402062588 0.1608965575 -0.0172496048
-#> rdr2::trt4-trt5  0.05850 0.030918734  1.892056780 0.0584834160 -0.0020996048
-#> rdr3::trt1-trt2 -0.00875 0.036192505 -0.241762762 0.8089639949 -0.0796860066
-#> rdr3::trt1-trt3  0.05900 0.036192505  1.630171765 0.1030651996 -0.0119360066
-#> rdr3::trt1-trt4  0.02310 0.036192505  0.638253691 0.5233085518 -0.0478360066
-#> rdr3::trt1-trt5  0.04060 0.036192505  1.121779214 0.2619563260 -0.0303360066
-#> rdr3::trt2-trt3  0.06775 0.036192505  1.871934526 0.0612156622 -0.0031860066
-#> rdr3::trt2-trt4  0.03185 0.036192505  0.880016453 0.3788503968 -0.0390860066
-#> rdr3::trt2-trt5  0.04935 0.036192505  1.363541976 0.1727117647 -0.0215860066
-#> rdr3::trt3-trt4 -0.03590 0.036192505 -0.991918074 0.3212374917 -0.1068360066
-#> rdr3::trt3-trt5 -0.01840 0.036192505 -0.508392550 0.6111780762 -0.0893360066
-#> rdr3::trt4-trt5  0.01750 0.036192505  0.483525523 0.6287226416 -0.0534360066
-#> rdr4::trt1-trt2 -0.00515 0.027207705 -0.189284617 0.8498697516 -0.0584761218
-#> rdr4::trt1-trt3  0.00915 0.027207705  0.336301795 0.7366432968 -0.0441761218
-#> rdr4::trt1-trt4 -0.01335 0.027207705 -0.490669831 0.6236599874 -0.0666761218
-#> rdr4::trt1-trt5  0.01845 0.027207705  0.678116733 0.4976976819 -0.0348761218
-#> rdr4::trt2-trt3  0.01430 0.027207705  0.525586411 0.5991756003 -0.0390261218
-#> rdr4::trt2-trt4 -0.00820 0.027207705 -0.301385215 0.7631207674 -0.0615261218
-#> rdr4::trt2-trt5  0.02360 0.027207705  0.867401350 0.3857221425 -0.0297261218
-#> rdr4::trt3-trt4 -0.02250 0.027207705 -0.826971626 0.4082531440 -0.0758261218
-#> rdr4::trt3-trt5  0.00930 0.027207705  0.341814939 0.7324901666 -0.0440261218
-#> rdr4::trt4-trt5  0.03180 0.027207705  1.168786565 0.2424896348 -0.0215261218
-#>                      CIUpper
-#> rdr1::trt1-trt2  0.100359937
-#> rdr1::trt1-trt3  0.151659937
-#> rdr1::trt1-trt4  0.062259937
-#> rdr1::trt1-trt5  0.123209937
-#> rdr1::trt2-trt3  0.111659937
-#> rdr1::trt2-trt4  0.022259937
-#> rdr1::trt2-trt5  0.083209937
-#> rdr1::trt3-trt4 -0.029040063
-#> rdr1::trt3-trt5  0.031909937
-#> rdr1::trt4-trt5  0.121309937
-#> rdr2::trt1-trt2  0.014099605
-#> rdr2::trt1-trt3  0.042449605
-#> rdr2::trt1-trt4  0.027299605
-#> rdr2::trt1-trt5  0.085799605
-#> rdr2::trt2-trt3  0.088949605
-#> rdr2::trt2-trt4  0.073799605
-#> rdr2::trt2-trt5  0.132299605
-#> rdr2::trt3-trt4  0.045449605
-#> rdr2::trt3-trt5  0.103949605
-#> rdr2::trt4-trt5  0.119099605
-#> rdr3::trt1-trt2  0.062186007
-#> rdr3::trt1-trt3  0.129936007
-#> rdr3::trt1-trt4  0.094036007
-#> rdr3::trt1-trt5  0.111536007
-#> rdr3::trt2-trt3  0.138686007
-#> rdr3::trt2-trt4  0.102786007
-#> rdr3::trt2-trt5  0.120286007
-#> rdr3::trt3-trt4  0.035036007
-#> rdr3::trt3-trt5  0.052536007
-#> rdr3::trt4-trt5  0.088436007
-#> rdr4::trt1-trt2  0.048176122
-#> rdr4::trt1-trt3  0.062476122
-#> rdr4::trt1-trt4  0.039976122
-#> rdr4::trt1-trt5  0.071776122
-#> rdr4::trt2-trt3  0.067626122
-#> rdr4::trt2-trt4  0.045126122
-#> rdr4::trt2-trt5  0.076926122
-#> rdr4::trt3-trt4  0.030826122
-#> rdr4::trt3-trt5  0.062626122
-#> rdr4::trt4-trt5  0.085126122
+#>                 Estimate StdErr       z   PrGTz  CILower CIUpper
+#> rdr1::trt1-trt2  0.04000 0.0308  1.2989 0.19400 -0.02036  0.1004
+#> rdr1::trt1-trt3  0.09130 0.0308  2.9646 0.00303  0.03094  0.1517
+#> rdr1::trt1-trt4  0.00190 0.0308  0.0617 0.95081 -0.05846  0.0623
+#> rdr1::trt1-trt5  0.06285 0.0308  2.0408 0.04127  0.00249  0.1232
+#> rdr1::trt2-trt3  0.05130 0.0308  1.6658 0.09576 -0.00906  0.1117
+#> rdr1::trt2-trt4 -0.03810 0.0308 -1.2372 0.21603 -0.09846  0.0223
+#> rdr1::trt2-trt5  0.02285 0.0308  0.7420 0.45811 -0.03751  0.0832
+#> rdr1::trt3-trt4 -0.08940 0.0308 -2.9029 0.00370 -0.14976 -0.0290
+#> rdr1::trt3-trt5 -0.02845 0.0308 -0.9238 0.35559 -0.08881  0.0319
+#> rdr1::trt4-trt5  0.06095 0.0308  1.9791 0.04780  0.00059  0.1213
+#> rdr2::trt1-trt2 -0.04650 0.0309 -1.5039 0.13260 -0.10710  0.0141
+#> rdr2::trt1-trt3 -0.01815 0.0309 -0.5870 0.55719 -0.07875  0.0424
+#> rdr2::trt1-trt4 -0.03330 0.0309 -1.0770 0.28147 -0.09390  0.0273
+#> rdr2::trt1-trt5  0.02520 0.0309  0.8150 0.41505 -0.03540  0.0858
+#> rdr2::trt2-trt3  0.02835 0.0309  0.9169 0.35918 -0.03225  0.0889
+#> rdr2::trt2-trt4  0.01320 0.0309  0.4269 0.66943 -0.04740  0.0738
+#> rdr2::trt2-trt5  0.07170 0.0309  2.3190 0.02040  0.01110  0.1323
+#> rdr2::trt3-trt4 -0.01515 0.0309 -0.4900 0.62414 -0.07575  0.0454
+#> rdr2::trt3-trt5  0.04335 0.0309  1.4021 0.16090 -0.01725  0.1039
+#> rdr2::trt4-trt5  0.05850 0.0309  1.8921 0.05848 -0.00210  0.1191
+#> rdr3::trt1-trt2 -0.00875 0.0362 -0.2418 0.80896 -0.07969  0.0622
+#> rdr3::trt1-trt3  0.05900 0.0362  1.6302 0.10307 -0.01194  0.1299
+#> rdr3::trt1-trt4  0.02310 0.0362  0.6383 0.52331 -0.04784  0.0940
+#> rdr3::trt1-trt5  0.04060 0.0362  1.1218 0.26196 -0.03034  0.1115
+#> rdr3::trt2-trt3  0.06775 0.0362  1.8719 0.06122 -0.00319  0.1387
+#> rdr3::trt2-trt4  0.03185 0.0362  0.8800 0.37885 -0.03909  0.1028
+#> rdr3::trt2-trt5  0.04935 0.0362  1.3635 0.17271 -0.02159  0.1203
+#> rdr3::trt3-trt4 -0.03590 0.0362 -0.9919 0.32124 -0.10684  0.0350
+#> rdr3::trt3-trt5 -0.01840 0.0362 -0.5084 0.61118 -0.08934  0.0525
+#> rdr3::trt4-trt5  0.01750 0.0362  0.4835 0.62872 -0.05344  0.0884
+#> rdr4::trt1-trt2 -0.00515 0.0272 -0.1893 0.84987 -0.05848  0.0482
+#> rdr4::trt1-trt3  0.00915 0.0272  0.3363 0.73664 -0.04418  0.0625
+#> rdr4::trt1-trt4 -0.01335 0.0272 -0.4907 0.62366 -0.06668  0.0400
+#> rdr4::trt1-trt5  0.01845 0.0272  0.6781 0.49770 -0.03488  0.0718
+#> rdr4::trt2-trt3  0.01430 0.0272  0.5256 0.59918 -0.03903  0.0676
+#> rdr4::trt2-trt4 -0.00820 0.0272 -0.3014 0.76312 -0.06153  0.0451
+#> rdr4::trt2-trt5  0.02360 0.0272  0.8674 0.38572 -0.02973  0.0769
+#> rdr4::trt3-trt4 -0.02250 0.0272 -0.8270 0.40825 -0.07583  0.0308
+#> rdr4::trt3-trt5  0.00930 0.0272  0.3418 0.73249 -0.04403  0.0626
+#> rdr4::trt4-trt5  0.03180 0.0272  1.1688 0.24249 -0.02153  0.0851
 #> 
 #> $FRRC$IndividualRdrVarCov1
-#>         varEachRdr   cov1EachRdr
-#> rdr1 0.00068948369 0.00021527296
-#> rdr2 0.00082356314 0.00034557909
-#> rdr3 0.00100854171 0.00035359299
-#> rdr4 0.00063488840 0.00026475880
+#>      varEachRdr cov1EachRdr
+#> rdr1   0.000689    0.000215
+#> rdr2   0.000824    0.000346
+#> rdr3   0.001009    0.000354
+#> rdr4   0.000635    0.000265
 #> 
 #> 
 #> $RRFC
 #> $RRFC$FTests
-#>    DF            MS         F           p
-#> T   4 0.00189695737 4.1041306 0.025328308
-#> TR 12 0.00046220687        NA          NA
+#>    DF       MS   F      p
+#> T   4 0.001897 4.1 0.0253
+#> TR 12 0.000462  NA     NA
 #> 
 #> $RRFC$ciDiffTrt
-#>             Estimate      StdErr DF            t       PrGTt       CILower
-#> trt1-trt2 -0.0051000 0.015202087 12 -0.335480262 0.743055139 -0.0382225014
-#> trt1-trt3  0.0353250 0.015202087 12  2.323694167 0.038508394  0.0022024986
-#> trt1-trt4 -0.0054125 0.015202087 12 -0.356036651 0.727993972 -0.0385350014
-#> trt1-trt5  0.0367750 0.015202087 12  2.419075810 0.032372026  0.0036524986
-#> trt2-trt3  0.0404250 0.015202087 12  2.659174429 0.020823153  0.0073024986
-#> trt2-trt4 -0.0003125 0.015202087 12 -0.020556389 0.983937382 -0.0334350014
-#> trt2-trt5  0.0418750 0.015202087 12  2.754556072 0.017454332  0.0087524986
-#> trt3-trt4 -0.0407375 0.015202087 12 -2.679730818 0.020046910 -0.0738600014
-#> trt3-trt5  0.0014500 0.015202087 12  0.095381643 0.925585993 -0.0316725014
-#> trt4-trt5  0.0421875 0.015202087 12  2.775112461 0.016801933  0.0090649986
-#>                 CIUpper
-#> trt1-trt2  0.0280225014
-#> trt1-trt3  0.0684475014
-#> trt1-trt4  0.0277100014
-#> trt1-trt5  0.0698975014
-#> trt2-trt3  0.0735475014
-#> trt2-trt4  0.0328100014
-#> trt2-trt5  0.0749975014
-#> trt3-trt4 -0.0076149986
-#> trt3-trt5  0.0345725014
-#> trt4-trt5  0.0753100014
+#>            Estimate StdErr DF       t  PrGTt  CILower  CIUpper
+#> trt1-trt2 -0.005100 0.0152 12 -0.3355 0.7431 -0.03822  0.02802
+#> trt1-trt3  0.035325 0.0152 12  2.3237 0.0385  0.00220  0.06845
+#> trt1-trt4 -0.005412 0.0152 12 -0.3560 0.7280 -0.03854  0.02771
+#> trt1-trt5  0.036775 0.0152 12  2.4191 0.0324  0.00365  0.06990
+#> trt2-trt3  0.040425 0.0152 12  2.6592 0.0208  0.00730  0.07355
+#> trt2-trt4 -0.000312 0.0152 12 -0.0206 0.9839 -0.03344  0.03281
+#> trt2-trt5  0.041875 0.0152 12  2.7546 0.0175  0.00875  0.07500
+#> trt3-trt4 -0.040737 0.0152 12 -2.6797 0.0200 -0.07386 -0.00761
+#> trt3-trt5  0.001450 0.0152 12  0.0954 0.9256 -0.03167  0.03457
+#> trt4-trt5  0.042187 0.0152 12  2.7751 0.0168  0.00906  0.07531
 #> 
 #> $RRFC$ciAvgRdrEachTrt
-#>       Estimate      StdErr DF    CILower    CIUpper
-#> Trt1 0.8451625 0.024607522  3 0.76685038 0.92347462
-#> Trt2 0.8502625 0.011429811  3 0.81388774 0.88663726
-#> Trt3 0.8098375 0.021532479  3 0.74131154 0.87836346
-#> Trt4 0.8505750 0.025385876  3 0.76978581 0.93136419
-#> Trt5 0.8083875 0.021011667  3 0.74151900 0.87525600
+#>      Estimate StdErr DF CILower CIUpper
+#> Trt1    0.845 0.0246  3   0.767   0.923
+#> Trt2    0.850 0.0114  3   0.814   0.887
+#> Trt3    0.810 0.0215  3   0.741   0.878
+#> Trt4    0.851 0.0254  3   0.770   0.931
+#> Trt5    0.808 0.0210  3   0.742   0.875
 ```
 
 ### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset04}
@@ -1007,276 +915,202 @@ print(st2)
 ds <- dataset04 # do NOT convert to ROC
 FOM <- "wAFROC" 
 st3 <- StSignificanceTesting(ds, FOM = FOM, method = "OR")
-print(st3)
+print(st3, digits = 3)
 #> $FOMs
 #> $FOMs$foms
-#>            rdr1       rdr3       rdr4       rdr5
-#> trt1 0.77926667 0.72489167 0.70362500 0.80509167
-#> trt2 0.78700000 0.72690000 0.72261667 0.80378333
-#> trt3 0.72969167 0.71575833 0.67230833 0.77265833
-#> trt4 0.81013333 0.74311667 0.69435833 0.82940833
-#> trt5 0.74880000 0.68227500 0.65517500 0.77125000
+#>       rdr1  rdr3  rdr4  rdr5
+#> trt1 0.779 0.725 0.704 0.805
+#> trt2 0.787 0.727 0.723 0.804
+#> trt3 0.730 0.716 0.672 0.773
+#> trt4 0.810 0.743 0.694 0.829
+#> trt5 0.749 0.682 0.655 0.771
 #> 
 #> $FOMs$trtMeans
-#>        Estimate
-#> trt1 0.75321875
-#> trt2 0.76007500
-#> trt3 0.72260417
-#> trt4 0.76925417
-#> trt5 0.71437500
+#>      Estimate
+#> trt1    0.753
+#> trt2    0.760
+#> trt3    0.723
+#> trt4    0.769
+#> trt5    0.714
 #> 
 #> $FOMs$trtMeanDiffs
-#>                Estimate
-#> trt1-trt2 -0.0068562500
-#> trt1-trt3  0.0306145833
-#> trt1-trt4 -0.0160354167
-#> trt1-trt5  0.0388437500
-#> trt2-trt3  0.0374708333
-#> trt2-trt4 -0.0091791667
-#> trt2-trt5  0.0457000000
-#> trt3-trt4 -0.0466500000
-#> trt3-trt5  0.0082291667
-#> trt4-trt5  0.0548791667
+#>           Estimate
+#> trt1-trt2 -0.00686
+#> trt1-trt3  0.03061
+#> trt1-trt4 -0.01604
+#> trt1-trt5  0.03884
+#> trt2-trt3  0.03747
+#> trt2-trt4 -0.00918
+#> trt2-trt5  0.04570
+#> trt3-trt4 -0.04665
+#> trt3-trt5  0.00823
+#> trt4-trt5  0.05488
 #> 
 #> 
 #> $ANOVA
 #> $ANOVA$TRanova
-#>              SS DF            MS
-#> T  0.0092661660  4 0.00231654149
-#> R  0.0354043662  3 0.01180145539
-#> TR 0.0020352419 12 0.00016960349
+#>         SS DF      MS
+#> T  0.00927  4 0.00232
+#> R  0.03540  3 0.01180
+#> TR 0.00204 12 0.00017
 #> 
 #> $ANOVA$VarCom
-#>            Estimates       Rhos
-#> VarR   0.00220864564         NA
-#> VarTR -0.00030459978         NA
-#> Cov1   0.00042203598 0.45473916
-#> Cov2   0.00033615564 0.36220403
-#> Cov3   0.00030431124 0.32789204
-#> Var    0.00092808365         NA
+#>       Estimates  Rhos
+#> VarR   0.002209    NA
+#> VarTR -0.000305    NA
+#> Cov1   0.000422 0.455
+#> Cov2   0.000336 0.362
+#> Cov3   0.000304 0.328
+#> Var    0.000928    NA
 #> 
 #> $ANOVA$IndividualTrt
-#>      DF   msREachTrt    varEachTrt   cov2EachTrt
-#> trt1  3 0.0022104190 0.00087740343 0.00033319886
-#> trt2  3 0.0017130271 0.00093887326 0.00038023350
-#> trt3  3 0.0017107295 0.00096971478 0.00029724350
-#> trt4  3 0.0038607283 0.00085902596 0.00031071226
-#> trt5  3 0.0029849654 0.00099540083 0.00035939006
+#>      DF msREachTrt varEachTrt cov2EachTrt
+#> trt1  3    0.00221   0.000877    0.000333
+#> trt2  3    0.00171   0.000939    0.000380
+#> trt3  3    0.00171   0.000970    0.000297
+#> trt4  3    0.00386   0.000859    0.000311
+#> trt5  3    0.00298   0.000995    0.000359
 #> 
 #> $ANOVA$IndividualRdr
-#>      DF    msTEachRdr    varEachRdr   cov1EachRdr
-#> rdr1  4 0.00101374290 0.00088314868 0.00041224847
-#> rdr3  4 0.00050928051 0.00089655670 0.00043556997
-#> rdr4  4 0.00069838090 0.00117090526 0.00049516987
-#> rdr5  4 0.00060394766 0.00076172396 0.00034515562
+#>      DF msTEachRdr varEachRdr cov1EachRdr
+#> rdr1  4   0.001014   0.000883    0.000412
+#> rdr3  4   0.000509   0.000897    0.000436
+#> rdr4  4   0.000698   0.001171    0.000495
+#> rdr5  4   0.000604   0.000762    0.000345
 #> 
 #> 
 #> $RRRC
 #> $RRRC$FTests
-#>                  DF            MS     FStat           p
-#> Treatment  4.000000 0.00231654149 7.8002997 0.000117105
-#> Error     36.793343 0.00029698109        NA          NA
+#>             DF       MS FStat        p
+#> Treatment  4.0 0.002317   7.8 0.000117
+#> Error     36.8 0.000297    NA       NA
 #> 
 #> $RRRC$ciDiffTrt
-#>                Estimate     StdErr        DF           t         PrGTt
-#> trt1-trt2 -0.0068562500 0.01218567 36.793343 -0.56264860 5.7708666e-01
-#> trt1-trt3  0.0306145833 0.01218567 36.793343  2.51234312 1.6509287e-02
-#> trt1-trt4 -0.0160354167 0.01218567 36.793343 -1.31592413 1.9633987e-01
-#> trt1-trt5  0.0388437500 0.01218567 36.793343  3.18765822 2.9246461e-03
-#> trt2-trt3  0.0374708333 0.01218567 36.793343  3.07499173 3.9557451e-03
-#> trt2-trt4 -0.0091791667 0.01218567 36.793343 -0.75327552 4.5607767e-01
-#> trt2-trt5  0.0457000000 0.01218567 36.793343  3.75030682 6.0697106e-04
-#> trt3-trt4 -0.0466500000 0.01218567 36.793343 -3.82826725 4.8459540e-04
-#> trt3-trt5  0.0082291667 0.01218567 36.793343  0.67531510 5.0369787e-01
-#> trt4-trt5  0.0548791667 0.01218567 36.793343  4.50358235 6.5228142e-05
-#>                 CILower       CIUpper
-#> trt1-trt2 -0.0315514439  0.0178389439
-#> trt1-trt3  0.0059193894  0.0553097773
-#> trt1-trt4 -0.0407306106  0.0086597773
-#> trt1-trt5  0.0141485561  0.0635389439
-#> trt2-trt3  0.0127756394  0.0621660273
-#> trt2-trt4 -0.0338743606  0.0155160273
-#> trt2-trt5  0.0210048061  0.0703951939
-#> trt3-trt4 -0.0713451939 -0.0219548061
-#> trt3-trt5 -0.0164660273  0.0329243606
-#> trt4-trt5  0.0301839727  0.0795743606
+#>           Estimate StdErr   DF      t    PrGTt  CILower  CIUpper
+#> trt1-trt2 -0.00686 0.0122 36.8 -0.563 5.77e-01 -0.03155  0.01784
+#> trt1-trt3  0.03061 0.0122 36.8  2.512 1.65e-02  0.00592  0.05531
+#> trt1-trt4 -0.01604 0.0122 36.8 -1.316 1.96e-01 -0.04073  0.00866
+#> trt1-trt5  0.03884 0.0122 36.8  3.188 2.92e-03  0.01415  0.06354
+#> trt2-trt3  0.03747 0.0122 36.8  3.075 3.96e-03  0.01278  0.06217
+#> trt2-trt4 -0.00918 0.0122 36.8 -0.753 4.56e-01 -0.03387  0.01552
+#> trt2-trt5  0.04570 0.0122 36.8  3.750 6.07e-04  0.02100  0.07040
+#> trt3-trt4 -0.04665 0.0122 36.8 -3.828 4.85e-04 -0.07135 -0.02195
+#> trt3-trt5  0.00823 0.0122 36.8  0.675 5.04e-01 -0.01647  0.03292
+#> trt4-trt5  0.05488 0.0122 36.8  4.504 6.52e-05  0.03018  0.07957
 #> 
 #> $RRRC$ciAvgRdrEachTrt
-#>        Estimate      StdErr         DF    CILower    CIUpper          Cov2
-#> trt1 0.75321875 0.029762453  7.7084474 0.68413193 0.82230557 0.00033319886
-#> trt2 0.76007500 0.028433963 10.6920840 0.69727167 0.82287833 0.00038023350
-#> trt3 0.72260417 0.026924448  8.6191761 0.66128414 0.78392420 0.00029724350
-#> trt4 0.76925417 0.035719663  5.2424244 0.67869638 0.85981195 0.00031071226
-#> trt5 0.71437500 0.033251036  6.5854184 0.63473415 0.79401585 0.00035939006
+#>      Estimate StdErr    DF CILower CIUpper     Cov2
+#> trt1    0.753 0.0298  7.71   0.684   0.822 0.000333
+#> trt2    0.760 0.0284 10.69   0.697   0.823 0.000380
+#> trt3    0.723 0.0269  8.62   0.661   0.784 0.000297
+#> trt4    0.769 0.0357  5.24   0.679   0.860 0.000311
+#> trt5    0.714 0.0333  6.59   0.635   0.794 0.000359
 #> 
 #> 
 #> $FRRC
 #> $FRRC$FTests
-#>                      MS     Chisq DF            p
-#> Treatment 0.00231654149 15.403026  4 0.0039343238
-#> Error     0.00060158087        NA NA           NA
+#>                 MS Chisq DF       p
+#> Treatment 0.002317  15.4  4 0.00393
+#> Error     0.000602    NA NA      NA
 #> 
 #> $FRRC$ciDiffTrt
-#>                Estimate      StdErr           z        PrGTz       CILower
-#> trt1-trt2 -0.0068562500 0.017343311 -0.39532532 0.6926028123 -0.0408485147
-#> trt1-trt3  0.0306145833 0.017343311  1.76520986 0.0775285026 -0.0033776814
-#> trt1-trt4 -0.0160354167 0.017343311 -0.92458797 0.3551802713 -0.0500276814
-#> trt1-trt5  0.0388437500 0.017343311  2.23969634 0.0251106431  0.0048514853
-#> trt2-trt3  0.0374708333 0.017343311  2.16053518 0.0307312632  0.0034785686
-#> trt2-trt4 -0.0091791667 0.017343311 -0.52926265 0.5966232621 -0.0431714314
-#> trt2-trt5  0.0457000000 0.017343311  2.63502167 0.0084131912  0.0117077353
-#> trt3-trt4 -0.0466500000 0.017343311 -2.68979783 0.0071495318 -0.0806422647
-#> trt3-trt5  0.0082291667 0.017343311  0.47448649 0.6351530315 -0.0257630981
-#> trt4-trt5  0.0548791667 0.017343311  3.16428432 0.0015546484  0.0208869019
-#>                CIUpper
-#> trt1-trt2  0.027136015
-#> trt1-trt3  0.064606848
-#> trt1-trt4  0.017956848
-#> trt1-trt5  0.072836015
-#> trt2-trt3  0.071463098
-#> trt2-trt4  0.024813098
-#> trt2-trt5  0.079692265
-#> trt3-trt4 -0.012657735
-#> trt3-trt5  0.042221431
-#> trt4-trt5  0.088871431
+#>           Estimate StdErr      z   PrGTz  CILower CIUpper
+#> trt1-trt2 -0.00686 0.0173 -0.395 0.69260 -0.04085  0.0271
+#> trt1-trt3  0.03061 0.0173  1.765 0.07753 -0.00338  0.0646
+#> trt1-trt4 -0.01604 0.0173 -0.925 0.35518 -0.05003  0.0180
+#> trt1-trt5  0.03884 0.0173  2.240 0.02511  0.00485  0.0728
+#> trt2-trt3  0.03747 0.0173  2.161 0.03073  0.00348  0.0715
+#> trt2-trt4 -0.00918 0.0173 -0.529 0.59662 -0.04317  0.0248
+#> trt2-trt5  0.04570 0.0173  2.635 0.00841  0.01171  0.0797
+#> trt3-trt4 -0.04665 0.0173 -2.690 0.00715 -0.08064 -0.0127
+#> trt3-trt5  0.00823 0.0173  0.474 0.63515 -0.02576  0.0422
+#> trt4-trt5  0.05488 0.0173  3.164 0.00155  0.02089  0.0889
 #> 
 #> $FRRC$ciAvgRdrEachTrt
-#>        Estimate      StdErr  DF    CILower    CIUpper
-#> trt1 0.75321875 0.021662179 199 0.71076166 0.79567584
-#> trt2 0.76007500 0.022801172 199 0.71538552 0.80476448
-#> trt3 0.72260417 0.021572235 199 0.68032336 0.76488497
-#> trt4 0.76925417 0.021161065 199 0.72777924 0.81072909
-#> trt5 0.71437500 0.022768240 199 0.66975007 0.75899993
+#>      Estimate StdErr  DF CILower CIUpper
+#> trt1    0.753 0.0217 199   0.711   0.796
+#> trt2    0.760 0.0228 199   0.715   0.805
+#> trt3    0.723 0.0216 199   0.680   0.765
+#> trt4    0.769 0.0212 199   0.728   0.811
+#> trt5    0.714 0.0228 199   0.670   0.759
 #> 
 #> $FRRC$ciDiffTrtEachRdr
-#>                      Estimate      StdErr            z        PrGTz
-#> rdr1::trt1-trt2 -0.0077333333 0.030688767 -0.251992312 0.8010470065
-#> rdr1::trt1-trt3  0.0495750000 0.030688767  1.615411921 0.1062215205
-#> rdr1::trt1-trt4 -0.0308666667 0.030688767 -1.005796899 0.3145132792
-#> rdr1::trt1-trt5  0.0304666667 0.030688767  0.992762814 0.3208255556
-#> rdr1::trt2-trt3  0.0573083333 0.030688767  1.867404232 0.0618451592
-#> rdr1::trt2-trt4 -0.0231333333 0.030688767 -0.753804588 0.4509665689
-#> rdr1::trt2-trt5  0.0382000000 0.030688767  1.244755126 0.2132217757
-#> rdr1::trt3-trt4 -0.0804416667 0.030688767 -2.621208820 0.0087618575
-#> rdr1::trt3-trt5 -0.0191083333 0.030688767 -0.622649106 0.5335151338
-#> rdr1::trt4-trt5  0.0613333333 0.030688767  1.998559713 0.0456560130
-#> rdr3::trt1-trt2 -0.0020083333 0.030364016 -0.066141888 0.9472648623
-#> rdr3::trt1-trt3  0.0091333333 0.030364016  0.300794643 0.7635710940
-#> rdr3::trt1-trt4 -0.0182250000 0.030364016 -0.600217047 0.5483615943
-#> rdr3::trt1-trt5  0.0426166667 0.030364016  1.403525367 0.1604602331
-#> rdr3::trt2-trt3  0.0111416667 0.030364016  0.366936530 0.7136663620
-#> rdr3::trt2-trt4 -0.0162166667 0.030364016 -0.534075159 0.5932895354
-#> rdr3::trt2-trt5  0.0446250000 0.030364016  1.469667254 0.1416518956
-#> rdr3::trt3-trt4 -0.0273583333 0.030364016 -0.901011689 0.3675821046
-#> rdr3::trt3-trt5  0.0334833333 0.030364016  1.102730724 0.2701441201
-#> rdr3::trt4-trt5  0.0608416667 0.030364016  2.003742413 0.0450976604
-#> rdr4::trt1-trt2 -0.0189916667 0.036762356 -0.516606359 0.6054309755
-#> rdr4::trt1-trt3  0.0313166667 0.036762356  0.851867792 0.3942874746
-#> rdr4::trt1-trt4  0.0092666667 0.036762356  0.252069448 0.8009873847
-#> rdr4::trt1-trt5  0.0484500000 0.036762356  1.317924254 0.1875290058
-#> rdr4::trt2-trt3  0.0503083333 0.036762356  1.368474152 0.1711637075
-#> rdr4::trt2-trt4  0.0282583333 0.036762356  0.768675807 0.4420857903
-#> rdr4::trt2-trt5  0.0674416667 0.036762356  1.834530613 0.0665752679
-#> rdr4::trt3-trt4 -0.0220500000 0.036762356 -0.599798344 0.5486406368
-#> rdr4::trt3-trt5  0.0171333333 0.036762356  0.466056461 0.6411750868
-#> rdr4::trt4-trt5  0.0391833333 0.036762356  1.065854806 0.2864892816
-#> rdr5::trt1-trt2  0.0013083333 0.028864107  0.045327345 0.9638463920
-#> rdr5::trt1-trt3  0.0324333333 0.028864107  1.123656212 0.2611588993
-#> rdr5::trt1-trt4 -0.0243166667 0.028864107 -0.842453450 0.3995341855
-#> rdr5::trt1-trt5  0.0338416667 0.028864107  1.172448067 0.2410172108
-#> rdr5::trt2-trt3  0.0311250000 0.028864107  1.078328867 0.2808870188
-#> rdr5::trt2-trt4 -0.0256250000 0.028864107 -0.887780794 0.3746586757
-#> rdr5::trt2-trt5  0.0325333333 0.028864107  1.127120723 0.2596914430
-#> rdr5::trt3-trt4 -0.0567500000 0.028864107 -1.966109662 0.0492859446
-#> rdr5::trt3-trt5  0.0014083333 0.028864107  0.048791855 0.9610851732
-#> rdr5::trt4-trt5  0.0581583333 0.028864107  2.014901517 0.0439149690
-#>                       CILower        CIUpper
-#> rdr1::trt1-trt2 -0.0678822113  0.05241554467
-#> rdr1::trt1-trt3 -0.0105738780  0.10972387800
-#> rdr1::trt1-trt4 -0.0910155447  0.02928221134
-#> rdr1::trt1-trt5 -0.0296822113  0.09061554467
-#> rdr1::trt2-trt3 -0.0028405447  0.11745721134
-#> rdr1::trt2-trt4 -0.0832822113  0.03701554467
-#> rdr1::trt2-trt5 -0.0219488780  0.09834887800
-#> rdr1::trt3-trt4 -0.1405905447 -0.02029278866
-#> rdr1::trt3-trt5 -0.0792572113  0.04104054467
-#> rdr1::trt4-trt5  0.0011844553  0.12148221134
-#> rdr3::trt1-trt2 -0.0615207111  0.05750404442
-#> rdr3::trt1-trt3 -0.0503790444  0.06864571108
-#> rdr3::trt1-trt4 -0.0777373778  0.04128737775
-#> rdr3::trt1-trt5 -0.0168957111  0.10212904442
-#> rdr3::trt2-trt3 -0.0483707111  0.07065404442
-#> rdr3::trt2-trt4 -0.0757290444  0.04329571108
-#> rdr3::trt2-trt5 -0.0148873778  0.10413737775
-#> rdr3::trt3-trt4 -0.0868707111  0.03215404442
-#> rdr3::trt3-trt5 -0.0260290444  0.09299571108
-#> rdr3::trt4-trt5  0.0013292889  0.12035404442
-#> rdr4::trt1-trt2 -0.0910445595  0.05306122620
-#> rdr4::trt1-trt3 -0.0407362262  0.10336955954
-#> rdr4::trt1-trt4 -0.0627862262  0.08131955954
-#> rdr4::trt1-trt5 -0.0236028929  0.12050289287
-#> rdr4::trt2-trt3 -0.0217445595  0.12236122620
-#> rdr4::trt2-trt4 -0.0437945595  0.10031122620
-#> rdr4::trt2-trt5 -0.0046112262  0.13949455954
-#> rdr4::trt3-trt4 -0.0941028929  0.05000289287
-#> rdr4::trt3-trt5 -0.0549195595  0.08918622620
-#> rdr4::trt4-trt5 -0.0328695595  0.11123622620
-#> rdr5::trt1-trt2 -0.0552642772  0.05788094384
-#> rdr5::trt1-trt3 -0.0241392772  0.08900594384
-#> rdr5::trt1-trt4 -0.0808892772  0.03225594384
-#> rdr5::trt1-trt5 -0.0227309438  0.09041427718
-#> rdr5::trt2-trt3 -0.0254476105  0.08769761051
-#> rdr5::trt2-trt4 -0.0821976105  0.03094761051
-#> rdr5::trt2-trt5 -0.0240392772  0.08910594384
-#> rdr5::trt3-trt4 -0.1133226105 -0.00017738949
-#> rdr5::trt3-trt5 -0.0551642772  0.05798094384
-#> rdr5::trt4-trt5  0.0015857228  0.11473094384
+#>                 Estimate StdErr       z   PrGTz  CILower   CIUpper
+#> rdr1::trt1-trt2 -0.00773 0.0307 -0.2520 0.80105 -0.06788  0.052416
+#> rdr1::trt1-trt3  0.04957 0.0307  1.6154 0.10622 -0.01057  0.109724
+#> rdr1::trt1-trt4 -0.03087 0.0307 -1.0058 0.31451 -0.09102  0.029282
+#> rdr1::trt1-trt5  0.03047 0.0307  0.9928 0.32083 -0.02968  0.090616
+#> rdr1::trt2-trt3  0.05731 0.0307  1.8674 0.06185 -0.00284  0.117457
+#> rdr1::trt2-trt4 -0.02313 0.0307 -0.7538 0.45097 -0.08328  0.037016
+#> rdr1::trt2-trt5  0.03820 0.0307  1.2448 0.21322 -0.02195  0.098349
+#> rdr1::trt3-trt4 -0.08044 0.0307 -2.6212 0.00876 -0.14059 -0.020293
+#> rdr1::trt3-trt5 -0.01911 0.0307 -0.6226 0.53352 -0.07926  0.041041
+#> rdr1::trt4-trt5  0.06133 0.0307  1.9986 0.04566  0.00118  0.121482
+#> rdr3::trt1-trt2 -0.00201 0.0304 -0.0661 0.94726 -0.06152  0.057504
+#> rdr3::trt1-trt3  0.00913 0.0304  0.3008 0.76357 -0.05038  0.068646
+#> rdr3::trt1-trt4 -0.01822 0.0304 -0.6002 0.54836 -0.07774  0.041287
+#> rdr3::trt1-trt5  0.04262 0.0304  1.4035 0.16046 -0.01690  0.102129
+#> rdr3::trt2-trt3  0.01114 0.0304  0.3669 0.71367 -0.04837  0.070654
+#> rdr3::trt2-trt4 -0.01622 0.0304 -0.5341 0.59329 -0.07573  0.043296
+#> rdr3::trt2-trt5  0.04462 0.0304  1.4697 0.14165 -0.01489  0.104137
+#> rdr3::trt3-trt4 -0.02736 0.0304 -0.9010 0.36758 -0.08687  0.032154
+#> rdr3::trt3-trt5  0.03348 0.0304  1.1027 0.27014 -0.02603  0.092996
+#> rdr3::trt4-trt5  0.06084 0.0304  2.0037 0.04510  0.00133  0.120354
+#> rdr4::trt1-trt2 -0.01899 0.0368 -0.5166 0.60543 -0.09104  0.053061
+#> rdr4::trt1-trt3  0.03132 0.0368  0.8519 0.39429 -0.04074  0.103370
+#> rdr4::trt1-trt4  0.00927 0.0368  0.2521 0.80099 -0.06279  0.081320
+#> rdr4::trt1-trt5  0.04845 0.0368  1.3179 0.18753 -0.02360  0.120503
+#> rdr4::trt2-trt3  0.05031 0.0368  1.3685 0.17116 -0.02174  0.122361
+#> rdr4::trt2-trt4  0.02826 0.0368  0.7687 0.44209 -0.04379  0.100311
+#> rdr4::trt2-trt5  0.06744 0.0368  1.8345 0.06658 -0.00461  0.139495
+#> rdr4::trt3-trt4 -0.02205 0.0368 -0.5998 0.54864 -0.09410  0.050003
+#> rdr4::trt3-trt5  0.01713 0.0368  0.4661 0.64118 -0.05492  0.089186
+#> rdr4::trt4-trt5  0.03918 0.0368  1.0659 0.28649 -0.03287  0.111236
+#> rdr5::trt1-trt2  0.00131 0.0289  0.0453 0.96385 -0.05526  0.057881
+#> rdr5::trt1-trt3  0.03243 0.0289  1.1237 0.26116 -0.02414  0.089006
+#> rdr5::trt1-trt4 -0.02432 0.0289 -0.8425 0.39953 -0.08089  0.032256
+#> rdr5::trt1-trt5  0.03384 0.0289  1.1724 0.24102 -0.02273  0.090414
+#> rdr5::trt2-trt3  0.03112 0.0289  1.0783 0.28089 -0.02545  0.087698
+#> rdr5::trt2-trt4 -0.02563 0.0289 -0.8878 0.37466 -0.08220  0.030948
+#> rdr5::trt2-trt5  0.03253 0.0289  1.1271 0.25969 -0.02404  0.089106
+#> rdr5::trt3-trt4 -0.05675 0.0289 -1.9661 0.04929 -0.11332 -0.000177
+#> rdr5::trt3-trt5  0.00141 0.0289  0.0488 0.96109 -0.05516  0.057981
+#> rdr5::trt4-trt5  0.05816 0.0289  2.0149 0.04391  0.00159  0.114731
 #> 
 #> $FRRC$IndividualRdrVarCov1
-#>         varEachRdr   cov1EachRdr
-#> rdr1 0.00088314868 0.00041224847
-#> rdr3 0.00089655670 0.00043556997
-#> rdr4 0.00117090526 0.00049516987
-#> rdr5 0.00076172396 0.00034515562
+#>      varEachRdr cov1EachRdr
+#> rdr1   0.000883    0.000412
+#> rdr3   0.000897    0.000436
+#> rdr4   0.001171    0.000495
+#> rdr5   0.000762    0.000345
 #> 
 #> 
 #> $RRFC
 #> $RRFC$FTests
-#>    DF            MS         F             p
-#> T   4 0.00231654149 13.658572 0.00020192224
-#> TR 12 0.00016960349        NA            NA
+#>    DF      MS    F        p
+#> T   4 0.00232 13.7 0.000202
+#> TR 12 0.00017   NA       NA
 #> 
 #> $RRFC$ciDiffTrt
-#>                Estimate       StdErr DF           t         PrGTt      CILower
-#> trt1-trt2 -0.0068562500 0.0092087864 12 -0.74453350 4.7088356e-01 -0.026920472
-#> trt1-trt3  0.0306145833 0.0092087864 12  3.32449706 6.0595183e-03  0.010550361
-#> trt1-trt4 -0.0160354167 0.0092087864 12 -1.74131704 1.0717825e-01 -0.036099639
-#> trt1-trt5  0.0388437500 0.0092087864 12  4.21811825 1.1928824e-03  0.018779528
-#> trt2-trt3  0.0374708333 0.0092087864 12  4.06903056 1.5563074e-03  0.017406611
-#> trt2-trt4 -0.0091791667 0.0092087864 12 -0.99678353 3.3854538e-01 -0.029243389
-#> trt2-trt5  0.0457000000 0.0092087864 12  4.96265175 3.2930420e-04  0.025635778
-#> trt3-trt4 -0.0466500000 0.0092087864 12 -5.06581410 2.7711820e-04 -0.066714222
-#> trt3-trt5  0.0082291667 0.0092087864 12  0.89362119 3.8909518e-01 -0.011835055
-#> trt4-trt5  0.0548791667 0.0092087864 12  5.95943529 6.6167481e-05  0.034814945
-#>                 CIUpper
-#> trt1-trt2  0.0132079720
-#> trt1-trt3  0.0506788053
-#> trt1-trt4  0.0040288053
-#> trt1-trt5  0.0589079720
-#> trt2-trt3  0.0575350553
-#> trt2-trt4  0.0108850553
-#> trt2-trt5  0.0657642220
-#> trt3-trt4 -0.0265857780
-#> trt3-trt5  0.0282933886
-#> trt4-trt5  0.0749433886
+#>           Estimate  StdErr DF      t    PrGTt CILower  CIUpper
+#> trt1-trt2 -0.00686 0.00921 12 -0.745 4.71e-01 -0.0269  0.01321
+#> trt1-trt3  0.03061 0.00921 12  3.324 6.06e-03  0.0106  0.05068
+#> trt1-trt4 -0.01604 0.00921 12 -1.741 1.07e-01 -0.0361  0.00403
+#> trt1-trt5  0.03884 0.00921 12  4.218 1.19e-03  0.0188  0.05891
+#> trt2-trt3  0.03747 0.00921 12  4.069 1.56e-03  0.0174  0.05754
+#> trt2-trt4 -0.00918 0.00921 12 -0.997 3.39e-01 -0.0292  0.01089
+#> trt2-trt5  0.04570 0.00921 12  4.963 3.29e-04  0.0256  0.06576
+#> trt3-trt4 -0.04665 0.00921 12 -5.066 2.77e-04 -0.0667 -0.02659
+#> trt3-trt5  0.00823 0.00921 12  0.894 3.89e-01 -0.0118  0.02829
+#> trt4-trt5  0.05488 0.00921 12  5.959 6.62e-05  0.0348  0.07494
 #> 
 #> $RRFC$ciAvgRdrEachTrt
-#>        Estimate      StdErr DF    CILower    CIUpper
-#> Trt1 0.75321875 0.023507547  3 0.67840724 0.82803026
-#> Trt2 0.76007500 0.020694366  3 0.69421629 0.82593371
-#> Trt3 0.72260417 0.020680483  3 0.65678964 0.78841869
-#> Trt4 0.76925417 0.031067379  3 0.67038390 0.86812443
-#> Trt5 0.71437500 0.027317419  3 0.62743878 0.80131122
+#>      Estimate StdErr DF CILower CIUpper
+#> Trt1    0.753 0.0235  3   0.678   0.828
+#> Trt2    0.760 0.0207  3   0.694   0.826
+#> Trt3    0.723 0.0207  3   0.657   0.788
+#> Trt4    0.769 0.0311  3   0.670   0.868
+#> Trt5    0.714 0.0273  3   0.627   0.801
 ```
 
 ### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset04-FROC}
@@ -1325,272 +1159,199 @@ print(st3)
 
 
 ```r
-st4 <- StSignificanceTesting(ds, FOM = FOM, method = "DBM") # Note: using DBM analysis
-print(st4)
+st4 <- StSignificanceTesting(ds, FOM = FOM, method = "DBM") 
+# Note: using DBM analysis
+print(st4, digits = 3)
 #> $FOMs
 #> $FOMs$foms
-#>            rdr1       rdr3       rdr4       rdr5
-#> trt1 0.77926667 0.72489167 0.70362500 0.80509167
-#> trt2 0.78700000 0.72690000 0.72261667 0.80378333
-#> trt3 0.72969167 0.71575833 0.67230833 0.77265833
-#> trt4 0.81013333 0.74311667 0.69435833 0.82940833
-#> trt5 0.74880000 0.68227500 0.65517500 0.77125000
+#>       rdr1  rdr3  rdr4  rdr5
+#> trt1 0.779 0.725 0.704 0.805
+#> trt2 0.787 0.727 0.723 0.804
+#> trt3 0.730 0.716 0.672 0.773
+#> trt4 0.810 0.743 0.694 0.829
+#> trt5 0.749 0.682 0.655 0.771
 #> 
 #> $FOMs$trtMeans
-#>        Estimate
-#> trt1 0.75321875
-#> trt2 0.76007500
-#> trt3 0.72260417
-#> trt4 0.76925417
-#> trt5 0.71437500
+#>      Estimate
+#> trt1    0.753
+#> trt2    0.760
+#> trt3    0.723
+#> trt4    0.769
+#> trt5    0.714
 #> 
 #> $FOMs$trtMeanDiffs
-#>                Estimate
-#> trt1-trt2 -0.0068562500
-#> trt1-trt3  0.0306145833
-#> trt1-trt4 -0.0160354167
-#> trt1-trt5  0.0388437500
-#> trt2-trt3  0.0374708333
-#> trt2-trt4 -0.0091791667
-#> trt2-trt5  0.0457000000
-#> trt3-trt4 -0.0466500000
-#> trt3-trt5  0.0082291667
-#> trt4-trt5  0.0548791667
+#>           Estimate
+#> trt1-trt2 -0.00686
+#> trt1-trt3  0.03061
+#> trt1-trt4 -0.01604
+#> trt1-trt5  0.03884
+#> trt2-trt3  0.03747
+#> trt2-trt4 -0.00918
+#> trt2-trt5  0.04570
+#> trt3-trt4 -0.04665
+#> trt3-trt5  0.00823
+#> trt4-trt5  0.05488
 #> 
 #> 
 #> $ANOVA
 #> $ANOVA$TRCanova
-#>                 SS   DF          MS
-#> T       1.85323319    4 0.463308298
-#> R       7.08087324    3 2.360291078
-#> C     289.60188783  199 1.455285868
-#> TR      0.40704839   12 0.033920699
-#> TC     95.77167376  796 0.120316173
-#> RC    126.90154272  597 0.212565398
-#> TRC   226.47948201 2388 0.094840654
-#> Total 748.09574113 3999          NA
+#>            SS   DF     MS
+#> T       1.853    4 0.4633
+#> R       7.081    3 2.3603
+#> C     289.602  199 1.4553
+#> TR      0.407   12 0.0339
+#> TC     95.772  796 0.1203
+#> RC    126.902  597 0.2126
+#> TRC   226.479 2388 0.0948
+#> Total 748.096 3999     NA
 #> 
 #> $ANOVA$VarCom
-#>             Estimates
-#> VarR    0.00220864564
-#> VarC    0.06086224757
-#> VarTR  -0.00030459978
-#> VarTC   0.00636887974
-#> VarRC   0.02354494882
-#> VarErr  0.09484065411
+#>        Estimates
+#> VarR    0.002209
+#> VarC    0.060862
+#> VarTR  -0.000305
+#> VarTC   0.006369
+#> VarRC   0.023545
+#> VarErr  0.094841
 #> 
 #> $ANOVA$IndividualTrt
-#>       DF       Trt1       Trt2       Trt3       Trt4       Trt5
-#> msR    3 0.44208381 0.34260543 0.34214590 0.77214565 0.59699308
-#> msC  199 0.37540000 0.41591475 0.37228906 0.35823255 0.41471420
-#> msRC 597 0.10884091 0.11172795 0.13449426 0.10966274 0.12720215
+#>       DF  Trt1  Trt2  Trt3  Trt4  Trt5
+#> msR    3 0.442 0.343 0.342 0.772 0.597
+#> msC  199 0.375 0.416 0.372 0.358 0.415
+#> msRC 597 0.109 0.112 0.134 0.110 0.127
 #> 
 #> $ANOVA$IndividualRdr
-#>       DF        rdr1        rdr3       rdr4        rdr5
-#> msT    4 0.202748581 0.101856101 0.13967618 0.120789532
-#> msC  199 0.506428511 0.527767315 0.63031695 0.428469287
-#> msTC 796 0.094180042 0.092197347 0.13514708 0.083313668
+#>       DF   rdr1   rdr3  rdr4   rdr5
+#> msT    4 0.2027 0.1019 0.140 0.1208
+#> msC  199 0.5064 0.5278 0.630 0.4285
+#> msTC 796 0.0942 0.0922 0.135 0.0833
 #> 
 #> 
 #> $RRRC
 #> $RRRC$FTests
-#>                  DF          MS     FStat           p
-#> Treatment  4.000000 0.463308298 7.8002997 0.000117105
-#> Error     36.793343 0.059396218        NA          NA
+#>             DF     MS FStat        p
+#> Treatment  4.0 0.4633   7.8 0.000117
+#> Error     36.8 0.0594    NA       NA
 #> 
 #> $RRRC$ciDiffTrt
-#>                Estimate     StdErr        DF           t         PrGTt
-#> trt1-trt2 -0.0068562500 0.01218567 36.793343 -0.56264860 5.7708666e-01
-#> trt1-trt3  0.0306145833 0.01218567 36.793343  2.51234312 1.6509287e-02
-#> trt1-trt4 -0.0160354167 0.01218567 36.793343 -1.31592413 1.9633987e-01
-#> trt1-trt5  0.0388437500 0.01218567 36.793343  3.18765822 2.9246461e-03
-#> trt2-trt3  0.0374708333 0.01218567 36.793343  3.07499173 3.9557451e-03
-#> trt2-trt4 -0.0091791667 0.01218567 36.793343 -0.75327552 4.5607767e-01
-#> trt2-trt5  0.0457000000 0.01218567 36.793343  3.75030682 6.0697106e-04
-#> trt3-trt4 -0.0466500000 0.01218567 36.793343 -3.82826725 4.8459540e-04
-#> trt3-trt5  0.0082291667 0.01218567 36.793343  0.67531510 5.0369787e-01
-#> trt4-trt5  0.0548791667 0.01218567 36.793343  4.50358235 6.5228142e-05
-#>                 CILower       CIUpper
-#> trt1-trt2 -0.0315514439  0.0178389439
-#> trt1-trt3  0.0059193894  0.0553097773
-#> trt1-trt4 -0.0407306106  0.0086597773
-#> trt1-trt5  0.0141485561  0.0635389439
-#> trt2-trt3  0.0127756394  0.0621660273
-#> trt2-trt4 -0.0338743606  0.0155160273
-#> trt2-trt5  0.0210048061  0.0703951939
-#> trt3-trt4 -0.0713451939 -0.0219548061
-#> trt3-trt5 -0.0164660273  0.0329243606
-#> trt4-trt5  0.0301839727  0.0795743606
+#>           Estimate StdErr   DF      t    PrGTt  CILower  CIUpper
+#> trt1-trt2 -0.00686 0.0122 36.8 -0.563 5.77e-01 -0.03155  0.01784
+#> trt1-trt3  0.03061 0.0122 36.8  2.512 1.65e-02  0.00592  0.05531
+#> trt1-trt4 -0.01604 0.0122 36.8 -1.316 1.96e-01 -0.04073  0.00866
+#> trt1-trt5  0.03884 0.0122 36.8  3.188 2.92e-03  0.01415  0.06354
+#> trt2-trt3  0.03747 0.0122 36.8  3.075 3.96e-03  0.01278  0.06217
+#> trt2-trt4 -0.00918 0.0122 36.8 -0.753 4.56e-01 -0.03387  0.01552
+#> trt2-trt5  0.04570 0.0122 36.8  3.750 6.07e-04  0.02100  0.07040
+#> trt3-trt4 -0.04665 0.0122 36.8 -3.828 4.85e-04 -0.07135 -0.02195
+#> trt3-trt5  0.00823 0.0122 36.8  0.675 5.04e-01 -0.01647  0.03292
+#> trt4-trt5  0.05488 0.0122 36.8  4.504 6.52e-05  0.03018  0.07957
 #> 
 #> $RRRC$ciAvgRdrEachTrt
-#>        Estimate      StdErr         DF    CILower    CIUpper
-#> trt1 0.75321875 0.029762453  7.7084474 0.68413193 0.82230557
-#> trt2 0.76007500 0.028433963 10.6920840 0.69727167 0.82287833
-#> trt3 0.72260417 0.026924448  8.6191761 0.66128414 0.78392420
-#> trt4 0.76925417 0.035719663  5.2424244 0.67869638 0.85981195
-#> trt5 0.71437500 0.033251036  6.5854184 0.63473415 0.79401585
+#>      Estimate StdErr    DF CILower CIUpper
+#> trt1    0.753 0.0298  7.71   0.684   0.822
+#> trt2    0.760 0.0284 10.69   0.697   0.823
+#> trt3    0.723 0.0269  8.62   0.661   0.784
+#> trt4    0.769 0.0357  5.24   0.679   0.860
+#> trt5    0.714 0.0333  6.59   0.635   0.794
 #> 
 #> 
 #> $FRRC
 #> $FRRC$FTests
-#>            DF         MS     FStat           p
-#> Treatment   4 0.46330830 3.8507566 0.004163522
-#> Error     796 0.12031617        NA          NA
+#>            DF    MS FStat       p
+#> Treatment   4 0.463  3.85 0.00416
+#> Error     796 0.120    NA      NA
 #> 
 #> $FRRC$ciDiffTrt
-#>                Estimate      StdErr  DF           t        PrGTt       CILower
-#> trt1-trt2 -0.0068562500 0.017343311 796 -0.39532532 0.6927087308 -0.0409002793
-#> trt1-trt3  0.0306145833 0.017343311 796  1.76520986 0.0779118871 -0.0034294460
-#> trt1-trt4 -0.0160354167 0.017343311 796 -0.92458797 0.3554604706 -0.0500794460
-#> trt1-trt5  0.0388437500 0.017343311 796  2.23969634 0.0253859867  0.0047997207
-#> trt2-trt3  0.0374708333 0.017343311 796  2.16053518 0.0310289993  0.0034268040
-#> trt2-trt4 -0.0091791667 0.017343311 796 -0.52926265 0.5967708242 -0.0432231960
-#> trt2-trt5  0.0457000000 0.017343311 796  2.63502167 0.0085768050  0.0116559707
-#> trt3-trt4 -0.0466500000 0.017343311 796 -2.68979783 0.0072992573 -0.0806940293
-#> trt3-trt5  0.0082291667 0.017343311 796  0.47448649 0.6352831698 -0.0258148626
-#> trt4-trt5  0.0548791667 0.017343311 796  3.16428432 0.0016137424  0.0208351374
-#>                CIUpper
-#> trt1-trt2  0.027187779
-#> trt1-trt3  0.064658613
-#> trt1-trt4  0.018008613
-#> trt1-trt5  0.072887779
-#> trt2-trt3  0.071514863
-#> trt2-trt4  0.024864863
-#> trt2-trt5  0.079744029
-#> trt3-trt4 -0.012605971
-#> trt3-trt5  0.042273196
-#> trt4-trt5  0.088923196
+#>           Estimate StdErr  DF      t   PrGTt  CILower CIUpper
+#> trt1-trt2 -0.00686 0.0173 796 -0.395 0.69271 -0.04090  0.0272
+#> trt1-trt3  0.03061 0.0173 796  1.765 0.07791 -0.00343  0.0647
+#> trt1-trt4 -0.01604 0.0173 796 -0.925 0.35546 -0.05008  0.0180
+#> trt1-trt5  0.03884 0.0173 796  2.240 0.02539  0.00480  0.0729
+#> trt2-trt3  0.03747 0.0173 796  2.161 0.03103  0.00343  0.0715
+#> trt2-trt4 -0.00918 0.0173 796 -0.529 0.59677 -0.04322  0.0249
+#> trt2-trt5  0.04570 0.0173 796  2.635 0.00858  0.01166  0.0797
+#> trt3-trt4 -0.04665 0.0173 796 -2.690 0.00730 -0.08069 -0.0126
+#> trt3-trt5  0.00823 0.0173 796  0.474 0.63528 -0.02581  0.0423
+#> trt4-trt5  0.05488 0.0173 796  3.164 0.00161  0.02084  0.0889
 #> 
 #> $FRRC$ciAvgRdrEachTrt
-#>        Estimate      StdErr  DF    CILower    CIUpper
-#> trt1 0.75321875 0.021662179 199 0.71050187 0.79593563
-#> trt2 0.76007500 0.022801172 199 0.71511208 0.80503792
-#> trt3 0.72260417 0.021572235 199 0.68006466 0.76514368
-#> trt4 0.76925417 0.021161065 199 0.72752547 0.81098287
-#> trt5 0.71437500 0.022768240 199 0.66947702 0.75927298
+#>      Estimate StdErr  DF CILower CIUpper
+#> trt1    0.753 0.0217 199   0.711   0.796
+#> trt2    0.760 0.0228 199   0.715   0.805
+#> trt3    0.723 0.0216 199   0.680   0.765
+#> trt4    0.769 0.0212 199   0.728   0.811
+#> trt5    0.714 0.0228 199   0.669   0.759
 #> 
 #> $FRRC$ciDiffTrtEachRdr
-#>                      Estimate      StdErr  DF            t        PrGTt
-#> rdr1::trt1-trt2 -0.0077333333 0.030688767 199 -0.251992312 0.8013070675
-#> rdr1::trt1-trt3  0.0495750000 0.030688767 199  1.615411921 0.1078058305
-#> rdr1::trt1-trt4 -0.0308666667 0.030688767 199 -1.005796899 0.3157346970
-#> rdr1::trt1-trt5  0.0304666667 0.030688767 199  0.992762814 0.3220311471
-#> rdr1::trt2-trt3  0.0573083333 0.030688767 199  1.867404232 0.0633155472
-#> rdr1::trt2-trt4 -0.0231333333 0.030688767 199 -0.753804588 0.4518575457
-#> rdr1::trt2-trt5  0.0382000000 0.030688767 199  1.244755126 0.2146856872
-#> rdr1::trt3-trt4 -0.0804416667 0.030688767 199 -2.621208820 0.0094386515
-#> rdr1::trt3-trt5 -0.0191083333 0.030688767 199 -0.622649106 0.5342279782
-#> rdr1::trt4-trt5  0.0613333333 0.030688767 199  1.998559713 0.0470170958
-#> rdr3::trt1-trt2 -0.0020083333 0.030364016 199 -0.066141888 0.9473312632
-#> rdr3::trt1-trt3  0.0091333333 0.030364016 199  0.300794643 0.7638851251
-#> rdr3::trt1-trt4 -0.0182250000 0.030364016 199 -0.600217047 0.5490444896
-#> rdr3::trt1-trt5  0.0426166667 0.030364016 199  1.403525367 0.1620187360
-#> rdr3::trt2-trt3  0.0111416667 0.030364016 199  0.366936530 0.7140562449
-#> rdr3::trt2-trt4 -0.0162166667 0.030364016 199 -0.534075159 0.5938856422
-#> rdr3::trt2-trt5  0.0446250000 0.030364016 199  1.469667254 0.1432310786
-#> rdr3::trt3-trt4 -0.0273583333 0.030364016 199 -0.901011689 0.3686712399
-#> rdr3::trt3-trt5  0.0334833333 0.030364016 199  1.102730724 0.2714759176
-#> rdr3::trt4-trt5  0.0608416667 0.030364016 199  2.003742413 0.0464538856
-#> rdr4::trt1-trt2 -0.0189916667 0.036762356 199 -0.516606359 0.6060045976
-#> rdr4::trt1-trt3  0.0313166667 0.036762356 199  0.851867792 0.3953114650
-#> rdr4::trt1-trt4  0.0092666667 0.036762356 199  0.252069448 0.8012475297
-#> rdr4::trt1-trt5  0.0484500000 0.036762356 199  1.317924254 0.1890441132
-#> rdr4::trt2-trt3  0.0503083333 0.036762356 199  1.368474152 0.1727066684
-#> rdr4::trt2-trt4  0.0282583333 0.036762356 199  0.768675807 0.4429970724
-#> rdr4::trt2-trt5  0.0674416667 0.036762356 199  1.834530613 0.0680683497
-#> rdr4::trt3-trt4 -0.0220500000 0.036762356 199 -0.599798344 0.5493229753
-#> rdr4::trt3-trt5  0.0171333333 0.036762356 199  0.466056461 0.6416848108
-#> rdr4::trt4-trt5  0.0391833333 0.036762356 199  1.065854806 0.2877807352
-#> rdr5::trt1-trt2  0.0013083333 0.028864107 199  0.045327345 0.9638918444
-#> rdr5::trt1-trt3  0.0324333333 0.028864107 199  1.123656212 0.2625125832
-#> rdr5::trt1-trt4 -0.0243166667 0.028864107 199 -0.842453450 0.4005455428
-#> rdr5::trt1-trt5  0.0338416667 0.028864107 199  1.172448067 0.2424188377
-#> rdr5::trt2-trt3  0.0311250000 0.028864107 199  1.078328867 0.2821923628
-#> rdr5::trt2-trt4 -0.0256250000 0.028864107 199 -0.887780794 0.3757304216
-#> rdr5::trt2-trt5  0.0325333333 0.028864107 199  1.127120723 0.2610486764
-#> rdr5::trt3-trt4 -0.0567500000 0.028864107 199 -1.966109662 0.0506765926
-#> rdr5::trt3-trt5  0.0014083333 0.028864107 199  0.048791855 0.9611341077
-#> rdr5::trt4-trt5  0.0581583333 0.028864107 199  2.014901517 0.0452606144
-#>                        CILower        CIUpper
-#> rdr1::trt1-trt2 -0.06825024821  0.05278358154
-#> rdr1::trt1-trt3 -0.01094191487  0.11009191487
-#> rdr1::trt1-trt4 -0.09138358154  0.02965024821
-#> rdr1::trt1-trt5 -0.03005024821  0.09098358154
-#> rdr1::trt2-trt3 -0.00320858154  0.11782524821
-#> rdr1::trt2-trt4 -0.08365024821  0.03738358154
-#> rdr1::trt2-trt5 -0.02231691487  0.09871691487
-#> rdr1::trt3-trt4 -0.14095858154 -0.01992475179
-#> rdr1::trt3-trt5 -0.07962524821  0.04140858154
-#> rdr1::trt4-trt5  0.00081641846  0.12185024821
-#> rdr3::trt1-trt2 -0.06188485336  0.05786818669
-#> rdr3::trt1-trt3 -0.05074318669  0.06900985336
-#> rdr3::trt1-trt4 -0.07810152003  0.04165152003
-#> rdr3::trt1-trt5 -0.01725985336  0.10249318669
-#> rdr3::trt2-trt3 -0.04873485336  0.07101818669
-#> rdr3::trt2-trt4 -0.07609318669  0.04365985336
-#> rdr3::trt2-trt5 -0.01525152003  0.10450152003
-#> rdr3::trt3-trt4 -0.08723485336  0.03251818669
-#> rdr3::trt3-trt5 -0.02639318669  0.09335985336
-#> rdr3::trt4-trt5  0.00096514664  0.12071818669
-#> rdr4::trt1-trt2 -0.09148543428  0.05350210095
-#> rdr4::trt1-trt3 -0.04117710095  0.10381043428
-#> rdr4::trt1-trt4 -0.06322710095  0.08176043428
-#> rdr4::trt1-trt5 -0.02404376761  0.12094376761
-#> rdr4::trt2-trt3 -0.02218543428  0.12280210095
-#> rdr4::trt2-trt4 -0.04423543428  0.10075210095
-#> rdr4::trt2-trt5 -0.00505210095  0.13993543428
-#> rdr4::trt3-trt4 -0.09454376761  0.05044376761
-#> rdr4::trt3-trt5 -0.05536043428  0.08962710095
-#> rdr4::trt4-trt5 -0.03331043428  0.11167710095
-#> rdr5::trt1-trt2 -0.05561043170  0.05822709837
-#> rdr5::trt1-trt3 -0.02448543170  0.08935209837
-#> rdr5::trt1-trt4 -0.08123543170  0.03260209837
-#> rdr5::trt1-trt5 -0.02307709837  0.09076043170
-#> rdr5::trt2-trt3 -0.02579376504  0.08804376504
-#> rdr5::trt2-trt4 -0.08254376504  0.03129376504
-#> rdr5::trt2-trt5 -0.02438543170  0.08945209837
-#> rdr5::trt3-trt4 -0.11366876504  0.00016876504
-#> rdr5::trt3-trt5 -0.05551043170  0.05832709837
-#> rdr5::trt4-trt5  0.00123956830  0.11507709837
+#>                 Estimate StdErr  DF       t   PrGTt   CILower   CIUpper
+#> rdr1::trt1-trt2 -0.00773 0.0307 199 -0.2520 0.80131 -0.068250  0.052784
+#> rdr1::trt1-trt3  0.04957 0.0307 199  1.6154 0.10781 -0.010942  0.110092
+#> rdr1::trt1-trt4 -0.03087 0.0307 199 -1.0058 0.31573 -0.091384  0.029650
+#> rdr1::trt1-trt5  0.03047 0.0307 199  0.9928 0.32203 -0.030050  0.090984
+#> rdr1::trt2-trt3  0.05731 0.0307 199  1.8674 0.06332 -0.003209  0.117825
+#> rdr1::trt2-trt4 -0.02313 0.0307 199 -0.7538 0.45186 -0.083650  0.037384
+#> rdr1::trt2-trt5  0.03820 0.0307 199  1.2448 0.21469 -0.022317  0.098717
+#> rdr1::trt3-trt4 -0.08044 0.0307 199 -2.6212 0.00944 -0.140959 -0.019925
+#> rdr1::trt3-trt5 -0.01911 0.0307 199 -0.6226 0.53423 -0.079625  0.041409
+#> rdr1::trt4-trt5  0.06133 0.0307 199  1.9986 0.04702  0.000816  0.121850
+#> rdr3::trt1-trt2 -0.00201 0.0304 199 -0.0661 0.94733 -0.061885  0.057868
+#> rdr3::trt1-trt3  0.00913 0.0304 199  0.3008 0.76389 -0.050743  0.069010
+#> rdr3::trt1-trt4 -0.01822 0.0304 199 -0.6002 0.54904 -0.078102  0.041652
+#> rdr3::trt1-trt5  0.04262 0.0304 199  1.4035 0.16202 -0.017260  0.102493
+#> rdr3::trt2-trt3  0.01114 0.0304 199  0.3669 0.71406 -0.048735  0.071018
+#> rdr3::trt2-trt4 -0.01622 0.0304 199 -0.5341 0.59389 -0.076093  0.043660
+#> rdr3::trt2-trt5  0.04462 0.0304 199  1.4697 0.14323 -0.015252  0.104502
+#> rdr3::trt3-trt4 -0.02736 0.0304 199 -0.9010 0.36867 -0.087235  0.032518
+#> rdr3::trt3-trt5  0.03348 0.0304 199  1.1027 0.27148 -0.026393  0.093360
+#> rdr3::trt4-trt5  0.06084 0.0304 199  2.0037 0.04645  0.000965  0.120718
+#> rdr4::trt1-trt2 -0.01899 0.0368 199 -0.5166 0.60600 -0.091485  0.053502
+#> rdr4::trt1-trt3  0.03132 0.0368 199  0.8519 0.39531 -0.041177  0.103810
+#> rdr4::trt1-trt4  0.00927 0.0368 199  0.2521 0.80125 -0.063227  0.081760
+#> rdr4::trt1-trt5  0.04845 0.0368 199  1.3179 0.18904 -0.024044  0.120944
+#> rdr4::trt2-trt3  0.05031 0.0368 199  1.3685 0.17271 -0.022185  0.122802
+#> rdr4::trt2-trt4  0.02826 0.0368 199  0.7687 0.44300 -0.044235  0.100752
+#> rdr4::trt2-trt5  0.06744 0.0368 199  1.8345 0.06807 -0.005052  0.139935
+#> rdr4::trt3-trt4 -0.02205 0.0368 199 -0.5998 0.54932 -0.094544  0.050444
+#> rdr4::trt3-trt5  0.01713 0.0368 199  0.4661 0.64168 -0.055360  0.089627
+#> rdr4::trt4-trt5  0.03918 0.0368 199  1.0659 0.28778 -0.033310  0.111677
+#> rdr5::trt1-trt2  0.00131 0.0289 199  0.0453 0.96389 -0.055610  0.058227
+#> rdr5::trt1-trt3  0.03243 0.0289 199  1.1237 0.26251 -0.024485  0.089352
+#> rdr5::trt1-trt4 -0.02432 0.0289 199 -0.8425 0.40055 -0.081235  0.032602
+#> rdr5::trt1-trt5  0.03384 0.0289 199  1.1724 0.24242 -0.023077  0.090760
+#> rdr5::trt2-trt3  0.03112 0.0289 199  1.0783 0.28219 -0.025794  0.088044
+#> rdr5::trt2-trt4 -0.02563 0.0289 199 -0.8878 0.37573 -0.082544  0.031294
+#> rdr5::trt2-trt5  0.03253 0.0289 199  1.1271 0.26105 -0.024385  0.089452
+#> rdr5::trt3-trt4 -0.05675 0.0289 199 -1.9661 0.05068 -0.113669  0.000169
+#> rdr5::trt3-trt5  0.00141 0.0289 199  0.0488 0.96113 -0.055510  0.058327
+#> rdr5::trt4-trt5  0.05816 0.0289 199  2.0149 0.04526  0.001240  0.115077
 #> 
 #> 
 #> $RRFC
 #> $RRFC$FTests
-#>           DF          MS     FStat             p
-#> Treatment  4 0.463308298 13.658572 0.00020192224
-#> Error     12 0.033920699        NA            NA
+#>           DF     MS FStat        p
+#> Treatment  4 0.4633  13.7 0.000202
+#> Error     12 0.0339    NA       NA
 #> 
 #> $RRFC$ciDiffTrt
-#>                Estimate       StdErr DF           t         PrGTt      CILower
-#> trt1-trt2 -0.0068562500 0.0092087864 12 -0.74453350 4.7088356e-01 -0.026920472
-#> trt1-trt3  0.0306145833 0.0092087864 12  3.32449706 6.0595183e-03  0.010550361
-#> trt1-trt4 -0.0160354167 0.0092087864 12 -1.74131704 1.0717825e-01 -0.036099639
-#> trt1-trt5  0.0388437500 0.0092087864 12  4.21811825 1.1928824e-03  0.018779528
-#> trt2-trt3  0.0374708333 0.0092087864 12  4.06903056 1.5563074e-03  0.017406611
-#> trt2-trt4 -0.0091791667 0.0092087864 12 -0.99678353 3.3854538e-01 -0.029243389
-#> trt2-trt5  0.0457000000 0.0092087864 12  4.96265175 3.2930420e-04  0.025635778
-#> trt3-trt4 -0.0466500000 0.0092087864 12 -5.06581410 2.7711820e-04 -0.066714222
-#> trt3-trt5  0.0082291667 0.0092087864 12  0.89362119 3.8909518e-01 -0.011835055
-#> trt4-trt5  0.0548791667 0.0092087864 12  5.95943529 6.6167481e-05  0.034814945
-#>                 CIUpper
-#> trt1-trt2  0.0132079720
-#> trt1-trt3  0.0506788053
-#> trt1-trt4  0.0040288053
-#> trt1-trt5  0.0589079720
-#> trt2-trt3  0.0575350553
-#> trt2-trt4  0.0108850553
-#> trt2-trt5  0.0657642220
-#> trt3-trt4 -0.0265857780
-#> trt3-trt5  0.0282933886
-#> trt4-trt5  0.0749433886
+#>           Estimate  StdErr DF      t    PrGTt CILower  CIUpper
+#> trt1-trt2 -0.00686 0.00921 12 -0.745 4.71e-01 -0.0269  0.01321
+#> trt1-trt3  0.03061 0.00921 12  3.324 6.06e-03  0.0106  0.05068
+#> trt1-trt4 -0.01604 0.00921 12 -1.741 1.07e-01 -0.0361  0.00403
+#> trt1-trt5  0.03884 0.00921 12  4.218 1.19e-03  0.0188  0.05891
+#> trt2-trt3  0.03747 0.00921 12  4.069 1.56e-03  0.0174  0.05754
+#> trt2-trt4 -0.00918 0.00921 12 -0.997 3.39e-01 -0.0292  0.01089
+#> trt2-trt5  0.04570 0.00921 12  4.963 3.29e-04  0.0256  0.06576
+#> trt3-trt4 -0.04665 0.00921 12 -5.066 2.77e-04 -0.0667 -0.02659
+#> trt3-trt5  0.00823 0.00921 12  0.894 3.89e-01 -0.0118  0.02829
+#> trt4-trt5  0.05488 0.00921 12  5.959 6.62e-05  0.0348  0.07494
 #> 
 #> $RRFC$ciAvgRdrEachTrt
-#>        Estimate      StdErr DF    CILower    CIUpper
-#> trt1 0.75321875 0.023507547  3 0.67840724 0.82803026
-#> trt2 0.76007500 0.020694366  3 0.69421629 0.82593371
-#> trt3 0.72260417 0.020680483  3 0.65678964 0.78841869
-#> trt4 0.76925417 0.031067379  3 0.67038390 0.86812443
-#> trt5 0.71437500 0.027317419  3 0.62743878 0.80131122
+#>      Estimate StdErr DF CILower CIUpper
+#> trt1    0.753 0.0235  3   0.678   0.828
+#> trt2    0.760 0.0207  3   0.694   0.826
+#> trt3    0.723 0.0207  3   0.657   0.788
+#> trt4    0.769 0.0311  3   0.670   0.868
+#> trt5    0.714 0.0273  3   0.627   0.801
 ```
 
 ### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset04-FROC-DBM}
@@ -1646,7 +1407,7 @@ ds1 <- dataset04 # do NOT convert to ROC
 ds <- ds1
 FOM <- "wAFROC" # also try wAFROC1, MaxLLF and MaxNLF
 st5 <- StSignificanceTesting(ds, FOM = FOM, method = "OR")
-print(st5)
+print(st5, digits = 4)
 ```
 
 A comparison was run between results of OR and DBM for the FROC dataset. Except for `FRRC`, where differences are expected (because `ddf` in the former is $\infty$, while that in the later is $(I-1)\times(J-1))$, the results for the p-values were identical. This was true for the following FOMs: `wAFROC`, with equal and unequal weights, and `MaxLLF`. The confidence intervals (again, excluding `FRRC`) were identical for `FOM` = `wAFROC`. Slight differences were observed for `FOM` = `MaxLLF`.  
