@@ -14,7 +14,7 @@ output:
 
 * To illustrate the covariance matrix, a single reader interpreting a case-set in multiple treatments is analyzed and the results compared to that using DBM fixed-reader analysis described in previous chapters. 
 
-## Single-reader multiple-treatment OR model {#OR1RMTModel}
+## Single-reader multiple-treatment {#OR1RMTModel}
 Consider a single-reader providing ROC interpretations of a common case-set $\{c\}$ in multiple-treatments $i$ ($i$ = 1, 2, …, $I$). Before proceeding, we note that this is not formally equivalent to multiple-readers providing ROC interpretations in a single treatment. This is because reader is a random factor while treatment is a fixed factor. 
 
 *In the OR method one models the figure-of-merit, not the pseudovalues; indeed this is a key differences from the DBM method.* The figure of merit $\theta$ is modeled as:
@@ -435,7 +435,7 @@ data.frame("ORBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"],
            "ORBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
            "ORBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
 #>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-#> 1    1.2333939          1   0.26674801
+#> 1     1.030213          1   0.31010864
 ```
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBM and $\infty$ for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
@@ -539,7 +539,7 @@ If RRRC analysis were conducted, the values are [one needs to analyze a dataset 
 
 For `RRFC` analysis, one replaces `RRRC` with `RRFC`, etc. I should note that the auto-prompt feature of `RStudio` makes it unnecessary to enter the complex string names shown above  - `RStudio` will suggest them.
 
-## Multiple-reader multiple-treatment OR model {#SignificanceTestingORMRMC}
+## Multiple-reader multiple-treatment {#SignificanceTestingORMRMC}
 The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to Eqn. \@ref(eq:ORModel1RMT), one needs an additional $j$ index to denote reader dependence of the figure of merit, and additional terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random (i.e., reader) factor. 
 
 The general Obuchowski and Rockette model for fully paired multiple-reader multiple-treatment interpretations is: 
@@ -729,8 +729,7 @@ Cov_3 \leq  Cov_2 \leq  \text{Cov1} \leq  \text{Var}
 (\#eq:CovOrderings)
 \end{equation}
 
-## Discussion/Summary/1
-
-
+## Summary{#ORMethodIntro-Summary}
+## Discussion{#ORMethodIntro-Discussion}
 ## References {#ORMethodIntro-references}
 

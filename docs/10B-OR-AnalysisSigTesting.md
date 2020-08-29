@@ -18,7 +18,7 @@ Multiple readers interpreting a case-set in multiple treatments is analyzed and 
 
 Before proceeding, it is understood that datasets analyzed in this chapter follow a _factorial_ design, sometimes call fully-factorial or fully-crossed design. Basically, the data structure is symmetric, e.g., all readers interpret all cases in all modalities. The next chapter will describe the analysis of _split-plot_ datasets, where, for example, some readers interpret all cases in one modality, while the remaining readers interpret all cases in the other modality.
 
-## Random-reader random-case (RRRC) analysis {#OR_RRRC}
+## Random-reader random-case {#OR_RRRC}
 In conventional ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented in the DBM model by the scalar $\epsilon$ term. Because of the correlated structure of the error term, in OR analysis, a customized ANOVA is needed. The null hypothesis (NH) is that the true figures-of-merit of all treatments are identical, i.e., 
 
 \begin{equation}
@@ -145,7 +145,7 @@ CI_{1-\alpha,RRRC,\theta_{i \bullet}} = \theta_{i \bullet} \pm t_{\alpha/2, \tex
 (\#eq:CI-RRRC-IndvlTrt)
 \end{equation}
 
-## Fixed-reader random-case (FRRC) analysis
+## Fixed-reader random-case {#OR-FRRC}
 Using the vertical bar notation $\mid R$ to denote that reader is regarded as a fixed effect [@RN1124], the F -statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is [@RN1865]: 
 
 \begin{equation}
@@ -213,7 +213,7 @@ CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}} = (\theta_{i j} - \theta_{i' j})
 
 In these equations $\text{Var}_i$ and $\text{Cov2}_i$ are computed using the data for treatment $i$ only, and $\text{Var}_j$ and $\text{Cov1}_j$ are computed using the data for reader $j$ only.  
 
-## Random-reader fixed-case (RRFC) analysis {#ORAnalysisSigTesting-RRFCAnalysis}
+## Random-reader fixed-case {#ORAnalysisSigTesting-RRFCAnalysis}
 When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis $NH: \tau_i = 0 \; (i=1,1,2,...I)$ is: 
 
 \begin{equation}
@@ -256,8 +256,7 @@ CI_{1-\alpha,RRFC,\theta_{i \bullet}} = \theta_{i \bullet} \pm t_{\alpha/2, J-1}
 
 Here $\text{MS(R)}_i$ is the reader mean-square for modality $i$.
 
-## Discussion/Summary/4
-
-
+## Summary{#ORAnalysisSigTesting-Summary}
+## Discussion{#ORAnalysisSigTesting-Discussion}
 ## References {#ORAnalysisSigTesting-references}
 
