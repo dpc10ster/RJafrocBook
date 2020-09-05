@@ -1,7 +1,7 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2020-08-28"
+date: "2020-09-04"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
@@ -17,8 +17,9 @@ description: "Extended RJafroc documentation."
 
 
 # Preface {-}
-* This book is currently (as of August 2020) in preparation. 
+* This book is currently (as of August 2020) in preparation. Parts labeled TBA need to be updated on final revision.
 * It is intended as an online update to my "physical" book [@RN2680]. Since its publication in 2017 the `RJafroc` package, on which the `R` code examples in the book depend, has evolved considerably, causing many of the examples to "break". This also gives me the opportunity to improve on the book and include additional material.
+* The physical book chapters are labeled (book), to distinguish them from the chapters in this online book.
 
 # A note on the online distribution mechanism of the book {-}
 * In the hard-copy version of my book [@RN2680] the online distribution mechanism was `BitBucket`. 
