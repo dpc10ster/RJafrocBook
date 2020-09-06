@@ -14,9 +14,14 @@ In a positive-directed rating scale with five discrete levels, the ratings could
 
 Table \@ref(tab:ratingsParadigmTable1) is a representative counts table for a 5-rating study that summarizes the collected data. It is the starting point for analysis. It lists the number of counts in each ratings bin, listed separately for non-diseased and diseased cases, respectively. The data is from an actual clinical study.
 
-\begin{table}[H]
+
+
+
+\begin{table}
+
+\caption{(\#tab:ratingsParadigmTable1)Representative counts table.}
 \centering
-\begin{tabular}{l|r|r|r|r|r}
+\begin{tabular}[t]{l|r|r|r|r|r}
 \hline
   & 1 & 2 & 3 & 4 & 5\\
 \hline
@@ -109,7 +114,7 @@ cat("showing observed operating points and equal variance model fitted ROC curve
 plotROC (mu, sigma, FPF, TPF)
 ```
 
-![](04-ratings-paradigm_files/figure-latex/unnamed-chunk-3-1.pdf)<!-- --> 
+![](04-ratings-paradigm_files/figure-latex/unnamed-chunk-4-1.pdf)<!-- --> 
 
 * Notice that the values of the arrays `FPF` and `TPF` are identical to those listed in Table 4.1.
 
@@ -151,7 +156,7 @@ cat("showing observed operating points and unequal variance model fitted ROC cur
 #> showing observed operating points and unequal variance model fitted ROC curve
 ```
 
-![](04-ratings-paradigm_files/figure-latex/unnamed-chunk-5-1.pdf)<!-- --> 
+![](04-ratings-paradigm_files/figure-latex/unnamed-chunk-6-1.pdf)<!-- --> 
 
 * The ROC curve in Fig. 4.1 (A), as determined by the uppermost operating point, passes exactly through this point but misses the others. If a different operating point were used to estimate $\mu$ = and $A_{z;\sigma = 1}$, the estimated values would have been different and the new curve would pass exactly through the *new* selected point. No single-point based choice of $\mu$ would yield a satisfactory visual fit to all the observed operating points. [The reader should confirm these statements with appropriate modifications to the code.] * __This is the reason one needs a modified model, with an extra parameter, namely the unequal variance binormal model, to fit radiologist data__ (the extra parameter is the ratio of the standard deviations of the two distributions). 
 

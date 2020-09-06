@@ -6,6 +6,7 @@ site: bookdown::bookdown_site
 output: 
    bookdown::html_document2: default
    bookdown::pdf_document2: default
+   latex_engine: lualatex
 documentclass: book
 bibliography: [packages.bib, myRefs.bib]
 biblio-style: apalike
