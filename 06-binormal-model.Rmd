@@ -1,4 +1,4 @@
-# Binormal model {#BinormalModel}
+# Binormal model {#BinMod}
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -31,7 +31,7 @@ plotROC <- function (mu, sigma, FPF, TPF)
 }
 ```
 
-## Introduction {#BinormalModelIntro}
+## Introduction {#BinModIntro}
 In this chapter the univariate binormal model [@RN212] is described, in which one is dealing with one ROC rating per case, as in a single observer interpreting cases, one at a time, in a single modality. By convention the qualifier "univariate" is often omitted, i.e., it is implicit. In a later chapter a bivariate binormal model will be described where each case yields two ratings, as in a single observer interpreting cases in two modalities, or equivalently, two observers interpreting cases in a single modality. 
 
 The equal variance binormal model was described in Chapter "Binary Paradigm". The ratings method of acquiring ROC data and calculation of operating points was illustrated in Chapter "Ratings Paradigm". It was shown that for a clinical ROC dataset the unequal-variance binormal model fitted the data better than the equal-variance binormal model. This chapter deals with details of the unequal-variance binormal model, establishes necessary notation for describing the model, and derives expressions for sensitivity, specificity and the area under the predicted ROC curve (due to its complexity it appears in an Appendix). 
@@ -39,7 +39,7 @@ The equal variance binormal model was described in Chapter "Binary Paradigm". Th
 The main aim of this chapter is to take the mystery out of statistical curve fitting. Accordingly, this is one chapter where the Appendices are longer than the main text, but as usual, they are essential reading as they reinforce the main text. It is not too much to expect the reader to load each file beginning with "main", click on Source and see what happens. [The reader is reminded that any file that starts with "main" contains directly executable code.]
 
 
-## The binormal model {#BinormalModelTheModel}
+## The binormal model {#BinModTheModel}
 The unequal-variance binormal model (henceforth abbreviated to binormal model; when the author means equal variances, it will be made explicit) is defined by (capital letters indicate random variables and their lower-case counterparts are actual realized values):
 
 \begin{equation*} 
@@ -544,19 +544,19 @@ FPF <- c(0.017, 0.050, 0.183, 0.5)
 TPF <- c(0.440, 0.680, 0.780, 0.900)
 # ...do...
 
-phiInvFPF <- qnorm(FPF)
+PhiInvFPF <- qnorm(FPF)
 # apply the PHI_INV function
-phiInvTPF <- qnorm(TPF)
+PhiInvTPF <- qnorm(TPF)
 # ... do ... 
 
-fit <- lm(phiInvTPF~phiInvFPF)
+fit <- lm(PhiInvTPF~PhiInvFPF)
 print(fit)
-pointsData <- data.frame(phiInvFPF = phiInvFPF, 
-                         phiInvTPF = phiInvTPF)
+pointsData <- data.frame(PhiInvFPF = PhiInvFPF, 
+                         PhiInvTPF = PhiInvTPF)
 pointsPlot <- ggplot(data = pointsData, 
                      mapping = 
-                       aes(x = phiInvFPF, 
-                           y = phiInvTPF)) + 
+                       aes(x = PhiInvFPF, 
+                           y = PhiInvTPF)) + 
   geom_point(size = 2) + 
   theme(
     axis.title.y = element_text(size = 18,face="bold"),
@@ -615,17 +615,17 @@ Similar expressions apply for all integer values of $r$ ranging from $1,2,...,R$
 
 \begin{equation} 
 \prod_{r=1}^{R}\left [\left (\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )  \right )^{K_{1r}} \left (\Phi\left ( b\zeta_{r+1}-a  \right ) - \Phi\left ( b\zeta_r-a  \right )  \right )^{K_{2r}}  \right ]
-(\#eq:BinormalModelProduct)
+(\#eq:BinModProductProb)
 \end{equation} 
 
 We are almost there. A specific combination of $K_{11},K_{12},...,K_{1R}$ counts from $K_1$ non-diseased cases and counts $K_{21},K_{22},...,K_{2R}$ from $K_2$ diseased cases can occur the following number of times (given by the multinomial factor shown below):
 
 \begin{equation} 
 \frac{K_1!}{\prod_{r=1}^{R}K_{1r}!}\frac{K_2!}{\prod_{r=1}^{R}K_{2r}!}
-(\#eq:BinormalModelCombFactor)
+(\#eq:BinModCombFactor)
 \end{equation} 
 
-The likelihood function is the product of Eqn. \@ref(eq:BinormalModelProduct) and Eqn.  \@ref(eq:BinormalModelCombFactor):
+The likelihood function is the product of Eqn. \@ref(eq:BinModProductProb) and Eqn.  \@ref(eq:BinModCombFactor):
 
 \begin{equation} 
 \left.\begin{matrix}
@@ -633,16 +633,16 @@ L\left ( a,b,\overrightarrow{\zeta} \right ) = \\
 \left (\frac{K_1!}{\prod_{r=1}^{R}K_{1r}!}\frac{K_2!}{\prod_{r=1}^{R}K_{2r}!}  \right ) \times\\ 
 \prod_{r=1}^{R}\left [\left (\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )  \right )^{K_{1r}} \left (\Phi\left ( b\zeta_{r+1}-a  \right ) - \Phi\left ( b\zeta_r-a  \right )  \right )^{K_{2r}}  \right ]
 \end{matrix}\right\}
-(\#eq:BinormalModelLikelihood)
+(\#eq:BinModLikelihood)
 \end{equation} 
 
-The left hand side of Eqn. \@ref(eq:BinormalModelLikelihood) shows explicitly the dependence of the likelihood function on the parameters of the model, namely $a,b,\overrightarrow{\zeta}$, where the vector of thresholds $\overrightarrow{\zeta}$ is a compact notation for the set of thresholds $\zeta_1,\zeta_2,...,\zeta_R$, (note that since $\zeta_0 = -\infty$, and $\zeta_R = +\infty$, only $R-1$ free threshold parameters are involved, and the total number of free parameters in the model is $R+1$). For example, for a 5-rating ROC study, the total number of free parameters is 6, i.e., $a$, $b$ and 4 thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$.
+The left hand side of Eqn. \@ref(eq:BinModLikelihood) shows explicitly the dependence of the likelihood function on the parameters of the model, namely $a,b,\overrightarrow{\zeta}$, where the vector of thresholds $\overrightarrow{\zeta}$ is a compact notation for the set of thresholds $\zeta_1,\zeta_2,...,\zeta_R$, (note that since $\zeta_0 = -\infty$, and $\zeta_R = +\infty$, only $R-1$ free threshold parameters are involved, and the total number of free parameters in the model is $R+1$). For example, for a 5-rating ROC study, the total number of free parameters is 6, i.e., $a$, $b$ and 4 thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$.
 
-Eqn.  \@ref(eq:BinormalModelLikelihood) is forbidding but here comes a simplification. The difference of probabilities such as $\Phi\left ( \zeta_r  \right )-\Phi\left ( \zeta_{r-1}  \right )$ is guaranteed to be positive and less than one [the $\Phi$ function is a probability, i.e., in the range 0 to 1, and since $\zeta_r$ is greater than $\zeta_{r-1}$, the difference is positive and less than one]. When the difference is raised to the power of $K_{1r}$ (a non-negative integer) a very small number can result. Multiplication of all these small numbers may result in an even smaller number, which may be too small to be represented as a floating-point value, especially as the number of counts increases. To prevent this we resort to a trick. Instead of maximizing the likelihood function $L\left ( a,b,\overrightarrow{\zeta} \right )$ we choose to maximize the logarithm of the likelihood function (the base of the logarithm is immaterial). The logarithm of the likelihood function is: 
+Eqn.  \@ref(eq:BinModLikelihood) is forbidding but here comes a simplification. The difference of probabilities such as $\Phi\left ( \zeta_r  \right )-\Phi\left ( \zeta_{r-1}  \right )$ is guaranteed to be positive and less than one [the $\Phi$ function is a probability, i.e., in the range 0 to 1, and since $\zeta_r$ is greater than $\zeta_{r-1}$, the difference is positive and less than one]. When the difference is raised to the power of $K_{1r}$ (a non-negative integer) a very small number can result. Multiplication of all these small numbers may result in an even smaller number, which may be too small to be represented as a floating-point value, especially as the number of counts increases. To prevent this we resort to a trick. Instead of maximizing the likelihood function $L\left ( a,b,\overrightarrow{\zeta} \right )$ we choose to maximize the logarithm of the likelihood function (the base of the logarithm is immaterial). The logarithm of the likelihood function is: 
 
 \begin{equation} 
 LL\left ( a,b,\overrightarrow{\zeta} \right )=\log \left ( L\left ( a,b,\overrightarrow{\zeta} \right ) \right )
-(\#eq:BinormalModelLogLikelihood)
+(\#eq:BinModLogLikelihood)
 \end{equation} 
 
 Since the logarithm is a monotonically increasing function of its argument, maximizing the logarithm of the likelihood function is equivalent to maximizing the likelihood function. Taking the logarithm converts the product symbols in Eqn. (6.4.8) to summations, so instead of multiplying small numbers one is adding them, thereby avoiding underflow errors. Another simplification is that one can ignore the logarithm of the multinomial factor involving the factorials, because these do not depend on the parameters of the model. Putting all this together, we get the following expression for the logarithm of the likelihood function:
@@ -651,10 +651,10 @@ Since the logarithm is a monotonically increasing function of its argument, maxi
 LL\left ( a,b,\overrightarrow{\zeta} \right ) \propto \\
 \sum_{r=1}^{R} K_{1r}\log \left ( \Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right ) \right ) + \\
 \sum_{r=1}^{R} K_{2r}\log \left ( \Phi\left (b \zeta_{r+1} - a \right ) - \Phi\left ( b \zeta_r - a \right ) \right ) 
-(\#eq:BinormalModelLL)
+(\#eq:BinModLL)
 \end{equation} 
 
-The left hand side of Eqn. \@ref(eq:BinormalModelLL) is a function of the model parameters $a,b,\overrightarrow{\zeta}$ and the observed data, the latter being the counts contained in the vectors $\overrightarrow{K_1}$ and $\overrightarrow{K_2}$, where the vector notation is used as a compact form for the counts $K_{11},K_{12},...,K_{1R}$ and $K_{21},K_{22},...,K_{2R}$, respectively. The right hand side of Eqn. \@ref(eq:BinormalModelLL) is monotonically related to the probability of observing the data given the model parameters $a,b,\overrightarrow{\zeta}$. If the choice of model parameters is poor, then the probability of observing the data will be small and log likelihood will be small. With a better choice of model parameters the probability and log likelihood will increase. With optimal choice of model parameters the probability and log likelihood will be maximized, and the corresponding optimal values of the model parameters are called maximum likelihood estimates (MLEs). These are the estimates produced by the programs RSCORE and ROCFIT. 
+The left hand side of Eqn. \@ref(eq:BinModLL) is a function of the model parameters $a,b,\overrightarrow{\zeta}$ and the observed data, the latter being the counts contained in the vectors $\overrightarrow{K_1}$ and $\overrightarrow{K_2}$, where the vector notation is used as a compact form for the counts $K_{11},K_{12},...,K_{1R}$ and $K_{21},K_{22},...,K_{2R}$, respectively. The right hand side of Eqn. \@ref(eq:BinModLL) is monotonically related to the probability of observing the data given the model parameters $a,b,\overrightarrow{\zeta}$. If the choice of model parameters is poor, then the probability of observing the data will be small and log likelihood will be small. With a better choice of model parameters the probability and log likelihood will increase. With optimal choice of model parameters the probability and log likelihood will be maximized, and the corresponding optimal values of the model parameters are called maximum likelihood estimates (MLEs). These are the estimates produced by the programs RSCORE and ROCFIT. 
 
 ### Code implementing MLE
 
@@ -680,29 +680,32 @@ The above ROC curve is a good visual fit to the observed operating points. Quant
 \begin{equation} 
 C^2=\sum_{t=1}^{2}\sum_{r=1}^{R}\frac{\left (K_{tr}-\left \langle K_{tr} \right \rangle  \right )^2}{\left \langle K_{tr} \right \rangle}\\
 K_{tr} \geq 5
-(\#eq:BinormalModelGoodnessFit)
+(\#eq:BinModGoodnessFit)
 \end{equation} 
 
 The expected values are given by:
 
-\begin{equation*} 
+\begin{equation} 
 \left \langle K_{1r} \right \rangle=K_1\left ( \Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right )  \right )\\
 \left \langle K_{2r} \right \rangle=K_2\left ( \Phi\left ( a\zeta_{r+1}-b \right ) - \Phi\left ( a\zeta_r - b\right )  \right )
-\end{equation*} 
+(\#eq:BinModGoodnessFitExpVals)
+\end{equation} 
 
 These expressions should make sense: the difference between the two CDF functions is the probability of a count in the specified bin, and multiplication by the total number of relevant cases should yield the expected counts (a non-integer). 
 
-It can be shown that under the null hypothesis that the assumed probability distribution functions for the counts equals the true probability distributions, i.e., the model is valid, the statistic $C^2\sim \chi_{df}^{2}$ is distributed as:
+It can be shown that under the null hypothesis that the assumed probability distribution functions for the counts equals the true probability distributions, i.e., the model is valid, the statistic $C^2$ is distributed as:
 
-\begin{equation*} 
+\begin{equation} 
 C^2\sim \chi_{df}^{2}
-\end{equation*} 
+(\#eq:BinModGoodnessFitDistr)
+\end{equation} 
 
-Here $C^2\sim \chi_{df}^{2}$  is the chi-square distribution with degrees of freedom  $ddf$ defined by:
+Here $C^2\sim \chi_{df}^{2}$  is the chi-square distribution with degrees of freedom  *df* defined by:
 
-\begin{equation*} 
-ddf=\left ( R-1 \right )+\left ( R-1 \right )-\left (2+ R-1 \right )=\left ( R-3 \right )
-\end{equation*} 
+\begin{equation} 
+df=\left ( R-1 \right )+\left ( R-1 \right )-\left (2+ R-1 \right )=\left ( R-3 \right )
+(\#eq:BinModGoodnessFitdf)
+\end{equation} 
 
 The right hand side of the above equation has been written in an expansive form to illustrate the general rule: for $R$ non-diseased cells in the ratings table, the degree of freedom is $R-1$: this is because when all but one cells are specified, the last is determined, because they must sum to $K_1$ . Similarly, the degree of freedom for the diseased cells is also $R-1$. Last, we need to subtract the number of free parameters in the model, which is $(2+R-1)$, i.e., the  $a,b$ parameters and the $R-1$ thresholds. It is evident that if $R = 3$ then $df = 0$. In this situation, there are only two non-trivial operating points and the straight-line fit shown will pass through both of them. With two basic parameters, fitting two points is trivial, and goodness of fit cannot be calculated.
 
@@ -721,15 +724,17 @@ Sensitivity and specificity are *dual* measures of overall performance. It is ha
 
 (Book) Appendix 6.A derives the formula for the partial area under the unequal-variance binormal model. A special case of this formula is the area under the whole ROC curve, reproduced below using both parameterizations of the model:
 
-\begin{equation*} 
+\begin{equation} 
 A_z=\Phi\left ( \frac{a}{\sqrt{1+b^2}} \right )=\Phi\left ( \frac{\mu}{\sqrt{1+\sigma^2}} \right )
-\end{equation*} 
+(\#eq:BinModab2Az)
+\end{equation} 
 
 The binormal fitted AUC increases as $a$ increases or as $b$ decreases. Equivalently, it increases as $\mu$ increases or as $\sigma$ decreases. An equivalent $d'$ parameter is defined as the separation of two unit-variance normal distributions yielding the same AUC as that predicted by the $(a,b)$ parameter binormal model. It is defined by:
 
-\begin{equation*} 
+\begin{equation} 
 d'=\sqrt{2}\Phi^{-1}\left ( A_z \right )
-\end{equation*} 
+(\#eq:BinModab2dprime)
+\end{equation} 
 
 
 ## Discussion
@@ -748,8 +753,8 @@ The unphysical nature of the hook (predicting worse than chance-level performanc
 To this day the binormal model is widely used to fit ROC datasets. In spite of its limitations, the binormal model has been very useful in bringing a level of quantification to this field that did not exist prior to the work [@RN212] by Dorfman and Alf.
 
 
-## Summary{#BinormalModel-Summary}
-## Discussion{#BinormalModel-Discussion}
-## References {#BinormalModel-references}
+## Summary{#BinMod-Summary}
+## Discussion{#BinMod-Discussion}
+## References {#BinMod-references}
 
 
