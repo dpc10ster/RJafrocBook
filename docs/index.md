@@ -1,9 +1,11 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2020-09-05"
+date: "2020-09-06"
 site: bookdown::bookdown_site
-output: bookdown::gitbook
+output: 
+   bookdown::html_document2: default
+   bookdown::pdf_document2: default
 documentclass: book
 bibliography: [packages.bib, myRefs.bib]
 biblio-style: apalike

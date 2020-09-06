@@ -15,24 +15,27 @@ The main aim of this chapter is to take the mystery out of statistical curve fit
 ## The binormal model {#BinModTheModel}
 The unequal-variance binormal model (henceforth abbreviated to binormal model; when the author means equal variances, it will be made explicit) is defined by (capital letters indicate random variables and their lower-case counterparts are actual realized values):
 
-\begin{equation*} 
+\begin{equation} 
 Z_{k_tt}\sim N\left ( \mu_t,\sigma_{t}^{2} \right );t=1,2
-\end{equation*}
+(\#eq:BinModZSampling1)
+\end{equation}
 
 where 
 
-\begin{equation*} 
+\begin{equation} 
 \mu_1=0;\mu_2=\mu;\sigma_{1}^{2}=1;\sigma_{2}^{2}=\sigma^{2}
-\end{equation*}
+(\#eq:BinModZSampling2)
+\end{equation}
 
-Eqn. (6.2.1) states that the Z-samples for non-diseased cases are distributed as a $N(0,1)$  distribution, i.e., the unit normal distribution, while the Z-samples for diseased cases are distributed as a  $N(\mu,\sigma^2)$ distribution, i.e., a normal distribution with mean $\mu$  and variance $\sigma^2$. This is a 2-parameter model of the z-samples, not counting additional threshold parameters needed for data binning.
+Eqn. \@ref(eq:BinModZSampling1) states that the z-samples for non-diseased cases are distributed as a $N(0,1)$  distribution, i.e., the unit normal distribution, while the z-samples for diseased cases are distributed as a  $N(\mu,\sigma^2)$ distribution, i.e., a normal distribution with mean $\mu$  and variance $\sigma^2$. This is a 2-parameter model of the z-samples, not counting additional threshold parameters needed for data binning.
 
 ### Binning the data
 In an R-rating ROC study the observed ratings r take on integer values, 1 through R, it being understood that higher ratings correspond to greater confidence for disease. Defining dummy cutoffs $\zeta_0 = -\infty$ and  $\zeta_R = +\infty$, the binning rule for a case with realized z-sample z is (Chapter "Ratings Paradigm", Eqn. 4.13):
 
-\begin{equation*} 
+\begin{equation} 
 if \left (\zeta_{r-1} \le z \le \zeta_r  \right )\Rightarrow \text rating = r
-\end{equation*}
+(\#eq:BinModZBinning)
+\end{equation}
 
 
 
@@ -90,15 +93,15 @@ grid.draw(gt)
 
 ![](06-binormal-model_files/figure-latex/unnamed-chunk-2-1.pdf)<!-- --> 
 
-In the unequal-variance binormal model, the variance $\sigma^2$ of the Z-samples for diseased cases, is allowed to be different from unity. Most ROC datasets are consistent with  $\sigma > 1$. The above figure, generated with  $\mu = 1.5, \sigma = 1.5$, illustrates how realized z-samples are converted to ratings, i.e., it illustrates application of the binning rule. For example, a case with  Z-sample equal to -2.5 would be rated "1", and one with  Z-sample equal to -1 would be rated "2", cases with Z-samples greater than 2.5 would be rated "5", etc.
+In the unequal-variance binormal model, the variance $\sigma^2$ of the z-samples for diseased cases is allowed to be different from unity. Most ROC datasets are consistent with  $\sigma > 1$. The above figure, generated with  $\mu = 1.5, \sigma = 1.5$, illustrates how realized z-samples are converted to ratings, i.e., application of the binning rule. For example, a case with  z-sample equal to -2.5 would be rated "1", and one with  z-sample equal to -1 would be rated "2", cases with z-samples greater than 2.5 would be rated "5", etc.
 
 ### Invariance of the binormal model to arbitrary monotone transformations
-
 The binormal model is not as restrictive as might appear at first sight. Any monotone increasing transformation $Y=f(Z)$  applied to the observed z-samples, and the associated thresholds, will yield the same observed data, e.g., Table 6.1. This is because such a transformation leaves the ordering of the ratings unaltered and hence results in the same operating points. While the distributions for   will not be binormal (i.e., two independent normal distributions), one can safely "pretend" that one is still dealing with an underlying binormal model. An alternative way of stating this is that any pair of distributions is allowed as long as they are reducible to a binormal model form by a monotonic increasing transformation of  Y: e.g., $Z=f^{-1}$. [If $f$ is a monotone increasing function of its argument, so is  $f^{-1}$}.]  For this reason, the term “pair of latent underlying normal distributions” is sometimes used to describe the binormal model. The robustness of the binormal model has been investigated [@RN1216; @RN100]. The referenced paper by Dorfman et al has an excellent discussion of the robustness of the binormal model.
 
-The robustness of the binormal model, i.e., the flexibility allowed by the infinite choices of monotonic increasing functions, application of each of which leaves the ordering of the data unaltered, is widely misunderstood. The non-Gaussian appearance of histograms of ratings in ROC studies can lead one to incorrect conclusions that the binormal model is inapplicable to these datasets. To quote a reviewer of one of the author's recent papers, *"I have had multiple encounters with statisticians who do not understand this difference.... They show me histograms of data, and tell me that the data is obviously not normal, therefore the binormal model should not be used.*" 
+The robustness of the binormal model, i.e., the flexibility allowed by the infinite choices of monotonic increasing functions, application of each of which leaves the ordering of the data unaltered, is widely misunderstood. The non-Gaussian appearance of histograms of ratings in ROC studies can lead one to incorrect conclusions that the binormal model is inapplicable to these datasets. To quote a reviewer of one of the author's recent papers: 
+> I have had multiple encounters with statisticians who do not understand this difference.... They show me histograms of data, and tell me that the data is obviously not normal, therefore the binormal model should not be used. 
 
-*The reviewer is correct.* The example below illustrates the misconception.
+The reviewer is correct. The misconception is illustrated next.
 
 
 
@@ -149,7 +152,9 @@ for (i in 1:3) {
     geom_line(data = curveData, size = 1) +
     xlab(label = "Original Rating") +
     ylab(label = "Transformed Rating") + 
-    ggtitle(label = paste0("B", i, ": ", "Monotone Transformation"))
+    ggtitle(
+      label = paste0("B", i, ": ", 
+                     "Monotone Transformation"))
   print(plot3)
   
   y <- Y(c(z1, z2),mu1,mu2,sigma1,sigma2,f)
@@ -159,18 +164,22 @@ for (i in 1:3) {
   hist.2 <-  ggplot(data = hist2, mapping = aes(x = x)) +
     geom_histogram(binwidth = 5, color = "black", fill="grey") +
     xlab(label = "Transformed Rating") + 
-    ggtitle(label = paste0("C", i, ": ", "Latent Gaussians"))
+    ggtitle(
+      label = paste0("C", i, ": ", "Latent Gaussians"))
   print(hist.2)
-  cat("seed =", seed, "f =", f, ", 
-      AUC of actual Gaussians =", AUC1, 
-      ", AUC of latent Gaussians =", AUC2, "\n")
+  cat("seed =", seed, "f =", f, 
+      "\nAUC of actual Gaussians =", AUC1, 
+      "\nAUC of latent Gaussians =", AUC2, "\n")
 }
-#> seed = 10 f = 0.1 , 
-#>       AUC of actual Gaussians = 0.99308 , AUC of latent Gaussians = 0.99308
-#> seed = 11 f = 0.5 , 
-#>       AUC of actual Gaussians = 0.9936689 , AUC of latent Gaussians = 0.9936689
-#> seed = 12 f = 0.9 , 
-#>       AUC of actual Gaussians = 0.9950411 , AUC of latent Gaussians = 0.9950411
+#> seed = 10 f = 0.1 
+#> AUC of actual Gaussians = 0.99308 
+#> AUC of latent Gaussians = 0.99308
+#> seed = 11 f = 0.5 
+#> AUC of actual Gaussians = 0.9936689 
+#> AUC of latent Gaussians = 0.9936689
+#> seed = 12 f = 0.9 
+#> AUC of actual Gaussians = 0.9950411 
+#> AUC of latent Gaussians = 0.9950411
 ```
 
 
@@ -180,11 +189,12 @@ for (i in 1:3) {
 
 Line 20-21 sets the parameters of the simulation model. The idea is to simulate continuous ratings data in the range 0 to 100 from a binormal model. Non-diseased cases are sampled from a Gaussian centered at $\mu_1$ = 30 and standard deviation $\sigma_1 = 7$. Diseased cases are sampled from a Gaussian centered at $\mu_2$ = 55 and standard deviation $\sigma_2$ = 7. The variable $f$, which is in the range (0,1), controls the shape of the transformed distribution. If $f$ is small, the transformed distribution will be peaked towards 0 and if $f$ is unity, it will be peaked at 100. If $f$ equals 0.5, the transformed distribution is flat. Insight into the reason for this transformation is in [@RN300], Chapter 7, ibid: it has to do with transformations of random variables. The transformation $Y(Z)$, in the in-line function $Y$, not shown, implements:
 
-\begin{equation*} 
+\begin{equation} 
 Y\left ( Z \right )=\left [ \left ( 1-f \right )\Phi\left ( \frac{Z-\mu_1}{\sigma_1} \right )+f\Phi\left ( \frac{Z-\mu_2}{\sigma_2} \right ) \right ]100
-\end{equation*}
+(\#eq:BinModDemoMisconception)
+\end{equation}
 
-The multiplication by 100 ensures that the transformed variable is in the range 0 to 100. The code chunk realizes the random samples, calculates the empirical AUC using the binormal samples, displays the histogram of the binormal samples, plots the transformation function, calculates the empirical AUC using the transformed samples, and plots the histogram of the transformed samples. 
+The multiplication by 100 ensures that the transformed variable is in the range 0 to 100. The code realizes the random samples, calculates the empirical AUC using the binormal samples, displays the histogram of the binormal samples, plots the transformation function, calculates the empirical AUC using the transformed samples, and plots the histogram of the transformed samples. 
 
 The output lists the values of the seed variable and the value of the shape parameter $f$. *For each value of seed and the shape parameter, the AUCs of the actual Gaussians and the transformed variables are identical to seven digits (set at line 10)*. For this reason, the transformed variables are termed "Latent Gaussians". The values of the parameters were chosen to explicate the binormal nature of the plots A2 and A3). This has the effect of making the AUCs close to unity. It is left as an exercise for the reader to plot ROC curves corresponding to actual Gaussian and latent Gaussian variables and show that they are identical. 
 
@@ -194,11 +204,12 @@ Each histogram in Fig. (C1, C2 and C3) appears to be non-Gaussian. The correspon
 
 
 ### Expressions for sensitivity and specificity
-Let $Z_t$ denote the random Z-sample for truth state $t$ ($t$ = 1 for non-diseased and $t$ = 2 for diseased cases).  Since the distribution of Z-samples from disease-free cases is $N(0,1)$, the expression for specificity, Chapter "Modeling Binary Paradigm", Eqn. 3.13, applies. It is reproduced below: 
+Let $Z_t$ denote the random z-sample for truth state $t$ ($t$ = 1 for non-diseased and $t$ = 2 for diseased cases).  Since the distribution of z-samples from disease-free cases is $N(0,1)$, the expression for specificity, Chapter "Modeling Binary Paradigm", Eqn. 3.13, applies. It is reproduced below: 
 
-\begin{equation*} 
+\begin{equation} 
 Sp\left ( \zeta \right )=P\left ( Z_1 < \zeta \right )=\Phi\left ( \zeta \right )
-\end{equation*}
+(\#eq:BinModSp)
+\end{equation}
 
 To obtain an expression for sensitivity, consider that for truth state $t = 2$, the random variable $\frac{Z_2-\mu}{\sigma}$  is distributed as $N(0,1)$: 
 
@@ -208,9 +219,10 @@ To obtain an expression for sensitivity, consider that for truth state $t = 2$, 
 
 Sensitivity is $P\left ( Z_2 > \zeta \right )$, which implies, because $\sigma$  is positive (subtract   from both sides of the “greater than” symbol and divide by $\sigma$):
 
-\begin{equation*} 
+\begin{equation} 
 Se\left ( \zeta | \mu, \sigma \right )= P\left ( Z_2 > \zeta \right )=P\left ( \frac{Z_2-\mu}{\sigma} > \frac{\zeta-\mu}{\sigma} \right )
-\end{equation*}
+(\#eq:BinModSe)
+\end{equation}
 
 The right-hand-side can be rewritten as follows:
 
@@ -221,62 +233,91 @@ Se\left ( \zeta | \mu, \sigma \right )= 1 - P\left ( \frac{Z_2-\mu}{\sigma} \leq
 
 Summarizing, the formulae for the specificity and sensitivity for the binormal model are: 
 
-\begin{equation*} 
+\begin{equation} 
 Sp\left ( \zeta \right ) = \Phi\left ( \zeta \right )\\
 Se\left ( \zeta | \mu, \sigma \right ) = \Phi\left (  \frac{\mu-\zeta}{\sigma}\right )
-\end{equation*}
+(\#eq:BinModSeSp)
+\end{equation}
 
 The coordinates of the operating point defined by $\zeta$ are given by:
 
-\begin{equation*} 
-FPF\left ( \zeta \right ) = 1 - Sp\left ( \zeta \right ) = 1 - \Phi\left ( \zeta \right ) = \Phi\left ( -\zeta \right ) \\
+\begin{equation} 
+FPF\left ( \zeta \right ) = 1 - Sp\left ( \zeta \right ) = 1 - \Phi\left ( \zeta \right ) = \Phi\left ( -\zeta \right )
+(\#eq:BinModFPF)
+\end{equation}
+
+\begin{equation} 
 TPF\left ( \zeta | \mu, \sigma \right ) = \Phi\left ( \frac{\mu-\zeta}{\sigma} \right )
-\end{equation*}
+(\#eq:BinModTPF)
+\end{equation}
 
-These expressions allow calculation of the operating point for any $\zeta$. An equation for a curve is usually expressed as $y=f(x)$. An expression of this form for the ROC curve, i.e., the y coordinate (TPF) expressed as a function of the x coordinate (FPF), follows upon inversion of the expression for FPF, Eqn.  (6.2.11):
+These expressions allow calculation of the operating point for any $\zeta$. An equation for a curve is usually expressed as $y=f(x)$. An expression of this form for the ROC curve, i.e., the y coordinate (TPF) expressed as a function of the x coordinate (FPF), follows upon inversion of the expression for FPF, Eqn.  \@ref(eq:BinModFPF):
 
-\begin{equation*} 
+\begin{equation} 
 \zeta = -\Phi^{-1}\left ( FPF \right )
-\end{equation*}
+(\#eq:BinModZeta)
+\end{equation}
 
-Substituting Eqn. (6.2.13) in the expression for TPF in 2nd Eqn. (6.2.11):
+Substitution of Eqn. \@ref(eq:BinModZeta) in Eqn. \@ref(eq:BinModTPF) yields:
 
-\begin{equation*} 
+\begin{equation} 
 TPF = \Phi\left ( \frac{\mu + \Phi^{-1}\left (FPF  \right )}{\sigma} \right )
-\end{equation*}
+(\#eq:BinModRocCurve1)
+\end{equation}
 
-### Binormal model in "conventional" notation
+This equation gives the dependence of TPF on FPF, i.e., the equation for the ROC curve. It will be put into standard notation next.  
+
+
+### Binormal model in standard notation
 The following notation is widely used in the literature: 
 
-\begin{equation*} 
+\begin{equation} 
 a=\frac{\mu}{\sigma};b=\frac{1}{\sigma}
-\end{equation*}
+(\#eq:BinModabParameters)
+\end{equation}
+
+The reason for the $(a,b)$  instead of the  $(\mu,\sigma)$ notation is that Dorfman and Alf assumed, in their seminal paper [@RN1081], that the diseased distribution (signal distribution in signal detection theory) had unit variance, and the non-diseased distribution (noise) had standard deviation $b$ ($b > 0$) or variance $b^2$, and that the separation of the two distributions was $a$, see figure below. In this example, $a = 1.11$ and $b = 0.556$. Dorfman and Alf's fundamental contribution, namely estimating these parameters from ratings data, to be described below, led to the widespread usage of the  $(a,b)$ parameters, estimated by their software (RSCORE), and its newer variants (e.g., RSCORE –II, ROCFIT and ROCKIT). 
+
+By dividing the z-samples by $b$, the variance of the distribution labeled "Noise" becomes unity, its mean stays at zero, and the variance of the distribution labeled "Signal" becomes $1/b$, and its mean becomes $a/b$, as shown below. It illustrates that the inverses of Eqn. \@ref(eq:BinModabParameters) are:
+
+\begin{equation} 
+\mu=\frac{a}{b};\sigma=\frac{1}{b}
+(\#eq:BinModabParametersInv)
+\end{equation}
+
+Eqns. \@ref(eq:BinModabParameters) and \@ref(eq:BinModabParametersInv) allow conversion from one notation to another.
 
 ![](06-binormal-model_files/figure-latex/unnamed-chunk-5-1.pdf) ![](06-binormal-model_files/figure-latex/unnamed-chunk-5-2.pdf) 
 
-The reason for the  $(a,b)$ instead of the  $(\mu,\sigma)$ notation is that Dorfman and Alf assumed, in their seminal paper3, that the diseased (often termed signal) distribution had unit variance, and the non-diseased (often termed noise) distribution had standard deviation $b$ ($b > 0$) or variance $b^2$, and that the separation of the two distributions was a, Fig. 6.2(A). In this example, $a = 1.11$ and $b = 0.556$. Dorfman and Alf's fundamental contribution, namely estimating these parameters from ratings data, to be described below, has led to the widespread usage of the  $(a,b)$ parameters, estimated by their software (RSCORE), and its modern variants (e.g., ROCFIT and ROCKIT). 
 
 ### Properties of the binormal model ROC curve
-Using the a, b notation, Eqn. (6.2.14) for the ROC curve reduces to:
+Using the $(a,b)$ notation, Eqn. \@ref(eq:BinModRocCurve1) for the ROC curve reduces to:
 
-\begin{equation*} 
+\begin{equation} 
 TPF = \Phi\left ( a+ b \Phi^{-1}\left (FPF  \right ) \right )
-\end{equation*}
+(\#eq:BinModRocCurve)
+\end{equation}
 
-Since $\Phi^{-1}(FPF)$  is an increasing function of its argument FPF, and  $b > 0$, the argument of the  $\Phi$ function is an increasing function of FPF. Since $\Phi$  is a monotonically increasing function of its argument, TPF is a monotonically increasing function of FPF. This is true regardless of the sign of $a$. If FPF = 0, then $\Phi^{-1}(0) = -\infty$  and TPF = 0. If FPF = 1, then $\Phi^{-1}(1) = +\infty$ and TPF = 1. [The fact that TPF is a monotonic increasing function of FPF is consistent with the following argument: to increase FPF, $\zeta$  must decrease, which will increase the area under the diseased distribution to the right of $\zeta$, i.e., increase TPF.] 
+Since $\Phi^{-1}(FPF)$  is an increasing function of its argument $FPF$, and $b > 0$, the argument of the  $\Phi$ function is an increasing function of $FPF$. Since $\Phi$  is a monotonically increasing function of its argument, $TPF$ is a monotonically increasing function of $FPF$. This is true regardless of the sign of $a$. If $FPF = 0$, then $\Phi^{-1}(0) = -\infty$  and $TPF = 0$. If $FPF = 1$, then $\Phi^{-1}(1) = +\infty$ and $TPF = 1$. [The fact that $TPF$ is a monotonic increasing function of $FPF$ is consistent with the following argument: to increase $FPF$, $\zeta$  must decrease, which increases the area under the diseased distribution to the right of $\zeta$, i.e., increases $TPF$.] 
 
 Regardless of the value of $a$, as long as $b \ge 0$, the ROC curve starts at (0,0) and ends at (1,1), increasing monotonically from the origin to (1,1).
 
-From Eqn. (6.2.11) and Eqn. (6.2.12), the expressions for FPF and TPF in terms of model parameters $(a,b)$ are:
+From Eqn. \@ref(eq:BinModFPF) and Eqn. \@ref(eq:BinModTPF), the expressions for $FPF$ and $TPF$ in terms of model parameters $(a,b)$ are:
 
-\begin{equation*} 
+\begin{equation} 
 FPF\left ( \zeta \right ) = \Phi\left ( -\zeta \right )\\
-TPF = \Phi\left ( a - b \zeta \right )
-\end{equation*}
+(\#eq:BinModFPFab)
+\end{equation}
 
+and
+
+\begin{equation} 
+TPF = \Phi\left ( a - b \zeta \right )
+(\#eq:BinModTPFab)
+\end{equation}
 
 ### pdfs of the binormal model
-According to Eqn. (6.2.1), the probability that a Z-sample is smaller than a specified threshold  $\zeta$, i.e., the CDF function, is:
+According to Eqn. \@ref(eq:BinModZSampling1) the probability that a z-sample is smaller than a specified threshold  $\zeta$, i.e., the CDF function, is:
 
 \begin{equation*} 
 P\left ( Z \le \zeta \mid  Z\sim N\left ( 0,1 \right ) \right ) = 1-FPF\left ( \zeta \right ) = \Phi \left ( \zeta  \right )
@@ -302,11 +343,11 @@ The second equation can be written in $(a,b)$  notation as:
 pdf_D\left ( \zeta \right ) = b\phi\left ( b\zeta-a \right ) = \frac{b}{\sqrt{2 \pi}}\exp\left ( -\frac{\left (b\zeta - a \right )^2}{2} \right )
 \end{equation*}
 
-Generation of pdfs for specified values of binormal model parameters was illustrated above (ref. TBA) for specified values of $\mu,\sigma$. Using transformations in Eqn. (6.2.16) the code can be readily converted to accept $a,b$  values as inputs.
+Generation of pdfs for specified values of binormal model parameters was illustrated above (ref. TBA to previous chapter?) for specified values of $\mu,\sigma$. Using transformations in Eqn. \@ref(eq:BinModabParameters) the code can be readily converted to accept $(a,b)$  values as inputs.
 
 
 ### Fitting the ROC curve
-To be described next is a method for fitting data such as in Table 6.1 to the binormal model, i.e., determining the parameters $a,b$ and the thresholds $\zeta_r , r = 1, 2, ..., R-1$, to best fit, in some to-be-defined sense, the observed cell counts. The most common method uses an algorithm called maximum likelihood. But before getting to that, I describe the least-square method, which is conceptually the simplest, but is not really applicable for this type of fitting.
+To be described next is a method for fitting data such as in \@ref(tab:ratingsParadigmTable1) to the binormal model, i.e., determining the parameters $a,b$ and the thresholds $\zeta_r , r = 1, 2, ..., R-1$, to best fit, in some to-be-defined sense, the observed cell counts. The most common method uses an algorithm called maximum likelihood. But before getting to that, I describe the least-square method, which is conceptually simpler, but not really applicable to this type of fitting.
 
 ### Least-squares estimation
 By applying the function $\Phi^{-1}$  to both sides of Eqn. (6.2.17), one gets (the "inverse" function cancels the "forward" function on the right hand side):
@@ -399,10 +440,10 @@ Similarly, the probability of a diseased case yielding a count in the rth bin eq
 
 The area between the two thresholds is:
 
-\begin{equation*} 
-P\left ( \text{count in diseased bin }r \right ) \\ = \Phi\left ( \frac{\zeta_r - \mu}{\sigma} \right ) - \Phi\left ( \frac{\zeta_{r-1} - \mu}{\sigma} \right ) \\
-= \Phi\left ( b\zeta_r-a \right ) - \Phi\left ( b\zeta_{r-1}-a \right )
-\end{equation*} 
+\begin{align*} 
+P\left ( \text{count in diseased bin }r \right ) &= \Phi\left ( \frac{\zeta_r - \mu}{\sigma} \right ) - \Phi\left ( \frac{\zeta_{r-1} - \mu}{\sigma} \right ) \\
+&= \Phi\left ( b\zeta_r-a \right ) - \Phi\left ( b\zeta_{r-1}-a \right )
+\end{align*}
 
 Let $K_{1r}$  denote the number of non-diseased cases in the rth bin, and $K_{2r}$  denotes the number of diseased cases in the rth bin. Consider the number of counts $K_{1r}$ in non-diseased case bin $r$. Since the probability of each count is  $\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )$, the probability of the observed number of counts, assuming the counts are independent, is  ${\left(\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )  \right )}^{K_{1r}}$. Similarly, the probability of observing  counts in diseased case bin $r$ is ${\left (\Phi\left ( b\zeta_{r+1}-a  \right ) - \Phi\left ( b\zeta_r-a  \right )  \right )}^{K_{2r}}$, subject to the same independence assumption. The probability of simultaneously observing $K_{1r}$  counts in non-diseased case bin r and $K_{2r}$  counts in diseased case bin $r$ is the product of these individual probabilities (again, an independence assumption is being used): 
 
@@ -427,13 +468,12 @@ We are almost there. A specific combination of $K_{11},K_{12},...,K_{1R}$ counts
 The likelihood function is the product of Eqn. \@ref(eq:BinModProductProb) and Eqn.  \@ref(eq:BinModCombFactor):
 
 \begin{equation} 
-\left.\begin{matrix}
-L\left ( a,b,\overrightarrow{\zeta} \right ) = \\ 
-\left (\frac{K_1!}{\prod_{r=1}^{R}K_{1r}!}\frac{K_2!}{\prod_{r=1}^{R}K_{2r}!}  \right ) \times\\ 
-\prod_{r=1}^{R}\left [\left (\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )  \right )^{K_{1r}} \left (\Phi\left ( b\zeta_{r+1}-a  \right ) - \Phi\left ( b\zeta_r-a  \right )  \right )^{K_{2r}}  \right ]
-\end{matrix}\right\}
+\begin{split}
+L\left ( a,b,\overrightarrow{\zeta} \right ) &= \left (\frac{K_1!}{\prod_{r=1}^{R}K_{1r}!}\frac{K_2!}{\prod_{r=1}^{R}K_{2r}!}  \right ) \times \\
+&\quad\prod_{r=1}^{R}\left [\left (\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )  \right )^{K_{1r}} \left (\Phi\left ( b\zeta_{r+1}-a  \right ) - \Phi\left ( b\zeta_r-a  \right )  \right )^{K_{2r}}  \right ]
+\end{split}
 (\#eq:BinModLikelihood)
-\end{equation} 
+\end{equation}
 
 The left hand side of Eqn. \@ref(eq:BinModLikelihood) shows explicitly the dependence of the likelihood function on the parameters of the model, namely $a,b,\overrightarrow{\zeta}$, where the vector of thresholds $\overrightarrow{\zeta}$ is a compact notation for the set of thresholds $\zeta_1,\zeta_2,...,\zeta_R$, (note that since $\zeta_0 = -\infty$, and $\zeta_R = +\infty$, only $R-1$ free threshold parameters are involved, and the total number of free parameters in the model is $R+1$). For example, for a 5-rating ROC study, the total number of free parameters is 6, i.e., $a$, $b$ and 4 thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$.
 
@@ -447,9 +487,10 @@ LL\left ( a,b,\overrightarrow{\zeta} \right )=\log \left ( L\left ( a,b,\overrig
 Since the logarithm is a monotonically increasing function of its argument, maximizing the logarithm of the likelihood function is equivalent to maximizing the likelihood function. Taking the logarithm converts the product symbols in Eqn. (6.4.8) to summations, so instead of multiplying small numbers one is adding them, thereby avoiding underflow errors. Another simplification is that one can ignore the logarithm of the multinomial factor involving the factorials, because these do not depend on the parameters of the model. Putting all this together, we get the following expression for the logarithm of the likelihood function:
 
 \begin{equation} 
-LL\left ( a,b,\overrightarrow{\zeta} \right ) \propto \\
-\sum_{r=1}^{R} K_{1r}\log \left ( \Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right ) \right ) + \\
-\sum_{r=1}^{R} K_{2r}\log \left ( \Phi\left (b \zeta_{r+1} - a \right ) - \Phi\left ( b \zeta_r - a \right ) \right ) 
+\begin{split}
+LL\left ( a,b,\overrightarrow{\zeta} \right ) \propto& \sum_{r=1}^{R} K_{1r}\log \left ( \Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right ) \right ) \\
+&+ \sum_{r=1}^{R} K_{2r}\log \left ( \Phi\left (b \zeta_{r+1} - a \right ) - \Phi\left ( b \zeta_r - a \right ) \right ) 
+\end{split}
 (\#eq:BinModLL)
 \end{equation} 
 
@@ -503,15 +544,17 @@ K_{tr} \geq 5
 
 The expected values are given by:
 
-\begin{equation} 
-\left \langle K_{1r} \right \rangle=K_1\left ( \Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right )  \right )\\
-\left \langle K_{2r} \right \rangle=K_2\left ( \Phi\left ( a\zeta_{r+1}-b \right ) - \Phi\left ( a\zeta_r - b\right )  \right )
+\begin{equation}
+\begin{split}
+\left \langle K_{1r} \right \rangle &=K_1\left ( \Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right )  \right ) \\
+\left \langle K_{2r} \right \rangle &=K_2\left ( \Phi\left ( a\zeta_{r+1}-b \right ) - \Phi\left ( a\zeta_r - b\right )  \right )
+\end{split}
 (\#eq:BinModGoodnessFitExpVals)
 \end{equation} 
 
 These expressions should make sense: the difference between the two CDF functions is the probability of a count in the specified bin, and multiplication by the total number of relevant cases should yield the expected counts (a non-integer). 
 
-It can be shown that under the null hypothesis that the assumed probability distribution functions for the counts equals the true probability distributions, i.e., the model is valid, the statistic $C^2\sim \chi_{df}^{2}$ is distributed as:
+It can be shown that under the null hypothesis that the assumed probability distribution functions for the counts equals the true probability distributions, i.e., the model is valid, the statistic $C^2$ is distributed as:
 
 \begin{equation} 
 C^2\sim \chi_{df}^{2}
