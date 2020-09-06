@@ -347,7 +347,7 @@ Generation of pdfs for specified values of binormal model parameters was illustr
 
 
 ### Fitting the ROC curve
-To be described next is a method for fitting data such as in \@ref(tab:ratingsParadigmTable1) to the binormal model, i.e., determining the parameters $a,b$ and the thresholds $\zeta_r , r = 1, 2, ..., R-1$, to best fit, in some to-be-defined sense, the observed cell counts. The most common method uses an algorithm called maximum likelihood. But before getting to that, I describe the least-square method, which is conceptually simpler, but not really applicable to this type of fitting.
+To be described next is a method for fitting data such as in Table \@ref(tab:ratingsParadigmTable1) to the binormal model, i.e., determining the parameters $a,b$ and the thresholds $\zeta_r , r = 1, 2, ..., R-1$, to best fit, in some to-be-defined sense, the observed cell counts. The most common method uses an algorithm called maximum likelihood. But before getting to that, I describe the least-square method, which is conceptually simpler, but not really applicable to this type of fitting.
 
 ### Least-squares estimation
 By applying the function $\Phi^{-1}$  to both sides of Eqn. (6.2.17), one gets (the "inverse" function cancels the "forward" function on the right hand side):

@@ -12,7 +12,7 @@ The dependence of variability of the operating point on the numbers of cases is 
 * $N(\mu,\sigma^2)$ is the normal distribution with mean $\mu$ and variance $\sigma^2$.
 * The Z-samples for non-diseased cases are distributed $N(0,1)$. 
 * The Z-samples for diseased cases are distributed $N(\mu,1)$. 
-* A case is diagnosed as diseased if its Z-sample ≥ a constant threshold $\zeta$, and non-diseased otherwise.
+* A case is diagnosed as diseased if its Z-sample $\geq$ a constant threshold $\zeta$, and non-diseased otherwise.
 
 ## Definitions and relevant formulae
 * pdf = probability density function, denoted $\phi$.
