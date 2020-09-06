@@ -55,32 +55,32 @@ df <- data.frame(z = c(z1, z2), pdfs = c(Pdf1, Pdf2),
 cut_point <- data.frame(z = c(-2.0, -0.5, 1, 2.5))
 
 rocPdfs <- ggplot(df, aes(x = z, y = pdfs, color = truth)) + 
-  geom_line(size = 2) + 
+  geom_line(size = 1) + 
   scale_colour_manual(values=c("darkgrey","black")) + 
   theme(
     legend.title = element_blank(), 
-    legend.position = c(0.85, 0.95), 
-    legend.text = element_text(size=25, face = "bold"), 
-    axis.title.x = element_text(hjust = 0.8, size = 30,face="bold"),
-    axis.title.y = element_text(size = 25,face="bold")) +
+    legend.position = c(0.85, 0.90), 
+    legend.text = element_text(face = "bold"), 
+    axis.title.x = element_text(hjust = 0.8, size = 14,face="bold"),
+    axis.title.y = element_text(size = 14,face="bold")) +
   geom_vline(data = cut_point, aes(xintercept = z), 
-             linetype = "dotted", size = 1.5) +
+             linetype = "dashed", size = 0.25) +
   annotation_custom(
     grob = 
       textGrob(bquote(italic("O")),
-               gp = gpar(fontsize = 32)), 
+               gp = gpar(fontsize = 12)), 
     xmin = -3.2, xmax = -3.2, # adjust the position of "O"
     ymin = -0.0, ymax = -0.01) +
   scale_x_continuous(expand = c(0, 0)) + 
-  scale_y_continuous(expand = c(0, 0))
+  scale_y_continuous(expand = c(0, 0),limits=c(NA,0.4))
 
 for (i in 1 : length(cut_point$z)){
   rocPdfs <- rocPdfs +
     annotation_custom(
       grob = 
-        textGrob(bquote(zeta[.(i)]),gp = gpar(fontsize = 20)),
+        textGrob(bquote(zeta[.(i)]),gp = gpar(fontsize = 12)),
       xmin = cut_point$z[i], xmax = cut_point$z[i],
-      ymin = -0.01, ymax = -0.01)
+      ymin = -0.025, ymax = -0.045)
 }
 
 gt <- ggplot_gtable(ggplot_build(rocPdfs))
@@ -354,13 +354,13 @@ pointsPlot <- ggplot(data = pointsData,
                      mapping = 
                        aes(x = phiInvFPF, 
                            y = phiInvTPF)) + 
-  geom_point(size = 5) + 
+  geom_point(size = 2) + 
   theme(
-    axis.title.y = element_text(size = 25,face="bold"),
-    axis.title.x = element_text(size = 30,face="bold")) +
+    axis.title.y = element_text(size = 18,face="bold"),
+    axis.title.x = element_text(size = 18,face="bold")) +
   geom_abline(
     slope = fit$coefficients[2], 
-    intercept = fit$coefficients[1], size = 2)
+    intercept = fit$coefficients[1], size = 0.75)
 print(pointsPlot)
 ```
 
@@ -374,7 +374,7 @@ The first two lines of the output are simply a reminder about the names of the d
 \zeta_r = - \Phi^{-1}\left ( FPF_r \right )
 \end{equation*} 
 
-These are "rigid" estimates that assume no error in the FPF values. As was shown in Chapter "Modeling Binary Paradigm", these are finite sample based estimates, subject to 95% confidence intervals.
+These are "rigid" estimates that assume no error in the FPF values. As was shown in Chapter \@ref(modelingBinaryTask), 95% confidence intervals apply to these estimates.
 
 [A historical note: prior to computers and easy access to statistical functions the analyst had to use a special plotting paper, termed “double probability paper”, that converted probabilities into x and y distances using the inverse function. The complement of the inverse function is sometimes termed the z-deviate.4 Since this term confused me when I entered this field ca. 1985, and it confuses me even now, I will not use it further.]
 
@@ -385,7 +385,7 @@ The approach taken by Dorfman and Alf was to maximize the likelihood function in
 \text {L} \equiv P\left ( data \mid \text {parameters} \right )
 \end{equation*} 
 
-Generally "data" is suppressed, so likelihood is a function of the parameters; but "data" is always implicit. With reference to Fig. 6.1, the probability of a non-diseased case yielding a count in the 2nd bin equals the area under the curve labeled "Noise" bounded by the vertical lines at $\zeta_1$ and $\zeta_2$. In general, the probability of a non-diseased case yielding a count in the rth bin equals the area under the curve labeled "Noise" bounded by the vertical lines at  $\zeta_{r-1}$ and $\zeta_r$.  Since the area to the left of a threshold is the CDF corresponding to that threshold, the required probability is $\Phi\left ( \zeta_r \right ) - \Phi\left ( \zeta_{r-1} \right )$; we are simply subtracting two expressions for specificity, Eqn. (6.2.5). 
+Generally "data" is suppressed, so likelihood is a function of the parameters; but "data" is always implicit. With reference to Fig. 6.1, the probability of a non-diseased case yielding a count in the 2nd bin equals the area under the curve labeled "Noise" bounded by the vertical lines at $\zeta_1$ and $\zeta_2$. In general, the probability of a non-diseased case yielding a count in the $r^\text{th}$ bin equals the area under the curve labeled "Noise" bounded by the vertical lines at  $\zeta_{r-1}$ and $\zeta_r$.  Since the area to the left of a threshold is the CDF corresponding to that threshold, the required probability is $\Phi\left ( \zeta_r \right ) - \Phi\left ( \zeta_{r-1} \right )$; we are simply subtracting two expressions for specificity, Eqn. (6.2.5). 
 
 \begin{equation*} 
 \text {count in non-diseased bin } r = \Phi\left ( \zeta_r \right ) - \Phi\left ( \zeta_{r-1} \right )
@@ -412,40 +412,48 @@ Let $K_{1r}$  denote the number of non-diseased cases in the rth bin, and $K_{2r
 
 Similar expressions apply for all integer values of $r$ ranging from $1,2,...,R$. Therefore the probability of observing the entire data set is the product of expressions like Eqn. (6.4.5), over all values of $r$:
 
-\begin{equation*} 
+\begin{equation} 
 \prod_{r=1}^{R}\left [\left (\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )  \right )^{K_{1r}} \left (\Phi\left ( b\zeta_{r+1}-a  \right ) - \Phi\left ( b\zeta_r-a  \right )  \right )^{K_{2r}}  \right ]
-\end{equation*} 
+(\#eq:BinormalModelProduct)
+\end{equation} 
 
 We are almost there. A specific combination of $K_{11},K_{12},...,K_{1R}$ counts from $K_1$ non-diseased cases and counts $K_{21},K_{22},...,K_{2R}$ from $K_2$ diseased cases can occur the following number of times (given by the multinomial factor shown below):
 
-\begin{equation*} 
+\begin{equation} 
 \frac{K_1!}{\prod_{r=1}^{R}K_{1r}!}\frac{K_2!}{\prod_{r=1}^{R}K_{2r}!}
-\end{equation*} 
+(\#eq:BinormalModelCombFactor)
+\end{equation} 
 
-The likelihood function is the product of Eqn. (6.4.6) and Eqn.  (6.4.7):
+The likelihood function is the product of Eqn. \@ref(eq:BinormalModelProduct) and Eqn.  \@ref(eq:BinormalModelCombFactor):
 
-\begin{equation*} 
-L\left ( a,b,\overrightarrow{\zeta} \right ) = \left (\frac{K_1!}{\prod_{r=1}^{R}K_{1r}!}\frac{K_2!}{\prod_{r=1}^{R}K_{2r}!}  \right )\times \\
+\begin{equation} 
+\left.\begin{matrix}
+L\left ( a,b,\overrightarrow{\zeta} \right ) = \\ 
+\left (\frac{K_1!}{\prod_{r=1}^{R}K_{1r}!}\frac{K_2!}{\prod_{r=1}^{R}K_{2r}!}  \right ) \times\\ 
 \prod_{r=1}^{R}\left [\left (\Phi\left ( \zeta_{r+1}  \right ) - \Phi\left ( \zeta_r  \right )  \right )^{K_{1r}} \left (\Phi\left ( b\zeta_{r+1}-a  \right ) - \Phi\left ( b\zeta_r-a  \right )  \right )^{K_{2r}}  \right ]
-\end{equation*} 
+\end{matrix}\right\}
+(\#eq:BinormalModelLikelihood)
+\end{equation} 
 
-The left hand side of Eqn. (6.4.8) explicitly shows the dependence of the likelihood function on the parameters of the model, namely $a,b,\overrightarrow{\zeta}$, where the vector of thresholds is a compact notation for the set of thresholds $\zeta_1,\zeta_2,...,\zeta_R,$ (note that since $\zeta_0 = -\infty$, and $\zeta_R = +\infty$, only $R-1$ free threshold parameters are involved, and the total number of free parameters in the model is $R+1$). For example, for a 5-rating ROC study, the total number of free parameters is 6, i.e., $a$, $b$ and 4 thresholds.
+The left hand side of Eqn. \@ref(eq:BinormalModelLikelihood) shows explicitly the dependence of the likelihood function on the parameters of the model, namely $a,b,\overrightarrow{\zeta}$, where the vector of thresholds $\overrightarrow{\zeta}$ is a compact notation for the set of thresholds $\zeta_1,\zeta_2,...,\zeta_R$, (note that since $\zeta_0 = -\infty$, and $\zeta_R = +\infty$, only $R-1$ free threshold parameters are involved, and the total number of free parameters in the model is $R+1$). For example, for a 5-rating ROC study, the total number of free parameters is 6, i.e., $a$, $b$ and 4 thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$.
 
-Eqn. (6.4.8) is forbidding but here comes a simplification. The difference of probabilities such as $\Phi\left ( \zeta_r  \right )-\Phi\left ( \zeta_{r-1}  \right )$ is guaranteed to be positive and less than one: the $\Phi$  function is a probability, i.e., in the range 0 to 1, and since $\zeta_r$ is greater than $\zeta_{r-1}$, the difference is positive and less than one. When the difference is raised to the power of $K_{1r}$ (a non-negative integer) a very small number can result. Multiplication of all these small numbers may result in an even smaller number, which may be too small to be represented as a floating-point value, especially as the number of counts increases. To prevent this we resort to a trick. Instead of maximizing the likelihood function $L\left ( a,b,\overrightarrow{\zeta} \right )$ we choose to maximize the logarithm of the likelihood function (the base of the logarithm is immaterial). The logarithm of the likelihood function is: 
+Eqn.  \@ref(eq:BinormalModelLikelihood) is forbidding but here comes a simplification. The difference of probabilities such as $\Phi\left ( \zeta_r  \right )-\Phi\left ( \zeta_{r-1}  \right )$ is guaranteed to be positive and less than one [the $\Phi$ function is a probability, i.e., in the range 0 to 1, and since $\zeta_r$ is greater than $\zeta_{r-1}$, the difference is positive and less than one]. When the difference is raised to the power of $K_{1r}$ (a non-negative integer) a very small number can result. Multiplication of all these small numbers may result in an even smaller number, which may be too small to be represented as a floating-point value, especially as the number of counts increases. To prevent this we resort to a trick. Instead of maximizing the likelihood function $L\left ( a,b,\overrightarrow{\zeta} \right )$ we choose to maximize the logarithm of the likelihood function (the base of the logarithm is immaterial). The logarithm of the likelihood function is: 
 
-\begin{equation*} 
+\begin{equation} 
 LL\left ( a,b,\overrightarrow{\zeta} \right )=\log \left ( L\left ( a,b,\overrightarrow{\zeta} \right ) \right )
-\end{equation*} 
+(\#eq:BinormalModelLogLikelihood)
+\end{equation} 
 
 Since the logarithm is a monotonically increasing function of its argument, maximizing the logarithm of the likelihood function is equivalent to maximizing the likelihood function. Taking the logarithm converts the product symbols in Eqn. (6.4.8) to summations, so instead of multiplying small numbers one is adding them, thereby avoiding underflow errors. Another simplification is that one can ignore the logarithm of the multinomial factor involving the factorials, because these do not depend on the parameters of the model. Putting all this together, we get the following expression for the logarithm of the likelihood function:
 
-\begin{equation*} 
+\begin{equation} 
 LL\left ( a,b,\overrightarrow{\zeta} \right ) \propto \\
 \sum_{r=1}^{R} K_{1r}\log \left ( \Phi\left ( \zeta_{r+1} \right ) - \Phi\left ( \zeta_r \right ) \right ) + \\
 \sum_{r=1}^{R} K_{2r}\log \left ( \Phi\left (b \zeta_{r+1} - a \right ) - \Phi\left ( b \zeta_r - a \right ) \right ) 
-\end{equation*} 
+(\#eq:BinormalModelLL)
+\end{equation} 
 
-If one looks carefully at the left hand side of Eqn. (6.4.10) one sees that it is a function of the model parameters $a,b,\overrightarrow{\zeta}$ and the observed data, the latter being the counts contained in the vectors $\overrightarrow{K_1}$ and $\overrightarrow{K_2}$, where the vector notation is used as a compact form for the counts $K_{11},K_{12},...,K_{1R}$ and $K_{21},K_{22},...,K_{2R}$, respectively. The right hand side of Eqn. (6.4.10) is monotonically related to the probability of observing the data given the model parameters $a,b,\overrightarrow{\zeta}$. If the choice of model parameters is poor, then the probability of observing the data will be small and log likelihood will be small. With a better choice of model parameters the probability and log likelihood will increase. With optimal choice of model parameters the probability and log likelihood will be maximized, and the corresponding optimal values of the model parameters are called maximum likelihood estimates (MLEs). These are the estimates produced by the programs RSCORE and ROCFIT. 
+The left hand side of Eqn. \@ref(eq:BinormalModelLL) is a function of the model parameters $a,b,\overrightarrow{\zeta}$ and the observed data, the latter being the counts contained in the vectors $\overrightarrow{K_1}$ and $\overrightarrow{K_2}$, where the vector notation is used as a compact form for the counts $K_{11},K_{12},...,K_{1R}$ and $K_{21},K_{22},...,K_{2R}$, respectively. The right hand side of Eqn. \@ref(eq:BinormalModelLL) is monotonically related to the probability of observing the data given the model parameters $a,b,\overrightarrow{\zeta}$. If the choice of model parameters is poor, then the probability of observing the data will be small and log likelihood will be small. With a better choice of model parameters the probability and log likelihood will increase. With optimal choice of model parameters the probability and log likelihood will be maximized, and the corresponding optimal values of the model parameters are called maximum likelihood estimates (MLEs). These are the estimates produced by the programs RSCORE and ROCFIT. 
 
 ### Code implementing MLE
 
@@ -520,13 +528,13 @@ Under the null hypothesis (i.e., model is valid) $C^2$ is distributed as $\chi_{
 At the 5% significance level, one concludes that the fit is not good if $p < 0.05$. In practice one occasionally accepts smaller values of $p$, $p > 0.001$ before completely abandoning a model. It is known that adoption of a stricter criterion, e.g., $p > 0.05$, can occasionally lead to rejection of a retrospectively valid model [@RN300].
 
 ### Estimating the covariance matrix
-See book chapter 6.4.3. This is implemented in RJafroc.
+TBA See book chapter 6.4.3. This is implemented in RJafroc.
 
 ### Estimating the variance of Az
-See book chapter 6.4.4. This is implemented in RJafroc.
+TBA See book chapter 6.4.4. This is implemented in RJafroc.
 
 ### Single FOM derived from ROC curve
-Sensitivity and specificity are *dual* measures of overall performance. It is hard to unambiguosly compare two systems usng dual measures. What if sensivity is higher for one system but specificity is higher for another. This is, of course, a consequence of sensivity/specificity depending on the position of the operating point on the ROC curve. Desirable is a *single* measure of performance that takes into account performance over the entire ROC curve. Two commonly used measures are the binormla model predicted area $A_z$ under the ROC curve, and the $d'$ index. 
+Sensitivity and specificity are *dual* measures of overall performance. It is hard to unambiguosly compare two systems usng dual measures. What if sensitivity is higher for one system but specificity is higher for another. This is, of course, a consequence of sensitivity/specificity depending on the position of the operating point on the ROC curve. Desirable is a *single* measure of performance that takes into account performance over the entire ROC curve. Two commonly used measures are the binormla model predicted area $A_z$ under the ROC curve, and the $d'$ index. 
 
 (Book) Appendix 6.A derives the formula for the partial area under the unequal-variance binormal model. A special case of this formula is the area under the whole ROC curve, reproduced below using both parameterizations of the model:
 
@@ -544,7 +552,7 @@ d'=\sqrt{2}\Phi^{-1}\left ( A_z \right )
 ## Discussion
 The binormal model is historically very important and the contribution by Dorfman and Alf [@RN212] was seminal. Prior to their work, there was no valid way of estimating AUC from observed ratings counts. Their work and a key paper by Lusted [@RN1487] accelerated research using ROC methods. The number of publications using their algorithm, and the more modern versions developed by Metz and colleagues, is probably well in excess of 500. Because of its key role, the author has endeavored to take out some of the mystery about how the binormal model parameters are estimated. In particular, a common misunderstanding that the binormal model assumptions are violated by real datasets, when in fact it is quite robust to apparent deviations from normality, is addressed. 
 
-A good understanding of this chapter should enable the reader to better understand alternative ROC models, discussed in a later chapter.
+A good understanding of this chapter should enable the reader to better understand alternative ROC models, discussed later.
 
 It has been stated that the `b`-parameter of the binormal model is generally observed to be less than one, consistent with the diseased distribution being wider than the non-diseased one. The ROC literature is largely silent on the reason for this finding. One reason, namely location uncertainty, is presented in Chapter "Predictions of the RSM", where RSM stands for Radiological Search Model. Basically, if the location of the lesion is unknown, then z-samples from diseased cases can be of two types, samples from the correct lesion location, or samples from other non-lesion locations. The resulting mixture distribution will then appear to have larger variance than the corresponding samples from non-diseased cases. This type of mixing need not be restricted to location uncertainty. Even is location is known, if the lesions are non-homogenous (e.g., they contain a range of contrasts) then a similar mixture-distribution induced broadening is expected. The contaminated binormal model (CBM) - see Chapter TBA - also predicts that the diseased distribution is wider than the non-diseased one.
 
