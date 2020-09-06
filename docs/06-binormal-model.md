@@ -415,7 +415,7 @@ The first two lines of the output are simply a reminder about the names of the d
 \zeta_r = - \Phi^{-1}\left ( FPF_r \right )
 \end{equation*} 
 
-These are "rigid" estimates that assume no error in the FPF values. As was shown in Chapter \@ref(modelingBinaryTask), 95% confidence intervals apply to these estimates.
+These are "rigid" estimates that assume no error in the FPF values. As was shown in Chapter \@ref(binaryTask), 95% confidence intervals apply to these estimates.
 
 [A historical note: prior to computers and easy access to statistical functions the analyst had to use a special plotting paper, termed “double probability paper”, that converted probabilities into x and y distances using the inverse function. The complement of the inverse function is sometimes termed the z-deviate.4 Since this term confused me when I entered this field ca. 1985, and it confuses me even now, I will not use it further.]
 

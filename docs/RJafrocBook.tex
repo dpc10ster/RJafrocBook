@@ -1208,13 +1208,13 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 \hypertarget{frocdataformat-references}{%
 \section{References}\label{frocdataformat-references}}
 
-\hypertarget{modelingBinaryTask}{%
-\chapter{Modeling the Binary Task}\label{modelingBinaryTask}}
+\hypertarget{binaryTask}{%
+\chapter{Modeling the Binary Task}\label{binaryTask}}
 
-\hypertarget{modelingBinaryTaskIntro}{%
-\section{Introduction}\label{modelingBinaryTaskIntro}}
+\hypertarget{binaryTaskIntro}{%
+\section{Introduction}\label{binaryTaskIntro}}
 
-Chapter 02 introduced measures of performance associated with the binary decision task. Described in this chapter is a 2-parameter statistical model for the binary task, in other words it shows how one can predict quantities like sensitivity and specificity based on the values of the parameters of a statistical model. It introduces the fundamental concepts of a decision variable and a decision threshold (the latter is one of the parameters of the statistical model) that pervade this book, and shows how the decision threshold can be altered by varying experimental conditions. The receiver-operating characteristic (ROC) plot is introduced which shows how the dependence of sensitivity and specificity on the decision threshold is exploited by a measure of performance that is independent of decision threshold, namely the area AUC under the ROC curve. AUC turns out to be related to the other parameter of the model.
+(book) Chapter 02 introduced measures of performance associated with the binary decision task. Described in this chapter is a 2-parameter statistical model for the binary task, in other words it shows how one can predict quantities like sensitivity and specificity based on the values of the parameters of a statistical model. It introduces the fundamental concepts of a decision variable and a decision threshold (the latter is one of the parameters of the statistical model) that pervade this book, and shows how the decision threshold can be altered by varying experimental conditions. The receiver-operating characteristic (ROC) plot is introduced which shows how the dependence of sensitivity and specificity on the decision threshold is exploited by a measure of performance that is independent of decision threshold, namely the area AUC under the ROC curve. AUC turns out to be related to the other parameter of the model.
 
 The dependence of variability of the operating point on the numbers of cases is explored, introducing the concept of random sampling and how the results become more stable with larger numbers of cases, or larger sample sizes. These are perhaps intuitively obvious concepts but it is important to see them demonstrated. Formulae for 95\% confidence intervals for estimates of sensitivity and specificity are derived and the calculations are shown explicitly.
 
@@ -1244,17 +1244,20 @@ The dependence of variability of the operating point on the numbers of cases is 
   cdf = cumulative distribution function, denoted \(\Phi\).
 \end{itemize}
 
-\begin{equation*} 
+\begin{equation} 
 \phi\left ( z|\mu,\sigma \right )=\frac{1}{\sigma\sqrt{2\pi}}\exp\left ( -\frac{(z-\mu)^2}{2\sigma^2} \right )
-\end{equation*}
+\label{eq:binaryTask-phi}
+\end{equation}
 
-\begin{equation*} 
+\begin{equation} 
 \phi\left ( z \right )=\frac{1}{\sqrt{2\pi}}\exp\left ( -\frac{z^2}{2} \right )
-\end{equation*}
+\label{eq:binaryTask-phi-normalized}
+\end{equation}
 
-\begin{equation*} 
+\begin{equation} 
 \Phi\left ( z \right )=\int_{-\infty }^{z}\phi(t)dt
-\end{equation*}
+\label{eq:binaryTask-Phi}
+\end{equation}
 
 \hypertarget{the-normal-distribution-pdf-and-cdf-plots}{%
 \section{The normal distribution pdf and cdf plots}\label{the-normal-distribution-pdf-and-cdf-plots}}
@@ -1265,8 +1268,12 @@ The dependence of variability of the operating point on the numbers of cases is 
 \NormalTok{pdfData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ x, }\DataTypeTok{pdfcdf =} \KeywordTok{dnorm}\NormalTok{(x))}
 \CommentTok{\# plot the CDF}
 \NormalTok{cdfData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ x, }\DataTypeTok{pdfcdf =} \KeywordTok{pnorm}\NormalTok{(x))}
-\NormalTok{pdfcdfPlot \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ z, }\DataTypeTok{y =}\NormalTok{ pdfcdf)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ pdfData) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ cdfData) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom\_vline}\NormalTok{(}\DataTypeTok{xintercept =} \DecValTok{1}\NormalTok{, }\DataTypeTok{linetype =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"z"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"pdf/CDF"}\NormalTok{)}
+\NormalTok{pdfcdfPlot \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}
+  \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ z, }\DataTypeTok{y =}\NormalTok{ pdfcdf)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ pdfData) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ cdfData) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom\_vline}\NormalTok{(}\DataTypeTok{xintercept =} \DecValTok{1}\NormalTok{, }\DataTypeTok{linetype =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"z"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"pdf/CDF"}\NormalTok{)}
 \KeywordTok{print}\NormalTok{(pdfcdfPlot)}
 \end{Highlighting}
 \end{Shaded}
@@ -1290,9 +1297,16 @@ The sigmoid shaped curve is the CDF, or cumulative distribution function, of the
 \NormalTok{nTN \textless{}{-}}\StringTok{ }\KeywordTok{length}\NormalTok{(z1[z1 }\OperatorTok{\textless{}}\StringTok{ }\NormalTok{zeta])}
 \NormalTok{nTP \textless{}{-}}\StringTok{ }\KeywordTok{length}\NormalTok{(z2[z2 }\OperatorTok{\textgreater{}=}\StringTok{ }\NormalTok{zeta])}
 \NormalTok{Sp \textless{}{-}}\StringTok{ }\NormalTok{nTN}\OperatorTok{/}\NormalTok{K1;Se \textless{}{-}}\StringTok{ }\NormalTok{nTP}\OperatorTok{/}\NormalTok{K2}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"seed = "}\NormalTok{, seed, }\StringTok{", K1 = "}\NormalTok{, K1, }\StringTok{", K2 = "}\NormalTok{, K2, }
-    \StringTok{"Specificity = "}\NormalTok{, Sp, }\StringTok{", Sensitivity = "}\NormalTok{, Se, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} seed =  100 , K1 =  9 , K2 =  11 Specificity =  0.8888889 , Sensitivity =  0.9090909}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"seed = "}\NormalTok{, seed, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{K1 = "}\NormalTok{, K1, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{K2 = "}\NormalTok{, K2, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Specificity = "}\NormalTok{, Sp, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Sensitivity = "}\NormalTok{, Se, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} seed =  100 }
+\CommentTok{\#\textgreater{} K1 =  9 }
+\CommentTok{\#\textgreater{} K2 =  11 }
+\CommentTok{\#\textgreater{} Specificity =  0.8888889 }
+\CommentTok{\#\textgreater{} Sensitivity =  0.9090909}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1308,15 +1322,25 @@ Line 6 calls the built-in function \texttt{rnorm()} -- for random sample(s) from
 \KeywordTok{options}\NormalTok{(}\DataTypeTok{digits=}\DecValTok{3}\NormalTok{)}
 \NormalTok{seed \textless{}{-}}\StringTok{ }\DecValTok{100}\NormalTok{;}\KeywordTok{set.seed}\NormalTok{(seed)}
 \NormalTok{alpha \textless{}{-}}\StringTok{ }\FloatTok{0.05}\NormalTok{;K1 \textless{}{-}}\StringTok{ }\DecValTok{99}\NormalTok{;K2 \textless{}{-}}\StringTok{ }\DecValTok{111}\NormalTok{;mu \textless{}{-}}\StringTok{ }\DecValTok{5}\NormalTok{;zeta \textless{}{-}}\StringTok{ }\NormalTok{mu}\OperatorTok{/}\DecValTok{2}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"alpha = "}\NormalTok{, alpha, }\StringTok{"K1 = "}\NormalTok{, K1, }\StringTok{"K2 = "}\NormalTok{, K2, }\StringTok{"mu = "}\NormalTok{, mu, }\StringTok{"zeta = "}\NormalTok{, zeta, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} alpha =  0.05 K1 =  99 K2 =  111 mu =  5 zeta =  2.5}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"alpha = "}\NormalTok{, alpha, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{K1 = "}\NormalTok{, K1, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{K2 = "}\NormalTok{, K2, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{mu = "}\NormalTok{, mu, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{zeta = "}\NormalTok{, zeta, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} alpha =  0.05 }
+\CommentTok{\#\textgreater{} K1 =  99 }
+\CommentTok{\#\textgreater{} K2 =  111 }
+\CommentTok{\#\textgreater{} mu =  5 }
+\CommentTok{\#\textgreater{} zeta =  2.5}
 \NormalTok{z1 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K1)}
 \NormalTok{z2 \textless{}{-}}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K2) }\OperatorTok{+}\StringTok{ }\NormalTok{mu}
 \NormalTok{nTN \textless{}{-}}\StringTok{ }\KeywordTok{length}\NormalTok{(z1[z1 }\OperatorTok{\textless{}}\StringTok{ }\NormalTok{zeta])}
 \NormalTok{nTP \textless{}{-}}\StringTok{ }\KeywordTok{length}\NormalTok{(z2[z2 }\OperatorTok{\textgreater{}=}\StringTok{ }\NormalTok{zeta])}
 \NormalTok{Sp \textless{}{-}}\StringTok{ }\NormalTok{nTN}\OperatorTok{/}\NormalTok{K1;Se \textless{}{-}}\StringTok{ }\NormalTok{nTP}\OperatorTok{/}\NormalTok{K2}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"Specificity = "}\NormalTok{, Sp, }\StringTok{"Sensitivity = "}\NormalTok{, Se, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} Specificity =  0.99 Sensitivity =  0.991}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"Specificity = "}\NormalTok{, Sp, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Sensitivity = "}\NormalTok{, Se, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} Specificity =  0.99 }
+\CommentTok{\#\textgreater{} Sensitivity =  0.991}
 
 \CommentTok{\# Approx binomial tests}
 \KeywordTok{cat}\NormalTok{(}\StringTok{"approx 95\% CI on Specificity = "}\NormalTok{, }
@@ -1326,7 +1350,8 @@ Line 6 calls the built-in function \texttt{rnorm()} -- for random sample(s) from
 
 \CommentTok{\# Exact binomial test}
 \NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{binom.test}\NormalTok{(nTN, K1, }\DataTypeTok{p =}\NormalTok{ nTN}\OperatorTok{/}\NormalTok{K1)}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"Exact 95\% CI on Specificity = "}\NormalTok{, }\KeywordTok{as.numeric}\NormalTok{(ret}\OperatorTok{$}\NormalTok{conf.int),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"Exact 95\% CI on Specificity = "}\NormalTok{, }
+    \KeywordTok{as.numeric}\NormalTok{(ret}\OperatorTok{$}\NormalTok{conf.int),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
 \CommentTok{\#\textgreater{} Exact 95\% CI on Specificity =  0.945 1}
 
 \CommentTok{\# Approx binomial tests}
@@ -1337,7 +1362,8 @@ Line 6 calls the built-in function \texttt{rnorm()} -- for random sample(s) from
 
 \CommentTok{\# Exact binomial test}
 \NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{binom.test}\NormalTok{(nTP, K2, }\DataTypeTok{p =}\NormalTok{ nTP}\OperatorTok{/}\NormalTok{K2)}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"Exact 95\% CI on Sensitivity = "}\NormalTok{, }\KeywordTok{as.numeric}\NormalTok{(ret}\OperatorTok{$}\NormalTok{conf.int),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"Exact 95\% CI on Sensitivity = "}\NormalTok{, }
+    \KeywordTok{as.numeric}\NormalTok{(ret}\OperatorTok{$}\NormalTok{conf.int),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
 \CommentTok{\#\textgreater{} Exact 95\% CI on Sensitivity =  0.951 1}
 \end{Highlighting}
 \end{Shaded}
@@ -1346,14 +1372,14 @@ The lines upto \texttt{cat("Specificity\ =\ ",\ Sp,\ "Sensitivity\ =\ ",\ Se,\ "
 
 The approximate confidence intervals can exceed the allowed ranges, but the exact confidence intervals do not.
 
-\hypertarget{modelingBinaryTask-Summary}{%
-\section{Summary}\label{modelingBinaryTask-Summary}}
+\hypertarget{binaryTask-Summary}{%
+\section{Summary}\label{binaryTask-Summary}}
 
-\hypertarget{modelingBinaryTask-Discussion}{%
-\section{Discussion}\label{modelingBinaryTask-Discussion}}
+\hypertarget{binaryTask-Discussion}{%
+\section{Discussion}\label{binaryTask-Discussion}}
 
-\hypertarget{modelingBinaryTask-references}{%
-\section{References}\label{modelingBinaryTask-references}}
+\hypertarget{binaryTask-references}{%
+\section{References}\label{binaryTask-references}}
 
 \hypertarget{ratingsParadigm}{%
 \chapter{Ratings Paradigm}\label{ratingsParadigm}}
@@ -1361,7 +1387,7 @@ The approximate confidence intervals can exceed the allowed ranges, but the exac
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-In Chapter 02 the binary task and associated concepts of sensitivity, specificity, true positive fraction, false positive fraction, positive and negative predictive values were introduced. Chapter 03 introduced the concepts of a random scalar decision variable, or z-sample for each case, which is compared, by the observer, to a fixed reporting threshold \(\zeta\), resulting in two types of decisions, ``case is non-diseased'' or ``case is diseased'' depending on whether the realized z-sample is less than, or greater than or equal to the reporting threshold. It described a statistical model, for the binary task, characterized by two unit-variance normal distributions separated by \(\mu\). The concept of an underlying receiver operating characteristic (ROC) curve with the reporting threshold defining an operating point on the curve was introduced and the advisability of using the area under the curve as a measure of performance, which is independent of reporting threshold, was stressed.
+In Chapter \ref{binaryTask} the binary task and associated concepts (e.g., sensitivity, specificity) were introduced. Chapter \ref{binaryTask} introduced the concepts of a random scalar decision variable, or z-sample for each case, which is compared, by the observer, to a fixed reporting threshold \(\zeta\), resulting in two types of decisions. It described a statistical model for the binary task, characterized by two unit-variance normal distributions separated by \(\mu\). The concept of an underlying receiver operating characteristic (ROC) curve with the reporting threshold defining an operating point on the curve was introduced and the advisability of using the area under the curve as a measure of performance, which is independent of reporting threshold, was stressed.
 
 In this chapter the more commonly used ratings method will be described, which yields greater definition to the underlying ROC curve than just one operating point obtained in the binary task, and moreover, is more efficient. In this method, the observer assigns a rating to each case. Described first is a typical ROC counts table and how operating points (i.e., pairs of FPF and TPF values) are calculated from the counts data. A labeling convention for the operating points is introduced. Notation is introduced for the observed integers in the counts table and the rules for calculating operating points are expressed as formulae and implemented in R. The ratings method is contrasted to the binary method, in terms of efficiency and practicality. A theme occurring repeatedly in this book, that the ratings are not numerical values but rather they are ordered labels is illustrated with an example.
 
@@ -1372,13 +1398,23 @@ In a positive-directed rating scale with five discrete levels, the ratings could
 
 Table \ref{tab:ratingsParadigmTable1} is a representative counts table for a 5-rating study that summarizes the collected data. It is the starting point for analysis. It lists the number of counts in each ratings bin, listed separately for non-diseased and diseased cases, respectively. The data is from an actual clinical study.
 
+\begin{itemize}
+\tightlist
+\item
+  \(r = 5\) means ``ratings equal to 5''
+\item
+  \(r = 4\) means ``ratings equal to 4''
+\item
+  Etc.
+\end{itemize}
+
 \begin{table}
 
 \caption{\label{tab:ratingsParadigmTable1}Representative counts table.}
 \centering
 \begin{tabular}[t]{l|r|r|r|r|r}
 \hline
-  & 1 & 2 & 3 & 4 & 5\\
+  & $r = 5$ & $r = 4$ & $r = 3$ & $r = 2$ & $r = 1$\\
 \hline
 non-diseased & 30 & 19 & 8 & 2 & 1\\
 \hline
@@ -1395,7 +1431,11 @@ In this example, there are \(K_1 = 60\) non-diseased cases and \(K_2 = 50\) dise
 \begin{itemize}
 \tightlist
 \item
-  \(r\ge 5\) means ``ratings greater than or equal to 5'', etc.
+  \(r\ge 5\) means ``counting ratings greater than or equal to 5 and dividing by the appropriate denominator, \(K_1\) for FPF and \(K_2\) for TPF''
+\item
+  \(r\ge 4\) means ``counting ratings greater than or equal to 4 and dividing by the appropriate denominator, \(K_1\) for FPF and \(K_2\) for TPF''
+\item
+  Etc.
 \end{itemize}
 
 \begin{table}
@@ -2077,7 +2117,7 @@ The first two lines of the output are simply a reminder about the names of the d
 \zeta_r = - \Phi^{-1}\left ( FPF_r \right )
 \end{equation*}
 
-These are ``rigid'' estimates that assume no error in the FPF values. As was shown in Chapter \ref{modelingBinaryTask}, 95\% confidence intervals apply to these estimates.
+These are ``rigid'' estimates that assume no error in the FPF values. As was shown in Chapter \ref{binaryTask}, 95\% confidence intervals apply to these estimates.
 
 {[}A historical note: prior to computers and easy access to statistical functions the analyst had to use a special plotting paper, termed ``double probability paper'', that converted probabilities into x and y distances using the inverse function. The complement of the inverse function is sometimes termed the z-deviate.4 Since this term confused me when I entered this field ca. 1985, and it confuses me even now, I will not use it further.{]}
 
@@ -4426,7 +4466,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.2612568          1   0.26141334}
+\CommentTok{\#\textgreater{} 1    1.3009469          1   0.25404033}
 \end{Highlighting}
 \end{Shaded}
 

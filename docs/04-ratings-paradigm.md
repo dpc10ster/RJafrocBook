@@ -5,7 +5,7 @@
 
 
 ## Introduction
-In Chapter 02 the binary task and associated concepts of sensitivity, specificity, true positive fraction, false positive fraction, positive and negative predictive values were introduced. Chapter 03 introduced the concepts of a random scalar decision variable, or z-sample for each case, which is compared, by the observer, to a fixed reporting threshold $\zeta$, resulting in two types of decisions, “case is non-diseased” or “case is diseased” depending on whether the realized z-sample is less than, or greater than or equal to the reporting threshold. It described a statistical model, for the binary task, characterized by two unit-variance normal distributions separated by $\mu$. The concept of an underlying receiver operating characteristic (ROC) curve with the reporting threshold defining an operating point on the curve was introduced and the advisability of using the area under the curve as a measure of performance, which is independent of reporting threshold, was stressed. 
+In Chapter \@ref(binaryTask) the binary task and associated concepts (e.g., sensitivity, specificity) were introduced. Chapter \@ref(binaryTask) introduced the concepts of a random scalar decision variable, or z-sample for each case, which is compared, by the observer, to a fixed reporting threshold $\zeta$, resulting in two types of decisions. It described a statistical model for the binary task, characterized by two unit-variance normal distributions separated by $\mu$. The concept of an underlying receiver operating characteristic (ROC) curve with the reporting threshold defining an operating point on the curve was introduced and the advisability of using the area under the curve as a measure of performance, which is independent of reporting threshold, was stressed. 
 
 In this chapter the more commonly used ratings method will be described, which yields greater definition to the underlying ROC curve than just one operating point obtained in the binary task, and moreover, is more efficient. In this method, the observer assigns a rating to each case. Described first is a typical ROC counts table and how operating points (i.e., pairs of FPF and TPF values) are calculated from the counts data. A labeling convention for the operating points is introduced. Notation is introduced for the observed integers in the counts table and the rules for calculating operating points are expressed as formulae and implemented in R. The ratings method is contrasted to the binary method, in terms of efficiency and practicality. A theme occurring repeatedly in this book, that the ratings are not numerical values but rather they are ordered labels is illustrated with an example.
 
@@ -17,13 +17,17 @@ Table \@ref(tab:ratingsParadigmTable1) is a representative counts table for a 5-
 
 
 
+* $r = 5$ means "ratings equal to 5" 
+* $r = 4$ means "ratings equal to 4" 
+* Etc.
+
 \begin{table}
 
 \caption{(\#tab:ratingsParadigmTable1)Representative counts table.}
 \centering
 \begin{tabular}[t]{l|r|r|r|r|r}
 \hline
-  & 1 & 2 & 3 & 4 & 5\\
+  & $r = 5$ & $r = 4$ & $r = 3$ & $r = 2$ & $r = 1$\\
 \hline
 non-diseased & 30 & 19 & 8 & 2 & 1\\
 \hline
@@ -35,8 +39,11 @@ diseased & 5 & 6 & 5 & 12 & 22\\
 In this example, there are $K_1 = 60$ non-diseased cases and $K_2 = 50$ diseased cases. Of the 60 non-diseased cases 30 were assigned the "1" rating, 19 were assigned the "2" rating, eight the "3" rating, two the "4" rating and one received the "5" rating. The distribution of counts is tilted towards the "1" rating end, but there is some spread and one actually non-diseased case appeared definitely diseased to the observer. In contrast, the distribution of the diseased cases is tilted towards the "5" rating end. Of the 50 diseased cases, 22 received the "5" rating, 12 the "4" rating, five the "3" rating, six the "2" rating and five the "1" rating. The spread appears to be more pronounced for the diseased cases, e.g., five of the 50 cases appeared to be definitely non-diseased to the observer. A little thought should convince you that the observed tilting of the counts, towards the "1" end for actually non-diseased cases, and towards the "5" end for actually diseased cases, is reasonable. However, one should be forewarned not to jump to conclusions about the spread of the data being larger for diseased than for non-diseased cases. While it turns out to be true, the ratings are merely ordered labels, and modeling is required, to be described in (TBA) Chapter 06, that uses only the ordering information implicit in the labels, not the actual values, to reach quantitative conclusions.
 
 ## Operating points from counts table
-* $r\ge 5$ means "ratings greater than or equal to 5", etc.
 
+
+* $r\ge 5$ means "counting ratings greater than or equal to 5 and dividing by the appropriate denominator, $K_1$ for FPF and $K_2$ for TPF" 
+* $r\ge 4$ means "counting ratings greater than or equal to 4 and dividing by the appropriate denominator, $K_1$ for FPF and $K_2$ for TPF" 
+* Etc.
 
 \begin{table}
 
