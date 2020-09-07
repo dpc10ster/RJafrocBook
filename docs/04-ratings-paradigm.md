@@ -5,12 +5,18 @@
 
 
 ## Introduction
-In Chapter \@ref(binaryTask) the binary task and associated concepts (e.g., sensitivity, specificity) were introduced. Chapter \@ref(binaryTask) introduced the concepts of a random scalar decision variable, or z-sample for each case, which is compared, by the observer, to a fixed reporting threshold $\zeta$, resulting in two types of decisions. It described a statistical model for the binary task, characterized by two unit-variance normal distributions separated by $\mu$. The concept of an underlying receiver operating characteristic (ROC) curve with the reporting threshold defining an operating point on the curve was introduced and the advisability of using the area under the curve as a measure of performance, which is independent of reporting threshold, was stressed. 
+In (book) Chapter 02 the binary paradigm and associated concepts (e.g., sensitivity, specificity) were introduced. Chapter \@ref(binaryTask) introduced the concepts of a random scalar decision variable, or z-sample for each case, which is compared, by the observer, to a fixed reporting threshold $\zeta$, resulting in two types of decisions. It described a statistical model for the binary task, characterized by two unit-variance normal distributions separated by $\mu$. The concept of an underlying receiver operating characteristic (ROC) curve with the reporting threshold defining an operating point on the curve was introduced and the advisability of using the area under the curve as a measure of performance, which is independent of reporting threshold, was stressed. 
 
 In this chapter the more commonly used ratings method will be described, which yields greater definition to the underlying ROC curve than just one operating point obtained in the binary task, and moreover, is more efficient. In this method, the observer assigns a rating to each case. Described first is a typical ROC counts table and how operating points (i.e., pairs of FPF and TPF values) are calculated from the counts data. A labeling convention for the operating points is introduced. Notation is introduced for the observed integers in the counts table and the rules for calculating operating points are expressed as formulae and implemented in R. The ratings method is contrasted to the binary method, in terms of efficiency and practicality. A theme occurring repeatedly in this book, that the ratings are not numerical values but rather they are ordered labels is illustrated with an example.
 
 ## The ROC counts table
-In a positive-directed rating scale with five discrete levels, the ratings could be the ordered labels “1”: definitely non-diseased, “2”: probably non-diseased, “3”: could be non-diseased or diseased, “4”: probably diseased, “5”: definitely diseased. At the conclusion of the ROC study an ROC counts table is constructed. This is the generalization to rating studies of the 2 x 2 decision vs. truth table introduced in Chapter 02, Table 2.1. This type of data representation is sometimes called a frequency table, but frequency  means a rate of number of events per some unit, so the author prefers the clearer term “counts”. 
+In a positive-directed rating scale with five discrete levels, the ratings could be the ordered labels: 
+* “1”: definitely non-diseased, 
+* “2”: probably non-diseased, 
+* “3”: could be non-diseased or diseased, 
+* “4”: probably diseased, 
+* “5”: definitely diseased. 
+At the conclusion of the ROC study an ROC counts table is constructed. This is the generalization to rating studies of the 2 x 2 decision vs. truth table introduced in (book) Chapter 02, Table 2.1. This type of data representation is sometimes called a frequency table, but frequency usually means a rate of number of events per some unit, so the author prefers the clearer term “counts”. 
 
 Table \@ref(tab:ratingsParadigmTable1) is a representative counts table for a 5-rating study that summarizes the collected data. It is the starting point for analysis. It lists the number of counts in each ratings bin, listed separately for non-diseased and diseased cases, respectively. The data is from an actual clinical study.
 
