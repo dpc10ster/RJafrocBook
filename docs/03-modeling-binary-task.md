@@ -4,37 +4,123 @@
 
 
 ## Introduction {#binaryTaskIntro}
-(book) Chapter 02 introduced measures of performance associated with the binary decision task. Described in this chapter is a 2-parameter statistical model for the binary task, in other words it shows how one can predict quantities like sensitivity and specificity based on the values of the parameters of a statistical model. It introduces the fundamental concepts of a decision variable and a decision threshold (the latter is one of the parameters of the statistical model) that pervade this book, and shows how the decision threshold can be altered by varying experimental conditions. The receiver-operating characteristic (ROC) plot is introduced which shows how the dependence of sensitivity and specificity on the decision threshold is exploited by a measure of performance that is independent of decision threshold, namely the area AUC under the ROC curve. AUC turns out to be related to the other parameter of the model. 
+Chapter \@ref(binaryTask0) introduced measures of performance associated with the binary decision task. Described in this chapter is a 2-parameter statistical model for the binary task, in other words it shows how one can predict quantities like sensitivity and specificity based on the values of the parameters of a statistical model. It introduces the fundamental concepts of a decision variable and a decision threshold (the latter is one of the parameters of the statistical model) that pervade this book, and shows how the decision threshold can be altered by varying experimental conditions. The receiver-operating characteristic (ROC) plot is introduced which shows how the dependence of sensitivity and specificity on the decision threshold is exploited by a measure of performance that is independent of decision threshold, namely the area AUC under the ROC curve. AUC turns out to be related to the other parameter of the model. 
 
-The dependence of variability of the operating point on the numbers of cases is explored, introducing the concept of random sampling and how the results become more stable with larger numbers of cases, or larger sample sizes. These are perhaps intuitively obvious concepts but it is important to see them demonstrated. Formulae for 95% confidence intervals for estimates of sensitivity and specificity are derived and the calculations are shown explicitly.
+The dependence of variability of the operating point on the numbers of cases is explored, introducing the concept of random sampling and how the results become more stable with larger numbers of cases, or larger sample sizes. These are perhaps intuitively obvious concepts but it is important to see them demonstrated, Online Appendix 3.A. Formulae for 95% confidence intervals for estimates of sensitivity and specificity are derived and the calculations are shown explicitly,
 
-## The equal-variance binormal model
-* $N(\mu,\sigma^2)$ is the normal distribution with mean $\mu$ and variance $\sigma^2$.
-* The z-samples for non-diseased cases are distributed $N(0,1)$. 
-* The z-samples for diseased cases are distributed $N(\mu,1)$. 
-* A case is diagnosed as diseased if its z-sample $\geq$ a constant threshold $\zeta$, and non-diseased otherwise.
+## Decision variable and decision threshold
+The model1 for the binary task involves three assumptions: (i) the existence of a decision variable associated with each case, (ii) the existence of a case-independent decision threshold for reporting individual cases as non-diseased or diseased and (iii) the adequacy of training session(s) in getting the observer to a steady state. In addition, common to all models is that the observer is "blinded" to the truth, while the researcher is not.
 
-## Definitions and relevant formulae
-* pdf = probability density function, denoted $\phi$.
-* cdf = cumulative distribution function, denoted $\Phi$.
+### Existence of a decision variable
+**Assumption 1:** Each case presentation is associated with the occurrence (or realization) of a specific value of a random scalar sensory variable yielding a unidirectional measure of evidence of disease. The two italicized phrases introduce important terms.
+
+* By sensory variable one means one that is sensed internally by the observer (in the cognitive system, associated with the brain) and as such is not directly measureable in the traditional physical sense. A physical measurement, for example, might consist of measuring a voltage difference across two points with a voltmeter. The term “latent” is often used to describe the sensory variable because it turns out that transforming this variable by an arbitrary monotonic non-decreasing transformation has no effect on the ROC – this will become clearer later. Alternative terms are “psychophysical variable”, “perceived variable”, “perceptual variable” or “confidence level”. The last term is the most common. It is a subjective variable since its value is expected to depend on the observer: the same case shown to different observers could evoke different values of the sensory variable. Since one cannot measure it anyway, it would be a very strong assumption to assume that the two sensations are identical. In this book the term “latent decision variable”, or simply “decision variable” is used, which hopefully gets away from the semantics and focuses instead on what the variable is used for, namely making decisions. The symbol Z will be used for it and specific realized values are termed z-samples. It is a random in the sense that it varies randomly from case to case; unless the cases are similar in some respect, for example, two variants of the same case under different image processing conditions, or images of twins; in these instances the corresponding decision variables are expected to be correlated. In the binary paradigm model to be described, the decision variables corresponding to different cases are assumed mutually independent.
+* The latent decision variable rank-orders cases with respect to evidence for presence of disease. Unlike a traditional rank-ordering scheme, where "1" is the highest rank, the scale is inverted with larger values corresponding to greater evidence of disease. Without loss of generality, one assumes that the decision variable ranges from -∞ to +∞, with large positive values indicative of strong evidence for presence of disease, and large negative values indicative of strong evidence for absence of disease. The zero value indicates no evidence for presence or absence of disease. [The -∞ to +∞ scale is not an assumption. The decision variable scale could just as well range from a to b, where a < b; with appropriate rescaling of the decision variable, there will be no changes in the rank-orderings, and the scale will extend from -∞ to +∞.] Such a decision scale, with increasing values corresponding to increasing evidence of disease, is termed positive-directed.
+
+### Existence of a decision threshold
+**Assumption 2:** In the binary decision task the radiologist adopts a single and fixed (i.e., case-independent) decision threshold  and states: "case is diseased" if the decision variable is greater than or equal to  , i.e.,  , and "case is non-diseased" if the decision variable is smaller than  , i.e.,  . 
+
+* The decision threshold is a fixed value used to separate cases reported as diseased from cases reported as non-diseased.
+* Unlike the random Z-sample, which varies from case to case, the decision threshold is held fixed for the duration of the study. In some of the older literature2 the decision threshold is sometimes referred to as "response bias". The author hesitates to use the term "bias" which has a negative connotation, whereas, in fact, the choice of decision threshold depends on rational assessment of costs and benefits of different outcomes.
+* The choice of decision threshold depends on the conditions of the study: perceived or known disease prevalence, cost-benefit considerations, instructions regarding dataset characteristics, personal interpreting style, etc. There is a transient "learning curve" during which observer is assumed to find the optimal threshold and henceforth holds it constant for the duration of the study. The learning is expected to stabilize during a sufficiently long training interval.
+* Data should only be collected in the fixed threshold state, i.e., at the end of the training session.
+* If a second study is conducted under different conditions, the observer will determine, after a new training session, the optimal threshold for the new conditions and henceforth hold it constant for the duration of the second study, etc.
+
+From assumption #2, it follows that: 
 
 \begin{equation} 
-\phi\left ( z|\mu,\sigma \right )=\frac{1}{\sigma\sqrt{2\pi}}\exp\left ( -\frac{(z-\mu)^2}{2\sigma^2} \right )
-(\#eq:binaryTask-phi)
+1-Sp=FPF=P(Z\ge \zeta|T=1)
+(\#eq:binaryTaskFPF)
+\end{equation} 
+
+\begin{equation} 
+Se=TPF=P(Z\ge \zeta|T=2)
+(\#eq:binaryTaskTPF)
+\end{equation} 
+
+**Explanation:** $P(Z\ge \zeta|T=1)$ is the probability that the Z-sample for a non-diseased case is greater than or equal to $\zeta$. According to assumption #2 these cases are incorrectly classified as diseased, i.e., they are FP decisions and the corresponding probability is false positive fraction $FPF$, which is the complement of specificity $Sp$. Likewise,  $P(Z\ge \zeta|T=2)$ denotes the probability that the Z-sample for a diseased case is greater than or equal to $\zeta$. These cases are correctly classified as diseased, i.e., these are TP decisions and the corresponding probability is true positive fraction $TPF$, which is sensitivity $Se$.
+
+There are several concepts implicit in Eqn. \@ref(eq:binaryTaskFPF) and Eqn. \@ref(eq:binaryTaskTPF). 
+
+* The Z-samples have an associated probability distribution; this is implicit in the notation $P(Z\ge \zeta|T=2)$ and $P(Z\ge \zeta|T=1)$. Diseased-cases are not homogenous; in some, disease is easy to detect, perhaps even obvious, in others the signs of disease are subtler, and in some, the disease is almost impossible to detect. Likewise, non-diseased cases are not homogenous. 
+* The probability distributions depend on the truth state $T$. The distribution of the Z-samples for non-diseased cases is in general different from that for the diseased cases. Generally, the distribution for $T = 2$ is shifted to the right of that for $T = 1$ (assuming a **positive-directed** decision variable scale). Later, specific distributional assumptions will be employed to obtain analytic expressions for the right hand sides of Eqn. \@ref(eq:binaryTaskFPF) and Eqn. \@ref(eq:binaryTaskTPF).
+* The equations imply that via choice of the decision threshold $\zeta$, $Se$ and $Sp$ are under the control of the observer. The lower the decision threshold the higher the sensitivity and the lower the specificity, and the converses are also true. Ideally both sensitivity and specificity should be large, i.e., unity (since they are probabilities they cannot exceed unity). The tradeoff between sensitivity and specificity says, essentially, that there is no “free lunch”. In general, the price paid for increased sensitivity is decreased specificity and vice-versa. 
+
+### Adequacy of the training session
+**Assumption 3:** The observer has complete knowledge of the distributions of actually non-diseased and actually diseased cases and makes rational decision based on this knowledge. Knowledge of the probabilistic distributions is consistent with not knowing for sure which distribution a specific sample came from, i.e., the "blindedness" assumption common to all observer performance studies.
+
+How an observer can be induced to change the decision threshold is the subject of the following two examples.
+
+## Changing the decision threshold: Example I 
+Suppose that in the first study a radiologist interprets a set of cases subject to the instructions that it is rather important to identify actually diseased cases and not to worry about misdiagnosing actually non-diseased cases. One way to do this would be to reward the radiologist with $10 for each TP decision but only $1 for each TN decision. For simplicity, assume there is no penalty imposed for incorrect decisions (FPs and FNs) and the case set contains equal numbers of non-diseased and diseased cases, and the radiologist is informed of these facts. It is also assumed that the radiologist is allowed to reach a steady state and responds rationally to the payoff arrangement. Under these circumstances, the radiologist is expected to set the decision threshold at a small value so that even slight evidence of presence of disease is enough to result in a "case is diseased" decision. The low decision threshold also implies that considerable evidence of lack of disease is needed before a "case is non-diseased" decision is rendered. The radiologist is expected to achieve relatively high sensitivity but specificity will be low. As a concrete example, if there are 100 non-diseased cases and 100 diseased cases, assume the radiologist makes 90 TP decisions; since the threshold for presence of presence of disease is small, this number is close to the maximum possible value, namely 100. Assume further that 10 TN decisions are made; since the implied threshold for evidence of absence of disease is large, this number is close to the minimum possible value, namely 0. Therefore, sensitivity is 90% and specificity is 10%. The radiologist earns 90 x $10 + 10 x $1 = $910 for participating in this study. 
+
+Next, suppose the study is repeated with the same cases but this time the payoff is $1 for each TP decision and $10 for each TN decision. Suppose, further, that sufficient time has elapsed between the two study sessions that memory effects can be neglected. Now the roles of sensitivity and specificity are reversed. The radiologist's incentive is to be correct on actually non-diseased cases without worrying too much about missing actually diseased cases. The radiologist is expected to set the decision threshold at a large value so that considerable evidence of disease-presence is required to result in a "case is diseased" decision, but even slight evidence of absence of disease is enough to result in a "case is non-diseased" decision. This radiologist is expected to achieve relatively low sensitivity but specificity will be higher. Assume the radiologist makes 90 TN decisions and 10 TP decisions, earning $910 for the second study. The corresponding sensitivity is 10% and specificity is 90%. 
+
+The incentives in the first study caused the radiologist to accept low specificity in order to achieve high sensitivity; the incentives in the second study caused the radiologist to accept low sensitivity in order to achieve high specificity. 
+
+## Changing the decision threshold: Example II
+Suppose one asks the same radiologist to interpret a set of cases, but this time the reward for a correct decision is always $1, regardless of the truth state of the case, and as before, there are is no penalty for incorrect decisions. However, the radiologist is told that disease prevalence is only 0.005 and that this is the actual prevalence, i.e., the experimenter is not deceiving the radiologist in this regard. [Even if the experimenter attempts to deceive the radiologist, by claiming for example that there are roughly equal numbers of non-diseased and diseased cases, after interpreting a few tens of cases the radiologist will know that a deception is involved. Deception in such studies is generally not a good idea, as the observer’s performance is not being measured in a “steady state condition” – the observer’s performance will change as the observer “learns” the true disease prevalence.] In other words, only five out of every 1000 cases are actually diseased. This information will cause the radiologist to adopt a high threshold for diagnosing disease-present thereby becoming more reluctant to state: “case is diseased”. By simply diagnosing all cases as non-diseased, without using any case information, the radiologist will be correct on every disease absent case and earn $995, which is very close to the maximum $1000 the radiologist can earn by using case information to the full and being correct on disease-present and disease-absent cases. 
+
+The example is not as contrived as might appear at first sight. However, in screening mammography, the cost of missing a breast cancer, both in terms of loss of life and a possible malpractice suite, is usually perceived to be higher than the cost of a false positive. This can result in a shift towards higher sensitivity at the expense of lower specificity. 
+
+If a new study were conducted with a highly enriched set of cases, where the disease prevalence is 0.995 (i.e., only 5 out of every 1000 cases are actually non-diseased), then the radiologist would adopt a low threshold. By simply calling every case “non-diseased”, the radiologist earns $995. 
+
+These examples show that by manipulating the relative costs of correct vs. incorrect decisions and / or by varying disease prevalence one can influence the radiologist’s decision threshold. These examples apply to laboratory studies. Clinical interpretations are subject to different cost-benefit considerations that are generally not under the researcher's control: actual (population) disease prevalence, the reputation of the radiologist, malpractice, etc.
+
+
+## The equal-variance binormal model
+Here is the model for the Z-samples. Using the notation $N(\mu,\sigma^2)$  for the normal (or "Gaussian") distribution with mean $\mu$ and variance $\sigma^2$, it is assumed: 
+1.	The Z-samples for non-diseased cases are distributed  $N(0,1)$. 
+2.	The Z-samples for diseased cases are distributed $N(\mu,1)$ with $\mu>0$. 
+3.	A case is diagnosed as diseased if its Z-sample ≥ a constant threshold $\zeta$, and non-diseased otherwise.
+
+The constraint $\mu>0$  is needed so that the observer's performance is at least as good as chance. A large negative value for this parameter would imply an observer so predictably bad that the observer is good; one simply reverses the observer's decision ("diseased" to "non-diseased" and vice versa) to get near-perfect performance . 
+
+The model described above is termed the equal-variance binormal model. [If the common variance is not unity, one can re-scale the decision axis to achieve unit-variance without changing the predictions of the model.] A more general model termed the unequal-variance binormal model is generally used for modeling human observer data, discussed later, but for the moment, one does not need that complication. The equal-variance binormal model is defined by:
+
+\begin{equation} 
+\left.\begin{matrix}
+Z_{k_tt} \sim N(\mu_t,1) \\ 
+\mu_1=0\\ 
+\mu_2=\mu
+\end{matrix}\right\}
+(\#eq:binaryTaskeq-variance-binormal-model)
+\end{equation} 
+
+In Eqn. \@ref(eq:binaryTaskeq-variance-binormal-model) the subscript $t$ denotes the truth, sometimes referred to as the "gold standard", with $t = 1$ denoting a non-diseased case and $t = 2$ denoting a diseased case. The variable $Z_{k_tt}$ denotes the random Z-sample for case $k_tt$, where $k_t$ is the index for cases with truth state $t$; for example $k_11=21$  denotes the 21st non-diseased case and  $k_22=3$ denotes the 3rd diseased case. To explicate $k_11=21$ further, the label $k_1$  indexes the case while the label $1$  indicates the truth of the case. The label $k_t$  ranges from $1,2,...,K_t$ , where $K_t$$  is the total number of cases with disease state $t$. 
+
+The author departs from usual convention, see for example paper by Hillis, which labels the cases with a single index $k$, which ranges from 1 to $K_1+K_2$, and one is left guessing as to the truth-state of each case. Also, the proposed notation extends readily to the FROC paradigm where two states of truth have to be distinguished, one at the case level and one at the location level.
+
+The first line in Eqn. \@ref(eq:binaryTaskeq-variance-binormal-model) states that $Z_{k_tt}$ is a random sample from the  $N(\mu_t,1)$ distribution, which has unit variance regardless of the value of $t$ (this is the reason for naming it the equal-variance binormal model). The remaining lines in Eqn. \@ref(eq:binaryTaskeq-variance-binormal-model) defines $\mu_1$ as zero and $\mu_2$ as $\mu$. Taken together, these equations state that non-diseased case Z-samples are distributed $N(0,1)$  and diseased case Z-samples are distributed $N(\mu,1)$. The name binormal arises from the two normal distributions underlying this model. It should not be confused with bivariate, which identifies a single distribution yielding two values per sample, where the two values could be correlated. In the binormal model, the samples from the two distributions are assumed independent of each other. 
+
+A few facts concerning the normal (or Gaussian) distribution are summarized next.
+
+## The normal distribution
+In probability theory, a probability density function (pdf), or density of a continuous random variable, is a function giving the relative chance that the random variable takes on a given value. For a continuous distribution, the probability of the random variable being exactly equal to a given value is zero. The probability of the random variable falling in a range of values is given by the integral of this variable’s pdf function over that range. For the normal distribution $N(\mu,\sigma^2)$  the pdf is denoted $\phi(z|\mu,\sigma)$ given by:
+
+By definition, 
+
+\begin{equation} 
+\phi\left ( z|\mu,\sigma \right )=P(z<Z<z+dz|Z \sim N(\mu,\sigma^2))
+(\#eq:binaryTask-phi-def)
 \end{equation}
+
+The right hand side of Eqn. \@ref(eq:binaryTask-phi-def) is the probability that the random variable $Z$, sampled from $N(\mu,\sigma^2)$, is between the fixed limits z and z + dz. For this reason $\phi(z|\mu,\sigma)$  is termed the probability density function. The special case  $\phi(z|0,1)$ is referred to as the **unit normal distribution**; it has zero mean and unit variance and the corresponding pdf is denoted $\phi(z)$. The defining equation for the pdf of this distribution is:
 
 \begin{equation} 
 \phi\left ( z \right )=\frac{1}{\sqrt{2\pi}}\exp\left ( -\frac{z^2}{2} \right )
-(\#eq:binaryTask-phi-normalized)
+(\#eq:binaryTask-phi)
 \end{equation}
+
+The integral of $\phi(z)$ from $-\infty$ to $z$  is the probability that a sample from the unit normal distribution is less than $z$. Regarded as a function of $z$, this is termed the cumulative distribution function (CDF) and is denoted, in this book, by the symbol $\Phi$. The function $\Phi(z)$, specific to the unit normal distribution, is defined by:
 
 \begin{equation} 
 \Phi\left ( z \right )=\int_{-\infty }^{z}\phi(t)dt
 (\#eq:binaryTask-Phi)
 \end{equation}
 
+Fig. \@ref(fig:binaryTask-plots1) shows plots, as functions of z, of the CDF and the pdf for the unit normal distribution. Since z-samples outside ±3 are unlikely, the plotted range, from -3 to +3 includes most of the distribution. The pdf is the familiar bell-shaped curve, centered at zero; the corresponding R function is `dnorm()`, i.e., density of the normal distribution. The CDF $\Phi(z)$ increases monotonically from 0 to unity as z increases from $-\infty$ to $+\infty$. It is the sigmoid-shaped curve in Fig. \@ref(fig:binaryTask-plots1); the corresponding `R` function is `pnorm()`. A related function is the inverse of Eqn. \@ref(eq:binaryTask-Phi). Suppose the left hand side of Eqn. \@ref(eq:binaryTask-Phi) is denoted $p$, which is a probability in the range 0 to 1, i.e.,
 
-## The normal distribution pdf and cdf plots
 
 
 ```r
@@ -51,9 +137,33 @@ pdfcdfPlot <- ggplot(
 print(pdfcdfPlot)
 ```
 
-![](03-modeling-binary-task_files/figure-latex/unnamed-chunk-1-1.pdf)<!-- --> 
+![(\#fig:binaryTask-plots1)pdf-CDF plots for unit normal.](03-modeling-binary-task_files/figure-latex/binaryTask-plots1-1.pdf) 
 
 The sigmoid shaped curve is the CDF, or cumulative distribution function, of the N(0,1) distribution, while the bell-shaped curve is the corresponding pdf, or probability density function. The dashed line corresponds to the reporting threshold $\zeta$. The area under the pdf to the left of $\zeta$ equals the value of CDF at the selected  $\zeta$, i.e., 0.841 (`pnorm(1)` = 0.841). 
+
+\begin{equation} 
+p=\Phi\left ( z \right )=\int_{-\infty }^{z}\phi(t)dt
+(\#eq:binaryTask-Phi2)
+\end{equation}
+
+The inverse of $\Phi(z)$ is that function which when applied to $p$ yields the upper limit $z$ in Eqn. \@ref(eq:binaryTask-Phi), i.e.,
+
+\begin{equation} 
+\Phi^{-1}(p) = z
+(\#eq:binaryTask-PhiInvDef)
+\end{equation}
+
+Since $p=\Phi(z)$ it follows that
+
+\begin{equation} 
+\Phi(\Phi^{-1}(z))=z
+(\#eq:binaryTask-PhiInvDef2)
+\end{equation}
+
+This nicely satisfies the property of an inverse function. The inverse function is known in statistical terminology as the quantile function, implemented in `R` as the `qnorm()` function. Think of `pnorm()` as a probability and `qnorm()` as value on the z-axis. 
+
+To summarize, `norm` implies the unit normal distribution, `p` denotes a probability distribution function  or CDF, `q` denotes a quantile function and `d` denotes a density function; this convention is used with all distributions in `R`.
+
 
 ## Binary ratings
 
