@@ -133,7 +133,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-09-07}
+\date{2020-09-09}
 
 \begin{document}
 \maketitle
@@ -1330,7 +1330,7 @@ These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
 \hypertarget{binaryTask0Intro}{%
 \section{Introduction}\label{binaryTask0Intro}}
 
-In the previous chapter four observer performance paradigms were introduced: the receiver operating characteristic (ROC), the free-response ROC (FROC), the location ROC (LROC) and the region of interest (ROI). The next few chapters focus on the ROC paradigm, where each case is rated for confidence in presence of disease. While a multiple point rating scale is generally used, in this chapter it is assumed that the ratings are binary, and the allowed values are ``1'' vs.~``2''. Equivalently, the ratings could be ``non-diseased'' vs.~``diseased'', ``negative'' vs.~``positive'', etc. In the literature this method of data acquisition is also termed the ``yes/no'' procedure \citep[\citet{RN346}]{RN298}. The reason for restricting, for now, to the binary task is that the multiple rating task can be shown to be equivalent to a number of simultaneously conducted binary tasks. Therefore, understanding the simpler method is a good starting point.
+In the previous chapter four observer performance paradigms were introduced: the receiver operating characteristic (ROC), the free-response ROC (FROC), the location ROC (LROC) and the region of interest (ROI). The next few chapters focus on the ROC paradigm, where each case is rated for confidence in presence of disease. While a multiple point rating scale is generally used, in this chapter it is assumed that the ratings are binary, and the allowed values are ``1'' vs.~``2''. Equivalently, the ratings could be ``non-diseased'' vs.~``diseased'', ``negative'' vs.~``positive'', etc. In the literature this method of data acquisition is also termed the ``yes/no'' procedure \citep{RN298, RN346}. The reason for restricting, for now, to the binary task is that the multiple rating task can be shown to be equivalent to a number of simultaneously conducted binary tasks. Therefore, understanding the simpler method is a good starting point.
 
 Since the truth is also binary, this chapter could be named the binary-truth binary-decision task. The starting point is a 2 x 2 table summarizing the outcomes in such studies and useful fractions that can be defined from the counts in this table, the most important ones being true positive fraction (TPF) and false positive fraction (FPF). These are used to construct measures of performance, some of which are desirable from the researcher's point of view, but others are more relevant to radiologists. The concept of disease prevalence is introduced and used to formulate relations between the different types of measures. An R example of calculation of these quantities is given that is only slightly more complicated than the demonstration in the prior chapter.
 
@@ -1359,13 +1359,13 @@ D=2 & FP & TP\\
 Table \ref{tab:binaryTask0truthTable2} shows the numbers of decisions in each of the four categories defined in Table \ref{tab:binaryTask0truthTable}. Specifically, \(n(TN)\) is the number of true negative decisions, \(n(FN)\) is the number of false negative decisions, etc. The last row is the sum of the corresponding columns. The sum of the number of true negative decisions \(n(TN)\) and the number of false positive decisions \(n(FP)\) must equal the total number of non-diseased cases, denoted \(K_1\). Likewise, the sum of the number of false negative decisions \(n(FN)\) and the number of true positive decisions \(n(TP)\) must equal the total number of diseased cases, denoted \(K_2\). The last column is the sum of the corresponding rows. The sum of the number of true negative \(n(TN)\) and false negative \(n(FN)\) decisions is the total number of negative decisions, denoted \(n(N)\). Likewise, the sum of the number of false positive \(n(FP)\) and true positive \(n(TP)\) decisions is the total number of positive decisions, denoted \(n(P)\). Since each case yields a decision, the bottom-right corner cell is \(n(N) + n(P)\), which must also equal \(K_1+K_2\), the total number of cases \(K\). These statements are summarized in Eqn. \eqref{eq:binaryTask0TruthTableEqns}.
 
 \begin{equation} 
-\left.\begin{matrix}
-K_1=n(TN)+n(FP)\\ 
-K_2=n(FN)+n(TN)\\ 
-n(N)=n(TN)+n(FN)\\ 
-n(P)=n(TP)+n(FP)\\
-K=K_1+K_2=n(N)+n(P)
-\end{matrix}\right\}
+\left.\begin{split}
+K_1&=n(TN)+n(FP)\\ 
+K_2&=n(FN)+n(TN)\\ 
+n(N)&=n(TN)+n(FN)\\ 
+n(P)&=n(TP)+n(FP)\\
+K=K_1+K_2&=n(N)+n(P)
+\end{split}\right\}
 \label{eq:binaryTask0TruthTableEqns}
 \end{equation}
 
@@ -1399,24 +1399,25 @@ P(D|T) = P(\text{diagnosis is D} | \text{truth is T})
 Therefore the probability that the radiologist will diagnose ``case is diseased'' when the case is actually diseased is \(P(D=2|T=2)\), which is the probability of a true positive \(P(TP)\).
 
 \begin{equation} 
-P(TP) = P(\text{ D = 2} | \text{T = 2})
+P(TP) = P(\text{D = 2} | \text{T = 2})
 \label{eq:binaryTask0PTP}
 \end{equation}
 
 Likewise, the probability that the radiologist will diagnose ``case is non-diseased'' when the case is actually diseased is \(P(D=1|T=2)\), which is the probability of a false negative \(P(FN)\).
 
 \begin{equation} 
-P(FN) = P(\text{ D = 1} | \text{T = 2})
+P(FN) = P(\text{D = 1} | \text{T = 2})
 \label{eq:binaryTask0PFN}
 \end{equation}
 
 The corresponding probabilities for non-diseased cases, \(P(TN)\) and \(P(FP)\), are defined by:
 
 \begin{equation} 
-\left.\begin{matrix}
-P(TN)=P(D=1|T=1)\\ 
-P(FP)=P(D=2|T=1
-\end{matrix}\right\}
+\left.\begin{split}
+P(TN)&=P(D=1|T=1)\\ 
+\\
+P(FP)&=P(D=2|T=1)
+\end{split}\right\}
 \label{eq:binaryTask0PTNFP}
 \end{equation}
 
@@ -1425,6 +1426,7 @@ Since the diagnosis must be either \(D=1\) or \(D=2\), for each truth state the 
 \begin{equation} 
 \left.\begin{matrix}
 P(D=1|T=1)+P(D=2|T=1)=1\\ 
+\\  
 P(D=1|T=2)+P(D=2|T=2)=1
 \end{matrix}\right\}
 \label{eq:binaryTask0PSumsToUnity}
@@ -1435,6 +1437,7 @@ Equivalently, these equations can be written:
 \begin{equation} 
 \left.\begin{matrix}
 P(TN)+P(FP)=1\\ 
+\\
 P(FN)+P(TP)=1
 \end{matrix}\right\}
 \label{eq:binaryTask0PSumsToUnity2}
@@ -1453,6 +1456,7 @@ Comments:
 \begin{equation} 
 \left.\begin{matrix}
 \text{Se}=P(TP)=P(D=2|T=2)\\ 
+\\
 \text{Sp}=P(TN)=P(D=1|T=1)
 \end{matrix}\right\}
 \label{eq:binaryTask0SeSp}
@@ -1500,11 +1504,11 @@ P(D|\text{lab})=P(T=2|\text{lab})
 Since the patients must be either diseased on non-diseased, it follows with either sampling method, that:
 
 \begin{equation} 
-\left.\begin{matrix}
-P(T=1|\text{pop})+P(T=2|\text{pop})=1\\
-P(T=1|\text{lab})+P(T=2|\text{lab})=1
-\end{matrix}\right\}
-\label{eq:binaryTask0DisPrevSums}
+\left.\begin{split}
+P(T=1|\text{pop})&+P(T=2|\text{pop})&=1\\
+\\
+P(T=1|\text{lab})&+P(T=2|\text{lab})&=1
+\end{split}\right\}
 \end{equation}
 
 If a finite number of patients are sampled randomly from the population the fraction of diseased patients in the sample is an estimate of true disease prevalence.
@@ -1520,11 +1524,11 @@ If a finite number of patients are sampled randomly from the population the frac
 It is important to appreciate the distinction between true (population) prevalence and laboratory prevalence. As an example, true disease prevalence for breast cancer is about five per 1000 patients in the US, but most mammography studies are conducted with comparable numbers of non-diseased and diseased cases:
 
 \begin{equation} 
-\left.\begin{matrix}
-\widehat{P(D|\text{pop})}\sim ~0.005
-\\ 
-\widehat{P(D|\text{lab})}\sim ~0.5\gg \widehat{P(D|\text{pop})}
-\end{matrix}\right\}
+\left.\begin{split}
+\widehat{P(D|\text{pop})}&\sim 0.005\\
+\\
+\widehat{P(D|\text{lab})}&\sim 0.5\gg \widehat{P(D|\text{pop})}
+\end{split}\right\}
 \label{eq:binaryTask0DisPrevLabVsPop}
 \end{equation}
 
@@ -1561,9 +1565,13 @@ n(TN)=K_1 \widehat{Sp}
 Therefore,
 
 \begin{equation} 
-\widehat{Ac}=\frac{n(TN)+n(TP)}{K}\\
-=\frac{K_1 \widehat{Sp}+K_2 \widehat{Se}}{K}\\
-=\widehat{Sp} \widehat{P(!D)}+\widehat{Se}\widehat{P(D)}
+\begin{split}
+\widehat{Ac}&=\frac{n(TN)+n(TP)}{K}\\
+\\
+&=\frac{K_1 \widehat{Sp}+K_2 \widehat{Se}}{K}\\
+\\
+&=\widehat{Sp} \widehat{P(!D)}+\widehat{Se}\widehat{P(D)}
+\end{split}
 \label{eq:binaryTask0AccuracyDeriv}
 \end{equation}
 
@@ -1644,7 +1652,11 @@ PPV =\frac{P(D)(TPF)}{P(D)(TPF)+P(!D)FPF}
 The equations defining NPV and PPV are actually special cases of Bayes' theorem \citep{RN1492}. The general theorem is:
 
 \begin{equation} 
-P(A|B)=\frac{P(B|A)P(A)}{P(B)}=\frac{P(A)P(B|A)}{P(A)P(B|A)+P(!A)P(B|!A)}
+\begin{split}
+P(A|B)&=\frac{P(B|A)P(A)}{P(B)} \\
+\\
+&=\frac{P(A)P(B|A)}{P(A)P(B|A)+P(!A)P(B|!A)}
+\end{split}
 \label{eq:binaryTask0BayesTheorem}
 \end{equation}
 
@@ -5115,7 +5127,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.4472407          1   0.22897122}
+\CommentTok{\#\textgreater{} 1    1.1818974          1   0.27697005}
 \end{Highlighting}
 \end{Shaded}
 

@@ -96,7 +96,7 @@ The first line in Eqn. \@ref(eq:binaryTaskeq-variance-binormal-model) states tha
 A few facts concerning the normal (or Gaussian) distribution are summarized next.
 
 ## The normal distribution
-In probability theory, a probability density function (pdf), or density of a continuous random variable, is a function giving the relative chance that the random variable takes on a given value. For a continuous distribution, the probability of the random variable being exactly equal to a given value is zero. The probability of the random variable falling in a range of values is given by the integral of this variable’s pdf function over that range. For the normal distribution $N(\mu,\sigma^2)$  the pdf is denoted $\phi(z|\mu,\sigma)$ given by:
+In probability theory, a probability density function (pdf), or density of a continuous random variable, is a function giving the relative chance that the random variable takes on a given value. For a continuous distribution, the probability of the random variable being exactly equal to a given value is zero. The probability of the random variable falling in a range of values is given by the integral of this variable’s pdf function over that range. For the normal distribution $N(\mu,\sigma^2)$  the pdf is denoted $\phi(z|\mu,\sigma)$.
 
 By definition, 
 
@@ -112,15 +112,16 @@ The right hand side of Eqn. \@ref(eq:binaryTask-phi-def) is the probability that
 (\#eq:binaryTask-phi)
 \end{equation}
 
-The integral of $\phi(z)$ from $-\infty$ to $z$  is the probability that a sample from the unit normal distribution is less than $z$. Regarded as a function of $z$, this is termed the cumulative distribution function (CDF) and is denoted, in this book, by the symbol $\Phi$. The function $\Phi(z)$, specific to the unit normal distribution, is defined by:
+The integral of $\phi(t)$ from $-\infty$ to $z$, as in Eqn. \@ref(eq:binaryTask-Phi), is the probability that a sample from the unit normal distribution is less than $z$. Regarded as a function of $z$, this is termed the cumulative distribution function (CDF) and is denoted, in this book, by the symbol $\Phi$. The function $\Phi(z)$, specific to the unit normal distribution, is defined by:
 
 \begin{equation} 
 \Phi\left ( z \right )=\int_{-\infty }^{z}\phi(t)dt
 (\#eq:binaryTask-Phi)
 \end{equation}
 
-Fig. \@ref(fig:binaryTask-plots1) shows plots, as functions of z, of the CDF and the pdf for the unit normal distribution. Since z-samples outside ±3 are unlikely, the plotted range, from -3 to +3 includes most of the distribution. The pdf is the familiar bell-shaped curve, centered at zero; the corresponding R function is `dnorm()`, i.e., density of the normal distribution. The CDF $\Phi(z)$ increases monotonically from 0 to unity as z increases from $-\infty$ to $+\infty$. It is the sigmoid-shaped curve in Fig. \@ref(fig:binaryTask-plots1); the corresponding `R` function is `pnorm()`. A related function is the inverse of Eqn. \@ref(eq:binaryTask-Phi). Suppose the left hand side of Eqn. \@ref(eq:binaryTask-Phi) is denoted $p$, which is a probability in the range 0 to 1, i.e.,
+Fig. \@ref(fig:binaryTask-plots1) shows plots, as functions of z, of the CDF and the pdf for the unit normal distribution. Since z-samples outside ±3 are unlikely, the plotted range, from -3 to +3 includes most of the distribution. The pdf is the familiar bell-shaped curve, centered at zero; the corresponding R function is `dnorm()`, i.e., density of the normal distribution. The CDF $\Phi(z)$ increases monotonically from 0 to unity as z increases from $-\infty$ to $+\infty$. It is the sigmoid (S-shaped) shaped curve in Fig. \@ref(fig:binaryTask-plots1); the corresponding `R` function is `pnorm()`. 
 
+The sigmoid shaped curve is the CDF, or cumulative distribution function, of the N(0,1) distribution, while the bell-shaped curve is the corresponding pdf, or probability density function. The dashed line corresponds to the reporting threshold $\zeta$. The area under the pdf to the left of $\zeta$ equals the value of CDF at the selected  $\zeta$, i.e., 0.841 (`pnorm(1)` = 0.841). 
 
 
 ```r
@@ -137,9 +138,12 @@ pdfcdfPlot <- ggplot(
 print(pdfcdfPlot)
 ```
 
-![(\#fig:binaryTask-plots1)pdf-CDF plots for unit normal.](03-modeling-binary-task_files/figure-latex/binaryTask-plots1-1.pdf) 
+<div class="figure">
+<img src="03-modeling-binary-task_files/figure-html/binaryTask-plots1-1.png" alt="pdf-CDF plots for unit normal." width="672" />
+<p class="caption">(\#fig:binaryTask-plots1)pdf-CDF plots for unit normal.</p>
+</div>
 
-The sigmoid shaped curve is the CDF, or cumulative distribution function, of the N(0,1) distribution, while the bell-shaped curve is the corresponding pdf, or probability density function. The dashed line corresponds to the reporting threshold $\zeta$. The area under the pdf to the left of $\zeta$ equals the value of CDF at the selected  $\zeta$, i.e., 0.841 (`pnorm(1)` = 0.841). 
+A related function is the inverse of Eqn. \@ref(eq:binaryTask-Phi). Suppose the left hand side of Eqn. \@ref(eq:binaryTask-Phi) is denoted $p$, which is a probability in the range 0 to 1. 
 
 \begin{equation} 
 p=\Phi\left ( z \right )=\int_{-\infty }^{z}\phi(t)dt
@@ -165,6 +169,395 @@ This nicely satisfies the property of an inverse function. The inverse function 
 To summarize, `norm` implies the unit normal distribution, `p` denotes a probability distribution function  or CDF, `q` denotes a quantile function and `d` denotes a density function; this convention is used with all distributions in `R`.
 
 
+```r
+qnorm(0.025)
+#> [1] -1.959964
+qnorm(1-0.025)
+#> [1] 1.959964
+pnorm(qnorm(0.025))
+#> [1] 0.025
+qnorm(pnorm(-1.96))
+#> [1] -1.96
+```
+
+The first command `qnorm(0.025)` demonstrates the identity:
+
+\begin{equation} 
+\Phi^{-1}(0.025)=-1.959964
+(\#eq:binaryTask-Phi-Inv-alpha-by2)
+\end{equation}
+
+The next command `qnorm(1-0.025)` demonstrates the identity:
+
+\begin{equation} 
+\Phi^{-1}(1-0.025)=+1.959964
+(\#eq:binaryTask-PhiInv-One-Minus-alphaby2)
+\end{equation}
+
+The last two commands demonstrate that `pnorm` and `qnorm`, applied in either order, are inverses of each other. 
+
+Eqn. \@ref(eq:binaryTask-Phi-Inv-alpha-by2) means that the (rounded) value -1.96 is such that the area under the pdf to the left of this value is 0.025. Similarly, Eqn. \@ref(eq:binaryTask-PhiInv-One-Minus-alphaby2) means that the (rounded) value +1.96 is such that the area under the pdf to the left of this value is 1-0.025 = 0.975. In other words, -1.96 captures, to its left, the 2.5th percentile of the unit-normal distribution, and 1.96 captures, to its left, the 97.5th percentile of the unit-normal distribution, Fig. \@ref(fig:binaryTask-shaded-tails). Since between them they capture 95% of the unit-normal pdf, these two values can be used to estimate 95% confidence intervals. 
+
+
+```r
+mu <- 0;sigma <- 1
+zeta <- -qnorm(0.025)
+step <- 0.1
+
+LL<- -3
+UL <- mu + 3*sigma
+
+x.values <- seq(zeta,UL,step)
+cord.x <- c(zeta, x.values,UL) 
+cord.y <- c(0,dnorm(x.values),0) 
+
+z <- seq(LL, UL, by = step)
+curveData <- data.frame(z = z, pdfs = dnorm(z))
+shadeData <- data.frame(z = cord.x, pdfs = cord.y)
+shadedTails <- ggplot(mapping = aes(x = z, y = pdfs))  + geom_polygon(data = shadeData, color = "grey", fill = "grey")
+
+zeta <- qnorm(0.025)
+x.values <- seq(LL, zeta,step)
+cord.x <- c(LL, x.values,zeta) 
+cord.y <- c(0,dnorm(x.values),0) 
+shadeData <- data.frame(z = cord.x, pdfs = cord.y)
+shadedTails <- shadedTails + geom_polygon(data = shadeData, color = "grey", fill = "grey") + xlab(label = "z") 
+shadedTails <- shadedTails + geom_line(data = curveData, color = "black")
+print(shadedTails)
+```
+
+<div class="figure">
+<img src="03-modeling-binary-task_files/figure-html/binaryTask-shaded-tails-1.png" alt="Illustrating that 95% of the total area under the unit normal pdf is contained in the range |Z| &lt; 1.96, which can be used to construct a 95% confidence interval for an estimate of a suitably normalized statistic. The area contained in each shaded tail is 2.5%." width="672" />
+<p class="caption">(\#fig:binaryTask-shaded-tails)Illustrating that 95% of the total area under the unit normal pdf is contained in the range |Z| < 1.96, which can be used to construct a 95% confidence interval for an estimate of a suitably normalized statistic. The area contained in each shaded tail is 2.5%.</p>
+</div>
+
+**If one knows that a variable is distributed as a unit-normal random variable, then the observed value minus 1.96 defines the lower limit of its 95% confidence interval, and the observed value plus 1.96 defines the upper limit of its 95% confidence interval.**
+
+## Analytic expressions for specificity and sensitivity
+Specificity corresponding to threshold $\zeta$ is the probability that a Z-sample from a non-diseased case is smaller than $\zeta$. By definition, this is the CDF corresponding to the threshold $\zeta$. In other words:
+
+\begin{equation} 
+Sp\left ( \zeta \right )=P\left ( Z_{k_11} < \zeta\mid Z_{k_11} \sim N\left ( 0,1 \right )\right ) = \Phi\left ( \zeta \right )
+(\#eq:binaryTask-Specificity)
+\end{equation}
+
+The expression for sensitivity can be derived tediously by starting with the fact that $Z_{k_22}$ and then using calculus to obtain the probability that a z-sample for a disease-present case exceeds $\zeta$. A quicker way is to consider the random variable obtaining by shifting the origin to  $\mu$. A little thought should convince the reader that $Z_{k_22}-\mu$  must be distributed as $N(0,1)$. Therefore, the desired probability is (the last step follows from the identity in Eqn. (3.7), with z replaced by $\zeta-\mu$ :
+
+\begin{equation} 
+Se\left ( \zeta \right )\\
+=P\left ( Z_{k_22} \geq \zeta\right ) \\
+=P\left (\left ( Z_{k_22} -\mu  \right ) \geq\left ( \zeta -\mu  \right )\right ) \\
+=1-P\left (\left ( Z_{k_22} -\mu  \right ) < \left ( \zeta -\mu  \right )\right ) \\
+= 1-\Phi\left ( \zeta -\mu \right )
+(\#eq:binaryTask-Sensitivity)
+\end{equation}
+
+A little thought (based on the definition of the CDF function and the symmetry of the unit-normal pdf function) should convince the reader that:
+
+\begin{equation} 
+1-\Phi(\zeta)=-\Phi(\zeta)\\
+1-\Phi(\zeta-\mu)=\Phi(\mu-\zeta)
+(\#eq:binaryTask-Sensitivity)
+\end{equation}
+
+Instead of carrying the "1 minus " around, one can use the more compact notation. Summarizing, the analytical formulae for the specificity and sensitivity for the equal-variance binormal model are: 
+
+\begin{equation} 
+Sp\left ( \zeta \right ) = \Phi(\zeta)\\
+Se\left ( \zeta \right ) = \Phi(\mu-\zeta)
+(\#eq:binaryTask-Sensitivity-Specificity)
+\end{equation}
+
+In these equations, the threshold $\zeta$ appears with different signs because specificity is the area under a pdf to the **left** of a threshold, while sensitivity is the area to the **right**.
+
+**As probabilities, both sensitivity and specificity are restricted to the range 0 to 1. The observer’s performance could be characterized by specifying sensitivity and specificity, i.e., a pair of numbers. If both sensitivity and specificity of an imaging system are greater than the corresponding values for another system, then the 1st system is unambiguously better than the 2nd. But what if sensitivity is greater for the 1st but specificity is greater for the 2nd? Now the comparison is ambiguous. It is difficult to unambiguously compare two pairs of performance indices. Clearly, a scalar measure is desirable that combines sensitivity and specificity into a single measure of diagnostic performance.**
+
+The parameter $\mu$  satisfies the requirements of a scalar figure of merit (FOM). Eqn. \@ref(eq:binaryTask-Sensitivity-Specificity) can be solved for $\mu$  as follows. Inverting the equations yields: 
+
+\begin{equation} 
+\zeta =\Phi^{-1} \left (Sp\left ( \zeta \right )  \right )\\
+\mu - \zeta = \Phi^{-1} \left (Se\left ( \zeta \right )  \right )
+(\#eq:binaryTask-SolveForMuZeta)
+\end{equation}
+
+Eliminating $\zeta$ yields:
+
+\begin{equation} 
+\mu = \Phi^{-1} \left (Sp\left ( \zeta \right )  \right ) + \Phi^{-1} \left (Se\left ( \zeta \right )  \right )
+(\#eq:binaryTask-SolveForMu)
+\end{equation}
+
+This is a useful relation, as it converts a *pair* of numbers that is hard to compare between two modalities, in the sense described above, into a *single* FOM. Now it is almost trivial to compare two modalities: the one with the higher $\mu$  wins. In reality, the comparison is not trivial since like sensitivity and specificity, $\mu$ has to be estimated from a finite dataset and is therefore subject to sampling variability.
+
+
+```r
+options(digits=3)
+mu <- 3;sigma <- 1
+zeta <- 1
+step <- 0.1
+
+lowerLimit<- -1 # lower limit
+upperLimit <- mu + 3*sigma # upper limit
+
+z <- seq(lowerLimit, upperLimit, by = step)
+pdfs <- dnorm(z)
+seqNor <- seq(zeta,upperLimit,step)
+cord.x <- c(zeta, seqNor,upperLimit) 
+# need two y-coords at each end point of range; 
+# one at zero and one at value of function
+cord.y <- c(0,dnorm(seqNor),0) 
+curveData <- data.frame(z = z, pdfs = pdfs)
+shadeData <- data.frame(z = cord.x, pdfs = cord.y)
+shadedPlots <- ggplot(mapping = aes(x = z, y = pdfs)) + geom_line(data = curveData, color = "blue") + geom_polygon(data = shadeData, color = "blue", fill = "blue")
+
+crossing <- uniroot(function(x) dnorm(x) - dnorm(x,mu,sigma), 
+                    lower = 0, upper = 3)$root
+crossing <- max(c(zeta, crossing))
+seqAbn <- seq(crossing,upperLimit,step)
+cord.x <- c(seqAbn, rev(seqAbn))
+# reason for reverse 
+# we want to explicitly define the polygon
+# we dont want R to close it 
+
+cord.y <- c()
+for (i in seq(1,length(cord.x)/2)) {
+  cord.y <- c(cord.y,dnorm(cord.x[i],mu, sigma))
+}
+for (i in seq(1,length(cord.x)/2)) {
+  cord.y <- c(cord.y,dnorm(cord.x[length(cord.x)/2+i]))
+}
+pdfs <- dnorm(z, mu, sigma)
+curveData <- data.frame(z = z, pdfs = pdfs)
+shadeData <- data.frame(z = cord.x, pdfs = cord.y)
+shadedPlots <- shadedPlots + geom_line(data = curveData, color = "red") + geom_polygon(data = shadeData, color = "red", fill = "red")
+seqAbn <- seq(zeta,upperLimit,step)
+for (i in seqAbn) {
+  # define xs and ys of two points, separated only along y-axis
+  vlineData <- data.frame(x1 = i, x2 = i, y1 = 0, y2 = dnorm(i, mu, sigma))
+  # draw vertical line between them
+  shadedPlots <- shadedPlots + geom_segment(aes(x = x1, xend = x2, y = y1, yend = y2), data = vlineData, color = "red")
+}
+shadedPlots <- shadedPlots + xlab(label = "z-sample")
+print(shadedPlots)
+```
+
+<div class="figure">
+<img src="03-modeling-binary-task_files/figure-html/binaryTask-shaded-plots-1.png" alt="The equal-variance binormal model for mu = 3  and  zeta = 1; the blue curve, centered at zero, corresponds to the pdf of non-diseased cases and the red one, centered at mu = 3, corresponds to the pdf of diseased cases. The left edge of the blue shaded region represents the threshold zeta, currently set at unity. The red shaded area, including the common portion with the vertical red lines, is sensitivity. The blue shaded area including the common portion with the vertical red lines is 1-specificity." width="672" />
+<p class="caption">(\#fig:binaryTask-shaded-plots)The equal-variance binormal model for mu = 3  and  zeta = 1; the blue curve, centered at zero, corresponds to the pdf of non-diseased cases and the red one, centered at mu = 3, corresponds to the pdf of diseased cases. The left edge of the blue shaded region represents the threshold zeta, currently set at unity. The red shaded area, including the common portion with the vertical red lines, is sensitivity. The blue shaded area including the common portion with the vertical red lines is 1-specificity.</p>
+</div>
+
+Fig. \@ref(fig:binaryTask-shaded-plots) shows the equal-variance binormal model for $\mu = 3$  and $\zeta = 1$. The blue-shaded area, including the "common" portion with the vertical red lines, is the probability that a z-sample from a non-diseased case exceeds $\zeta = 1$, which is the complement of specificity, i.e., it is false positive fraction, which is 1 - `pnorm(1)` = 0.159. The red shaded area, including the "common" portion with the vertical red lines, is the probability that a z-sample from a diseased case exceeds $\zeta = 1$, which is sensitivity or true positive fraction, which is `pnorm(3-1)`= 0.977.
+
+Demonstrated next are these concepts using R examples.
+
+## Demonstration of the concepts of sensitivity and specificity
+
+### Estimating mu from a finite sample
+The following code simulates 9 non-diseased and 11 diseased cases. The $\mu$ parameter is 1.5 and $\zeta$ is $\mu/2$. Shown are the calculations of sensitivity and specificity and the value of estimated $\mu$. 
+
+
+
+
+
+```r
+mu <- 1.5
+zeta <- mu/2
+seed <- 100 # line 4
+K1 <- 9
+K2 <- 11
+ds <- simulateDataset(K1, K2, mu, zeta, seed)
+
+cat("seed = ", seed, 
+    "\nK1 = ", K1, 
+    "\nK2 = ", K2, 
+    "\nSpecificity = ", ds$Sp, 
+    "\nSensitivity = ", ds$Se, 
+    "\nEst. of mu = ", ds$mu, "\n")
+#> seed =  100 
+#> K1 =  9 
+#> K2 =  11 
+#> Specificity =  0.889 
+#> Sensitivity =  0.909 
+#> Est. of mu =  2.56
+```
+
+Since this is a finite sample, the estimate of $\mu$ is not exactly equal to the true value. In fact, all of the estimates, sensitivity, specificity and $\mu$ are subject to sampling variability.
+
+### Changing the seed variable: case-sampling variability
+No matter how many times one runs the above code, one always sees the same output shown above. This is because at line 4 one sets the `seed` of the random number generator to a fixed value, namely 100. This is like having a perfectly reproducible reader repeatedly interpreting the same cases – one always gets the same results. Change the `seed` to 101. One should see:
+
+
+```r
+seed <- 101 # change
+ds <- simulateDataset(K1, K2, mu, zeta, seed)
+
+cat("seed = ", seed, 
+    "\nK1 = ", K1, 
+    "\nK2 = ", K2, 
+    "\nSpecificity = ", ds$Sp, 
+    "\nSensitivity = ", ds$Se, 
+    "\nEst. of mu = ", ds$mu, "\n")
+#> seed =  101 
+#> K1 =  9 
+#> K2 =  11 
+#> Specificity =  0.778 
+#> Sensitivity =  0.545 
+#> Est. of mu =  0.879
+```
+
+Changing `seed` is equivalent to sampling a completely new set of patients. This is an example of case sampling variability. The effect is quite large (`Se` fell from 0.909 to 0.545 and estimated `mu` fell from 2.56 to 0.879!) because the size of the relevant case set, $K_2=11$ for sensitivity, is rather small, leading to large variability. 
+
+### Increasing the numbers of cases
+Here we increase $K_1$ and $K_2$, by a factor of 10 each, and return the `seed` to 100. 
+
+
+```r
+K1 <- 90 # change
+K2 <- 110 # change
+seed <- 100 # change
+ds <- simulateDataset(K1, K2, mu, zeta, seed)
+
+cat("seed = ", seed, 
+    "\nK1 = ", K1, 
+    "\nK2 = ", K2, 
+    "\nSpecificity = ", ds$Sp, 
+    "\nSensitivity = ", ds$Se, 
+    "\nEst. of mu = ", ds$mu, "\n")
+#> seed =  100 
+#> K1 =  90 
+#> K2 =  110 
+#> Specificity =  0.778 
+#> Sensitivity =  0.836 
+#> Est. of mu =  1.74
+```
+
+Next we change `seed` to 101.
+
+
+```r
+seed <- 101 # change
+ds <- simulateDataset(K1, K2, mu, zeta, seed)
+
+cat("seed = ", seed, 
+    "\nK1 = ", K1, 
+    "\nK2 = ", K2, 
+    "\nSpecificity = ", ds$Sp, 
+    "\nSensitivity = ", ds$Se, 
+    "\nEst. of mu = ", ds$mu, "\n")
+#> seed =  101 
+#> K1 =  90 
+#> K2 =  110 
+#> Specificity =  0.811 
+#> Sensitivity =  0.755 
+#> Est. of mu =  1.57
+```
+
+Notice that now the values are less sensitive to seed. TBA Table 3.2 illustrates this trend with ever increasing sample sizes (the reader should confirm the listed values).
+
+
+```r
+results <- array(dim = c(9,6))
+results[1,] <- c(9, 11, 100, 0.889, 0.909, 2.56)
+results[2,] <- c(9, 11, 101, 0.778, 0.545, 0.879)
+results[3,] <- c(90, 110, 100, 0.778, 0.836, 1.74)
+results[4,] <- c(90, 110, 101, 0.811, 0.755, 1.57)
+results[5,] <- c(900, 1100, 100, 0.764, 0.761, 1.43)
+results[6,] <- c(900, 1100, 101, 0.807, 0.759, 1.57)
+results[7,] <- c(9000, 11000, 100, 0.774, 0.772, 1.5)
+results[8,] <- c(9000, 11000, 101, 0.771, 0.775, 1.5)
+results[9,] <- c(Inf, Inf, NA, 0.773, 0.773, 1.5)
+df <- as.data.frame(results)
+colnames(df) <- c("K1","K2","seed","Se","Sp","mu")
+```
+
+<table>
+<caption>(\#tab:binaryTask0SeSpMuvsCaseSizeSeed)Effect of sample size on case-sampling variability of estimates of sensitivity, specificity and the separation parameter.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> K1 </th>
+   <th style="text-align:right;"> K2 </th>
+   <th style="text-align:right;"> seed </th>
+   <th style="text-align:right;"> Se </th>
+   <th style="text-align:right;"> Sp </th>
+   <th style="text-align:right;"> mu </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 11 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0.889 </td>
+   <td style="text-align:right;"> 0.909 </td>
+   <td style="text-align:right;"> 2.560 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 11 </td>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:right;"> 0.778 </td>
+   <td style="text-align:right;"> 0.545 </td>
+   <td style="text-align:right;"> 0.879 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 90 </td>
+   <td style="text-align:right;"> 110 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0.778 </td>
+   <td style="text-align:right;"> 0.836 </td>
+   <td style="text-align:right;"> 1.740 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 90 </td>
+   <td style="text-align:right;"> 110 </td>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:right;"> 0.811 </td>
+   <td style="text-align:right;"> 0.755 </td>
+   <td style="text-align:right;"> 1.570 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 900 </td>
+   <td style="text-align:right;"> 1100 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0.764 </td>
+   <td style="text-align:right;"> 0.761 </td>
+   <td style="text-align:right;"> 1.430 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 900 </td>
+   <td style="text-align:right;"> 1100 </td>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:right;"> 0.807 </td>
+   <td style="text-align:right;"> 0.759 </td>
+   <td style="text-align:right;"> 1.570 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9000 </td>
+   <td style="text-align:right;"> 11000 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0.774 </td>
+   <td style="text-align:right;"> 0.772 </td>
+   <td style="text-align:right;"> 1.500 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9000 </td>
+   <td style="text-align:right;"> 11000 </td>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:right;"> 0.771 </td>
+   <td style="text-align:right;"> 0.775 </td>
+   <td style="text-align:right;"> 1.500 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> Inf </td>
+   <td style="text-align:right;"> Inf </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> 0.773 </td>
+   <td style="text-align:right;"> 0.773 </td>
+   <td style="text-align:right;"> 1.500 </td>
+  </tr>
+</tbody>
+</table>
+
 ## Binary ratings
 
 
@@ -187,8 +580,8 @@ cat("seed = ", seed,
 #> seed =  100 
 #> K1 =  9 
 #> K2 =  11 
-#> Specificity =  0.8888889 
-#> Sensitivity =  0.9090909
+#> Specificity =  0.889 
+#> Sensitivity =  0.909
 ```
 
 Line 4 sets the `seed` of the random number generator to 100: this causes the random number generator to yield the same sequence of "random" numbers every time it is run. This is useful during initial code development and for showing the various steps of the example (if `seed <- NULL` the random numbers would be different every time, making it harder for me, from a pedagogical point of view, to illustrate the steps). Line 5 initializes variables `K1` and `K2`, which represent the number of non-diseased cases and  the number of diseased cases, respectively. In this example 9 non-diseased and 11 diseased cases are simulated. Line 5 also initializes the parameter `mu <- 1.5` (`mu` corresponds to the separation  parameter of the simulation model). Finally, this line initializes `zeta`, which corresponds to the threshold for declaring cases as diseased, to `mu/2`, i.e., halfway between the means of the two distributions defining the binormal model. Later one can experiment with other values. [Note that multiple statements can be put on a single line as long as semi-colons separate them. The author prefers the “vertical length” of the program to be short, a personal preference that gives the author a better perspective of the code.] 
