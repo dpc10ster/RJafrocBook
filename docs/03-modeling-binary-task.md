@@ -18,7 +18,7 @@ The model1 for the binary task involves three assumptions: (i) the existence of 
 * The latent decision variable rank-orders cases with respect to evidence for presence of disease. Unlike a traditional rank-ordering scheme, where "1" is the highest rank, the scale is inverted with larger values corresponding to greater evidence of disease. Without loss of generality, one assumes that the decision variable ranges from -∞ to +∞, with large positive values indicative of strong evidence for presence of disease, and large negative values indicative of strong evidence for absence of disease. The zero value indicates no evidence for presence or absence of disease. [The -∞ to +∞ scale is not an assumption. The decision variable scale could just as well range from a to b, where a < b; with appropriate rescaling of the decision variable, there will be no changes in the rank-orderings, and the scale will extend from -∞ to +∞.] Such a decision scale, with increasing values corresponding to increasing evidence of disease, is termed positive-directed.
 
 ### Existence of a decision threshold
-**Assumption 2:** In the binary decision task the radiologist adopts a single and fixed (i.e., case-independent) decision threshold  and states: "case is diseased" if the decision variable is greater than or equal to  , i.e.,  , and "case is non-diseased" if the decision variable is smaller than  , i.e.,  . 
+**Assumption 2:** In the binary decision task the radiologist adopts a single and fixed (i.e., case-independent) decision threshold and states: "case is diseased" if the decision variable is greater than or equal to $\zeta$, i.e., $Z \geq \zeta$, and "case is non-diseased" if the decision variable is smaller than $\zeta$, i.e., $Z <\zeta$. 
 
 * The decision threshold is a fixed value used to separate cases reported as diseased from cases reported as non-diseased.
 * Unlike the random Z-sample, which varies from case to case, the decision threshold is held fixed for the duration of the study. In some of the older literature2 the decision threshold is sometimes referred to as "response bias". The author hesitates to use the term "bias" which has a negative connotation, whereas, in fact, the choice of decision threshold depends on rational assessment of costs and benefits of different outcomes.
@@ -112,7 +112,7 @@ The right hand side of Eqn. \@ref(eq:binaryTask-phi-def) is the probability that
 (\#eq:binaryTask-phi)
 \end{equation}
 
-The integral of $\phi(t)$ from $-\infty$ to $z$, as in Eqn. \@ref(eq:binaryTask-Phi), is the probability that a sample from the unit normal distribution is less than $z$. Regarded as a function of $z$, this is termed the cumulative distribution function (CDF) and is denoted, in this book, by the symbol $\Phi$. The function $\Phi(z)$, specific to the unit normal distribution, is defined by:
+The integral of $\phi(t)$ from $-\infty$ to $z$, as in Eqn. \@ref(eq:binaryTask-Phi), is the probability that a sample from the unit normal distribution is less than $z$. Regarded as a function of $z$, this is termed the cumulative distribution function (CDF) and is denoted, in this book, by the symbol $\Phi$ (sometimes the term probability distribution function is used for what we are terming the CDF). The function $\Phi(z)$, specific to the unit normal distribution, is defined by:
 
 \begin{equation} 
 \Phi\left ( z \right )=\int_{-\infty }^{z}\phi(t)dt
@@ -127,7 +127,6 @@ The sigmoid shaped curve is the CDF, or cumulative distribution function, of the
 ```r
 x <- seq(-3,3,0.01)
 pdfData <- data.frame(z = x, pdfcdf = dnorm(x))
-# plot the CDF
 cdfData <- data.frame(z = x, pdfcdf = pnorm(x))
 pdfcdfPlot <- ggplot(
   mapping = aes(x = z, y = pdfcdf)) + 
@@ -163,7 +162,7 @@ Since $p=\Phi(z)$ it follows that
 
 This nicely satisfies the property of an inverse function. The inverse function is known in statistical terminology as the quantile function, implemented in `R` as the `qnorm()` function. Think of `pnorm()` as a probability and `qnorm()` as value on the z-axis. 
 
-To summarize, `norm` implies the unit normal distribution, `p` denotes a probability distribution function  or CDF, `q` denotes a quantile function and `d` denotes a density function; this convention is used with all distributions in `R`.
+To summarize, `norm` implies the unit normal distribution, `p` denotes a probability distribution function or CDF, `q` denotes a quantile function and `d` denotes a density function; this convention is used with all distributions in `R`.
 
 
 ```r
@@ -211,15 +210,20 @@ cord.y <- c(0,dnorm(x.values),0)
 z <- seq(LL, UL, by = step)
 curveData <- data.frame(z = z, pdfs = dnorm(z))
 shadeData <- data.frame(z = cord.x, pdfs = cord.y)
-shadedTails <- ggplot(mapping = aes(x = z, y = pdfs))  + geom_polygon(data = shadeData, color = "grey", fill = "grey")
+shadedTails <- ggplot(mapping = aes(x = z, y = pdfs))  + 
+  geom_polygon(data = shadeData, color = "grey", fill = "grey")
 
 zeta <- qnorm(0.025)
 x.values <- seq(LL, zeta,step)
 cord.x <- c(LL, x.values,zeta) 
 cord.y <- c(0,dnorm(x.values),0) 
 shadeData <- data.frame(z = cord.x, pdfs = cord.y)
-shadedTails <- shadedTails + geom_polygon(data = shadeData, color = "grey", fill = "grey") + xlab(label = "z") 
-shadedTails <- shadedTails + geom_line(data = curveData, color = "black")
+shadedTails <- shadedTails + 
+  geom_polygon(
+    data = shadeData, color = "grey", fill = "grey") + 
+  xlab(label = "z") 
+shadedTails <- shadedTails + 
+  geom_line(data = curveData, color = "black")
 print(shadedTails)
 ```
 
@@ -237,12 +241,14 @@ Sp\left ( \zeta \right )=P\left ( Z_{k_11} < \zeta\mid Z_{k_11} \sim N\left ( 0,
 
 The expression for sensitivity can be derived tediously by starting with the fact that $Z_{k_22}$ and then using calculus to obtain the probability that a z-sample for a disease-present case exceeds $\zeta$. A quicker way is to consider the random variable obtaining by shifting the origin to  $\mu$. A little thought should convince the reader that $Z_{k_22}-\mu$  must be distributed as $N(0,1)$. Therefore, the desired probability is (the last step follows from the identity in Eqn. (3.7), with z replaced by $\zeta-\mu$ :
 
-\begin{equation} 
+\begin{equation}
+\begin{aligned} 
 Se\left ( \zeta \right )\\
 =P\left ( Z_{k_22} \geq \zeta\right ) \\
 =P\left (\left ( Z_{k_22} -\mu  \right ) \geq\left ( \zeta -\mu  \right )\right ) \\
 =1-P\left (\left ( Z_{k_22} -\mu  \right ) < \left ( \zeta -\mu  \right )\right ) \\
 = 1-\Phi\left ( \zeta -\mu \right )
+\end{aligned}
 (\#eq:binaryTask-Sensitivity1)
 \end{equation}
 
@@ -302,7 +308,9 @@ cord.x <- c(zeta, seqNor,upperLimit)
 cord.y <- c(0,dnorm(seqNor),0) 
 curveData <- data.frame(z = z, pdfs = pdfs)
 shadeData <- data.frame(z = cord.x, pdfs = cord.y)
-shadedPlots <- ggplot(mapping = aes(x = z, y = pdfs)) + geom_line(data = curveData, color = "blue") + geom_polygon(data = shadeData, color = "blue", fill = "blue")
+shadedPlots <- ggplot(mapping = aes(x = z, y = pdfs)) + 
+  geom_line(data = curveData, color = "blue") + 
+  geom_polygon(data = shadeData, color = "blue", fill = "blue")
 
 crossing <- uniroot(function(x) dnorm(x) - dnorm(x,mu,sigma), 
                     lower = 0, upper = 3)$root
@@ -323,13 +331,20 @@ for (i in seq(1,length(cord.x)/2)) {
 pdfs <- dnorm(z, mu, sigma)
 curveData <- data.frame(z = z, pdfs = pdfs)
 shadeData <- data.frame(z = cord.x, pdfs = cord.y)
-shadedPlots <- shadedPlots + geom_line(data = curveData, color = "red") + geom_polygon(data = shadeData, color = "red", fill = "red")
+shadedPlots <- shadedPlots + 
+  geom_line(data = curveData, color = "red") + 
+  geom_polygon(data = shadeData, color = "red", fill = "red")
 seqAbn <- seq(zeta,upperLimit,step)
 for (i in seqAbn) {
   # define xs and ys of two points, separated only along y-axis
-  vlineData <- data.frame(x1 = i, x2 = i, y1 = 0, y2 = dnorm(i, mu, sigma))
+  vlineData <- data.frame(x1 = i, 
+                          x2 = i, 
+                          y1 = 0, 
+                          y2 = dnorm(i, mu, sigma))
   # draw vertical line between them
-  shadedPlots <- shadedPlots + geom_segment(aes(x = x1, xend = x2, y = y1, yend = y2), data = vlineData, color = "red")
+  shadedPlots <- shadedPlots + 
+    geom_segment(aes(x = x1, xend = x2, y = y1, yend = y2), 
+                 data = vlineData, color = "red")
 }
 shadedPlots <- shadedPlots + xlab(label = "z-sample")
 print(shadedPlots)
@@ -541,19 +556,27 @@ rocPlot <- ggplot(mapping = aes(x = FPF, y = TPF))
 for (mu in 0:3){
   TPF <- pnorm(mu-zeta)
   curveData <- data.frame(FPF = FPF, TPF = TPF)
-  rocPlot <- rocPlot + geom_line(data = curveData, size = 2) + 
+  rocPlot <- rocPlot + 
+    geom_line(data = curveData, size = 2) + 
     xlab("FPF")+ ylab("TPF" ) + 
     theme(axis.title.y = element_text(size = 25,face="bold"),
           axis.title.x = element_text(size = 30,face="bold"))  +
-  annotate("text", x = pnorm(-mu/2) + 0.07, y = pnorm(mu/2), 
-             label = paste0("mu == ", mu), parse = TRUE, size = 8)
+    annotate("text", 
+             x = pnorm(-mu/2) + 0.07, 
+             y = pnorm(mu/2), 
+             label = paste0("mu == ", mu), 
+             parse = TRUE, size = 8)
   next
 }
 rocPlot <- rocPlot +
   scale_x_continuous(expand = c(0, 0)) + 
   scale_y_continuous(expand = c(0, 0))     
-  
-rocPlot <- rocPlot + geom_abline(slope = -1, intercept = 1, linetype = 3, size = 2)
+
+rocPlot <- rocPlot + 
+  geom_abline(slope = -1, 
+              intercept = 1, 
+              linetype = 3,
+              size = 2)
 print(rocPlot)
 ```
 
@@ -618,10 +641,11 @@ A_{z;\sigma = 1} = \Phi\left ( \frac{\mu} {\sqrt{2}} \right )
 Since the ROC curve is bounded by the unit square, AUC must be between zero and one. If $\mu$ is non-negative, the area under the ROC curve must be between 0.5 and 1. The chance diagonal, corresponding to  $\mu = 0$, yields $A_{z;\sigma = 1} = 0.5$, while the perfect ROC curve, corresponding to infinite yields unit area. Since it is a scalar quantity, AUC can be used to less-ambiguously quantify performance in the ROC task than is possible using sensitivity - specificity pairs. 
 
 ### Properties of the equal-variance binormal model ROC curve
-    a. The ROC curve is completely contained within the unit square. This follows from the fact that both axes of the plot are probabilities.
-    b. The operating point rises monotonically from (0,0) to (1,1). 
-    c. Since $\mu$ is positive, the slope of the equal-variance binormal model curve at the origin (0,0) is infinite and the slope at (1,1) is zero, and the slope along the curve is always non-negative and decreases monotonically as the operating point moves up the curve.
-    d. AUC is a monotone increasing function of  $\mu$ . It varies from 0.5 to 1 as  $\mu$  varies from zero to infinity. 
+
+a. The ROC curve is completely contained within the unit square. This follows from the fact that both axes of the plot are probabilities.
+b. The operating point rises monotonically from (0,0) to (1,1). 
+c. Since $\mu$ is positive, the slope of the equal-variance binormal model curve at the origin (0,0) is infinite and the slope at (1,1) is zero, and the slope along the curve is always non-negative and decreases monotonically as the operating point moves up the curve.
+d. AUC is a monotone increasing function of  $\mu$. It varies from 0.5 to 1 as  $\mu$  varies from zero to infinity. 
 
 ### Comments 
 Property (b): since the operating point coordinates can both be expressed in terms of $\Phi$  functions, which are monotone in their arguments, and in each case the argument   appears with a negative sign, it follows that as $\zeta$ is lowered both TPF and FPF increase. In other words, the operating point corresponding to $\zeta - d\zeta$  is to the upper right of that corresponding $\zeta$ to (assuming $d\zeta > 0$).  
@@ -645,7 +669,7 @@ $$d\Phi(\zeta)=P\left ( \zeta < Z < \zeta + d \zeta \right ) = \phi(\zeta)d\zeta
 
 Since the slope of the ROC curve can be expressed as a power of $e$, it is always non-negative. Provided $\mu > 0$, then, in the limit $\zeta\rightarrow \infty$, the slope at the origin approaches $\infty$. Eqn. \@ref(eq:binaryTask-slopeROC1) also implies that in the limit $\zeta\rightarrow -\infty$  the slope of the ROC curve at the end-point (1,1) approaches zero, i.e., the slope is a monotone increasing function of  $\zeta$. As $\zeta$  decrease from $+\infty$ to $-\infty$, the slope decreases monotonically from $+\infty$ to 0.
 
-Fig. \@ref(fig:binaryTask-MainAnalyticalROC) is the ROC curve for the equal-variance binormal model for  . The entire curve is defined by  . Specifying a particular value of  corresponds to specifying a particular point on the ROC curve. In Fig. 3.5 the open circle corresponds to the operating point (0.159, 0.977) defined by   = 1; pnorm(-1) = 0.159; pnorm(3-1) = 0.977. The operating point lies exactly on the curve, as this is a predicted operating point. 
+Fig. \@ref(fig:binaryTask-MainAnalyticalROC) is the ROC curve for the equal-variance binormal model for  . The entire curve is defined by  . Specifying a particular value of corresponds to specifying a particular point on the ROC curve. In Fig. 3.5 the open circle corresponds to the operating point (0.159, 0.977) defined by   = 1; pnorm(-1) = 0.159; pnorm(3-1) = 0.977. The operating point lies exactly on the curve, as this is a predicted operating point. 
 
 
 ```r
@@ -657,8 +681,11 @@ curveData <- data.frame(FPF = FPF, TPF = TPF)
 OpX <- pnorm(-1)
 OpY <- pnorm(mu-1)
 pointData <- data.frame(FPF = OpX, TPF = OpY)
-rocPlot <- ggplot(mapping = aes(x = FPF, y = TPF)) + xlab("FPF")+ ylab("TPF" ) + 
-  geom_line(data = curveData, size = 2) + geom_point(data = pointData, size = 5) +
+rocPlot <- ggplot(
+  mapping = aes(x = FPF, y = TPF)) + 
+  xlab("FPF")+ ylab("TPF" ) + 
+  geom_line(data = curveData, size = 2) + 
+  geom_point(data = pointData, size = 5) +
   theme(axis.title.y = element_text(size = 25,face="bold"),
         axis.title.x = element_text(size = 30,face="bold"))  +
   scale_x_continuous(expand = c(0, 0)) + 
@@ -686,10 +713,10 @@ For electrical signals, SNR can be measured with instruments but, in the context
 * It should be clear that a 99percent CI is wider than a 95 percent CI, and a 90percentCI is narrower; in general, the higher the confidence that the interval contains the true value, the wider the range of the CI. 
 * Calculation of a parametric confidence interval requires a distributional assumption (non-parametric estimation methods, which use resampling methods, are described later). With a distributional assumption, the method being described now, the parameters of the distribution can be estimated, and since the distribution accounts for variability, the needed confidence interval estimate follows. 
 * With TPF and FPF, each of which involves a ratio of two integers, it is convenient to assume a *binomial* distribution for the following reason: 
-    + The diagnosis "non-diseased" vs. "diseased" is a Bernoulli trial, i.e., one whose outcome is binary. 
-    + A Bernoulli trial is like a coin-toss, a special coin whose probability of landing "diseased" face up is $p$, which is not necessarily 0.5 as with a real coin. 
-    + It is a theorem in statistics that the total number of Bernoulli outcomes of one type, e.g., $n(FP)$, is a binomial-distributed random variable, with success probability $\widehat{FPF}$ and trial size  $K_1$. The circumflex denotes an estimate.
-    
++ The diagnosis "non-diseased" vs. "diseased" is a Bernoulli trial, i.e., one whose outcome is binary. 
++ A Bernoulli trial is like a coin-toss, a special coin whose probability of landing "diseased" face up is $p$, which is not necessarily 0.5 as with a real coin. 
++ It is a theorem in statistics that the total number of Bernoulli outcomes of one type, e.g., $n(FP)$, is a binomial-distributed random variable, with success probability $\widehat{FPF}$ and trial size  $K_1$. The circumflex denotes an estimate.
+
 \begin{equation} 
 n(FP) \sim B\left ( K_1, \widehat{FPF} \right )
 (\#eq:binaryTask-BinDistrFPF)
@@ -705,7 +732,7 @@ k=0,1,2,...,n\\
 (\#eq:binaryTask-BinDistrDef)
 \end{equation}
 
-Eqn. \@ref(eq:binaryTask-BinDistrDef) states that $k$ is a random sample from the binomial distribution $B(n,p)$. For reference, the probability mass function $pmf$ of $B(n,p)$ is defined by (the subscript $Bin$ denotes a binomial distribution):
+Eqn. \@ref(eq:binaryTask-BinDistrDef) states that $k$ is a random sample from the binomial distribution $B(n,p)$. For reference, the probability mass function $\text{pmf}$ of $B(n,p)$ is defined by (the subscript $Bin$ denotes a binomial distribution):
 
 \begin{equation} 
 \text{pmf}_{Bin}\left ( k;n,p \right )=\binom{n}{k}p^k(1-p)^{n-k}
@@ -714,7 +741,7 @@ Eqn. \@ref(eq:binaryTask-BinDistrDef) states that $k$ is a random sample from th
 
 For a discrete distribution, one has probability *mass* function; in contrast, for a continuous distribution one has a probability *density* function.
 
-The binomial coefficient $\binom{n}{k}$ appearing in Eqn. \@ref(eq:binaryTask-BinDistrDef2), to be read as "n pick k", is defined by:
+The binomial coefficient $\binom{n}{k}$ appearing in Eqn. \@ref(eq:binaryTask-BinDistrDef2), to be read as "$n$ pick $k$", is defined by:
 
 \begin{equation} 
 \binom{n}{k}=\frac{n!}{k!(n-k)!}
@@ -728,7 +755,7 @@ From the properties of the binomial distribution the variance of n(FP) is given 
 (\#eq:binaryTask-Var-n-FP)
 \end{equation}
 
-It follows that $FPF$ has mean $\widehat{FPF}$ and variance $\sigma_{FPF}^2$ given by (using theorem $Var(aX) = a^2 Var(X)$  where $a$ is a constant, equal to $K_1$ in this case):
+It follows that $FPF$ has mean $\widehat{FPF}$ and variance $\sigma_{FPF}^2$ given by (using theorem $Var(aX) = a^2 Var(X)$, where $a$ is a constant, equal to $1/K_1$ in this case):
 
 \begin{equation} 
 \sigma_{FPF}^2 = \frac{\widehat{FPF}\left ( 1 - \widehat{FPF} \right )}{K_1}
@@ -739,25 +766,21 @@ For large $K_1$ the distribution of $FPF$ approaches a normal distribution as fo
 
 $$FPF \sim N\left ( \widehat{FPF}, \sigma_{FPF}^2 \right )$$
 
-Translating the mean to zero and dividing by the square root of the variance, it follows that the translated and normalized difference follows the unit normal distribution:
-
-$$\frac{FPF -  \widehat{FPF}}{\widehat{FPF}} \sim N\left ( 0, 1 \right )$$
-
-This immediately allows us to write down the confidence interval for the normalized difference: $-z_{\alpha/2}, z_{\alpha/2}$ around zero. Translating this back to FPF, one has
+This immediately allows us to write down the confidence interval for $\widehat{FPF}$, i.e., $\pm z_{\alpha/2}$ around $\widehat{FPF}$. 
 
 \begin{equation} 
 CI_{1-\alpha}^{FPF}=\left ( \widehat{FPF} - z_{\alpha/2} \sigma_{FPF}, \widehat{FPF} + z_{\alpha/2} \sigma_{FPF} \right )
 (\#eq:binaryTask-CI-FPF)
 \end{equation}
 
-In Eqn. \@ref(eq:binaryTask-CI-FPF), $z_{\alpha/2}$ is the upper  $(1-\alpha)$ quantile of the unit normal distribution, i.e., the area to the *right* under the unit normal distribution pdf from $z_{\alpha/2}$ to $\infty$ equals  $\alpha/2$.  It is the complement (plus goes to minus) of $\Phi^{-1}(\alpha/2)$ introduced earlier; the difference is that the latter uses the area to the *left*. The following code might help. 
+In Eqn. \@ref(eq:binaryTask-CI-FPF), $z_{\alpha/2}$ is the upper $\alpha/2$ quantile of the unit normal distribution, i.e., the area to the *right* under the unit normal distribution pdf from $z_{\alpha/2}$ to $\infty$ equals $\alpha/2$.  It is the complement (i.e., plus goes to minus) of $\Phi^{-1}(\alpha/2)$ introduced earlier; the difference is that the latter uses the area to the *left*. The following code might help. 
 
 
 ```r
 alpha <- 0.05
-qnorm(1-alpha/2) #this is z_{\alpha/2}, upper quantile
+qnorm(1-alpha/2) # this is z_{\alpha/2}, the upper \alpha/2 quantile
 #> [1] 1.96
-qnorm(alpha/2) # # this is \Phi^{-1}(\alpha/2), lower quantile
+qnorm(alpha/2)   # this is \Phi^{-1}(\alpha/2), the lower \alpha/2 quantile
 #> [1] -1.96
 ```
 Here is the definition of $z_{\alpha/2}$: 
@@ -774,7 +797,7 @@ z_{\alpha/2} &=\Phi^{-1}\left ( 1-\alpha/2 \right )\\
 (\#eq:binaryTask-def-z-alpha2)
 \end{equation} 
 
-The normal approximation is adequate if both of the following two conditions are both met, i.e., $\widehat{FPF}$ is not too close to zero or 1: $K_1\widehat{FPF} > 10$ and $K_1(1-\widehat{FPF}) > 10$.  
+The normal approximation is adequate if both of the following two conditions are both met: $K_1\widehat{FPF} > 10$ and $K_1(1-\widehat{FPF}) > 10$. This means, essentially, that $\widehat{FPF}$ is not too close to zero or 1.  
 
 Similarly, an approximate symmetric $(1-\alpha)$  confidence interval for TPF is:
 
@@ -884,7 +907,7 @@ In Fig. \@ref(fig:BeamStudyFig), a schematic of the data, if one looks at the po
 Fig. \@ref(fig:BeamStudyFig) and Table \@ref(tab:binaryTask0BeamStudy) illustrate several important principles.
 1.	Since an operating point is characterized by two values, unless both numbers are higher (e.g., radiologist A vs. B or C), it is difficult to unambiguously compare them. 
 2.	While sensitivity and specificity depend on the reporting threshold, the area under the ROC plot is independent of it. Using the area under the ROC curve one can unambiguously compare two readers. 
-3.	Combining sensitivity and the complement of specificity into a single AUC measure yields the additional benefit of lower variability. In Fig. \@ref(fig:BeamStudyFig), the range for sensitivity is 53percent while that for specificity is 63percent. In contrast, the range for AUC is only 21percent. This means that much of the observed variations in sensitivity and specificity are due to variations in thresholds, and using AUC eliminates this source of variability. Decreased variability of a measure is a highly desirable characteristic as it implies the measurement is more precise, making it easier to detect genuine changes between readers and / or modalities.
+3.	Combining sensitivity and the complement of specificity into a single AUC measure yields the additional benefit of lower variability. In Fig. \@ref(fig:BeamStudyFig), the range for sensitivity is 53 percent while that for specificity is 63 percent. In contrast, the range for AUC is only 21 percent. This means that much of the observed variations in sensitivity and specificity are due to variations in thresholds, and using AUC eliminates this source of variability. Decreased variability of a measure is a highly desirable characteristic as it implies the measurement is more precise, making it easier to detect genuine changes between readers and / or modalities.
 
 
 ## Summary{#binaryTask-Summary}

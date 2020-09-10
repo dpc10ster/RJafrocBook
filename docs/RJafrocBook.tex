@@ -133,7 +133,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-09-09}
+\date{2020-09-10}
 
 \begin{document}
 \maketitle
@@ -1764,7 +1764,7 @@ The model1 for the binary task involves three assumptions: (i) the existence of 
 \hypertarget{existence-of-a-decision-threshold}{%
 \subsection{Existence of a decision threshold}\label{existence-of-a-decision-threshold}}
 
-\textbf{Assumption 2:} In the binary decision task the radiologist adopts a single and fixed (i.e., case-independent) decision threshold and states: ``case is diseased'' if the decision variable is greater than or equal to , i.e., , and ``case is non-diseased'' if the decision variable is smaller than , i.e., .
+\textbf{Assumption 2:} In the binary decision task the radiologist adopts a single and fixed (i.e., case-independent) decision threshold and states: ``case is diseased'' if the decision variable is greater than or equal to \(\zeta\), i.e., \(Z \geq \zeta\), and ``case is non-diseased'' if the decision variable is smaller than \(\zeta\), i.e., \(Z <\zeta\).
 
 \begin{itemize}
 \tightlist
@@ -1881,7 +1881,7 @@ The right hand side of Eqn. \eqref{eq:binaryTask-phi-def} is the probability tha
 \label{eq:binaryTask-phi}
 \end{equation}
 
-The integral of \(\phi(t)\) from \(-\infty\) to \(z\), as in Eqn. \eqref{eq:binaryTask-Phi}, is the probability that a sample from the unit normal distribution is less than \(z\). Regarded as a function of \(z\), this is termed the cumulative distribution function (CDF) and is denoted, in this book, by the symbol \(\Phi\). The function \(\Phi(z)\), specific to the unit normal distribution, is defined by:
+The integral of \(\phi(t)\) from \(-\infty\) to \(z\), as in Eqn. \eqref{eq:binaryTask-Phi}, is the probability that a sample from the unit normal distribution is less than \(z\). Regarded as a function of \(z\), this is termed the cumulative distribution function (CDF) and is denoted, in this book, by the symbol \(\Phi\) (sometimes the term probability distribution function is used for what we are terming the CDF). The function \(\Phi(z)\), specific to the unit normal distribution, is defined by:
 
 \begin{equation} 
 \Phi\left ( z \right )=\int_{-\infty }^{z}\phi(t)dt
@@ -1896,7 +1896,6 @@ The sigmoid shaped curve is the CDF, or cumulative distribution function, of the
 \begin{Highlighting}[]
 \NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{{-}}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{,}\FloatTok{0.01}\NormalTok{)}
 \NormalTok{pdfData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ x, }\DataTypeTok{pdfcdf =} \KeywordTok{dnorm}\NormalTok{(x))}
-\CommentTok{\# plot the CDF}
 \NormalTok{cdfData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ x, }\DataTypeTok{pdfcdf =} \KeywordTok{pnorm}\NormalTok{(x))}
 \NormalTok{pdfcdfPlot \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}
   \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ z, }\DataTypeTok{y =}\NormalTok{ pdfcdf)) }\OperatorTok{+}\StringTok{ }
@@ -1986,15 +1985,20 @@ Eqn. \eqref{eq:binaryTask-Phi-Inv-alpha-by2} means that the (rounded) value -1.9
 \NormalTok{z \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(LL, UL, }\DataTypeTok{by =}\NormalTok{ step)}
 \NormalTok{curveData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{pdfs =} \KeywordTok{dnorm}\NormalTok{(z))}
 \NormalTok{shadeData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ cord.x, }\DataTypeTok{pdfs =}\NormalTok{ cord.y)}
-\NormalTok{shadedTails \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ z, }\DataTypeTok{y =}\NormalTok{ pdfs))  }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_polygon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ shadeData, }\DataTypeTok{color =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"grey"}\NormalTok{)}
+\NormalTok{shadedTails \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ z, }\DataTypeTok{y =}\NormalTok{ pdfs))  }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_polygon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ shadeData, }\DataTypeTok{color =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"grey"}\NormalTok{)}
 
 \NormalTok{zeta \textless{}{-}}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\FloatTok{0.025}\NormalTok{)}
 \NormalTok{x.values \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(LL, zeta,step)}
 \NormalTok{cord.x \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(LL, x.values,zeta) }
 \NormalTok{cord.y \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\KeywordTok{dnorm}\NormalTok{(x.values),}\DecValTok{0}\NormalTok{) }
 \NormalTok{shadeData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ cord.x, }\DataTypeTok{pdfs =}\NormalTok{ cord.y)}
-\NormalTok{shadedTails \textless{}{-}}\StringTok{ }\NormalTok{shadedTails }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_polygon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ shadeData, }\DataTypeTok{color =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"grey"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"z"}\NormalTok{) }
-\NormalTok{shadedTails \textless{}{-}}\StringTok{ }\NormalTok{shadedTails }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{)}
+\NormalTok{shadedTails \textless{}{-}}\StringTok{ }\NormalTok{shadedTails }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_polygon}\NormalTok{(}
+    \DataTypeTok{data =}\NormalTok{ shadeData, }\DataTypeTok{color =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"grey"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"z"}\NormalTok{) }
+\NormalTok{shadedTails \textless{}{-}}\StringTok{ }\NormalTok{shadedTails }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{)}
 \KeywordTok{print}\NormalTok{(shadedTails)}
 \end{Highlighting}
 \end{Shaded}
@@ -2019,12 +2023,14 @@ Sp\left ( \zeta \right )=P\left ( Z_{k_11} < \zeta\mid Z_{k_11} \sim N\left ( 0,
 
 The expression for sensitivity can be derived tediously by starting with the fact that \(Z_{k_22}\) and then using calculus to obtain the probability that a z-sample for a disease-present case exceeds \(\zeta\). A quicker way is to consider the random variable obtaining by shifting the origin to \(\mu\). A little thought should convince the reader that \(Z_{k_22}-\mu\) must be distributed as \(N(0,1)\). Therefore, the desired probability is (the last step follows from the identity in Eqn. (3.7), with z replaced by \(\zeta-\mu\) :
 
-\begin{equation} 
+\begin{equation}
+\begin{aligned} 
 Se\left ( \zeta \right )\\
 =P\left ( Z_{k_22} \geq \zeta\right ) \\
 =P\left (\left ( Z_{k_22} -\mu  \right ) \geq\left ( \zeta -\mu  \right )\right ) \\
 =1-P\left (\left ( Z_{k_22} -\mu  \right ) < \left ( \zeta -\mu  \right )\right ) \\
 = 1-\Phi\left ( \zeta -\mu \right )
+\end{aligned}
 \label{eq:binaryTask-Sensitivity1}
 \end{equation}
 
@@ -2084,7 +2090,9 @@ This is a useful relation, as it converts a \emph{pair} of numbers that is hard 
 \NormalTok{cord.y \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\KeywordTok{dnorm}\NormalTok{(seqNor),}\DecValTok{0}\NormalTok{) }
 \NormalTok{curveData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{pdfs =}\NormalTok{ pdfs)}
 \NormalTok{shadeData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ cord.x, }\DataTypeTok{pdfs =}\NormalTok{ cord.y)}
-\NormalTok{shadedPlots \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ z, }\DataTypeTok{y =}\NormalTok{ pdfs)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_polygon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ shadeData, }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"blue"}\NormalTok{)}
+\NormalTok{shadedPlots \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ z, }\DataTypeTok{y =}\NormalTok{ pdfs)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_polygon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ shadeData, }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"blue"}\NormalTok{)}
 
 \NormalTok{crossing \textless{}{-}}\StringTok{ }\KeywordTok{uniroot}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{dnorm}\NormalTok{(x) }\OperatorTok{{-}}\StringTok{ }\KeywordTok{dnorm}\NormalTok{(x,mu,sigma), }
                     \DataTypeTok{lower =} \DecValTok{0}\NormalTok{, }\DataTypeTok{upper =} \DecValTok{3}\NormalTok{)}\OperatorTok{$}\NormalTok{root}
@@ -2105,13 +2113,20 @@ This is a useful relation, as it converts a \emph{pair} of numbers that is hard 
 \NormalTok{pdfs \textless{}{-}}\StringTok{ }\KeywordTok{dnorm}\NormalTok{(z, mu, sigma)}
 \NormalTok{curveData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{pdfs =}\NormalTok{ pdfs)}
 \NormalTok{shadeData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{z =}\NormalTok{ cord.x, }\DataTypeTok{pdfs =}\NormalTok{ cord.y)}
-\NormalTok{shadedPlots \textless{}{-}}\StringTok{ }\NormalTok{shadedPlots }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_polygon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ shadeData, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"red"}\NormalTok{)}
+\NormalTok{shadedPlots \textless{}{-}}\StringTok{ }\NormalTok{shadedPlots }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_polygon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ shadeData, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"red"}\NormalTok{)}
 \NormalTok{seqAbn \textless{}{-}}\StringTok{ }\KeywordTok{seq}\NormalTok{(zeta,upperLimit,step)}
 \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in}\NormalTok{ seqAbn) \{}
   \CommentTok{\# define xs and ys of two points, separated only along y{-}axis}
-\NormalTok{  vlineData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x1 =}\NormalTok{ i, }\DataTypeTok{x2 =}\NormalTok{ i, }\DataTypeTok{y1 =} \DecValTok{0}\NormalTok{, }\DataTypeTok{y2 =} \KeywordTok{dnorm}\NormalTok{(i, mu, sigma))}
+\NormalTok{  vlineData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x1 =}\NormalTok{ i, }
+                          \DataTypeTok{x2 =}\NormalTok{ i, }
+                          \DataTypeTok{y1 =} \DecValTok{0}\NormalTok{, }
+                          \DataTypeTok{y2 =} \KeywordTok{dnorm}\NormalTok{(i, mu, sigma))}
   \CommentTok{\# draw vertical line between them}
-\NormalTok{  shadedPlots \textless{}{-}}\StringTok{ }\NormalTok{shadedPlots }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_segment}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x1, }\DataTypeTok{xend =}\NormalTok{ x2, }\DataTypeTok{y =}\NormalTok{ y1, }\DataTypeTok{yend =}\NormalTok{ y2), }\DataTypeTok{data =}\NormalTok{ vlineData, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{)}
+\NormalTok{  shadedPlots \textless{}{-}}\StringTok{ }\NormalTok{shadedPlots }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom\_segment}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x1, }\DataTypeTok{xend =}\NormalTok{ x2, }\DataTypeTok{y =}\NormalTok{ y1, }\DataTypeTok{yend =}\NormalTok{ y2), }
+                 \DataTypeTok{data =}\NormalTok{ vlineData, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{)}
 \NormalTok{\}}
 \NormalTok{shadedPlots \textless{}{-}}\StringTok{ }\NormalTok{shadedPlots }\OperatorTok{+}\StringTok{ }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"z{-}sample"}\NormalTok{)}
 \KeywordTok{print}\NormalTok{(shadedPlots)}
@@ -2342,19 +2357,27 @@ The operating point predicted by the above equation lies exactly on the theoreti
 \ControlFlowTok{for}\NormalTok{ (mu }\ControlFlowTok{in} \DecValTok{0}\OperatorTok{:}\DecValTok{3}\NormalTok{)\{}
 \NormalTok{  TPF \textless{}{-}}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(mu}\OperatorTok{{-}}\NormalTok{zeta)}
 \NormalTok{  curveData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{FPF =}\NormalTok{ FPF, }\DataTypeTok{TPF =}\NormalTok{ TPF)}
-\NormalTok{  rocPlot \textless{}{-}}\StringTok{ }\NormalTok{rocPlot }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\NormalTok{  rocPlot \textless{}{-}}\StringTok{ }\NormalTok{rocPlot }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }
 \StringTok{    }\KeywordTok{xlab}\NormalTok{(}\StringTok{"FPF"}\NormalTok{)}\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\StringTok{"TPF"}\NormalTok{ ) }\OperatorTok{+}\StringTok{ }
 \StringTok{    }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.title.y =} \KeywordTok{element\_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{25}\NormalTok{,}\DataTypeTok{face=}\StringTok{"bold"}\NormalTok{),}
           \DataTypeTok{axis.title.x =} \KeywordTok{element\_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{30}\NormalTok{,}\DataTypeTok{face=}\StringTok{"bold"}\NormalTok{))  }\OperatorTok{+}
-\StringTok{  }\KeywordTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\DataTypeTok{x =} \KeywordTok{pnorm}\NormalTok{(}\OperatorTok{{-}}\NormalTok{mu}\OperatorTok{/}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\FloatTok{0.07}\NormalTok{, }\DataTypeTok{y =} \KeywordTok{pnorm}\NormalTok{(mu}\OperatorTok{/}\DecValTok{2}\NormalTok{), }
-             \DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"mu == "}\NormalTok{, mu), }\DataTypeTok{parse =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{size =} \DecValTok{8}\NormalTok{)}
+\StringTok{    }\KeywordTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }
+             \DataTypeTok{x =} \KeywordTok{pnorm}\NormalTok{(}\OperatorTok{{-}}\NormalTok{mu}\OperatorTok{/}\DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\FloatTok{0.07}\NormalTok{, }
+             \DataTypeTok{y =} \KeywordTok{pnorm}\NormalTok{(mu}\OperatorTok{/}\DecValTok{2}\NormalTok{), }
+             \DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"mu == "}\NormalTok{, mu), }
+             \DataTypeTok{parse =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{size =} \DecValTok{8}\NormalTok{)}
   \ControlFlowTok{next}
 \NormalTok{\}}
 \NormalTok{rocPlot \textless{}{-}}\StringTok{ }\NormalTok{rocPlot }\OperatorTok{+}
 \StringTok{  }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{scale\_y\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{))     }
-  
-\NormalTok{rocPlot \textless{}{-}}\StringTok{ }\NormalTok{rocPlot }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_abline}\NormalTok{(}\DataTypeTok{slope =} \DecValTok{{-}1}\NormalTok{, }\DataTypeTok{intercept =} \DecValTok{1}\NormalTok{, }\DataTypeTok{linetype =} \DecValTok{3}\NormalTok{, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{)}
+
+\NormalTok{rocPlot \textless{}{-}}\StringTok{ }\NormalTok{rocPlot }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_abline}\NormalTok{(}\DataTypeTok{slope =} \DecValTok{{-}1}\NormalTok{, }
+              \DataTypeTok{intercept =} \DecValTok{1}\NormalTok{, }
+              \DataTypeTok{linetype =} \DecValTok{3}\NormalTok{,}
+              \DataTypeTok{size =} \DecValTok{2}\NormalTok{)}
 \KeywordTok{print}\NormalTok{(rocPlot)}
 \end{Highlighting}
 \end{Shaded}
@@ -2439,12 +2462,18 @@ Since the ROC curve is bounded by the unit square, AUC must be between zero and 
 \hypertarget{properties-of-the-equal-variance-binormal-model-roc-curve}{%
 \subsection{Properties of the equal-variance binormal model ROC curve}\label{properties-of-the-equal-variance-binormal-model-roc-curve}}
 
-\begin{verbatim}
-a. The ROC curve is completely contained within the unit square. This follows from the fact that both axes of the plot are probabilities.
-b. The operating point rises monotonically from (0,0) to (1,1). 
-c. Since $\mu$ is positive, the slope of the equal-variance binormal model curve at the origin (0,0) is infinite and the slope at (1,1) is zero, and the slope along the curve is always non-negative and decreases monotonically as the operating point moves up the curve.
-d. AUC is a monotone increasing function of  $\mu$ . It varies from 0.5 to 1 as  $\mu$  varies from zero to infinity. 
-\end{verbatim}
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  The ROC curve is completely contained within the unit square. This follows from the fact that both axes of the plot are probabilities.
+\item
+  The operating point rises monotonically from (0,0) to (1,1).
+\item
+  Since \(\mu\) is positive, the slope of the equal-variance binormal model curve at the origin (0,0) is infinite and the slope at (1,1) is zero, and the slope along the curve is always non-negative and decreases monotonically as the operating point moves up the curve.
+\item
+  AUC is a monotone increasing function of \(\mu\). It varies from 0.5 to 1 as \(\mu\) varies from zero to infinity.
+\end{enumerate}
 
 \hypertarget{comments}{%
 \subsection{Comments}\label{comments}}
@@ -2482,8 +2511,11 @@ Fig. \ref{fig:binaryTask-MainAnalyticalROC} is the ROC curve for the equal-varia
 \NormalTok{OpX \textless{}{-}}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(}\OperatorTok{{-}}\DecValTok{1}\NormalTok{)}
 \NormalTok{OpY \textless{}{-}}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(mu}\DecValTok{{-}1}\NormalTok{)}
 \NormalTok{pointData \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{FPF =}\NormalTok{ OpX, }\DataTypeTok{TPF =}\NormalTok{ OpY)}
-\NormalTok{rocPlot \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ FPF, }\DataTypeTok{y =}\NormalTok{ TPF)) }\OperatorTok{+}\StringTok{ }\KeywordTok{xlab}\NormalTok{(}\StringTok{"FPF"}\NormalTok{)}\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\StringTok{"TPF"}\NormalTok{ ) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom\_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ pointData, }\DataTypeTok{size =} \DecValTok{5}\NormalTok{) }\OperatorTok{+}
+\NormalTok{rocPlot \textless{}{-}}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}
+  \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ FPF, }\DataTypeTok{y =}\NormalTok{ TPF)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"FPF"}\NormalTok{)}\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\StringTok{"TPF"}\NormalTok{ ) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ curveData, }\DataTypeTok{size =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom\_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ pointData, }\DataTypeTok{size =} \DecValTok{5}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.title.y =} \KeywordTok{element\_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{25}\NormalTok{,}\DataTypeTok{face=}\StringTok{"bold"}\NormalTok{),}
         \DataTypeTok{axis.title.x =} \KeywordTok{element\_text}\NormalTok{(}\DataTypeTok{size =} \DecValTok{30}\NormalTok{,}\DataTypeTok{face=}\StringTok{"bold"}\NormalTok{))  }\OperatorTok{+}
 \StringTok{  }\KeywordTok{scale\_x\_continuous}\NormalTok{(}\DataTypeTok{expand =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
@@ -2527,16 +2559,12 @@ For electrical signals, SNR can be measured with instruments but, in the context
   Calculation of a parametric confidence interval requires a distributional assumption (non-parametric estimation methods, which use resampling methods, are described later). With a distributional assumption, the method being described now, the parameters of the distribution can be estimated, and since the distribution accounts for variability, the needed confidence interval estimate follows.
 \item
   With TPF and FPF, each of which involves a ratio of two integers, it is convenient to assume a \emph{binomial} distribution for the following reason:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    The diagnosis ``non-diseased'' vs.~``diseased'' is a Bernoulli trial, i.e., one whose outcome is binary.
-  \item
-    A Bernoulli trial is like a coin-toss, a special coin whose probability of landing ``diseased'' face up is \(p\), which is not necessarily 0.5 as with a real coin.
-  \item
-    It is a theorem in statistics that the total number of Bernoulli outcomes of one type, e.g., \(n(FP)\), is a binomial-distributed random variable, with success probability \(\widehat{FPF}\) and trial size \(K_1\). The circumflex denotes an estimate.
-  \end{itemize}
+\item
+  The diagnosis ``non-diseased'' vs.~``diseased'' is a Bernoulli trial, i.e., one whose outcome is binary.
+\item
+  A Bernoulli trial is like a coin-toss, a special coin whose probability of landing ``diseased'' face up is \(p\), which is not necessarily 0.5 as with a real coin.
+\item
+  It is a theorem in statistics that the total number of Bernoulli outcomes of one type, e.g., \(n(FP)\), is a binomial-distributed random variable, with success probability \(\widehat{FPF}\) and trial size \(K_1\). The circumflex denotes an estimate.
 \end{itemize}
 
 \begin{equation} 
@@ -2554,7 +2582,7 @@ k=0,1,2,...,n\\
 \label{eq:binaryTask-BinDistrDef}
 \end{equation}
 
-Eqn. \eqref{eq:binaryTask-BinDistrDef} states that \(k\) is a random sample from the binomial distribution \(B(n,p)\). For reference, the probability mass function \(pmf\) of \(B(n,p)\) is defined by (the subscript \(Bin\) denotes a binomial distribution):
+Eqn. \eqref{eq:binaryTask-BinDistrDef} states that \(k\) is a random sample from the binomial distribution \(B(n,p)\). For reference, the probability mass function \(\text{pmf}\) of \(B(n,p)\) is defined by (the subscript \(Bin\) denotes a binomial distribution):
 
 \begin{equation} 
 \text{pmf}_{Bin}\left ( k;n,p \right )=\binom{n}{k}p^k(1-p)^{n-k}
@@ -2563,7 +2591,7 @@ Eqn. \eqref{eq:binaryTask-BinDistrDef} states that \(k\) is a random sample from
 
 For a discrete distribution, one has probability \emph{mass} function; in contrast, for a continuous distribution one has a probability \emph{density} function.
 
-The binomial coefficient \(\binom{n}{k}\) appearing in Eqn. \eqref{eq:binaryTask-BinDistrDef2}, to be read as ``n pick k'', is defined by:
+The binomial coefficient \(\binom{n}{k}\) appearing in Eqn. \eqref{eq:binaryTask-BinDistrDef2}, to be read as ``\(n\) pick \(k\)'', is defined by:
 
 \begin{equation} 
 \binom{n}{k}=\frac{n!}{k!(n-k)!}
@@ -2577,7 +2605,7 @@ From the properties of the binomial distribution the variance of n(FP) is given 
 \label{eq:binaryTask-Var-n-FP}
 \end{equation}
 
-It follows that \(FPF\) has mean \(\widehat{FPF}\) and variance \(\sigma_{FPF}^2\) given by (using theorem \(Var(aX) = a^2 Var(X)\) where \(a\) is a constant, equal to \(K_1\) in this case):
+It follows that \(FPF\) has mean \(\widehat{FPF}\) and variance \(\sigma_{FPF}^2\) given by (using theorem \(Var(aX) = a^2 Var(X)\), where \(a\) is a constant, equal to \(1/K_1\) in this case):
 
 \begin{equation} 
 \sigma_{FPF}^2 = \frac{\widehat{FPF}\left ( 1 - \widehat{FPF} \right )}{K_1}
@@ -2588,25 +2616,21 @@ For large \(K_1\) the distribution of \(FPF\) approaches a normal distribution a
 
 \[FPF \sim N\left ( \widehat{FPF}, \sigma_{FPF}^2 \right )\]
 
-Translating the mean to zero and dividing by the square root of the variance, it follows that the translated and normalized difference follows the unit normal distribution:
-
-\[\frac{FPF -  \widehat{FPF}}{\widehat{FPF}} \sim N\left ( 0, 1 \right )\]
-
-This immediately allows us to write down the confidence interval for the normalized difference: \(-z_{\alpha/2}, z_{\alpha/2}\) around zero. Translating this back to FPF, one has
+This immediately allows us to write down the confidence interval for \(\widehat{FPF}\), i.e., \(\pm z_{\alpha/2}\) around \(\widehat{FPF}\).
 
 \begin{equation} 
 CI_{1-\alpha}^{FPF}=\left ( \widehat{FPF} - z_{\alpha/2} \sigma_{FPF}, \widehat{FPF} + z_{\alpha/2} \sigma_{FPF} \right )
 \label{eq:binaryTask-CI-FPF}
 \end{equation}
 
-In Eqn. \eqref{eq:binaryTask-CI-FPF}, \(z_{\alpha/2}\) is the upper \((1-\alpha)\) quantile of the unit normal distribution, i.e., the area to the \emph{right} under the unit normal distribution pdf from \(z_{\alpha/2}\) to \(\infty\) equals \(\alpha/2\). It is the complement (plus goes to minus) of \(\Phi^{-1}(\alpha/2)\) introduced earlier; the difference is that the latter uses the area to the \emph{left}. The following code might help.
+In Eqn. \eqref{eq:binaryTask-CI-FPF}, \(z_{\alpha/2}\) is the upper \(\alpha/2\) quantile of the unit normal distribution, i.e., the area to the \emph{right} under the unit normal distribution pdf from \(z_{\alpha/2}\) to \(\infty\) equals \(\alpha/2\). It is the complement (i.e., plus goes to minus) of \(\Phi^{-1}(\alpha/2)\) introduced earlier; the difference is that the latter uses the area to the \emph{left}. The following code might help.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{alpha \textless{}{-}}\StringTok{ }\FloatTok{0.05}
-\KeywordTok{qnorm}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{) }\CommentTok{\#this is z\_\{\textbackslash{}alpha/2\}, upper quantile}
+\KeywordTok{qnorm}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{) }\CommentTok{\# this is z\_\{\textbackslash{}alpha/2\}, the upper \textbackslash{}alpha/2 quantile}
 \CommentTok{\#\textgreater{} [1] 1.96}
-\KeywordTok{qnorm}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{) }\CommentTok{\# \# this is \textbackslash{}Phi\^{}\{{-}1\}(\textbackslash{}alpha/2), lower quantile}
+\KeywordTok{qnorm}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{)   }\CommentTok{\# this is \textbackslash{}Phi\^{}\{{-}1\}(\textbackslash{}alpha/2), the lower \textbackslash{}alpha/2 quantile}
 \CommentTok{\#\textgreater{} [1] {-}1.96}
 \end{Highlighting}
 \end{Shaded}
@@ -2625,7 +2649,7 @@ z_{\alpha/2} &=\Phi^{-1}\left ( 1-\alpha/2 \right )\\
 \label{eq:binaryTask-def-z-alpha2}
 \end{equation}
 
-The normal approximation is adequate if both of the following two conditions are both met, i.e., \(\widehat{FPF}\) is not too close to zero or 1: \(K_1\widehat{FPF} > 10\) and \(K_1(1-\widehat{FPF}) > 10\).
+The normal approximation is adequate if both of the following two conditions are both met: \(K_1\widehat{FPF} > 10\) and \(K_1(1-\widehat{FPF}) > 10\). This means, essentially, that \(\widehat{FPF}\) is not too close to zero or 1.
 
 Similarly, an approximate symmetric \((1-\alpha)\) confidence interval for TPF is:
 
@@ -2739,7 +2763,7 @@ In Fig. \ref{fig:BeamStudyFig}, a schematic of the data, if one looks at the poi
 Fig. \ref{fig:BeamStudyFig} and Table \ref{tab:binaryTask0BeamStudy} illustrate several important principles.
 1. Since an operating point is characterized by two values, unless both numbers are higher (e.g., radiologist A vs.~B or C), it is difficult to unambiguously compare them.
 2. While sensitivity and specificity depend on the reporting threshold, the area under the ROC plot is independent of it. Using the area under the ROC curve one can unambiguously compare two readers.
-3. Combining sensitivity and the complement of specificity into a single AUC measure yields the additional benefit of lower variability. In Fig. \ref{fig:BeamStudyFig}, the range for sensitivity is 53percent while that for specificity is 63percent. In contrast, the range for AUC is only 21percent. This means that much of the observed variations in sensitivity and specificity are due to variations in thresholds, and using AUC eliminates this source of variability. Decreased variability of a measure is a highly desirable characteristic as it implies the measurement is more precise, making it easier to detect genuine changes between readers and / or modalities.
+3. Combining sensitivity and the complement of specificity into a single AUC measure yields the additional benefit of lower variability. In Fig. \ref{fig:BeamStudyFig}, the range for sensitivity is 53 percent while that for specificity is 63 percent. In contrast, the range for AUC is only 21 percent. This means that much of the observed variations in sensitivity and specificity are due to variations in thresholds, and using AUC eliminates this source of variability. Decreased variability of a measure is a highly desirable characteristic as it implies the measurement is more precise, making it easier to detect genuine changes between readers and / or modalities.
 
 \hypertarget{binaryTask-Summary}{%
 \section{Summary}\label{binaryTask-Summary}}
@@ -5851,7 +5875,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.3541201          1   0.24455912}
+\CommentTok{\#\textgreater{} 1    1.2259505          1   0.26819602}
 \end{Highlighting}
 \end{Shaded}
 
