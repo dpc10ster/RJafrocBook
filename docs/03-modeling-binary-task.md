@@ -710,7 +710,7 @@ For electrical signals, SNR can be measured with instruments but, in the context
 ## Assigning confidence intervals to an operating point
 * The notation in the following equations follows that introduced in Chapter 02.
 * A $(1-\alpha)$  confidence interval (CI) of a statistic is the range that is expected to contain the true value of the statistic with probability $(1-\alpha)$. 
-* It should be clear that a 99percent CI is wider than a 95 percent CI, and a 90percentCI is narrower; in general, the higher the confidence that the interval contains the true value, the wider the range of the CI. 
+* It should be clear that a 99 percent CI is wider than a 95 percent CI, and a 90percentCI is narrower; in general, the higher the confidence that the interval contains the true value, the wider the range of the CI. 
 * Calculation of a parametric confidence interval requires a distributional assumption (non-parametric estimation methods, which use resampling methods, are described later). With a distributional assumption, the method being described now, the parameters of the distribution can be estimated, and since the distribution accounts for variability, the needed confidence interval estimate follows. 
 * With TPF and FPF, each of which involves a ratio of two integers, it is convenient to assume a *binomial* distribution for the following reason: 
 + The diagnosis "non-diseased" vs. "diseased" is a Bernoulli trial, i.e., one whose outcome is binary. 
@@ -778,9 +778,11 @@ In Eqn. \@ref(eq:binaryTask-CI-FPF), $z_{\alpha/2}$ is the upper $\alpha/2$ quan
 
 ```r
 alpha <- 0.05
-qnorm(1-alpha/2) # this is z_{\alpha/2}, the upper \alpha/2 quantile
+# this is z_{\alpha/2}, the upper \alpha/2 quantile
+qnorm(1-alpha/2) 
 #> [1] 1.96
-qnorm(alpha/2)   # this is \Phi^{-1}(\alpha/2), the lower \alpha/2 quantile
+# this is \Phi^{-1}(\alpha/2), the lower \alpha/2 quantile
+qnorm(alpha/2)   
 #> [1] -1.96
 ```
 Here is the definition of $z_{\alpha/2}$: 

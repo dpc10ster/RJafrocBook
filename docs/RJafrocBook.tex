@@ -431,899 +431,6 @@ This concludes the introduction of the book.
 \hypertarget{preliminaries-references}{%
 \section{References}\label{preliminaries-references}}
 
-\hypertarget{rocdataformat}{%
-\chapter{ROC DATA FORMAT}\label{rocdataformat}}
-
-\hypertarget{rocdataformatIntro}{%
-\section{Introduction}\label{rocdataformatIntro}}
-
-\begin{itemize}
-\tightlist
-\item
-  The purpose of this chapter is to explain the data format of the input Excel file and to introduce the capabilities of the function \texttt{DfReadDataFile()}. Background on observer performance methods are in my book \citep{RN2680}.
-\item
-  I will start with Receiver Operating Characteristic (ROC) data \citep{RN1766}, as this is by far the simplest paradigm.
-\item
-  In the ROC paradigm the observer assigns a rating to each image. A rating is an ordered numeric label, and, in our convention, higher values represent greater certainty or \textbf{confidence level} for presence of disease. With human observers, a 5 (or 6) point rating scale is typically used, with 1 representing highest confidence for \emph{absence} of disease and 5 (or 6) representing highest confidence for \emph{presence} of disease. Intermediate values represent intermediate confidence levels for presence or absence of disease.
-\item
-  Note that location information associated with the disease, if applicable, is not collected.
-\item
-  There is no restriction to 5 or 6 ratings. With algorithmic observers, e.g., computer aided detection (CAD) algorithms, the rating could be a floating point number and have infinite precision. All that is required is that higher values correspond to greater confidence in presence of disease.
-\end{itemize}
-
-\hypertarget{note-to-existing-users}{%
-\section{Note to existing users}\label{note-to-existing-users}}
-
-\begin{itemize}
-\tightlist
-\item
-  The Excel file format has recently undergone changes resulting in 4 extra \texttt{list} members in the final created \texttt{dataset} object (i.e., 12 members instead of 8).
-\item
-  Code should run on the old format Excel files as the 4 extra list members are simply ignored.
-\item
-  Reasons for the change will become clearer in these chapters.
-\item
-  Basically they are needed for generalization to other data collection paradigms instead of crossed, for example to the split-plot data acquisition paradigm, and for better data entry error control.
-\end{itemize}
-
-\hypertarget{rocExceldataformat}{%
-\section{The Excel data format}\label{rocExceldataformat}}
-
-\begin{itemize}
-\tightlist
-\item
-  The Excel file has three worksheets.
-\item
-  These are named
-
-  \begin{itemize}
-  \tightlist
-  \item
-    \texttt{Truth},
-  \item
-    \texttt{NL} (or \texttt{FP}),
-  \item
-    \texttt{LL} (or \texttt{TP}).
-  \end{itemize}
-\end{itemize}
-
-\hypertarget{illustrative-toy-file}{%
-\section{Illustrative toy file}\label{illustrative-toy-file}}
-
-\begin{itemize}
-\tightlist
-\item
-  \emph{Toy files} are artificial small datasets intended to illustrate essential features of the data format.\\
-\item
-  The examples shown in this chapter corresponds to Excel file \texttt{inst/extdata/toyFiles/ROC/rocCr.xlsx} in the project directory.
-\item
-  To view these files one needs to \texttt{clone} the source files from \texttt{GitHub}.
-\end{itemize}
-
-\hypertarget{rocExcelTruthdataformat}{%
-\section{\texorpdfstring{The \texttt{Truth} worksheet}{The Truth worksheet}}\label{rocExcelTruthdataformat}}
-
-\begin{itemize}
-\tightlist
-\item
-  The \texttt{Truth} worksheet contains 6 columns: \texttt{CaseID}, \texttt{LesionID}, \texttt{Weight}, \texttt{ReaderID}, \texttt{ModalityID} and \texttt{Paradigm}.
-\item
-  For ROC data the first five columns contain as many rows as there are cases (images) in the dataset.
-\item
-  \texttt{CaseID}: unique integers, one per case, representing the cases in the dataset.
-\item
-  \texttt{LesionID}: integers 0 or 1, with each 0 representing a non-diseased case and each 1 representing a diseased case.
-\item
-  In the current toy dataset, the non-diseased cases are labeled \texttt{1}, \texttt{2} and \texttt{3}, while the diseased cases are labeled \texttt{70}, \texttt{71}, \texttt{72}, \texttt{73} and \texttt{74}. The values do not have to be consecutive integers; they need not be ordered; the only requirement is that they be \textbf{unique}.
-\item
-  \texttt{Weight}: Not used for ROC data, a floating point value, typically filled in with 0 or 1.
-\item
-  \texttt{ReaderID}: a \textbf{comma-separated} listing of reader labels, each represented by a \textbf{unique string}, that have interpreted the case. In the example shown below each cell has the value \texttt{0,\ 1,\ 2,\ 3,\ 4} meaning that each of the readers, represented by the strings ``0'', ``1'', ``2'', ``3'' and ``4'', have interpreted all cases (hence the ``crossed'' design). \textbf{With reader names that could be confused with integers, each cell in this column has to be text formatted as otherwise Excel will not accept it.} {[}Try entering \texttt{0,\ 1,\ 2,\ 3,\ 4} in a numeric formatted Excel cell.{]}
-\item
-  The reader names could just as well have been \texttt{Rdr0,\ Rdr1,\ Rdr2,\ Rdr3,\ Rdr4}. The only requirement is that they be unique strings.
-\item
-  Look in in the \texttt{inst/extdata/toyFiles/ROC} directory for files \texttt{rocCrStrRdrsTrts.xlsx} and \texttt{rocCrStrRdrsNonUnique.xlsx} for examples of data files using longer strings for readers. The second file generates an error because the reader names are not unique.
-\item
-  \texttt{ModalityID}: a comma-separated listing of modalities (one or more modalities), each represented by a \textbf{unique string}, that are applied to each case. In the example each cell has the value \texttt{"0",\ "1"}. \textbf{With treatment names that could be confused with integers, each cell has to be text formatted as otherwise Excel will not accept it.}
-\item
-  The treatment names could just as well have been \texttt{Trt0,\ Trt1}. Again, the only requirement is that they be unique strings.
-\item
-  \texttt{Paradigm}: this column contains two cells, \texttt{ROC} and \texttt{crossed}. It informs the software that this is an ROC dataset, and the design is crossed, meaning each reader has interpreted each case in each modality (in statistical terminology: modality and reader factors are ``crossed'').
-\item
-  There are 5 diseased cases in the dataset (the number of 1's in the \texttt{LesionID} column of the \texttt{Truth} worksheet).
-\item
-  There are 3 non-diseased cases in the dataset (the number of 0's in the \texttt{LesionID} column).
-\item
-  There are 5 readers in the dataset (each cell in the \texttt{ReaderID} column contains the string \texttt{0,\ 1,\ 2,\ 3,\ 4}).
-\item
-  There are 2 modalities in the dataset (each cell in the \texttt{ModalityID} column contains the string \texttt{0,\ 1}).
-\end{itemize}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocCrTruth} 
-
-}
-
-\caption{Truth worksheet for file rocCr.xlsx}\label{fig:showRocCrTruthSheet}
-\end{figure}
-
-\hypertarget{the-structure-of-an-roc-dataset}{%
-\section{The structure of an ROC dataset}\label{the-structure-of-an-roc-dataset}}
-
-In the following code chunk the first statement retrieves the name of the data file, located in a hidden directory that one need not be concerned with. The second statement reads the file using the function \texttt{DfReadDataFile()} and saves it to object \texttt{x}. The third statement shows the structure of the dataset object \texttt{x}.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{rocCr \textless{}{-}}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\StringTok{"extdata"}\NormalTok{, }\StringTok{"toyFiles/ROC/rocCr.xlsx"}\NormalTok{,}
-                        \DataTypeTok{package =} \StringTok{"RJafroc"}\NormalTok{, }\DataTypeTok{mustWork =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(rocCr, }\DataTypeTok{newExcelFileFormat =} \OtherTok{TRUE}\NormalTok{)}
-\KeywordTok{str}\NormalTok{(x)}
-\CommentTok{\#\textgreater{} List of 3}
-\CommentTok{\#\textgreater{}  $ ratings     :List of 3}
-\CommentTok{\#\textgreater{}   ..$ NL   : num [1:2, 1:5, 1:8, 1] 1 3 2 3 2 2 1 2 3 2 ...}
-\CommentTok{\#\textgreater{}   ..$ LL   : num [1:2, 1:5, 1:5, 1] 5 5 5 5 5 5 5 5 5 5 ...}
-\CommentTok{\#\textgreater{}   ..$ LL\_IL: logi NA}
-\CommentTok{\#\textgreater{}  $ lesions     :List of 3}
-\CommentTok{\#\textgreater{}   ..$ perCase: int [1:5] 1 1 1 1 1}
-\CommentTok{\#\textgreater{}   ..$ IDs    : num [1:5, 1] 1 1 1 1 1}
-\CommentTok{\#\textgreater{}   ..$ weights: num [1:5, 1] 1 1 1 1 1}
-\CommentTok{\#\textgreater{}  $ descriptions:List of 7}
-\CommentTok{\#\textgreater{}   ..$ fileName     : chr "rocCr"}
-\CommentTok{\#\textgreater{}   ..$ type         : chr "ROC"}
-\CommentTok{\#\textgreater{}   ..$ name         : logi NA}
-\CommentTok{\#\textgreater{}   ..$ truthTableStr: num [1:2, 1:5, 1:8, 1:2] 1 1 1 1 1 1 1 1 1 1 ...}
-\CommentTok{\#\textgreater{}   ..$ design       : chr "FCTRL"}
-\CommentTok{\#\textgreater{}   ..$ modalityID   : Named chr [1:2] "0" "1"}
-\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:2] "0" "1"}
-\CommentTok{\#\textgreater{}   ..$ readerID     : Named chr [1:5] "0" "1" "2" "3" ...}
-\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:5] "0" "1" "2" "3" ...}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  In the above code chunk flag \texttt{newExcelFileFormat} is set to \texttt{TRUE} as otherwise columns D - F in the \texttt{Truth} worksheet are ignored and the dataset is assumed to be crossed, with \texttt{dataType} automatically determined from the contents of the FP and TP worksheets.
-\item
-  Flag \texttt{newExcelFileFormat\ =\ FALSE} is for compatibility with older JAFROC format Excel files, which did not have these columns in the \texttt{Truth} worksheet. Its usage is deprecated.
-\item
-  The dataset object \texttt{x} is a \texttt{list} variable with 3 members.
-\item
-  The \texttt{x\$NL} member, with dimension {[}2, 5, 8, 1{]}, contains the ratings of normal cases. The extra values in the third dimension, filled with \texttt{NAs}, are needed for compatibility with FROC datasets, as unlike ROC, false positives are possible on diseased cases.
-\item
-  The \texttt{x\$LL}, with dimension {[}2, 5, 5, 1{]}, contains the ratings of abnormal cases.
-\item
-  The \texttt{x\$lesionVector} member is a vector with 5 ones representing the 5 diseased cases in the dataset.
-\item
-  The \texttt{x\$lesionID} member is an array with 5 ones.
-\item
-  The \texttt{x\$lesionWeight} member is an array with 5 ones.
-\item
-  The \texttt{lesionVector}, \texttt{lesionID} and \texttt{lesionWeight} members are not used for ROC datasets. They are there for compatibility with FROC datasets.
-\item
-  The \texttt{dataType} member indicates that this is an \texttt{ROC} dataset.
-\item
-  The \texttt{x\$modalityID} member is a vector with two elements \texttt{"0"} and \texttt{"1"}, naming the two modalities.
-\item
-  The \texttt{x\$readerID} member is a vector with five elements \texttt{"0"}, \texttt{"1"}, \texttt{"2"}, \texttt{"3"} and \texttt{"4"}, naming the five readers.
-\item
-  The \texttt{x\$design} member is ; specifies the dataset design, which is ``CROSSED''.
-\item
-  The \texttt{x\$normalCases} member lists the integer names of the normal cases, .
-\item
-  The \texttt{x\$abnormalCases} member lists the integer names of the abnormal cases, .
-\item
-  The \texttt{x\$truthTableStr} member quantifies the structure of the dataset, as explained in prior chapters.
-\end{itemize}
-
-\hypertarget{rocExcelFPdataformat}{%
-\section{The false positive (FP) ratings}\label{rocExcelFPdataformat}}
-
-These are found in the \texttt{FP} or \texttt{NL} worksheet, see below.
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocCrFp} 
-
-}
-
-\caption{FP worksheet for file rocCr.xlsx}\label{fig:showRocCrFpSheet}
-\end{figure}
-
-\begin{itemize}
-\tightlist
-\item
-  It consists of 4 columns, each of length 30 (= \# of modalities times number of readers times number of non-diseased cases).
-\item
-  \texttt{ReaderID}: the reader labels: \texttt{0}, \texttt{1}, \texttt{2}, \texttt{3} and \texttt{4}. Each reader label occurs 6 times (= \# of modalities times number of non-diseased cases).
-\item
-  \texttt{ModalityID}: the modality or treatment labels: \texttt{0} and \texttt{1}. Each label occurs 15 times (= \# of readers times number of non-diseased cases).
-\item
-  \texttt{CaseID}: the case labels for non-diseased cases: \texttt{1}, \texttt{2} and \texttt{3}. Each label occurs 10 times (= \# of modalities times \# of readers).
-\item
-  The label of a diseased case cannot occur in the FP worksheet. If it does the software generates an error.
-\item
-  \texttt{FP\_Rating}: the floating point ratings of non-diseased cases. Each row of this worksheet contains a rating corresponding to the values of \texttt{ReaderID}, \texttt{ModalityID} and \texttt{CaseID} for that row.
-\end{itemize}
-
-\hypertarget{rocExcelTPdataformat}{%
-\section{The true positive (TP) ratings}\label{rocExcelTPdataformat}}
-
-These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocCrTp} 
-
-}
-
-\caption{TP worksheet for file rocCr.xlsx}\label{fig:showRocCrTpSheet}
-\end{figure}
-
-\begin{itemize}
-\tightlist
-\item
-  It consists of 5 columns, each of length 50 (= \# of modalities times number of readers times number of diseased cases).
-\item
-  \texttt{ReaderID}: the reader labels: \texttt{0}, \texttt{1}, \texttt{2}, \texttt{3} and \texttt{4}. Each reader label occurs 10 times (= \# of modalities times number of diseased cases).
-\item
-  \texttt{ModalityID}: the modality or treatment labels: \texttt{0} and \texttt{1}. Each label occurs 25 times (= \# of readers times number of diseased cases).
-\item
-  \texttt{LesionID}: For an ROC dataset this column contains fifty 1's (each diseased case has one lesion).
-\item
-  \texttt{CaseID}: the case labels for non-diseased cases: \texttt{70}, \texttt{71}, \texttt{72}, \texttt{73} and \texttt{74}. Each label occurs 10 times (= \# of modalities times \# of readers). The label of a non-diseased case cannot occur in the TP worksheet.
-\item
-  \texttt{TP\_Rating}: the floating point ratings of diseased cases. Each row of this worksheet contains a rating corresponding to the values of \texttt{ReaderID}, \texttt{ModalityID}, \texttt{LesionID} and \texttt{CaseID} for that row.
-\end{itemize}
-
-\hypertarget{correspondence-between-nl-member-of-dataset-and-the-fp-worksheet}{%
-\section{\texorpdfstring{Correspondence between \texttt{NL} member of dataset and the \texttt{FP} worksheet}{Correspondence between NL member of dataset and the FP worksheet}}\label{correspondence-between-nl-member-of-dataset-and-the-fp-worksheet}}
-
-\begin{itemize}
-\tightlist
-\item
-  The list member \texttt{x\$NL} is an array with \texttt{dim\ =\ c(2,5,8,1)}.
-
-  \begin{itemize}
-  \tightlist
-  \item
-    The first dimension (2) comes from the number of modalities.
-  \item
-    The second dimension (5) comes from the number of readers.
-  \item
-    The third dimension (8) comes from the \textbf{total} number of cases.
-  \item
-    The fourth dimension is alway 1 for an ROC dataset.
-  \end{itemize}
-\item
-  The value of \texttt{x\$NL{[}1,5,2,1{]}}, i.e., , corresponds to row 15 of the FP table, i.e., to \texttt{ModalityID} = 0, \texttt{ReaderID} = 4 and \texttt{CaseID} = 2.
-\item
-  The value of \texttt{x\$NL{[}2,3,2,1{]}}, i.e., , corresponds to row 24 of the FP table, i.e., to \texttt{ModalityID} 1, \texttt{ReaderID} 2 and \texttt{CaseID} 2.
-\item
-  All values for case index \textgreater{} 3 are \texttt{-Inf}. For example the value of \texttt{x\$NL{[}2,3,4,1{]}} is \texttt{-Inf}. This is because there are only 3 non-diseased cases. The extra length is needed for compatibility with FROC datasets.
-\end{itemize}
-
-\hypertarget{correspondence-between-ll-member-of-dataset-and-the-tp-worksheet}{%
-\section{\texorpdfstring{Correspondence between \texttt{LL} member of dataset and the \texttt{TP} worksheet}{Correspondence between LL member of dataset and the TP worksheet}}\label{correspondence-between-ll-member-of-dataset-and-the-tp-worksheet}}
-
-\begin{itemize}
-\tightlist
-\item
-  The list member \texttt{x\$LL} is an array with \texttt{dim\ =\ c(2,5,5,1)}.
-
-  \begin{itemize}
-  \tightlist
-  \item
-    The first dimension (2) comes from the number of modalities.
-  \item
-    The second dimension (5) comes from the number of readers.
-  \item
-    The third dimension (5) comes from the number of diseased cases.
-  \item
-    The fourth dimension is alway 1 for an ROC dataset.
-  \end{itemize}
-\item
-  The value of \texttt{x\$LL{[}1,1,5,1{]}}, i.e., , corresponds to row 6 of the TP table, i.e., to \texttt{ModalityID} = 0, \texttt{ReaderID} = 0 and \texttt{CaseID} = 74.
-\item
-  The value of \texttt{x\$LL{[}1,2,2,1{]}}, i.e., , corresponds to row 8 of the TP table, i.e., to \texttt{ModalityID} = 0, \texttt{ReaderID} = 1 and \texttt{CaseID} = 71.
-\item
-  There are no -Inf values in \texttt{x\$LL}: \texttt{any(x\$LL\ ==\ -Inf)} = FALSE.
-\end{itemize}
-
-\hypertarget{correspondence-using-the-which-function}{%
-\section{\texorpdfstring{Correspondence using the \texttt{which} function}{Correspondence using the which function}}\label{correspondence-using-the-which-function}}
-
-\begin{itemize}
-\tightlist
-\item
-  Converting from \textbf{names} to \textbf{subscripts} (indicating position in an array) can be confusing.
-\item
-  The following example uses the \texttt{which} function to help out.
-\item
-  The first line says that the \texttt{abnormalCase} named 70 corresponds to subscript 1 in the LL array case dimension.
-\item
-  The second line prints the NL rating for \texttt{modalityID} = 0, \texttt{readerID} = 1 and \texttt{normalCases} = 1.
-\item
-  The third line prints the LL rating for \texttt{modalityID} = 0, \texttt{readerID} = 1 and \texttt{abnormalCases} = 70.
-\item
-  The last line shows what happens if one enters an invalid value for name; the result is a \texttt{numeric(0)}.
-\item
-  Note that in each of these examples, the last dimension is 1 because we are dealing with an ROC dataset.
-\item
-  The reader is encouraged to examine the correspondence between the NL and LL ratings and the Excel file using this method.
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{abnormalCases }\OperatorTok{==}\StringTok{ }\DecValTok{70}\NormalTok{)}
-\CommentTok{\#\textgreater{} integer(0)}
-\NormalTok{x}\OperatorTok{$}\NormalTok{NL[}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{modalityID }\OperatorTok{==}\StringTok{ "0"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{readerID }\OperatorTok{==}\StringTok{ "1"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{normalCases }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{),}\DecValTok{1}\NormalTok{]}
-\CommentTok{\#\textgreater{} NULL}
-\NormalTok{x}\OperatorTok{$}\NormalTok{LL[}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{modalityID }\OperatorTok{==}\StringTok{ "0"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{readerID }\OperatorTok{==}\StringTok{ "1"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{abnormalCases }\OperatorTok{==}\StringTok{ }\DecValTok{70}\NormalTok{),}\DecValTok{1}\NormalTok{]}
-\CommentTok{\#\textgreater{} NULL}
-\NormalTok{x}\OperatorTok{$}\NormalTok{LL[}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{modalityID }\OperatorTok{==}\StringTok{ "a"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{readerID }\OperatorTok{==}\StringTok{ "1"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{abnormalCases }\OperatorTok{==}\StringTok{ }\DecValTok{70}\NormalTok{),}\DecValTok{1}\NormalTok{]}
-\CommentTok{\#\textgreater{} NULL}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{rocdataformat-Summary}{%
-\section{Summary}\label{rocdataformat-Summary}}
-
-\hypertarget{rocdataformat-Discussion}{%
-\section{Discussion}\label{rocdataformat-Discussion}}
-
-\hypertarget{rocdataformat-references}{%
-\section{References}\label{rocdataformat-references}}
-
-\hypertarget{frocdataformat}{%
-\chapter{FROC data format}\label{frocdataformat}}
-
-\hypertarget{purpose}{%
-\section{Purpose}\label{purpose}}
-
-\begin{itemize}
-\tightlist
-\item
-  Explain the data format of the input Excel file for FROC datasets.
-\item
-  Explain the format of the FROC dataset.
-\item
-  Explain the lesion distribution array returned by \texttt{UtilLesionDistr()}.
-\item
-  Explain the lesion weights array returned by \texttt{UtilLesionWeightsDistr()}.
-\item
-  Details on the FROC paradigm are in my book.
-\end{itemize}
-
-\hypertarget{frocdataformatIntro}{%
-\section{Introduction}\label{frocdataformatIntro}}
-
-\begin{itemize}
-\tightlist
-\item
-  See my book \citet{RN2680} for full details.
-\item
-  In the Free-response Receiver Operating Characteristic (FROC) paradigm \citep{RN761} the observer searches each case for signs of \textbf{localized disease} and marks and rates localized regions that are sufficiently suspicious for disease presence.
-\item
-  FROC data consists of \textbf{mark-rating pairs}, where each mark is a localized-region that was considered sufficiently suspicious for presence of a localized lesion and the rating is the corresponding confidence level.
-\item
-  By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (\texttt{LL}) - if it is close to a real lesion - or a non-lesion localization (\texttt{NL}) otherwise.
-\item
-  The observer assigns a rating to each region. The rating, as in the ROC paradigm, can be an integer or quasi-continuous (e.g., 0 -- 100), or a floating point value, as long as higher numbers represent greater confidence in presence of a lesion at the indicated region.
-\end{itemize}
-
-\hypertarget{frocExceldataformat}{%
-\section{The Excel data format}\label{frocExceldataformat}}
-
-The Excel file has three worsheets. These are named \texttt{Truth}, \texttt{NL} or \texttt{FP} and \texttt{LL} or \texttt{TP}.
-
-\hypertarget{frocExcelTruthdataformat}{%
-\section{\texorpdfstring{The \texttt{Truth} worksheet}{The Truth worksheet}}\label{frocExcelTruthdataformat}}
-
-The \texttt{Truth} worksheet contains 6 columns: \texttt{CaseID}, \texttt{LesionID}, \texttt{Weight}, \texttt{ReaderID}, \texttt{ModalityID} and \texttt{Paradigm}.
-
-\begin{itemize}
-\tightlist
-\item
-  Since a diseased case may have more than one lesion, the first five columns contain \textbf{at least} as many rows as there are cases (images) in the dataset.
-\item
-  \texttt{CaseID}: unique \textbf{integers}, one per case, representing the cases in the dataset.
-\item
-  \texttt{LesionID}: integers 0, 1, 2, etc., with each 0 representing a non-diseased case, 1 representing the \emph{first} lesion on a diseased case, 2 representing the second lesion on a diseased case, if present, and so on.
-\item
-  The non-diseased cases are labeled \texttt{1}, \texttt{2} and \texttt{3}, while the diseased cases are labeled \texttt{70}, \texttt{71}, \texttt{72}, \texttt{73} and \texttt{74}.
-\item
-  There are 3 non-diseased cases in the dataset (the number of 0's in the \texttt{LesionID} column).
-\item
-  There are 5 diseased cases in the dataset (the number of 1's in the \texttt{LesionID} column of the \texttt{Truth} worksheet).
-\item
-  There are 3 readers in the dataset (each cell in the \texttt{ReaderID} column contains \texttt{0,\ 1,\ 2}).
-\item
-  There are 2 modalities in the dataset (each cell in the \texttt{ModalityID} column contains \texttt{0,\ 1}).
-\item
-  \texttt{Weight}: floating point; 0, for each non-diseased case, or values for each diseased case that add up to unity.\\
-\item
-  Diseased case \texttt{70} has two lesions, with \texttt{LesionID}s 1 and 2, and weights 0.3 and 0.7. Diseased case \texttt{71} has one lesion, with \texttt{LesionID} = 1, and \texttt{Weight} = 1. Diseased case \texttt{72} has three lesions, with \texttt{LesionID}s 1, 2 and 3 and weights 1/3 each. Diseased case \texttt{73} has two lesions, with \texttt{LesionID}s 1, and 2 and weights 0.1 and 0.9. Diseased case \texttt{74} has one lesion, with \texttt{LesionID} = 1 and \texttt{Weight} = 1.
-\item
-  \texttt{ReaderID}: a comma-separated listing of readers, each represented by a unique \textbf{integer}, that have interpreted the case. In the example shown below each cell has the value \texttt{0,\ 1,\ 2}. \textbf{Each cell has to be text formatted. Otherwise Excel will not accept it.}
-\item
-  \texttt{ModalityID}: a comma-separated listing of modalities (or treatments), each represented by a unique \textbf{integer}, that apply to each case. In the example each cell has the value \texttt{0,\ 1}. \textbf{Each cell has to be text formatted.}
-\item
-  \texttt{Paradigm}: In the example shown below, the contents are \texttt{FROC} and \texttt{crossed}. It informs the software that this is an \texttt{FROC} dataset and the design is ``crossed'', as in \textbf{TBA chapter xx}.
-\end{itemize}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocCrTruth} 
-
-}
-
-\caption{Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:frocCrTruth}
-\end{figure}
-
-\hypertarget{the-structure-of-an-froc-dataset}{%
-\section{The structure of an FROC dataset}\label{the-structure-of-an-froc-dataset}}
-
-The example shown above corresponds to Excel file \texttt{inst/extdata/toyFiles/FROC/frocCr.xlsx} in the project directory.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{frocCr \textless{}{-}}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\StringTok{"extdata"}\NormalTok{, }\StringTok{"toyFiles/FROC/frocCr.xlsx"}\NormalTok{,}
-                        \DataTypeTok{package =} \StringTok{"RJafroc"}\NormalTok{, }\DataTypeTok{mustWork =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(frocCr, }\DataTypeTok{newExcelFileFormat =} \OtherTok{TRUE}\NormalTok{)}
-\KeywordTok{str}\NormalTok{(x)}
-\CommentTok{\#\textgreater{} List of 3}
-\CommentTok{\#\textgreater{}  $ ratings     :List of 3}
-\CommentTok{\#\textgreater{}   ..$ NL   : num [1:2, 1:3, 1:8, 1:2] 1.02 2.89 2.21 3.01 2.14 ...}
-\CommentTok{\#\textgreater{}   ..$ LL   : num [1:2, 1:3, 1:5, 1:3] 5.28 5.2 5.14 4.77 4.66 4.87 3.01 3.27 3.31 3.19 ...}
-\CommentTok{\#\textgreater{}   ..$ LL\_IL: logi NA}
-\CommentTok{\#\textgreater{}  $ lesions     :List of 3}
-\CommentTok{\#\textgreater{}   ..$ perCase: int [1:5] 2 1 3 2 1}
-\CommentTok{\#\textgreater{}   ..$ IDs    : num [1:5, 1:3] 1 1 1 1 1 ...}
-\CommentTok{\#\textgreater{}   ..$ weights: num [1:5, 1:3] 0.3 1 0.333 0.1 1 ...}
-\CommentTok{\#\textgreater{}  $ descriptions:List of 7}
-\CommentTok{\#\textgreater{}   ..$ fileName     : chr "frocCr"}
-\CommentTok{\#\textgreater{}   ..$ type         : chr "FROC"}
-\CommentTok{\#\textgreater{}   ..$ name         : logi NA}
-\CommentTok{\#\textgreater{}   ..$ truthTableStr: num [1:2, 1:3, 1:8, 1:4] 1 1 1 1 1 1 1 1 1 1 ...}
-\CommentTok{\#\textgreater{}   ..$ design       : chr "FCTRL"}
-\CommentTok{\#\textgreater{}   ..$ modalityID   : Named chr [1:2] "0" "1"}
-\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:2] "0" "1"}
-\CommentTok{\#\textgreater{}   ..$ readerID     : Named chr [1:3] "0" "1" "2"}
-\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:3] "0" "1" "2"}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  This follows the general description in \textbf{TBA chapter xx}. The differences are described below.
-\item
-  The \texttt{x\$dataType} member indicates that this is an \texttt{FROC} dataset.
-\item
-  The \texttt{x\$lesionVector} member is a vector whose contents reflect the number of lesions in each diseased case, i.e., in the current example.
-\item
-  The \texttt{x\$lesionID} member indicates the labeling of the lesions in each diseased case.
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{x}\OperatorTok{$}\NormalTok{lesionID}
-\CommentTok{\#\textgreater{} NULL}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  This shows that the lesions on the first diseased case are labeled 1 and 2. The \texttt{-Inf} is a filler used to denote a missing value. The second diseased case has one lesion labeled 1. The third diseased case has three lesions labeled 1, 2 and 3, etc.
-\item
-  The \texttt{lesionWeight} member is the clinical importance of each lesion. Lacking specific clinical reasons, the lesions should be equally weighted; this is \emph{not} true for this toy dataset.
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{x}\OperatorTok{$}\NormalTok{lesionWeight}
-\CommentTok{\#\textgreater{} NULL}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  The first diseased case has two lesions, the first has weight 0.3 and the second has weight 0.7. The second diseased case has one lesion with weight 1.The third diseased case has three equally weighted lesions, each with weight 1/3. Etc.
-\end{itemize}
-
-\hypertarget{the-false-positive-fp-ratings}{%
-\section{The false positive (FP) ratings}\label{the-false-positive-fp-ratings}}
-
-These are found in the \texttt{FP} or \texttt{NL} worksheet, see below.
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocCrNL} 
-
-}
-
-\caption{Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:frocCrNL}
-\end{figure}
-
-\begin{itemize}
-\tightlist
-\item
-  It consists of 4 columns, of equal length. \textbf{The common length is unpredictable.} It could be zero if the dataset has no NL marks (a distinct possibility if the lesions are very easy to find and the modality and/or observer has high performance). All one knows is that the common length is an integer greater than or equal to zero.
-\item
-  In the example dataset, the common length is 0.
-\item
-  \texttt{ReaderID}: the reader labels: these must be \texttt{0}, \texttt{1}, or \texttt{2}, as declared in the \texttt{Truth} worksheet.
-\item
-  \texttt{ModalityID}: the modality labels: must be \texttt{0} or \texttt{1}, as declared in the \texttt{Truth} worksheet.
-\item
-  \texttt{CaseID}: the labels of cases with \texttt{NL} marks. In the FROC paradigm, \texttt{NL} events can occur on non-diseased \textbf{and} diseased cases.
-\item
-  \texttt{FP\_Rating}: the floating point ratings of \texttt{NL} marks. Each row of this worksheet yields a rating corresponding to the values of \texttt{ReaderID}, \texttt{ModalityID} and \texttt{CaseID} for that row.
-\item
-  For \texttt{ModalityID} 0, \texttt{ReaderID} 0 and \texttt{CaseID} 1 (the first non-diseased case declared in the \texttt{Truth} worksheet), there is a single \texttt{NL} mark that was rated , corresponding to row 2 of the \texttt{FP} worksheet.
-\item
-  Diseased cases with \texttt{NL} marks are also declared in the \texttt{FP} worksheet. Some examples are seen at rows 15, 16 and 21-23 of the \texttt{FP} worksheet.
-\item
-  Rows 21 and 22 show that \texttt{caseID} = 71 got two \texttt{NL} marks, rated .
-\item
-  That this is the \emph{only} case with two marks determines the length of the fourth dimension of the \texttt{x\$NL} list member, 0 in the current example. Absent this case, the length would have been one.
-\item
-  In general, the case with the most \texttt{NL} marks determines the length of the fourth dimension of the \texttt{x\$NL} list member.
-\item
-  The reader should convince oneself that the ratings in \texttt{x\$NL} reflect the contents of the \texttt{FP} worksheet.
-\end{itemize}
-
-\hypertarget{the-true-positive-tp-ratings}{%
-\section{The true positive (TP) ratings}\label{the-true-positive-tp-ratings}}
-
-These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocCrLL} 
-
-}
-
-\caption{Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:frocCrLL}
-\end{figure}
-
-\begin{itemize}
-\tightlist
-\item
-  This worksheet can only have diseased cases. The presence of a non-diseased case in this worksheet will generate an error.
-\item
-  The common vertical length, 31 in this example, is a-priori unpredictable. Given the structure of the \texttt{Truth} worsheet for this dataset, the maximum length would be 9 times 2 times 3, assuming every lesion is marked for each modality, reader and diseased case. The 9 comes from the total number of non-zero entries in the \texttt{LesionID} column of the \texttt{Truth} worksheet.
-\item
-  The fact that the length is smaller than the maximum length means that there are combinations of modality, reader and diseased cases on which some lesions were not marked.
-\item
-  As an example, the first lesion in \texttt{CaseID} equal to \texttt{70} was marked (and rated ) in \texttt{ModalityID} \texttt{0} and \texttt{ReaderID} \texttt{0}.
-\item
-  The length of the fourth dimension of the \texttt{x\$LL} list member, 0 in the present example, is determined by the diseased case with the most lesions in the \texttt{Truth} worksheet.
-\item
-  The reader should convince oneself that the ratings in \texttt{x\$LL} reflect the contents of the \texttt{TP} worksheet.
-\end{itemize}
-
-\hypertarget{on-the-distribution-of-numbers-of-lesions-in-abnormal-cases}{%
-\section{On the distribution of numbers of lesions in abnormal cases}\label{on-the-distribution-of-numbers-of-lesions-in-abnormal-cases}}
-
-\begin{itemize}
-\tightlist
-\item
-  Consider a much larger dataset, \texttt{dataset11}, with structure as shown below:
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{x \textless{}{-}}\StringTok{ }\NormalTok{dataset11}
-\KeywordTok{str}\NormalTok{(x)}
-\CommentTok{\#\textgreater{} List of 3}
-\CommentTok{\#\textgreater{}  $ ratings     :List of 3}
-\CommentTok{\#\textgreater{}   ..$ NL   : num [1:4, 1:5, 1:158, 1:4] {-}Inf {-}Inf {-}Inf {-}Inf {-}Inf ...}
-\CommentTok{\#\textgreater{}   ..$ LL   : num [1:4, 1:5, 1:115, 1:20] {-}Inf {-}Inf {-}Inf {-}Inf {-}Inf ...}
-\CommentTok{\#\textgreater{}   ..$ LL\_IL: logi NA}
-\CommentTok{\#\textgreater{}  $ lesions     :List of 3}
-\CommentTok{\#\textgreater{}   ..$ perCase: int [1:115] 6 4 7 1 3 3 3 8 11 2 ...}
-\CommentTok{\#\textgreater{}   ..$ IDs    : num [1:115, 1:20] 1 1 1 1 1 1 1 1 1 1 ...}
-\CommentTok{\#\textgreater{}   ..$ weights: num [1:115, 1:20] 0.167 0.25 0.143 1 0.333 ...}
-\CommentTok{\#\textgreater{}  $ descriptions:List of 7}
-\CommentTok{\#\textgreater{}   ..$ fileName     : chr "dataset11"}
-\CommentTok{\#\textgreater{}   ..$ type         : chr "FROC"}
-\CommentTok{\#\textgreater{}   ..$ name         : chr "DOBBINS{-}1"}
-\CommentTok{\#\textgreater{}   ..$ truthTableStr: num [1:4, 1:5, 1:158, 1:21] 1 1 1 1 1 1 1 1 1 1 ...}
-\CommentTok{\#\textgreater{}   ..$ design       : chr "FCTRL"}
-\CommentTok{\#\textgreater{}   ..$ modalityID   : Named chr [1:4] "1" "2" "3" "4"}
-\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:4] "1" "2" "3" "4"}
-\CommentTok{\#\textgreater{}   ..$ readerID     : Named chr [1:5] "1" "2" "3" "4" ...}
-\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:5] "1" "2" "3" "4" ...}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  Focus for now in the 115 abnormal cases.
-\item
-  The numbers of lesions in these cases is contained in \texttt{x\$lesionVector}.
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{x}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{perCase}
-\CommentTok{\#\textgreater{}   [1]  6  4  7  1  3  3  3  8 11  2  4  6  2 16  5  2  8  3  4  7 11  1  4  3  4}
-\CommentTok{\#\textgreater{}  [26]  4  7  3  2  5  2  2  7  6  6  4 10 20 12  6  4  7 12  5  1  1  5  1  2  8}
-\CommentTok{\#\textgreater{}  [51]  3  1  2  2  3  2  8 16 10  1  2  2  6  3  2  2  4  6 10 11  1  2  6  2  4}
-\CommentTok{\#\textgreater{}  [76]  5  2  9  6  6  8  3  8  7  1  1  6  3  2  1  9  8  8  2  2 12  1  1  1  1}
-\CommentTok{\#\textgreater{} [101]  1  3  1  2  2  1  1  1  1  3  1  1  1  2  1}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  For example, the first abnormal case contains 6 lesions, the second contains 4 lesions, the third contains 7 lesions, etc. and the last abnormal case contains 1 lesion.
-\item
-  To get an idea of the distribution of the numbers of lesions per abnormal cases, one could interrogate this vector as shown below using the \texttt{which()} function:
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ControlFlowTok{for}\NormalTok{ (el }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{max}\NormalTok{(x}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{perCase)) }\KeywordTok{cat}\NormalTok{(}
-  \StringTok{"abnormal cases with"}\NormalTok{, el, }\StringTok{"lesions = "}\NormalTok{, }
-  \KeywordTok{length}\NormalTok{(}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{lesionVector }\OperatorTok{==}\StringTok{ }\NormalTok{el)), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} abnormal cases with 1 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 2 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 3 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 4 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 5 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 6 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 7 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 8 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 9 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 10 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 11 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 12 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 13 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 14 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 15 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 16 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 17 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 18 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 19 lesions =  0 }
-\CommentTok{\#\textgreater{} abnormal cases with 20 lesions =  0}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  This tells us that 25 cases contain 1 lesion
-\item
-  Likewise, 23 cases contain 2 lesions
-\item
-  Etc.
-\end{itemize}
-
-\hypertarget{definition-of-lesdistr-array}{%
-\subsection{\texorpdfstring{Definition of \texttt{lesDistr} array}{Definition of lesDistr array}}\label{definition-of-lesdistr-array}}
-
-\begin{itemize}
-\tightlist
-\item
-  Let us ask what is the fraction of (abnormal) cases with 1 lesion, 2 lesions etc.
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ControlFlowTok{for}\NormalTok{ (el }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{max}\NormalTok{(x}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{perCase)) }\KeywordTok{cat}\NormalTok{(}\StringTok{"fraction of abnormal cases with"}\NormalTok{, el, }\StringTok{"lesions = "}\NormalTok{, }
-                                              \KeywordTok{length}\NormalTok{(}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{perCase }\OperatorTok{==}\StringTok{ }\NormalTok{el))}\OperatorTok{/}\KeywordTok{length}\NormalTok{(x}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{LL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{]), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 1 lesions =  0.2173913 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 2 lesions =  0.2 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 3 lesions =  0.1130435 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 4 lesions =  0.08695652 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 5 lesions =  0.04347826 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 6 lesions =  0.09565217 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 7 lesions =  0.05217391 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 8 lesions =  0.06956522 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 9 lesions =  0.0173913 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 10 lesions =  0.02608696 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 11 lesions =  0.02608696 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 12 lesions =  0.02608696 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 13 lesions =  0 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 14 lesions =  0 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 15 lesions =  0 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 16 lesions =  0.0173913 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 17 lesions =  0 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 18 lesions =  0 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 19 lesions =  0 }
-\CommentTok{\#\textgreater{} fraction of abnormal cases with 20 lesions =  0.008695652}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  This tells us that fraction 0.217 of (abnormal) cases contain 1 lesion
-\item
-  And fraction 0.2 of (abnormal) cases contain 2 lesions
-\item
-  Etc.
-\item
-  This information is contained the the \texttt{lesDistr} array
-\item
-  It is coded in the \texttt{Utility} function \texttt{UtilLesionDistr()}
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{lesDistr \textless{}{-}}\StringTok{ }\KeywordTok{UtilLesionDistr}\NormalTok{(x)}
-\NormalTok{lesDistr}
-\CommentTok{\#\textgreater{}       [,1]        [,2]}
-\CommentTok{\#\textgreater{}  [1,]    1 0.217391304}
-\CommentTok{\#\textgreater{}  [2,]    2 0.200000000}
-\CommentTok{\#\textgreater{}  [3,]    3 0.113043478}
-\CommentTok{\#\textgreater{}  [4,]    4 0.086956522}
-\CommentTok{\#\textgreater{}  [5,]    5 0.043478261}
-\CommentTok{\#\textgreater{}  [6,]    6 0.095652174}
-\CommentTok{\#\textgreater{}  [7,]    7 0.052173913}
-\CommentTok{\#\textgreater{}  [8,]    8 0.069565217}
-\CommentTok{\#\textgreater{}  [9,]    9 0.017391304}
-\CommentTok{\#\textgreater{} [10,]   10 0.026086957}
-\CommentTok{\#\textgreater{} [11,]   11 0.026086957}
-\CommentTok{\#\textgreater{} [12,]   12 0.026086957}
-\CommentTok{\#\textgreater{} [13,]   16 0.017391304}
-\CommentTok{\#\textgreater{} [14,]   20 0.008695652}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  The \texttt{UtilLesionDistr()} function returns an array with two columns and number of rows equal to the number of distinct values of lesions per case.
-\item
-  The first column contains the number of distinct values of lesions per case, 14 in the current example.
-\item
-  The second column contains the fraction of diseased cases with the number of lesions indicated in the first column.
-\item
-  The second column must sum to unity
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{sum}\NormalTok{(}\KeywordTok{UtilLesionDistr}\NormalTok{(x)[,}\DecValTok{2}\NormalTok{])}
-\CommentTok{\#\textgreater{} [1] 1}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  The lesion distribution array will come in handy when it comes to predicting the operating characteristics from using the Radiological Search Model (RSM), as detailed in Chapter 17 of my book.
-\end{itemize}
-
-\hypertarget{definition-of-leswghtdistr-array}{%
-\section{\texorpdfstring{Definition of \texttt{lesWghtDistr} array}{Definition of lesWghtDistr array}}\label{definition-of-leswghtdistr-array}}
-
-\begin{itemize}
-\tightlist
-\item
-  This is returned by \texttt{UtilLesionWeightsDistr()}.
-\item
-  This contains the same number of rows as \texttt{lesDistr}.
-\item
-  The number of columns is one plus the number of rows as \texttt{lesDistr}.
-\item
-  The first column contains the number of distinct values of lesions per case, 14 in the current example.
-\item
-  The second column contains the weights of cases with number of lesions per case corresponding to row 1.
-\item
-  The third column contains the weights of cases with number of lesions per case corresponding to row 2.
-\item
-  Etc.
-\item
-  Missing values are filled with \texttt{-Inf}.
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{lesWghtDistr \textless{}{-}}\StringTok{ }\KeywordTok{UtilLesionWeightsDistr}\NormalTok{(x)}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"dim(lesDistr) ="}\NormalTok{, }\KeywordTok{dim}\NormalTok{(lesDistr),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} dim(lesDistr) = 14 2}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"dim(lesWghtDistr) ="}\NormalTok{, }\KeywordTok{dim}\NormalTok{(lesWghtDistr),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} dim(lesWghtDistr) = 14 21}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"lesWghtDistr = }\CharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} lesWghtDistr =}
-\NormalTok{lesWghtDistr}
-\CommentTok{\#\textgreater{}       [,1]       [,2]       [,3]       [,4]       [,5]       [,6]       [,7]}
-\CommentTok{\#\textgreater{}  [1,]    1 1.00000000       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf}
-\CommentTok{\#\textgreater{}  [2,]    2 0.50000000 0.50000000       {-}Inf       {-}Inf       {-}Inf       {-}Inf}
-\CommentTok{\#\textgreater{}  [3,]    3 0.33333333 0.33333333 0.33333333       {-}Inf       {-}Inf       {-}Inf}
-\CommentTok{\#\textgreater{}  [4,]    4 0.25000000 0.25000000 0.25000000 0.25000000       {-}Inf       {-}Inf}
-\CommentTok{\#\textgreater{}  [5,]    5 0.20000000 0.20000000 0.20000000 0.20000000 0.20000000       {-}Inf}
-\CommentTok{\#\textgreater{}  [6,]    6 0.16666667 0.16666667 0.16666667 0.16666667 0.16666667 0.16666667}
-\CommentTok{\#\textgreater{}  [7,]    7 0.14285714 0.14285714 0.14285714 0.14285714 0.14285714 0.14285714}
-\CommentTok{\#\textgreater{}  [8,]    8 0.12500000 0.12500000 0.12500000 0.12500000 0.12500000 0.12500000}
-\CommentTok{\#\textgreater{}  [9,]    9 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111}
-\CommentTok{\#\textgreater{} [10,]   10 0.10000000 0.10000000 0.10000000 0.10000000 0.10000000 0.10000000}
-\CommentTok{\#\textgreater{} [11,]   11 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909}
-\CommentTok{\#\textgreater{} [12,]   12 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333}
-\CommentTok{\#\textgreater{} [13,]   16 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000}
-\CommentTok{\#\textgreater{} [14,]   20 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000}
-\CommentTok{\#\textgreater{}             [,8]       [,9]      [,10]      [,11]      [,12]      [,13]  [,14]}
-\CommentTok{\#\textgreater{}  [1,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{}  [2,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{}  [3,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{}  [4,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{}  [5,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{}  [6,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{}  [7,] 0.14285714       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{}  [8,] 0.12500000 0.12500000       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{}  [9,] 0.11111111 0.11111111 0.11111111       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{} [10,] 0.10000000 0.10000000 0.10000000 0.10000000       {-}Inf       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{} [11,] 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909       {-}Inf   {-}Inf}
-\CommentTok{\#\textgreater{} [12,] 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333   {-}Inf}
-\CommentTok{\#\textgreater{} [13,] 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.0625}
-\CommentTok{\#\textgreater{} [14,] 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.0500}
-\CommentTok{\#\textgreater{}        [,15]  [,16]  [,17] [,18] [,19] [,20] [,21]}
-\CommentTok{\#\textgreater{}  [1,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{}  [2,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{}  [3,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{}  [4,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{}  [5,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{}  [6,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{}  [7,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{}  [8,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{}  [9,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{} [10,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{} [11,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{} [12,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{} [13,] 0.0625 0.0625 0.0625  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
-\CommentTok{\#\textgreater{} [14,] 0.0500 0.0500 0.0500  0.05  0.05  0.05  0.05}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{itemize}
-\tightlist
-\item
-  Row 3 corresponds to 3 lesions per case and the weights are 1/3, 1/3 and 1/3.
-\item
-  Row 13 corresponds to 16 lesions per case and the weights are 0.06250000, 0.06250000, \ldots, repeated 13 times.
-\item
-  Note that the number of rows is less than the maximum number of lesions per case (20).
-\item
-  This is because some configurations of lesions per case (e.g., cases with 13 lesions per case) do not occur in this dataset.
-\end{itemize}
-
-\hypertarget{frocdataformat-Summary}{%
-\section{Summary}\label{frocdataformat-Summary}}
-
-\begin{itemize}
-\tightlist
-\item
-  The FROC dataset has far less regularity in structure as compared to an ROC dataset.
-\item
-  The length of the first dimension of either \texttt{x\$NL} or \texttt{x\$LL} list members is the total number of modalities, 2 in the current example.
-\item
-  The length of the second dimension of either \texttt{x\$NL} or \texttt{x\$LL} list members is the total number of readers, 3 in the current example.
-\item
-  The length of the third dimension of \texttt{x\$NL} is the total number of cases, 8 in the current example. The first three positions account for \texttt{NL} marks on non-diseased cases and the remaining 5 positions account for \texttt{NL} marks on diseased cases.
-\item
-  The length of the third dimension of \texttt{x\$LL} is the total number of diseased cases, 5 in the current example.
-\item
-  The length of the fourth dimension of \texttt{x\$NL} is determined by the case (diseased or non-diseased) with the most \texttt{NL} marks, 2 in the current example.
-\item
-  The length of the fourth dimension of \texttt{x\$LL} is determined by the diseased case with the most lesions, 3 in the current example.
-\end{itemize}
-
-\hypertarget{frocdataformat-Discussion}{%
-\section{Discussion}\label{frocdataformat-Discussion}}
-
-\hypertarget{frocdataformat-references}{%
-\section{References}\label{frocdataformat-references}}
-
 \hypertarget{binaryTask0}{%
 \chapter{The Binary Task}\label{binaryTask0}}
 
@@ -2554,7 +1661,7 @@ For electrical signals, SNR can be measured with instruments but, in the context
 \item
   A \((1-\alpha)\) confidence interval (CI) of a statistic is the range that is expected to contain the true value of the statistic with probability \((1-\alpha)\).
 \item
-  It should be clear that a 99percent CI is wider than a 95 percent CI, and a 90percentCI is narrower; in general, the higher the confidence that the interval contains the true value, the wider the range of the CI.
+  It should be clear that a 99 percent CI is wider than a 95 percent CI, and a 90percentCI is narrower; in general, the higher the confidence that the interval contains the true value, the wider the range of the CI.
 \item
   Calculation of a parametric confidence interval requires a distributional assumption (non-parametric estimation methods, which use resampling methods, are described later). With a distributional assumption, the method being described now, the parameters of the distribution can be estimated, and since the distribution accounts for variability, the needed confidence interval estimate follows.
 \item
@@ -2628,9 +1735,11 @@ In Eqn. \eqref{eq:binaryTask-CI-FPF}, \(z_{\alpha/2}\) is the upper \(\alpha/2\)
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{alpha \textless{}{-}}\StringTok{ }\FloatTok{0.05}
-\KeywordTok{qnorm}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{) }\CommentTok{\# this is z\_\{\textbackslash{}alpha/2\}, the upper \textbackslash{}alpha/2 quantile}
+\CommentTok{\# this is z\_\{\textbackslash{}alpha/2\}, the upper \textbackslash{}alpha/2 quantile}
+\KeywordTok{qnorm}\NormalTok{(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{) }
 \CommentTok{\#\textgreater{} [1] 1.96}
-\KeywordTok{qnorm}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{)   }\CommentTok{\# this is \textbackslash{}Phi\^{}\{{-}1\}(\textbackslash{}alpha/2), the lower \textbackslash{}alpha/2 quantile}
+\CommentTok{\# this is \textbackslash{}Phi\^{}\{{-}1\}(\textbackslash{}alpha/2), the lower \textbackslash{}alpha/2 quantile}
+\KeywordTok{qnorm}\NormalTok{(alpha}\OperatorTok{/}\DecValTok{2}\NormalTok{)   }
 \CommentTok{\#\textgreater{} [1] {-}1.96}
 \end{Highlighting}
 \end{Shaded}
@@ -5875,7 +4984,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.2259505          1   0.26819602}
+\CommentTok{\#\textgreater{} 1    1.4003645          1   0.23666254}
 \end{Highlighting}
 \end{Shaded}
 
@@ -8702,6 +7811,907 @@ R(T) is read as ``reader nested within treatment'' \citep{RN2508}.
 
 \hypertarget{SplitPlotChapter-references}{%
 \section{References}\label{SplitPlotChapter-references}}
+
+\hypertarget{part-appendices}{%
+\part*{APPENDICES}\label{part-appendices}}
+\addcontentsline{toc}{part}{APPENDICES}
+
+\hypertarget{appendix-appendix}{%
+\appendix}
+
+
+\hypertarget{rocdataformat}{%
+\chapter{ROC DATA FORMAT}\label{rocdataformat}}
+
+\hypertarget{rocdataformatIntro}{%
+\section{Introduction}\label{rocdataformatIntro}}
+
+\begin{itemize}
+\tightlist
+\item
+  The purpose of this chapter is to explain the data format of the input Excel file and to introduce the capabilities of the function \texttt{DfReadDataFile()}. Background on observer performance methods are in my book \citep{RN2680}.
+\item
+  I will start with Receiver Operating Characteristic (ROC) data \citep{RN1766}, as this is by far the simplest paradigm.
+\item
+  In the ROC paradigm the observer assigns a rating to each image. A rating is an ordered numeric label, and, in our convention, higher values represent greater certainty or \textbf{confidence level} for presence of disease. With human observers, a 5 (or 6) point rating scale is typically used, with 1 representing highest confidence for \emph{absence} of disease and 5 (or 6) representing highest confidence for \emph{presence} of disease. Intermediate values represent intermediate confidence levels for presence or absence of disease.
+\item
+  Note that location information associated with the disease, if applicable, is not collected.
+\item
+  There is no restriction to 5 or 6 ratings. With algorithmic observers, e.g., computer aided detection (CAD) algorithms, the rating could be a floating point number and have infinite precision. All that is required is that higher values correspond to greater confidence in presence of disease.
+\end{itemize}
+
+\hypertarget{note-to-existing-users}{%
+\section{Note to existing users}\label{note-to-existing-users}}
+
+\begin{itemize}
+\tightlist
+\item
+  The Excel file format has recently undergone changes resulting in 4 extra \texttt{list} members in the final created \texttt{dataset} object (i.e., 12 members instead of 8).
+\item
+  Code should run on the old format Excel files as the 4 extra list members are simply ignored.
+\item
+  Reasons for the change will become clearer in these chapters.
+\item
+  Basically they are needed for generalization to other data collection paradigms instead of crossed, for example to the split-plot data acquisition paradigm, and for better data entry error control.
+\end{itemize}
+
+\hypertarget{rocExceldataformat}{%
+\section{The Excel data format}\label{rocExceldataformat}}
+
+\begin{itemize}
+\tightlist
+\item
+  The Excel file has three worksheets.
+\item
+  These are named
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{Truth},
+  \item
+    \texttt{NL} (or \texttt{FP}),
+  \item
+    \texttt{LL} (or \texttt{TP}).
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{illustrative-toy-file}{%
+\section{Illustrative toy file}\label{illustrative-toy-file}}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Toy files} are artificial small datasets intended to illustrate essential features of the data format.\\
+\item
+  The examples shown in this chapter corresponds to Excel file \texttt{inst/extdata/toyFiles/ROC/rocCr.xlsx} in the project directory.
+\item
+  To view these files one needs to \texttt{clone} the source files from \texttt{GitHub}.
+\end{itemize}
+
+\hypertarget{rocExcelTruthdataformat}{%
+\section{\texorpdfstring{The \texttt{Truth} worksheet}{The Truth worksheet}}\label{rocExcelTruthdataformat}}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{Truth} worksheet contains 6 columns: \texttt{CaseID}, \texttt{LesionID}, \texttt{Weight}, \texttt{ReaderID}, \texttt{ModalityID} and \texttt{Paradigm}.
+\item
+  For ROC data the first five columns contain as many rows as there are cases (images) in the dataset.
+\item
+  \texttt{CaseID}: unique integers, one per case, representing the cases in the dataset.
+\item
+  \texttt{LesionID}: integers 0 or 1, with each 0 representing a non-diseased case and each 1 representing a diseased case.
+\item
+  In the current toy dataset, the non-diseased cases are labeled \texttt{1}, \texttt{2} and \texttt{3}, while the diseased cases are labeled \texttt{70}, \texttt{71}, \texttt{72}, \texttt{73} and \texttt{74}. The values do not have to be consecutive integers; they need not be ordered; the only requirement is that they be \textbf{unique}.
+\item
+  \texttt{Weight}: Not used for ROC data, a floating point value, typically filled in with 0 or 1.
+\item
+  \texttt{ReaderID}: a \textbf{comma-separated} listing of reader labels, each represented by a \textbf{unique string}, that have interpreted the case. In the example shown below each cell has the value \texttt{0,\ 1,\ 2,\ 3,\ 4} meaning that each of the readers, represented by the strings ``0'', ``1'', ``2'', ``3'' and ``4'', have interpreted all cases (hence the ``crossed'' design). \textbf{With reader names that could be confused with integers, each cell in this column has to be text formatted as otherwise Excel will not accept it.} {[}Try entering \texttt{0,\ 1,\ 2,\ 3,\ 4} in a numeric formatted Excel cell.{]}
+\item
+  The reader names could just as well have been \texttt{Rdr0,\ Rdr1,\ Rdr2,\ Rdr3,\ Rdr4}. The only requirement is that they be unique strings.
+\item
+  Look in in the \texttt{inst/extdata/toyFiles/ROC} directory for files \texttt{rocCrStrRdrsTrts.xlsx} and \texttt{rocCrStrRdrsNonUnique.xlsx} for examples of data files using longer strings for readers. The second file generates an error because the reader names are not unique.
+\item
+  \texttt{ModalityID}: a comma-separated listing of modalities (one or more modalities), each represented by a \textbf{unique string}, that are applied to each case. In the example each cell has the value \texttt{"0",\ "1"}. \textbf{With treatment names that could be confused with integers, each cell has to be text formatted as otherwise Excel will not accept it.}
+\item
+  The treatment names could just as well have been \texttt{Trt0,\ Trt1}. Again, the only requirement is that they be unique strings.
+\item
+  \texttt{Paradigm}: this column contains two cells, \texttt{ROC} and \texttt{crossed}. It informs the software that this is an ROC dataset, and the design is crossed, meaning each reader has interpreted each case in each modality (in statistical terminology: modality and reader factors are ``crossed'').
+\item
+  There are 5 diseased cases in the dataset (the number of 1's in the \texttt{LesionID} column of the \texttt{Truth} worksheet).
+\item
+  There are 3 non-diseased cases in the dataset (the number of 0's in the \texttt{LesionID} column).
+\item
+  There are 5 readers in the dataset (each cell in the \texttt{ReaderID} column contains the string \texttt{0,\ 1,\ 2,\ 3,\ 4}).
+\item
+  There are 2 modalities in the dataset (each cell in the \texttt{ModalityID} column contains the string \texttt{0,\ 1}).
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocCrTruth} 
+
+}
+
+\caption{Truth worksheet for file rocCr.xlsx}\label{fig:showRocCrTruthSheet}
+\end{figure}
+
+\hypertarget{the-structure-of-an-roc-dataset}{%
+\section{The structure of an ROC dataset}\label{the-structure-of-an-roc-dataset}}
+
+In the following code chunk the first statement retrieves the name of the data file, located in a hidden directory that one need not be concerned with. The second statement reads the file using the function \texttt{DfReadDataFile()} and saves it to object \texttt{x}. The third statement shows the structure of the dataset object \texttt{x}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rocCr \textless{}{-}}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\StringTok{"extdata"}\NormalTok{, }\StringTok{"toyFiles/ROC/rocCr.xlsx"}\NormalTok{,}
+                        \DataTypeTok{package =} \StringTok{"RJafroc"}\NormalTok{, }\DataTypeTok{mustWork =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(rocCr, }\DataTypeTok{newExcelFileFormat =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(x)}
+\CommentTok{\#\textgreater{} List of 3}
+\CommentTok{\#\textgreater{}  $ ratings     :List of 3}
+\CommentTok{\#\textgreater{}   ..$ NL   : num [1:2, 1:5, 1:8, 1] 1 3 2 3 2 2 1 2 3 2 ...}
+\CommentTok{\#\textgreater{}   ..$ LL   : num [1:2, 1:5, 1:5, 1] 5 5 5 5 5 5 5 5 5 5 ...}
+\CommentTok{\#\textgreater{}   ..$ LL\_IL: logi NA}
+\CommentTok{\#\textgreater{}  $ lesions     :List of 3}
+\CommentTok{\#\textgreater{}   ..$ perCase: int [1:5] 1 1 1 1 1}
+\CommentTok{\#\textgreater{}   ..$ IDs    : num [1:5, 1] 1 1 1 1 1}
+\CommentTok{\#\textgreater{}   ..$ weights: num [1:5, 1] 1 1 1 1 1}
+\CommentTok{\#\textgreater{}  $ descriptions:List of 7}
+\CommentTok{\#\textgreater{}   ..$ fileName     : chr "rocCr"}
+\CommentTok{\#\textgreater{}   ..$ type         : chr "ROC"}
+\CommentTok{\#\textgreater{}   ..$ name         : logi NA}
+\CommentTok{\#\textgreater{}   ..$ truthTableStr: num [1:2, 1:5, 1:8, 1:2] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{\#\textgreater{}   ..$ design       : chr "FCTRL"}
+\CommentTok{\#\textgreater{}   ..$ modalityID   : Named chr [1:2] "0" "1"}
+\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:2] "0" "1"}
+\CommentTok{\#\textgreater{}   ..$ readerID     : Named chr [1:5] "0" "1" "2" "3" ...}
+\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:5] "0" "1" "2" "3" ...}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  In the above code chunk flag \texttt{newExcelFileFormat} is set to \texttt{TRUE} as otherwise columns D - F in the \texttt{Truth} worksheet are ignored and the dataset is assumed to be crossed, with \texttt{dataType} automatically determined from the contents of the FP and TP worksheets.
+\item
+  Flag \texttt{newExcelFileFormat\ =\ FALSE} is for compatibility with older JAFROC format Excel files, which did not have these columns in the \texttt{Truth} worksheet. Its usage is deprecated.
+\item
+  The dataset object \texttt{x} is a \texttt{list} variable with 3 members.
+\item
+  The \texttt{x\$NL} member, with dimension {[}2, 5, 8, 1{]}, contains the ratings of normal cases. The extra values in the third dimension, filled with \texttt{NAs}, are needed for compatibility with FROC datasets, as unlike ROC, false positives are possible on diseased cases.
+\item
+  The \texttt{x\$LL}, with dimension {[}2, 5, 5, 1{]}, contains the ratings of abnormal cases.
+\item
+  The \texttt{x\$lesionVector} member is a vector with 5 ones representing the 5 diseased cases in the dataset.
+\item
+  The \texttt{x\$lesionID} member is an array with 5 ones.
+\item
+  The \texttt{x\$lesionWeight} member is an array with 5 ones.
+\item
+  The \texttt{lesionVector}, \texttt{lesionID} and \texttt{lesionWeight} members are not used for ROC datasets. They are there for compatibility with FROC datasets.
+\item
+  The \texttt{dataType} member indicates that this is an \texttt{ROC} dataset.
+\item
+  The \texttt{x\$modalityID} member is a vector with two elements \texttt{"0"} and \texttt{"1"}, naming the two modalities.
+\item
+  The \texttt{x\$readerID} member is a vector with five elements \texttt{"0"}, \texttt{"1"}, \texttt{"2"}, \texttt{"3"} and \texttt{"4"}, naming the five readers.
+\item
+  The \texttt{x\$design} member is ; specifies the dataset design, which is ``CROSSED''.
+\item
+  The \texttt{x\$normalCases} member lists the integer names of the normal cases, .
+\item
+  The \texttt{x\$abnormalCases} member lists the integer names of the abnormal cases, .
+\item
+  The \texttt{x\$truthTableStr} member quantifies the structure of the dataset, as explained in prior chapters.
+\end{itemize}
+
+\hypertarget{rocExcelFPdataformat}{%
+\section{The false positive (FP) ratings}\label{rocExcelFPdataformat}}
+
+These are found in the \texttt{FP} or \texttt{NL} worksheet, see below.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocCrFp} 
+
+}
+
+\caption{FP worksheet for file rocCr.xlsx}\label{fig:showRocCrFpSheet}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  It consists of 4 columns, each of length 30 (= \# of modalities times number of readers times number of non-diseased cases).
+\item
+  \texttt{ReaderID}: the reader labels: \texttt{0}, \texttt{1}, \texttt{2}, \texttt{3} and \texttt{4}. Each reader label occurs 6 times (= \# of modalities times number of non-diseased cases).
+\item
+  \texttt{ModalityID}: the modality or treatment labels: \texttt{0} and \texttt{1}. Each label occurs 15 times (= \# of readers times number of non-diseased cases).
+\item
+  \texttt{CaseID}: the case labels for non-diseased cases: \texttt{1}, \texttt{2} and \texttt{3}. Each label occurs 10 times (= \# of modalities times \# of readers).
+\item
+  The label of a diseased case cannot occur in the FP worksheet. If it does the software generates an error.
+\item
+  \texttt{FP\_Rating}: the floating point ratings of non-diseased cases. Each row of this worksheet contains a rating corresponding to the values of \texttt{ReaderID}, \texttt{ModalityID} and \texttt{CaseID} for that row.
+\end{itemize}
+
+\hypertarget{rocExcelTPdataformat}{%
+\section{The true positive (TP) ratings}\label{rocExcelTPdataformat}}
+
+These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocCrTp} 
+
+}
+
+\caption{TP worksheet for file rocCr.xlsx}\label{fig:showRocCrTpSheet}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  It consists of 5 columns, each of length 50 (= \# of modalities times number of readers times number of diseased cases).
+\item
+  \texttt{ReaderID}: the reader labels: \texttt{0}, \texttt{1}, \texttt{2}, \texttt{3} and \texttt{4}. Each reader label occurs 10 times (= \# of modalities times number of diseased cases).
+\item
+  \texttt{ModalityID}: the modality or treatment labels: \texttt{0} and \texttt{1}. Each label occurs 25 times (= \# of readers times number of diseased cases).
+\item
+  \texttt{LesionID}: For an ROC dataset this column contains fifty 1's (each diseased case has one lesion).
+\item
+  \texttt{CaseID}: the case labels for non-diseased cases: \texttt{70}, \texttt{71}, \texttt{72}, \texttt{73} and \texttt{74}. Each label occurs 10 times (= \# of modalities times \# of readers). The label of a non-diseased case cannot occur in the TP worksheet.
+\item
+  \texttt{TP\_Rating}: the floating point ratings of diseased cases. Each row of this worksheet contains a rating corresponding to the values of \texttt{ReaderID}, \texttt{ModalityID}, \texttt{LesionID} and \texttt{CaseID} for that row.
+\end{itemize}
+
+\hypertarget{correspondence-between-nl-member-of-dataset-and-the-fp-worksheet}{%
+\section{\texorpdfstring{Correspondence between \texttt{NL} member of dataset and the \texttt{FP} worksheet}{Correspondence between NL member of dataset and the FP worksheet}}\label{correspondence-between-nl-member-of-dataset-and-the-fp-worksheet}}
+
+\begin{itemize}
+\tightlist
+\item
+  The list member \texttt{x\$NL} is an array with \texttt{dim\ =\ c(2,5,8,1)}.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The first dimension (2) comes from the number of modalities.
+  \item
+    The second dimension (5) comes from the number of readers.
+  \item
+    The third dimension (8) comes from the \textbf{total} number of cases.
+  \item
+    The fourth dimension is alway 1 for an ROC dataset.
+  \end{itemize}
+\item
+  The value of \texttt{x\$NL{[}1,5,2,1{]}}, i.e., , corresponds to row 15 of the FP table, i.e., to \texttt{ModalityID} = 0, \texttt{ReaderID} = 4 and \texttt{CaseID} = 2.
+\item
+  The value of \texttt{x\$NL{[}2,3,2,1{]}}, i.e., , corresponds to row 24 of the FP table, i.e., to \texttt{ModalityID} 1, \texttt{ReaderID} 2 and \texttt{CaseID} 2.
+\item
+  All values for case index \textgreater{} 3 are \texttt{-Inf}. For example the value of \texttt{x\$NL{[}2,3,4,1{]}} is \texttt{-Inf}. This is because there are only 3 non-diseased cases. The extra length is needed for compatibility with FROC datasets.
+\end{itemize}
+
+\hypertarget{correspondence-between-ll-member-of-dataset-and-the-tp-worksheet}{%
+\section{\texorpdfstring{Correspondence between \texttt{LL} member of dataset and the \texttt{TP} worksheet}{Correspondence between LL member of dataset and the TP worksheet}}\label{correspondence-between-ll-member-of-dataset-and-the-tp-worksheet}}
+
+\begin{itemize}
+\tightlist
+\item
+  The list member \texttt{x\$LL} is an array with \texttt{dim\ =\ c(2,5,5,1)}.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The first dimension (2) comes from the number of modalities.
+  \item
+    The second dimension (5) comes from the number of readers.
+  \item
+    The third dimension (5) comes from the number of diseased cases.
+  \item
+    The fourth dimension is alway 1 for an ROC dataset.
+  \end{itemize}
+\item
+  The value of \texttt{x\$LL{[}1,1,5,1{]}}, i.e., , corresponds to row 6 of the TP table, i.e., to \texttt{ModalityID} = 0, \texttt{ReaderID} = 0 and \texttt{CaseID} = 74.
+\item
+  The value of \texttt{x\$LL{[}1,2,2,1{]}}, i.e., , corresponds to row 8 of the TP table, i.e., to \texttt{ModalityID} = 0, \texttt{ReaderID} = 1 and \texttt{CaseID} = 71.
+\item
+  There are no -Inf values in \texttt{x\$LL}: \texttt{any(x\$LL\ ==\ -Inf)} = FALSE.
+\end{itemize}
+
+\hypertarget{correspondence-using-the-which-function}{%
+\section{\texorpdfstring{Correspondence using the \texttt{which} function}{Correspondence using the which function}}\label{correspondence-using-the-which-function}}
+
+\begin{itemize}
+\tightlist
+\item
+  Converting from \textbf{names} to \textbf{subscripts} (indicating position in an array) can be confusing.
+\item
+  The following example uses the \texttt{which} function to help out.
+\item
+  The first line says that the \texttt{abnormalCase} named 70 corresponds to subscript 1 in the LL array case dimension.
+\item
+  The second line prints the NL rating for \texttt{modalityID} = 0, \texttt{readerID} = 1 and \texttt{normalCases} = 1.
+\item
+  The third line prints the LL rating for \texttt{modalityID} = 0, \texttt{readerID} = 1 and \texttt{abnormalCases} = 70.
+\item
+  The last line shows what happens if one enters an invalid value for name; the result is a \texttt{numeric(0)}.
+\item
+  Note that in each of these examples, the last dimension is 1 because we are dealing with an ROC dataset.
+\item
+  The reader is encouraged to examine the correspondence between the NL and LL ratings and the Excel file using this method.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{abnormalCases }\OperatorTok{==}\StringTok{ }\DecValTok{70}\NormalTok{)}
+\CommentTok{\#\textgreater{} integer(0)}
+\NormalTok{x}\OperatorTok{$}\NormalTok{NL[}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{modalityID }\OperatorTok{==}\StringTok{ "0"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{readerID }\OperatorTok{==}\StringTok{ "1"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{normalCases }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{),}\DecValTok{1}\NormalTok{]}
+\CommentTok{\#\textgreater{} NULL}
+\NormalTok{x}\OperatorTok{$}\NormalTok{LL[}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{modalityID }\OperatorTok{==}\StringTok{ "0"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{readerID }\OperatorTok{==}\StringTok{ "1"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{abnormalCases }\OperatorTok{==}\StringTok{ }\DecValTok{70}\NormalTok{),}\DecValTok{1}\NormalTok{]}
+\CommentTok{\#\textgreater{} NULL}
+\NormalTok{x}\OperatorTok{$}\NormalTok{LL[}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{modalityID }\OperatorTok{==}\StringTok{ "a"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{readerID }\OperatorTok{==}\StringTok{ "1"}\NormalTok{),}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{abnormalCases }\OperatorTok{==}\StringTok{ }\DecValTok{70}\NormalTok{),}\DecValTok{1}\NormalTok{]}
+\CommentTok{\#\textgreater{} NULL}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{rocdataformat-Summary}{%
+\section{Summary}\label{rocdataformat-Summary}}
+
+\hypertarget{rocdataformat-Discussion}{%
+\section{Discussion}\label{rocdataformat-Discussion}}
+
+\hypertarget{rocdataformat-references}{%
+\section{References}\label{rocdataformat-references}}
+
+\hypertarget{frocdataformat}{%
+\chapter{FROC data format}\label{frocdataformat}}
+
+\hypertarget{purpose}{%
+\section{Purpose}\label{purpose}}
+
+\begin{itemize}
+\tightlist
+\item
+  Explain the data format of the input Excel file for FROC datasets.
+\item
+  Explain the format of the FROC dataset.
+\item
+  Explain the lesion distribution array returned by \texttt{UtilLesionDistr()}.
+\item
+  Explain the lesion weights array returned by \texttt{UtilLesionWeightsDistr()}.
+\item
+  Details on the FROC paradigm are in my book.
+\end{itemize}
+
+\hypertarget{frocdataformatIntro}{%
+\section{Introduction}\label{frocdataformatIntro}}
+
+\begin{itemize}
+\tightlist
+\item
+  See my book \citet{RN2680} for full details.
+\item
+  In the Free-response Receiver Operating Characteristic (FROC) paradigm \citep{RN761} the observer searches each case for signs of \textbf{localized disease} and marks and rates localized regions that are sufficiently suspicious for disease presence.
+\item
+  FROC data consists of \textbf{mark-rating pairs}, where each mark is a localized-region that was considered sufficiently suspicious for presence of a localized lesion and the rating is the corresponding confidence level.
+\item
+  By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (\texttt{LL}) - if it is close to a real lesion - or a non-lesion localization (\texttt{NL}) otherwise.
+\item
+  The observer assigns a rating to each region. The rating, as in the ROC paradigm, can be an integer or quasi-continuous (e.g., 0 -- 100), or a floating point value, as long as higher numbers represent greater confidence in presence of a lesion at the indicated region.
+\end{itemize}
+
+\hypertarget{frocExceldataformat}{%
+\section{The Excel data format}\label{frocExceldataformat}}
+
+The Excel file has three worsheets. These are named \texttt{Truth}, \texttt{NL} or \texttt{FP} and \texttt{LL} or \texttt{TP}.
+
+\hypertarget{frocExcelTruthdataformat}{%
+\section{\texorpdfstring{The \texttt{Truth} worksheet}{The Truth worksheet}}\label{frocExcelTruthdataformat}}
+
+The \texttt{Truth} worksheet contains 6 columns: \texttt{CaseID}, \texttt{LesionID}, \texttt{Weight}, \texttt{ReaderID}, \texttt{ModalityID} and \texttt{Paradigm}.
+
+\begin{itemize}
+\tightlist
+\item
+  Since a diseased case may have more than one lesion, the first five columns contain \textbf{at least} as many rows as there are cases (images) in the dataset.
+\item
+  \texttt{CaseID}: unique \textbf{integers}, one per case, representing the cases in the dataset.
+\item
+  \texttt{LesionID}: integers 0, 1, 2, etc., with each 0 representing a non-diseased case, 1 representing the \emph{first} lesion on a diseased case, 2 representing the second lesion on a diseased case, if present, and so on.
+\item
+  The non-diseased cases are labeled \texttt{1}, \texttt{2} and \texttt{3}, while the diseased cases are labeled \texttt{70}, \texttt{71}, \texttt{72}, \texttt{73} and \texttt{74}.
+\item
+  There are 3 non-diseased cases in the dataset (the number of 0's in the \texttt{LesionID} column).
+\item
+  There are 5 diseased cases in the dataset (the number of 1's in the \texttt{LesionID} column of the \texttt{Truth} worksheet).
+\item
+  There are 3 readers in the dataset (each cell in the \texttt{ReaderID} column contains \texttt{0,\ 1,\ 2}).
+\item
+  There are 2 modalities in the dataset (each cell in the \texttt{ModalityID} column contains \texttt{0,\ 1}).
+\item
+  \texttt{Weight}: floating point; 0, for each non-diseased case, or values for each diseased case that add up to unity.\\
+\item
+  Diseased case \texttt{70} has two lesions, with \texttt{LesionID}s 1 and 2, and weights 0.3 and 0.7. Diseased case \texttt{71} has one lesion, with \texttt{LesionID} = 1, and \texttt{Weight} = 1. Diseased case \texttt{72} has three lesions, with \texttt{LesionID}s 1, 2 and 3 and weights 1/3 each. Diseased case \texttt{73} has two lesions, with \texttt{LesionID}s 1, and 2 and weights 0.1 and 0.9. Diseased case \texttt{74} has one lesion, with \texttt{LesionID} = 1 and \texttt{Weight} = 1.
+\item
+  \texttt{ReaderID}: a comma-separated listing of readers, each represented by a unique \textbf{integer}, that have interpreted the case. In the example shown below each cell has the value \texttt{0,\ 1,\ 2}. \textbf{Each cell has to be text formatted. Otherwise Excel will not accept it.}
+\item
+  \texttt{ModalityID}: a comma-separated listing of modalities (or treatments), each represented by a unique \textbf{integer}, that apply to each case. In the example each cell has the value \texttt{0,\ 1}. \textbf{Each cell has to be text formatted.}
+\item
+  \texttt{Paradigm}: In the example shown below, the contents are \texttt{FROC} and \texttt{crossed}. It informs the software that this is an \texttt{FROC} dataset and the design is ``crossed'', as in \textbf{TBA chapter xx}.
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocCrTruth} 
+
+}
+
+\caption{Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:frocCrTruth}
+\end{figure}
+
+\hypertarget{the-structure-of-an-froc-dataset}{%
+\section{The structure of an FROC dataset}\label{the-structure-of-an-froc-dataset}}
+
+The example shown above corresponds to Excel file \texttt{inst/extdata/toyFiles/FROC/frocCr.xlsx} in the project directory.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{frocCr \textless{}{-}}\StringTok{ }\KeywordTok{system.file}\NormalTok{(}\StringTok{"extdata"}\NormalTok{, }\StringTok{"toyFiles/FROC/frocCr.xlsx"}\NormalTok{,}
+                        \DataTypeTok{package =} \StringTok{"RJafroc"}\NormalTok{, }\DataTypeTok{mustWork =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(frocCr, }\DataTypeTok{newExcelFileFormat =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(x)}
+\CommentTok{\#\textgreater{} List of 3}
+\CommentTok{\#\textgreater{}  $ ratings     :List of 3}
+\CommentTok{\#\textgreater{}   ..$ NL   : num [1:2, 1:3, 1:8, 1:2] 1.02 2.89 2.21 3.01 2.14 ...}
+\CommentTok{\#\textgreater{}   ..$ LL   : num [1:2, 1:3, 1:5, 1:3] 5.28 5.2 5.14 4.77 4.66 4.87 3.01 3.27 3.31 3.19 ...}
+\CommentTok{\#\textgreater{}   ..$ LL\_IL: logi NA}
+\CommentTok{\#\textgreater{}  $ lesions     :List of 3}
+\CommentTok{\#\textgreater{}   ..$ perCase: int [1:5] 2 1 3 2 1}
+\CommentTok{\#\textgreater{}   ..$ IDs    : num [1:5, 1:3] 1 1 1 1 1 ...}
+\CommentTok{\#\textgreater{}   ..$ weights: num [1:5, 1:3] 0.3 1 0.333 0.1 1 ...}
+\CommentTok{\#\textgreater{}  $ descriptions:List of 7}
+\CommentTok{\#\textgreater{}   ..$ fileName     : chr "frocCr"}
+\CommentTok{\#\textgreater{}   ..$ type         : chr "FROC"}
+\CommentTok{\#\textgreater{}   ..$ name         : logi NA}
+\CommentTok{\#\textgreater{}   ..$ truthTableStr: num [1:2, 1:3, 1:8, 1:4] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{\#\textgreater{}   ..$ design       : chr "FCTRL"}
+\CommentTok{\#\textgreater{}   ..$ modalityID   : Named chr [1:2] "0" "1"}
+\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:2] "0" "1"}
+\CommentTok{\#\textgreater{}   ..$ readerID     : Named chr [1:3] "0" "1" "2"}
+\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:3] "0" "1" "2"}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  This follows the general description in \textbf{TBA chapter xx}. The differences are described below.
+\item
+  The \texttt{x\$dataType} member indicates that this is an \texttt{FROC} dataset.
+\item
+  The \texttt{x\$lesionVector} member is a vector whose contents reflect the number of lesions in each diseased case, i.e., in the current example.
+\item
+  The \texttt{x\$lesionID} member indicates the labeling of the lesions in each diseased case.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{lesionID}
+\CommentTok{\#\textgreater{} NULL}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  This shows that the lesions on the first diseased case are labeled 1 and 2. The \texttt{-Inf} is a filler used to denote a missing value. The second diseased case has one lesion labeled 1. The third diseased case has three lesions labeled 1, 2 and 3, etc.
+\item
+  The \texttt{lesionWeight} member is the clinical importance of each lesion. Lacking specific clinical reasons, the lesions should be equally weighted; this is \emph{not} true for this toy dataset.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{lesionWeight}
+\CommentTok{\#\textgreater{} NULL}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The first diseased case has two lesions, the first has weight 0.3 and the second has weight 0.7. The second diseased case has one lesion with weight 1.The third diseased case has three equally weighted lesions, each with weight 1/3. Etc.
+\end{itemize}
+
+\hypertarget{the-false-positive-fp-ratings}{%
+\section{The false positive (FP) ratings}\label{the-false-positive-fp-ratings}}
+
+These are found in the \texttt{FP} or \texttt{NL} worksheet, see below.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocCrNL} 
+
+}
+
+\caption{Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:frocCrNL}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  It consists of 4 columns, of equal length. \textbf{The common length is unpredictable.} It could be zero if the dataset has no NL marks (a distinct possibility if the lesions are very easy to find and the modality and/or observer has high performance). All one knows is that the common length is an integer greater than or equal to zero.
+\item
+  In the example dataset, the common length is 0.
+\item
+  \texttt{ReaderID}: the reader labels: these must be \texttt{0}, \texttt{1}, or \texttt{2}, as declared in the \texttt{Truth} worksheet.
+\item
+  \texttt{ModalityID}: the modality labels: must be \texttt{0} or \texttt{1}, as declared in the \texttt{Truth} worksheet.
+\item
+  \texttt{CaseID}: the labels of cases with \texttt{NL} marks. In the FROC paradigm, \texttt{NL} events can occur on non-diseased \textbf{and} diseased cases.
+\item
+  \texttt{FP\_Rating}: the floating point ratings of \texttt{NL} marks. Each row of this worksheet yields a rating corresponding to the values of \texttt{ReaderID}, \texttt{ModalityID} and \texttt{CaseID} for that row.
+\item
+  For \texttt{ModalityID} 0, \texttt{ReaderID} 0 and \texttt{CaseID} 1 (the first non-diseased case declared in the \texttt{Truth} worksheet), there is a single \texttt{NL} mark that was rated , corresponding to row 2 of the \texttt{FP} worksheet.
+\item
+  Diseased cases with \texttt{NL} marks are also declared in the \texttt{FP} worksheet. Some examples are seen at rows 15, 16 and 21-23 of the \texttt{FP} worksheet.
+\item
+  Rows 21 and 22 show that \texttt{caseID} = 71 got two \texttt{NL} marks, rated .
+\item
+  That this is the \emph{only} case with two marks determines the length of the fourth dimension of the \texttt{x\$NL} list member, 0 in the current example. Absent this case, the length would have been one.
+\item
+  In general, the case with the most \texttt{NL} marks determines the length of the fourth dimension of the \texttt{x\$NL} list member.
+\item
+  The reader should convince oneself that the ratings in \texttt{x\$NL} reflect the contents of the \texttt{FP} worksheet.
+\end{itemize}
+
+\hypertarget{the-true-positive-tp-ratings}{%
+\section{The true positive (TP) ratings}\label{the-true-positive-tp-ratings}}
+
+These are found in the \texttt{TP} or \texttt{LL} worksheet, see below.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocCrLL} 
+
+}
+
+\caption{Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}\label{fig:frocCrLL}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  This worksheet can only have diseased cases. The presence of a non-diseased case in this worksheet will generate an error.
+\item
+  The common vertical length, 31 in this example, is a-priori unpredictable. Given the structure of the \texttt{Truth} worsheet for this dataset, the maximum length would be 9 times 2 times 3, assuming every lesion is marked for each modality, reader and diseased case. The 9 comes from the total number of non-zero entries in the \texttt{LesionID} column of the \texttt{Truth} worksheet.
+\item
+  The fact that the length is smaller than the maximum length means that there are combinations of modality, reader and diseased cases on which some lesions were not marked.
+\item
+  As an example, the first lesion in \texttt{CaseID} equal to \texttt{70} was marked (and rated ) in \texttt{ModalityID} \texttt{0} and \texttt{ReaderID} \texttt{0}.
+\item
+  The length of the fourth dimension of the \texttt{x\$LL} list member, 0 in the present example, is determined by the diseased case with the most lesions in the \texttt{Truth} worksheet.
+\item
+  The reader should convince oneself that the ratings in \texttt{x\$LL} reflect the contents of the \texttt{TP} worksheet.
+\end{itemize}
+
+\hypertarget{on-the-distribution-of-numbers-of-lesions-in-abnormal-cases}{%
+\section{On the distribution of numbers of lesions in abnormal cases}\label{on-the-distribution-of-numbers-of-lesions-in-abnormal-cases}}
+
+\begin{itemize}
+\tightlist
+\item
+  Consider a much larger dataset, \texttt{dataset11}, with structure as shown below:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x \textless{}{-}}\StringTok{ }\NormalTok{dataset11}
+\KeywordTok{str}\NormalTok{(x)}
+\CommentTok{\#\textgreater{} List of 3}
+\CommentTok{\#\textgreater{}  $ ratings     :List of 3}
+\CommentTok{\#\textgreater{}   ..$ NL   : num [1:4, 1:5, 1:158, 1:4] {-}Inf {-}Inf {-}Inf {-}Inf {-}Inf ...}
+\CommentTok{\#\textgreater{}   ..$ LL   : num [1:4, 1:5, 1:115, 1:20] {-}Inf {-}Inf {-}Inf {-}Inf {-}Inf ...}
+\CommentTok{\#\textgreater{}   ..$ LL\_IL: logi NA}
+\CommentTok{\#\textgreater{}  $ lesions     :List of 3}
+\CommentTok{\#\textgreater{}   ..$ perCase: int [1:115] 6 4 7 1 3 3 3 8 11 2 ...}
+\CommentTok{\#\textgreater{}   ..$ IDs    : num [1:115, 1:20] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{\#\textgreater{}   ..$ weights: num [1:115, 1:20] 0.167 0.25 0.143 1 0.333 ...}
+\CommentTok{\#\textgreater{}  $ descriptions:List of 7}
+\CommentTok{\#\textgreater{}   ..$ fileName     : chr "dataset11"}
+\CommentTok{\#\textgreater{}   ..$ type         : chr "FROC"}
+\CommentTok{\#\textgreater{}   ..$ name         : chr "DOBBINS{-}1"}
+\CommentTok{\#\textgreater{}   ..$ truthTableStr: num [1:4, 1:5, 1:158, 1:21] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{\#\textgreater{}   ..$ design       : chr "FCTRL"}
+\CommentTok{\#\textgreater{}   ..$ modalityID   : Named chr [1:4] "1" "2" "3" "4"}
+\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:4] "1" "2" "3" "4"}
+\CommentTok{\#\textgreater{}   ..$ readerID     : Named chr [1:5] "1" "2" "3" "4" ...}
+\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr [1:5] "1" "2" "3" "4" ...}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Focus for now in the 115 abnormal cases.
+\item
+  The numbers of lesions in these cases is contained in \texttt{x\$lesionVector}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{perCase}
+\CommentTok{\#\textgreater{}   [1]  6  4  7  1  3  3  3  8 11  2  4  6  2 16  5  2  8  3  4  7 11  1  4  3  4}
+\CommentTok{\#\textgreater{}  [26]  4  7  3  2  5  2  2  7  6  6  4 10 20 12  6  4  7 12  5  1  1  5  1  2  8}
+\CommentTok{\#\textgreater{}  [51]  3  1  2  2  3  2  8 16 10  1  2  2  6  3  2  2  4  6 10 11  1  2  6  2  4}
+\CommentTok{\#\textgreater{}  [76]  5  2  9  6  6  8  3  8  7  1  1  6  3  2  1  9  8  8  2  2 12  1  1  1  1}
+\CommentTok{\#\textgreater{} [101]  1  3  1  2  2  1  1  1  1  3  1  1  1  2  1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  For example, the first abnormal case contains 6 lesions, the second contains 4 lesions, the third contains 7 lesions, etc. and the last abnormal case contains 1 lesion.
+\item
+  To get an idea of the distribution of the numbers of lesions per abnormal cases, one could interrogate this vector as shown below using the \texttt{which()} function:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (el }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{max}\NormalTok{(x}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{perCase)) }\KeywordTok{cat}\NormalTok{(}
+  \StringTok{"abnormal cases with"}\NormalTok{, el, }\StringTok{"lesions = "}\NormalTok{, }
+  \KeywordTok{length}\NormalTok{(}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{lesionVector }\OperatorTok{==}\StringTok{ }\NormalTok{el)), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} abnormal cases with 1 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 2 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 3 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 4 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 5 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 6 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 7 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 8 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 9 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 10 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 11 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 12 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 13 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 14 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 15 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 16 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 17 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 18 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 19 lesions =  0 }
+\CommentTok{\#\textgreater{} abnormal cases with 20 lesions =  0}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  This tells us that 25 cases contain 1 lesion
+\item
+  Likewise, 23 cases contain 2 lesions
+\item
+  Etc.
+\end{itemize}
+
+\hypertarget{definition-of-lesdistr-array}{%
+\subsection{\texorpdfstring{Definition of \texttt{lesDistr} array}{Definition of lesDistr array}}\label{definition-of-lesdistr-array}}
+
+\begin{itemize}
+\tightlist
+\item
+  Let us ask what is the fraction of (abnormal) cases with 1 lesion, 2 lesions etc.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ (el }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{max}\NormalTok{(x}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{perCase)) }\KeywordTok{cat}\NormalTok{(}\StringTok{"fraction of abnormal cases with"}\NormalTok{, el, }\StringTok{"lesions = "}\NormalTok{, }
+                                              \KeywordTok{length}\NormalTok{(}\KeywordTok{which}\NormalTok{(x}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{perCase }\OperatorTok{==}\StringTok{ }\NormalTok{el))}\OperatorTok{/}\KeywordTok{length}\NormalTok{(x}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{LL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{]), }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 1 lesions =  0.2173913 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 2 lesions =  0.2 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 3 lesions =  0.1130435 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 4 lesions =  0.08695652 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 5 lesions =  0.04347826 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 6 lesions =  0.09565217 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 7 lesions =  0.05217391 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 8 lesions =  0.06956522 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 9 lesions =  0.0173913 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 10 lesions =  0.02608696 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 11 lesions =  0.02608696 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 12 lesions =  0.02608696 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 13 lesions =  0 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 14 lesions =  0 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 15 lesions =  0 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 16 lesions =  0.0173913 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 17 lesions =  0 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 18 lesions =  0 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 19 lesions =  0 }
+\CommentTok{\#\textgreater{} fraction of abnormal cases with 20 lesions =  0.008695652}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  This tells us that fraction 0.217 of (abnormal) cases contain 1 lesion
+\item
+  And fraction 0.2 of (abnormal) cases contain 2 lesions
+\item
+  Etc.
+\item
+  This information is contained the the \texttt{lesDistr} array
+\item
+  It is coded in the \texttt{Utility} function \texttt{UtilLesionDistr()}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lesDistr \textless{}{-}}\StringTok{ }\KeywordTok{UtilLesionDistr}\NormalTok{(x)}
+\NormalTok{lesDistr}
+\CommentTok{\#\textgreater{}       [,1]        [,2]}
+\CommentTok{\#\textgreater{}  [1,]    1 0.217391304}
+\CommentTok{\#\textgreater{}  [2,]    2 0.200000000}
+\CommentTok{\#\textgreater{}  [3,]    3 0.113043478}
+\CommentTok{\#\textgreater{}  [4,]    4 0.086956522}
+\CommentTok{\#\textgreater{}  [5,]    5 0.043478261}
+\CommentTok{\#\textgreater{}  [6,]    6 0.095652174}
+\CommentTok{\#\textgreater{}  [7,]    7 0.052173913}
+\CommentTok{\#\textgreater{}  [8,]    8 0.069565217}
+\CommentTok{\#\textgreater{}  [9,]    9 0.017391304}
+\CommentTok{\#\textgreater{} [10,]   10 0.026086957}
+\CommentTok{\#\textgreater{} [11,]   11 0.026086957}
+\CommentTok{\#\textgreater{} [12,]   12 0.026086957}
+\CommentTok{\#\textgreater{} [13,]   16 0.017391304}
+\CommentTok{\#\textgreater{} [14,]   20 0.008695652}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{UtilLesionDistr()} function returns an array with two columns and number of rows equal to the number of distinct values of lesions per case.
+\item
+  The first column contains the number of distinct values of lesions per case, 14 in the current example.
+\item
+  The second column contains the fraction of diseased cases with the number of lesions indicated in the first column.
+\item
+  The second column must sum to unity
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sum}\NormalTok{(}\KeywordTok{UtilLesionDistr}\NormalTok{(x)[,}\DecValTok{2}\NormalTok{])}
+\CommentTok{\#\textgreater{} [1] 1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  The lesion distribution array will come in handy when it comes to predicting the operating characteristics from using the Radiological Search Model (RSM), as detailed in Chapter 17 of my book.
+\end{itemize}
+
+\hypertarget{definition-of-leswghtdistr-array}{%
+\section{\texorpdfstring{Definition of \texttt{lesWghtDistr} array}{Definition of lesWghtDistr array}}\label{definition-of-leswghtdistr-array}}
+
+\begin{itemize}
+\tightlist
+\item
+  This is returned by \texttt{UtilLesionWeightsDistr()}.
+\item
+  This contains the same number of rows as \texttt{lesDistr}.
+\item
+  The number of columns is one plus the number of rows as \texttt{lesDistr}.
+\item
+  The first column contains the number of distinct values of lesions per case, 14 in the current example.
+\item
+  The second column contains the weights of cases with number of lesions per case corresponding to row 1.
+\item
+  The third column contains the weights of cases with number of lesions per case corresponding to row 2.
+\item
+  Etc.
+\item
+  Missing values are filled with \texttt{-Inf}.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lesWghtDistr \textless{}{-}}\StringTok{ }\KeywordTok{UtilLesionWeightsDistr}\NormalTok{(x)}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"dim(lesDistr) ="}\NormalTok{, }\KeywordTok{dim}\NormalTok{(lesDistr),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} dim(lesDistr) = 14 2}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"dim(lesWghtDistr) ="}\NormalTok{, }\KeywordTok{dim}\NormalTok{(lesWghtDistr),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} dim(lesWghtDistr) = 14 21}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"lesWghtDistr = }\CharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} lesWghtDistr =}
+\NormalTok{lesWghtDistr}
+\CommentTok{\#\textgreater{}       [,1]       [,2]       [,3]       [,4]       [,5]       [,6]       [,7]}
+\CommentTok{\#\textgreater{}  [1,]    1 1.00000000       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf}
+\CommentTok{\#\textgreater{}  [2,]    2 0.50000000 0.50000000       {-}Inf       {-}Inf       {-}Inf       {-}Inf}
+\CommentTok{\#\textgreater{}  [3,]    3 0.33333333 0.33333333 0.33333333       {-}Inf       {-}Inf       {-}Inf}
+\CommentTok{\#\textgreater{}  [4,]    4 0.25000000 0.25000000 0.25000000 0.25000000       {-}Inf       {-}Inf}
+\CommentTok{\#\textgreater{}  [5,]    5 0.20000000 0.20000000 0.20000000 0.20000000 0.20000000       {-}Inf}
+\CommentTok{\#\textgreater{}  [6,]    6 0.16666667 0.16666667 0.16666667 0.16666667 0.16666667 0.16666667}
+\CommentTok{\#\textgreater{}  [7,]    7 0.14285714 0.14285714 0.14285714 0.14285714 0.14285714 0.14285714}
+\CommentTok{\#\textgreater{}  [8,]    8 0.12500000 0.12500000 0.12500000 0.12500000 0.12500000 0.12500000}
+\CommentTok{\#\textgreater{}  [9,]    9 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111}
+\CommentTok{\#\textgreater{} [10,]   10 0.10000000 0.10000000 0.10000000 0.10000000 0.10000000 0.10000000}
+\CommentTok{\#\textgreater{} [11,]   11 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909}
+\CommentTok{\#\textgreater{} [12,]   12 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333}
+\CommentTok{\#\textgreater{} [13,]   16 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000}
+\CommentTok{\#\textgreater{} [14,]   20 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000}
+\CommentTok{\#\textgreater{}             [,8]       [,9]      [,10]      [,11]      [,12]      [,13]  [,14]}
+\CommentTok{\#\textgreater{}  [1,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{}  [2,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{}  [3,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{}  [4,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{}  [5,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{}  [6,]       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{}  [7,] 0.14285714       {-}Inf       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{}  [8,] 0.12500000 0.12500000       {-}Inf       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{}  [9,] 0.11111111 0.11111111 0.11111111       {-}Inf       {-}Inf       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{} [10,] 0.10000000 0.10000000 0.10000000 0.10000000       {-}Inf       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{} [11,] 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909       {-}Inf   {-}Inf}
+\CommentTok{\#\textgreater{} [12,] 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333   {-}Inf}
+\CommentTok{\#\textgreater{} [13,] 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.0625}
+\CommentTok{\#\textgreater{} [14,] 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.0500}
+\CommentTok{\#\textgreater{}        [,15]  [,16]  [,17] [,18] [,19] [,20] [,21]}
+\CommentTok{\#\textgreater{}  [1,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{}  [2,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{}  [3,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{}  [4,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{}  [5,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{}  [6,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{}  [7,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{}  [8,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{}  [9,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{} [10,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{} [11,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{} [12,]   {-}Inf   {-}Inf   {-}Inf  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{} [13,] 0.0625 0.0625 0.0625  {-}Inf  {-}Inf  {-}Inf  {-}Inf}
+\CommentTok{\#\textgreater{} [14,] 0.0500 0.0500 0.0500  0.05  0.05  0.05  0.05}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Row 3 corresponds to 3 lesions per case and the weights are 1/3, 1/3 and 1/3.
+\item
+  Row 13 corresponds to 16 lesions per case and the weights are 0.06250000, 0.06250000, \ldots, repeated 13 times.
+\item
+  Note that the number of rows is less than the maximum number of lesions per case (20).
+\item
+  This is because some configurations of lesions per case (e.g., cases with 13 lesions per case) do not occur in this dataset.
+\end{itemize}
+
+\hypertarget{frocdataformat-Summary}{%
+\section{Summary}\label{frocdataformat-Summary}}
+
+\begin{itemize}
+\tightlist
+\item
+  The FROC dataset has far less regularity in structure as compared to an ROC dataset.
+\item
+  The length of the first dimension of either \texttt{x\$NL} or \texttt{x\$LL} list members is the total number of modalities, 2 in the current example.
+\item
+  The length of the second dimension of either \texttt{x\$NL} or \texttt{x\$LL} list members is the total number of readers, 3 in the current example.
+\item
+  The length of the third dimension of \texttt{x\$NL} is the total number of cases, 8 in the current example. The first three positions account for \texttt{NL} marks on non-diseased cases and the remaining 5 positions account for \texttt{NL} marks on diseased cases.
+\item
+  The length of the third dimension of \texttt{x\$LL} is the total number of diseased cases, 5 in the current example.
+\item
+  The length of the fourth dimension of \texttt{x\$NL} is determined by the case (diseased or non-diseased) with the most \texttt{NL} marks, 2 in the current example.
+\item
+  The length of the fourth dimension of \texttt{x\$LL} is determined by the diseased case with the most lesions, 3 in the current example.
+\end{itemize}
+
+\hypertarget{frocdataformat-Discussion}{%
+\section{Discussion}\label{frocdataformat-Discussion}}
+
+\hypertarget{frocdataformat-references}{%
+\section{References}\label{frocdataformat-references}}
 
   \bibliography{packages.bib,myRefs.bib}
 

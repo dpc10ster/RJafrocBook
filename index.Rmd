@@ -11,7 +11,7 @@ bibliography: [packages.bib, myRefs.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: dpc10ster/RJafrocBook
-description: "Extended RJafroc documentation."
+description: "The updated observer-performance book based on RJafroc."
 ---
 
 
