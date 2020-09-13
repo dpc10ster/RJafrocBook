@@ -5,27 +5,22 @@
 
 
 ## Introduction
-In Chapter \@ref(#binaryTask0) the binary paradigm and associated concepts (e.g., sensitivity, specificity) were introduced. Chapter \@ref(binaryTask) introduced the concepts of a random scalar decision variable, or z-sample for each case, which is compared, by the observer, to a fixed reporting threshold $\zeta$, resulting in two types of decisions. It described a statistical model for the binary task, characterized by two unit-variance normal distributions separated by $\mu$. The concept of an underlying receiver operating characteristic (ROC) curve with the reporting threshold defining an operating point on the curve was introduced and the advisability of using the area under the curve as a measure of performance, which is independent of reporting threshold, was stressed. 
+In Chapter \@ref(binaryTask0) the binary paradigm and associated concepts (e.g., sensitivity, specificity) were introduced. Chapter \@ref(binaryTask) introduced the concepts of a random scalar decision variable, or z-sample for each case, which is compared, by the observer, to a fixed reporting threshold $\zeta$, resulting in two types of decisions. It described a statistical model for the binary task, characterized by two unit-variance normal distributions separated by $\mu$. The concept of an underlying receiver operating characteristic (ROC) curve with the reporting threshold defining an operating point on the curve was introduced and the advisability of using the area under the curve as a measure of performance, which is independent of reporting threshold, was stressed. 
 
 In this chapter the more commonly used ratings method will be described, which yields greater definition to the underlying ROC curve than just one operating point obtained in the binary task, and moreover, is more efficient. In this method, the observer assigns a rating to each case. Described first is a typical ROC counts table and how operating points (i.e., pairs of FPF and TPF values) are calculated from the counts data. A labeling convention for the operating points is introduced. Notation is introduced for the observed integers in the counts table and the rules for calculating operating points are expressed as formulae and implemented in R. The ratings method is contrasted to the binary method, in terms of efficiency and practicality. A theme occurring repeatedly in this book, that the ratings are not numerical values but rather they are ordered labels is illustrated with an example.
 
 ## The ROC counts table
 In a positive-directed rating scale with five discrete levels, the ratings could be the ordered labels: 
+
 * “1”: definitely non-diseased, 
 * “2”: probably non-diseased, 
 * “3”: could be non-diseased or diseased, 
 * “4”: probably diseased, 
 * “5”: definitely diseased. 
+
 At the conclusion of the ROC study an ROC counts table is constructed. This is the generalization to rating studies of the 2 x 2 decision vs. truth table introduced in (book) Chapter 02, Table 2.1. This type of data representation is sometimes called a frequency table, but frequency usually means a rate of number of events per some unit, so the author prefers the clearer term “counts”. 
 
 Table \@ref(tab:ratingsParadigmTable1) is a representative counts table for a 5-rating study that summarizes the collected data. It is the starting point for analysis. It lists the number of counts in each ratings bin, listed separately for non-diseased and diseased cases, respectively. The data is from an actual clinical study.
-
-
-
-
-* $r = 5$ means "ratings equal to 5" 
-* $r = 4$ means "ratings equal to 4" 
-* Etc.
 
 \begin{table}
 
@@ -42,22 +37,21 @@ diseased & 5 & 6 & 5 & 12 & 22\\
 \end{tabular}
 \end{table}
 
+
+* $r = 5$ means "rating equal to 5" 
+* $r = 4$ means "rating equal to 4" 
+* Etc.
+
 In this example, there are $K_1 = 60$ non-diseased cases and $K_2 = 50$ diseased cases. Of the 60 non-diseased cases 30 were assigned the "1" rating, 19 were assigned the "2" rating, eight the "3" rating, two the "4" rating and one received the "5" rating. The distribution of counts is tilted towards the "1" rating end, but there is some spread and one actually non-diseased case appeared definitely diseased to the observer. In contrast, the distribution of the diseased cases is tilted towards the "5" rating end. Of the 50 diseased cases, 22 received the "5" rating, 12 the "4" rating, five the "3" rating, six the "2" rating and five the "1" rating. The spread appears to be more pronounced for the diseased cases, e.g., five of the 50 cases appeared to be definitely non-diseased to the observer. A little thought should convince you that the observed tilting of the counts, towards the "1" end for actually non-diseased cases, and towards the "5" end for actually diseased cases, is reasonable. However, one should be forewarned not to jump to conclusions about the spread of the data being larger for diseased than for non-diseased cases. While it turns out to be true, the ratings are merely ordered labels, and modeling is required, to be described in (TBA) Chapter 06, that uses only the ordering information implicit in the labels, not the actual values, to reach quantitative conclusions.
 
 ## Operating points from counts table
-
-
-* $r\ge 5$ means "counting ratings greater than or equal to 5 and dividing by the appropriate denominator, yields $K_1$ for FPF and $K_2$ for TPF" 
-* $r\ge 4$ means "counting ratings greater than or equal to 4 and dividing by the appropriate denominator, yields $K_1$ for FPF and $K_2$ for TPF" 
-* Etc.
-
 \begin{table}
 
 \caption{(\#tab:ratingsParadigmTable2)Computation of operating points from cell counts.}
 \centering
 \begin{tabular}[t]{l|r|r|r|r|r}
 \hline
-  & $r\ge 5$ & $r\ge 4$ & $r\ge 3$ & $r\ge 2$ & $r\ge 1$\\
+  & $r\geq 5$ & $r\geq 4$ & $r\geq 3$ & $r\geq 2$ & $r\geq 1$\\
 \hline
 FPF & 0.017 & 0.05 & 0.183 & 0.5 & 1\\
 \hline
@@ -66,10 +60,13 @@ TPF & 0.440 & 0.68 & 0.780 & 0.9 & 1\\
 \end{tabular}
 \end{table}
 
+* $r\geq 5$ means "counting ratings greater than or equal to 5 and dividing by the appropriate denominator ($K_1$ for FPF and $K_2$ for TPF)" 
+* $r\geq 4$ means "counting ratings greater than or equal to 4 and dividing by the appropriate denominator ($K_1$ for FPF and $K_2$ for TPF)" 
+* Etc.
 
-* Table \@ref(tab:ratingsParadigmTable2) illustrates how ROC operating points are calculated from the cell counts. One starts with non-diseased cases that were rated five or more (in this example, since 5 is the highest allowed rating, the “or more” clause is superfluous) and divides by the total number of non-diseased cases, $K_1 = 60$. This yields the abscissa of the lowest non-trivial operating point, namely  $FPF_{\ge5}$ = 1/60 = 0.017. The subscript on FPF is intended to make explicit which ratings are being cumulated. The corresponding ordinate is obtained by dividing the number of diseased cases rated "5" or more and dividing by the total number of diseased cases, $K_2 = 50$, yielding $TPF_{\ge5}$ = 22/50 = 0.440. Therefore, the coordinates of the lowest operating point are (0.017, 0.44). The abscissa of the next higher operating point is obtained by dividing the number of non-diseased cases that were rated "4" or more and dividing by the total number of non-diseased cases, i.e., $TPF_{\ge4}$ = 3/60 = 0.05. Similarly the ordinate of this operating point is obtained by dividing the number of diseased cases that were rated "4" or more and dividing by the total number of diseased cases, i.e., $FPF_{\ge4}$ = 34/50 = 0.680. The procedure, which at each stage cumulates the number of cases equal to or greater (in the sense of increased confidence level for disease presence) than a specified label, is repeated to yield the rest of the operating points listed in Table 4.1. Since they are computed directly from the data, without any assumption, they are called empirical or observed operating points. After done this once it would be nice to have a formula implementing the process, one use of which would be to code the procedure. First, one needs appropriate notation for the bin counts.
+Table \@ref(tab:ratingsParadigmTable2) illustrates how ROC operating points are calculated from the cell counts. One starts with non-diseased cases that were rated five or more (in this example, since 5 is the highest allowed rating, the “or more” clause is inconsequential) and divides by the total number of non-diseased cases, $K_1 = 60$. This yields the abscissa of the lowest non-trivial operating point, namely  $FPF_{\ge5}$ = 1/60 = 0.017. The subscript on FPF is intended to make explicit which ratings are being cumulated. The corresponding ordinate is obtained by dividing the number of diseased cases rated "5" or more and dividing by the total number of diseased cases, $K_2 = 50$, yielding $TPF_{\ge5}$ = 22/50 = 0.440. Therefore, the coordinates of the lowest operating point are (0.017, 0.44). The abscissa of the next higher operating point is obtained by dividing the number of non-diseased cases that were rated "4" or more and dividing by the total number of non-diseased cases, i.e., $TPF_{\ge4}$ = 3/60 = 0.05. Similarly the ordinate of this operating point is obtained by dividing the number of diseased cases that were rated "4" or more and dividing by the total number of diseased cases, i.e., $FPF_{\ge4}$ = 34/50 = 0.680. The procedure, which at each stage cumulates the number of cases equal to or greater (in the sense of increased confidence level for disease presence) than a specified label, is repeated to yield the rest of the operating points listed in Table 4.1. Since they are computed directly from the data, without any assumption, they are called empirical or observed operating points. After done this once it would be nice to have a formula implementing the process, one use of which would be to code the procedure. First, one needs appropriate notation for the bin counts.
 
-* Let $K_{1r}$ denote the number of non-diseased cases rated r, and $K_{2r}$ denote the number of diseased cases rated r. For convenience, define dummy counts  $K_{1{(R+1)}}$ = $K_{2{(R+1)}}$ = 0, where R is the number of ROC bins. This construct allows inclusion of the origin (0,0) in the formulae. The range of r is $r = 1,2,...,(R+1)$. Within each truth-state, the individual bin counts sum to the total number of non-diseased and diseased cases, respectively. The following equations summarize all this:
+Let $K_{1r}$ denote the number of non-diseased cases rated r, and $K_{2r}$ denote the number of diseased cases rated r. For convenience, define dummy counts  $K_{1{(R+1)}}$ = $K_{2{(R+1)}}$ = 0, where R is the number of ROC bins. This construct allows inclusion of the origin (0,0) in the formulae. The range of r is $r = 1,2,...,(R+1)$. Within each truth-state, the individual bin counts sum to the total number of non-diseased and diseased cases, respectively. The following equations summarize all this:
 
 \begin{equation*} 
 K_1=\sum_{r=1}^{R+1}K_{1r}
@@ -97,52 +94,120 @@ FPF_r=\frac {1} {K_1} \sum_{s=r}^{R+1}K_{1s}
 TPF_r=\frac {1} {K_2} \sum_{s=r}^{R+1}K_{2s}
 \end{equation*}
 
-* The labeling of the points follows the following convention: $r=1$  corresponds to the upper right corner (1,1) of the ROC plot, a trivial operating point since it is common to all datasets. Next, $r=2$  is the next lower operating point, etc., and  $r=R$ is the lowest non-trivial operating point and finally $r=R+1$  is the origin (0,0) of the ROC plot, which is also a trivial operating point, because it is common to all datasets. In other words, the operating points are numbered starting with the upper right corner, labeled 1, and working down the curve, each time increasing the label by one. 
+The labeling of the points follows the following convention: $r=1$  corresponds to the upper right corner (1,1) of the ROC plot, a trivial operating point since it is common to all datasets. Next, $r=2$  is the next lower operating point, etc., and  $r=R$ is the lowest non-trivial operating point and finally $r=R+1$  is the origin (0,0) of the ROC plot, which is also a trivial operating point, because it is common to all datasets. In other words, the operating points are numbered starting with the upper right corner, labeled 1, and working down the curve, each time increasing the label by one. 
 
-* Since one is cumulating counts, which cannot be negative, the highest non-trivial operating point resulting from cumulating the 2 through 5 ratings has to be to the upper-right of the next adjacent operating point resulting from cumulating the 3 through 5 ratings. This in turn has to be to the upper-right of the operating point resulting from cumulating the 4 through 5 ratings. This in turn has to be to the upper right of the operating point resulting from the 5 ratings. In other words, as one cumulates ratings bins, the operating point must move monotonically up and to the right, or more accurately, the point cannot move down or to the left. If a particular bin has zero counts for non-diseased cases, and non-zero counts for diseased cases, the operating point moves vertically up when this bin is cumulated; if it has zero counts for diseased cases, and non-zero counts for non-diseased cases, the operating point moves horizontally to the right when this bin is cumulated.
+### Examples
+In the following examples $R = 5$ is the number of ROC bins and $K_{1(R+1)}$ = $K_{2(R+1)}$ = 0. If $r = 1$ one gets the uppermost "trivial" operating point (1,1):
+
+\begin{equation*} 
+FPF_1=\frac {1} {K_1} \sum_{s=1}^{R+1}K_{1s} = \frac{60}{60} = 1\\
+TPF_1=\frac {1} {K_2} \sum_{s=1}^{R+1}K_{2s} = \frac{50}{50} = 1
+\end{equation*}
+
+The uppermost non-trivial operating point is obtained for $r = 2$, when:
+	
+\begin{equation*} 
+FPF_2=\frac {1} {K_1} \sum_{s=2}^{R+1}K_{1s} = \frac{30}{60} = 0.5\\
+TPF_2=\frac {1} {K_2} \sum_{s=2}^{R+1}K_{2s} = \frac{45}{50} = 0.9
+\end{equation*}
+
+
+The next lower operating point is obtained for $r = 3$:
+
+\begin{equation*} 
+FPF_3=\frac {1} {K_1} \sum_{s=3}^{R+1}K_{1s} = \frac{11}{60} = 0.183\\
+TPF_3=\frac {1} {K_2} \sum_{s=3}^{R+1}K_{2s} = \frac{39}{50} = 0.780
+\end{equation*}
+
+The next lower operating point is obtained for $r = 4$:
+
+\begin{equation*} 
+FPF_4=\frac {1} {K_1} \sum_{s=4}^{R+1}K_{1s} = \frac{3}{60} = 0.05\\
+TPF_4=\frac {1} {K_2} \sum_{s=4}^{R+1}K_{2s} = \frac{34}{50} = 0.680
+\end{equation*}
+
+The lowest non-trivial operating point is obtained for $r = 5$:
+
+\begin{equation*} 
+FPF_5=\frac {1} {K_1} \sum_{s=5}^{R+1}K_{1s} = \frac{1}{60} = 0.017\\
+TPF_5=\frac {1} {K_2} \sum_{s=5}^{R+1}K_{2s} = \frac{22}{50} = 0.440
+\end{equation*}
+
+The next value $r = 6$  yields the trivial operating point (0,0): 
+
+\begin{equation*} 
+FPF_6=\frac {1} {K_1} \sum_{s=6}^{R+1}K_{1s} = \frac{0}{60} = 0\\
+TPF_6=\frac {1} {K_2} \sum_{s=6}^{R+1}K_{2s} = \frac{0}{50} = 0
+\end{equation*}
+
+This exercise shows explicitly that an R-rating ROC study can yield, at most, $R + 1$ distinct non-trivial operating points; i.e., those corresponding to $r=2,3,...,R$.
+ 
+The modifier “at most” is needed, because if both counts (i.e., non-diseased and diseased) for bin $r'$ are zeroes, then that operating point merges with the one immediately below-left of it:
+	
+\begin{equation*} 
+FPF_{r'}=\frac {1} {K_1} \sum_{s={r'}}^{R+1}K_{1s} = \frac {1} {K_1} \sum_{s={r'+1}}^{R+1}K_{1s} = FPF_{r'+1}\\
+\\
+TPF_{r'}=\frac {1} {K_2} \sum_{s={r'}}^{R+1}K_{2s} = \frac {1} {K_2} \sum_{s={r'+1}}^{R+1}K_{2s} = TPF_{r'+1}
+\end{equation*}
+
+Since bin $r'$ is unpopulated, one can re-label the bins to exclude the unpopulated bin, and now the total number of bins is effectively $R-1$. 
+
+Since one is cumulating counts, which cannot be negative, the highest non-trivial operating point resulting from cumulating the 2 through 5 ratings has to be to the upper-right of the next adjacent operating point resulting from cumulating the 3 through 5 ratings. This in turn has to be to the upper-right of the operating point resulting from cumulating the 4 through 5 ratings. This in turn has to be to the upper right of the operating point resulting from the 5 ratings. In other words, as one cumulates ratings bins, the operating point must move monotonically up and to the right, or more accurately, the point cannot move down or to the left. If a particular bin has zero counts for non-diseased cases, and non-zero counts for diseased cases, the operating point moves vertically up when this bin is cumulated; if it has zero counts for diseased cases, and non-zero counts for non-diseased cases, the operating point moves horizontally to the right when this bin is cumulated.
 
 ## Automating all this
-It is useful to replace the preceding detailed explanation with a simple algorithm, as in the following code: 
+It is useful to replace the preceding detailed explanation with a simple algorithm, as in the following code (see first seven lines): 
 
 
 ```r
 options(digits = 3)
 FPF <- array(0,dim = R)
 TPF <- array(0,dim = R)
-
 for (r in (R+1):2) {
   FPF[(R+2)-r] <- sum(Ktr[1, r:(R+1)])/sum(Ktr[1,])
   TPF[(R+2)-r] <- sum(Ktr[2, r:(R+1)])/sum(Ktr[2,])    
 }
-
-cat("FPF =", "\n")
-#> FPF =
-cat(FPF, "\n")
-#> 0.0167 0.05 0.183 0.5
-cat("TPF = ", "\n")
-#> TPF =
-cat(TPF, "\n")
-#> 0.44 0.68 0.78 0.9
+df <- data.frame(FPF = FPF, TPF = TPF)
+df <- t(df)
+print(df)
+#>       [,1] [,2]  [,3] [,4]
+#> FPF 0.0167 0.05 0.183  0.5
+#> TPF 0.4400 0.68 0.780  0.9
 mu <- qnorm(.5)+qnorm(.9);sigma <- 1
 Az <- pnorm(mu/sqrt(2))
 cat("uppermost point based estimate of mu = ", mu, "\n")
 #> uppermost point based estimate of mu =  1.28
 cat("corresponding estimate of Az = ", Az, "\n")
 #> corresponding estimate of Az =  0.818
-cat("showing observed operating points and equal variance model fitted ROC curve", "\n")
-#> showing observed operating points and equal variance model fitted ROC curve
-plotROC (mu, sigma, FPF, TPF)
 ```
 
-![](04-ratings-paradigm_files/figure-latex/unnamed-chunk-4-1.pdf)<!-- --> 
+Notice that the values of the arrays `FPF` and `TPF` are identical to those listed in Table \@ref(tab:ratingsParadigmTable2). Regarding the last four lines of code, it was shown in Chapter \@ref(binaryTask) that in the equal variance binormal model the operating point determines the parameters $\mu$ = 1.282, Eqn. \@ref(eq:binaryTask-SolveForMu), or equivalently $A_{z;\sigma = 1}$ = 0.818, Eqn. \@ref(eq:binaryTask-Az-EqVarModel2). The last four lines illustrate the application of these formulae using the coordinates (0.5, 0.9) of the uppermost non-trivial operating point, i.e., one is fitting the equal variance model to the uppermost operating point.
 
-* Notice that the values of the arrays `FPF` and `TPF` are identical to those listed in Table 4.1.
+Shown next is the equal-variance model fit to the uppermost non-trivial operating point, left plot, and for comparison, the right plot is the unequal variance model fit to all operating points. The unequal variance model is the subject of an upcoming chapter.
 
-* It was shown in Chapter 03 that in the equal variance binormal model, an operating point determines the parameters $\mu$ = 1.282, Eqn. (3.21), or equivalently $A_{z;\sigma = 1}$ = 0.818, Eqn. (3.30). The last three lines of the preceding code chunk illustrate the application of these formulae using the coordinates (0.5, 0.9) of the uppermost non-trivial operating point, followed by a plot of the ROC curve and the operating points. 
 
-* It should come as no surprise that the uppermost operating point is *exactly* on the predicted curve: after all, this point was used to calculate $\mu$ = 1.282. 
+```r
+# equal variance fit to uppermost operating point
+p1 <- plotROC (mu, sigma, FPF, TPF)
+# the following values are from unequal-variance model fitting
+# to be discussed later
+mu <- 2.17;sigma <- 1.65
+# this formula to be discussed later
+Az <- pnorm(mu/sqrt(1+sigma^2))
+cat("binormal unequal variance model estimate of Az = ", Az, "\n")
+#> binormal unequal variance model estimate of Az =  0.87
+# unequal variance fit to all operating points
+p2 <- plotROC (mu, sigma, FPF, TPF)
+```
 
-* The corresponding value of $\zeta$ can be calculated from Eqn. (3.17), namely:
+
+
+```r
+grid.arrange(p1,p2,ncol=2)
+```
+
+![(\#fig:ratingsParadigmEqVarFitA)The left figure is the predicted ROC curve for $\mu=1.282$ superposed on the operating points. The right figure is the same data fitted with a two-parameter model described later.](04-ratings-paradigm_files/figure-latex/ratingsParadigmEqVarFitA-1.pdf) 
+
+It should come as no surprise that the uppermost operating point is *exactly* on the predicted curve: after all, this point was used to calculate $\mu$ = 2.17. The corresponding value of $\zeta$ can be calculated from Eqn. (3.17), namely:
 
 \begin{equation*} 
 \zeta = \Phi^{-1}\left ( Sp \right )
@@ -161,24 +226,12 @@ These are coded below:
 qnorm(1-0.5)
 #> [1] 0
 mu-qnorm(0.9)
-#> [1] 0
+#> [1] 0.888
 ```
 
-* Either way, one gets the same result: $\zeta$ = 0. It should be clear that this makes sense: FPF = 0.5 is consistent with half of the (symmetrical) unit-normal non-diseased distribution being above $\zeta$ = 0. The transformed value $\zeta$ (zero in this example) is a genuine numerical value. *To reiterate, ratings cannot be treated as genuine numerical values, but thresholds, estimated from an appropriate model, can be treated as genuine numerical values.* 
-* Exercise: calculate $\zeta$ for each of the remaining operating points. *Notice that $\zeta$ increases as one moves down the curve.*
+Either way, one gets the same result: $\zeta$ = 0. It should be clear that this makes sense: FPF = 0.5 is consistent with half of the (symmetrical) unit-normal non-diseased distribution being above $\zeta$ = 0. The transformed value $\zeta$ (zero in this example) is a genuine numerical value. *To reiterate, ratings cannot be treated as genuine numerical values, but thresholds, estimated from an appropriate model, can be treated as genuine numerical values.* 
 
-
-```r
-mu <- 2.17;sigma <- 1.65
-Az <- pnorm(mu/sqrt(1+sigma^2))
-plotROC (mu, sigma, FPF, TPF)
-cat("binormal unequal variance model estimate of Az = ", Az, "\n")
-#> binormal unequal variance model estimate of Az =  0.87
-cat("showing observed operating points and unequal variance model fitted ROC curve", "\n")
-#> showing observed operating points and unequal variance model fitted ROC curve
-```
-
-![](04-ratings-paradigm_files/figure-latex/unnamed-chunk-6-1.pdf)<!-- --> 
+Exercise: calculate $\zeta$ for each of the remaining operating points. *Notice that $\zeta$ increases as one moves down the curve.*
 
 * The ROC curve in Fig. 4.1 (A), as determined by the uppermost operating point, passes exactly through this point but misses the others. If a different operating point were used to estimate $\mu$ = and $A_{z;\sigma = 1}$, the estimated values would have been different and the new curve would pass exactly through the *new* selected point. No single-point based choice of $\mu$ would yield a satisfactory visual fit to all the observed operating points. [The reader should confirm these statements with appropriate modifications to the code.] * __This is the reason one needs a modified model, with an extra parameter, namely the unequal variance binormal model, to fit radiologist data__ (the extra parameter is the ratio of the standard deviations of the two distributions). 
 

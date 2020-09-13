@@ -240,9 +240,52 @@ W = AUC
 (\#eq:empirical-AUC-BambersTheorem)
 \end{equation}
 
-Numerical illustration: While hardly a proof, as an illustration of the theorem it is helpful to calculate the sum on the right hand side of Eqn. \@ref(eq:empirical-AUC-Wilcoxon) and compare it to direct integration of the area under the empirical ROC curve (i.e., adding the area of a triangle and several trapezoids). `R` provides a function that does just that. It is part of package `caTools` and is called `trapz(x,y)`. It takes two array arguments, $x$ and $y$, where in the current case $x$ is $FPF$ and $y$ is $TPF$. One has to be careful to include the end-points as otherwise the area will be underestimated. The Wilcoxon $W$ and the numerical estimate of the empirical area AUC are implemented in the following code.
+Numerical illustration: While hardly a proof, as an illustration of the theorem it is helpful to calculate the sum on the right hand side of Eqn. \@ref(eq:empirical-AUC-Wilcoxon) and compare it to direct integration of the area under the empirical ROC curve (i.e., adding the area of a triangle and several trapezoids). The function is called `trapz(x,y)`, see below. It takes two array arguments, $x$ and $y$, where in the current case $x$ is $FPF$ and $y$ is $TPF$. One has to be careful to include the end-points as otherwise the area will be underestimated. The Wilcoxon $W$ and the numerical estimate of the empirical area AUC are implemented in the following code.
 
 
+```r
+trapz = function(x, y)
+{ ### computes the integral of y with respect to x using trapezoidal integration.
+  idx = 2:length(x)
+  return (as.double( (x[idx] - x[idx-1]) %*% (y[idx] + y[idx-1])) / 2)
+}
+```
+
+
+
+```r
+Wilcoxon <- function (zk1, zk2)
+{
+  K1 = length(zk1)
+  K2 = length(zk2)
+  W <- 0
+  for (k1 in 1:K1) {
+    W <- W + sum(zk1[k1] < zk2)
+    W <- W + 0.5 * sum(zk1[k1] == zk2)
+  }
+  W <- W/K1/K2
+  return (W)
+}
+
+RocOperatingPoints <- function( K1, K2 ) {
+  
+  nOpPts <- length(K1) - 1 # number of op points
+  FPF <- array(0,dim = nOpPts)
+  TPF <- array(0,dim = nOpPts)
+   
+  for (r in (nOpPts+1):2) {
+    FPF[r-1] <- sum(K1[r:(nOpPts+1)])/sum(K1)
+    TPF[r-1] <- sum(K2[r:(nOpPts+1)])/sum(K2)    
+  }
+  FPF <- rev(FPF)
+  TPF <- rev(TPF)
+  
+  return( list(
+    FPF = FPF,
+    TPF = TPF
+  ) )
+}
+```
 
 
 

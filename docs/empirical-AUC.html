@@ -134,11 +134,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">RJafroc documentation</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="" data-path="a-note-on-the-online-distribution-mechanism-of-the-book.html"><a href="a-note-on-the-online-distribution-mechanism-of-the-book.html"><i class="fa fa-check"></i>A note on the online distribution mechanism of the book</a></li>
-<li class="chapter" data-level="" data-path="contributing-to-this-book.html"><a href="contributing-to-this-book.html"><i class="fa fa-check"></i>Contributing to this book</a></li>
-<li class="chapter" data-level="" data-path="is-this-book-relevant-to-you-and-what-are-the-alternatives.html"><a href="is-this-book-relevant-to-you-and-what-are-the-alternatives.html"><i class="fa fa-check"></i>Is this book relevant to you and what are the alternatives?</a></li>
-<li class="chapter" data-level="" data-path="todos.html"><a href="todos.html"><i class="fa fa-check"></i>ToDos</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#a-note-on-the-online-distribution-mechanism-of-the-book"><i class="fa fa-check"></i>A note on the online distribution mechanism of the book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#contributing-to-this-book"><i class="fa fa-check"></i>Contributing to this book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#is-this-book-relevant-to-you-and-what-are-the-alternatives"><i class="fa fa-check"></i>Is this book relevant to you and what are the alternatives?</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#todos"><i class="fa fa-check"></i>ToDos</a></li>
+</ul></li>
 <li class="chapter" data-level="1" data-path="preliminaries.html"><a href="preliminaries.html"><i class="fa fa-check"></i><b>1</b> Preliminaries</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="preliminaries.html"><a href="preliminaries.html#preliminariesIntro"><i class="fa fa-check"></i><b>1.1</b> Introduction</a></li>
@@ -232,7 +234,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="ratingsParadigm.html"><a href="ratingsParadigm.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
 <li class="chapter" data-level="4.2" data-path="ratingsParadigm.html"><a href="ratingsParadigm.html#the-roc-counts-table"><i class="fa fa-check"></i><b>4.2</b> The ROC counts table</a></li>
-<li class="chapter" data-level="4.3" data-path="ratingsParadigm.html"><a href="ratingsParadigm.html#operating-points-from-counts-table"><i class="fa fa-check"></i><b>4.3</b> Operating points from counts table</a></li>
+<li class="chapter" data-level="4.3" data-path="ratingsParadigm.html"><a href="ratingsParadigm.html#operating-points-from-counts-table"><i class="fa fa-check"></i><b>4.3</b> Operating points from counts table</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="ratingsParadigm.html"><a href="ratingsParadigm.html#examples"><i class="fa fa-check"></i><b>4.3.1</b> Examples</a></li>
+</ul></li>
 <li class="chapter" data-level="4.4" data-path="ratingsParadigm.html"><a href="ratingsParadigm.html#automating-all-this"><i class="fa fa-check"></i><b>4.4</b> Automating all this</a></li>
 <li class="chapter" data-level="4.5" data-path="ratingsParadigm.html"><a href="ratingsParadigm.html#relation-between-ratings-paradigm-and-the-binary-paradigm"><i class="fa fa-check"></i><b>4.5</b> Relation between ratings paradigm and the binary paradigm</a></li>
 <li class="chapter" data-level="4.6" data-path="ratingsParadigm.html"><a href="ratingsParadigm.html#ratings-are-not-numerical-values"><i class="fa fa-check"></i><b>4.6</b> Ratings are not numerical values</a></li>
@@ -848,23 +853,59 @@ W=\frac{1}{K_1K_2} \sum_{k_1=1}^{K_1} \sum_{k_2=1}^{K_2} \psi\left ( z_{k_11} , 
 W = AUC
 \tag{5.8}
 \end{equation}\]</span></p>
-<p>Numerical illustration: While hardly a proof, as an illustration of the theorem it is helpful to calculate the sum on the right hand side of Eqn. <a href="empirical-AUC.html#eq:empirical-AUC-Wilcoxon">(5.6)</a> and compare it to direct integration of the area under the empirical ROC curve (i.e., adding the area of a triangle and several trapezoids). <code>R</code> provides a function that does just that. It is part of package <code>caTools</code> and is called <code>trapz(x,y)</code>. It takes two array arguments, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, where in the current case <span class="math inline">\(x\)</span> is <span class="math inline">\(FPF\)</span> and <span class="math inline">\(y\)</span> is <span class="math inline">\(TPF\)</span>. One has to be careful to include the end-points as otherwise the area will be underestimated. The Wilcoxon <span class="math inline">\(W\)</span> and the numerical estimate of the empirical area AUC are implemented in the following code.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="empirical-AUC.html#cb23-1"></a>RocCountsTable =<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">5</span>))</span>
-<span id="cb23-2"><a href="empirical-AUC.html#cb23-2"></a>RocCountsTable[<span class="dv">1</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">19</span>,<span class="dv">8</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
-<span id="cb23-3"><a href="empirical-AUC.html#cb23-3"></a>RocCountsTable[<span class="dv">2</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">12</span>,<span class="dv">22</span>)</span>
-<span id="cb23-4"><a href="empirical-AUC.html#cb23-4"></a></span>
-<span id="cb23-5"><a href="empirical-AUC.html#cb23-5"></a>zk1  &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(RocCountsTable[<span class="dv">1</span>,]),RocCountsTable[<span class="dv">1</span>,])<span class="co">#convert frequency table to array</span></span>
-<span id="cb23-6"><a href="empirical-AUC.html#cb23-6"></a>zk2  &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(RocCountsTable[<span class="dv">2</span>,]),RocCountsTable[<span class="dv">2</span>,])<span class="co">#do:</span></span>
-<span id="cb23-7"><a href="empirical-AUC.html#cb23-7"></a></span>
-<span id="cb23-8"><a href="empirical-AUC.html#cb23-8"></a>w  &lt;-<span class="st"> </span><span class="kw">Wilcoxon</span> (zk1, zk2)</span>
-<span id="cb23-9"><a href="empirical-AUC.html#cb23-9"></a><span class="kw">cat</span>(<span class="st">&quot;The wilcoxon statistic is = &quot;</span>, w, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb23-10"><a href="empirical-AUC.html#cb23-10"></a><span class="co">#&gt; The wilcoxon statistic is =  0.8606667</span></span>
-<span id="cb23-11"><a href="empirical-AUC.html#cb23-11"></a>ret &lt;-<span class="st"> </span><span class="kw">RocOperatingPoints</span>(RocCountsTable[<span class="dv">1</span>,], RocCountsTable[<span class="dv">2</span>,])</span>
-<span id="cb23-12"><a href="empirical-AUC.html#cb23-12"></a>FPF &lt;-<span class="st"> </span>ret<span class="op">$</span>FPF;FPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,FPF,<span class="dv">1</span>)</span>
-<span id="cb23-13"><a href="empirical-AUC.html#cb23-13"></a>TPF &lt;-<span class="st"> </span>ret<span class="op">$</span>TPF;TPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,TPF,<span class="dv">1</span>)</span>
-<span id="cb23-14"><a href="empirical-AUC.html#cb23-14"></a>AUC &lt;-<span class="st"> </span><span class="kw">trapz</span>(FPF,TPF) <span class="co"># trapezoidal integration</span></span>
-<span id="cb23-15"><a href="empirical-AUC.html#cb23-15"></a><span class="kw">cat</span>(<span class="st">&quot;direct integration yields AUC = &quot;</span>, AUC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb23-16"><a href="empirical-AUC.html#cb23-16"></a><span class="co">#&gt; direct integration yields AUC =  0.8606667</span></span></code></pre></div>
+<p>Numerical illustration: While hardly a proof, as an illustration of the theorem it is helpful to calculate the sum on the right hand side of Eqn. <a href="empirical-AUC.html#eq:empirical-AUC-Wilcoxon">(5.6)</a> and compare it to direct integration of the area under the empirical ROC curve (i.e., adding the area of a triangle and several trapezoids). The function is called <code>trapz(x,y)</code>, see below. It takes two array arguments, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, where in the current case <span class="math inline">\(x\)</span> is <span class="math inline">\(FPF\)</span> and <span class="math inline">\(y\)</span> is <span class="math inline">\(TPF\)</span>. One has to be careful to include the end-points as otherwise the area will be underestimated. The Wilcoxon <span class="math inline">\(W\)</span> and the numerical estimate of the empirical area AUC are implemented in the following code.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="empirical-AUC.html#cb23-1"></a>trapz =<span class="st"> </span><span class="cf">function</span>(x, y)</span>
+<span id="cb23-2"><a href="empirical-AUC.html#cb23-2"></a>{ <span class="co">### computes the integral of y with respect to x using trapezoidal integration.</span></span>
+<span id="cb23-3"><a href="empirical-AUC.html#cb23-3"></a>  idx =<span class="st"> </span><span class="dv">2</span><span class="op">:</span><span class="kw">length</span>(x)</span>
+<span id="cb23-4"><a href="empirical-AUC.html#cb23-4"></a>  <span class="kw">return</span> (<span class="kw">as.double</span>( (x[idx] <span class="op">-</span><span class="st"> </span>x[idx<span class="dv">-1</span>]) <span class="op">%*%</span><span class="st"> </span>(y[idx] <span class="op">+</span><span class="st"> </span>y[idx<span class="dv">-1</span>])) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</span>
+<span id="cb23-5"><a href="empirical-AUC.html#cb23-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="empirical-AUC.html#cb24-1"></a>Wilcoxon &lt;-<span class="st"> </span><span class="cf">function</span> (zk1, zk2)</span>
+<span id="cb24-2"><a href="empirical-AUC.html#cb24-2"></a>{</span>
+<span id="cb24-3"><a href="empirical-AUC.html#cb24-3"></a>  K1 =<span class="st"> </span><span class="kw">length</span>(zk1)</span>
+<span id="cb24-4"><a href="empirical-AUC.html#cb24-4"></a>  K2 =<span class="st"> </span><span class="kw">length</span>(zk2)</span>
+<span id="cb24-5"><a href="empirical-AUC.html#cb24-5"></a>  W &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb24-6"><a href="empirical-AUC.html#cb24-6"></a>  <span class="cf">for</span> (k1 <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K1) {</span>
+<span id="cb24-7"><a href="empirical-AUC.html#cb24-7"></a>    W &lt;-<span class="st"> </span>W <span class="op">+</span><span class="st"> </span><span class="kw">sum</span>(zk1[k1] <span class="op">&lt;</span><span class="st"> </span>zk2)</span>
+<span id="cb24-8"><a href="empirical-AUC.html#cb24-8"></a>    W &lt;-<span class="st"> </span>W <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(zk1[k1] <span class="op">==</span><span class="st"> </span>zk2)</span>
+<span id="cb24-9"><a href="empirical-AUC.html#cb24-9"></a>  }</span>
+<span id="cb24-10"><a href="empirical-AUC.html#cb24-10"></a>  W &lt;-<span class="st"> </span>W<span class="op">/</span>K1<span class="op">/</span>K2</span>
+<span id="cb24-11"><a href="empirical-AUC.html#cb24-11"></a>  <span class="kw">return</span> (W)</span>
+<span id="cb24-12"><a href="empirical-AUC.html#cb24-12"></a>}</span>
+<span id="cb24-13"><a href="empirical-AUC.html#cb24-13"></a></span>
+<span id="cb24-14"><a href="empirical-AUC.html#cb24-14"></a>RocOperatingPoints &lt;-<span class="st"> </span><span class="cf">function</span>( K1, K2 ) {</span>
+<span id="cb24-15"><a href="empirical-AUC.html#cb24-15"></a>  </span>
+<span id="cb24-16"><a href="empirical-AUC.html#cb24-16"></a>  nOpPts &lt;-<span class="st"> </span><span class="kw">length</span>(K1) <span class="op">-</span><span class="st"> </span><span class="dv">1</span> <span class="co"># number of op points</span></span>
+<span id="cb24-17"><a href="empirical-AUC.html#cb24-17"></a>  FPF &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>,<span class="dt">dim =</span> nOpPts)</span>
+<span id="cb24-18"><a href="empirical-AUC.html#cb24-18"></a>  TPF &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>,<span class="dt">dim =</span> nOpPts)</span>
+<span id="cb24-19"><a href="empirical-AUC.html#cb24-19"></a>   </span>
+<span id="cb24-20"><a href="empirical-AUC.html#cb24-20"></a>  <span class="cf">for</span> (r <span class="cf">in</span> (nOpPts<span class="op">+</span><span class="dv">1</span>)<span class="op">:</span><span class="dv">2</span>) {</span>
+<span id="cb24-21"><a href="empirical-AUC.html#cb24-21"></a>    FPF[r<span class="dv">-1</span>] &lt;-<span class="st"> </span><span class="kw">sum</span>(K1[r<span class="op">:</span>(nOpPts<span class="op">+</span><span class="dv">1</span>)])<span class="op">/</span><span class="kw">sum</span>(K1)</span>
+<span id="cb24-22"><a href="empirical-AUC.html#cb24-22"></a>    TPF[r<span class="dv">-1</span>] &lt;-<span class="st"> </span><span class="kw">sum</span>(K2[r<span class="op">:</span>(nOpPts<span class="op">+</span><span class="dv">1</span>)])<span class="op">/</span><span class="kw">sum</span>(K2)    </span>
+<span id="cb24-23"><a href="empirical-AUC.html#cb24-23"></a>  }</span>
+<span id="cb24-24"><a href="empirical-AUC.html#cb24-24"></a>  FPF &lt;-<span class="st"> </span><span class="kw">rev</span>(FPF)</span>
+<span id="cb24-25"><a href="empirical-AUC.html#cb24-25"></a>  TPF &lt;-<span class="st"> </span><span class="kw">rev</span>(TPF)</span>
+<span id="cb24-26"><a href="empirical-AUC.html#cb24-26"></a>  </span>
+<span id="cb24-27"><a href="empirical-AUC.html#cb24-27"></a>  <span class="kw">return</span>( <span class="kw">list</span>(</span>
+<span id="cb24-28"><a href="empirical-AUC.html#cb24-28"></a>    <span class="dt">FPF =</span> FPF,</span>
+<span id="cb24-29"><a href="empirical-AUC.html#cb24-29"></a>    <span class="dt">TPF =</span> TPF</span>
+<span id="cb24-30"><a href="empirical-AUC.html#cb24-30"></a>  ) )</span>
+<span id="cb24-31"><a href="empirical-AUC.html#cb24-31"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="empirical-AUC.html#cb25-1"></a>RocCountsTable =<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">5</span>))</span>
+<span id="cb25-2"><a href="empirical-AUC.html#cb25-2"></a>RocCountsTable[<span class="dv">1</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">19</span>,<span class="dv">8</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb25-3"><a href="empirical-AUC.html#cb25-3"></a>RocCountsTable[<span class="dv">2</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">12</span>,<span class="dv">22</span>)</span>
+<span id="cb25-4"><a href="empirical-AUC.html#cb25-4"></a></span>
+<span id="cb25-5"><a href="empirical-AUC.html#cb25-5"></a>zk1  &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(RocCountsTable[<span class="dv">1</span>,]),RocCountsTable[<span class="dv">1</span>,])<span class="co">#convert frequency table to array</span></span>
+<span id="cb25-6"><a href="empirical-AUC.html#cb25-6"></a>zk2  &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(RocCountsTable[<span class="dv">2</span>,]),RocCountsTable[<span class="dv">2</span>,])<span class="co">#do:</span></span>
+<span id="cb25-7"><a href="empirical-AUC.html#cb25-7"></a></span>
+<span id="cb25-8"><a href="empirical-AUC.html#cb25-8"></a>w  &lt;-<span class="st"> </span><span class="kw">Wilcoxon</span> (zk1, zk2)</span>
+<span id="cb25-9"><a href="empirical-AUC.html#cb25-9"></a><span class="kw">cat</span>(<span class="st">&quot;The wilcoxon statistic is = &quot;</span>, w, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb25-10"><a href="empirical-AUC.html#cb25-10"></a><span class="co">#&gt; The wilcoxon statistic is =  0.8606667</span></span>
+<span id="cb25-11"><a href="empirical-AUC.html#cb25-11"></a>ret &lt;-<span class="st"> </span><span class="kw">RocOperatingPoints</span>(RocCountsTable[<span class="dv">1</span>,], RocCountsTable[<span class="dv">2</span>,])</span>
+<span id="cb25-12"><a href="empirical-AUC.html#cb25-12"></a>FPF &lt;-<span class="st"> </span>ret<span class="op">$</span>FPF;FPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,FPF,<span class="dv">1</span>)</span>
+<span id="cb25-13"><a href="empirical-AUC.html#cb25-13"></a>TPF &lt;-<span class="st"> </span>ret<span class="op">$</span>TPF;TPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,TPF,<span class="dv">1</span>)</span>
+<span id="cb25-14"><a href="empirical-AUC.html#cb25-14"></a>AUC &lt;-<span class="st"> </span><span class="kw">trapz</span>(FPF,TPF) <span class="co"># trapezoidal integration</span></span>
+<span id="cb25-15"><a href="empirical-AUC.html#cb25-15"></a><span class="kw">cat</span>(<span class="st">&quot;direct integration yields AUC = &quot;</span>, AUC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb25-16"><a href="empirical-AUC.html#cb25-16"></a><span class="co">#&gt; direct integration yields AUC =  0.8606667</span></span></code></pre></div>
 <p>Note the equality of the two estimates.</p>
 <p>The following proof is adapted from <span class="citation">(Bamber <a href="#ref-RN2174" role="doc-biblioref">1975</a>)</span> and while it may appear to be restricted to discrete ratings, the result is in fact quite general, i.e., it is applicable even if the ratings are acquired on a continuous scale. The reason is that in an R-rating ROC study the observed z-samples or ratings take on integer values, 1 through R. If R is large enough, ordering information present in the continuous data is not lost upon binning. In the following it is helpful to keep in mind that one is dealing with discrete distributions of the ratings, described by probability mass functions as opposed to probability density functions, e.g., <span class="math inline">\(P(Z_2 = \zeta_i)\)</span> is not zero, as would be the case for continuous ratings. The proof is illustrated with Fig. <a href="empirical-AUC.html#fig:empirical-AUC-BambersTheorem">5.3</a>.</p>
 <div class="figure"><span id="fig:empirical-AUC-BambersTheorem"></span>
