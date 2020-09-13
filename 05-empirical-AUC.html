@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>05-empirical-AUC.utf8</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown #bookdown:version# and GitBook 2.6.7" />
+
+  <meta property="og:title" content="05-empirical-AUC.utf8" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="05-empirical-AUC.utf8" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<!--bookdown:link_prev-->
+<!--bookdown:link_next-->
+<script src="libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+<!--bookdown:title:start-->
+<!--bookdown:title:end-->
+
+<!--bookdown:toc:start-->
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+<!--bookdown:toc2:start-->
+<ul>
+<li><a href="#empirical-auc-empirical-auc"><span class="toc-section-number">1</span> Empirical AUC {empirical-AUC}</a>
+<ul>
+<li><a href="#introduction-empirical-auc-intro"><span class="toc-section-number">1.1</span> Introduction {empirical-AUC-Intro}</a></li>
+<li><a href="#the-empirical-roc-plot"><span class="toc-section-number">1.2</span> The empirical ROC plot</a></li>
+<li><a href="#appendix-5.a-details-of-wilcoxon-theorem"><span class="toc-section-number">1.3</span> Appendix 5.A: Details of Wilcoxon theorem</a></li>
+<li><a href="#references"><span class="toc-section-number">1.4</span> References</a></li>
+</ul></li>
+</ul>
+<!--bookdown:toc2:end-->
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<!--bookdown:toc:end-->
+<!--bookdown:body:start-->
+<div id="empirical-auc-empirical-auc" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Empirical AUC {empirical-AUC}</h1>
+<div id="introduction-empirical-auc-intro" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Introduction {empirical-AUC-Intro}</h2>
+<p>The ROC plot, introduced in Chapter 03, is defined as the plot of sensitivity (y-axis) vs. 1-specificity (x-axis). Equivalently, it is the plot of TPF (y-axis) vs. FPF (x-axis). An equal variance binormal model was introduced which allows an ROC plot to be fitted to a single observed operating point. In Chapter 04, the more commonly used ratings paradigm was introduced.</p>
+<p>One of the reasons for fitting observed counts data, such as in Table 4.1 in Chapter 04, to a parametric model, is to derive analytical expressions for the separation parameter of the model or the area AUC under the curve. Other figures of merit, such as the TPF at a specified FPF, or the partial area to the left of a specified FPF, can also be calculated from this model. Each figure of merit can serve as the basis for comparing two readers to determine which one is better. They have the advantage of being single values, as opposed to a pair of sensitivity-specificity values, thereby making it easier to unambiguously compare performances. Additionally, they often yield physical insight into the task, e.g., the separation parameter is the perceptual signal to noise corresponding to the diagnostic task.</p>
+<p>It was shown, Fig. 4.1 (A - B), that the equal variance binormal model did not describe a clinical dataset and that an unequal variance binormal model yielded a better visual fit. This turns out to be an almost universal finding. Before getting into the complexity of the unequal variance binormal model curve fitting, it is appropriate to introduce a simpler empirical approach, which is very popular with some researchers. The New Oxford American Dictionary definition of “empirical” is: “based on, concerned with, or verifiable by observation or experience rather than theory or pure logic”. The method is also termed “non-parametric” as it does not involve any parametric assumptions (specifically normality assumptions). Notation is introduced for labeling individual cases that is used in subsequent chapters. An important theorem relating the empirical area under the ROC to a formal statistic, known as the Wilcoxon, is described. The importance of the theorem derives from its applications to non-parametric analysis of ROC data.</p>
+</div>
+<div id="the-empirical-roc-plot" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> The empirical ROC plot</h2>
+<p>The empirical ROC plot is constructed by connecting adjacent observed operating points, including the trivial ones at (0,0) and (1,1), with straight lines. The trapezoidal area under this plot is a non-parametric figure of merit that is threshold independent. Since no parametric assumptions are involved, some prefer it to parametric methods, such as the one to be described in the next chapter. [In the context of AUC, the terms empirical, trapezoidal, or non-parametric all mean the same thing.]</p>
+<p>5.2.1: Notation for cases
+As in §3.5, cases are indexed by where indicates the truth-status at the case (i.e., patient) level, with for non diseased cases and for diseased cases. Index ranges from one to for non-diseased cases and ranges from one to for diseased cases, where and are the total number of non-diseased and diseased cases, respectively. In Table 5.1, each case is represented as a shaded box, lighter shading for non-diseased cases and darker shading for diseased cases. There are 11 non-diseased cases, labeled N1 – N11, in the upper row of boxes and there are seven diseased cases, labeled D1 – D7, in the lower row of boxes.</p>
+<p>Table 5.1: On the need for two indices to label cases in an ROC study. The upper row denotes 11 non-diseased cases, labeled N1 – N11, while the lower row denotes seven diseased cases, labeled D1 – D7. To address any case one needs two indices: the row number (t = 1 or t = 2) and the column number . Since in general the column number depends on the value of t, one needs two indices to specify the column index.
+N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11
+D1 D2 D3 D4 D5 D6 D7</p>
+<p>To address a case one needs two indices; the first index is the column number and the second index is the row number, and moreover the total number of columns can, and does in this example, depend on the row number. This means the first index has to be t-dependent, i.e., , denoting the column index of a case with truth index t. Alternative notation in more commonly usage uses a single index k to label the cases. It reserves the first positions for non-diseased cases and the rest for diseased cases: e.g., corresponds to the third non-diseased case, corresponds to the fifth diseased case, etc. Because it extends more easily to more complex data structures, e.g., FROC, the author prefers the two-index notation.
+5.2.2: An empirical operating point
+Let represent the (realized) z-sample of case . For a given reporting threshold , and assuming a positive-directed rating scale (i.e., higher values correspond to greater confidence in presence of disease), empirical false positive fraction and empirical true positive fraction are defined by:</p>
+<pre><code>.   (5.1)
+.   (5.2)</code></pre>
+<p>Here is the indicator function that equals one if is true and is zero otherwise:</p>
+<pre><code>.   (5.3)</code></pre>
+<p>In Eqn. (5.1) and Eqn. (5.2), the indicator functions act as counters, effectively counting instances where the z-sample of a case equals or exceeds , and division by the appropriate denominator yields the desired left hand sides of these equations. The operating point corresponding to threshold is defined by:</p>
+<pre><code>.   (5.4)</code></pre>
+<p>The difference between Eqn. (5.1) and Eqn. (5.2) vs. Eqn. (3.22) and Eqn. (3.23) corresponds to that between parametric and non-parametric methods. In Chapter 03 analytical (or parametric, i.e., depending on model parameters) operating points were obtained. In contrast, in Eqn. (5.1) and Eqn. (5.2), one uses the observed ratings to calculate the empirical operating point.
+5.3: Empirical operating points from ratings data
+Consider a ratings ROC study with R bins. Describing an R-rating empirical ROC plot requires R-1 ordered empirical thresholds, see Eqn. 4.13, reproduced below:</p>
+<pre><code>.   (5.5)</code></pre>
+<p>The discrete operating point is obtained by replacing with in Eqn. (5.4), where:</p>
+<pre><code>.   (5.6)</code></pre>
+<p>Its coordinates are defined by:</p>
+<pre><code>.   (5.7)</code></pre>
+<p>For example,</p>
+<pre><code>.   (5.8)</code></pre>
+<p>In Table 4.1, a sample clinical ratings data set was introduced. For convenience it is reproduced below, Table 5.2. In this example, R = 5, corresponding to the 5-ratings bins used to acquire the data.</p>
+<p>Table 5.2: A typical ROC counts table, reproduced from Chapter 04, Table 4.1.
+Counts in ratings bins
+Rating = 1 Rating = 2 Rating = 3 Rating = 4 Rating = 5</p>
+<p>30 19 8 2 1</p>
+<p>5 6 5 12 22
+Operating points
+≥5 ≥4 ≥3 ≥2 ≥1
+FPF 0.017 0.050 0.183 0.500 1
+TPF 0.440 0.680 0.780 0.900 1</p>
+<p>Shown below is a partial code listing of mainEmpRocPlot.R showing implementation of Eqn. (5.7). Except for the last statement, the plotting part of the code is suppressed.
+5.3.1 Code listing (partial)
+rm(list = ls()) # mainEmpRocPlot.R
+…
+K1 &lt;- 60;K2 &lt;- 50
+FPF &lt;- c(0, cumsum(rev(c(30, 19, 8, 2, 1))) / K1)
+TPF &lt;- c(0, cumsum(rev(c(5, 6, 5, 12, 22))) / K2)
+…
+grid.draw(p)</p>
+<p>Line 4 – 6 constructs the counts table shown in Table 5.2 and implements Eqn. (5.7). The function cumsum() is used to calculate the cumulative sum. The rev() function reverses the order of the array supplied as its argument. The reader should use the debugging techniques (basically copy and paste parts of the code to the Console window and hit enter) to understand how this simple appearing code implements Eqn. (5.7); see §5.3.2.</p>
+<p>Fig. 5.1 is the empirical ROC plot, produced by sourcing mainEmpRocPlot.R. It illustrates the convention used to label the operating points is that introduced in §4.3 is, i.e., is the uppermost non-trivial point, and the labels are incremented by unity as one moves down the plot. By convention, not shown are the trivial operating points and .</p>
+<p>Fig. 5.1: Convention: The operating points are numbered starting with the uppermost non-trivial one, which is , and working down the plot. This figure corresponds to the data in Table 5.2. The plot was produced by mainEmpROCPlot.R.
+5.4: AUC under the empirical ROC plot
+Fig. 5.2 shows the empirical plot for the data in Table 5.2, and the area under the curve (AUC) is the shaded area. By dropping imaginary vertical lines from the non-trivial operating points onto the x-axis, the shaded area is seen to be the sum of one triangular shaped area and four trapezoids. One may be tempted to write equations to calculate the total area using elementary algebra, but that would be unproductive. There is a theorem (see below) that the empirical area is exactly equal to a particular statistic known as the Mann-Whitney-Wilcoxon statistic1,2, which, in this book, is abbreviated to the Wilcoxon statistic. Calculating this statistic is much simpler than calculating and summing the areas of the triangle and trapezoids or doing planimetry.</p>
+<p>Fig. 5.2: The empirical ROC plot corresponding to Table 5.2; the shaded area is the area under this plot, a widely used figure of merit in non-parametric ROC analysis. The plot was produced by the code in mainEmpiricalAUC.R.
+5.5: The Wilcoxon statistic
+A statistic is any value calculated from observed data. The Wilcoxon statistic is defined in terms of the observed ratings, by:</p>
+<pre><code>.   (5.9)</code></pre>
+<p>The function is defined by:</p>
+<pre><code>    .   (5.10)</code></pre>
+<p>The function is sometimes called the kernel function. It is unity if the diseased case is rated higher, 0.5 if the two are rated the same and zero otherwise. Each evaluation of the kernel function results from a comparison of a case from the non-diseased set with one from the diseased set. In Eqn. (5.9) the two summations and division by the total number of comparisons yields the observed or empirical probability that diseased cases are rated higher than non-diseased ones. Since it is a probability, it can theoretically range from zero to one. However, if the observer has any discrimination ability, one expects diseased cases to be rated equal or greater than non-diseased ones, so in practice one expects:</p>
+<pre><code>.   (5.11)</code></pre>
+<p>The limit 0.5 corresponds to a guessing observer, whose operating point moves along the chance diagonal of the ROC plot.
+5.6: Bamber’s Equivalence theorem
+Here is the result: the Wilcoxon statistic W equals the area AUC under the empirical ROC plot:</p>
+<pre><code>.   (5.12)</code></pre>
+<p>Numerical illustration: While hardly a proof, as an illustration of the theorem it is helpful to calculate the sum on the right hand side of Eqn. (5.12) and compare it to the result of a direct integration of the area under the empirical ROC curve (i.e., adding the area of a triangle and several trapezoids). R provides a function that does just that. It is part of package caTools and is called trapz(x,y). It takes two array arguments, x and y, where in the current case x is FPF and y is TPF. One has to be careful to include the end-points as otherwise the area will be underestimated. The Wilcoxon W and the empirical area AUC are implemented in Online Appendix 5.A, in file mainWilcoxon.R. Source this file to get the following output.</p>
+<p>Note the equality of the two estimates.</p>
+<p>Proof: The following proof is adapted from a paper by Bamber 3 and while it may appear to be restricted to discrete ratings, the result is in fact quite general, i.e., it is applicable even if the ratings are acquired on a continuous (floating point variable) scale. The reason is as follows: in an R-rating ROC study the observed z-samples or ratings take on integer values, 1 through R. If R is large enough, ordering information present in the continuous data is not lost upon binning – this is the reason why the proof is quite general.</p>
+<p>In the following it is helpful to keep in mind that one is dealing with discrete distributions of the ratings, described by probability mass functions as opposed to probability density functions, e.g., is not zero, as would be the case for continuous ratings.</p>
+<p>Fig. 5.3: Illustration of the derivation of Bamber’s equivalence theorem. Shows an empirical ROC plot for R = 5; the shaded area is due to points labeled i and i + 1. This figure was created by the code in MainBamberTheorem.R.</p>
+<p>The abscissa of the operating point is and the corresponding ordinate is . Here is a random sample from a non-diseased case and is a random sample from a diseased case. The shaded trapezoid defined by drawing horizontal lines from operating points (upper) and (lower) to the right edge of the ROC plot, Fig. 5.3, created by the code in MainBamberTheorem.R, see Online Appendix 5.A, has height:</p>
+<p>. . (5.13)</p>
+<p>The validity of this equation can perhaps be more easily seen when the first term is written in the form:</p>
+<p>.</p>
+<p>The lengths of the top and bottom edges of the trapezoid are, respectively:</p>
+<p>,</p>
+<p>and</p>
+<pre><code>. </code></pre>
+<p>The area of the shaded trapezoid in Fig. 5.3 is (the steps are shown explicitly):</p>
+<pre><code>.   (5.14)</code></pre>
+<p>In going from the first to the second line of Eqn. (5.14), use has been made of the last relation, below, derived from Eqn. (5.13) after replacing 2 with 1 and expressing the two probabilities on the left hand side of Eqn. (5.13) in terms of their complementary probabilities:</p>
+<p>. . (5.15)</p>
+<p>Summing over all values of i, one gets for the total area under the empirical ROC plot:</p>
+<pre><code>.       (5.16)</code></pre>
+<p>It is shown in Appendix 5.A that the term corresponds to the triangle at the upper right corner of Fig. 5.3. Likewise, the term corresponds to the horizontal trapezoid defined by the lowest non-trivial operating point.</p>
+<p>Eqn. (5.16) can be restated as:</p>
+<pre><code>.   (5.17)</code></pre>
+<p>The Wilcoxon statistic was defined in Eqn. (5.9). It can be seen that the comparisons implied by the summations and the weighting implied by the kernel function are estimating the two probabilities in the expression for in Eqn. (5.17). Therefore,</p>
+<pre><code>.   (5.18)</code></pre>
+<p>
+## Importance of Bamber’s theorem
+The equivalence theorem is the starting point for all non-parametric methods of analyzing ROC plots, e.g., Refs. 4,5. Prior to Bamber’s work one knew how to plot an empirical operating characteristic and how to calculate the Wilcoxon statistic, but their equality had not been analytically proven. This was Bamber’s essential contribution. In the absence of this theorem, the Wilcoxon statistic would be “just another statistic” in the context of ROC analysis. The theorem is so important that a major paper appeared in Radiology6 devoted to the equivalence. The title of this paper was “The meaning and use of the area under a receiver operating characteristic (ROC) curve”. The equivalence theorem literally gives meaning to the empirical area under the ROC.
+5.8: Discussion / Summary
+In this chapter, a simple method for estimating the area under the ROC plot has been described. The empirical AUC is a non-parametric measure of performance. Its simplicity and clear physical interpretation as the AUC under the empirical ROC (not fitted, not true) has spurred much theoretical development. These include the De Long et al method for estimating the variance of AUC of a single ROC empirical curve, and comparing pairs of ROC empirical curves5. Bamber’s theorem, namely the equivalence between the empirical AUC and the Wilcoxon statistic has been derived and demonstrated. More recently, a first principle derivation and generalization of the variance-component modeling approach to analyzing multiple-reader multiple-case (MRMC) datasets, has been described7,8.</p>
+<p>Since the empirical AUC always yields a number, the researcher could be unaware about unusual behavior of the empirical ROC curve, so it is always a good idea to plot the data and look for evidence of large extrapolations. An example would be data points clustered at low FPF values, which imply a large AUC contribution, unsupported by intermediate operating points, from the line connecting the uppermost non-trivial operating point to (1,1).</p>
+</div>
+<div id="appendix-5.a-details-of-wilcoxon-theorem" class="section level2" number="1.3">
+<h2 number="1.3"><span class="header-section-number">1.3</span> Appendix 5.A: Details of Wilcoxon theorem</h2>
+</div>
+<div id="references" class="section level2" number="1.4">
+<h2 number="1.4"><span class="header-section-number">1.4</span> References</h2>
+</div>
+</div>
+<!--bookdown:body:end-->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<!--bookdown:link_prev-->
+<!--bookdown:link_next-->
+    </div>
+  </div>
+<!--bookdown:config-->
+
+</body>
+
+</html>

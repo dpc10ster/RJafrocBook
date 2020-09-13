@@ -47,8 +47,8 @@ In this example, there are $K_1 = 60$ non-diseased cases and $K_2 = 50$ diseased
 ## Operating points from counts table
 
 
-* $r\ge 5$ means "counting ratings greater than or equal to 5 and dividing by the appropriate denominator, $K_1$ for FPF and $K_2$ for TPF" 
-* $r\ge 4$ means "counting ratings greater than or equal to 4 and dividing by the appropriate denominator, $K_1$ for FPF and $K_2$ for TPF" 
+* $r\ge 5$ means "counting ratings greater than or equal to 5 and dividing by the appropriate denominator, yields $K_1$ for FPF and $K_2$ for TPF" 
+* $r\ge 4$ means "counting ratings greater than or equal to 4 and dividing by the appropriate denominator, yields $K_1$ for FPF and $K_2$ for TPF" 
 * Etc.
 
 \begin{table}
@@ -145,11 +145,13 @@ plotROC (mu, sigma, FPF, TPF)
 * The corresponding value of $\zeta$ can be calculated from Eqn. (3.17), namely:
 
 \begin{equation*} 
-\Phi^{-1}\left ( Sp \right )=\zeta
+\zeta = \Phi^{-1}\left ( Sp \right )
+(\#eq:ratingsParadigm-Zeta)
 \end{equation*}
 
 \begin{equation*} 
-\zeta=\mu - \Phi^{-1}\left ( Se \right )
+\mu = \zeta + \Phi^{-1}\left ( Se \right )
+(\#eq:ratingsParadigm-Mu)
 \end{equation*}
 
 These are coded below:
@@ -185,17 +187,36 @@ cat("showing observed operating points and unequal variance model fitted ROC cur
 * Notice the improved visual quality of the fit. Each observed point is "not engraved in stone", rather both FPF and TPF are subject to sampling variability. Estimation of confidence intervals for FPF and TPF was addressed in §3.10. [A detail: the estimated confidence interval in the preceding chapter was for a single operating point; since the multiple operating points are correlated – some of the counts used to calculate them are common to two or more operating points – the method tends to overestimate the confidence interval. A modeling approach is possible to estimate confidence intervals that accounts for data correlation and this yields tighter confidence intervals.]
 
 ## Relation between ratings paradigm and the binary paradigm
-* In Chapter 02 it was shown that the binary task requires a single fixed threshold parameter $\zeta$ and a decision rule, namely, to give the case a diseased rating of 2 if $Z \ge \zeta$ and a rating of 1 otherwise. 
+Table \@ref(tab:ratingsParadigmTable1) and Table \@ref(tab:ratingsParadigmTable2) correspond to $R = 5$. In Chapter \@ref(binaryTask0) it was shown that the binary task requires a single fixed threshold parameter $\zeta$ and a decision or binning rule Eqn. \@ref(eq:ratingsParadigm-binningRule): assign the case a diseased rating of 2 if $Z > \zeta$ and a rating of 1 otherwise. 
 
-* The R-rating task can be viewed as $(R-1)$ *simultaneously* conducted binary tasks each with its own fixed threshold  $\zeta_r, r = 1, 2, ..., R-1$. It is efficient compared to $(R-1)$  *sequentially* conducted binary tasks; *however, the onus is on the observer to maintain fixed-multiple thresholds through the duration of the study*.
+**The R-rating task can be viewed as $R-1$ simultaneously conducted binary tasks each with its own fixed threshold $\zeta_r$, where r = 1, 2, ..., R-1. It is efficient compared to $R-1$ sequentially conducted binary tasks; however, the onus is on the observer to maintain fixed-multiple thresholds through the duration of the study.**
 
-* The rating method is a more efficient way of collecting the data compared to running the study repeatedly with appropriate instructions to cause the observer to adopt different fixed thresholds specific to each replication. In the clinical context such repeated studies would be impractical because it would introduce memory effects, wherein the diagnosis of a case would depend on how many times the case had been seen, along with other cases, in previous sessions. A second reason is that it is difficult for a radiologist to change the operating threshold in response to instructions. To the author's knowledge, repeated use of the binary paradigm has not been used in any clinical ROC study.  
+The rating method is a more efficient way of collecting the data compared to running the study repeatedly with appropriate instructions to cause the observer to adopt different fixed thresholds specific to each replication. In the clinical context such repeated studies would be impractical because it would introduce memory effects, wherein the diagnosis of a case would depend on how many times the case had been seen, along with other cases, in previous sessions. A second reason is that it is difficult for a radiologist to change the operating threshold in response to instructions. To the author's knowledge, repeated use of the binary paradigm has not been used in any clinical ROC study
 
-* How does one model the binning? For convenience one defines dummy thresholds $\zeta_0 = - \infty$  and  $\zeta_R = + \infty$, in which case the thresholds satisfy the ordering requirement  $\zeta_{r-1} \le  \zeta_r$ , r = 1, 2, ..., R. The rating or binning rule is:	
+How does one model the binning? For convenience one defines dummy thresholds $\zeta_0 = - \infty$ and $\zeta_R = + \infty$, in which case the thresholds satisfy the ordering requirement $\zeta_{r-1} \le  \zeta_r$ , r = 1, 2, ..., R. The rating or binning rule is:	
 
-\begin{equation*} 
+\begin{equation} 
 if \left (\zeta_{r-1} \le z \le \zeta_r  \right )\Rightarrow \text rating = r
-\end{equation*}
+(\#eq:ratingsParadigm-binningRule)
+\end{equation}
+
+For Table \@ref(tab:ratingsParadigmTable2), the **empirical** thresholds are as follows:
+
+\begin{equation} 
+\left.
+\begin{aligned}
+\zeta_r &= r + 1 \\
+r & = 1, 2, ..., R-1\\
+\zeta_0 &= -\infty\\
+\zeta_R &= \infty\\
+\end{aligned}
+\right \}
+(\#eq:ratingsParadigm-EmpZeta)
+\end{equation}
+
+The empirical thresholds are integers, as distinct from the floating point values predicted by Eqn. \@ref(eq:ratingsParadigm-Zeta). **Either way one gets the same operating points.** This is a subtle and important distinction, which is related to the next section: one has enormous flexibility in the choice of the scale adopted for the decision variable axis. 
+
+In Table \@ref(tab:ratingsParadigmTable1) the number of bins is $R = 5$. The "simultaneously conducted binary tasks" nature of the rating task can be appreciated from the following examples. Suppose one selects the threshold for the first binary task to be $\zeta_4 = 5$. By definition, $\zeta_5 = \infty$; therefore a case rated 5 satisfies the binning rule $\zeta_4 \leq 5 < \zeta_5$, i.e., Eqn. \@ref(eq:ratingsParadigm-binningRule). The operating point corresponding to $\zeta_4 = 5$, obtained by cumulating all cases rated five, yields $(0.017, 0.440)$. In the second binary-task, one selects as threshold $\zeta_3 = 4$. Therefore, a case rated four satisfies the binning rule $\zeta_3 \leq 4 < \zeta_4$. The operating point corresponding to $\zeta_3 = 4$, obtained by cumulating all cases rated four or five, yields $(0.05, 0.680)$. Similarly, for $\zeta_2 = 3$, $\zeta_1 = 2$ and $\zeta_0 = -\infty$, which yield counts in bins 3, 2 and 1, respectively. The last is a trivial operating point. The non-trivial operating points are generated by thresholds $\zeta_r$, where $r$ = 1, 2, 3 and 4. A five-rating study has four associated thresholds and a corresponding number of equivalent binary studies. In general, an $R$ rating study has $R-1$ associated thresholds.
 
 ## Ratings are not numerical values
 * The ratings are to be thought of as ordered labels, not as numeric values. Arithmetic operations that are allowed on numeric values, such as averaging, are not allowed on ratings. One could have relabeled the ratings in Table 4.2 as A, B, C, D and E, where A < B etc. As long as the counts in the body of the table are unaltered, such relabeling would have no effect on the observed operating points and the fitted curve. Of course one cannot average the labels A, B, etc. of different cases. The issue with numeric labels is not fundamentally different. At the root is that the difference in thresholds corresponding to the different operating points are not in relation to the difference between their numeric values. There is a way to estimate the underlying thresholds, if one assumes a specific model, for example the unequal-variance binormal model to be described in Chapter 06. The thresholds so obtained are genuine numeric values and can be averaged. [Not to hold the reader in suspense, the four thresholds corresponding to the data in Table 4.1 are   0.007676989,   0.8962713,   1.515645 and   2.396711; see §6.4.1; these values would be unchanged if, for example, the labels were doubled, with allowed values 2, 4, 6, 8 and 10, or any of an infinite number of rearrangements that preserves their ordering.]
