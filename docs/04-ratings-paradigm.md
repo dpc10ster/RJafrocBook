@@ -27,20 +27,37 @@ Table \@ref(tab:ratingsParadigmTable1) is a representative counts table for a 5-
 * $r = 4$ means "ratings equal to 4" 
 * Etc.
 
-\begin{table}
-
-\caption{(\#tab:ratingsParadigmTable1)Representative counts table.}
-\centering
-\begin{tabular}[t]{l|r|r|r|r|r}
-\hline
-  & $r = 5$ & $r = 4$ & $r = 3$ & $r = 2$ & $r = 1$\\
-\hline
-non-diseased & 30 & 19 & 8 & 2 & 1\\
-\hline
-diseased & 5 & 6 & 5 & 12 & 22\\
-\hline
-\end{tabular}
-\end{table}
+<table>
+<caption>(\#tab:ratingsParadigmTable1)Representative counts table.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> $r = 5$ </th>
+   <th style="text-align:right;"> $r = 4$ </th>
+   <th style="text-align:right;"> $r = 3$ </th>
+   <th style="text-align:right;"> $r = 2$ </th>
+   <th style="text-align:right;"> $r = 1$ </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> non-diseased </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 19 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> diseased </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:right;"> 22 </td>
+  </tr>
+</tbody>
+</table>
 
 In this example, there are $K_1 = 60$ non-diseased cases and $K_2 = 50$ diseased cases. Of the 60 non-diseased cases 30 were assigned the "1" rating, 19 were assigned the "2" rating, eight the "3" rating, two the "4" rating and one received the "5" rating. The distribution of counts is tilted towards the "1" rating end, but there is some spread and one actually non-diseased case appeared definitely diseased to the observer. In contrast, the distribution of the diseased cases is tilted towards the "5" rating end. Of the 50 diseased cases, 22 received the "5" rating, 12 the "4" rating, five the "3" rating, six the "2" rating and five the "1" rating. The spread appears to be more pronounced for the diseased cases, e.g., five of the 50 cases appeared to be definitely non-diseased to the observer. A little thought should convince you that the observed tilting of the counts, towards the "1" end for actually non-diseased cases, and towards the "5" end for actually diseased cases, is reasonable. However, one should be forewarned not to jump to conclusions about the spread of the data being larger for diseased than for non-diseased cases. While it turns out to be true, the ratings are merely ordered labels, and modeling is required, to be described in (TBA) Chapter 06, that uses only the ordering information implicit in the labels, not the actual values, to reach quantitative conclusions.
 
@@ -51,20 +68,37 @@ In this example, there are $K_1 = 60$ non-diseased cases and $K_2 = 50$ diseased
 * $r\ge 4$ means "counting ratings greater than or equal to 4 and dividing by the appropriate denominator, yields $K_1$ for FPF and $K_2$ for TPF" 
 * Etc.
 
-\begin{table}
-
-\caption{(\#tab:ratingsParadigmTable2)Computation of operating points from cell counts.}
-\centering
-\begin{tabular}[t]{l|r|r|r|r|r}
-\hline
-  & $r\ge 5$ & $r\ge 4$ & $r\ge 3$ & $r\ge 2$ & $r\ge 1$\\
-\hline
-FPF & 0.017 & 0.05 & 0.183 & 0.5 & 1\\
-\hline
-TPF & 0.440 & 0.68 & 0.780 & 0.9 & 1\\
-\hline
-\end{tabular}
-\end{table}
+<table>
+<caption>(\#tab:ratingsParadigmTable2)Computation of operating points from cell counts.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> $r\ge 5$ </th>
+   <th style="text-align:right;"> $r\ge 4$ </th>
+   <th style="text-align:right;"> $r\ge 3$ </th>
+   <th style="text-align:right;"> $r\ge 2$ </th>
+   <th style="text-align:right;"> $r\ge 1$ </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> FPF </td>
+   <td style="text-align:right;"> 0.017 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.183 </td>
+   <td style="text-align:right;"> 0.5 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TPF </td>
+   <td style="text-align:right;"> 0.440 </td>
+   <td style="text-align:right;"> 0.68 </td>
+   <td style="text-align:right;"> 0.780 </td>
+   <td style="text-align:right;"> 0.9 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+</tbody>
+</table>
 
 
 * Table \@ref(tab:ratingsParadigmTable2) illustrates how ROC operating points are calculated from the cell counts. One starts with non-diseased cases that were rated five or more (in this example, since 5 is the highest allowed rating, the “or more” clause is superfluous) and divides by the total number of non-diseased cases, $K_1 = 60$. This yields the abscissa of the lowest non-trivial operating point, namely  $FPF_{\ge5}$ = 1/60 = 0.017. The subscript on FPF is intended to make explicit which ratings are being cumulated. The corresponding ordinate is obtained by dividing the number of diseased cases rated "5" or more and dividing by the total number of diseased cases, $K_2 = 50$, yielding $TPF_{\ge5}$ = 22/50 = 0.440. Therefore, the coordinates of the lowest operating point are (0.017, 0.44). The abscissa of the next higher operating point is obtained by dividing the number of non-diseased cases that were rated "4" or more and dividing by the total number of non-diseased cases, i.e., $TPF_{\ge4}$ = 3/60 = 0.05. Similarly the ordinate of this operating point is obtained by dividing the number of diseased cases that were rated "4" or more and dividing by the total number of diseased cases, i.e., $FPF_{\ge4}$ = 34/50 = 0.680. The procedure, which at each stage cumulates the number of cases equal to or greater (in the sense of increased confidence level for disease presence) than a specified label, is repeated to yield the rest of the operating points listed in Table 4.1. Since they are computed directly from the data, without any assumption, they are called empirical or observed operating points. After done this once it would be nice to have a formula implementing the process, one use of which would be to code the procedure. First, one needs appropriate notation for the bin counts.
@@ -134,7 +168,7 @@ cat("showing observed operating points and equal variance model fitted ROC curve
 plotROC (mu, sigma, FPF, TPF)
 ```
 
-![](04-ratings-paradigm_files/figure-latex/unnamed-chunk-4-1.pdf)<!-- --> 
+<img src="04-ratings-paradigm_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
 * Notice that the values of the arrays `FPF` and `TPF` are identical to those listed in Table 4.1.
 
@@ -178,7 +212,7 @@ cat("showing observed operating points and unequal variance model fitted ROC cur
 #> showing observed operating points and unequal variance model fitted ROC curve
 ```
 
-![](04-ratings-paradigm_files/figure-latex/unnamed-chunk-6-1.pdf)<!-- --> 
+<img src="04-ratings-paradigm_files/figure-html/unnamed-chunk-6-1.png" width="672" />
 
 * The ROC curve in Fig. 4.1 (A), as determined by the uppermost operating point, passes exactly through this point but misses the others. If a different operating point were used to estimate $\mu$ = and $A_{z;\sigma = 1}$, the estimated values would have been different and the new curve would pass exactly through the *new* selected point. No single-point based choice of $\mu$ would yield a satisfactory visual fit to all the observed operating points. [The reader should confirm these statements with appropriate modifications to the code.] * __This is the reason one needs a modified model, with an extra parameter, namely the unequal variance binormal model, to fit radiologist data__ (the extra parameter is the ratio of the standard deviations of the two distributions). 
 
