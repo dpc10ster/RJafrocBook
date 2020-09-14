@@ -5,9 +5,9 @@
 
 
 ## Introduction
-In Chapter \@ref(binaryTask0) the binary paradigm and associated concepts (e.g., sensitivity, specificity) were introduced. Chapter \@ref(binaryTask) introduced the concepts of a random scalar decision variable, or z-sample for each case, which is compared, by the observer, to a fixed reporting threshold $\zeta$, resulting in two types of decisions. It described a statistical model for the binary task, characterized by two unit-variance normal distributions separated by $\mu$. The concept of an underlying receiver operating characteristic (ROC) curve with the reporting threshold defining an operating point on the curve was introduced and the advisability of using the area under the curve as a measure of performance, which is independent of reporting threshold, was stressed. 
+In Chapter \@ref(binaryTask0) the binary paradigm and associated concepts (e.g., sensitivity, specificity) were introduced. Chapter \@ref(binaryTask) introduced the concepts of a random scalar decision variable, or z-sample for each case, which is compared, by the observer to a fixed reporting threshold $\zeta$, resulting in two types of decisions. It described a statistical model, characterized by two unit-variance normal distributions separated by $\mu$, for the binary task. The concept of an underlying receiver operating characteristic (ROC) curve with the reporting threshold defining an operating point on the curve was introduced and the advisability of using the area under the curve as a measure of performance, which is independent of reporting threshold, was stressed. 
 
-In this chapter the more commonly used ratings method will be described, which yields greater definition to the underlying ROC curve than just one operating point obtained in the binary task, and moreover, is more efficient. In this method, the observer assigns a rating to each case. Described first is a typical ROC counts table and how operating points (i.e., pairs of FPF and TPF values) are calculated from the counts data. A labeling convention for the operating points is introduced. Notation is introduced for the observed integers in the counts table and the rules for calculating operating points are expressed as formulae and implemented in R. The ratings method is contrasted to the binary method, in terms of efficiency and practicality. A theme occurring repeatedly in this book, that the ratings are not numerical values but rather they are ordered labels is illustrated with an example.
+In this chapter the more commonly used ratings method will be described, which yields greater definition to the underlying ROC curve than just one operating point obtained in the binary task, and moreover, is more efficient. In this method, the observer assigns a rating to each case. Described first is a typical ROC counts table and how operating points (i.e., pairs of FPF and TPF values) are calculated from the counts data. A labeling convention for the operating points is introduced. Notation is introduced for the observed integers in the counts table and the rules for calculating operating points are expressed as formulae and implemented in R. The ratings method is contrasted to the binary method, in terms of efficiency and practicality. A theme occurring repeatedly in this book, that the ratings are not numerical values but rather they are ordered labels is illustrated with an example. A method of collecting ROC data on a 6-point scale is described that has the advantage of yielding an unambiguous single operating point. The forced choice paradigm is described. Two controversies are described: one on the utility of discrete (e.g., 1 to 6) vs. quasi-continuous  (e.g., 0 to 100) ratings and the other on the applicability of a clinical screening mammography-reporting scale for ROC analyses. Both of these are important issues and it would be a disservice to the readers of the book if the author did not express his position on them.
 
 ## The ROC counts table
 In a positive-directed rating scale with five discrete levels, the ratings could be the ordered labels: 
@@ -20,7 +20,7 @@ In a positive-directed rating scale with five discrete levels, the ratings could
 
 At the conclusion of the ROC study an ROC counts table is constructed. This is the generalization to rating studies of the 2 x 2 decision vs. truth table introduced in (book) Chapter 02, Table 2.1. This type of data representation is sometimes called a frequency table, but frequency usually means a rate of number of events per some unit, so the author prefers the clearer term “counts”. 
 
-Table \@ref(tab:ratingsParadigmTable1) is a representative counts table for a 5-rating study that summarizes the collected data. It is the starting point for analysis. It lists the number of counts in each ratings bin, listed separately for non-diseased and diseased cases, respectively. The data is from an actual clinical study.
+Table \@ref(tab:ratingsParadigmTable1) is a representative counts table for a 5-rating study that summarizes the collected data. It is the starting point for analysis. It lists the number of counts in each ratings bin, listed separately for non-diseased and diseased cases, respectively. The data is from an actual clinical study [@RN4343]. 
 
 \begin{table}
 
@@ -30,21 +30,30 @@ Table \@ref(tab:ratingsParadigmTable1) is a representative counts table for a 5-
 \hline
   & $r = 5$ & $r = 4$ & $r = 3$ & $r = 2$ & $r = 1$\\
 \hline
-non-diseased & 30 & 19 & 8 & 2 & 1\\
+non-diseased & 1 & 2 & 8 & 19 & 30\\
 \hline
-diseased & 5 & 6 & 5 & 12 & 22\\
+diseased & 22 & 12 & 5 & 6 & 5\\
 \hline
 \end{tabular}
 \end{table}
 
+In this table:
 
 * $r = 5$ means "rating equal to 5" 
 * $r = 4$ means "rating equal to 4" 
 * Etc.
 
-In this example, there are $K_1 = 60$ non-diseased cases and $K_2 = 50$ diseased cases. Of the 60 non-diseased cases 30 were assigned the "1" rating, 19 were assigned the "2" rating, eight the "3" rating, two the "4" rating and one received the "5" rating. The distribution of counts is tilted towards the "1" rating end, but there is some spread and one actually non-diseased case appeared definitely diseased to the observer. In contrast, the distribution of the diseased cases is tilted towards the "5" rating end. Of the 50 diseased cases, 22 received the "5" rating, 12 the "4" rating, five the "3" rating, six the "2" rating and five the "1" rating. The spread appears to be more pronounced for the diseased cases, e.g., five of the 50 cases appeared to be definitely non-diseased to the observer. A little thought should convince you that the observed tilting of the counts, towards the "1" end for actually non-diseased cases, and towards the "5" end for actually diseased cases, is reasonable. However, one should be forewarned not to jump to conclusions about the spread of the data being larger for diseased than for non-diseased cases. While it turns out to be true, the ratings are merely ordered labels, and modeling is required, to be described in (TBA) Chapter 06, that uses only the ordering information implicit in the labels, not the actual values, to reach quantitative conclusions.
+There are $K_1 = 60$ non-diseased cases and $K_2 = 50$ diseased cases. Of the 60 non-diseased cases, one received the "5" rating, two the "4" rating, eight the "3" rating, 19 the "2" rating and 30 were assigned the "1" rating. The distribution of counts is tilted towards the "1" rating end, but there is some spread and one actually non-diseased case appeared definitely diseased to the observer. In contrast, the distribution of the diseased cases is tilted towards the "5" rating end. Of the 50 diseased cases, 22 received the "5" rating, 12 the "4" rating, five the "3" rating, six the "2" rating and five the "1" rating. A little thought should convince you that the observed tilting of the counts, towards the "1" end for actually non-diseased cases, and towards the "5" end for actually diseased cases, is reasonable. 
+
+The spread appears to be more pronounced for the diseased cases, e.g., five of the 50 cases appeared to be definitely non-diseased to the observer. However, one should be forewarned not to jump to conclusions about the spread of the data being larger for diseased than for non-diseased cases. While it turns out to be true as will be shown later, the **ratings are merely ordered labels**, and modeling is required, to be described in Chapter \@ref(BinMod), that uses only the *ordering information* implicit in the labels, not the *actual values*, to reach quantitative conclusions.
 
 ## Operating points from counts table
+Table \@ref(tab:ratingsParadigmTable2) illustrates how ROC operating points are calculated from the cell counts. In this table:
+
+* $r\geq 5$ means "counting ratings greater than or equal to 5" 
+* $r\geq 4$ means "counting ratings greater than or equal to 4" 
+* Etc.
+
 \begin{table}
 
 \caption{(\#tab:ratingsParadigmTable2)Computation of operating points from cell counts.}
@@ -53,20 +62,18 @@ In this example, there are $K_1 = 60$ non-diseased cases and $K_2 = 50$ diseased
 \hline
   & $r\geq 5$ & $r\geq 4$ & $r\geq 3$ & $r\geq 2$ & $r\geq 1$\\
 \hline
-FPF & 0.017 & 0.05 & 0.183 & 0.5 & 1\\
+FPF & 0.0167 & 0.05 & 0.1833 & 0.5 & 1\\
 \hline
-TPF & 0.440 & 0.68 & 0.780 & 0.9 & 1\\
+TPF & 0.4400 & 0.68 & 0.7800 & 0.9 & 1\\
 \hline
 \end{tabular}
 \end{table}
 
-* $r\geq 5$ means "counting ratings greater than or equal to 5 and dividing by the appropriate denominator ($K_1$ for FPF and $K_2$ for TPF)" 
-* $r\geq 4$ means "counting ratings greater than or equal to 4 and dividing by the appropriate denominator ($K_1$ for FPF and $K_2$ for TPF)" 
-* Etc.
+One starts with non-diseased cases that were rated five or more (in this example, since 5 is the highest allowed rating, the “or more” clause is inconsequential) and divides by the total number of non-diseased cases, $K_1 = 60$. This yields the abscissa of the lowest non-trivial operating point, namely  $FPF_{\ge5}$ = 1/60 = 0.017. The subscript on FPF is intended to make explicit which ratings are being cumulated. The corresponding ordinate is obtained by dividing the number of diseased cases rated "5" or more and dividing by the total number of diseased cases, $K_2 = 50$, yielding $TPF_{\ge5}$ = 22/50 = 0.440. Therefore, the coordinates of the lowest operating point are (0.017, 0.44). The abscissa of the next higher operating point is obtained by dividing the number of non-diseased cases that were rated "4" or more and dividing by the total number of non-diseased cases, i.e., $TPF_{\ge4}$ = 3/60 = 0.05. Similarly the ordinate of this operating point is obtained by dividing the number of diseased cases that were rated "4" or more and dividing by the total number of diseased cases, i.e., $FPF_{\ge4}$ = 34/50 = 0.680. The procedure, which at each stage cumulates the number of cases equal to or greater (in the sense of increased confidence level for disease presence) than a specified ordered label, is repeated to yield the rest of the operating points listed in Table \@ref(tab:ratingsParadigmTable2). Since they are computed directly from the data, without any assumption, they are called empirical or observed operating points. 
 
-Table \@ref(tab:ratingsParadigmTable2) illustrates how ROC operating points are calculated from the cell counts. One starts with non-diseased cases that were rated five or more (in this example, since 5 is the highest allowed rating, the “or more” clause is inconsequential) and divides by the total number of non-diseased cases, $K_1 = 60$. This yields the abscissa of the lowest non-trivial operating point, namely  $FPF_{\ge5}$ = 1/60 = 0.017. The subscript on FPF is intended to make explicit which ratings are being cumulated. The corresponding ordinate is obtained by dividing the number of diseased cases rated "5" or more and dividing by the total number of diseased cases, $K_2 = 50$, yielding $TPF_{\ge5}$ = 22/50 = 0.440. Therefore, the coordinates of the lowest operating point are (0.017, 0.44). The abscissa of the next higher operating point is obtained by dividing the number of non-diseased cases that were rated "4" or more and dividing by the total number of non-diseased cases, i.e., $TPF_{\ge4}$ = 3/60 = 0.05. Similarly the ordinate of this operating point is obtained by dividing the number of diseased cases that were rated "4" or more and dividing by the total number of diseased cases, i.e., $FPF_{\ge4}$ = 34/50 = 0.680. The procedure, which at each stage cumulates the number of cases equal to or greater (in the sense of increased confidence level for disease presence) than a specified label, is repeated to yield the rest of the operating points listed in Table 4.1. Since they are computed directly from the data, without any assumption, they are called empirical or observed operating points. After done this once it would be nice to have a formula implementing the process, one use of which would be to code the procedure. First, one needs appropriate notation for the bin counts.
+After doing this once, it would be nice to have a formula implementing the process, one use of which would be to code the procedure. But first one needs appropriate notation for the bin counts.
 
-Let $K_{1r}$ denote the number of non-diseased cases rated r, and $K_{2r}$ denote the number of diseased cases rated r. For convenience, define dummy counts  $K_{1{(R+1)}}$ = $K_{2{(R+1)}}$ = 0, where R is the number of ROC bins. This construct allows inclusion of the origin (0,0) in the formulae. The range of r is $r = 1,2,...,(R+1)$. Within each truth-state, the individual bin counts sum to the total number of non-diseased and diseased cases, respectively. The following equations summarize all this:
+Let $K_{1r}$ denote the number of non-diseased cases rated $r$, and $K_{2r}$ denote the number of diseased cases rated $r$. For convenience, define dummy counts  $K_{1{(R+1)}}$ = $K_{2{(R+1)}}$ = 0, where R is the number of ROC bins, $R = 5$ in the current example. This construct allows inclusion of the origin (0,0) in the formulae. The range of $r$ is $r = 1,2,...,(R+1)$. Within each truth-state, the individual bin counts sum to the total number of non-diseased and diseased cases, respectively. The following equations summarize all this:
 
 \begin{equation*} 
 K_1=\sum_{r=1}^{R+1}K_{1r}
@@ -86,16 +93,22 @@ r = 1,2,...,(R+1)
 
 The operating points are defined by:
 
-\begin{equation*} 
-FPF_r=\frac {1} {K_1} \sum_{s=r}^{R+1}K_{1s}
-\end{equation*}
+\begin{equation}
+\left. 
+\begin{aligned}
+FPF_r=& \frac {1} {K_1} \sum_{s=r}^{R+1}K_{1s}\\
+TPF_r=& \frac {1} {K_2} \sum_{s=r}^{R+1}K_{2s}
+ \end{aligned}
+\right \}
+(\#eq:ratingsParadigm-FPF-TPF-from-counts)
+\end{equation}
 
-\begin{equation*} 
-TPF_r=\frac {1} {K_2} \sum_{s=r}^{R+1}K_{2s}
-\end{equation*}
+### Numbering the points
+The numbering $n$ of the points follows the following convention: From Eqn. \@ref(eq:ratingsParadigm-FPF-TPF-from-counts), the point corresponding to $r=1$ would correspond to the upper right corner (1,1) of the ROC plot, a trivial operating point since it is common to all datasets, and is therefore not shown. The numbering starts with the next lower-left point, numbered $n=1$, which corresponds to $r=2$, the next lower-left point is numbered $n=2$, corresponding to $r=3$, etc., and the point numbered $n=R-1=4$ is the lowest non-trivial operating point corresponding to $r=R$ and finally $r=R+1$ is the origin (0,0) of the ROC plot, which is also a trivial operating point, because it is common to all datasets, and is therefore not shown. **To summarize, the operating points are numbered starting with the upper right corner, numbered 1, and working down the curve, each time increasing the number by one. The total number of points is $R-1$.**  The relation between $n$ and $r$ in the formulae is:
 
-The labeling of the points follows the following convention: $r=1$  corresponds to the upper right corner (1,1) of the ROC plot, a trivial operating point since it is common to all datasets. Next, $r=2$  is the next lower operating point, etc., and  $r=R$ is the lowest non-trivial operating point and finally $r=R+1$  is the origin (0,0) of the ROC plot, which is also a trivial operating point, because it is common to all datasets. In other words, the operating points are numbered starting with the upper right corner, labeled 1, and working down the curve, each time increasing the label by one. 
-
+$$n=r-1$$
+ An example of the numbering is shown in the next chapter, Fig. \@ref(fig:empirical-AUC-EmpiricalPlot).
+ 
 ### Examples
 In the following examples $R = 5$ is the number of ROC bins and $K_{1(R+1)}$ = $K_{2(R+1)}$ = 0. If $r = 1$ one gets the uppermost "trivial" operating point (1,1):
 
@@ -169,9 +182,9 @@ for (r in (R+1):2) {
 df <- data.frame(FPF = FPF, TPF = TPF)
 df <- t(df)
 print(df)
-#>       [,1] [,2]  [,3] [,4]
-#> FPF 0.0167 0.05 0.183  0.5
-#> TPF 0.4400 0.68 0.780  0.9
+#>     [,1]  [,2] [,3]  [,4]
+#> FPF  0.5 0.817 0.95 0.983
+#> TPF  0.1 0.220 0.32 0.560
 mu <- qnorm(.5)+qnorm(.9);sigma <- 1
 Az <- pnorm(mu/sqrt(2))
 cat("uppermost point based estimate of mu = ", mu, "\n")
