@@ -375,21 +375,30 @@ The reported ROC analyses used the BIRADS assessments labels ordered as follows:
 \centering
 \begin{tabular}[t]{l|l|l|l|l}
 \hline
-  & Total number of mammograms & Mammograms without breast cancer (percent) & Mammograms with breast cancer  (percent) & Cancers per 1000 screening mammograms\\
+  & Total number 
+of mammograms & Mammograms without 
+breast cancer (percent) & Mammograms with 
+breast cancer  (percent) & Cancers per 1000 
+screening mammograms\\
 \hline
 1:Normal & 356,030 & 355,734 (76.2) & 296 (12.3) & 0.83\\
 \hline
 2: Benign finding & 56,614 & 56,533 (12.1) & 81 (3.4) & 1.43\\
 \hline
-3: Probably benign, recommend normal or short term follow up & 8,692 & 8,627 (1.8) & 65 (2.7) & 7.48\\
+3: Probably benign, 
+recommend normal or short term follow up & 8,692 & 8,627 (1.8) & 65 (2.7) & 7.48\\
 \hline
-3-plus: Probably benign, recommend immediate follow up & 3,094 & 3,049 (0.7) & 45 (1.9) & 14.54\\
+3-plus: Probably benign, 
+recommend immediate follow up & 3,094 & 3,049 (0.7) & 45 (1.9) & 14.54\\
 \hline
-0: Need additional imaging evaluation & 42,823 & 41,442 (8.9) & 1,381 (57.5) & 32.25\\
+0: Need additional 
+imaging evaluation & 42,823 & 41,442 (8.9) & 1,381 (57.5) & 32.25\\
 \hline
-4: Suspicious finding, biopsy should be considered & 2,022 & 1,687 (0.4) & 335 (13.9) & 165.68\\
+4: Suspicious finding, 
+biopsy should be considered & 2,022 & 1,687 (0.4) & 335 (13.9) & 165.68\\
 \hline
-5: Highly suggestinve of malignancy & 237 & 38 (0.0) & 199 (8.3) & 839.66\\
+5: Highly suggestive 
+of malignancy & 237 & 38 (0.0) & 199 (8.3) & 839.66\\
 \hline
 \end{tabular}
 \end{table}
