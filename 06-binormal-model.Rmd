@@ -9,6 +9,7 @@ library(kableExtra)
 library(ggplot2)
 library(RJafroc)
 library(grid)
+library(gridExtra)
 ```
 
 ```{r, echo=FALSE}
@@ -32,12 +33,13 @@ plotROC <- function (mu, sigma, FPF, TPF)
 ```
 
 ## Introduction {#BinModIntro}
-In this chapter the univariate binormal model [@RN212] is described, in which one is dealing with one ROC rating per case, as in a single observer interpreting cases, one at a time, in a single modality. By convention the qualifier "univariate" is often omitted, i.e., it is implicit. In a later chapter a bivariate binormal model will be described where each case yields two ratings, as in a single observer interpreting cases in two modalities, or equivalently, two observers interpreting cases in a single modality. 
+The equal variance binormal model was described in Chapter 02. The ratings method of acquiring ROC data and calculation of operating points was discussed in Chapter 04. It was shown, Fig. \@ref(fig:ratingsParadigmEqVarFitA), that for a clinical dataset the unequal-variance binormal model visually fitted the data better than the equal-variance binormal model, although how the unequal variance fit was obtained was not discussed. This chapter deals with details of the unequal-variance binormal model, often abbreviated to **binormal model**, establishes necessary notation, and derives expressions for sensitivity, specificity and the area under the predicted ROC curve). 
 
-The equal variance binormal model was described in Chapter "Binary Paradigm". The ratings method of acquiring ROC data and calculation of operating points was illustrated in Chapter "Ratings Paradigm". It was shown that for a clinical ROC dataset the unequal-variance binormal model fitted the data better than the equal-variance binormal model. This chapter deals with details of the unequal-variance binormal model, establishes necessary notation for describing the model, and derives expressions for sensitivity, specificity and the area under the predicted ROC curve (due to its complexity it appears in an Appendix). 
+The binormal model describes univariate datasets, in which there is one ROC rating per case, as in a single observer interpreting cases, one at a time, in a single modality. By convention the qualifier "univariate" is often omitted. In TBA Chapter 21 a bivariate model will be described where each case yields two ratings, as in a single observer interpreting cases in two modalities, or the homologous problem of two observers interpreting cases in a single modality. 
 
-The main aim of this chapter is to take the mystery out of statistical curve fitting. Accordingly, this is one chapter where the Appendices are longer than the main text, but as usual, they are essential reading as they reinforce the main text. It is not too much to expect the reader to load each file beginning with "main", click on Source and see what happens. [The reader is reminded that any file that starts with "main" contains directly executable code.]
+The main aim of this chapter is to demystify statistical curve fitting. With the passing of Dorfman, Metz and Swensson, parametric modeling is being neglected. Researchers are instead focusing on non-parametric analysis using the empirical AUC. While useful, empirical AUC yields almost no insight into what is limiting performance. Taking the mystery out of curve fitting will allow the reader to appreciate later chapters that describe more complex fitting methods, which yield important insights into factors limiting performance. 
 
+Here is the organization of this chapter. It starts with a description of the binormal model and how it accommodates data binning. An important point, on which there is much confusion, on the invariance of the binormal model to arbitrary monotone transformations of the ratings is explicated with an example. Expressions for sensitivity and specificity are derived. Two notations used to characterize the binormal model are explained. Expressions for the pdfs of the binormal model are derived. A simple linear fitting method is illustrated: this used to be the only recourse a researcher had before Dorfman and Alf's seminal publication [@RN1081]. The maximum likelihood method for estimating parameters of the binormal model is detailed. Validation of the fitting method is described, i.e., how can one be confident that the fitting method, which makes normality and other assumptions, is valid for a dataset arising from an unknown distribution. The Appendix has a detailed derivation, originally published in a terse paper [@RN2342] on the partial area under the ROC curve. The partial area is defined by the area under the binormal ROC curve from $FPF = 0$ to $FPF = c$, where $0 \leq c \leq 1$. As a special case $c = 1$ yields the total area under the binormal ROC. 
 
 ## The binormal model {#BinModTheModel}
 The unequal-variance binormal model (henceforth abbreviated to binormal model; when the author means equal variances, it will be made explicit) is defined by (capital letters indicate random variables and their lower-case counterparts are actual realized values):
@@ -56,16 +58,18 @@ where
 
 Eqn. \@ref(eq:BinModZSampling1) states that the z-samples for non-diseased cases are distributed as a $N(0,1)$  distribution, i.e., the unit normal distribution, while the z-samples for diseased cases are distributed as a  $N(\mu,\sigma^2)$ distribution, i.e., a normal distribution with mean $\mu$  and variance $\sigma^2$. This is a 2-parameter model of the z-samples, not counting additional threshold parameters needed for data binning.
 
+A more complicated version of this model allows the mean of the non-diseased distribution to be non-zero and its variance different from unity. The 4-parameter model is no more general than the 2-parameter model. The reason is that one is free to transform the decision variable, and associated thresholds, by applying arbitrary monotonic increasing function transformation, which do not change the ordering of the ratings and hence do not change the ROC curve. So if the mean of the noise distribution were non-zero, subtracting this value from all Z-samples would shift the effective mean of the non-diseased distribution to zero (the shifted Z-values are monotonically related to the original values) and the mean of the shifted diseased distribution becomes $\mu_2-\mu_1$. Next, one scales or divides (division by a positive number is also a monotonic transformation) all the Z-samples by $\sigma_1$, resulting in the scaled non-diseased distribution having unit variance, and the scaled diseased distribution has mean $\frac{\mu_2-\mu_1}{\sigma_1}$  and variance $(\frac{\sigma_2}{\sigma_1})^2$. Therefore, if one starts with 4 parameters then one can, by simple shifting and scaling operations, reduce the model to 2 parameters, as in Eqn. \@ref(eq:BinModZSampling1). [The author has seen a publication on Bayesian ROC estimation using the four-parameter model.]
+
 ### Binning the data
-In an R-rating ROC study the observed ratings r take on integer values, 1 through R, it being understood that higher ratings correspond to greater confidence for disease. Defining dummy cutoffs $\zeta_0 = -\infty$ and  $\zeta_R = +\infty$, the binning rule for a case with realized z-sample z is (Chapter "Ratings Paradigm", Eqn. 4.13):
+In an R-rating ROC study the observed ratings r take on integer values, 1 through R, it being understood that higher ratings correspond to greater confidence for disease. Defining dummy cutoffs $\zeta_0 = -\infty$ and  $\zeta_R = +\infty$, the binning rule for a case with realized z-sample z is (Chapter \@ref(ratingsParadigm), Eqn. \@ref(eq:ratingsParadigm-binningRule)):
 
 \begin{equation} 
-if \left (\zeta_{r-1} \le z \le \zeta_r  \right )\Rightarrow \text rating = r
+\text{if} \left (\zeta_{r-1} \le z \le \zeta_r  \right )\Rightarrow \text {rating} = r
 (\#eq:BinModZBinning)
 \end{equation}
 
 
-```{r, fig.show='hold'}
+```{r, fig.show='hold', echo = FALSE}
 mu <- 1.5;sigma <- 1.5
 
 z1 <- seq(-3, 4, by = 0.01)
@@ -117,12 +121,13 @@ gt$layout$clip[gt$layout$name == "panel"] <- "off"
 grid.draw(gt)
 ```             
 
-In the unequal-variance binormal model, the variance $\sigma^2$ of the z-samples for diseased cases is allowed to be different from unity. Most ROC datasets are consistent with  $\sigma > 1$. The above figure, generated with  $\mu = 1.5, \sigma = 1.5$, illustrates how realized z-samples are converted to ratings, i.e., application of the binning rule. For example, a case with  z-sample equal to -2.5 would be rated "1", and one with  z-sample equal to -1 would be rated "2", cases with z-samples greater than 2.5 would be rated "5", etc.
+In the unequal-variance binormal model, the variance $\sigma^2$ of the z-samples for diseased cases is allowed to be different from unity. Most ROC datasets are consistent with  $\sigma > 1$. The above figure, generated with  $\mu = 1.5, \sigma = 1.5, \zeta_1 = -2, \zeta_2 = -0.5, \zeta_3 = 1, \zeta_4 = 2.5$, illustrates how realized z-samples are converted to ratings, i.e., application of the binning rule \@ref(eq:BinModZBinning). For example, a case with  z-sample equal to -2.5 would be rated "1", and one with  z-sample equal to -1 would be rated "2", cases with z-samples greater than 2.5 would be rated "5", etc.
 
 ### Invariance of the binormal model to arbitrary monotone transformations
-The binormal model is not as restrictive as might appear at first sight. Any monotone increasing transformation $Y=f(Z)$  applied to the observed z-samples, and the associated thresholds, will yield the same observed data, e.g., Table 6.1. This is because such a transformation leaves the ordering of the ratings unaltered and hence results in the same operating points. While the distributions for   will not be binormal (i.e., two independent normal distributions), one can safely "pretend" that one is still dealing with an underlying binormal model. An alternative way of stating this is that any pair of distributions is allowed as long as they are reducible to a binormal model form by a monotonic increasing transformation of  Y: e.g., $Z=f^{-1}$. [If $f$ is a monotone increasing function of its argument, so is  $f^{-1}$}.]  For this reason, the term “pair of latent underlying normal distributions” is sometimes used to describe the binormal model. The robustness of the binormal model has been investigated [@RN1216; @RN100]. The referenced paper by Dorfman et al has an excellent discussion of the robustness of the binormal model.
+The binormal model is not as restrictive as might appear at first sight. Any monotone increasing transformation $Y=f(Z)$ applied to the observed z-samples, and the associated thresholds, will yield the same observed data, e.g., Table \@ref(tab:ratingsParadigmExampleTable). This is because such a transformation leaves the ordering of the ratings unaltered and hence results in the same operating points. While the distributions for $Y$ will not be binormal (i.e., two independent normal distributions), one can safely "pretend" that one is still dealing with an underlying binormal model. An alternative way of stating this is that any pair of distributions is allowed as long as they are reducible to a binormal model form by a monotonic increasing transformation of  Y: e.g., $Z=f^{-1}$. [If $f$ is a monotone increasing function of its argument, so is  $f^{-1}$}.]  For this reason, the term “pair of latent underlying normal distributions” is sometimes used to describe the binormal model. The robustness of the binormal model has been investigated [@RN1216; @RN100]. The referenced paper by Dorfman et al has an excellent discussion of the robustness of the binormal model.
 
-The robustness of the binormal model, i.e., the flexibility allowed by the infinite choices of monotonic increasing functions, application of each of which leaves the ordering of the data unaltered, is widely misunderstood. The non-Gaussian appearance of histograms of ratings in ROC studies can lead one to incorrect conclusions that the binormal model is inapplicable to these datasets. To quote a reviewer of one of the author's recent papers: 
+The robustness of the binormal model, i.e., the flexibility allowed by the infinite choices of monotonic increasing functions, application of each of which leaves the ordering of the data unaltered, is widely misunderstood. The non-Gaussian appearance of histograms of ratings in ROC studies can lead one to incorrect conclusions that the binormal model is inapplicable to these datasets. To quote a reviewer of one of the author's recent papers:
+
 > I have had multiple encounters with statisticians who do not understand this difference.... They show me histograms of data, and tell me that the data is obviously not normal, therefore the binormal model should not be used. 
 
 The reviewer is correct. The misconception is illustrated next.
@@ -140,97 +145,99 @@ TrapezoidalArea <- function( noise, signal )
   area = area / length( noise ) / length( signal )
   return( area )
 }
-
 Y <- function(z,mu1,mu2,sigma1,sigma2,f) { # line 12
   y <- (1-f)*pnorm((z-mu1)/sigma1)*100+f*pnorm((z-mu2)/sigma2)*100
   return( y )
-} # line 15
+}
 ```
-
 
 
 ```{r, fig.show='hold', out.width = '33%'}
 # shows that monotone transformations have no effect on 
 # AUC even though the pdfs look non-gaussian
 # common statistician misconception about ROC analysis
-
-options(digits = 7) # line 10
-
-fArray <- c(0.1,0.5,0.9);seedArray <- c(10,11,12)
-for (i in 1:3) { 
-  f <- fArray[i];seed <- seedArray[i];set.seed(seed) # line 20
+fArray <- c(0.1,0.5,0.9)
+seedArray <- c(10,11,12)
+for (row in 1:3) { 
+  f <- fArray[row]
+  seed <- seedArray[row]
+  set.seed(seed) 
+  # numbers of cases simulated
   K1 <- 900
   K2 <- 1000
   mu1 <- 30
   sigma1 <- 7
-  mu2 <- 55;sigma2 <- 7 # line 21
-  z1 <- rnorm(
-    K1, 
-    mean = mu1, 
-    sd = sigma1)
-  z1[z1>100] <- 100;z1[z1<0] <- 0
-  z2 <- rnorm(
-    K2, 
-    mean = mu2, 
-    sd = sigma2)
-  z2[z2>100] <- 100;z2[z2<0] <- 0
+  mu2 <- 55
+  sigma2 <- 7 
+  # Simulate true gaussian ratings using above parameter values
+  z1 <- rnorm(K1,mean = mu1,sd = sigma1)
+  z1[z1>100] <- 100;z1[z1<0] <- 0 # constrain to 0 to 100
+  z2 <- rnorm(K2,mean = mu2,sd = sigma2)
+  z2[z2>100] <- 100;z2[z2<0] <- 0 # constrain to 0 to 100
+  # calculate AUC for true Gaussian ratings
   AUC1 <- TrapezoidalArea(z1, z2)
   Gaussians <- c(z1, z2)
-  hist1 <- data.frame(x=Gaussians) #  line 27
-  hist.1 <-  
-    ggplot(data = hist1, mapping = aes(x = x)) +
+  # display histograms of true Gaussian ratings, A1, A2 or A3
+  x <- data.frame(x=Gaussians) #  line 27
+  x <-  
+    ggplot(data = x, mapping = aes(x = x)) +
     geom_histogram(binwidth = 5, color = "black", fill="grey") + 
     xlab(label = "Original Rating") + 
-    ggtitle(label = paste0("A", i, ": ", "Gaussians"))
-  print(hist.1)
-  
-  z <- seq(0.0, 100, 0.1) # line 32
-  curveData <- 
-    data.frame(x = z, 
-               z =  Y(z,mu1,mu2,sigma1,sigma2,f))
-  plot3 <- 
+    ggtitle(label = paste0("A", row, ": ", "Gaussians"))
+  print(x)
+  z <- seq(0.0, 100, 0.1)
+  # transform the latent Gaussians to true Gaussians
+  transformation <- 
+    data.frame(
+      x = z, 
+      z =  Y(z,mu1,mu2,sigma1,sigma2,f))
+  # display transformation functions, B1, B2 or B3
+  x <- 
     ggplot(mapping = aes(x = x, y = z)) + 
-    geom_line(data = curveData, size = 1) +
+    geom_line(data = transformation, size = 1) +
     xlab(label = "Original Rating") +
     ylab(label = "Transformed Rating") + 
-    ggtitle(
-      label = paste0("B", i, ": ", 
-                     "Monotone Transformation"))
-  print(plot3)
-  
+    ggtitle(label = paste0("B", row, ": ","Monotone Transformation"))
+  print(x)
   y <- Y(c(z1, z2),mu1,mu2,sigma1,sigma2,f)
   y1 <- y[1:K1];y2 <- y[(K1+1):(K1+K2)]
+  # calculate AUC for transformed ratings
   AUC2 <- TrapezoidalArea( y1, y2)
-  hist2 <- data.frame(x=y)
-  hist.2 <-  ggplot(data = hist2, mapping = aes(x = x)) +
+  # display histograms of latent Gaussian ratings, C1, C2 or C3
+  x <- data.frame(x=y)
+  x <-  ggplot(data = x, mapping = aes(x = x)) +
     geom_histogram(binwidth = 5, color = "black", fill="grey") +
     xlab(label = "Transformed Rating") + 
-    ggtitle(
-      label = paste0("C", i, ": ", "Latent Gaussians"))
-  print(hist.2)
-  cat("seed =", seed, "f =", f, 
+    ggtitle(label = paste0("C", row, ": ", "Latent Gaussians"))
+  print(x)
+# print AUCs, note they are identical (for each row)  
+options(digits = 9)
+  cat("row =", row, ", seed =", seed, ", f =", f, 
       "\nAUC of actual Gaussians =", AUC1, 
       "\nAUC of latent Gaussians =", AUC2, "\n")
 }
 ```
 
-**Figure captions (A1 - C3):** Plots illustrating the invariance of ROC analysis to arbitrary monotone transformations of the ratings. Each of the latent Gaussian plots (C1, C2 and C3) appears not binormal. However, by using the inverse of the monotone transformations shown (B1, B2 and B3), they can be transformed to the binormal model histograms (A1, A2 and A3). Plot (A1) shows the histogram of simulated ratings from a binormal model. Two peaks, one at 30 and the other at 55 are evident (by design, all ratings in this figure are in the range 0 to 100). Plot (B1) shows the monotone transformation for $f = 0.1$. Plot (C1) shows the histogram of the transformed rating. The choice of $f$ leads to a transformed rating histogram that is peaked near the high end of the rating scale. For (A1) and (C1) the corresponding AUCs are identical (0.99308). Plot (A2) is for a different seed value, plot (B2) is the transformation for $f = 0.5$ and now the transformed histogram is almost flat, plot C2. For plots (A2) and (C2) the corresponding AUCs are identical (0.9936689). Plot (A3) is for a different seed value, (B3) is the transformation for $f = 0.9$ and the transformed histogram (C3) is peaked near the low end of the transformed rating scale. For plots (A3) and (C3) the corresponding AUCs are identical (0.9950411).
+**Figure captions (A1 - C3):** Illustrating the invariance of ROC analysis to arbitrary monotone transformations of the ratings. Each row contains 3 plots: labeled 1, 2 and 3. Each column contains 3 plots labeled A, B and C. So, for example, plot C2 refers to the second row and third column. The for-loop generates the plot one row at a time. Each of the latent Gaussian plots C1, C2 and C3 appears not binormal. However, using the inverse of the monotone transformations shown B1, B2 and B3, they can be transformed to the binormal model histograms A1, A2 and A3. Plot A1 shows the histogram of simulated ratings from a binormal model. Two peaks, one at 30 and the other at 55 are evident (by design, all ratings in this figure are in the range 0 to 100). Plot B1 shows the monotone transformation for $f = 0.1$. Plot C1 shows the histogram of the transformed rating. The choice of $f$ leads to a transformed rating histogram that is peaked near the high end of the rating scale. For A1 and C1 the corresponding AUCs are identical (0.993080000). Plot A2 is for a different seed value, plot B2 is the transformation for $f = 0.5$ and now the transformed histogram is almost flat, plot C2. For plots A2 and C2 the corresponding AUCs are identical (0.993668889). Plot A3 is for a different seed value, B3 is the transformation for $f = 0.9$ and the transformed histogram C3 is peaked near the low end of the transformed rating scale. For plots A3 and (C3) the corresponding AUCs are identical (0.995041111).
 
-Line 20-21 sets the parameters of the simulation model. The idea is to simulate continuous ratings data in the range 0 to 100 from a binormal model. Non-diseased cases are sampled from a Gaussian centered at $\mu_1$ = 30 and standard deviation $\sigma_1 = 7$. Diseased cases are sampled from a Gaussian centered at $\mu_2$ = 55 and standard deviation $\sigma_2$ = 7. The variable $f$, which is in the range (0,1), controls the shape of the transformed distribution. If $f$ is small, the transformed distribution will be peaked towards 0 and if $f$ is unity, it will be peaked at 100. If $f$ equals 0.5, the transformed distribution is flat. Insight into the reason for this transformation is in [@RN300], Chapter 7, ibid: it has to do with transformations of random variables. The transformation $Y(Z)$, in the in-line function $Y$, not shown, implements:
+The idea is to simulate continuous ratings data in the range 0 to 100 from a binormal model. $K_1 = 900$ non-diseased cases are sampled from a Gaussian centered at $\mu_1$ = 30 and standard deviation $\sigma_1 = 7$. $K_2 = 1000$ diseased cases are sampled from a Gaussian centered at $\mu_2$ = 55 and standard deviation $\sigma_2$ = 7. The variable $f$, which is in the range (0,1), controls the shape of the transformed distribution. If $f$ is small, the transformed distribution will be peaked towards 0 and if $f$ is unity, it will be peaked at 100. If $f$ equals 0.5, the transformed distribution is flat. Insight into the reason for this transformation is in [@RN300], Chapter 7: it has to do with transformations of random variables. The transformation function, $Y(Z)$, implements:
 
 \begin{equation} 
 Y\left ( Z \right )=\left [ \left ( 1-f \right )\Phi\left ( \frac{Z-\mu_1}{\sigma_1} \right )+f\Phi\left ( \frac{Z-\mu_2}{\sigma_2} \right ) \right ]100
 (\#eq:BinModDemoMisconception)
 \end{equation}
 
-The multiplication by 100 ensures that the transformed variable is in the range 0 to 100. The code realizes the random samples, calculates the empirical AUC using the binormal samples, displays the histogram of the binormal samples, plots the transformation function, calculates the empirical AUC using the transformed samples, and plots the histogram of the transformed samples. 
+The multiplication by 100 ensures that the transformed variable is in the range 0 to 100 (if not, it is code-constrained to be). The code realizes the random samples, calculates the empirical AUC, displays the histogram of the true binormal samples, plots the transformation function, calculates the empirical AUC using the transformed samples, and plots the histogram of the transformed samples (the latent binormal). 
 
-The output lists the values of the seed variable and the value of the shape parameter $f$. *For each value of seed and the shape parameter, the AUCs of the actual Gaussians and the transformed variables are identical to seven digits (set at line 10)*. For this reason, the transformed variables are termed "Latent Gaussians". The values of the parameters were chosen to explicate the binormal nature of the plots A2 and A3). This has the effect of making the AUCs close to unity. It is left as an exercise for the reader to plot ROC curves corresponding to actual Gaussian and latent Gaussian variables and show that they are identical. 
+* B1 shows the transformation for $f = 0.1$. The steep initial rise of the curve has the effect of flattening the histogram of the transformed ratings at the low end of the rating scale, C1. Conversely, the flat nature of the curve near upper end of the rating range has the effect of causing the histogram of the transformed variable to peak in that range. 
+* B2 shows the transformation for $f = 0.5$. This time the latent rating histogram, C2, is almost flat over the entire range, definitely not visually binormal. 
+* B3 shows the transformation for $f = 0.9$. This time the transformed rating histogram, C3, is peaked at the low end of the transformed rating scale.
+* The output lists the values of the seed variable and the value of the shape parameter $f$. *For each value of seed and the shape parameter, the AUCs of the actual Gaussians and the transformed variables are identical*. 
+* The values of the parameters were chosen to best illustrate the true binormal nature of the plots A2 and A3. This has the effect of making the AUCs close to unity. 
 
-Fig. (B1) shows the transformation for $f = 0.1$. The steep initial rise of the curve has the effect of flattening the histogram of the transformed ratings at the low end of the rating scale, Fig. (C1). Conversely, the flat nature of the curve near upper end of the rating range has the effect of causing the histogram of the transformed variable to peak in that range. Fig. (B2) shows the transformation for $f = 0.5$. This time the transformed rating histogram, Fig. (C2), is almost flat over the entire range. Fig. (B3) shows the transformation for $f = 0.9$. This time the transformed rating histogram, Fig. (C3) is peaked at the low end of the transformed rating scale.
+The histograms in C1, C2 and C3 appear to be non-Gaussian. The corresponding non-diseased and diseased ratings will fail tests of normality. [Showing this is left as an exercise for the reader.] Nevertheless, they are latent Gaussians in the sense that the inverses of the transformations shown in B1, B2 and B3 will yield histograms that are strictly binormal, i.e., A1, A2 and A3. By appropriate changes to the monotone transformation function, the histograms shown in C1, C2 and C3 can be made to resemble a wide variety of shapes, for example, quasi-bimodal (don't confuse bimodal with binormal) histograms.] 
 
-Each histogram in Fig. (C1, C2 and C3) appears to be non-Gaussian. The corresponding non-diseased and diseased ratings will fail tests of normality. [Showing this is left as an exercise for the reader.] Nevertheless, the transformed ratings are latent Gaussians in the sense that the inverses of the transformations shown in Fig. (B1, B2 and B3) will yield histograms that are strictly binormal. By appropriate changes to the monotone transformation function, the histograms shown in Fig. (C1, C2 and C3) can be made to resemble a wide variety of shapes. [As another exercise, the reader could modify the transformation function to yield quasi-bimodal histograms.] **One concludes that visual examination of the shape of the histogram of ratings yields little, if any, insight into whether the underlying binormal model assumptions are being violated.**
-
+**Visual examination of the shape of the histograms of ratings, or standard tests for normality, yield little, if any, insight into whether the underlying binormal model assumptions are being violated.**
 
 ### Expressions for sensitivity and specificity
 Let $Z_t$ denote the random z-sample for truth state $t$ ($t$ = 1 for non-diseased and $t$ = 2 for diseased cases).  Since the distribution of z-samples from disease-free cases is $N(0,1)$, the expression for specificity, Chapter "Modeling Binary Paradigm", Eqn. 3.13, applies. It is reproduced below: 
@@ -246,7 +253,7 @@ To obtain an expression for sensitivity, consider that for truth state $t = 2$, 
 \frac{Z_2-\mu}{\sigma}\sim N\left ( 0,1 \right )
 \end{equation*}
 
-Sensitivity is $P\left ( Z_2 > \zeta \right )$, which implies, because $\sigma$  is positive (subtract   from both sides of the “greater than” symbol and divide by $\sigma$):
+Sensitivity is $P\left ( Z_2 > \zeta \right )$, which implies, because $\sigma$ is positive (subtract $\mu$ from both sides of the “greater than” symbol and divide by $\sigma$):
 
 \begin{equation} 
 Se\left ( \zeta | \mu, \sigma \right )= P\left ( Z_2 > \zeta \right )=P\left ( \frac{Z_2-\mu}{\sigma} > \frac{\zeta-\mu}{\sigma} \right )
@@ -305,7 +312,7 @@ a=\frac{\mu}{\sigma};b=\frac{1}{\sigma}
 (\#eq:BinModabParameters)
 \end{equation}
 
-The reason for the $(a,b)$  instead of the  $(\mu,\sigma)$ notation is that Dorfman and Alf assumed, in their seminal paper [@RN1081], that the diseased distribution (signal distribution in signal detection theory) had unit variance, and the non-diseased distribution (noise) had standard deviation $b$ ($b > 0$) or variance $b^2$, and that the separation of the two distributions was $a$, see figure below. In this example, $a = 1.11$ and $b = 0.556$. Dorfman and Alf's fundamental contribution, namely estimating these parameters from ratings data, to be described below, led to the widespread usage of the  $(a,b)$ parameters, estimated by their software (RSCORE), and its newer variants (e.g., RSCORE –II, ROCFIT and ROCKIT). 
+The reason for the $(a,b)$  instead of the  $(\mu,\sigma)$ notation is that Dorfman and Alf assumed, in their seminal paper [@RN1081], that the diseased distribution (signal distribution in signal detection theory) had unit variance, and the non-diseased distribution (noise) had standard deviation $b$ ($b > 0$) or variance $b^2$, and that the separation of the two distributions was $a$, see figure below. In this example: $a = 1.11$ and $b = 0.556$, corresponding to $\mu = 2$ and $\sigma = 1.8$. Dorfman and Alf's fundamental contribution, namely estimating these parameters from ratings data, to be described below, led to the widespread usage of the  $(a,b)$ parameters estimated by their software (RSCORE), and its newer variants (e.g., RSCORE–II, ROCFIT and ROCKIT). 
 
 By dividing the z-samples by $b$, the variance of the distribution labeled "Noise" becomes unity, its mean stays at zero, and the variance of the distribution labeled "Signal" becomes $1/b$, and its mean becomes $a/b$, as shown below. It illustrates that the inverses of Eqn. \@ref(eq:BinModabParameters) are:
 
@@ -409,7 +416,6 @@ p1 <- ggplot() +
            y = 0.18, 
            label = "Signal", 
            size = 5)
-print(p1)
 
 z <- seq(-3*sigma, 6*sigma, by = 0.01)
 y1 <- dnorm(z, sd = sigma)
@@ -494,7 +500,10 @@ p2 <- ggplot() + geom_line(
            label = "Signal", 
            size = 5, 
            fontface = "bold", parse = TRUE)
-print(p2)
+```
+
+```{r BinMod-ab2-mu-sigma, fig.cap="The left plot shows the definitions of the (a,b) parameters of the binormal model. In the right plot the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\\mu,\\sigma$) parameters.", fig.show='hold'}
+grid.arrange(p1,p2,ncol=2)
 ```
 
 
@@ -506,25 +515,21 @@ TPF = \Phi\left ( a+ b \Phi^{-1}\left (FPF  \right ) \right )
 (\#eq:BinModRocCurve)
 \end{equation}
 
-Since $\Phi^{-1}(FPF)$  is an increasing function of its argument $FPF$, and $b > 0$, the argument of the  $\Phi$ function is an increasing function of $FPF$. Since $\Phi$  is a monotonically increasing function of its argument, $TPF$ is a monotonically increasing function of $FPF$. This is true regardless of the sign of $a$. If $FPF = 0$, then $\Phi^{-1}(0) = -\infty$  and $TPF = 0$. If $FPF = 1$, then $\Phi^{-1}(1) = +\infty$ and $TPF = 1$. [The fact that $TPF$ is a monotonic increasing function of $FPF$ is consistent with the following argument: to increase $FPF$, $\zeta$  must decrease, which increases the area under the diseased distribution to the right of $\zeta$, i.e., increases $TPF$.] 
-
-Regardless of the value of $a$, as long as $b \ge 0$, the ROC curve starts at (0,0) and ends at (1,1), increasing monotonically from the origin to (1,1).
+Since $\Phi^{-1}(FPF)$  is an increasing function of its argument $FPF$, and $b > 0$, the argument of the  $\Phi$ function is an increasing function of $FPF$. Since $\Phi$  is a monotonically increasing function of its argument, $TPF$ is a monotonically increasing function of $FPF$. This is true regardless of the sign of $a$. If $FPF = 0$, then $\Phi^{-1}(0) = -\infty$  and $TPF = 0$. If $FPF = 1$, then $\Phi^{-1}(1) = +\infty$ and $TPF = 1$. Regardless of the value of $a$, as long as $b \ge 0$, the ROC curve starts at (0,0) and increases monotonically ending at (1,1).
 
 From Eqn. \@ref(eq:BinModFPF) and Eqn. \@ref(eq:BinModTPF), the expressions for $FPF$ and $TPF$ in terms of model parameters $(a,b)$ are:
 
-\begin{equation} 
-FPF\left ( \zeta \right ) = \Phi\left ( -\zeta \right )\\
-(\#eq:BinModFPFab)
+\begin{equation}
+\left.
+\begin{aligned}
+FPF\left ( \zeta \right ) &= \Phi\left ( -\zeta \right )\\
+TPF &= \Phi\left ( a - b \zeta \right )
+\end{aligned}
+\right \}
+(\#eq:BinModFPF-TPF-ab)
 \end{equation}
 
-and
-
-\begin{equation} 
-TPF = \Phi\left ( a - b \zeta \right )
-(\#eq:BinModTPFab)
-\end{equation}
-
-### pdfs of the binormal model
+### Density functions (pdfs) of the binormal model
 According to Eqn. \@ref(eq:BinModZSampling1) the probability that a z-sample is smaller than a specified threshold  $\zeta$, i.e., the CDF function, is:
 
 \begin{equation*} 
@@ -551,31 +556,34 @@ The second equation can be written in $(a,b)$  notation as:
 pdf_D\left ( \zeta \right ) = b\phi\left ( b\zeta-a \right ) = \frac{b}{\sqrt{2 \pi}}\exp\left ( -\frac{\left (b\zeta - a \right )^2}{2} \right )
 \end{equation*}
 
-Generation of pdfs for specified values of binormal model parameters was illustrated above (ref. TBA to previous chapter?) for specified values of $\mu,\sigma$. Using transformations in Eqn. \@ref(eq:BinModabParameters) the code can be readily converted to accept $(a,b)$  values as inputs.
 
 
-### Fitting the ROC curve
-To be described next is a method for fitting data such as in Table \@ref(tab:ratingsParadigmTable1) to the binormal model, i.e., determining the parameters $a,b$ and the thresholds $\zeta_r , r = 1, 2, ..., R-1$, to best fit, in some to-be-defined sense, the observed cell counts. The most common method uses an algorithm called maximum likelihood. But before getting to that, I describe the least-square method, which is conceptually simpler, but not really applicable to this type of fitting.
+## Fitting an ROC curve to data points
+### A JAVA fitted ROC curve
+This section, described in the physical book, has been abbreviated to the [relevant website](http://www.rad.jhmi.edu/jeng/javarad/roc/JROCFITi.html).
 
-### Least-squares estimation
-By applying the function $\Phi^{-1}$  to both sides of Eqn. (6.2.17), one gets (the "inverse" function cancels the "forward" function on the right hand side):
+### A simplistic straight line fit to the ROC curve
+To be described next is a method for fitting data such as in Table \@ref(tab:ratingsParadigmExampleTable) to the binormal model, i.e., determining the parameters $(a,b)$ and the thresholds $\zeta_r , \quad r = 1, 2, ..., R-1$, to best fit, in some to-be-defined sense, the observed cell counts. The most common method uses an algorithm called maximum likelihood. But before getting to that, I describe the least-square method, which is conceptually simpler, but not really applicable, as will be explained shortly.
+
+#### Least-squares estimation
+By applying the function $\Phi^{-1}$  to both sides of Eqn. \@ref(eq:BinModRocCurve1), one gets (the "inverse" function cancels the "forward" function on the right hand side):
 
 \begin{equation*} 
 \Phi^{-1}\left ( TPF \right ) = a + b \Phi^{-1}\left ( FPF \right )
 \end{equation*}
 
-This suggests that a plot of $y = \Phi^{-1}\left ( TPF \right )$  vs. $\Phi^{-1}\left ( FPF \right )$ is expected to follow a straight line with slope b and intercept a. Fitting a straight line to such data is generally performed by the method of least-squares, a capability present in most software packages and even spreadsheets, e.g., Excel. Alternatively one can simply visually draw the best straight line that fits the points, memorably referred to7 as "chi-by-eye". This was the way parameters of the binormal model were estimated prior to Dorfman and Alf's work3. The least-squares method is a quantitative way of accomplishing the same aim. If $\left ( x_t,y_t \right )$ are the data points, one constructs $S$, the sum of the squared deviations of the observed ordinates from the predicted values:
+This suggests that a plot of $y = \Phi^{-1}\left ( TPF \right )$  vs. $x=\Phi^{-1}\left ( FPF \right )$ is expected to follow a straight line with slope $b$ and intercept $a$. Fitting a straight line to such data is generally performed by the method of least-squares, a capability present in most software packages and spreadsheets. Alternatively, one can simply visually draw the best straight line that fits the points, memorably referred to [@RN300] as "chi-by-eye". This was the way parameters of the binormal model were estimated prior to Dorfman and Alf's work [@RN1081]. The least-squares method is a quantitative way of accomplishing the same aim. If $\left ( x_t,y_t \right )$ are the data points, one constructs $S$, the sum of the squared deviations of the observed ordinates from the predicted values (since $R$ is the number of ratings bins, the summation runs over the $R-1$ operating points):
 
 \begin{equation*} 
 S  = \sum_{i=1}^{R-1}\left ( y_i - \left ( a + bx_i \right ) \right )^2
 \end{equation*} 
 
-The idea is to minimize S with respect to the parameters $(a,b)$. One approach is to differentiate this with respect to $a$ and $b$ and equate each resulting derivate expression to zero. This yields two equations in two unknowns, which are solved for $a$ and $b$. If the reader has never done this before, one should go through these steps at least once, but it would be smarter in future to use software that does all this. In `R` the least-squares fitting function is `lm(y~x)`, which in its simplest form fits a linear model   using the method of least-squares (in case you are wondering lm stands for linear model, a whole branch of statistics in itself; in this example one is using its simplest capability).
+The idea is to minimize S with respect to the parameters $(a,b)$. One approach is to differentiate this with respect to $a$ and $b$ and equate each resulting derivate expression to zero. This yields two equations in two unknowns, which are solved for $a$ and $b$. If the reader has never done this before, one should go through these steps at least once, but it would be smarter in future to use software that does all this. In `R` the least-squares fitting function is `lm(y~x)`, which in its simplest form fits a linear model `lm(y~x)`  using the method of least-squares (in case you are wondering `lm` stands for linear model, a whole branch of statistics in itself; in this example one is using its simplest capability).
 
-```{r, fig.show='hold'}
+```{r, fig.cap = "The straight line fit method of estimating parameters of the fitting model.", fig.show='hold'}
 # ML estimates of a and b (from Eng JAVA program)
 # a <- 1.3204; b <- 0.6075 
-# # these are not used in program; just there for comparison
+# # these are not used in program; just here for comparison
 
 FPF <- c(0.017, 0.050, 0.183, 0.5)  
 # this is from Table 6.11, last two rows
@@ -589,6 +597,10 @@ PhiInvTPF <- qnorm(TPF)
 
 fit <- lm(PhiInvTPF~PhiInvFPF)
 print(fit)
+```             
+
+
+```{r BinModStraightLineFit, fig.cap = "The straight line fit method of estimating parameters of the fitting model.", fig.show='hold', echo=FALSE}
 pointsData <- data.frame(PhiInvFPF = PhiInvFPF, 
                          PhiInvTPF = PhiInvTPF)
 pointsPlot <- ggplot(data = pointsData, 
@@ -602,12 +614,13 @@ pointsPlot <- ggplot(data = pointsData,
   geom_abline(
     slope = fit$coefficients[2], 
     intercept = fit$coefficients[1], size = 0.75)
-print(pointsPlot)
-```             
+p1 <- pointsPlot
+print(p1)
+```
 
-This plot shows operating points from Table 1, transformed by the $\Phi^{-1}$ function; the slope of the line is the least-squares estimate of the $b$ parameter and the intercept is the corresponding $a$ parameter of the binormal model.
+Fig. \@ref(fig:BinModStraightLineFit) shows operating points from Table \@ref(tab:ratingsParadigmExampleTable), transformed by the $\Phi^{-1}$ function; the slope of the line is the least-squares estimate of the $b$ parameter and the intercept is the corresponding $a$ parameter of the binormal model.
 
-The first two lines of the output are simply a reminder about the names of the dependent and independent variables. The last line contains the least squares estimated values, $a$ = 1.3288 and $b$ = 0.6307. The corresponding maximum likelihood estimates of these parameters, as yielded by the Eng web code, Appendix B, are listed in line 4 of the main program: $a$ = 1.3204 and $b$ = 0.6075. The estimates appear to be close, particularly the estimate of $a$ , but there are a few things wrong with the least-squares approach. First, the method of least squares assumes that the data points are independent. Because of the manner in which they are constructed, namely by cumulating points, the independence assumption is not valid for ROC operating points. Cumulating the 4 and 5 responses constrains the resulting operating point to be above and to the right of the point obtained by cumulating the 5 responses only, so the data points are definitely not independent. Similarly, cumulating the 3, 4 and 5 responses constrains the resulting operating point to be above and to the right of the point obtained by cumulating the 4 and 5 responses, and so on. The second problem is the linear least-squares method assumes there is no error in measuring x; the only source of error that is accounted for is in the y-coordinate. In fact, both coordinates of an ROC operating point are subject to sampling error. Third, disregard of error in the x-direction is further implicit in the estimates of the thresholds, which according to Eqn. (6.2.19), is given by:
+The last line contains the least squares estimated values, $a$ = 1.3288 and $b$ = 0.6307. The corresponding maximum likelihood estimates of these parameters, as yielded by the Eng web code, Appendix B, are listed in line 4 of the main program: $a$ = 1.3204 and $b$ = 0.6075. The estimates appear to be close, particularly the estimate of $a$ , but there are a few things wrong with the least-squares approach. First, the method of least squares assumes that the data points are independent. Because of the manner in which they are constructed, namely by cumulating points, the independence assumption is not valid for ROC operating points. Cumulating the 4 and 5 responses constrains the resulting operating point to be above and to the right of the point obtained by cumulating the 5 responses only, so the data points are definitely not independent. Similarly, cumulating the 3, 4 and 5 responses constrains the resulting operating point to be above and to the right of the point obtained by cumulating the 4 and 5 responses, and so on. The second problem is the linear least-squares method assumes there is no error in measuring x; the only source of error that is accounted for is in the y-coordinate. In fact, both coordinates of an ROC operating point are subject to sampling error. Third, disregard of error in the x-direction is further implicit in the estimates of the thresholds, which according to Eqn. (6.2.19), is given by:
 
 \begin{equation*} 
 \zeta_r = - \Phi^{-1}\left ( FPF_r \right )
@@ -615,9 +628,9 @@ The first two lines of the output are simply a reminder about the names of the d
 
 These are "rigid" estimates that assume no error in the FPF values. As was shown in Chapter \@ref(binaryTask), 95% confidence intervals apply to these estimates.
 
-[A historical note: prior to computers and easy access to statistical functions the analyst had to use a special plotting paper, termed “double probability paper”, that converted probabilities into x and y distances using the inverse function. The complement of the inverse function is sometimes termed the z-deviate.4 Since this term confused me when I entered this field ca. 1985, and it confuses me even now, I will not use it further.]
+A historical note: prior to computers and easy access to statistical functions the analyst had to use a special plotting paper, termed “double probability paper”, that converted probabilities into x and y distances using the inverse function.
 
-## Maximum likelihood estimation (MLE)
+### Maximum likelihood estimation (MLE)
 The approach taken by Dorfman and Alf was to maximize the likelihood function instead of S. The likelihood function is the probability of the observed data given a set of parameter values, i.e.,
 
 \begin{equation*} 
@@ -762,7 +775,7 @@ TBA See book chapter 6.4.4. This is implemented in RJafroc.
 ### Single FOM derived from ROC curve
 Sensitivity and specificity are *dual* measures of overall performance. It is hard to unambiguosly compare two systems usng dual measures. What if sensitivity is higher for one system but specificity is higher for another. This is, of course, a consequence of sensitivity/specificity depending on the position of the operating point on the ROC curve. Desirable is a *single* measure of performance that takes into account performance over the entire ROC curve. Two commonly used measures are the binormla model predicted area $A_z$ under the ROC curve, and the $d'$ index. 
 
-(Book) Appendix 6.A derives the formula for the partial area under the unequal-variance binormal model. A special case of this formula is the area under the whole ROC curve, reproduced below using both parameterizations of the model:
+TBA (Book) Appendix 6.A derives the formula for the partial area under the unequal-variance binormal model. A special case of this formula is the area under the whole ROC curve, reproduced below using both parameterizations of the model:
 
 \begin{equation} 
 A_z=\Phi\left ( \frac{a}{\sqrt{1+b^2}} \right )=\Phi\left ( \frac{\mu}{\sqrt{1+\sigma^2}} \right )
@@ -777,8 +790,8 @@ d'=\sqrt{2}\Phi^{-1}\left ( A_z \right )
 \end{equation} 
 
 
-## Discussion
-The binormal model is historically very important and the contribution by Dorfman and Alf [@RN212] was seminal. Prior to their work, there was no valid way of estimating AUC from observed ratings counts. Their work and a key paper by Lusted [@RN1487] accelerated research using ROC methods. The number of publications using their algorithm, and the more modern versions developed by Metz and colleagues, is probably well in excess of 500. Because of its key role, the author has endeavored to take out some of the mystery about how the binormal model parameters are estimated. In particular, a common misunderstanding that the binormal model assumptions are violated by real datasets, when in fact it is quite robust to apparent deviations from normality, is addressed. 
+## Discussion{#BinMod-Discussion}
+The binormal model is historically very important and the contribution by Dorfman and Alf [@RN1081] was seminal. Prior to their work, there was no valid way of estimating AUC from observed ratings counts. Their work and a key paper [@RN1487] accelerated research using ROC methods. The number of publications using their algorithm, and the more modern versions developed by Metz and colleagues, is probably well in excess of 500. Because of its key role, the author has endeavored to take out some of the mystery about how the binormal model parameters are estimated. In particular, a common misunderstanding that the binormal model assumptions are violated by real datasets, when in fact it is quite robust to apparent deviations from normality, is addressed. 
 
 A good understanding of this chapter should enable the reader to better understand alternative ROC models, discussed later.
 
@@ -790,11 +803,8 @@ A recent example is Fig. 1 in the publication resulting from the Digital Mammogr
 
 The unphysical nature of the hook (predicting worse than chance-level performance for supposedly expert readers) is not the only reason for seeking alternate ROC models. The binormal model is susceptible to degeneracy problems. If the dataset does not provide any interior operating points (i.e., all observed points lie on the axes defined by FPF = 0 or TPF = 1) then the model fits these points with b = 0. The resulting straight-line segment fits do not make physical sense. These problems are addressed by the contaminated binormal model16 to be discussed in Chapter "Other proper ROC models". The first paper in the series has particularly readable accounts of data degeneracy.
 
-To this day the binormal model is widely used to fit ROC datasets. In spite of its limitations, the binormal model has been very useful in bringing a level of quantification to this field that did not exist prior to the work [@RN212] by Dorfman and Alf.
+To this day the binormal model is widely used to fit ROC datasets. In spite of its limitations, the binormal model has been very useful in bringing a level of quantification to this field that did not exist prior to the work [@RN1081] by Dorfman and Alf.
 
-
-## Summary{#BinMod-Summary}
-## Discussion{#BinMod-Discussion}
 ## References {#BinMod-references}
 
 
