@@ -41,7 +41,7 @@ In an R-rating ROC study the observed ratings r take on integer values, 1 throug
 \end{equation}
 
 
-<img src="06-binormal-model_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+![](06-binormal-model_files/figure-latex/unnamed-chunk-2-1.pdf)<!-- --> 
 
 In the unequal-variance binormal model, the variance $\sigma^2$ of the z-samples for diseased cases is allowed to be different from unity. Most ROC datasets are consistent with  $\sigma > 1$. The above figure, generated with  $\mu = 1.5, \sigma = 1.5, \zeta_1 = -2, \zeta_2 = -0.5, \zeta_3 = 1, \zeta_4 = 2.5$, illustrates how realized z-samples are converted to ratings, i.e., application of the binning rule \@ref(eq:BinModZBinning). For example, a case with  z-sample equal to -2.5 would be rated "1", and one with  z-sample equal to -1 would be rated "2", cases with z-samples greater than 2.5 would be rated "5", etc.
 
@@ -133,7 +133,8 @@ options(digits = 9)
 #> AUC of latent Gaussians = 0.995041111
 ```
 
-<img src="06-binormal-model_files/figure-html/unnamed-chunk-4-1.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-2.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-3.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-4.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-5.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-6.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-7.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-8.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-9.png" width="33%" />
+
+\includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-1} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-2} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-3} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-4} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-5} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-6} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-7} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-8} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-9} 
 
 **Figure captions (A1 - C3):** Illustrating the invariance of ROC analysis to arbitrary monotone transformations of the ratings. Each row contains 3 plots: labeled 1, 2 and 3. Each column contains 3 plots labeled A, B and C. So, for example, plot C2 refers to the second row and third column. The for-loop generates the plot one row at a time. Each of the latent Gaussian plots C1, C2 and C3 appears not binormal. However, using the inverse of the monotone transformations shown B1, B2 and B3, they can be transformed to the binormal model histograms A1, A2 and A3. Plot A1 shows the histogram of simulated ratings from a binormal model. Two peaks, one at 30 and the other at 55 are evident (by design, all ratings in this figure are in the range 0 to 100). Plot B1 shows the monotone transformation for $f = 0.1$. Plot C1 shows the histogram of the transformed rating. The choice of $f$ leads to a transformed rating histogram that is peaked near the high end of the rating scale. For A1 and C1 the corresponding AUCs are identical (0.993080000). Plot A2 is for a different seed value, plot B2 is the transformation for $f = 0.5$ and now the transformed histogram is almost flat, plot C2. For plots A2 and C2 the corresponding AUCs are identical (0.993668889). Plot A3 is for a different seed value, B3 is the transformation for $f = 0.9$ and the transformed histogram C3 is peaked near the low end of the transformed rating scale. For plots A3 and (C3) the corresponding AUCs are identical (0.995041111).
 
@@ -247,10 +248,7 @@ Eqns. \@ref(eq:BinModabParameters) and \@ref(eq:BinModabParametersInv) allow con
 grid.arrange(p1,p2,ncol=2)
 ```
 
-<div class="figure">
-<img src="06-binormal-model_files/figure-html/BinMod-ab2-mu-sigma-1.png" alt="The left plot shows the definitions of the (a,b) parameters of the binormal model. In the right plot the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\mu,\sigma$) parameters." width="672" />
-<p class="caption">(\#fig:BinMod-ab2-mu-sigma)The left plot shows the definitions of the (a,b) parameters of the binormal model. In the right plot the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\mu,\sigma$) parameters.</p>
-</div>
+![(\#fig:BinMod-ab2-mu-sigma)The left plot shows the definitions of the (a,b) parameters of the binormal model. In the right plot the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\mu,\sigma$) parameters.](06-binormal-model_files/figure-latex/BinMod-ab2-mu-sigma-1.pdf) 
 
 
 ### Properties of the binormal model ROC curve
@@ -275,7 +273,7 @@ TPF &= \Phi\left ( a - b \zeta \right )
 (\#eq:BinModFPF-TPF-ab)
 \end{equation}
 
-### pdfs of the binormal model
+### Density functions (pdfs) of the binormal model
 According to Eqn. \@ref(eq:BinModZSampling1) the probability that a z-sample is smaller than a specified threshold  $\zeta$, i.e., the CDF function, is:
 
 \begin{equation*} 
@@ -354,10 +352,7 @@ print(fit)
 ```
 
 
-<div class="figure">
-<img src="06-binormal-model_files/figure-html/BinModStraightLineFit-1.png" alt="The straight line fit method of estimating parameters of the fitting model." width="672" />
-<p class="caption">(\#fig:BinModStraightLineFit)The straight line fit method of estimating parameters of the fitting model.</p>
-</div>
+![(\#fig:BinModStraightLineFit)The straight line fit method of estimating parameters of the fitting model.](06-binormal-model_files/figure-latex/BinModStraightLineFit-1.pdf) 
 
 Fig. \@ref(fig:BinModStraightLineFit) shows operating points from Table \@ref(tab:ratingsParadigmExampleTable), transformed by the $\Phi^{-1}$ function; the slope of the line is the least-squares estimate of the $b$ parameter and the intercept is the corresponding $a$ parameter of the binormal model.
 
@@ -481,7 +476,7 @@ retFit[1:5]
 print(retFit$fittedPlot)
 ```
 
-<img src="06-binormal-model_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+![](06-binormal-model_files/figure-latex/unnamed-chunk-7-1.pdf)<!-- --> 
 
 Note the usage of the `RJafroc` package [@R-RJafroc]. Specifically, the function `FitBinormalRoc`. The ratings table is converted to an `RJafroc` dataset object, followed by application of the fitting function. The results, contained in `retFit` should be compared to those obtained from the [website implementation of ROCFIT](http://www.rad.jhmi.edu/jeng/javarad/roc/JROCFITi.html).
 
@@ -551,7 +546,7 @@ d'=\sqrt{2}\Phi^{-1}\left ( A_z \right )
 
 
 ## Discussion{#BinMod-Discussion}
-The binormal model is historically very important and the contribution by Dorfman and Alf [@RN1081] was seminal. Prior to their work, there was no valid way of estimating AUC from observed ratings counts. Their work and a key paper by Lusted [@RN1487] accelerated research using ROC methods. The number of publications using their algorithm, and the more modern versions developed by Metz and colleagues, is probably well in excess of 500. Because of its key role, the author has endeavored to take out some of the mystery about how the binormal model parameters are estimated. In particular, a common misunderstanding that the binormal model assumptions are violated by real datasets, when in fact it is quite robust to apparent deviations from normality, is addressed. 
+The binormal model is historically very important and the contribution by Dorfman and Alf [@RN1081] was seminal. Prior to their work, there was no valid way of estimating AUC from observed ratings counts. Their work and a key paper [@RN1487] accelerated research using ROC methods. The number of publications using their algorithm, and the more modern versions developed by Metz and colleagues, is probably well in excess of 500. Because of its key role, the author has endeavored to take out some of the mystery about how the binormal model parameters are estimated. In particular, a common misunderstanding that the binormal model assumptions are violated by real datasets, when in fact it is quite robust to apparent deviations from normality, is addressed. 
 
 A good understanding of this chapter should enable the reader to better understand alternative ROC models, discussed later.
 
@@ -559,11 +554,11 @@ It has been stated that the `b`-parameter of the binormal model is generally obs
 
 The fact that the `b`-parameter is less than unity implies that the predicted ROC curve is improper, meaning its slope is not monotone decreasing as the operating point moves up the curve. The result is that a portion of the curve, near (1,1) that crosses the chance-diagonal and hooks upward approaching (1,1) with infinite slope. Ways of fitting proper ROC curves are described in Chapter "Other proper ROC models". Usually the hook is not readily visible, which has been used as an excuse to ignore the problem. For example, in Fig. 6.4, one would have to "zoom-in" on the upper right corner to see it, but the reader should make no mistake about it, the hook is there as  . 
 
-A recent example is Fig. 1 in the publication resulting from the Digital Mammographic Imaging Screening Trial (DMIST) clinical trial [@RN1784] involving 49,528 asymptomatic women from 33 clinical sites and involving 153 radiologists, where each of the film modality ROC plots crosses the chance diagonal and hooks upwards to (1,1), which as is known, results anytime  .
+A recent example is Fig. 1 in the publication resulting from the Digital Mammographic Imaging Screening Trial (DMIST) clinical trial [@RN1784] involving 49,528 asymptomatic women from 33 clinical sites and involving 153 radiologists, where each of the film modality ROC plots crosses the chance diagonal and hooks upwards to (1,1), which as is known, results anytime $b <1$.
 
 The unphysical nature of the hook (predicting worse than chance-level performance for supposedly expert readers) is not the only reason for seeking alternate ROC models. The binormal model is susceptible to degeneracy problems. If the dataset does not provide any interior operating points (i.e., all observed points lie on the axes defined by FPF = 0 or TPF = 1) then the model fits these points with b = 0. The resulting straight-line segment fits do not make physical sense. These problems are addressed by the contaminated binormal model16 to be discussed in Chapter "Other proper ROC models". The first paper in the series has particularly readable accounts of data degeneracy.
 
-To this day the binormal model is widely used to fit ROC datasets. In spite of its limitations, the binormal model has been very useful in bringing a level of quantification to this field that did not exist prior to the work [@RN1081] by Dorfman and Alf.
+To this day the binormal model is widely used to fit ROC datasets. In spite of its limitations, the binormal model has been very useful in bringing a level of quantification to this field that did not exist prior to [@RN1081].
 
 ## References {#BinMod-references}
 

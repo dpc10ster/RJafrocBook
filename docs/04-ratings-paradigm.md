@@ -373,7 +373,8 @@ The reported ROC analyses used the BIRADS assessments labels ordered as follows:
 
 \caption{(\#tab:BIRADS-study)The Barlow et al study: the ordering of the BI-RADS ratings in the first column correlates with cancer-rate in the last column.}
 \centering
-\begin{tabular}[t]{l|l|l|l|l}
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{11em}|>{\raggedright\arraybackslash}p{8em}|>{\raggedright\arraybackslash}p{8em}|>{\raggedright\arraybackslash}p{8em}|>{\raggedright\arraybackslash}p{8em}}
 \hline
   & Total number 
 of mammograms & Mammograms without 
@@ -381,7 +382,7 @@ breast cancer (percent) & Mammograms with
 breast cancer  (percent) & Cancers per 1000 
 screening mammograms\\
 \hline
-1:Normal & 356,030 & 355,734 (76.2) & 296 (12.3) & 0.83\\
+1: Normal & 356,030 & 355,734 (76.2) & 296 (12.3) & 0.83\\
 \hline
 2: Benign finding & 56,614 & 56,533 (12.1) & 81 (3.4) & 1.43\\
 \hline
@@ -400,7 +401,7 @@ biopsy should be considered & 2,022 & 1,687 (0.4) & 335 (13.9) & 165.68\\
 5: Highly suggestive 
 of malignancy & 237 & 38 (0.0) & 199 (8.3) & 839.66\\
 \hline
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 The use of the BI-RADS ratings shown in Table \@ref(tab:BIRADS-study) has been criticized [@RN2166] in an editorial titled: 
