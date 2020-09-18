@@ -762,17 +762,6 @@ cat("Mean Sd Jack Sampling = ", mean(sqrt(VJK)),"\n")
 cat("Mean Sd DeLong  = ", mean(sqrt(VDL)),"\n")
 ```
 
-```
-#> seed =  1 
-#> K1 =  600 
-#> K2 =  500 
-#> mu =  2.173598 
-#> sigma =  1.646098
-#> Mean Sd Pop Sampling =  0.01132805
-#> Mean Sd Boot Sampling =  0.01099246
-#> Mean Sd Jack Sampling =  0.01130954
-#> Mean Sd DeLong  =  0.01130374
-```
 
 <table>
 <caption>(\#tab:sourcesVariabilityTableCompareA)Different estimates of standard deviation of AUC (* the entry for the DeLong method was obtained using the empirical AUC).</caption>
