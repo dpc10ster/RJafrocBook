@@ -53,7 +53,7 @@ Note that $\{c\}$ is not an individual *case* index, rather it is a *case-set* i
 
 What does the dependence of AUC on the $c$ index mean? Different case samples differ in their *difficulty* levels. A difficult case set contains a greater fraction of difficult cases than is usual. A difficult diseased case is one where disease is difficult to detect. For example, the lesions could be partly obscured by overlapping normal structures in the patient anatomy; i.e., the lesion does not “stick out”. Alternatively, variants of normal anatomy could mimic a lesion, like a blood vessel viewed end on in a chest radiograph, causing the radiologist to miss the real lesion(s) and mistake these blood vessels for lesions. An easy diseased case is one where the disease is easy to detect. For example, the lesion is projected over smooth background tissue, because of which it “sticks out”, or is more conspicuous2. How does difficulty level affect non-diseased cases? A difficult non-diseased case is one where variants of normal anatomy mimic actual lesions and could cause the radiologist to falsely diagnose the patient as diseased. Conversely, an easy non-diseased case is like a textbook illustration of normal anatomy. Every structure in it is clearly visualized and accounted for by the radiologist’s knowledge of the patient’s non-diseased anatomy, and the radiologist is confident that any abnormal structure, *if present*, would be readily seen. The radiologist is unlikely to falsely diagnose the patient as diseased. Difficult cases tend to be rated in the middle of the rating scale, while easy ones tend to be rated at the ends of the rating scale. 
 
-### Case sampling induced variability of AUC
+### Case sampling variability of AUC
 An easy case sample will cause AUC to increase over its average value; interpreting many case-sets and averaging the AUCs determines the average value.  Conversely, a difficult case sample will cause AUC to decrease. Case sampling variability causes variability in the measured AUC. How does one estimate this essential source of variability? One method, totally impractical in the clinic but easy with simulations, is to have the same radiologist interpret repeated samples of case-sets from the population of cases (i.e., patients), termed *population sampling*, or more viscerally, as the "brute force" method. 
 
 Even if one could get a radiologist to interpret different case-sets, it is even more impractical to actually acquire the different case samples of truth-proven cases. Patients do not come conveniently labeled as non-diseased or diseased. Rather, one needs to follow-up on the patients, perhaps do other imaging tests, in order to establish true disease status, or ground-truth. In screening mammography, a woman who continues to be diagnosed as non-diseased on successive yearly screening tests in the US, and has no other symptoms of breast disease, is probably disease-free. Likewise, a woman diagnosed as diseased and the diagnosis is confirmed by biopsy (i.e., the biopsy comes back showing a malignancy in the sampled tissues) is known to be diseased. However, not all patients who are diseased are actually diagnosed as diseased: a typical false negative fraction is 20% in screening mammography3. This is where follow-up imaging can help determine true disease status at the initial screen. A false negative mistake is unlikely to be repeated at the next screen. After a year, the tumor may have grown, and is more likely to be detected. Having detected the tumor in the most recent screen, radiologists can go back and retrospectively view it in the initial screen, at which it was missed during the "live" interpretation. If one knows where to look, the cancer is easier to see. The previous screen images would be an example of a difficult diseased case. In unfortunate instances, the patient may die from the previously undetected cancer, which would establish the truth status at the initial screen, too late to do the patient any good. The process of determining actual truth is often referred to as defining the "gold standard", the *ground truth*: or simply *truthing*. 
@@ -64,7 +64,7 @@ There has to be a better way of estimating case-sampling variability. With a par
 
 There are other options available for estimating case-sampling variance of AUC, and this chapter is not intended to be comprehensive. Three commonly used options are described: the DeLong et al method, the bootstrap and the jackknife resampling methods.
 
-## Estimating case-sampling variability using the DeLong method
+## DeLong method {#sourcesVariabilityDeLong}
 If the figure-of-merit is the empirical AUC, then a procedure developed by DeLong et al4 (henceforth abbreviated to DeLong) is applicable that is based on earlier work by [@RN2530] and [@RN2174]. The author will not go into details of this procedure but limit to showing that it "works". However, before one can show that it "works", one needs to know the true value of the variance of empirical AUC. Even if data were simulated using the binormal model, one cannot use the binormal model based estimate of variance as it is an estimate, not to be confused with a true value. Estimates are realizations of random numbers and are themselves subject to variability, which decreases with increasing case-set size. Instead, a “brute-force” (i.e., simulated population sampling) approach is adopted to determine the true value of the variance of AUC. The simulator provides a means of repeatedly generating case-sets interpreted by the same radiologist, and by sampling it enough time, e.g., $C$ = 10,000 times, each time calculating AUC, one determines the population mean and standard deviation. The standard deviation determined this way is compared to that yielded by the DeLong method to check if the latter actually works.  
 
 
@@ -166,7 +166,7 @@ This demonstration should convince the reader that one does have recourse other 
 
 Next, two resampling–based methods of estimating case-sampling variance of AUC are introduced. The word “resampling” means that the dataset itself is regarded as containing information regarding its variability, which can be extracted by sampling from the original data (hence the word "resampling"). These are general and powerful techniques, applicable to any scalar statistic, not just the empirical AUC, which one might be able to use in other contexts.
 
-## Bootstrap estimation of AUC case-sampling variability
+## Bootstrap method {#sourcesVariabilityBootstrap}
 The simplest resampling method, at least at the conceptual level, is the bootstrap. *The bootstrap method is based on the assumption that one can regard the observed sample as defining the population from which it was sampled.* Since by definition a population cannot be exhausted, the idea is to resample, *with replacement*, from the observed sample. Each resampling step realizes a particular bootstrap sample set denoted $\{b\}$, where $b = 1, 2, ..., B$. The curly brackets emphasize that different integer values of $b$ denote different *sets of cases*, not individual cases. [In contrast, the notation $(k)$ will be used to denote *removing* a specific case, $k$, as in the jackknife procedure to be described shortly. The index $b$ should not be confused with the index $c$, the case sampling index; the latter denotes repeated sampling from the population, which is impractical in real life; the bootstrap index denotes repeated sampling from the dataset, which is quite feasible.] The procedure is repeated $B$ times, typically $B$ can be as small as 200, but to be safe the author generally use about 1000 - 2000 bootstraps. The following example uses Table \@ref(tab:ratingsParadigmExampleTable) from Chapter \@ref(ratingsParadigm). 
 
 For convenience, let us denote cases as follows. The 30 non-diseased cases that received the 1 rating are denoted $k_{1,1},k_{2,1},...,k_{30,1}$. The second index denotes the truth state of the cases. Likewise, the 19 non-diseased cases that received the 2 rating are denoted $k_{31,1},k_{32,1},...,k_{49,1}$ and so on for the remaining non-diseased cases. The 5 diseased cases that received the 1 rating are denoted $k_{1,2},k_{2,2},...,k_{5,2}$, the 6 diseased cases that received the 2 rating are denoted $k_{6,2},k_{7,2},...,k_{11,2}$, and so on. Let us figuratively "put" all non-diseased cases (think of each case as an index card, with the case notation and rating recorded on it) into one hat (the non-diseased hat) and all the diseased cases into another hat (the diseased hat). Next, one randomly picks one case (card) from the non-diseased hat, records it's rating, and puts the case back in the hat, so that it is free to be possibly picked again. This is repeated 60 times for the non-diseased hat resulting in 60 ratings from non-diseased cases. A similar procedure is performed using the diseased hat, resulting in 50 ratings from diseased cases. The author has just described, in painful detail (one might say) the realization of the 1st bootstrap sample, denoted $\{b=1\}$. This is used to construct the 1st bootstrap counts table, Table \@ref(tab:sourcesVariabilitybs1). 
@@ -363,8 +363,8 @@ Finally, here is the output when using non-parametric AUC, with `seed` = 1.
 #> stdAUCboot =  0.04125475
 ```
 
-
-## Jackknife estimation of AUC case-sampling variability
+ 
+## Jackknife method {#sourcesVariabilityJackknife}
 The second resampling method, termed the *jackknife*, is computationally less demanding, but as was seen with the bootstrap, with modern personal computers computational limitations are no longer that important, at least for the types of analyses that this book is concerned with.
  
 In this method, the first case is removed, or jackknifed, from the set of cases and the MLE (or empirical estimation) is conducted on the resulting dataset, which has one less case. Let us denote by $AUC_{(1)}$ the resulting value of AUC. The parentheses around the subscript $1$ are meant to emphasize that the AUC value corresponds to that with the first case *removed* from the original dataset. Next, the first case is replaced, and now the second case is removed, the new dataset is analyzed yielding $AUC_{(2)}$, and so on, yielding $K$ ($K$ is the total number of cases; $K=K_1+K_2$) *jackknife AUC values*: 
@@ -508,26 +508,140 @@ The next output is with the non-parametric figure of merit:
 #> stdAUCjack =  0.03689264
 ```
 
-It may be noticed that the mean of the jackknife figure of merit values, i.e., 0.8606667, exactly equals the original figure of merit 0.8606667 (i.e., that calculated including all cases). This can be shown analytically. 
+It may be noticed that the mean of the jackknife figure of merit values, i.e., 0.8606667, exactly equals the original figure of merit 0.8606667 (i.e., that calculated including all cases). This can be shown analytically to be true so long as the figure of merit is the empirical AUC. A similar relation is not true for the bootstrap.
 
-### Estimating AUC case-sampling variability using calibrated simulator
-In real life one does have the luxury of sampling from the population of cases, but with a simulator almost anything is possible. The population sampling method used previously, §7.3.2, to compare the DeLong method to a known standard used arbitrarily set simulator values (mu = 1.5 and sigma = 1.3 at line 5 of mainDeLongSd.R). One does not know if these values are actually representative of real clinical data. In this section a simple method of implementing population sampling using a calibrated simulator is described. The code is in mainCalSimulator.R in Online Appendix 7.C. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset, so the simulator is calibrated to the specific one-and-only-one dataset. Why might one wish to do that? Rather than "fish in the dark" and set arbitrary values for the simulator parameters, one needs to find realistic values that match an actual clinical dataset. This way one has at least some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis is more likely to be correct.
+## Calibrated simulator {#sourcesVariabilityCalSimulator}
+In real life one does have the luxury of sampling from the population of cases, but with a simulator almost anything is possible. The population sampling method used previously, \@ref({sourcesVariabilityDeLong}), to compare the DeLong method to a known standard used arbitrarily set simulator values, $\mu = 1.5$ and $\sigma = 1.3$ . One does not know if these values are actually representative of real clinical data. In this section a simple method of implementing population sampling using a calibrated simulator is described. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset, so the simulator is calibrated to the specific one-and-only-one dataset. Why might one wish to do that? Rather than "fish in the dark" and set arbitrary values for the simulator parameters, one needs to find realistic values that match an actual clinical dataset. This way one has at least some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis is more likely to be correct.
 
-As an example, consider a real clinical dataset, such as in Table 7.1. This data set analyzed by MLE yielded model parameters, a, b and the 4 thresholds . The specific values were (in the same order): 1.320453, 0.607497, 0.007675259, 0.8962713, 1.515645 and 2.39671 (listed in 7.7.1: Code Output below). On each pass through the simulator one samples 60 values from the non-diseased distribution and 50 values from the diseased distribution, implemented in SimulateRocTable.R, Online Appendix 7.C, which returns a simulated ROC counts table like Table 7.1. MLE on the ROC counts table yields  . The process is repeated P = 2000 (p is the population sampling index, ranging from 1 to P) and finally one calculates the mean and standard deviation of the 2000   values. Open the file mainCalSimulator.R, Online Appendix 7.C, confirm that FOM is set to "Az" at line 11 (i.e., it is not commented out) and source it. Shown are results of two runs with different values for the seed (namely, 1 and 2):
+As an example, consider a real clinical dataset, such as in Table \@ref(tab:ratingsParadigmExampleTable). This data set analyzed by MLE yielded model parameters, `a`, `b` and the 4 thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$. The specific values were (in the same order): 1.320453, 0.607497, 0.007675259, 0.8962713, 1.515645 and 2.39671 (see code output below). On each pass through the simulator one samples 60 values from the non-diseased distribution and 50 values from the diseased distribution, which producers a simulated ROC counts table like Table \@ref(tab:ratingsParadigmExampleTable). MLE on the ROC counts table yields $A_z$. The process is repeated $P = 2000$ ($p$ is the population sampling index, ranging from 1 to $P$) and finally one calculates the mean and standard deviation of the 2000 $A_z$ values. Open the file mainCalSimulator.R, Online Appendix 7.C, confirm that FOM is set to "Az" at line 11 (i.e., it is not commented out) and source it. Shown are results of two runs with different values for the seed (namely, 1 and 2):
 
 
-7.7.1: Code Output
-> source('~/book2/02 A ROC analysis/A7 Sources of variability in AUC/software/mainCalSimulator.R')
-seed =  1 , FOM =  Az , P =  2000 
-Calibrated simulator values: a, b, zetas:
- 1.320453 0.607497 0.007675259 0.8962713 1.515645 2.39671 
-seed =  1 OrigAUC =  0.8704519 meanAUC =  0.8676727 stdAUC =  0.04033307
- 
-> source('~/book2/02 A ROC analysis/A7 Sources of variability in AUC/software/mainCalSimulator.R')
-seed =  2 , FOM =  Az , P =  2000 
-Calibrated simulator values: a, b, zetas:
- 1.320453 0.607497 0.007675259 0.8962713 1.515645 2.39671 
-seed =  2 OrigAUC =  0.8704519 meanAUC =  0.8681855 stdAUC =  0.04055164
+```r
+source(here("R/CH07-Variability/SimulateRocCountsTable.R"))
+```
+
+
+
+```r
+doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
+  K <- c(sum(RocCountsTable[1,]), 
+         sum(RocCountsTable[2,]))
+  # to build the model we have to do a parametric fit first
+  ret <- RocfitR(RocCountsTable) # AUC for observed data
+  a <- ret$a
+  b  <- ret$b
+  zetas <- ret$zeta
+  mu  <- a/b
+  sigma <- 1/b
+  zetas <- zetas/b # need to also scale zetas
+   # AUC for observed data
+  if (parametricFOM) {
+    OrigAUC <- RocfitR(RocCountsTable)$AUC                 
+  } else {
+    OrigAUC <- WilcoxonCountsTable(RocCountsTable)$AUC 
+  }
+  #to save the pop sample AUC values
+  AUC <- array(dim = P)
+  a1 <- array(dim = P)
+  b1 <- array(dim = P)
+  for ( p in 1 : P){
+    while (1) {
+      RocCountsTableSimPop <- 
+        SimulateRocCountsTable(K, mu, sigma, zetas)
+      #replace NAs with zeroes
+      RocCountsTableSimPop[is.na(RocCountsTableSimPop )] <- 0
+      if (parametricFOM) {
+        # AUC for observed data 
+        temp <- RocfitR(RocCountsTableSimPop)
+        # a return of -1 means RocFitR did not converge
+        if (temp[1] != -1) {
+          AUC[p]  <- temp$AUC
+          a1[p] <- temp$a
+          b1[p] <- temp$b
+          break 
+        }
+      } else {
+        AUC[p] <- (WilcoxonCountsTable(RocCountsTableSimPop))$AUC
+        break 
+      }    
+    }
+  }
+  meanAUC  <- mean(AUC)
+  stdAUC  <- sqrt(var(AUC))
+  return(list(
+    mu = mu,
+    sigma = sigma,
+    zetas = zetas,
+    OrigAUC = OrigAUC,
+    meanAUC = meanAUC,
+    stdAUC = stdAUC
+  ))
+}
+```
+
+
+
+```r
+parametricFOM <- TRUE
+P <- 2000
+RocCountsTable = array(dim = c(2,5))
+RocCountsTable[1,]  <- c(30,19,8,2,1)
+RocCountsTable[2,]  <- c(5,6,5,12,22)
+ret <- doCalSimulator(P, parametricFOM, RocCountsTable)
+cat("parametricFOM = ", parametricFOM,
+  "\nCalibrated simulator values:\n", 
+    "\nmu = ", ret$mu, 
+    "\nsigma = ", ret$sigma, 
+    "\nzetas = ", ret$zetas, "\n")
+#> parametricFOM =  TRUE 
+#> Calibrated simulator values:
+#>  
+#> mu =  2.173597 
+#> sigma =  1.646099 
+#> zetas =  0.01263423 1.475351 2.494901 3.945221
+
+cat("Simulations using calibrated simulator",
+    "\nP = ", P, 
+    "\nOrigAUC = ", ret$OrigAUC, 
+    "\nmeanAUC = ", ret$meanAUC, 
+    "\nstdAUC = ", ret$stdAUC, "\n")
+#> Simulations using calibrated simulator 
+#> P =  2000 
+#> OrigAUC =  0.8704519 
+#> meanAUC =  0.8675359 
+#> stdAUC =  0.04064876
+```
+
+
+
+```
+#> parametricFOM =  TRUE 
+#> Calibrated simulator values:
+#>  
+#> mu =  2.173597 
+#> sigma =  1.646099 
+#> zetas =  0.01263423 1.475351 2.494901 3.945221
+#> Simulations using calibrated simulator: 
+#> P =  2000 
+#> OrigAUC =  0.8704519 
+#> meanAUC =  0.867856 
+#> stdAUC =  0.04101963
+```
+
+
+```
+#> parametricFOM =  FALSE 
+#> Calibrated simulator values:
+#>  
+#> mu =  2.173597 
+#> sigma =  1.646099 
+#> zetas =  0.01263423 1.475351 2.494901 3.945221
+#> Simulations using calibrated simulator: 
+#> P =  2000 
+#> OrigAUC =  0.8606667 
+#> meanAUC =  0.8504027 
+#> stdAUC =  0.03773004
+```
 
 The seed = 1 estimate of standard deviation of AUC (0.0403) is recorded in Table 7.3, row A, sub-row "Population". The entry for sub-row "MLE" was obtained using the ROCFIT equivalent Eng's JAVA program [@RN2114], §6.2.6. The DeLong method entry for row A was obtained using mainDeLongSd.R with FOM set to " Wilcoxon", as indicated by the asterisk; see §7.3.2. The bootstrap entry was obtained using mainBootstrapSd.R, and the jackknife entry was obtained using mainJackknifeSd.R; in both cases FOM was set to "Az". Note that the four estimates are close to each other, around 0.04. This confirms the validity of the different approaches to estimating the case sampling standard deviation, and is a self-consistency check on the calibration process.
 
@@ -537,7 +651,7 @@ Exercise: Use the calibrated simulator to test the effect of changing simulator 
 
 Table 7.3: Comparison of different estimates of the standard deviation of AUC, namely MLE, the DeLong method, bootstrap, jackknife and population sampling. MLE = maximum likelihood estimate; shown are results for a real dataset (A, B) and two simulated datasets (C and D) and two choices for estimating AUC: parametric and empirical. * The entry for the DeLong method was obtained using the empirical AUC. (P = 2000) (B = 2000)
 
-## Dependence of AUC on reader expertise
+## Dependence of AUC on reader expertise {#sourcesVariabilityreaderExpertise}
 Suppose one conducts an ROC study with J readers where typically J is about 5 but can be as low as 3 and as high as 20 (the wide variability reflects, in the author's opinion, lack of understanding of the factors affecting the optimal choice of J and the related issue of statistical power). Each reader interprets the same case sample, i.e., the same set of cases, but because they have different expertise levels and for other reasons (see below), the observed ROC counts tables will not be identical. The variance of the observed values is an empirical estimate of between-reader variance (including the inseparable within-reader component). Here is an example, in file MainBetweenReaderSd.R. This file loads the Van Dyke dataset, consisting of two modalities and five readers described in Online Chapter 24. Source the code file to get:
 7.8.1: Code Output 
 > source('~/book2/02 A ROC analysis/A7 Sources of variability in AUC/software/mainBetweenReaderSd.R')
@@ -557,7 +671,7 @@ How does one conceptualize reader variability? As stated before, it is due to di
 
 All else being equal, readers with larger   will perform better because they are better able to separate the non-diseased and diseased cases in z-space than their fellow readers. It is difficult and possibly misleading to try to estimate the differences directly from the observed ROC counts tables, but in general better readers will yield counts more skewed towards the low end of the rating scale on non-diseased cases and more skewed towards the high end of the rating scale for diseased cases. The ideal reader would rate all diseased cases one value (e.g. 5) and all non-diseased cases a smaller fixed value (e.g., 1, 2, 3, or 4), resulting in unit AUC, i.e., perfect performance. According to Eqn. (7.12), a reader with smaller   will also perform better. As noted before, typically the   parameter is greater than unity. The reasons for this general finding will be discussed later, but accept the author's word for now that the best the reader can is to reduce this parameter to unity. See Summary of Chapter 06 for reasons for the observation that generally the variance of the diseased distribution is larger than one – it has to do with the inhomogeneity of the distribution of diseased cases and the possibility that a mixture distribution is involved. As regards thresholds, while the population based performance for a particular reader does not depend on thresholds, the thresholds determine the ROC counts table, so differences in usage of the thresholds will translate to differences in estimates of , but this is expected to be a smaller effect compared to the dependence on  . To summarize, variability of readers can be attributed to variability in the binormal model parameters and, to a lesser extent, to variability in adopted thresholds.
 
-## Dependence of AUC on modality
+## Dependence of AUC on modality {#sourcesVariabilityModalityEffect}
 Suppose one conducts an ROC study with j (j =1,2,…J) readers but there are I  (i=1,2,…I) modalities. This is frequently referred to as the multiple reader multiple case (MRMC) paradigm. Each reader interprets the same case sample, i.e., the same set of cases, in two or more modalities. Here is an example, in file MainModalityEffect.R. This file loads the Van Dyke dataset, consisting of two modalities and five readers described in Online Chapter 24. Source the code file to get:
 7.9.1: Code Output
 > source('~/book2/02 A ROC analysis/A7 Sources of variability in AUC/software/mainModalityEffect.R')
@@ -575,7 +689,7 @@ The most general way of thinking of reader and modality variability is to put ij
 
 Given an MRMC dataset, using MLE one can estimate the parameters  for each modality-reader combination, and this could be used to design a simulator that is calibrated to the specific clinical dataset, which in turn can be used to illustrate the ideas and to test any proposed method of analyzing the data. However, the problem is more complex; the procedure needs to also account for the correlations arising from the large number of pairings inherent is such a dataset (e.g., reader 1 in modality 1 vs. reader 2 in modality 2, since both interpret a common dataset). Designing a MRMC calibrated simulator was until recently, an unsolved problem, which necessitated recent work9 by the author and Mr. Xuetong Zhai. Chapter 23 describes recent progress towards this end. 
 
-## Effect on empirical AUC of variations in thresholds and numbers of bins
+## Effect of binning {#sourcesVariabilityBinning}
 There are actually two effects. (1) The empirical AUC will tend to be smaller than the true AUC. If there are few operating points, and they are clustered together, the difference may be large, Fig. 7.1 (A). 
 
 7.10.1: Code listing
@@ -604,7 +718,7 @@ In Fig. 7.1(E) and Fig. 7.1(F) the effect is dramatic. The expert radiologist tr
 (F) AUC = 0.8632
 Fig. 7.1 (A-D):  Plots (A - B) depict empirical plots for two simulated datasets for the same model, i.e., same continuous ratings, using different thresholds. In (A) the thresholds are clustered at low FPF values, while in (B) they are more evenly spaced. Empirical AUCs for the plots are 0.803 for (A) and 0.858 for (B). The clustering in (A) leads to a low estimate of AUC. Plots (C) and (D) are fitted curves corresponding to the same data as in (A) and (B), respectively. For each plot, the population AUC is 0.866. The fitted curves are less sensitive, but not immune, to the data clustering variations. With a large number of evenly spaced points, the empirical AUC is close to that of the fitted curve. This effect is demonstrated in plots (E) and (F). The plots were generated by mainEmpVsFit.R and  mainBinVariability.R.
 
-## Empirical vs. fitted AUCs
+## Empirical vs. fitted AUCs {#sourcesVariabilityEmpiricalVsFitted}
 There is a preference with some researchers to using the empirical AUC as a figure of merit. Its usage enables analyses10-14 variously referred to as the "probabilistic", mechanistic" or "first-principles" approach and the "one-shot" approach15 to multiple reader multiple case analysis. The author is aware of some statisticians who distrust parametric modeling and the associate normality assumptions (the author trusts that the demonstrations in §6.2.2 may assuage the concerns). In addition, empirical AUC frees the researcher from problems with binormal model based fitting, e.g., handling degenerate datasets (these problems go away with two of the fitting methods described in later chapters). The fact that the empirical AUC can always be calculated, even, for example, with a single operating point, can make the analyst blissfully unaware of anomalous data structures. In contrast, the binormal curve-fitting method in Chapter 06 will complain when the ratings bins are not well populated, e.g., by failing to converge. This at least alerts the analyst that conditions are not optimal, and prompt data visualization and consideration of alternate fitting methods. 
 
 If empirical AUC is defined by a large number of operating points, such as with continuous ratings obtained with algorithmic observers, then empirical AUC will be nearly equal to the true AUC, to within sampling error. However, with human observers one rarely gets more than about 6 distinct ratings. The researcher has no control over the internal sensory thresholds used by the radiologist to bin the data, and these could depend on the modality. As demonstrated in the previous section, the empirical AUC is sensitive to the choice of thresholds, especially when the number of thresholds is small, as is usually the case with radiologists, and when the operating points are clustered on the initial near vertical section of the plot, as is also the case with experts. 

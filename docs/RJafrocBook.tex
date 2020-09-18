@@ -3618,8 +3618,8 @@ Note that \(\{c\}\) is not an individual \emph{case} index, rather it is a \emph
 
 What does the dependence of AUC on the \(c\) index mean? Different case samples differ in their \emph{difficulty} levels. A difficult case set contains a greater fraction of difficult cases than is usual. A difficult diseased case is one where disease is difficult to detect. For example, the lesions could be partly obscured by overlapping normal structures in the patient anatomy; i.e., the lesion does not ``stick out''. Alternatively, variants of normal anatomy could mimic a lesion, like a blood vessel viewed end on in a chest radiograph, causing the radiologist to miss the real lesion(s) and mistake these blood vessels for lesions. An easy diseased case is one where the disease is easy to detect. For example, the lesion is projected over smooth background tissue, because of which it ``sticks out'', or is more conspicuous2. How does difficulty level affect non-diseased cases? A difficult non-diseased case is one where variants of normal anatomy mimic actual lesions and could cause the radiologist to falsely diagnose the patient as diseased. Conversely, an easy non-diseased case is like a textbook illustration of normal anatomy. Every structure in it is clearly visualized and accounted for by the radiologist's knowledge of the patient's non-diseased anatomy, and the radiologist is confident that any abnormal structure, \emph{if present}, would be readily seen. The radiologist is unlikely to falsely diagnose the patient as diseased. Difficult cases tend to be rated in the middle of the rating scale, while easy ones tend to be rated at the ends of the rating scale.
 
-\hypertarget{case-sampling-induced-variability-of-auc}{%
-\subsection{Case sampling induced variability of AUC}\label{case-sampling-induced-variability-of-auc}}
+\hypertarget{case-sampling-variability-of-auc}{%
+\subsection{Case sampling variability of AUC}\label{case-sampling-variability-of-auc}}
 
 An easy case sample will cause AUC to increase over its average value; interpreting many case-sets and averaging the AUCs determines the average value. Conversely, a difficult case sample will cause AUC to decrease. Case sampling variability causes variability in the measured AUC. How does one estimate this essential source of variability? One method, totally impractical in the clinic but easy with simulations, is to have the same radiologist interpret repeated samples of case-sets from the population of cases (i.e., patients), termed \emph{population sampling}, or more viscerally, as the ``brute force'' method.
 
@@ -3631,8 +3631,8 @@ There has to be a better way of estimating case-sampling variability. With a par
 
 There are other options available for estimating case-sampling variance of AUC, and this chapter is not intended to be comprehensive. Three commonly used options are described: the DeLong et al method, the bootstrap and the jackknife resampling methods.
 
-\hypertarget{estimating-case-sampling-variability-using-the-delong-method}{%
-\section{Estimating case-sampling variability using the DeLong method}\label{estimating-case-sampling-variability-using-the-delong-method}}
+\hypertarget{sourcesVariabilityDeLong}{%
+\section{DeLong method}\label{sourcesVariabilityDeLong}}
 
 If the figure-of-merit is the empirical AUC, then a procedure developed by DeLong et al4 (henceforth abbreviated to DeLong) is applicable that is based on earlier work by \citep{RN2530} and \citep{RN2174}. The author will not go into details of this procedure but limit to showing that it ``works''. However, before one can show that it ``works'', one needs to know the true value of the variance of empirical AUC. Even if data were simulated using the binormal model, one cannot use the binormal model based estimate of variance as it is an estimate, not to be confused with a true value. Estimates are realizations of random numbers and are themselves subject to variability, which decreases with increasing case-set size. Instead, a ``brute-force'' (i.e., simulated population sampling) approach is adopted to determine the true value of the variance of AUC. The simulator provides a means of repeatedly generating case-sets interpreted by the same radiologist, and by sampling it enough time, e.g., \(C\) = 10,000 times, each time calculating AUC, one determines the population mean and standard deviation. The standard deviation determined this way is compared to that yielded by the DeLong method to check if the latter actually works.
 
@@ -3742,8 +3742,8 @@ This demonstration should convince the reader that one does have recourse other 
 
 Next, two resampling--based methods of estimating case-sampling variance of AUC are introduced. The word ``resampling'' means that the dataset itself is regarded as containing information regarding its variability, which can be extracted by sampling from the original data (hence the word ``resampling''). These are general and powerful techniques, applicable to any scalar statistic, not just the empirical AUC, which one might be able to use in other contexts.
 
-\hypertarget{bootstrap-estimation-of-auc-case-sampling-variability}{%
-\section{Bootstrap estimation of AUC case-sampling variability}\label{bootstrap-estimation-of-auc-case-sampling-variability}}
+\hypertarget{sourcesVariabilityBootstrap}{%
+\section{Bootstrap method}\label{sourcesVariabilityBootstrap}}
 
 The simplest resampling method, at least at the conceptual level, is the bootstrap. \emph{The bootstrap method is based on the assumption that one can regard the observed sample as defining the population from which it was sampled.} Since by definition a population cannot be exhausted, the idea is to resample, \emph{with replacement}, from the observed sample. Each resampling step realizes a particular bootstrap sample set denoted \(\{b\}\), where \(b = 1, 2, ..., B\). The curly brackets emphasize that different integer values of \(b\) denote different \emph{sets of cases}, not individual cases. {[}In contrast, the notation \((k)\) will be used to denote \emph{removing} a specific case, \(k\), as in the jackknife procedure to be described shortly. The index \(b\) should not be confused with the index \(c\), the case sampling index; the latter denotes repeated sampling from the population, which is impractical in real life; the bootstrap index denotes repeated sampling from the dataset, which is quite feasible.{]} The procedure is repeated \(B\) times, typically \(B\) can be as small as 200, but to be safe the author generally use about 1000 - 2000 bootstraps. The following example uses Table \ref{tab:ratingsParadigmExampleTable} from Chapter \ref{ratingsParadigm}.
 
@@ -3935,8 +3935,8 @@ Finally, here is the output when using non-parametric AUC, with \texttt{seed} = 
 #> stdAUCboot =  0.04125475
 \end{verbatim}
 
-\hypertarget{jackknife-estimation-of-auc-case-sampling-variability}{%
-\section{Jackknife estimation of AUC case-sampling variability}\label{jackknife-estimation-of-auc-case-sampling-variability}}
+\hypertarget{sourcesVariabilityJackknife}{%
+\section{Jackknife method}\label{sourcesVariabilityJackknife}}
 
 The second resampling method, termed the \emph{jackknife}, is computationally less demanding, but as was seen with the bootstrap, with modern personal computers computational limitations are no longer that important, at least for the types of analyses that this book is concerned with.
 
@@ -4079,29 +4079,140 @@ The next output is with the non-parametric figure of merit:
 #> stdAUCjack =  0.03689264
 \end{verbatim}
 
-It may be noticed that the mean of the jackknife figure of merit values, i.e., 0.8606667, exactly equals the original figure of merit 0.8606667 (i.e., that calculated including all cases). This can be shown analytically.
+It may be noticed that the mean of the jackknife figure of merit values, i.e., 0.8606667, exactly equals the original figure of merit 0.8606667 (i.e., that calculated including all cases). This can be shown analytically to be true so long as the figure of merit is the empirical AUC. A similar relation is not true for the bootstrap.
 
-\hypertarget{estimating-auc-case-sampling-variability-using-calibrated-simulator}{%
-\subsection{Estimating AUC case-sampling variability using calibrated simulator}\label{estimating-auc-case-sampling-variability-using-calibrated-simulator}}
+\hypertarget{sourcesVariabilityCalSimulator}{%
+\section{Calibrated simulator}\label{sourcesVariabilityCalSimulator}}
 
-In real life one does have the luxury of sampling from the population of cases, but with a simulator almost anything is possible. The population sampling method used previously, §7.3.2, to compare the DeLong method to a known standard used arbitrarily set simulator values (mu = 1.5 and sigma = 1.3 at line 5 of mainDeLongSd.R). One does not know if these values are actually representative of real clinical data. In this section a simple method of implementing population sampling using a calibrated simulator is described. The code is in mainCalSimulator.R in Online Appendix 7.C. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset, so the simulator is calibrated to the specific one-and-only-one dataset. Why might one wish to do that? Rather than ``fish in the dark'' and set arbitrary values for the simulator parameters, one needs to find realistic values that match an actual clinical dataset. This way one has at least some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis is more likely to be correct.
+In real life one does have the luxury of sampling from the population of cases, but with a simulator almost anything is possible. The population sampling method used previously, @ref(\{sourcesVariabilityDeLong\}), to compare the DeLong method to a known standard used arbitrarily set simulator values, \(\mu = 1.5\) and \(\sigma = 1.3\) . One does not know if these values are actually representative of real clinical data. In this section a simple method of implementing population sampling using a calibrated simulator is described. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset, so the simulator is calibrated to the specific one-and-only-one dataset. Why might one wish to do that? Rather than ``fish in the dark'' and set arbitrary values for the simulator parameters, one needs to find realistic values that match an actual clinical dataset. This way one has at least some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis is more likely to be correct.
 
-As an example, consider a real clinical dataset, such as in Table 7.1. This data set analyzed by MLE yielded model parameters, a, b and the 4 thresholds . The specific values were (in the same order): 1.320453, 0.607497, 0.007675259, 0.8962713, 1.515645 and 2.39671 (listed in 7.7.1: Code Output below). On each pass through the simulator one samples 60 values from the non-diseased distribution and 50 values from the diseased distribution, implemented in SimulateRocTable.R, Online Appendix 7.C, which returns a simulated ROC counts table like Table 7.1. MLE on the ROC counts table yields . The process is repeated P = 2000 (p is the population sampling index, ranging from 1 to P) and finally one calculates the mean and standard deviation of the 2000 values. Open the file mainCalSimulator.R, Online Appendix 7.C, confirm that FOM is set to ``Az'' at line 11 (i.e., it is not commented out) and source it. Shown are results of two runs with different values for the seed (namely, 1 and 2):
+As an example, consider a real clinical dataset, such as in Table \ref{tab:ratingsParadigmExampleTable}. This data set analyzed by MLE yielded model parameters, \texttt{a}, \texttt{b} and the 4 thresholds \(\zeta_1,\zeta_2,\zeta_3,\zeta_4\). The specific values were (in the same order): 1.320453, 0.607497, 0.007675259, 0.8962713, 1.515645 and 2.39671 (see code output below). On each pass through the simulator one samples 60 values from the non-diseased distribution and 50 values from the diseased distribution, which producers a simulated ROC counts table like Table \ref{tab:ratingsParadigmExampleTable}. MLE on the ROC counts table yields \(A_z\). The process is repeated \(P = 2000\) (\(p\) is the population sampling index, ranging from 1 to \(P\)) and finally one calculates the mean and standard deviation of the 2000 \(A_z\) values. Open the file mainCalSimulator.R, Online Appendix 7.C, confirm that FOM is set to ``Az'' at line 11 (i.e., it is not commented out) and source it. Shown are results of two runs with different values for the seed (namely, 1 and 2):
 
-7.7.1: Code Output
-\textgreater{} source(`\textasciitilde/book2/02 A ROC analysis/A7 Sources of variability in AUC/software/mainCalSimulator.R')
-seed = 1 , FOM = Az , P = 2000
-Calibrated simulator values: a, b, zetas:
-1.320453 0.607497 0.007675259 0.8962713 1.515645 2.39671
-seed = 1 OrigAUC = 0.8704519 meanAUC = 0.8676727 stdAUC = 0.04033307
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH07{-}Variability/SimulateRocCountsTable.R"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
 
-\begin{quote}
-source(`\textasciitilde/book2/02 A ROC analysis/A7 Sources of variability in AUC/software/mainCalSimulator.R')
-seed = 2 , FOM = Az , P = 2000
-Calibrated simulator values: a, b, zetas:
-1.320453 0.607497 0.007675259 0.8962713 1.515645 2.39671
-seed = 2 OrigAUC = 0.8704519 meanAUC = 0.8681855 stdAUC = 0.04055164
-\end{quote}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{doCalSimulator \textless{}{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{(P, parametricFOM, RocCountsTable) \{}
+\NormalTok{  K \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{sum}\NormalTok{(RocCountsTable[}\DecValTok{1}\NormalTok{,]), }
+         \KeywordTok{sum}\NormalTok{(RocCountsTable[}\DecValTok{2}\NormalTok{,]))}
+  \CommentTok{\# to build the model we have to do a parametric fit first}
+\NormalTok{  ret \textless{}{-}}\StringTok{ }\KeywordTok{RocfitR}\NormalTok{(RocCountsTable) }\CommentTok{\# AUC for observed data}
+\NormalTok{  a \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{a}
+\NormalTok{  b  \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{b}
+\NormalTok{  zetas \textless{}{-}}\StringTok{ }\NormalTok{ret}\OperatorTok{$}\NormalTok{zeta}
+\NormalTok{  mu  \textless{}{-}}\StringTok{ }\NormalTok{a}\OperatorTok{/}\NormalTok{b}
+\NormalTok{  sigma \textless{}{-}}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{b}
+\NormalTok{  zetas \textless{}{-}}\StringTok{ }\NormalTok{zetas}\OperatorTok{/}\NormalTok{b }\CommentTok{\# need to also scale zetas}
+   \CommentTok{\# AUC for observed data}
+  \ControlFlowTok{if}\NormalTok{ (parametricFOM) \{}
+\NormalTok{    OrigAUC \textless{}{-}}\StringTok{ }\KeywordTok{RocfitR}\NormalTok{(RocCountsTable)}\OperatorTok{$}\NormalTok{AUC                 }
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    OrigAUC \textless{}{-}}\StringTok{ }\KeywordTok{WilcoxonCountsTable}\NormalTok{(RocCountsTable)}\OperatorTok{$}\NormalTok{AUC }
+\NormalTok{  \}}
+  \CommentTok{\#to save the pop sample AUC values}
+\NormalTok{  AUC \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =}\NormalTok{ P)}
+\NormalTok{  a1 \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =}\NormalTok{ P)}
+\NormalTok{  b1 \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =}\NormalTok{ P)}
+  \ControlFlowTok{for}\NormalTok{ ( p }\ControlFlowTok{in} \DecValTok{1} \OperatorTok{:}\StringTok{ }\NormalTok{P)\{}
+    \ControlFlowTok{while}\NormalTok{ (}\DecValTok{1}\NormalTok{) \{}
+\NormalTok{      RocCountsTableSimPop \textless{}{-}}\StringTok{ }
+\StringTok{        }\KeywordTok{SimulateRocCountsTable}\NormalTok{(K, mu, sigma, zetas)}
+      \CommentTok{\#replace NAs with zeroes}
+\NormalTok{      RocCountsTableSimPop[}\KeywordTok{is.na}\NormalTok{(RocCountsTableSimPop )] \textless{}{-}}\StringTok{ }\DecValTok{0}
+      \ControlFlowTok{if}\NormalTok{ (parametricFOM) \{}
+        \CommentTok{\# AUC for observed data }
+\NormalTok{        temp \textless{}{-}}\StringTok{ }\KeywordTok{RocfitR}\NormalTok{(RocCountsTableSimPop)}
+        \CommentTok{\# a return of {-}1 means RocFitR did not converge}
+        \ControlFlowTok{if}\NormalTok{ (temp[}\DecValTok{1}\NormalTok{] }\OperatorTok{!=}\StringTok{ }\DecValTok{{-}1}\NormalTok{) \{}
+\NormalTok{          AUC[p]  \textless{}{-}}\StringTok{ }\NormalTok{temp}\OperatorTok{$}\NormalTok{AUC}
+\NormalTok{          a1[p] \textless{}{-}}\StringTok{ }\NormalTok{temp}\OperatorTok{$}\NormalTok{a}
+\NormalTok{          b1[p] \textless{}{-}}\StringTok{ }\NormalTok{temp}\OperatorTok{$}\NormalTok{b}
+          \ControlFlowTok{break} 
+\NormalTok{        \}}
+\NormalTok{      \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{        AUC[p] \textless{}{-}}\StringTok{ }\NormalTok{(}\KeywordTok{WilcoxonCountsTable}\NormalTok{(RocCountsTableSimPop))}\OperatorTok{$}\NormalTok{AUC}
+        \ControlFlowTok{break} 
+\NormalTok{      \}    }
+\NormalTok{    \}}
+\NormalTok{  \}}
+\NormalTok{  meanAUC  \textless{}{-}}\StringTok{ }\KeywordTok{mean}\NormalTok{(AUC)}
+\NormalTok{  stdAUC  \textless{}{-}}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{var}\NormalTok{(AUC))}
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{list}\NormalTok{(}
+    \DataTypeTok{mu =}\NormalTok{ mu,}
+    \DataTypeTok{sigma =}\NormalTok{ sigma,}
+    \DataTypeTok{zetas =}\NormalTok{ zetas,}
+    \DataTypeTok{OrigAUC =}\NormalTok{ OrigAUC,}
+    \DataTypeTok{meanAUC =}\NormalTok{ meanAUC,}
+    \DataTypeTok{stdAUC =}\NormalTok{ stdAUC}
+\NormalTok{  ))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{parametricFOM \textless{}{-}}\StringTok{ }\OtherTok{TRUE}
+\NormalTok{P \textless{}{-}}\StringTok{ }\DecValTok{2000}
+\NormalTok{RocCountsTable =}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{5}\NormalTok{))}
+\NormalTok{RocCountsTable[}\DecValTok{1}\NormalTok{,]  \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{30}\NormalTok{,}\DecValTok{19}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+\NormalTok{RocCountsTable[}\DecValTok{2}\NormalTok{,]  \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{12}\NormalTok{,}\DecValTok{22}\NormalTok{)}
+\NormalTok{ret \textless{}{-}}\StringTok{ }\KeywordTok{doCalSimulator}\NormalTok{(P, parametricFOM, RocCountsTable)}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"parametricFOM = "}\NormalTok{, parametricFOM,}
+  \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{Calibrated simulator values:}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{mu = "}\NormalTok{, ret}\OperatorTok{$}\NormalTok{mu, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{sigma = "}\NormalTok{, ret}\OperatorTok{$}\NormalTok{sigma, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{zetas = "}\NormalTok{, ret}\OperatorTok{$}\NormalTok{zetas, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} parametricFOM =  TRUE }
+\CommentTok{\#\textgreater{} Calibrated simulator values:}
+\CommentTok{\#\textgreater{}  }
+\CommentTok{\#\textgreater{} mu =  2.173597 }
+\CommentTok{\#\textgreater{} sigma =  1.646099 }
+\CommentTok{\#\textgreater{} zetas =  0.01263423 1.475351 2.494901 3.945221}
+
+\KeywordTok{cat}\NormalTok{(}\StringTok{"Simulations using calibrated simulator"}\NormalTok{,}
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{P = "}\NormalTok{, P, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{OrigAUC = "}\NormalTok{, ret}\OperatorTok{$}\NormalTok{OrigAUC, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{meanAUC = "}\NormalTok{, ret}\OperatorTok{$}\NormalTok{meanAUC, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{stdAUC = "}\NormalTok{, ret}\OperatorTok{$}\NormalTok{stdAUC, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} Simulations using calibrated simulator }
+\CommentTok{\#\textgreater{} P =  2000 }
+\CommentTok{\#\textgreater{} OrigAUC =  0.8704519 }
+\CommentTok{\#\textgreater{} meanAUC =  0.8675359 }
+\CommentTok{\#\textgreater{} stdAUC =  0.04064876}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> parametricFOM =  TRUE 
+#> Calibrated simulator values:
+#>  
+#> mu =  2.173597 
+#> sigma =  1.646099 
+#> zetas =  0.01263423 1.475351 2.494901 3.945221
+#> Simulations using calibrated simulator: 
+#> P =  2000 
+#> OrigAUC =  0.8704519 
+#> meanAUC =  0.867856 
+#> stdAUC =  0.04101963
+\end{verbatim}
+
+\begin{verbatim}
+#> parametricFOM =  FALSE 
+#> Calibrated simulator values:
+#>  
+#> mu =  2.173597 
+#> sigma =  1.646099 
+#> zetas =  0.01263423 1.475351 2.494901 3.945221
+#> Simulations using calibrated simulator: 
+#> P =  2000 
+#> OrigAUC =  0.8606667 
+#> meanAUC =  0.8504027 
+#> stdAUC =  0.03773004
+\end{verbatim}
 
 The seed = 1 estimate of standard deviation of AUC (0.0403) is recorded in Table 7.3, row A, sub-row ``Population''. The entry for sub-row ``MLE'' was obtained using the ROCFIT equivalent Eng's JAVA program \citep{RN2114}, §6.2.6. The DeLong method entry for row A was obtained using mainDeLongSd.R with FOM set to " Wilcoxon``, as indicated by the asterisk; see §7.3.2. The bootstrap entry was obtained using mainBootstrapSd.R, and the jackknife entry was obtained using mainJackknifeSd.R; in both cases FOM was set to''Az". Note that the four estimates are close to each other, around 0.04. This confirms the validity of the different approaches to estimating the case sampling standard deviation, and is a self-consistency check on the calibration process.
 
@@ -4111,8 +4222,8 @@ Exercise: Use the calibrated simulator to test the effect of changing simulator 
 
 Table 7.3: Comparison of different estimates of the standard deviation of AUC, namely MLE, the DeLong method, bootstrap, jackknife and population sampling. MLE = maximum likelihood estimate; shown are results for a real dataset (A, B) and two simulated datasets (C and D) and two choices for estimating AUC: parametric and empirical. * The entry for the DeLong method was obtained using the empirical AUC. (P = 2000) (B = 2000)
 
-\hypertarget{dependence-of-auc-on-reader-expertise}{%
-\section{Dependence of AUC on reader expertise}\label{dependence-of-auc-on-reader-expertise}}
+\hypertarget{sourcesVariabilityreaderExpertise}{%
+\section{Dependence of AUC on reader expertise}\label{sourcesVariabilityreaderExpertise}}
 
 Suppose one conducts an ROC study with J readers where typically J is about 5 but can be as low as 3 and as high as 20 (the wide variability reflects, in the author's opinion, lack of understanding of the factors affecting the optimal choice of J and the related issue of statistical power). Each reader interprets the same case sample, i.e., the same set of cases, but because they have different expertise levels and for other reasons (see below), the observed ROC counts tables will not be identical. The variance of the observed values is an empirical estimate of between-reader variance (including the inseparable within-reader component). Here is an example, in file MainBetweenReaderSd.R. This file loads the Van Dyke dataset, consisting of two modalities and five readers described in Online Chapter 24. Source the code file to get:
 7.8.1: Code Output
@@ -4133,8 +4244,8 @@ How does one conceptualize reader variability? As stated before, it is due to di
 
 All else being equal, readers with larger will perform better because they are better able to separate the non-diseased and diseased cases in z-space than their fellow readers. It is difficult and possibly misleading to try to estimate the differences directly from the observed ROC counts tables, but in general better readers will yield counts more skewed towards the low end of the rating scale on non-diseased cases and more skewed towards the high end of the rating scale for diseased cases. The ideal reader would rate all diseased cases one value (e.g.~5) and all non-diseased cases a smaller fixed value (e.g., 1, 2, 3, or 4), resulting in unit AUC, i.e., perfect performance. According to Eqn. (7.12), a reader with smaller will also perform better. As noted before, typically the parameter is greater than unity. The reasons for this general finding will be discussed later, but accept the author's word for now that the best the reader can is to reduce this parameter to unity. See Summary of Chapter 06 for reasons for the observation that generally the variance of the diseased distribution is larger than one -- it has to do with the inhomogeneity of the distribution of diseased cases and the possibility that a mixture distribution is involved. As regards thresholds, while the population based performance for a particular reader does not depend on thresholds, the thresholds determine the ROC counts table, so differences in usage of the thresholds will translate to differences in estimates of , but this is expected to be a smaller effect compared to the dependence on . To summarize, variability of readers can be attributed to variability in the binormal model parameters and, to a lesser extent, to variability in adopted thresholds.
 
-\hypertarget{dependence-of-auc-on-modality}{%
-\section{Dependence of AUC on modality}\label{dependence-of-auc-on-modality}}
+\hypertarget{sourcesVariabilityModalityEffect}{%
+\section{Dependence of AUC on modality}\label{sourcesVariabilityModalityEffect}}
 
 Suppose one conducts an ROC study with j (j =1,2,\ldots J) readers but there are I (i=1,2,\ldots I) modalities. This is frequently referred to as the multiple reader multiple case (MRMC) paradigm. Each reader interprets the same case sample, i.e., the same set of cases, in two or more modalities. Here is an example, in file MainModalityEffect.R. This file loads the Van Dyke dataset, consisting of two modalities and five readers described in Online Chapter 24. Source the code file to get:
 7.9.1: Code Output
@@ -4153,8 +4264,8 @@ The most general way of thinking of reader and modality variability is to put ij
 
 Given an MRMC dataset, using MLE one can estimate the parameters for each modality-reader combination, and this could be used to design a simulator that is calibrated to the specific clinical dataset, which in turn can be used to illustrate the ideas and to test any proposed method of analyzing the data. However, the problem is more complex; the procedure needs to also account for the correlations arising from the large number of pairings inherent is such a dataset (e.g., reader 1 in modality 1 vs.~reader 2 in modality 2, since both interpret a common dataset). Designing a MRMC calibrated simulator was until recently, an unsolved problem, which necessitated recent work9 by the author and Mr.~Xuetong Zhai. Chapter 23 describes recent progress towards this end.
 
-\hypertarget{effect-on-empirical-auc-of-variations-in-thresholds-and-numbers-of-bins}{%
-\section{Effect on empirical AUC of variations in thresholds and numbers of bins}\label{effect-on-empirical-auc-of-variations-in-thresholds-and-numbers-of-bins}}
+\hypertarget{sourcesVariabilityBinning}{%
+\section{Effect of binning}\label{sourcesVariabilityBinning}}
 
 There are actually two effects. (1) The empirical AUC will tend to be smaller than the true AUC. If there are few operating points, and they are clustered together, the difference may be large, Fig. 7.1 (A).
 
@@ -4191,8 +4302,8 @@ In Fig. 7.1(E) and Fig. 7.1(F) the effect is dramatic. The expert radiologist tr
   Fig. 7.1 (A-D): Plots (A - B) depict empirical plots for two simulated datasets for the same model, i.e., same continuous ratings, using different thresholds. In (A) the thresholds are clustered at low FPF values, while in (B) they are more evenly spaced. Empirical AUCs for the plots are 0.803 for (A) and 0.858 for (B). The clustering in (A) leads to a low estimate of AUC. Plots (C) and (D) are fitted curves corresponding to the same data as in (A) and (B), respectively. For each plot, the population AUC is 0.866. The fitted curves are less sensitive, but not immune, to the data clustering variations. With a large number of evenly spaced points, the empirical AUC is close to that of the fitted curve. This effect is demonstrated in plots (E) and (F). The plots were generated by mainEmpVsFit.R and mainBinVariability.R.
 \end{enumerate}
 
-\hypertarget{empirical-vs.-fitted-aucs}{%
-\section{Empirical vs.~fitted AUCs}\label{empirical-vs.-fitted-aucs}}
+\hypertarget{sourcesVariabilityEmpiricalVsFitted}{%
+\section{Empirical vs.~fitted AUCs}\label{sourcesVariabilityEmpiricalVsFitted}}
 
 There is a preference with some researchers to using the empirical AUC as a figure of merit. Its usage enables analyses10-14 variously referred to as the ``probabilistic'', mechanistic" or ``first-principles'' approach and the ``one-shot'' approach15 to multiple reader multiple case analysis. The author is aware of some statisticians who distrust parametric modeling and the associate normality assumptions (the author trusts that the demonstrations in §6.2.2 may assuage the concerns). In addition, empirical AUC frees the researcher from problems with binormal model based fitting, e.g., handling degenerate datasets (these problems go away with two of the fitting methods described in later chapters). The fact that the empirical AUC can always be calculated, even, for example, with a single operating point, can make the analyst blissfully unaware of anomalous data structures. In contrast, the binormal curve-fitting method in Chapter 06 will complain when the ratings bins are not well populated, e.g., by failing to converge. This at least alerts the analyst that conditions are not optimal, and prompt data visualization and consideration of alternate fitting methods.
 
@@ -6356,7 +6467,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.1810219          1   0.27714805}
+\CommentTok{\#\textgreater{} 1    1.2305974          1   0.26729089}
 \end{Highlighting}
 \end{Shaded}
 
