@@ -133,7 +133,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-09-17}
+\date{2020-09-18}
 
 \begin{document}
 \maketitle
@@ -4086,7 +4086,24 @@ It may be noticed that the mean of the jackknife figure of merit values, i.e., 0
 
 In real life one does have the luxury of sampling from the population of cases, but with a simulator almost anything is possible. The population sampling method used previously, @ref(\{sourcesVariabilityDeLong\}), to compare the DeLong method to a known standard used arbitrarily set simulator values, \(\mu = 1.5\) and \(\sigma = 1.3\) . One does not know if these values are actually representative of real clinical data. In this section a simple method of implementing population sampling using a calibrated simulator is described. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset, so the simulator is calibrated to the specific one-and-only-one dataset. Why might one wish to do that? Rather than ``fish in the dark'' and set arbitrary values for the simulator parameters, one needs to find realistic values that match an actual clinical dataset. This way one has at least some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis is more likely to be correct.
 
-As an example, consider a real clinical dataset, such as in Table \ref{tab:ratingsParadigmExampleTable}. This data set analyzed by MLE yielded model parameters, \texttt{a}, \texttt{b} and the 4 thresholds \(\zeta_1,\zeta_2,\zeta_3,\zeta_4\). The specific values were (in the same order): 1.320453, 0.607497, 0.007675259, 0.8962713, 1.515645 and 2.39671 (see code output below). On each pass through the simulator one samples 60 values from the non-diseased distribution and 50 values from the diseased distribution, which producers a simulated ROC counts table like Table \ref{tab:ratingsParadigmExampleTable}. MLE on the ROC counts table yields \(A_z\). The process is repeated \(P = 2000\) (\(p\) is the population sampling index, ranging from 1 to \(P\)) and finally one calculates the mean and standard deviation of the 2000 \(A_z\) values. Open the file mainCalSimulator.R, Online Appendix 7.C, confirm that FOM is set to ``Az'' at line 11 (i.e., it is not commented out) and source it. Shown are results of two runs with different values for the seed (namely, 1 and 2):
+As an example, consider a real clinical dataset, such as in Table \ref{tab:ratingsParadigmExampleTable}. This data set analyzed by MLE yielded model parameters, \texttt{a}, \texttt{b} and the 4 thresholds \(\zeta_1,\zeta_2,\zeta_3,\zeta_4\). After conversion to \(\mu=a/b\) and \(\sigma= 1/b\) and new zetas \(\zeta = \zeta/b\), the values are (in the same order): 2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221 (see code output below).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# x is the mu{-}sigma notation}
+\NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{2.173597}\NormalTok{, }\FloatTok{1.646099}\NormalTok{, }\FloatTok{0.01263423}\NormalTok{, }\FloatTok{1.475351}\NormalTok{, }\FloatTok{2.494901}\NormalTok{, }\FloatTok{3.945221}\NormalTok{)}
+\CommentTok{\# y is the a{-}b notation}
+\NormalTok{y \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{1.320453}\NormalTok{, }\FloatTok{0.607497}\NormalTok{, }\FloatTok{0.007675259}\NormalTok{, }\FloatTok{0.8962713}\NormalTok{, }\FloatTok{1.515645}\NormalTok{, }\FloatTok{2.39671}\NormalTok{)}
+\NormalTok{y[}\DecValTok{1}\NormalTok{]}\OperatorTok{/}\NormalTok{y[}\DecValTok{2}\NormalTok{] }\CommentTok{\# this is mu}
+\CommentTok{\#\textgreater{} [1] 2.173596}
+\DecValTok{1}\OperatorTok{/}\NormalTok{y[}\DecValTok{2}\NormalTok{]    }\CommentTok{\# this is sigma}
+\CommentTok{\#\textgreater{} [1] 1.646099}
+\NormalTok{y[}\DecValTok{3}\OperatorTok{:}\DecValTok{6}\NormalTok{]}\OperatorTok{/}\NormalTok{y[}\DecValTok{2}\NormalTok{] }\CommentTok{\# this is zeta in mu{-}sigma notation}
+\CommentTok{\#\textgreater{} [1] 0.01263423 1.47535099 2.49490121 3.94522113}
+\end{Highlighting}
+\end{Shaded}
+
+On each pass through the simulator one samples 60 values from the non-diseased distribution and 50 values from the diseased distribution, which producers a simulated ROC counts table like Table \ref{tab:ratingsParadigmExampleTable}. MLE on the ROC counts table yields \(A_z\). The process is repeated \(P = 2000\) (\(p\) is the population sampling index, ranging from 1 to \(P\)) and finally one calculates the mean and standard deviation of the 2000 \(A_z\) values. Open the file mainCalSimulator.R, Online Appendix 7.C, confirm that FOM is set to ``Az'' at line 11 (i.e., it is not commented out) and source it. There is no \texttt{seed} dependence of the code (the physical book is incorrect on this point):
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4115,8 +4132,6 @@ As an example, consider a real clinical dataset, such as in Table \ref{tab:ratin
 \NormalTok{  \}}
   \CommentTok{\#to save the pop sample AUC values}
 \NormalTok{  AUC \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =}\NormalTok{ P)}
-\NormalTok{  a1 \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =}\NormalTok{ P)}
-\NormalTok{  b1 \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =}\NormalTok{ P)}
   \ControlFlowTok{for}\NormalTok{ ( p }\ControlFlowTok{in} \DecValTok{1} \OperatorTok{:}\StringTok{ }\NormalTok{P)\{}
     \ControlFlowTok{while}\NormalTok{ (}\DecValTok{1}\NormalTok{) \{}
 \NormalTok{      RocCountsTableSimPop \textless{}{-}}\StringTok{ }
@@ -4129,8 +4144,6 @@ As an example, consider a real clinical dataset, such as in Table \ref{tab:ratin
         \CommentTok{\# a return of {-}1 means RocFitR did not converge}
         \ControlFlowTok{if}\NormalTok{ (temp[}\DecValTok{1}\NormalTok{] }\OperatorTok{!=}\StringTok{ }\DecValTok{{-}1}\NormalTok{) \{}
 \NormalTok{          AUC[p]  \textless{}{-}}\StringTok{ }\NormalTok{temp}\OperatorTok{$}\NormalTok{AUC}
-\NormalTok{          a1[p] \textless{}{-}}\StringTok{ }\NormalTok{temp}\OperatorTok{$}\NormalTok{a}
-\NormalTok{          b1[p] \textless{}{-}}\StringTok{ }\NormalTok{temp}\OperatorTok{$}\NormalTok{b}
           \ControlFlowTok{break} 
 \NormalTok{        \}}
 \NormalTok{      \} }\ControlFlowTok{else}\NormalTok{ \{}
@@ -4139,6 +4152,7 @@ As an example, consider a real clinical dataset, such as in Table \ref{tab:ratin
 \NormalTok{      \}    }
 \NormalTok{    \}}
 \NormalTok{  \}}
+\NormalTok{  AUC \textless{}{-}}\StringTok{ }\NormalTok{AUC[}\OperatorTok{!}\KeywordTok{is.na}\NormalTok{(AUC)]}
 \NormalTok{  meanAUC  \textless{}{-}}\StringTok{ }\KeywordTok{mean}\NormalTok{(AUC)}
 \NormalTok{  stdAUC  \textless{}{-}}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{var}\NormalTok{(AUC))}
   \KeywordTok{return}\NormalTok{(}\KeywordTok{list}\NormalTok{(}
@@ -4214,6 +4228,23 @@ As an example, consider a real clinical dataset, such as in Table \ref{tab:ratin
 #> stdAUC =  0.03773004
 \end{verbatim}
 
+\begin{verbatim}
+#> parametricFOM =  FALSE 
+#> Calibrated simulator values:
+#>  
+#> mu =  2.173597 
+#> sigma =  1.646099 
+#> zetas =  0.01263423 1.475351 2.494901 3.945221
+#> Simulations using calibrated simulator: 
+#> P =  2000 
+#> OrigAUC =  0.8606667 
+#> meanAUC =  0.8509415 
+#> stdAUC =  0.01145896
+\end{verbatim}
+
+\hypertarget{tba}{%
+\subsection{TBA}\label{tba}}
+
 The seed = 1 estimate of standard deviation of AUC (0.0403) is recorded in Table 7.3, row A, sub-row ``Population''. The entry for sub-row ``MLE'' was obtained using the ROCFIT equivalent Eng's JAVA program \citep{RN2114}, §6.2.6. The DeLong method entry for row A was obtained using mainDeLongSd.R with FOM set to " Wilcoxon``, as indicated by the asterisk; see §7.3.2. The bootstrap entry was obtained using mainBootstrapSd.R, and the jackknife entry was obtained using mainJackknifeSd.R; in both cases FOM was set to''Az". Note that the four estimates are close to each other, around 0.04. This confirms the validity of the different approaches to estimating the case sampling standard deviation, and is a self-consistency check on the calibration process.
 
 Row B repeats the values in row A, except that this time the empirical AUC is being used as the figure of merit. The flexibility afforded by the calibrated simulator is that using it one can test various ideas. For example, what happens if the number of cases is increased? One expects the standard deviations in the last column of Table 7.3 to decrease, but by how much. Row B uses datasets generated by the simulator calibrated to the data in Table 7.3. Since the numbers of cases has not changed, the values are similar to those in row A. In row-C the number of cases has been inflated by a factor of 10, and the standard deviations decrease by about a factor of square root of 10. {[}Since rows B, C and D use empirical AUC, MLE estimates are inapplicable.{]}
@@ -4221,6 +4252,173 @@ Row B repeats the values in row A, except that this time the empirical AUC is be
 Exercise: Use the calibrated simulator to test the effect of changing simulator parameters, particularly mu. As mu increases, the standard deviation is expected to decrease, because there is ``less room'' for AUC to vary, since it is constrained to be ≤1.
 
 Table 7.3: Comparison of different estimates of the standard deviation of AUC, namely MLE, the DeLong method, bootstrap, jackknife and population sampling. MLE = maximum likelihood estimate; shown are results for a real dataset (A, B) and two simulated datasets (C and D) and two choices for estimating AUC: parametric and empirical. * The entry for the DeLong method was obtained using the empirical AUC. (P = 2000) (B = 2000)
+
+\hypertarget{comparison-of-methods-of-estimating-variability}{%
+\section{Comparison of methods of estimating variability}\label{comparison-of-methods-of-estimating-variability}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH07{-}Variability/GenerateCaseSamples.R"}\NormalTok{))}
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH07{-}Variability/VarPopSampling.R"}\NormalTok{))}
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH07{-}Variability/VarBootstrap.R"}\NormalTok{))}
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH07{-}Variability/VarJack.R"}\NormalTok{))}
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH07{-}Variability/Wilcoxon.R"}\NormalTok{))}
+\KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH07{-}Variability/VarDeLong.R"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{FinalParameters \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{1.320455}\NormalTok{, }
+                     \FloatTok{0.6074974}\NormalTok{, }
+                     \FloatTok{0.007676989}\NormalTok{, }
+                     \FloatTok{0.8962713}\NormalTok{, }
+                     \FloatTok{1.515645}\NormalTok{, }
+                     \FloatTok{2.396711}\NormalTok{)}
+\NormalTok{a  \textless{}{-}}\StringTok{ }\NormalTok{FinalParameters[}\DecValTok{1}\NormalTok{]}
+\NormalTok{b  \textless{}{-}}\StringTok{  }\NormalTok{FinalParameters[}\DecValTok{2}\NormalTok{]}
+\NormalTok{zetas \textless{}{-}}\StringTok{ }\NormalTok{FinalParameters[}\DecValTok{3}\OperatorTok{:}\KeywordTok{length}\NormalTok{((FinalParameters))]}
+\NormalTok{mu \textless{}{-}}\StringTok{ }\NormalTok{a}\OperatorTok{/}\NormalTok{b}
+\NormalTok{sigma \textless{}{-}}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{b}
+\NormalTok{K \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{60}\NormalTok{, }\DecValTok{50}\NormalTok{)}
+\NormalTok{seed \textless{}{-}}\StringTok{ }\DecValTok{1}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"seed = "}\NormalTok{, seed, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{K1 = "}\NormalTok{, K[}\DecValTok{1}\NormalTok{], }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{K2 = "}\NormalTok{, K[}\DecValTok{2}\NormalTok{], }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{mu = "}\NormalTok{, mu, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{sigma = "}\NormalTok{, sigma, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} seed =  1 }
+\CommentTok{\#\textgreater{} K1 =  60 }
+\CommentTok{\#\textgreater{} K2 =  50 }
+\CommentTok{\#\textgreater{} mu =  2.173598 }
+\CommentTok{\#\textgreater{} sigma =  1.646098}
+
+\NormalTok{P \textless{}{-}}\StringTok{ }\DecValTok{2000}
+\NormalTok{B \textless{}{-}}\StringTok{ }\DecValTok{2000}
+\NormalTok{P1 \textless{}{-}}\StringTok{ }\DecValTok{20}
+
+\KeywordTok{set.seed}\NormalTok{( seed )}
+\NormalTok{VPS\textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =}\NormalTok{ P1)}
+\ControlFlowTok{for}\NormalTok{ (p }\ControlFlowTok{in} \DecValTok{1} \OperatorTok{:}\StringTok{ }\NormalTok{P1) VPS[p] \textless{}{-}}\StringTok{ }\KeywordTok{VarPopSampling}\NormalTok{(K, mu, sigma, zetas, P)}
+
+\KeywordTok{set.seed}\NormalTok{( seed )}
+\NormalTok{VBS\textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =}\NormalTok{ P1)}
+\ControlFlowTok{for}\NormalTok{ (p }\ControlFlowTok{in} \DecValTok{1} \OperatorTok{:}\StringTok{ }\NormalTok{P1) VBS[p] \textless{}{-}}\StringTok{ }\KeywordTok{VarBootstrap}\NormalTok{(K, mu, sigma, zetas, B)}
+
+\KeywordTok{set.seed}\NormalTok{( seed )}
+\NormalTok{VJK\textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =}\NormalTok{ P1)}
+\ControlFlowTok{for}\NormalTok{ (p }\ControlFlowTok{in} \DecValTok{1} \OperatorTok{:}\StringTok{ }\NormalTok{P1) VJK[p] \textless{}{-}}\StringTok{ }\KeywordTok{VarJack}\NormalTok{(K, mu, sigma, zetas)}
+
+\KeywordTok{set.seed}\NormalTok{( seed )}
+\NormalTok{VDL \textless{}{-}}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =}\NormalTok{ P1)}
+\ControlFlowTok{for}\NormalTok{ (p }\ControlFlowTok{in} \DecValTok{1} \OperatorTok{:}\StringTok{ }\NormalTok{P1) VDL[p] \textless{}{-}}\StringTok{ }\KeywordTok{VarDeLong}\NormalTok{(K, mu, sigma, zetas)}
+
+\KeywordTok{cat}\NormalTok{(}\StringTok{"Mean Sd Pop Sampling = "}\NormalTok{, }\KeywordTok{mean}\NormalTok{(}\KeywordTok{sqrt}\NormalTok{(VPS)),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} Mean Sd Pop Sampling =  0.03594515}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"Mean Sd Boot Sampling = "}\NormalTok{, }\KeywordTok{mean}\NormalTok{(}\KeywordTok{sqrt}\NormalTok{(VBS)),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} Mean Sd Boot Sampling =  0.03656486}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"Mean Sd Jack Sampling = "}\NormalTok{, }\KeywordTok{mean}\NormalTok{(}\KeywordTok{sqrt}\NormalTok{(VJK)),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} Mean Sd Jack Sampling =  0.03349281}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"Mean Sd DeLong  = "}\NormalTok{, }\KeywordTok{mean}\NormalTok{(}\KeywordTok{sqrt}\NormalTok{(VDL)),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{\#\textgreater{} Mean Sd DeLong  =  0.03331918}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> seed =  1 
+#> K1 =  600 
+#> K2 =  500 
+#> mu =  2.173598 
+#> sigma =  1.646098
+#> Mean Sd Pop Sampling =  0.01132805
+#> Mean Sd Boot Sampling =  0.01099246
+#> Mean Sd Jack Sampling =  0.01130954
+#> Mean Sd DeLong  =  0.01130374
+\end{verbatim}
+
+\begin{table}
+
+\caption{\label{tab:sourcesVariabilityTableCompareA}Different estimates of standard deviation of AUC.}
+\centering
+\begin{tabular}[t]{l|l|l|l}
+\hline
+Dataset & AUC est. method & Var. est. method & std. dev. AUC\\
+\hline
+ExampleTable & Rocfit & MLE & 0.0378\\
+\hline
+ExampleTable & Rocfit & DeLong & *0.0380\\
+\hline
+ExampleTable & Rocfit & Bootstrap & 0.0438\\
+\hline
+ExampleTable & Rocfit & Jackknife & 0.0386\\
+\hline
+ExampleTable & Rocfit & PopulationSampling & 0.0403\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+
+\caption{\label{tab:sourcesVariabilityTableCompareB}Different estimates of standard deviation of AUC.}
+\centering
+\begin{tabular}[t]{l|l|l|l}
+\hline
+Dataset & AUC est. method & Var. est. method & std. dev. AUC\\
+\hline
+ExampleTable & Wilcoxon & MLE & NA\\
+\hline
+ExampleTable & Wilcoxon & DeLong & 0.0380\\
+\hline
+ExampleTable & Wilcoxon & Bootstrap & 0.0413\\
+\hline
+ExampleTable & Wilcoxon & Jackknife & 0.0369\\
+\hline
+ExampleTable & Wilcoxon & PopulationSampling & 0.0369\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+
+\caption{\label{tab:sourcesVariabilityTableCompareC}Different estimates of standard deviation of AUC.}
+\centering
+\begin{tabular}[t]{l|l|l|l}
+\hline
+Dataset & AUC est. method & Var. est. method & std. dev. AUC\\
+\hline
+Cal. Simulator 60 cases & Wilcoxon & MLE & NA\\
+\hline
+Cal. Simulator 60 cases & Wilcoxon & DeLong & 0.0333\\
+\hline
+Cal. Simulator 60 cases & Wilcoxon & Bootstrap & 0.0366\\
+\hline
+Cal. Simulator 60 cases & Wilcoxon & Jackknife & 0.0335\\
+\hline
+Cal. Simulator 60 cases & Wilcoxon & PopulationSampling & 0.0359\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+
+\caption{\label{tab:sourcesVariabilityTableCompareD}Different estimates of standard deviation of AUC.}
+\centering
+\begin{tabular}[t]{l|l|l|l}
+\hline
+Dataset & AUC est. method & Var. est. method & std. dev. AUC\\
+\hline
+Cal. Simulator 600 cases & Wilcoxon & MLE & NA\\
+\hline
+Cal. Simulator 600 cases & Wilcoxon & DeLong & 0.0113\\
+\hline
+Cal. Simulator 600 cases & Wilcoxon & Bootstrap & 0.0110\\
+\hline
+Cal. Simulator 600 cases & Wilcoxon & Jackknife & 0.0113\\
+\hline
+Cal. Simulator 600 cases & Wilcoxon & PopulationSampling & 0.0113\\
+\hline
+\end{tabular}
+\end{table}
 
 \hypertarget{sourcesVariabilityreaderExpertise}{%
 \section{Dependence of AUC on reader expertise}\label{sourcesVariabilityreaderExpertise}}
@@ -6467,7 +6665,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.2305974          1   0.26729089}
+\CommentTok{\#\textgreater{} 1    1.1789246          1   0.27757503}
 \end{Highlighting}
 \end{Shaded}
 
