@@ -172,20 +172,37 @@ The simplest resampling method, at least at the conceptual level, is the bootstr
 For convenience, let us denote cases as follows. The 30 non-diseased cases that received the 1 rating are denoted $k_{1,1},k_{2,1},...,k_{30,1}$. The second index denotes the truth state of the cases. Likewise, the 19 non-diseased cases that received the 2 rating are denoted $k_{31,1},k_{32,1},...,k_{49,1}$ and so on for the remaining non-diseased cases. The 5 diseased cases that received the 1 rating are denoted $k_{1,2},k_{2,2},...,k_{5,2}$, the 6 diseased cases that received the 2 rating are denoted $k_{6,2},k_{7,2},...,k_{11,2}$, and so on. Let us figuratively "put" all non-diseased cases (think of each case as an index card, with the case notation and rating recorded on it) into one hat (the non-diseased hat) and all the diseased cases into another hat (the diseased hat). Next, one randomly picks one case (card) from the non-diseased hat, records it's rating, and puts the case back in the hat, so that it is free to be possibly picked again. This is repeated 60 times for the non-diseased hat resulting in 60 ratings from non-diseased cases. A similar procedure is performed using the diseased hat, resulting in 50 ratings from diseased cases. The author has just described, in painful detail (one might say) the realization of the 1st bootstrap sample, denoted $\{b=1\}$. This is used to construct the 1st bootstrap counts table, Table \@ref(tab:sourcesVariabilitybs1). 
 
 
-\begin{table}
-
-\caption{(\#tab:sourcesVariabilitybs1)Representative counts table.}
-\centering
-\begin{tabular}[t]{l|r|r|r|r|r}
-\hline
-  & $r = 5$ & $r = 4$ & $r = 3$ & $r = 2$ & $r = 1$\\
-\hline
-non-diseased & 0 & 0 & 9 & 16 & 35\\
-\hline
-diseased & 19 & 8 & 7 & 9 & 7\\
-\hline
-\end{tabular}
-\end{table}
+<table>
+<caption>(\#tab:sourcesVariabilitybs1)Representative counts table.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> $r = 5$ </th>
+   <th style="text-align:right;"> $r = 4$ </th>
+   <th style="text-align:right;"> $r = 3$ </th>
+   <th style="text-align:right;"> $r = 2$ </th>
+   <th style="text-align:right;"> $r = 1$ </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> non-diseased </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 16 </td>
+   <td style="text-align:right;"> 35 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> diseased </td>
+   <td style="text-align:right;"> 19 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 7 </td>
+  </tr>
+</tbody>
+</table>
 
 
 So what happened? Consider the 35 non-diseased cases with a 1 rating. If each non-diseased case rated 1 in Table \@ref(tab:ratingsParadigmExampleTable) were picked one time, the total would have been 30, but it is 35. Therefore, some of the original non-diseased cases rated 1 must have been picked multiple times, but one must also make allowance as there is no guarantee that a specific case was picked at all. Still focusing on the 35 non-diseased cases with a 1 rating in the first bootstrap sample, the picked labels, reordered after the fact, with respect to the first index, might be: 
@@ -513,7 +530,25 @@ It may be noticed that the mean of the jackknife figure of merit values, i.e., 0
 ## Calibrated simulator {#sourcesVariabilityCalSimulator}
 In real life one does have the luxury of sampling from the population of cases, but with a simulator almost anything is possible. The population sampling method used previously, \@ref({sourcesVariabilityDeLong}), to compare the DeLong method to a known standard used arbitrarily set simulator values, $\mu = 1.5$ and $\sigma = 1.3$ . One does not know if these values are actually representative of real clinical data. In this section a simple method of implementing population sampling using a calibrated simulator is described. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset, so the simulator is calibrated to the specific one-and-only-one dataset. Why might one wish to do that? Rather than "fish in the dark" and set arbitrary values for the simulator parameters, one needs to find realistic values that match an actual clinical dataset. This way one has at least some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis is more likely to be correct.
 
-As an example, consider a real clinical dataset, such as in Table \@ref(tab:ratingsParadigmExampleTable). This data set analyzed by MLE yielded model parameters, `a`, `b` and the 4 thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$. The specific values were (in the same order): 1.320453, 0.607497, 0.007675259, 0.8962713, 1.515645 and 2.39671 (see code output below). On each pass through the simulator one samples 60 values from the non-diseased distribution and 50 values from the diseased distribution, which producers a simulated ROC counts table like Table \@ref(tab:ratingsParadigmExampleTable). MLE on the ROC counts table yields $A_z$. The process is repeated $P = 2000$ ($p$ is the population sampling index, ranging from 1 to $P$) and finally one calculates the mean and standard deviation of the 2000 $A_z$ values. Open the file mainCalSimulator.R, Online Appendix 7.C, confirm that FOM is set to "Az" at line 11 (i.e., it is not commented out) and source it. Shown are results of two runs with different values for the seed (namely, 1 and 2):
+As an example, consider a real clinical dataset, such as in Table \@ref(tab:ratingsParadigmExampleTable). This data set analyzed by MLE yielded model parameters, `a`, `b` and the 4 thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$. After conversion to $\mu=a/b$ and $\sigma= 1/b$ and new zetas $\zeta = \zeta/b$, the values are (in the same order): 2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221 (see code output below). 
+
+
+```r
+# x is the mu-sigma notation
+x <- c(2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221)
+# y is the a-b notation
+y <- c(1.320453, 0.607497, 0.007675259, 0.8962713, 1.515645, 2.39671)
+y[1]/y[2] # this is mu
+#> [1] 2.173596
+1/y[2]    # this is sigma
+#> [1] 1.646099
+y[3:6]/y[2] # this is zeta in mu-sigma notation
+#> [1] 0.01263423 1.47535099 2.49490121 3.94522113
+```
+
+
+On each pass through the simulator one samples 60 values from the non-diseased distribution and 50 values from the diseased distribution, which producers a simulated ROC counts table like Table \@ref(tab:ratingsParadigmExampleTable). MLE on the ROC counts table yields $A_z$. The process is repeated $P = 2000$ ($p$ is the population sampling index, ranging from 1 to $P$) and finally one calculates the mean and standard deviation of the 2000 $A_z$ values. Open the file mainCalSimulator.R, Online Appendix 7.C, confirm that FOM is set to "Az" at line 11 (i.e., it is not commented out) and source it. There is no `seed` dependence of the code (the physical book is incorrect on this point):
+
 
 
 ```r
@@ -542,8 +577,6 @@ doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
   }
   #to save the pop sample AUC values
   AUC <- array(dim = P)
-  a1 <- array(dim = P)
-  b1 <- array(dim = P)
   for ( p in 1 : P){
     while (1) {
       RocCountsTableSimPop <- 
@@ -556,8 +589,6 @@ doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
         # a return of -1 means RocFitR did not converge
         if (temp[1] != -1) {
           AUC[p]  <- temp$AUC
-          a1[p] <- temp$a
-          b1[p] <- temp$b
           break 
         }
       } else {
@@ -566,6 +597,7 @@ doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
       }    
     }
   }
+  AUC <- AUC[!is.na(AUC)]
   meanAUC  <- mean(AUC)
   stdAUC  <- sqrt(var(AUC))
   return(list(
@@ -629,6 +661,7 @@ cat("Simulations using calibrated simulator",
 ```
 
 
+
 ```
 #> parametricFOM =  FALSE 
 #> Calibrated simulator values:
@@ -641,6 +674,21 @@ cat("Simulations using calibrated simulator",
 #> OrigAUC =  0.8606667 
 #> meanAUC =  0.8504027 
 #> stdAUC =  0.03773004
+```
+
+
+```
+#> parametricFOM =  FALSE 
+#> Calibrated simulator values:
+#>  
+#> mu =  2.173597 
+#> sigma =  1.646099 
+#> zetas =  0.01263423 1.475351 2.494901 3.945221
+#> Simulations using calibrated simulator: 
+#> P =  2000 
+#> OrigAUC =  0.8606667 
+#> meanAUC =  0.8509415 
+#> stdAUC =  0.01145896
 ```
 
 The seed = 1 estimate of standard deviation of AUC (0.0403) is recorded in Table 7.3, row A, sub-row "Population". The entry for sub-row "MLE" was obtained using the ROCFIT equivalent Eng's JAVA program [@RN2114], §6.2.6. The DeLong method entry for row A was obtained using mainDeLongSd.R with FOM set to " Wilcoxon", as indicated by the asterisk; see §7.3.2. The bootstrap entry was obtained using mainBootstrapSd.R, and the jackknife entry was obtained using mainJackknifeSd.R; in both cases FOM was set to "Az". Note that the four estimates are close to each other, around 0.04. This confirms the validity of the different approaches to estimating the case sampling standard deviation, and is a self-consistency check on the calibration process.

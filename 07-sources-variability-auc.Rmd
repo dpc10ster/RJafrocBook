@@ -78,7 +78,7 @@ There are other options available for estimating case-sampling variance of AUC, 
 ## DeLong method {#sourcesVariabilityDeLong}
 If the figure-of-merit is the empirical AUC, then a procedure developed by DeLong et al4 (henceforth abbreviated to DeLong) is applicable that is based on earlier work by [@RN2530] and [@RN2174]. The author will not go into details of this procedure but limit to showing that it "works". However, before one can show that it "works", one needs to know the true value of the variance of empirical AUC. Even if data were simulated using the binormal model, one cannot use the binormal model based estimate of variance as it is an estimate, not to be confused with a true value. Estimates are realizations of random numbers and are themselves subject to variability, which decreases with increasing case-set size. Instead, a “brute-force” (i.e., simulated population sampling) approach is adopted to determine the true value of the variance of AUC. The simulator provides a means of repeatedly generating case-sets interpreted by the same radiologist, and by sampling it enough time, e.g., $C$ = 10,000 times, each time calculating AUC, one determines the population mean and standard deviation. The standard deviation determined this way is compared to that yielded by the DeLong method to check if the latter actually works.  
 
-```{r echo=FALSE}
+```{r, echo=FALSE}
 Wilcoxon <- function (zk1, zk2)
 {
   K1 = length(zk1)
@@ -313,7 +313,7 @@ doBootstrap <- function(parametricFOM, B, seed, RocTable) {
 Since the bootstrap method is applicable to any scalar figure of merit, two options are provided in the code. If `parametricFOM` is set to `TRUE`, then the binormal model estimate is used, and if set to `FALSE`, the empirical AUC is used. The first set of results are obtained with `parametricFOM` set to `TRUE`.
 
 
-```{r}
+```{r, cache = TRUE}
 parametricFOM <- TRUE
 B <- 200;seed <- 1;set.seed(seed)
 RocTable = array(dim = c(2,5))
@@ -337,7 +337,7 @@ cat("Bootstrap variance estimation:",
 This shows that the AUC of the original data (i.e., before performing any bootstrapping) is 0.870, the mean AUC of the B = 200 bootstrapped datasets is 0.867, and the standard deviation of the 200 bootstraps is 0.0438. If one runs the website calculator referenced in the previous chapter on the dataset shown in Table \@ref(tab:ratingsParadigmExampleTable), one finds that the MLE of the standard deviation of the AUC of the fitted ROC curve is 0.0378. The standard deviation is itself a statistic and there is sampling variability associated with it, i.e., there exists such a beast as a standard deviation of a standard deviation; the bootstrap estimate is not too far from the MLE estimate. By setting `seed` to different values, one gets an idea of the variability of the estimate of the standard deviation of AUC. For example, with `seed` = 2, one gets: 
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, cache = TRUE}
 parametricFOM <- TRUE
 B <- 200;seed <- 2;set.seed(seed)
 RocTable = array(dim = c(2,5))
@@ -361,7 +361,7 @@ cat("Bootstrap variance estimation:",
 Note that both the mean of the bootstrap samples and the standard deviation have changed, but both are close to the MLE values. Examined next is the dependence of the estimates on `B`, the number of bootstraps. With `seed` = 1 and `B` = 2000 one gets: 
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, cache = TRUE}
 parametricFOM <- TRUE
 B <- 2000;seed <- 1;set.seed(seed)
 RocTable = array(dim = c(2,5))
@@ -387,7 +387,7 @@ The estimates are evidently rather insensitive to $B$, but the computation time 
 
 Finally, here is the output when using non-parametric AUC, with `seed` = 1.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, cache = TRUE}
 parametricFOM <- FALSE
 B <- 200;seed <- 1;set.seed(seed)
 RocTable = array(dim = c(2,5))
@@ -516,7 +516,7 @@ doJackknife <- function(parametricFOM, RocTable) {
 Since the jackknife method is applicable to any scalar figure of merit, two options are provided in the code. If `parametricFOM` is set to `TRUE`, then the binormal model estimate is used, and if set to `FALSE`, the empirical AUC is used. The first set of results are obtained with `parametricFOM` set to `TRUE`. Notice that the code does not use a `set.seed()` statement, as no random number generator is needed in the jackknife method. Systematically removing and replacing each case in sequence, one at a time, is not random sampling, which should further explain the need for the variance inflation factor in Eqn. \@ref(eq:sourcesVariability-jackknife-variance-ordinary-variance). 
 
 
-```{r}
+```{r, cache = TRUE}
 parametricFOM <- TRUE
 RocTable = array(dim = c(2,5))
 RocTable[1,]  <- c(30,19,8,2,1)
@@ -537,7 +537,7 @@ cat("Jackknife variance estimation:",
 The next output is with the non-parametric figure of merit:
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, cache = TRUE}
 parametricFOM <- FALSE
 RocTable = array(dim = c(2,5))
 RocTable[1,]  <- c(30,19,8,2,1)
@@ -636,7 +636,7 @@ doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
 ```
 
 
-```{r}
+```{r, cache = TRUE}
 parametricFOM <- TRUE
 P <- 2000
 RocCountsTable = array(dim = c(2,5))
@@ -657,7 +657,7 @@ cat("Simulations using calibrated simulator",
 ```
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, cache = TRUE}
 parametricFOM <- TRUE
 P <- 2000
 RocCountsTable = array(dim = c(2,5))
@@ -678,12 +678,32 @@ cat("Simulations using calibrated simulator:",
 ```
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, cache = TRUE}
 parametricFOM <- FALSE
 P <- 2000
 RocCountsTable = array(dim = c(2,5))
 RocCountsTable[1,]  <- c(30,19,8,2,1)
 RocCountsTable[2,]  <- c(5,6,5,12,22)
+ret <- doCalSimulator(P, parametricFOM, RocCountsTable)
+cat("parametricFOM = ", parametricFOM,
+  "\nCalibrated simulator values:\n", 
+    "\nmu = ", ret$mu, 
+    "\nsigma = ", ret$sigma, 
+    "\nzetas = ", ret$zetas, "\n")
+
+cat("Simulations using calibrated simulator:",
+    "\nP = ", P, 
+    "\nOrigAUC = ", ret$OrigAUC, 
+    "\nmeanAUC = ", ret$meanAUC, 
+    "\nstdAUC = ", ret$stdAUC, "\n")
+```
+
+```{r, echo=FALSE, cache = TRUE}
+parametricFOM <- FALSE
+P <- 2000
+RocCountsTable = array(dim = c(2,5))
+RocCountsTable[1,]  <- c(30,19,8,2,1) * 10
+RocCountsTable[2,]  <- c(5,6,5,12,22) * 10
 ret <- doCalSimulator(P, parametricFOM, RocCountsTable)
 cat("parametricFOM = ", parametricFOM,
   "\nCalibrated simulator values:\n", 
@@ -705,6 +725,99 @@ Row B repeats the values in row A, except that this time the empirical AUC is be
 Exercise: Use the calibrated simulator to test the effect of changing simulator parameters, particularly mu. As mu increases, the standard deviation is expected to decrease, because there is "less room" for AUC to vary, since it is constrained to be ≤1. 
 
 Table 7.3: Comparison of different estimates of the standard deviation of AUC, namely MLE, the DeLong method, bootstrap, jackknife and population sampling. MLE = maximum likelihood estimate; shown are results for a real dataset (A, B) and two simulated datasets (C and D) and two choices for estimating AUC: parametric and empirical. * The entry for the DeLong method was obtained using the empirical AUC. (P = 2000) (B = 2000)
+
+## Comparing the four estimates
+
+```{r}
+source(here("R/CH07-Variability/GenerateCaseSamples.R"))
+source(here("R/CH07-Variability/VarPopSampling.R"))
+source(here("R/CH07-Variability/VarBootstrap.R"))
+source(here("R/CH07-Variability/VarJack.R"))
+source(here("R/CH07-Variability/Wilcoxon.R"))
+source(here("R/CH07-Variability/VarDeLong.R"))
+```
+
+
+```{r, cache=TRUE}
+FinalParameters <- c(1.320455, 
+                     0.6074974, 
+                     0.007676989, 
+                     0.8962713, 
+                     1.515645, 
+                     2.396711)
+a  <- FinalParameters[1]
+b  <-  FinalParameters[2]
+zetas <- FinalParameters[3:length((FinalParameters))]
+mu <- a/b
+sigma <- 1/b
+K <- c(60, 50)
+seed <- 1
+cat("seed = ", seed, 
+    "\nK1 = ", K[1], 
+    "\nK2 = ", K[2], 
+    "\nmu = ", mu, 
+    "\nsigma = ", sigma, "\n")
+
+P <- 2000
+B <- 2000
+P1 <- 20
+
+set.seed( seed )
+VPS<- array(dim = P1)
+for (p in 1 : P1) VPS[p] <- VarPopSampling(K, mu, sigma, zetas, P)
+
+set.seed( seed )
+VBS<- array(dim = P1)
+for (p in 1 : P1) VBS[p] <- VarBootstrap(K, mu, sigma, zetas, B)
+
+set.seed( seed )
+VJK<- array(dim = P1)
+for (p in 1 : P1) VJK[p] <- VarJack(K, mu, sigma, zetas)
+
+set.seed( seed )
+VDL <- array(dim = P1)
+for (p in 1 : P1) VDL[p] <- VarDeLong(K, mu, sigma, zetas)
+
+cat("Mean Sd Pop Sampling = ", mean(sqrt(VPS)),"\n")
+cat("Mean Sd Boot Sampling = ", mean(sqrt(VBS)),"\n")
+cat("Mean Sd Jack Sampling = ", mean(sqrt(VJK)),"\n")
+cat("Mean Sd DeLong  = ", mean(sqrt(VDL)),"\n")
+```
+```{r, echo = FALSE, cache=TRUE}
+K <- c(600, 500)
+seed <- 1
+cat("seed = ", seed, 
+    "\nK1 = ", K[1], 
+    "\nK2 = ", K[2], 
+    "\nmu = ", mu, 
+    "\nsigma = ", sigma, "\n")
+
+P <- 2000
+B <- 2000
+P1 <- 20
+
+set.seed( seed )
+VPS<- array(dim = P1)
+for (p in 1 : P1) VPS[p] <- VarPopSampling(K, mu, sigma, zetas, P)
+
+set.seed( seed )
+VBS<- array(dim = P1)
+for (p in 1 : P1) VBS[p] <- VarBootstrap(K, mu, sigma, zetas, B)
+
+set.seed( seed )
+VJK<- array(dim = P1)
+for (p in 1 : P1) VJK[p] <- VarJack(K, mu, sigma, zetas)
+
+set.seed( seed )
+VDL <- array(dim = P1)
+for (p in 1 : P1) VDL[p] <- VarDeLong(K, mu, sigma, zetas)
+
+cat("Mean Sd Pop Sampling = ", mean(sqrt(VPS)),"\n")
+cat("Mean Sd Boot Sampling = ", mean(sqrt(VBS)),"\n")
+cat("Mean Sd Jack Sampling = ", mean(sqrt(VJK)),"\n")
+cat("Mean Sd DeLong  = ", mean(sqrt(VDL)),"\n")
+```
+
 
 ## Dependence of AUC on reader expertise {#sourcesVariabilityreaderExpertise}
 Suppose one conducts an ROC study with J readers where typically J is about 5 but can be as low as 3 and as high as 20 (the wide variability reflects, in the author's opinion, lack of understanding of the factors affecting the optimal choice of J and the related issue of statistical power). Each reader interprets the same case sample, i.e., the same set of cases, but because they have different expertise levels and for other reasons (see below), the observed ROC counts tables will not be identical. The variance of the observed values is an empirical estimate of between-reader variance (including the inseparable within-reader component). Here is an example, in file MainBetweenReaderSd.R. This file loads the Van Dyke dataset, consisting of two modalities and five readers described in Online Chapter 24. Source the code file to get:
