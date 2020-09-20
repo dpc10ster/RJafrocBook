@@ -4084,9 +4084,9 @@ It may be noticed that the mean of the jackknife figure of merit values, i.e., 0
 \hypertarget{sourcesVariabilityCalSimulator}{%
 \section{Calibrated simulator}\label{sourcesVariabilityCalSimulator}}
 
-In real life one does have the luxury of sampling from the population of cases, but with a simulator almost anything is possible. The population sampling method used previously, @ref(\{sourcesVariabilityDeLong\}), to compare the DeLong method to a known standard used arbitrarily set simulator values, \(\mu = 1.5\) and \(\sigma = 1.3\) . One does not know if these values are actually representative of real clinical data. In this section a simple method of implementing population sampling using a calibrated simulator is described. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset, so the simulator is calibrated to the specific one-and-only-one dataset. Why might one wish to do that? Rather than ``fish in the dark'' and set arbitrary values for the simulator parameters, one needs to find realistic values that match an actual clinical dataset. This way one has at least some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis is more likely to be correct.
+In real life one does have the luxury of sampling from the population of cases. The population sampling method used previously, \ref{sourcesVariabilityDeLong}, to compare the DeLong method to a known standard used arbitrarily set simulator values, i.e., \(\mu = 1.5\) and \(\sigma = 1.3\). One does not know if these values actually represent real clinical data. In this section a simple method of implementing population sampling using a \emph{calibrated simulator} is described. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset. This way one has some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis (in our case method of estimating AUC variability) is likely to be correct.
 
-As an example, consider a real clinical dataset, such as in Table \ref{tab:ratingsParadigmExampleTable}. This data set analyzed by MLE yielded model parameters, \texttt{a}, \texttt{b} and the 4 thresholds \(\zeta_1,\zeta_2,\zeta_3,\zeta_4\). After conversion to \(\mu=a/b\) and \(\sigma= 1/b\) and new zetas \(\zeta = \zeta/b\), the values are (in the same order): 2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221 (see code output below).
+As an example, consider a real clinical dataset, such as in Table \ref{tab:ratingsParadigmExampleTable}. This dataset, analyzed by MLE, yielded model parameters, \texttt{a}, \texttt{b} and the 4 thresholds \(\zeta_1,\zeta_2,\zeta_3,\zeta_4\). After conversion to \(\mu=a/b\) and \(\sigma= 1/b\) and new zetas \(\zeta = \zeta/b\), the values are (in the same order): 2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221 (see code output below):
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4103,6 +4103,8 @@ As an example, consider a real clinical dataset, such as in Table \ref{tab:ratin
 \end{Highlighting}
 \end{Shaded}
 
+{[}The reason for dividing \(zeta\) by \(b\) is that when re-scaling the decision variable axis by \(b\) one must also re-scale the cutoffs.{]}
+
 On each pass through the simulator one samples 60 values from the non-diseased distribution and 50 values from the diseased distribution, which producers a simulated ROC counts table like Table \ref{tab:ratingsParadigmExampleTable}. MLE on the ROC counts table yields \(A_z\). The process is repeated \(P = 2000\) (\(p\) is the population sampling index, ranging from 1 to \(P\)) and finally one calculates the mean and standard deviation of the 2000 \(A_z\) values. Open the file mainCalSimulator.R, Online Appendix 7.C, confirm that FOM is set to ``Az'' at line 11 (i.e., it is not commented out) and source it. There is no \texttt{seed} dependence of the code (the physical book is incorrect on this point):
 
 \begin{Shaded}
@@ -4111,8 +4113,10 @@ On each pass through the simulator one samples 60 values from the non-diseased d
 \end{Highlighting}
 \end{Shaded}
 
+The following code implements function \texttt{doCalSimulator(P,\ parametricFOM,\ RocCountsTable)}. Here \texttt{P} is the number of population samples to perform, \texttt{parametricFOM} is a logical, if set to \texttt{TRUE}, the binormal model is used to calculate fitted AUC and otherwise the Wilcoxon statistic is used to calculate empirical AUC, and \texttt{RocCountsTable} contains the ROC data, such as \ref{tab:ratingsParadigmExampleTable}, to which the simulator is to be calibrated to.
+
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{doCalSimulator \textless{}{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{(P, parametricFOM, RocCountsTable) \{}
 \NormalTok{  K \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{sum}\NormalTok{(RocCountsTable[}\DecValTok{1}\NormalTok{,]), }
          \KeywordTok{sum}\NormalTok{(RocCountsTable[}\DecValTok{2}\NormalTok{,]))}
@@ -4256,6 +4260,8 @@ Table 7.3: Comparison of different estimates of the standard deviation of AUC, n
 \hypertarget{comparison-of-methods-of-estimating-variability}{%
 \section{Comparison of methods of estimating variability}\label{comparison-of-methods-of-estimating-variability}}
 
+TBA This section compares the four methods described above: MLE, population sampling, bootstrap, jackknife and the DeLong method.
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{source}\NormalTok{(}\KeywordTok{here}\NormalTok{(}\StringTok{"R/CH07{-}Variability/GenerateCaseSamples.R"}\NormalTok{))}
@@ -4269,6 +4275,8 @@ Table 7.3: Comparison of different estimates of the standard deviation of AUC, n
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\CommentTok{\# this takes a long time to run and the results are not used below}
+\CommentTok{\# the summary tables are hard{-}coded}
 \NormalTok{FinalParameters \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{1.320455}\NormalTok{, }
                      \FloatTok{0.6074974}\NormalTok{, }
                      \FloatTok{0.007676989}\NormalTok{, }
@@ -4324,21 +4332,9 @@ Table 7.3: Comparison of different estimates of the standard deviation of AUC, n
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-#> seed =  1 
-#> K1 =  600 
-#> K2 =  500 
-#> mu =  2.173598 
-#> sigma =  1.646098
-#> Mean Sd Pop Sampling =  0.01132805
-#> Mean Sd Boot Sampling =  0.01099246
-#> Mean Sd Jack Sampling =  0.01130954
-#> Mean Sd DeLong  =  0.01130374
-\end{verbatim}
-
 \begin{table}
 
-\caption{\label{tab:sourcesVariabilityTableCompareA}Different estimates of standard deviation of AUC.}
+\caption{\label{tab:sourcesVariabilityTableCompareA}Different estimates of standard deviation of AUC (* the entry for the DeLong method was obtained using the empirical AUC).}
 \centering
 \begin{tabular}[t]{l|l|l|l}
 \hline
@@ -4356,6 +4352,12 @@ ExampleTable & Rocfit & PopulationSampling & 0.0403\\
 \hline
 \end{tabular}
 \end{table}
+
+\begin{itemize}
+\tightlist
+\item
+  The entry for the DeLong method was obtained using the empirical AUC.
+\end{itemize}
 
 \begin{table}
 
@@ -6665,7 +6667,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.1789246          1   0.27757503}
+\CommentTok{\#\textgreater{} 1    1.0968151          1   0.29496611}
 \end{Highlighting}
 \end{Shaded}
 

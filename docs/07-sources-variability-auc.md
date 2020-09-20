@@ -528,9 +528,9 @@ The next output is with the non-parametric figure of merit:
 It may be noticed that the mean of the jackknife figure of merit values, i.e., 0.8606667, exactly equals the original figure of merit 0.8606667 (i.e., that calculated including all cases). This can be shown analytically to be true so long as the figure of merit is the empirical AUC. A similar relation is not true for the bootstrap.
 
 ## Calibrated simulator {#sourcesVariabilityCalSimulator}
-In real life one does have the luxury of sampling from the population of cases, but with a simulator almost anything is possible. The population sampling method used previously, \@ref(sourcesVariabilityDeLong), to compare the DeLong method to a known standard used arbitrarily set simulator values, $\mu = 1.5$ and $\sigma = 1.3$ . One does not know if these values are actually representative of real clinical data. In this section a simple method of implementing population sampling using a calibrated simulator is described. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset, so the simulator is calibrated to the specific one-and-only-one dataset. Why might one wish to do that? Rather than "fish in the dark" and set arbitrary values for the simulator parameters, one needs to find realistic values that match an actual clinical dataset. This way one has at least some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis is more likely to be correct.
+In real life one does have the luxury of sampling from the population of cases. The population sampling method used previously, \@ref(sourcesVariabilityDeLong), to compare the DeLong method to a known standard used arbitrarily set simulator values, i.e., $\mu = 1.5$ and $\sigma = 1.3$. One does not know if these values actually represent real clinical data. In this section a simple method of implementing population sampling using a *calibrated simulator* is described. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset. This way one has some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis (in our case method of estimating AUC variability) is likely to be correct.
 
-As an example, consider a real clinical dataset, such as in Table \@ref(tab:ratingsParadigmExampleTable). This data set analyzed by MLE yielded model parameters, `a`, `b` and the 4 thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$. After conversion to $\mu=a/b$ and $\sigma= 1/b$ and new zetas $\zeta = \zeta/b$, the values are (in the same order): 2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221 (see code output below). 
+As an example, consider a real clinical dataset, such as in Table \@ref(tab:ratingsParadigmExampleTable). This dataset, analyzed by MLE, yielded model parameters, `a`, `b` and the 4 thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$. After conversion to $\mu=a/b$ and $\sigma= 1/b$ and new zetas $\zeta = \zeta/b$, the values are (in the same order): 2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221 (see code output below): 
 
 
 ```r
@@ -547,7 +547,7 @@ y[3:6]/y[2] # this is zeta in mu-sigma notation
 ```
 
 
-On each pass through the simulator one samples 60 values from the non-diseased distribution and 50 values from the diseased distribution, which producers a simulated ROC counts table like Table \@ref(tab:ratingsParadigmExampleTable). MLE on the ROC counts table yields $A_z$. The process is repeated $P = 2000$ ($p$ is the population sampling index, ranging from 1 to $P$) and finally one calculates the mean and standard deviation of the 2000 $A_z$ values. Open the file mainCalSimulator.R, Online Appendix 7.C, confirm that FOM is set to "Az" at line 11 (i.e., it is not commented out) and source it. There is no `seed` dependence of the code (the physical book is incorrect on this point):
+[The reason for dividing $zeta$ by $b$ is that when re-scaling the decision variable axis by $b$ one must also re-scale the cutoffs.]
 
 
 
@@ -556,12 +556,15 @@ source(here("R/CH07-Variability/SimulateRocCountsTable.R"))
 ```
 
 
+Here is the function `doCalSimulator()` that will be used to perform the initial calibration and the subsequent population sampling:
 
-```r
+
+
+```{.r .numberLines}
 doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
   K <- c(sum(RocCountsTable[1,]), 
          sum(RocCountsTable[2,]))
-  # to build the model we have to do a parametric fit first
+  # perform the initial calibration
   ret <- RocfitR(RocCountsTable) # AUC for observed data
   a <- ret$a
   b  <- ret$b
@@ -575,7 +578,7 @@ doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
   } else {
     OrigAUC <- WilcoxonCountsTable(RocCountsTable)$AUC 
   }
-  #to save the pop sample AUC values
+  # perform the population sampling
   AUC <- array(dim = P)
   for ( p in 1 : P){
     while (1) {
@@ -601,9 +604,9 @@ doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
   meanAUC  <- mean(AUC)
   stdAUC  <- sqrt(var(AUC))
   return(list(
-    mu = mu,
-    sigma = sigma,
-    zetas = zetas,
+    mu = mu, # these define the calibration simulator
+    sigma = sigma, #do:
+    zetas = zetas, #do:
     OrigAUC = OrigAUC,
     meanAUC = meanAUC,
     stdAUC = stdAUC
@@ -611,10 +614,15 @@ doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
 }
 ```
 
+This code implements function `doCalSimulator(P, parametricFOM, RocCountsTable)`. Here `P` is the desired number of population samples, `parametricFOM` is a logical, if set to `TRUE`, the binormal model is used to calculate fitted AUC and otherwise the Wilcoxon statistic is used to calculate empirical AUC, and `RocCountsTable` contains the ROC data, such as \@ref(tab:ratingsParadigmExampleTable), to which the simulator is to be calibrated to. Lines 2-3 construct the K-vector, containing $K_1,K_2$. Line 5 performs the maximum likelihood fit, using function `RocfitR(RocCountsTable)`. The returned variable contains $a, b, \zeta$ as a `list`, which are extracted at lines 6-8. Lines 9-11 converts these to the mu-sigma notation. In essence, lines 5 - 11 calibrates the simulator and the calibrated values of the simulator are contained in $\mu,\sigma,\zeta$. Lines 13-17 calculates `OrigAUC`, the AUC of the original data, using parametric `RocfitR` or the Wilcoxon statistic, as appropriate, depending on the value of `parametricFOM`. After defining an empty length `P` array, at line 19, to hold the sampled `AUC` values, lines 20-39 begins and ends a `for` loop to conduct the `P` population samples. Each pass through the `for` loop yields $K_1$ samples from the non-diseased distribution and $K_2$ samples from the diseased distribution, returned in the variable `RocCountsTableSimPop`, which is similar in structure to a counts table like Table \@ref(tab:ratingsParadigmExampleTable). Within the `for` loop there is an endless `while` loop, needed because `RocfitR` can sometimes fail to converge, signaled by the first member of the returned being minus 1, in which case another iteration of the while loop is performed (see line 30) and otherwise the `break` statement causes program execution to proceed to the next iteration of the `for` loop. The first thing done after entering the `while` loop, lines 22-23, is to simulate, using `SimulateRocCountsTable()`, a new ROC counts table, denoted `RocCountsTableSimPop`. The returned list is saved to `temp` at line 28, and if `temp[1] != -1` the AUC value is saved to `AUC[p]`, line 31. Upon exiting the code one has `P` values of AUC in the array `AUC`.
+
+The following code uses the function just described and prints out the relevant values.
 
 
 ```r
 parametricFOM <- TRUE
+seed <- 1
+set.seed(seed)
 P <- 2000
 RocCountsTable = array(dim = c(2,5))
 RocCountsTable[1,]  <- c(30,19,8,2,1)
@@ -633,17 +641,23 @@ cat("parametricFOM = ", parametricFOM,
 #> zetas =  0.01263423 1.475351 2.494901 3.945221
 
 cat("Simulations using calibrated simulator",
+    "\nseed = ", seed, 
     "\nP = ", P, 
     "\nOrigAUC = ", ret$OrigAUC, 
     "\nmeanAUC = ", ret$meanAUC, 
     "\nstdAUC = ", ret$stdAUC, "\n")
 #> Simulations using calibrated simulator 
+#> seed =  1 
 #> P =  2000 
 #> OrigAUC =  0.8704519 
-#> meanAUC =  0.8675359 
-#> stdAUC =  0.04064876
+#> meanAUC =  0.8676727 
+#> stdAUC =  0.04033307
 ```
 
+
+After setting `parametricFOM` to `TRUE` (for a parametric fit), `seed` to 1 and `P` to 2000, the ROC counts table is defined and the function `doCalSimulator()` is called. The returned `list` contains `OrigAUC`, the AUC of the original data, calculated by `RocfitR()`, in this case `OrigAUC` = 0.8704519, and the mean and standard deviation of the 2000 AUC values, are equal to 0.8676727 and 0.0403331, respectively.
+
+The simulations are repeated with `seed` = 2.
 
 
 ```
@@ -654,11 +668,54 @@ cat("Simulations using calibrated simulator",
 #> sigma =  1.646099 
 #> zetas =  0.01263423 1.475351 2.494901 3.945221
 #> Simulations using calibrated simulator: 
+#> seed =  2 
 #> P =  2000 
 #> OrigAUC =  0.8704519 
-#> meanAUC =  0.867856 
-#> stdAUC =  0.04101963
+#> meanAUC =  0.8681855 
+#> stdAUC =  0.04055164
 ```
+
+
+This time the mean and standard deviation of the 2000 AUC values, are equal to 0.8681855 and 0.0405516, respectively. The respective values for the two values of `seed` are quite close to each other (to within a percent). 
+
+More variability would be observed if the above two experiments were repeated with P = 200.
+
+
+```
+#> parametricFOM =  TRUE 
+#> Calibrated simulator values:
+#>  
+#> mu =  2.173597 
+#> sigma =  1.646099 
+#> zetas =  0.01263423 1.475351 2.494901 3.945221
+#> Simulations using calibrated simulator 
+#> seed =  1 
+#> P =  200 
+#> OrigAUC =  0.8704519 
+#> meanAUC =  0.8727151 
+#> stdAUC =  0.03552808
+```
+
+For `seed` = 1 and `P` = 200 the mean and standard deviation of the 2000 AUC values, are equal to 0.8727151 and 0.0355281, respectively. 
+
+
+```
+#> parametricFOM =  TRUE 
+#> Calibrated simulator values:
+#>  
+#> mu =  2.173597 
+#> sigma =  1.646099 
+#> zetas =  0.01263423 1.475351 2.494901 3.945221
+#> Simulations using calibrated simulator 
+#> seed =  2 
+#> P =  200 
+#> OrigAUC =  0.8704519 
+#> meanAUC =  0.8649385 
+#> stdAUC =  0.04509473
+```
+
+
+For `seed` = 2 and `P` = 200 the mean and standard deviation of the 2000 AUC values, are equal to 0.8649385 and 0.0450947, respectively. Note the greater variability between the respective values.
 
 
 
@@ -670,26 +727,18 @@ cat("Simulations using calibrated simulator",
 #> sigma =  1.646099 
 #> zetas =  0.01263423 1.475351 2.494901 3.945221
 #> Simulations using calibrated simulator: 
+#> seed =  3 
 #> P =  2000 
 #> OrigAUC =  0.8606667 
-#> meanAUC =  0.8504027 
-#> stdAUC =  0.03773004
+#> meanAUC =  0.8486143 
+#> stdAUC =  0.03714344
 ```
 
 
-```
-#> parametricFOM =  FALSE 
-#> Calibrated simulator values:
-#>  
-#> mu =  2.173597 
-#> sigma =  1.646099 
-#> zetas =  0.01263423 1.475351 2.494901 3.945221
-#> Simulations using calibrated simulator: 
-#> P =  2000 
-#> OrigAUC =  0.8606667 
-#> meanAUC =  0.8509415 
-#> stdAUC =  0.01145896
-```
+
+
+
+
 ### TBA
 The seed = 1 estimate of standard deviation of AUC (0.0403) is recorded in Table 7.3, row A, sub-row "Population". The entry for sub-row "MLE" was obtained using the ROCFIT equivalent Eng's JAVA program [@RN2114], §6.2.6. The DeLong method entry for row A was obtained using mainDeLongSd.R with FOM set to " Wilcoxon", as indicated by the asterisk; see §7.3.2. The bootstrap entry was obtained using mainBootstrapSd.R, and the jackknife entry was obtained using mainJackknifeSd.R; in both cases FOM was set to "Az". Note that the four estimates are close to each other, around 0.04. This confirms the validity of the different approaches to estimating the case sampling standard deviation, and is a self-consistency check on the calibration process.
 
@@ -700,7 +749,7 @@ Exercise: Use the calibrated simulator to test the effect of changing simulator 
 Table 7.3: Comparison of different estimates of the standard deviation of AUC, namely MLE, the DeLong method, bootstrap, jackknife and population sampling. MLE = maximum likelihood estimate; shown are results for a real dataset (A, B) and two simulated datasets (C and D) and two choices for estimating AUC: parametric and empirical. * The entry for the DeLong method was obtained using the empirical AUC. (P = 2000) (B = 2000)
 
 ## Comparison of methods of estimating variability
-TBA This section compares the four methods described above: MLE, population sampling, bootstrap, jackknife and the DeLong method.
+TBA This section compares the four methods described in this chapter: MLE (if applicable), DeLong (if applicable), bootstrap, jackknife and population sampling with a calibrated simulator. The modifier "if applicable" is needed as the choice of FOM determines whether the MLE or the DeLong method are applicable. For example, MLE is only possible with the binormal model fitted AUC as figure of merit, while the DeLong method is only possible with the empirical AUC as figure of merit.
 
 
 ```r
@@ -735,6 +784,11 @@ cat("seed = ", seed,
     "\nK2 = ", K[2], 
     "\nmu = ", mu, 
     "\nsigma = ", sigma, "\n")
+#> seed =  1 
+#> K1 =  60 
+#> K2 =  50 
+#> mu =  2.173598 
+#> sigma =  1.646098
 
 P <- 2000
 B <- 2000
@@ -757,10 +811,16 @@ VDL <- array(dim = P1)
 for (p in 1 : P1) VDL[p] <- VarDeLong(K, mu, sigma, zetas)
 
 cat("Mean Sd Pop Sampling = ", mean(sqrt(VPS)),"\n")
+#> Mean Sd Pop Sampling =  0.03594515
 cat("Mean Sd Boot Sampling = ", mean(sqrt(VBS)),"\n")
+#> Mean Sd Boot Sampling =  0.03656486
 cat("Mean Sd Jack Sampling = ", mean(sqrt(VJK)),"\n")
+#> Mean Sd Jack Sampling =  0.03349281
 cat("Mean Sd DeLong  = ", mean(sqrt(VDL)),"\n")
+#> Mean Sd DeLong  =  0.03331918
 ```
+
+
 
 
 <table>
