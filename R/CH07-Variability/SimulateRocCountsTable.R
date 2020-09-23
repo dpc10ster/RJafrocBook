@@ -26,6 +26,8 @@ SimulateRocCountsTable <- function(K,mu,sigma,zetas)
   RocCountsTable = array(dim = c(2,length(zetas)-2+1))
   RocCountsTable[1,1:length(table(z1))] <- table(z1)  
   RocCountsTable[2,1:length(table(z2))] <- table(z2)
+  #replace NAs with zeroes (this happens if any cell has zero counts)
+  RocCountsTable[is.na(RocCountsTable)] <- 0
   
   return(RocCountsTable)
   

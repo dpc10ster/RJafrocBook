@@ -528,35 +528,34 @@ The next output is with the non-parametric figure of merit:
 It may be noticed that the mean of the jackknife figure of merit values, i.e., 0.8606667, exactly equals the original figure of merit 0.8606667 (i.e., that calculated including all cases). This can be shown analytically to be true so long as the figure of merit is the empirical AUC. A similar relation is not true for the bootstrap.
 
 ## Calibrated simulator {#sourcesVariabilityCalSimulator}
-In real life one does have the luxury of sampling from the population of cases. The population sampling method used previously, \@ref(sourcesVariabilityDeLong), to compare the DeLong method to a known standard used arbitrarily set simulator values, i.e., $\mu = 1.5$ and $\sigma = 1.3$. One does not know if these values actually represent real clinical data. In this section a simple method of implementing population sampling using a *calibrated simulator* is described. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset. This way one has some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis (in our case method of estimating AUC variability) is likely to be correct.
+### The need for a calibrated simulator
+The population sampling method used previously, \@ref(sourcesVariabilityDeLong), to compare the DeLong method to a known standard used arbitrarily set simulator values, i.e., $\mu = 1.5$ and $\sigma = 1.3$. One does not know if these values actually represent real clinical data. In this section a simple method of implementing population sampling using a *calibrated simulator* is described. A calibrated simulator is one whose parameters are chosen to match those of an actual clinical dataset. This way one has some assurance that the simulator is realistic and therefore its verdict on a proposed method or analysis (in our case method of estimating AUC variability) is likely to be correct.  
 
-As an example, consider a real clinical dataset, such as in Table \@ref(tab:ratingsParadigmExampleTable). This dataset, analyzed by MLE, yielded model parameters, `a`, `b` and the 4 thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$. After conversion to $\mu=a/b$ and $\sigma= 1/b$ and new zetas $\zeta = \zeta/b$, the values are (in the same order): 2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221 (see code output below): 
+### Implementation of a simple calibrated simulator
+The simple simulator described here is limited to a single reader single modality dataset. A more complex simulator describing multiple readers in multiple modalities is described in a later chapter (TBA). Consider a clinical dataset, such as in Table \@ref(tab:ratingsParadigmExampleTable). Analyzed by MLE, this yields binormal model parameters, `a`, `b` and the thresholds $\zeta_1,\zeta_2,\zeta_3,\zeta_4$. After conversion to $\mu=a/b$ and $\sigma= 1/b$ and new zetas $\zeta = \zeta/b$, the values are (in the same order): 2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221 (see code output below): 
 
 
 ```r
-# x is the mu-sigma notation
-x <- c(2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221)
-# y is the a-b notation
-y <- c(1.320453, 0.607497, 0.007675259, 0.8962713, 1.515645, 2.39671)
-y[1]/y[2] # this is mu
+# mu_sigma is the mu-sigma notation
+mu_sigma <- c(2.173597, 1.646099, 0.01263423, 1.475351, 2.494901, 3.945221)
+# ab is the a-b notation
+ab <- c(1.320453, 0.607497, 0.007675259, 0.8962713, 1.515645, 2.39671)
+ab[1]/ab[2] # this is mu
 #> [1] 2.173596
-1/y[2]    # this is sigma
+1/ab[2]    # this is sigma
 #> [1] 1.646099
-y[3:6]/y[2] # this is zeta in mu-sigma notation
+ab[3:6]/ab[2] # this is zeta in mu-sigma notation
 #> [1] 0.01263423 1.47535099 2.49490121 3.94522113
 ```
 
 
-[The reason for dividing $zeta$ by $b$ is that when re-scaling the decision variable axis by $b$ one must also re-scale the cutoffs.]
+[The reason for dividing $\zeta$ by $b$ is that when re-scaling the decision variable axis by $b$ one must also re-scale the cutoffs.] The values $\mu,\sigma,\zeta$ define the calibrated simulator, in the sense that the parameter values are calibrated to match the dataset in Table \@ref(tab:ratingsParadigmExampleTable). 
 
 
 
-```r
-source(here("R/CH07-Variability/SimulateRocCountsTable.R"))
-```
 
 
-Here is the function `doCalSimulator()` that will be used to perform the initial calibration and the subsequent population sampling:
+Here is the function `doCalSimulator()` that will be used to perform the initial calibration followed by population sampling from the calibrated simulator:
 
 
 
@@ -582,12 +581,12 @@ doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
   AUC <- array(dim = P)
   for ( p in 1 : P){
     while (1) {
+      
       RocCountsTableSimPop <- 
         SimulateRocCountsTable(K, mu, sigma, zetas)
-      #replace NAs with zeroes
-      RocCountsTableSimPop[is.na(RocCountsTableSimPop )] <- 0
       if (parametricFOM) {
-        # AUC for observed data 
+        
+        # AUC for fitted curve 
         temp <- RocfitR(RocCountsTableSimPop)
         # a return of -1 means RocFitR did not converge
         if (temp[1] != -1) {
@@ -614,9 +613,10 @@ doCalSimulator <- function(P, parametricFOM, RocCountsTable) {
 }
 ```
 
-This code implements function `doCalSimulator(P, parametricFOM, RocCountsTable)`. Here `P` is the desired number of population samples, `parametricFOM` is a logical, if set to `TRUE`, the binormal model is used to calculate fitted AUC and otherwise the Wilcoxon statistic is used to calculate empirical AUC, and `RocCountsTable` contains the ROC data, such as \@ref(tab:ratingsParadigmExampleTable), to which the simulator is to be calibrated to. Lines 2-3 construct the K-vector, containing $K_1,K_2$. Line 5 performs the maximum likelihood fit, using function `RocfitR(RocCountsTable)`. The returned variable contains $a, b, \zeta$ as a `list`, which are extracted at lines 6-8. Lines 9-11 converts these to the mu-sigma notation. In essence, lines 5 - 11 calibrates the simulator and the calibrated values of the simulator are contained in $\mu,\sigma,\zeta$. Lines 13-17 calculates `OrigAUC`, the AUC of the original data, using parametric `RocfitR` or the Wilcoxon statistic, as appropriate, depending on the value of `parametricFOM`. After defining an empty length `P` array, at line 19, to hold the sampled `AUC` values, lines 20-39 begins and ends a `for` loop to conduct the `P` population samples. Each pass through the `for` loop yields $K_1$ samples from the non-diseased distribution and $K_2$ samples from the diseased distribution, returned in the variable `RocCountsTableSimPop`, which is similar in structure to a counts table like Table \@ref(tab:ratingsParadigmExampleTable). Within the `for` loop there is an endless `while` loop, needed because `RocfitR` can sometimes fail to converge, signaled by the first member of the returned being minus 1, in which case another iteration of the while loop is performed (see line 30) and otherwise the `break` statement causes program execution to proceed to the next iteration of the `for` loop. The first thing done after entering the `while` loop, lines 22-23, is to simulate, using `SimulateRocCountsTable()`, a new ROC counts table, denoted `RocCountsTableSimPop`. The returned list is saved to `temp` at line 28, and if `temp[1] != -1` the AUC value is saved to `AUC[p]`, line 31. Upon exiting the code one has `P` values of AUC in the array `AUC`.
+In the function `doCalSimulator(P, parametricFOM, RocCountsTable)`, `P` is the desired number of population samples, `parametricFOM` is a logical, if set to `TRUE` the binormal model is used to calculate *fitted* AUC and otherwise the Wilcoxon statistic is used to calculate *empirical* AUC, and `RocCountsTable` contains the ROC data, such as Table \@ref(tab:ratingsParadigmExampleTable), to which the simulator is to be calibrated to. Lines 2-3 construct the K-vector, containing $K_1,K_2$. Line 5 performs the maximum likelihood fit, using function `RocfitR(RocCountsTable)`. The returned variable contains $a, b, \zeta$ as a `list`, which are extracted at lines 6-8. Lines 9-11 converts these to the mu-sigma notation. In essence, lines 5 - 11 calibrates the simulator and the calibrated values of the simulator are contained in $\mu,\sigma,\zeta$. Lines 13-17 calculates `OrigAUC`, the AUC of the original data, using parametric `RocfitR` or the Wilcoxon statistic, as appropriate, depending on the value of `parametricFOM`. After defining a length `P` array, at line 19, to hold the sampled `AUC` values, lines 20-39 begins and ends a `for` loop to conduct the `P` population samples. Each pass through the `for` loop yields $K_1$ samples from the non-diseased distribution and $K_2$ samples from the diseased distribution, returned in the variable `RocCountsTableSimPop`, which is similar in structure to a counts table like Table \@ref(tab:ratingsParadigmExampleTable). Within the `for` loop there is an endless `while` loop, needed because `RocfitR` can sometimes fail to converge, signaled by the first member of the returned `list` being minus 1, in which case another iteration of the `while` loop is performed (see line 30) and otherwise the `break` statement (line 32) causes program execution to proceed to the next iteration of the `for` loop. After entering the `while` loop, lines 22-23, a new ROC counts table is generated. The returned `list` is saved to `temp` at line 28, and if `temp[1] != -1` (i.e., `RocfitR` did converge) the AUC value is saved to `AUC[p]`, line 31. Upon exiting the code one has `P` values of AUC in the array `AUC`.
 
-The following code uses the function just described and prints out the relevant values.
+#### Parametric AUC results
+The following code uses the function just described and prints out the results.
 
 
 ```r
@@ -628,486 +628,53 @@ RocCountsTable = array(dim = c(2,5))
 RocCountsTable[1,]  <- c(30,19,8,2,1)
 RocCountsTable[2,]  <- c(5,6,5,12,22)
 ret <- doCalSimulator(P, parametricFOM, RocCountsTable)
-cat("parametricFOM = ", parametricFOM,
-  "\nCalibrated simulator values:\n", 
-    "\nmu = ", ret$mu, 
-    "\nsigma = ", ret$sigma, 
-    "\nzetas = ", ret$zetas, "\n")
-#> parametricFOM =  TRUE 
-#> Calibrated simulator values:
-#>  
-#> mu =  2.173597 
-#> sigma =  1.646099 
-#> zetas =  0.01263423 1.475351 2.494901 3.945221
-
-cat("Simulations using calibrated simulator",
-    "\nseed = ", seed, 
-    "\nP = ", P, 
-    "\nOrigAUC = ", ret$OrigAUC, 
-    "\nmeanAUC = ", ret$meanAUC, 
-    "\nstdAUC = ", ret$stdAUC, "\n")
-#> Simulations using calibrated simulator 
-#> seed =  1 
-#> P =  2000 
-#> OrigAUC =  0.8704519 
-#> meanAUC =  0.8676727 
-#> stdAUC =  0.04033307
+mu <- ret$mu
+sigma <- ret$sigma
+zetas <- ret$zetas
+meanAUC_1_2000 <- ret$meanAUC
+stdAUC_1_2000 <- ret$stdAUC
 ```
 
 
-After setting `parametricFOM` to `TRUE` (for a parametric fit), `seed` to 1 and `P` to 2000, the ROC counts table is defined and the function `doCalSimulator()` is called. The returned `list` contains `OrigAUC`, the AUC of the original data, calculated by `RocfitR()`, in this case `OrigAUC` = 0.8704519, and the mean and standard deviation of the 2000 AUC values, are equal to 0.8676727 and 0.0403331, respectively.
+After setting `parametricFOM` to `TRUE` (for a parametric fit), `seed` to 1 and `P` to 2000, the ROC counts table is defined and the function `doCalSimulator()` is called. The returned `list` contains the parameter values for the calibrated simulator: $\mu$ = 2.1735969,  $\sigma$ = 1.6460988 and  $\zeta$ = 0.0126342, 1.4753512, 2.4949012, 3.9452209. It also contains `OrigAUC`, the AUC of the original data, calculated by `RocfitR()`, in this case `OrigAUC` = 0.8704519, and the mean and standard deviation of the 2000 AUC values, equal to 0.8676727 and 0.0403331, respectively. 
 
-The simulations are repeated with `seed` = 2.
 
 
-```
-#> parametricFOM =  TRUE 
-#> Calibrated simulator values:
-#>  
-#> mu =  2.173597 
-#> sigma =  1.646099 
-#> zetas =  0.01263423 1.475351 2.494901 3.945221
-#> Simulations using calibrated simulator: 
-#> seed =  2 
-#> P =  2000 
-#> OrigAUC =  0.8704519 
-#> meanAUC =  0.8681855 
-#> stdAUC =  0.04055164
-```
 
 
-This time the mean and standard deviation of the 2000 AUC values, are equal to 0.8681855 and 0.0405516, respectively. The respective values for the two values of `seed` are quite close to each other (to within a percent). 
+The simulations were repeated with `seed` = 2. This time the mean and standard deviation of the 2000 AUC values, are equal to 0.8681855 and 0.0405516, respectively. The respective values corresponding to the two `seed` values are quite close to each other (to within a percent). 
 
-More variability would be observed if the above two experiments were repeated with P = 200.
+More variability is observed, as expected, when the above two simulations are repeated with `P` = 200:
 
-
-```
-#> parametricFOM =  TRUE 
-#> Calibrated simulator values:
-#>  
-#> mu =  2.173597 
-#> sigma =  1.646099 
-#> zetas =  0.01263423 1.475351 2.494901 3.945221
-#> Simulations using calibrated simulator 
-#> seed =  1 
-#> P =  200 
-#> OrigAUC =  0.8704519 
-#> meanAUC =  0.8727151 
-#> stdAUC =  0.03552808
-```
-
-For `seed` = 1 and `P` = 200 the mean and standard deviation of the 2000 AUC values, are equal to 0.8727151 and 0.0355281, respectively. 
-
-
-```
-#> parametricFOM =  TRUE 
-#> Calibrated simulator values:
-#>  
-#> mu =  2.173597 
-#> sigma =  1.646099 
-#> zetas =  0.01263423 1.475351 2.494901 3.945221
-#> Simulations using calibrated simulator 
-#> seed =  2 
-#> P =  200 
-#> OrigAUC =  0.8704519 
-#> meanAUC =  0.8649385 
-#> stdAUC =  0.04509473
-```
-
-
-For `seed` = 2 and `P` = 200 the mean and standard deviation of the 2000 AUC values, are equal to 0.8649385 and 0.0450947, respectively. Note the greater variability between the respective values.
-
-
-
-```
-#> parametricFOM =  FALSE 
-#> Calibrated simulator values:
-#>  
-#> mu =  2.173597 
-#> sigma =  1.646099 
-#> zetas =  0.01263423 1.475351 2.494901 3.945221
-#> Simulations using calibrated simulator: 
-#> seed =  3 
-#> P =  2000 
-#> OrigAUC =  0.8606667 
-#> meanAUC =  0.8486143 
-#> stdAUC =  0.03714344
-```
-
-
-
-
-
-
-### TBA
-The seed = 1 estimate of standard deviation of AUC (0.0403) is recorded in Table 7.3, row A, sub-row "Population". The entry for sub-row "MLE" was obtained using the ROCFIT equivalent Eng's JAVA program [@RN2114], §6.2.6. The DeLong method entry for row A was obtained using mainDeLongSd.R with FOM set to " Wilcoxon", as indicated by the asterisk; see §7.3.2. The bootstrap entry was obtained using mainBootstrapSd.R, and the jackknife entry was obtained using mainJackknifeSd.R; in both cases FOM was set to "Az". Note that the four estimates are close to each other, around 0.04. This confirms the validity of the different approaches to estimating the case sampling standard deviation, and is a self-consistency check on the calibration process.
-
-Row B repeats the values in row A, except that this time the empirical AUC is being used as the figure of merit. The flexibility afforded by the calibrated simulator is that using it one can test various ideas. For example, what happens if the number of cases is increased? One expects the standard deviations in the last column of Table 7.3 to decrease, but by how much. Row B uses datasets generated by the simulator calibrated to the data in Table 7.3. Since the numbers of cases has not changed, the values are similar to those in row A. In row-C the number of cases has been inflated by a factor of 10, and the standard deviations decrease by about a factor of square root of 10. [Since rows B, C and D use empirical AUC, MLE estimates are inapplicable.]
-
-Exercise: Use the calibrated simulator to test the effect of changing simulator parameters, particularly mu. As mu increases, the standard deviation is expected to decrease, because there is "less room" for AUC to vary, since it is constrained to be ≤1. 
-
-Table 7.3: Comparison of different estimates of the standard deviation of AUC, namely MLE, the DeLong method, bootstrap, jackknife and population sampling. MLE = maximum likelihood estimate; shown are results for a real dataset (A, B) and two simulated datasets (C and D) and two choices for estimating AUC: parametric and empirical. * The entry for the DeLong method was obtained using the empirical AUC. (P = 2000) (B = 2000)
-
-## Comparison of methods of estimating variability
-TBA This section compares the four methods described in this chapter: MLE (if applicable), DeLong (if applicable), bootstrap, jackknife and population sampling with a calibrated simulator. The modifier "if applicable" is needed as the choice of FOM determines whether the MLE or the DeLong method are applicable. For example, MLE is only possible with the binormal model fitted AUC as figure of merit, while the DeLong method is only possible with the empirical AUC as figure of merit.
-
-
-```r
-source(here("R/CH07-Variability/GenerateCaseSamples.R"))
-source(here("R/CH07-Variability/VarPopSampling.R"))
-source(here("R/CH07-Variability/VarBootstrap.R"))
-source(here("R/CH07-Variability/VarJack.R"))
-source(here("R/CH07-Variability/Wilcoxon.R"))
-source(here("R/CH07-Variability/VarDeLong.R"))
-```
-
-
-
-```r
-# this takes a long time to run and the results are not used below
-# the summary tables are hard-coded
-FinalParameters <- c(1.320455, 
-                     0.6074974, 
-                     0.007676989, 
-                     0.8962713, 
-                     1.515645, 
-                     2.396711)
-a  <- FinalParameters[1]
-b  <-  FinalParameters[2]
-zetas <- FinalParameters[3:length((FinalParameters))]
-mu <- a/b
-sigma <- 1/b
-K <- c(60, 50)
-seed <- 1
-cat("seed = ", seed, 
-    "\nK1 = ", K[1], 
-    "\nK2 = ", K[2], 
-    "\nmu = ", mu, 
-    "\nsigma = ", sigma, "\n")
-#> seed =  1 
-#> K1 =  60 
-#> K2 =  50 
-#> mu =  2.173598 
-#> sigma =  1.646098
-
-P <- 2000
-B <- 2000
-P1 <- 20
-
-set.seed( seed )
-VPS<- array(dim = P1)
-for (p in 1 : P1) VPS[p] <- VarPopSampling(K, mu, sigma, zetas, P)
-
-set.seed( seed )
-VBS<- array(dim = P1)
-for (p in 1 : P1) VBS[p] <- VarBootstrap(K, mu, sigma, zetas, B)
-
-set.seed( seed )
-VJK<- array(dim = P1)
-for (p in 1 : P1) VJK[p] <- VarJack(K, mu, sigma, zetas)
-
-set.seed( seed )
-VDL <- array(dim = P1)
-for (p in 1 : P1) VDL[p] <- VarDeLong(K, mu, sigma, zetas)
-
-cat("Mean Sd Pop Sampling = ", mean(sqrt(VPS)),"\n")
-#> Mean Sd Pop Sampling =  0.03594515
-cat("Mean Sd Boot Sampling = ", mean(sqrt(VBS)),"\n")
-#> Mean Sd Boot Sampling =  0.03656486
-cat("Mean Sd Jack Sampling = ", mean(sqrt(VJK)),"\n")
-#> Mean Sd Jack Sampling =  0.03349281
-cat("Mean Sd DeLong  = ", mean(sqrt(VDL)),"\n")
-#> Mean Sd DeLong  =  0.03331918
-```
-
-
-
-
-<table>
-<caption>(\#tab:sourcesVariabilityTableCompareA)Different estimates of standard deviation of AUC (* the entry for the DeLong method was obtained using the empirical AUC).</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> Dataset </th>
-   <th style="text-align:left;"> AUC est. method </th>
-   <th style="text-align:left;"> Var. est. method </th>
-   <th style="text-align:left;"> std. dev. AUC </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> ExampleTable </td>
-   <td style="text-align:left;"> Rocfit </td>
-   <td style="text-align:left;"> MLE </td>
-   <td style="text-align:left;"> 0.0378 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ExampleTable </td>
-   <td style="text-align:left;"> Rocfit </td>
-   <td style="text-align:left;"> DeLong </td>
-   <td style="text-align:left;"> *0.0380 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ExampleTable </td>
-   <td style="text-align:left;"> Rocfit </td>
-   <td style="text-align:left;"> Bootstrap </td>
-   <td style="text-align:left;"> 0.0438 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ExampleTable </td>
-   <td style="text-align:left;"> Rocfit </td>
-   <td style="text-align:left;"> Jackknife </td>
-   <td style="text-align:left;"> 0.0386 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ExampleTable </td>
-   <td style="text-align:left;"> Rocfit </td>
-   <td style="text-align:left;"> PopulationSampling </td>
-   <td style="text-align:left;"> 0.0403 </td>
-  </tr>
-</tbody>
-</table>
-
-* The entry for the DeLong method was obtained using the empirical AUC.
-
-<table>
-<caption>(\#tab:sourcesVariabilityTableCompareB)Different estimates of standard deviation of AUC.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> Dataset </th>
-   <th style="text-align:left;"> AUC est. method </th>
-   <th style="text-align:left;"> Var. est. method </th>
-   <th style="text-align:left;"> std. dev. AUC </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> ExampleTable </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> MLE </td>
-   <td style="text-align:left;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ExampleTable </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> DeLong </td>
-   <td style="text-align:left;"> 0.0380 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ExampleTable </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> Bootstrap </td>
-   <td style="text-align:left;"> 0.0413 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ExampleTable </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> Jackknife </td>
-   <td style="text-align:left;"> 0.0369 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ExampleTable </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> PopulationSampling </td>
-   <td style="text-align:left;"> 0.0369 </td>
-  </tr>
-</tbody>
-</table>
-
-
-<table>
-<caption>(\#tab:sourcesVariabilityTableCompareC)Different estimates of standard deviation of AUC.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> Dataset </th>
-   <th style="text-align:left;"> AUC est. method </th>
-   <th style="text-align:left;"> Var. est. method </th>
-   <th style="text-align:left;"> std. dev. AUC </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> Cal. Simulator 60 cases </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> MLE </td>
-   <td style="text-align:left;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Cal. Simulator 60 cases </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> DeLong </td>
-   <td style="text-align:left;"> 0.0333 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Cal. Simulator 60 cases </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> Bootstrap </td>
-   <td style="text-align:left;"> 0.0366 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Cal. Simulator 60 cases </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> Jackknife </td>
-   <td style="text-align:left;"> 0.0335 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Cal. Simulator 60 cases </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> PopulationSampling </td>
-   <td style="text-align:left;"> 0.0359 </td>
-  </tr>
-</tbody>
-</table>
-
-
-<table>
-<caption>(\#tab:sourcesVariabilityTableCompareD)Different estimates of standard deviation of AUC.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> Dataset </th>
-   <th style="text-align:left;"> AUC est. method </th>
-   <th style="text-align:left;"> Var. est. method </th>
-   <th style="text-align:left;"> std. dev. AUC </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> Cal. Simulator 600 cases </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> MLE </td>
-   <td style="text-align:left;"> NA </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Cal. Simulator 600 cases </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> DeLong </td>
-   <td style="text-align:left;"> 0.0113 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Cal. Simulator 600 cases </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> Bootstrap </td>
-   <td style="text-align:left;"> 0.0110 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Cal. Simulator 600 cases </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> Jackknife </td>
-   <td style="text-align:left;"> 0.0113 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Cal. Simulator 600 cases </td>
-   <td style="text-align:left;"> Wilcoxon </td>
-   <td style="text-align:left;"> PopulationSampling </td>
-   <td style="text-align:left;"> 0.0113 </td>
-  </tr>
-</tbody>
-</table>
-
-
-## Dependence of AUC on reader expertise {#sourcesVariabilityreaderExpertise}
-Suppose one conducts an ROC study with J readers where typically J is about 5 but can be as low as 3 and as high as 20 (the wide variability reflects, in the author's opinion, lack of understanding of the factors affecting the optimal choice of J and the related issue of statistical power). Each reader interprets the same case sample, i.e., the same set of cases, but because they have different expertise levels and for other reasons (see below), the observed ROC counts tables will not be identical. The variance of the observed values is an empirical estimate of between-reader variance (including the inseparable within-reader component). Here is an example, in file MainBetweenReaderSd.R. This file loads the Van Dyke dataset, consisting of two modalities and five readers described in Online Chapter 24. Source the code file to get:
-7.8.1: Code Output 
-> source('~/book2/02 A ROC analysis/A7 Sources of variability in AUC/software/mainBetweenReaderSd.R')
-between-reader variance in modality 1 = 0.003082629 
-between-reader variance in modality 2 = 0.001304602 
-avg. between-reader variance in both modalities = 0.002193615
-
-Notice that the between-reader (including, as always, within-reader) variance appears to be modality dependent. Determining if the difference is significant requires more analysis. For now one simply averages the two estimates.
-
-How can one handle between-reader variability in the notation? Each reader’s interpretation can be analyzed by MLE to get the corresponding AUC value. The notation for the observed AUC values is:
-
- 	.	(7.11)
-
-How does one conceptualize reader variability? As stated before, it is due to differences in expertise levels, but there is more to it. Since the single reader is characterized by parameters (R is the number of ratings bins; it is assumed that all readers employ the same number of bins, although they may employ it in different ways, i.e., the values of the thresholds may be different). While the non-diseased distribution for each reader could have mean different from 0 and variance different from unity, one can always translate it to zero and scale it to assure that the non-diseased distribution is the unit normal distribution. However, one cannot be assured that the separation and the width of the diseased distribution, and the thresholds, will not depend on the reader. Therefore, the most general way of thinking of reader variability is to put a j subscript on each of the model parameters, yielding . Now the first two of these define the population ROC curve for reader j, and the corresponding AUC value is (this equation was derived in Chapter 06, Eqn. (6.92.24)):
-
- 	.	(7.12)
-
-All else being equal, readers with larger   will perform better because they are better able to separate the non-diseased and diseased cases in z-space than their fellow readers. It is difficult and possibly misleading to try to estimate the differences directly from the observed ROC counts tables, but in general better readers will yield counts more skewed towards the low end of the rating scale on non-diseased cases and more skewed towards the high end of the rating scale for diseased cases. The ideal reader would rate all diseased cases one value (e.g. 5) and all non-diseased cases a smaller fixed value (e.g., 1, 2, 3, or 4), resulting in unit AUC, i.e., perfect performance. According to Eqn. (7.12), a reader with smaller   will also perform better. As noted before, typically the   parameter is greater than unity. The reasons for this general finding will be discussed later, but accept the author's word for now that the best the reader can is to reduce this parameter to unity. See Summary of Chapter 06 for reasons for the observation that generally the variance of the diseased distribution is larger than one – it has to do with the inhomogeneity of the distribution of diseased cases and the possibility that a mixture distribution is involved. As regards thresholds, while the population based performance for a particular reader does not depend on thresholds, the thresholds determine the ROC counts table, so differences in usage of the thresholds will translate to differences in estimates of , but this is expected to be a smaller effect compared to the dependence on  . To summarize, variability of readers can be attributed to variability in the binormal model parameters and, to a lesser extent, to variability in adopted thresholds.
-
-## Dependence of AUC on modality {#sourcesVariabilityModalityEffect}
-Suppose one conducts an ROC study with j (j =1,2,…J) readers but there are I  (i=1,2,…I) modalities. This is frequently referred to as the multiple reader multiple case (MRMC) paradigm. Each reader interprets the same case sample, i.e., the same set of cases, in two or more modalities. Here is an example, in file MainModalityEffect.R. This file loads the Van Dyke dataset, consisting of two modalities and five readers described in Online Chapter 24. Source the code file to get:
-7.9.1: Code Output
-> source('~/book2/02 A ROC analysis/A7 Sources of variability in AUC/software/mainModalityEffect.R')
-reader-average FOM in modality 1 = 0.897037 reader-average FOM in modality 2 = 0.9408374 , effect size, i.e., fom modality 1 minus modality 2 = -0.04380032
-
-Notice that the second modality has a higher FOM. Determining if the difference is significant requires more analysis as described in Chapter 09. The difference between the reader-averaged FOMs is referred to as the observed effect size.
-
-How does on handle modality dependence of the FOM in the notation? If K is the total number of cases, the total number of interpretations involved is IJK, each of which results in a rating. MLE analysis yields IJ values for AUC, one for each modality-reader combination. The appropriate notation is
-
- 	.	(7.13)
-
-The most general way of thinking of reader and modality variability is to put ij subscripts on each of the model parameters, yielding . For a particular combination of modality and reader, the population ROC curve as fitted by the binormal model, yields the area under the ROC curve:
-
- 	.	(7.14)
-
-Given an MRMC dataset, using MLE one can estimate the parameters  for each modality-reader combination, and this could be used to design a simulator that is calibrated to the specific clinical dataset, which in turn can be used to illustrate the ideas and to test any proposed method of analyzing the data. However, the problem is more complex; the procedure needs to also account for the correlations arising from the large number of pairings inherent is such a dataset (e.g., reader 1 in modality 1 vs. reader 2 in modality 2, since both interpret a common dataset). Designing a MRMC calibrated simulator was until recently, an unsolved problem, which necessitated recent work9 by the author and Mr. Xuetong Zhai. Chapter 23 describes recent progress towards this end. 
-
-## Effect of binning {#sourcesVariabilityBinning}
-There are actually two effects. (1) The empirical AUC will tend to be smaller than the true AUC. If there are few operating points, and they are clustered together, the difference may be large, Fig. 7.1 (A). 
-
-7.10.1: Code listing
-
-
-
-This figure was generated by a binormal model simulator, with thresholds chosen to exaggerate the effect, line 4 - 7. The true or population AUC is 0.8664, while the empirical AUC is 0.8030, line 13. However, since interest is in differences in AUCs, e.g., between two modalities, and the underestimates may tend to cancel, this may not be a serious issue. However, an effect that may be problematical is that the operating points for a given reader may not span the same FPF ranges in the two modalities, in which case the empirical AUCs will be different, as depicted in Fig. 7.1 (A - B). The AUC in modality (B), where the operating points span the entire range, is 0.8580, line 21, which is closer to the population value. Since the usage of the bins is not under the researcher's control, this effect cannot be ruled out. Fitted AUCs are expected to be less sensitive, but not immune, to this effect. Fig. 7.1 (C) is a contaminated binormal model (CBM) fitted curve, line 14, to the same data as in (A), fitted AUC = 0.892, while Fig. 7.1 (D) is a CBM fitted curve, line 22, to the same data as in (B), fitted AUC = 0.867. The difference in AUCs between (A) and (B) is  0.055, while that between (C) and (D) is 0.024. The consequences of these effects on the validity of analyses using the empirical AUC have not been studied. [The parameters of the model were a = 1.33 and b = 0.667, which yields the quoted value of the population AUC. The population value is that predicted by the parameters; it has zero sampling variability. The fitted curves are those predicted by the CBM, discussed in Chapter 20.]
-
-(2) The second effect is varying numbers of thresholds or bins between the readers. One could be a radiologist, capable of maintaining at most about 6 bins, and the other an algorithmic observer, such as CAD, capable of maintaining more bins. Moreover, if the radiologist is an expert, the data points will tend to cluster near the initial near vertical part of the ROC (see Chapter 17 for explanation). This is illustrated using code in file mainBinVariability.R. Sourcing this code yields Fig. 7.1 (E – F) and the AUC values shown in these plots.
-
-7.10.2: Code listing
-
-
-
-In Fig. 7.1(E) and Fig. 7.1(F) the effect is dramatic. The expert radiologist trapezoidal AUC is 0.7418, while that for CAD is 0.8632; the latter is close to the population value. It is left as an exercise for the reader to demonstrate that using CBM one can avoid the severe underestimate of performance that occurs in plot (E).
-
-
- 
-(A) AUC = 0.8030	 
-(B) AUC = 0.8580
- 
-(C) AUC = 0.892	 
-(D) AUC = 0.867
- 
-(E) AUC =  0.7418	 
-(F) AUC = 0.8632
-Fig. 7.1 (A-D):  Plots (A - B) depict empirical plots for two simulated datasets for the same model, i.e., same continuous ratings, using different thresholds. In (A) the thresholds are clustered at low FPF values, while in (B) they are more evenly spaced. Empirical AUCs for the plots are 0.803 for (A) and 0.858 for (B). The clustering in (A) leads to a low estimate of AUC. Plots (C) and (D) are fitted curves corresponding to the same data as in (A) and (B), respectively. For each plot, the population AUC is 0.866. The fitted curves are less sensitive, but not immune, to the data clustering variations. With a large number of evenly spaced points, the empirical AUC is close to that of the fitted curve. This effect is demonstrated in plots (E) and (F). The plots were generated by mainEmpVsFit.R and  mainBinVariability.R.
-
-## Empirical vs. fitted AUCs {#sourcesVariabilityEmpiricalVsFitted}
-There is a preference with some researchers to using the empirical AUC as a figure of merit. Its usage enables analyses10-14 variously referred to as the "probabilistic", mechanistic" or "first-principles" approach and the "one-shot" approach15 to multiple reader multiple case analysis. The author is aware of some statisticians who distrust parametric modeling and the associate normality assumptions (the author trusts that the demonstrations in §6.2.2 may assuage the concerns). In addition, empirical AUC frees the researcher from problems with binormal model based fitting, e.g., handling degenerate datasets (these problems go away with two of the fitting methods described in later chapters). The fact that the empirical AUC can always be calculated, even, for example, with a single operating point, can make the analyst blissfully unaware of anomalous data structures. In contrast, the binormal curve-fitting method in Chapter 06 will complain when the ratings bins are not well populated, e.g., by failing to converge. This at least alerts the analyst that conditions are not optimal, and prompt data visualization and consideration of alternate fitting methods. 
-
-If empirical AUC is defined by a large number of operating points, such as with continuous ratings obtained with algorithmic observers, then empirical AUC will be nearly equal to the true AUC, to within sampling error. However, with human observers one rarely gets more than about 6 distinct ratings. The researcher has no control over the internal sensory thresholds used by the radiologist to bin the data, and these could depend on the modality. As demonstrated in the previous section, the empirical AUC is sensitive to the choice of thresholds, especially when the number of thresholds is small, as is usually the case with radiologists, and when the operating points are clustered on the initial near vertical section of the plot, as is also the case with experts. 
-
- 
-
-
-
-
-
-
- 
- 
-(A)	 
-(B)	 
-(C)
- 
-(D)	 
-(E)	
-Fig. 7.2 (A-E): This figure shows a small sample of the 236 viewable plots in the cited online document. In this figure, each panel corresponds to a different reader (the j-index in the labels). The modality is the same (the i-index) and the dataset is labeled D1. The three curves correspond to different advanced method of fitting ROC data. The interest in this chapter is on the positions of the operating points. Reader (C) traverses more of the FPF range than does reader (E). Empirical AUC may result in a greater error for reader (E) than for reader (C). An explanation of the three fits is deferred to Chapter 18
 
 
+For `seed` = 1 and `P` = 200 the mean and standard deviation of the 200 AUC values, are 0.8727151 and 0.0355281, respectively. 
+
+
+
+
+For `seed` = 2 and `P` = 200 the mean and standard deviation of the 200 AUC values, are 0.8649385 and 0.0450947, respectively. Note the greater variability induced by the change in `seed`, as compared to `P` = 2000.
+
+#### Non-parametric AUC results
+
+
+
+
+
+
+The next simulation is with `seed` = 1 and `P` = 2000, but this time `parametricFOM` is set to `FALSE`. The calibration proceeds as before, using `RocfitR` to determine the parameters of the simulation model, calibrating the simulator requires a parametric fit, but this empirical AUC is used to obtained the 2000 AUC samples. The mean and standard deviation of the AUC values, are 0.8497634 and 0.0367476, respectively. Note that these are smaller than the corresponding parametric estimates. The empirical AUC is expected to be smaller than the corresponding parametric AUC as joining adjacent points with straight lines will underestimate the area under the smooth ROC curve. Repeating with `seed` = 2, the mean and standard deviation of the AUC values, are 0.8503732 and 0.0369091, respectively, which are close to the `seed` = 1 values. 
 
 
 ## Discussion{#sourcesVariability-Discussion}
-This chapter focused on the factors affecting variability of AUC, namely case-sampling and between-reader variability, each of which contain an inseparable within-reader contribution. The only way to get an estimate of within-reader variability is to have the same reader re-interpret the same case-set on multiple occasions (with sufficient time delay to minimize memory effects). This is rarely done and is unnecessary, in the ROC context, to sound experimental design and analysis. Some early publications have suggested that such re-interpretations are needed to estimate the within-reader component, but modern analysis, described in the next part of the book, does not require re-interpretations. Indeed, it is a waste of precious reader-time resources. Rather than have the same readers re-interpret the same case-set on multiple occasions, it makes much more sense to recruit more readers and/or collect more cases, guided by a systematic sample size estimation method. Another reason the author is not in favor of re-interpretations is that the within-reader variance is usually smaller than case-sampling and between-reader variances. Re-interpretations would minimize a quantity that is already small, which is not good science.
-
-In the author's judgment, current literature on this topic lacks notational clarity, particularly when it comes to case sampling. An important part of this chapter is the explicit usage of the case-set index   to describe a key-factor, namely the case-sample, on which AUC depends. This index is assumed in the literature, which can lead to confusion; especially understanding one the methods used to analyze ROC MRMC data, see Chapter 10. Different simulated datasets correspond to different values of  . This indexing leads to a natural, in the author's opinion, understanding of the bootstrap method; one simply replaces  with  , the bootstrap case-set index. 
+This chapter focused on the factors affecting variability of AUC, namely case-sampling and between-reader variability, each of which contain an inseparable within-reader contribution. The only way to get an estimate of within-reader variability is to have the same reader re-interpret the same case-set on multiple occasions, after a  sufficient time delay to minimize memory effects. This is rarely done and is unnecessary, in the ROC context, to sound experimental design and analysis. Some early publications have suggested that such re-interpretations are needed, but modern methods, described in the next part of the book, does not require re-interpretations. Indeed, it is a waste of precious reader-time resources. Rather than have the same readers re-interpret the same case-set on multiple occasions, it makes much more sense to recruit more readers and/or collect more cases, guided by a systematic sample size estimation method. Another reason the author is not in favor of re-interpretations is that the within-reader variance is usually smaller than case-sampling and between-reader variances. Re-interpretations would minimize a quantity that is already small, which is not good practice.
 
 The bootstrap and jackknife methods described in this chapter have wide applicability. Later they will be extended to estimating the covariance (essentially a scaled correlation) between two random variables. Also described was the DeLong method, applicable to the empirical AUC. Using a real dataset and simulators, all methods were shown to agree with each other, especially when the numbers of cases is large, Table 7.3 (row-D). 
 
 The concept of a calibrated simulator was introduced as a way of "anchoring" a simulator to a real dataset. While relatively easy for a single dataset, the concept has yet to be extended to where it would be useful, namely designing a simulator calibrated to a dataset consisting of interpretations by multiple readers in multiple modalities of a common dataset. Just as a calibrated simulator allowed comparison of the different variance estimation methods to a known standard, obtained by population sampling, a more general calibrated simulator would allow better testing the validity of the analysis described in the next few chapters.
 
-A source of variability not generally considered, namely threshold variability, is introduced, and a cautionary note is struck with respect to indiscriminate usage of the empirical AUC. Finally, the author wishes to reemphasize the importance of viewing ROC plots, to detect anomalous conditions that might be otherwise overlooked.
-
 This concludes Part A of this book. The next chapter begins Part B, namely the statistical analysis of multiple-reader multiple-case (MRMC) ROC datasets. 
+
+TBA: what to do with removed sections?
 
 ## References {#sourcesVariability-references}
 
