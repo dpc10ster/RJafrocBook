@@ -172,37 +172,20 @@ The simplest resampling method, at least at the conceptual level, is the bootstr
 For convenience, let us denote cases as follows. The 30 non-diseased cases that received the 1 rating are denoted $k_{1,1},k_{2,1},...,k_{30,1}$. The second index denotes the truth state of the cases. Likewise, the 19 non-diseased cases that received the 2 rating are denoted $k_{31,1},k_{32,1},...,k_{49,1}$ and so on for the remaining non-diseased cases. The 5 diseased cases that received the 1 rating are denoted $k_{1,2},k_{2,2},...,k_{5,2}$, the 6 diseased cases that received the 2 rating are denoted $k_{6,2},k_{7,2},...,k_{11,2}$, and so on. Let us figuratively "put" all non-diseased cases (think of each case as an index card, with the case notation and rating recorded on it) into one hat (the non-diseased hat) and all the diseased cases into another hat (the diseased hat). Next, one randomly picks one case (card) from the non-diseased hat, records it's rating, and puts the case back in the hat, so that it is free to be possibly picked again. This is repeated 60 times for the non-diseased hat resulting in 60 ratings from non-diseased cases. A similar procedure is performed using the diseased hat, resulting in 50 ratings from diseased cases. The author has just described, in painful detail (one might say) the realization of the 1st bootstrap sample, denoted $\{b=1\}$. This is used to construct the 1st bootstrap counts table, Table \@ref(tab:sourcesVariabilitybs1). 
 
 
-<table>
-<caption>(\#tab:sourcesVariabilitybs1)Representative counts table.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> $r = 5$ </th>
-   <th style="text-align:right;"> $r = 4$ </th>
-   <th style="text-align:right;"> $r = 3$ </th>
-   <th style="text-align:right;"> $r = 2$ </th>
-   <th style="text-align:right;"> $r = 1$ </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> non-diseased </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 9 </td>
-   <td style="text-align:right;"> 16 </td>
-   <td style="text-align:right;"> 35 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> diseased </td>
-   <td style="text-align:right;"> 19 </td>
-   <td style="text-align:right;"> 8 </td>
-   <td style="text-align:right;"> 7 </td>
-   <td style="text-align:right;"> 9 </td>
-   <td style="text-align:right;"> 7 </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:sourcesVariabilitybs1)Representative counts table.}
+\centering
+\begin{tabular}[t]{l|r|r|r|r|r}
+\hline
+  & $r = 5$ & $r = 4$ & $r = 3$ & $r = 2$ & $r = 1$\\
+\hline
+non-diseased & 0 & 0 & 9 & 16 & 35\\
+\hline
+diseased & 19 & 8 & 7 & 9 & 7\\
+\hline
+\end{tabular}
+\end{table}
 
 
 So what happened? Consider the 35 non-diseased cases with a 1 rating. If each non-diseased case rated 1 in Table \@ref(tab:ratingsParadigmExampleTable) were picked one time, the total would have been 30, but it is 35. Therefore, some of the original non-diseased cases rated 1 must have been picked multiple times, but one must also make allowance as there is no guarantee that a specific case was picked at all. Still focusing on the 35 non-diseased cases with a 1 rating in the first bootstrap sample, the picked labels, reordered after the fact, with respect to the first index, might be: 

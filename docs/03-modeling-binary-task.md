@@ -137,10 +137,7 @@ pdfcdfPlot <- ggplot(
 print(pdfcdfPlot)
 ```
 
-<div class="figure">
-<img src="03-modeling-binary-task_files/figure-html/binaryTask-plots1-1.png" alt="pdf-CDF plots for unit normal." width="672" />
-<p class="caption">(\#fig:binaryTask-plots1)pdf-CDF plots for unit normal.</p>
-</div>
+![(\#fig:binaryTask-plots1)pdf-CDF plots for unit normal.](03-modeling-binary-task_files/figure-latex/binaryTask-plots1-1.pdf) 
 
 A related function is the inverse of Eqn. \@ref(eq:binaryTask-Phi). Suppose the left hand side of Eqn. \@ref(eq:binaryTask-Phi) is denoted $p$, which is a probability in the range 0 to 1. 
 
@@ -230,10 +227,7 @@ shadedTails <- shadedTails +
 print(shadedTails)
 ```
 
-<div class="figure">
-<img src="03-modeling-binary-task_files/figure-html/binaryTask-shaded-tails-1.png" alt="Illustrating that 95percent of the total area under the unit normal pdf is contained in the range |Z| &lt; 1.96, which can be used to construct a 95percent confidence interval for an estimate of a suitably normalized statistic. The area contained in each shaded tail is 2.5percent." width="672" />
-<p class="caption">(\#fig:binaryTask-shaded-tails)Illustrating that 95percent of the total area under the unit normal pdf is contained in the range |Z| < 1.96, which can be used to construct a 95percent confidence interval for an estimate of a suitably normalized statistic. The area contained in each shaded tail is 2.5percent.</p>
-</div>
+![(\#fig:binaryTask-shaded-tails)Illustrating that 95percent of the total area under the unit normal pdf is contained in the range |Z| < 1.96, which can be used to construct a 95percent confidence interval for an estimate of a suitably normalized statistic. The area contained in each shaded tail is 2.5percent.](03-modeling-binary-task_files/figure-latex/binaryTask-shaded-tails-1.pdf) 
 
 **If one knows that a variable is distributed as a unit-normal random variable, then the observed value minus 1.96 defines the lower limit of its 95percent confidence interval, and the observed value plus 1.96 defines the upper limit of its 95percent confidence interval.**
 
@@ -356,10 +350,7 @@ shadedPlots <- shadedPlots + xlab(label = "z-sample")
 print(shadedPlots)
 ```
 
-<div class="figure">
-<img src="03-modeling-binary-task_files/figure-html/binaryTask-shaded-plots-1.png" alt="The equal-variance binormal model for mu = 3  and  zeta = 1; the blue curve, centered at zero, corresponds to the pdf of non-diseased cases and the red one, centered at mu = 3, corresponds to the pdf of diseased cases. The left edge of the blue shaded region represents the threshold zeta, currently set at unity. The red shaded area, including the common portion with the vertical red lines, is sensitivity. The blue shaded area including the common portion with the vertical red lines is 1-specificity." width="672" />
-<p class="caption">(\#fig:binaryTask-shaded-plots)The equal-variance binormal model for mu = 3  and  zeta = 1; the blue curve, centered at zero, corresponds to the pdf of non-diseased cases and the red one, centered at mu = 3, corresponds to the pdf of diseased cases. The left edge of the blue shaded region represents the threshold zeta, currently set at unity. The red shaded area, including the common portion with the vertical red lines, is sensitivity. The blue shaded area including the common portion with the vertical red lines is 1-specificity.</p>
-</div>
+![(\#fig:binaryTask-shaded-plots)The equal-variance binormal model for mu = 3  and  zeta = 1; the blue curve, centered at zero, corresponds to the pdf of non-diseased cases and the red one, centered at mu = 3, corresponds to the pdf of diseased cases. The left edge of the blue shaded region represents the threshold zeta, currently set at unity. The red shaded area, including the common portion with the vertical red lines, is sensitivity. The blue shaded area including the common portion with the vertical red lines is 1-specificity.](03-modeling-binary-task_files/figure-latex/binaryTask-shaded-plots-1.pdf) 
 
 Fig. \@ref(fig:binaryTask-shaded-plots) shows the equal-variance binormal model for $\mu = 3$  and $\zeta = 1$. The blue-shaded area, including the "common" portion with the vertical red lines, is the probability that a z-sample from a non-diseased case exceeds $\zeta = 1$, which is the complement of specificity, i.e., it is false positive fraction, which is 1 - `pnorm(1)` = 0.159. The red shaded area, including the "common" portion with the vertical red lines, is the probability that a z-sample from a diseased case exceeds $\zeta = 1$, which is sensitivity or true positive fraction, which is `pnorm(3-1)`= 0.977.
 
@@ -486,93 +477,34 @@ df <- as.data.frame(results)
 colnames(df) <- c("K1","K2","seed","Se","Sp","mu")
 ```
 
-<table>
-<caption>(\#tab:binaryTask0SeSpMuvsCaseSizeSeed)Effect of sample size and seed on estimates of sensitivity, specificity and the mu-parameter.</caption>
- <thead>
-  <tr>
-   <th style="text-align:right;"> K1 </th>
-   <th style="text-align:right;"> K2 </th>
-   <th style="text-align:right;"> seed </th>
-   <th style="text-align:right;"> Se </th>
-   <th style="text-align:right;"> Sp </th>
-   <th style="text-align:right;"> mu </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:right;"> 9 </td>
-   <td style="text-align:right;"> 11 </td>
-   <td style="text-align:right;"> 100 </td>
-   <td style="text-align:right;"> 0.889 </td>
-   <td style="text-align:right;"> 0.909 </td>
-   <td style="text-align:right;"> 2.556 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 9 </td>
-   <td style="text-align:right;"> 11 </td>
-   <td style="text-align:right;"> 101 </td>
-   <td style="text-align:right;"> 0.778 </td>
-   <td style="text-align:right;"> 0.545 </td>
-   <td style="text-align:right;"> 0.879 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 90 </td>
-   <td style="text-align:right;"> 110 </td>
-   <td style="text-align:right;"> 100 </td>
-   <td style="text-align:right;"> 0.778 </td>
-   <td style="text-align:right;"> 0.836 </td>
-   <td style="text-align:right;"> 1.744 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 90 </td>
-   <td style="text-align:right;"> 110 </td>
-   <td style="text-align:right;"> 101 </td>
-   <td style="text-align:right;"> 0.811 </td>
-   <td style="text-align:right;"> 0.755 </td>
-   <td style="text-align:right;"> 1.571 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 900 </td>
-   <td style="text-align:right;"> 1100 </td>
-   <td style="text-align:right;"> 100 </td>
-   <td style="text-align:right;"> 0.764 </td>
-   <td style="text-align:right;"> 0.761 </td>
-   <td style="text-align:right;"> 1.430 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 900 </td>
-   <td style="text-align:right;"> 1100 </td>
-   <td style="text-align:right;"> 101 </td>
-   <td style="text-align:right;"> 0.807 </td>
-   <td style="text-align:right;"> 0.759 </td>
-   <td style="text-align:right;"> 1.569 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 9000 </td>
-   <td style="text-align:right;"> 11000 </td>
-   <td style="text-align:right;"> 100 </td>
-   <td style="text-align:right;"> 0.774 </td>
-   <td style="text-align:right;"> 0.772 </td>
-   <td style="text-align:right;"> 1.496 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 9000 </td>
-   <td style="text-align:right;"> 11000 </td>
-   <td style="text-align:right;"> 101 </td>
-   <td style="text-align:right;"> 0.771 </td>
-   <td style="text-align:right;"> 0.775 </td>
-   <td style="text-align:right;"> 1.498 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> Inf </td>
-   <td style="text-align:right;"> Inf </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 0.773 </td>
-   <td style="text-align:right;"> 0.773 </td>
-   <td style="text-align:right;"> 1.500 </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:binaryTask0SeSpMuvsCaseSizeSeed)Effect of sample size and seed on estimates of sensitivity, specificity and the mu-parameter.}
+\centering
+\begin{tabular}[t]{r|r|r|r|r|r}
+\hline
+K1 & K2 & seed & Se & Sp & mu\\
+\hline
+9 & 11 & 100 & 0.889 & 0.909 & 2.556\\
+\hline
+9 & 11 & 101 & 0.778 & 0.545 & 0.879\\
+\hline
+90 & 110 & 100 & 0.778 & 0.836 & 1.744\\
+\hline
+90 & 110 & 101 & 0.811 & 0.755 & 1.571\\
+\hline
+900 & 1100 & 100 & 0.764 & 0.761 & 1.430\\
+\hline
+900 & 1100 & 101 & 0.807 & 0.759 & 1.569\\
+\hline
+9000 & 11000 & 100 & 0.774 & 0.772 & 1.496\\
+\hline
+9000 & 11000 & 101 & 0.771 & 0.775 & 1.498\\
+\hline
+Inf & Inf & NA & 0.773 & 0.773 & 1.500\\
+\hline
+\end{tabular}
+\end{table}
 
 As the numbers of cases increase, the sensitivity and specificity converge to a common value, around 0.773 and the estimate of the separation parameter converges to the known value.
 
@@ -648,10 +580,7 @@ rocPlot <- rocPlot +
 print(rocPlot)
 ```
 
-<div class="figure">
-<img src="03-modeling-binary-task_files/figure-html/binaryTask-RocCurvesEqVarModel-1.png" alt="ROC plots predicted by the equal variance binormal model for different values of mu. As mu increases the intersection of the curve with the negative diagonal moves closer to the ideal operating point, (0,1) at which sensitivity and specificity are both equal to unity." width="672" />
-<p class="caption">(\#fig:binaryTask-RocCurvesEqVarModel)ROC plots predicted by the equal variance binormal model for different values of mu. As mu increases the intersection of the curve with the negative diagonal moves closer to the ideal operating point, (0,1) at which sensitivity and specificity are both equal to unity.</p>
-</div>
+![(\#fig:binaryTask-RocCurvesEqVarModel)ROC plots predicted by the equal variance binormal model for different values of mu. As mu increases the intersection of the curve with the negative diagonal moves closer to the ideal operating point, (0,1) at which sensitivity and specificity are both equal to unity.](03-modeling-binary-task_files/figure-latex/binaryTask-RocCurvesEqVarModel-1.pdf) 
 
 ### The chance diagonal
 In Fig. \@ref(fig:binaryTask-RocCurvesEqVarModel) the ROC curve for $\mu=0$  is the positive diagonal of the ROC plot, termed the chance diagonal. Along this curve $TPF = FPF$ and the observer’s performance is at chance level. In the equal variance binormal model, for $\mu=0$, the pdf of the diseased distribution is identical to that of the non-diseased distribution: both are centered at the origin. Therefore, no matter the choice of threshold  $\zeta$, $TPF = FPF$. Setting $\mu=0$ in Eqn. \@ref(eq:binaryTask-FPF-TPF) yields:
@@ -764,10 +693,7 @@ rocPlot <- ggplot(
 print(rocPlot)
 ```
 
-<div class="figure">
-<img src="03-modeling-binary-task_files/figure-html/binaryTask-MainAnalyticalROC-1.png" alt="ROC curve predicted by equal variance binormal model for mu = 3. The circled operating point corresponds to zeta = 1. The operating point falls exactly on the curve, as these are analytical results. Due to sampling variability, with finite numbers of cases, this is not observed in practice." width="672" />
-<p class="caption">(\#fig:binaryTask-MainAnalyticalROC)ROC curve predicted by equal variance binormal model for mu = 3. The circled operating point corresponds to zeta = 1. The operating point falls exactly on the curve, as these are analytical results. Due to sampling variability, with finite numbers of cases, this is not observed in practice.</p>
-</div>
+![(\#fig:binaryTask-MainAnalyticalROC)ROC curve predicted by equal variance binormal model for mu = 3. The circled operating point corresponds to zeta = 1. The operating point falls exactly on the curve, as these are analytical results. Due to sampling variability, with finite numbers of cases, this is not observed in practice.](03-modeling-binary-task_files/figure-latex/binaryTask-MainAnalyticalROC-1.pdf) 
 
 
 ### Physical interpretation of the mu-parameter
@@ -957,42 +883,26 @@ rownames(df) <- c("Sensiivity","Specificity","AUC")
 colnames(df) <- c("Min","Max","Range")
 ```
 
-<table>
-<caption>(\#tab:binaryTask0BeamStudy)The variability of 108 radiologists on a common dataset of screening mammograms. Note the reduced variability when one uses AUC, which accounts for variations in reporting thresholds (AUC variability range is 21percent compared to 53percent for sensitivity and 63percent for specificity).</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> Min </th>
-   <th style="text-align:right;"> Max </th>
-   <th style="text-align:right;"> Range </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> Sensiivity </td>
-   <td style="text-align:right;"> 46.70 </td>
-   <td style="text-align:right;"> 100.00 </td>
-   <td style="text-align:right;"> 53.30 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Specificity </td>
-   <td style="text-align:right;"> 36.30 </td>
-   <td style="text-align:right;"> 99.30 </td>
-   <td style="text-align:right;"> 63.00 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> AUC </td>
-   <td style="text-align:right;"> 0.74 </td>
-   <td style="text-align:right;"> 0.95 </td>
-   <td style="text-align:right;"> 0.21 </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
 
-<div class="figure">
-<img src="images/BeamStudy.png" alt="Schematic, patterned from the Beam et al study, showing the ROC operating points of 108 mammographers. Wide variability in sensitivity (40percent) and specificity (45percent) are evident. Radiologists (B) and (C) appear to be trading sensitivity for specificity and vice versa, while radiologist A's performance is intrinsically superior. See summary of important principles below." width="80%" />
-<p class="caption">(\#fig:BeamStudyFig)Schematic, patterned from the Beam et al study, showing the ROC operating points of 108 mammographers. Wide variability in sensitivity (40percent) and specificity (45percent) are evident. Radiologists (B) and (C) appear to be trading sensitivity for specificity and vice versa, while radiologist A's performance is intrinsically superior. See summary of important principles below.</p>
-</div>
+\caption{(\#tab:binaryTask0BeamStudy)The variability of 108 radiologists on a common dataset of screening mammograms. Note the reduced variability when one uses AUC, which accounts for variations in reporting thresholds (AUC variability range is 21percent compared to 53percent for sensitivity and 63percent for specificity).}
+\centering
+\begin{tabular}[t]{l|r|r|r}
+\hline
+  & Min & Max & Range\\
+\hline
+Sensiivity & 46.70 & 100.00 & 53.30\\
+\hline
+Specificity & 36.30 & 99.30 & 63.00\\
+\hline
+AUC & 0.74 & 0.95 & 0.21\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\includegraphics[width=0.8\linewidth]{images/BeamStudy} \caption{Schematic, patterned from the Beam et al study, showing the ROC operating points of 108 mammographers. Wide variability in sensitivity (40percent) and specificity (45percent) are evident. Radiologists (B) and (C) appear to be trading sensitivity for specificity and vice versa, while radiologist A's performance is intrinsically superior. See summary of important principles below.}(\#fig:BeamStudyFig)
+\end{figure}
 
 In Fig. \@ref(fig:BeamStudyFig), a schematic of the data, if one looks at the points labeled (B) and (C) one can mentally construct a smooth ROC curve that starts at (0,0), passes roughly through these points and ends at (1,1). In this sense, the intrinsic performances (i.e., AUCs or equivalently the   parameter) of the two radiologists are similar. The only difference between them is that radiologist (B) is using lower threshold relative to the radiologist (C). Radiologist (C) is more concerned with minimizing FPs while radiologist (B) is more concerned with maximizing sensitivity. By appropriate feedback radiologist (C) can perhaps be induced to change the threshold to that of radiologist (B), or they both could be induced to achieve a happy compromise. An example of feedback might be: “you are missing too many cancers and this could get us all into trouble; worry less about reduced specificity and more about increasing your sensitivity”. In contrast, radiologist (A) has intrinsically greater performance (B) or (C). No change in threshold is going to get the other two to a similar level of performance as radiologist A. Extensive training will be needed to bring the under-performing radiologists to the expert level represented by radiologist A. 
 
