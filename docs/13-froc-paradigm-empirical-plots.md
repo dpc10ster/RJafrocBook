@@ -21,44 +21,88 @@ To distinguish between perceived suspicious regions and regions that were actual
 
 * A non-diseased case can only have latent NLs. A diseased case can have latent NLs and latent LLs. 
 
-\begin{table}
-
-\caption{(\#tab:froc-paradigm-frocNotation)FROC notation,; all marks refer to latent marks; see details}
-\centering
-\begin{tabular}[t]{l|l|l}
-\hline
-Row number & Symbol & Meaning\\
-\hline
-1 & t & Case-level truth: 1 for non-diseased and 2 for diseased\\
-\hline
-1 & $K_t$ & Number of cases with case-level truth t\\
-\hline
-2 & $k_t t$ & Case $k_t$ in case-level truth t\\
-\hline
-3 & s & Mark-level truth: 1 for NL and 2 for LL\\
-\hline
-4 & $l_s s$ & Mark $l_s$ in mark-level truth s\\
-\hline
-5 & $z_{k_t t l_1 1}$ & z-sample for case $k_t t$ and mark $l_1 1$\\
-\hline
-6 & $z_{k_2 2 l_2 2}$ & z-sample for case $k_2 2$ and mark $l_2 2$\\
-\hline
-7 & $R_{FROC}$ & Number of FROC bins\\
-\hline
-8 & $\zeta_1$ & Lowest reporting threshold\\
-\hline
-9 & $\zeta_r\quad(r=2,3,...,R_{FROC})$ & Other reporting thresholds\\
-\hline
-9 & $\zeta_0, \zeta{R_{FROC}}+1)$ & Dummy thresholds\\
-\hline
-10 & $N_{k_t t}$ & Number of NLs on case $k_t t$\\
-\hline
-11 & $L_{k_2}$ & Number of lesions on case $k_2 2$\\
-\hline
-12 & $L_T$ & Total number of lesions in dataset\\
-\hline
-\end{tabular}
-\end{table}
+<table>
+<caption>(\#tab:froc-paradigm-frocNotation)FROC notation,; all marks refer to latent marks; see details</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Row number </th>
+   <th style="text-align:left;"> Symbol </th>
+   <th style="text-align:left;"> Meaning </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:left;"> Case-level truth: 1 for non-diseased and 2 for diseased </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> $K_t$ </td>
+   <td style="text-align:left;"> Number of cases with case-level truth t </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> $k_t t$ </td>
+   <td style="text-align:left;"> Case $k_t$ in case-level truth t </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:left;"> s </td>
+   <td style="text-align:left;"> Mark-level truth: 1 for NL and 2 for LL </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:left;"> $l_s s$ </td>
+   <td style="text-align:left;"> Mark $l_s$ in mark-level truth s </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 5 </td>
+   <td style="text-align:left;"> $z_{k_t t l_1 1}$ </td>
+   <td style="text-align:left;"> z-sample for case $k_t t$ and mark $l_1 1$ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 6 </td>
+   <td style="text-align:left;"> $z_{k_2 2 l_2 2}$ </td>
+   <td style="text-align:left;"> z-sample for case $k_2 2$ and mark $l_2 2$ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 7 </td>
+   <td style="text-align:left;"> $R_{FROC}$ </td>
+   <td style="text-align:left;"> Number of FROC bins </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 8 </td>
+   <td style="text-align:left;"> $\zeta_1$ </td>
+   <td style="text-align:left;"> Lowest reporting threshold </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 9 </td>
+   <td style="text-align:left;"> $\zeta_r\quad(r=2,3,...,R_{FROC})$ </td>
+   <td style="text-align:left;"> Other reporting thresholds </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 9 </td>
+   <td style="text-align:left;"> $\zeta_0, \zeta{R_{FROC}}+1)$ </td>
+   <td style="text-align:left;"> Dummy thresholds </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 10 </td>
+   <td style="text-align:left;"> $N_{k_t t}$ </td>
+   <td style="text-align:left;"> Number of NLs on case $k_t t$ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 11 </td>
+   <td style="text-align:left;"> $L_{k_2}$ </td>
+   <td style="text-align:left;"> Number of lesions on case $k_2 2$ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 12 </td>
+   <td style="text-align:left;"> $L_T$ </td>
+   <td style="text-align:left;"> Total number of lesions in dataset </td>
+  </tr>
+</tbody>
+</table>
 
 Details: In row 10-11 the thresholds are ordered as in $\zeta_r < \zeta_{r+1}$, and one defines dummy thresholds $\zeta_0 = -\infty$ and  $\zeta_{R_{FROC}+1} = +\infty$.
 
@@ -91,7 +135,7 @@ The label $l_1 = \{1, 2, ..., N_{k_t t}\}$ indexes latent NL marks, provided the
 
 Having covered notation, attention turns to the empirical plots possible with FROC data. The historical starting point is the FROC plot.
 
-## Formalism: the empirical FROC plot
+## The empirical FROC plot
 In Chapter \@ref(froc-paradigm), the FROC was defined as the plot of LLF (along the ordinate) vs. NLF.  Using the notation of Table \@ref(tab:froc-paradigm-frocNotation) and assuming binned data ^[This is not a limiting assumption: if the data is continuous, for finite numbers of cases, no ordering information is lost if the number of ratings is chosen large enough. This is analogous to Bamber's theorem in Chapter 05, where a proof, although given for binned data, is applicable to continuous data.] then, corresponding to the operating point determined by rating $r$, the coordinates are $\text{NLF}\left ( \zeta_r \right )$, the total number of NLs rated $\geq$ threshold $\zeta_r$ divided by the total number of cases, and $\text{LLF}\left ( \zeta_r \right )$, the total number of LLs rated $\geq$ threshold $\zeta_r$ divided by the total number of lesions: 
 
 \begin{equation}
@@ -206,7 +250,7 @@ The numerator is the total number of lesions that were actually marked. The rati
 The formalism should not obscure the fact that Eqn. (13.6) and Eqn. (13.9) are obvious conclusions about the observed end-point of the FROC, namely the ordinate is constrained to $\leq$ unity while the abscissa is unconstrained. One does not know how far to the right it might extend were the observer to report every suspicious region.
 
 
-## Formalism: the alternative FROC (AFROC) plot
+## The alternative FROC (AFROC) plot
 Fig. 4 in [@RN2453] anticipated another way of visualizing FROC data. The author subsequently termed^[The late Prof. Richard Swensson did not like the author's choice of the word "alternative" in naming this operating characteristic. The author had no idea in 1989 how important this operating characteristic would later turn out to be, otherwise a more meaningful name would have been proposed.] this the *alternative FROC (AFROC)* plot [@RN761]. The AFROC is defined as the plot of $LLF(\zeta)$ along the ordinate vs. $\text{FPF}(\zeta)$ along the abscissa. Obtaining FPF, an ROC paradigm quantity, from FROC data is described next. 
 
 ### Inferred-ROC rating
@@ -312,7 +356,10 @@ The chance level FROC was addressed in the previous chapter; it is a "flat-liner
 
 
 
-![(\#fig:froc-afroc-chance-level)The left figure is the near guessing observer's FROC and the right figure is the corresponding AFROC for for $\mu=0.01$.](13-froc-paradigm-empirical-plots_files/figure-latex/froc-afroc-chance-level-1.pdf) 
+<div class="figure">
+<img src="13-froc-paradigm-empirical-plots_files/figure-html/froc-afroc-chance-level-1.png" alt="The left figure is the near guessing observer's FROC and the right figure is the corresponding AFROC for for $\mu=0.01$." width="672" />
+<p class="caption">(\#fig:froc-afroc-chance-level)The left figure is the near guessing observer's FROC and the right figure is the corresponding AFROC for for $\mu=0.01$.</p>
+</div>
 
 Fig. \@ref(fig:froc-afroc-chance-level) shows "near guessing" FROC and AFROC plots for $\mu  = 0.1$. These plots were generated by the code with $\mu$ = 0.1, $\lambda$ = 1, $\nu$ = 0.1, $\zeta_1$ = -1, $K_1$ = 50, $K_2$ = 70. One does not expect to observe curves like these with radiologists as they rarely guess in the clinic – there is too much at stake.
 
@@ -322,7 +369,7 @@ The AFROC of a guessing observer is not the line connecting (0,0) to (1,1). This
 
 *To summarize, AFROC AUC of a guessing observer is zero. On the other hand, suppose an expert radiologist views screening images and the lesions on diseased cases are very difficult, even for the expert, and the radiologist does not find any of them. Being an expert the radiologist successfully screens out non-diseased cases and sees nothing suspicious in any of them – this is a measure of the expertise of the radiologist, not mistaking variants of normal anatomy for false lesions on non-diseased cases. Accordingly, the expert radiologist does not report anything, and the operating point is "stuck" at the origin. Even in this unusual situation, one would be justified in connecting the origin to (1,1) and claiming area under AFROC is 0.5. The extension gives the radiologist credit for not marking any non-diseased case; of course, the radiologist does not get any credit for marking any of the lesions. An even better radiologist, who finds and marks some of the lesions, will score higher, and AFROC-AUC will exceed 0.5. See TBA §17.7.4 for a software demonstration of this unusual situation.*
 
-## The EFROC plot
+### The EFROC plot
 An exponentially transformed FROC (EFROC) plot has been proposed [@RN2366] that, like the AFROC, is contained within the unit square. The EFROC inferred FPF is defined by (this is yet another way of inferring ROC data, albeit only FPF, from FROC data):
 
 \begin{equation}
@@ -337,7 +384,7 @@ In other words, one computes $NLF_r$ using NLs rated $\geq \zeta_r$ on all cases
 (emphasis added) repeats serious misconceptions in this field. Not all suspicious regions are reported; even CAD reports a small fraction of the suspicious regions that it finds. In spite of these concerns, the EFROC represents the first recognition by someone other than the author, of significant limitations of the FROC curve, and that an operating characteristic for FROC data that is completely contained within the unit square is highly desirable. The empirical EFROC-AUC FOM is implemented in `RJafroc` software.
 
 
-## Formalism for the inferred ROC plot
+## The inferred ROC plot
 The inferred true positive (TP) z-sample for diseased case $k_2 2$ is defined by: 
 
 \begin{equation}
@@ -363,7 +410,7 @@ TPF_r \equiv TPF_{\zeta_r} = \frac{1}{K_2}\sum_{k_2=1}^{K_2} \mathbb{I}\left ( T
 The definition of $FPF_r$ is the same as before, i.e., Eqn. \@ref(eq:froc-paradigm-FPF). The inferred empirical ROC plot connects adjacent points $\left( FPF_r, TPF_r \right )$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1).
 
 
-## Formalism for the weighted-AFROC (wAFROC) plot
+## The weighted-AFROC (wAFROC) plot
 The AFROC ordinate defined in Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) gives equal importance to every lesion on a case. Therefore, a case with more lesions will have more influence on the AFROC (this is explained in depth in TBA Chapter 14). This is undesirable since each case (i.e., patient) should get equal importance in the analysis. As with ROC analysis, one wishes to draw conclusions about the population of cases and each case is regarded as an equally valid sample from the population. In particular, one does not want the analysis to be skewed towards cases with greater than average number of lesions. ^[Historical note: the author became aware of how serious this issue could be when a researcher contacted him about using FROC methodology for nuclear medicine bone scan images, where the number of lesions on diseased cases can vary from a few to a hundred!] 
 
 Another issue is that the AFROC assigns equal clinical importance to each lesion in a case. Lesion weights were introduced [@RN1385] to allow for the possibility that the clinical importance of finding a lesion might be lesion-dependent [@RN1966] (the referenced paper should be of interest to the more advanced reader). For example, it is possible that an easy to find lesion is less clinically important than a harder to find one, therefore the figure-of-merit should give more importance to the harder to find one. Clinical importance in this context could be the mortality associated with the specific lesion type, which can be obtained from epidemiological studies [@desantis2011breast]. Let $W_{k_2 l_2} \geq 0$ denote the weight (i.e., clinical importance) of lesion $l_2$ in diseased case $k_2$ (since weights are only applicable to diseased cases, one can, without ambiguity, drop the case-level and location-level truth subscripts, i.e., $W_{k_2 2 l_2 2}$ would be superfluous). For each diseased case $k_2 2$ the weights are subject to the constraint:
@@ -388,7 +435,7 @@ The weighted lesion localization fraction $\text{wLLF}_r$ is defined by [@RN2484
 
 The empirical wAFROC plot connects adjacent operating points $\left ( FPF_r, \text{wLLF}_r \right )$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1). The area under this plot is the empirical weighted-AFROC AUC.
 
-## Formalism for the AFROC1 plot
+## The AFROC1 plot
 Historically the AFROC originally used a different definition of FPF, which is retrospectively termed the AFROC1 plot. Since NLs can occur on diseased cases, it is possible to define an inferred "FP" rating on a *diseased case* as the maximum of all NL ratings on the case, or $-\infty$ if the case has no NLs. The quotes emphasize that this is non-standard usage of ROC terminology: in an ROC study, a FP can only occur on a *non-diseased case*. Since both case-level truth states are allowed, the highest false positive (FP) z-sample for case $k_t t$ is [the "1" superscript below is necessary to distinguish it from TBA Eqn. \@ref(eq:froc-paradigm-FP)]: 
 
 \begin{equation}
@@ -412,79 +459,315 @@ FPF_r^1 \equiv FPF_r^1\left ( \zeta_r \right ) = \frac{1}{K_1+K_2}\sum_{t=1}^{2}
 Note the subtle differences between Eqn. \@ref(eq:froc-paradigm-FPF) and Eqn. \@ref(eq:froc-paradigm-FPF1). The latter counts "FPs" on non-diseased and diseased cases while Eqn. \@ref(eq:froc-paradigm-FPF) counts FPs on non-diseased cases only, and for that reason the denominators in the two equations are different. The advisability of allowing a diseased case to be both a TP and a FP is questionable from both clinical and statistical considerations. However, allowing this possibility leads to the following definition: the empirical alternative FROC1 (AFROC1) plot connects adjacent operating points $\left ( FPF_r^1, \text{LLF}_r \right )$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1). The only difference between AFROC1 and the AFROC plot is in the x-axis. 
 
 
-## Formalism: the weighted-AFROC1 (wAFROC1) plot
+## The weighted-AFROC1 (wAFROC1) plot
 The empirical weighted-AFROC1 (wAFROC1) plot connects adjacent operating points $\left ( FPF_r^1, \text{wLLF}_r \right )$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1). The only difference between it and the wAFROC plot is in the x-axis. 
 
 So far, the description has been limited to abstract definitions of various operating characteristics possible with FROC data. Now it is time to put numbers into the formulae and see actual plots. The starting point is the FROC plot. 
 
-## Example: "raw" FROC plots
-The FROC plots shown below were generated using the data simulator introduced in Chapter \@ref(froc-paradigm). The examples are similar to the population FROC curves shown in that chapter, TBA Fig. 12.2 (A - C), but the emphasis here is on understanding the FROC data structure. To this end smaller numbers of cases, not 20,000 as in the previous chapter are used. Examples are given using continuous ratings, termed “raw data”, and binned data, for a smaller dataset and for a larger dataset. With a smaller dataset, the logic of constructing the plot is more transparent but the operating points are more susceptible to sampling variability. The examples illustrate key points distinguishing the free-response paradigm from ROC. The author believes a good understanding of this relatively complex paradigm is obtained from a detailed examination.
+## Raw FROC/AFROC/ROC plots
+*Raw plots* correspond to the actual simulator generated continuous ratings, prior to any binning operation. The opposite of raw plots would be *binned plots*. The FROC plots shown below were generated using the data simulator introduced in Chapter \@ref(froc-paradigm). The examples are similar to the population FROC curves shown in that chapter but the emphasis here is on understanding the FROC data structure. To this end smaller numbers of cases, not 20,000 as in the previous chapter, are used. Examples are given using continuous ratings, termed “raw data”, and binned data, for a smaller dataset and for a larger dataset. With a smaller dataset, the logic of constructing the plot is more transparent but the operating points are more susceptible to sampling variability. The examples illustrate key points distinguishing the free-response paradigm from ROC. 
+
+## Code for raw plots {#raw-plots-code1}
+
+```{.r .numberLines}
+seed <- 1;set.seed(seed)
+mu <- 1
+lambda <- 1
+nu <- 1 
+zeta1 <- -1
+K1 <- 5
+K2 <- 7 
+Lmax <- 2
+Lk2 <- floor(runif(K2, 1, Lmax + 1))
+
+frocDataRaw <- SimulateFrocDataset(
+  mu = mu, 
+  lambda = lambda, 
+  nu = nu, 
+  I = 1,
+  J = 1,
+  K1 = K1, 
+  K2 = K2, 
+  perCase = Lk2, 
+  zeta1 = zeta1
+)
+
+p1 <- PlotEmpiricalOperatingCharacteristics(
+  dataset = frocDataRaw, 
+  trts= 1, rdrs = 1, opChType = "FROC", 
+  legend.position = "NULL")$Plot
+
+p2 <- PlotEmpiricalOperatingCharacteristics(
+  dataset = frocDataRaw, 
+  trts= 1, rdrs = 1, opChType = "AFROC", 
+  legend.position = "NULL")$Plot
+
+p3 <- PlotEmpiricalOperatingCharacteristics(
+  dataset = frocDataRaw, 
+  trts= 1, rdrs = 1, opChType = "ROC", 
+  legend.position = "NULL")$Plot
+```
+
+### Explanation of the code
+Line 1 sets the seed of the random number generator. Lines 2-5 set the simulator parameters $\mu = 1, \lambda = 1, \nu = 1, \zeta_1 = -1$. Briefly, $\mu$ determines the separation of two unit variance Gaussians, the left one determines the z-samples of latent NLs, while the right one determines the z-samples of latent LLs. $\lambda$ determines the number of latent NLs while $\nu$ determines the number of latent LLs. A latent NL or LL is marked if its z-sample $\geq \zeta_1$.
+
+Lines 6-7 set the number of non-diseased cases $K_1 = 5$ and the number of diseased cases $K_2 = 7$. 
+
+Line 8 sets the maximum number of lesions per diseased case to 2. Line 9 randomly samples the actual number of lesions per diseased case. The following code illustrats the process.
+
+#### Number of lesions per diseased case
 
 
-
-
-The code generates FROC, AFROC and ROC plots, lines 16, 19 and 22. The discreteness, i.e., the relatively big jumps between data points, is due to the small numbers of cases. 
-
-Increasing the numbers of cases by a factor of 10 each to $K_1 = 50$ and $K_2 = 70$ and source the code again, yielding Fig. 13.2  (B). The fact that Fig. 13.2  (A) does not seem to match (B), especially near NLF = 0.25, is not an aberration; plot (A), with only 12 cases, is subject to more sampling variability than plot (B) with 120 cases. Try different seed values to be satisfied on this point (this is case-sampling at work!). 
-
-
-
-
-![(\#fig:froc-afroc-roc-50-70-seed1)FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below](13-froc-paradigm-empirical-plots_files/figure-latex/froc-afroc-roc-50-70-seed1-1.pdf) 
-
-Fig. \@ref(fig:froc-afroc-roc-50-70-seed1) (A - L): Plots (A - F) apply to the FROC. Plots (G – L) apply to the AFROC. Each "column" of plots corresponds to the same simulated data. The first column corresponds to five non-diseased, seven diseased cases, and reporting threshold equal to -1. The second column corresponds to 50 non-diseased, 70 diseased cases, and reporting threshold equal to -1. The third column corresponds to 50 non-diseased, 70 diseased cases, and reporting threshold equal to +1. Within each column, the rows alternate between raw and binned data (5 requested bins). The discreteness (jumps) in plot (A) is due to the small number of cases. The decreased discreteness in plot (B) is due to the larger numbers of cases. If the number of cases is increased further, the plots will approach continuous plots, like those shown in Chapter 12, Fig. 12.2 (A) – (C). In plot (C), note the smaller traverse of the FROC plot. It is actually a replica of plot (B) truncated at a smaller value of NLF. With a higher reporting threshold, fewer NL / LL events exceed the threshold and are consequently marked. Plots (D - F) show binned FROC plots where five bins were attempted. Plot (D) shows a binned FROC plot corresponding to five non-diseased and seven diseased cases; the data could only support three bins. Plot (E) shows a binned FROC plot corresponding to 50 non-diseased and 70 diseased cases; this time five bins were realized. Plot (F) shows the binned FROC plot for reporting threshold set to +1. The resulting plot has a smaller traverse than (E) and is not identical to a truncated version of (E). This is because binning was performed after truncating the raw data. Plots (G - L) have the same structure as plots (A – F) but show AFROC curves. All AFROC plots are contained within the unit square, and unlike the semi-constrained property of the observed FROC end-point, the observed AFROC end-point is constrained to lie within the unit square. This has important consequences in terms of defining a valid figure of merit.    
-
-
-
-
-
-The code generates FROC, AFROC and ROC plots, lines 16, 19 and 22. The discreteness, i.e., the relatively big jumps between data points, is due to the small numbers of cases. 
-
-Increasing the numbers of cases by a factor of 10 each to $K_1 = 50$ and $K_2 = 70$ and source the code again, yielding Fig. 13.2  (B). The fact that Fig. 13.2  (A) does not seem to match (B), especially near NLF = 0.25, is not an aberration; plot (A), with only 12 cases, is subject to more sampling variability than plot (B) with 120 cases. Try different seed values to be satisfied on this point (this is case-sampling at work!). 
-
-
-
-
-![(\#fig:froc-afroc-roc-50-70-seed2)FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below](13-froc-paradigm-empirical-plots_files/figure-latex/froc-afroc-roc-50-70-seed2-1.pdf) 
-
-Fig. \@ref(fig:froc-afroc-roc-50-70-seed2) (A - L): Plots (A - F) apply to the FROC. Plots (G – L) apply to the AFROC. Each "column" of plots corresponds to the same simulated data. The first column corresponds to five non-diseased, seven diseased cases, and reporting threshold equal to -1. The second column corresponds to 50 non-diseased, 70 diseased cases, and reporting threshold equal to -1. The third column corresponds to 50 non-diseased, 70 diseased cases, and reporting threshold equal to +1. Within each column, the rows alternate between raw and binned data (5 requested bins). The discreteness (jumps) in plot (A) is due to the small number of cases. The decreased discreteness in plot (B) is due to the larger numbers of cases. If the number of cases is increased further, the plots will approach continuous plots, like those shown in Chapter 12, Fig. 12.2 (A) – (C). In plot (C), note the smaller traverse of the FROC plot. It is actually a replica of plot (B) truncated at a smaller value of NLF. With a higher reporting threshold, fewer NL / LL events exceed the threshold and are consequently marked. Plots (D - F) show binned FROC plots where five bins were attempted. Plot (D) shows a binned FROC plot corresponding to five non-diseased and seven diseased cases; the data could only support three bins. Plot (E) shows a binned FROC plot corresponding to 50 non-diseased and 70 diseased cases; this time five bins were realized. Plot (F) shows the binned FROC plot for reporting threshold set to +1. The resulting plot has a smaller traverse than (E) and is not identical to a truncated version of (E). This is because binning was performed after truncating the raw data. Plots (G - L) have the same structure as plots (A – F) but show AFROC curves. All AFROC plots are contained within the unit square, and unlike the semi-constrained property of the observed FROC end-point, the observed AFROC end-point is constrained to lie within the unit square. This has important consequences in terms of defining a valid figure of merit.    
-
-
-
-### Simulation parameters and effect of reporting threshold
-Exit debug mode and source the code mainOCsRaw.R one more time with 50/70 cases. Line 6 specifies the simulation model parameters:  , ,   (Table 13.1 has definitions of these quantities). The other simulation parameters  ,  ,  , were introduced in §12.4.4, and are explained in detail in Chapter 16. The simulator generates a non-negative random integer for each non-diseased case, representing latent NLs, and two non-negative random integers for each diseased case, representing latent NLs and/or latent LLs. For each latent NL or LL, the simulator samples an appropriate normal distribution to generate "raw" z-samples (i.e. a floating point numbers). The unit variance normal distributions for sampling latent NL and / or LL ratings are separated by  , the perceptual signal-to-noise-ratio introduced in the previous chapter. The simulation parameter zeta1 (representing the lowest reporting threshold, denoted  in Table 13.1) determines whether the latent mark is actually marked: only locations generating ratings $\geq$ zeta1 are actually marked. The simulator returns actual (not latent) marks and their ratings. Increasing zeta1 will yield fewer marked NLs and LLs per case and the FROC plot will have a shorter upward and rightward traverse, as demonstrated next. 
-
-TBA
+```r
+Lk2
+#> [1] 1 1 2 2 1 2 2
+sum(Lk2)
+#> [1] 11
+max(floor(runif(1000, 1, Lmax + 1)))
+#> [1] 2
+```
 
 This shows that the first two diseased cases have one lesion each, the third and fourth have two lesions each, etc. The total number of lesions in the dataset is 11. The last two lines of the code snippet show that, even with a thousand simulations, the number of lesions per diseased case is indeed limited to two.
-13.10.4: FROC data structure
-At lines 10 – 13 SimulateFrocData(), with appropriate parameters, returns the simulated data, which is saved to frocDataRaw, which, as its name suggests, represents the raw FROC data. Fig. 13.3, a screen-shot of the Environment panel, shows the structure of frocDataRaw. It is a list of 8 variables, the first two of which are NL[1,1,1:12,1;4] and LL[1,1,1:7,1:2], representing NL and LL ratings, respectively. The first two dimensions are needed to accommodate the more general situation with multiple modalities (the 1st dimension) and multiple readers (the 2nd dimension). The third dimension accommodates the case index and the fourth dimension accommodates the location index: it is needed because a case can generate zero or more marks . The list member lesionNum[1:7] corresponds to the number of lesions per diseased case. lesionID[1:7,1:2] labels the lesions in the dataset; the 2nd dimension is needed to accommodate multiple lesions on the same case; compare Fig. 13.3 to code snippet §13.10. Diseased case 1 has one lesion, labeled 1, and the –Inf means that a 2nd lesion on this case does not exist. Diseased case 3 has two lesions, labeled 1 and 2. Lesion labels are needed because one needs to keep track of which lesion receives which rating. Just as different cases need unique labels, think of different lesions within a case as "mini-cases", each of which requires a unique label.
+
+#### The structure of the FROC dataset
+
+Returning to the explanation of the code, lines 11-21 uses the function `SimulateFrocDataset` to simulate the dataset object `frocDataRaw`. Its structure is examined next:   
 
 
- 
-Fig. 13.3: The structure of an FROC dataset object. It is a list variable containing, in order, the NL array, the LL array, etc. See details in RJafroc documentation files accessible from RStudio help. 
+```r
+str(frocDataRaw)
+#> List of 3
+#>  $ ratings     :List of 3
+#>   ..$ NL   : num [1, 1, 1:12, 1:4] 0.764 -0.799 -Inf -Inf -Inf ...
+#>   ..$ LL   : num [1, 1, 1:7, 1:2] -Inf 0.943 0.944 0.309 0.522 ...
+#>   ..$ LL_IL: logi NA
+#>  $ lesions     :List of 3
+#>   ..$ perCase: num [1:7] 1 1 2 2 1 2 2
+#>   ..$ IDs    : num [1:7, 1:2] 1 1 1 1 1 ...
+#>   ..$ weights: num [1:7, 1:2] 1 1 0.5 0.5 1 ...
+#>  $ descriptions:List of 7
+#>   ..$ fileName     : chr "NA"
+#>   ..$ type         : chr "FROC"
+#>   ..$ name         : logi NA
+#>   ..$ truthTableStr: logi NA
+#>   ..$ design       : chr "FCTRL"
+#>   ..$ modalityID   : chr "1"
+#>   ..$ readerID     : chr "1"
+```
 
-Here are some key differences from the ROC paradigm:
+
+It is seen to consist of three `list` members: `ratings`, `lesions` and `descriptions`. Let us examine the `ratings` member.
+
+#### The structure of the ratings member
+
+The `ratings` member is itself a list of 3, consisting of `NL` the non-lesion localization ratings, `LL` the lesion localization ratings and `LL_IL` the incorrect localization ratings. The last member is needed for LROC datasets and can be ignored for now. Let us examine the contents of the `NL` member. 
+
+
+#### The structure of the NL member
+
+
+
+```r
+frocDataRaw$ratings$NL[1,1,,]
+#>             [,1]       [,2]       [,3] [,4]
+#>  [1,]  0.7635935       -Inf       -Inf -Inf
+#>  [2,] -0.7990092       -Inf       -Inf -Inf
+#>  [3,]       -Inf       -Inf       -Inf -Inf
+#>  [4,]       -Inf       -Inf       -Inf -Inf
+#>  [5,]       -Inf       -Inf       -Inf -Inf
+#>  [6,]       -Inf       -Inf       -Inf -Inf
+#>  [7,] -0.2894616       -Inf       -Inf -Inf
+#>  [8,] -0.2992151 -0.4115108       -Inf -Inf
+#>  [9,]  0.2522234       -Inf       -Inf -Inf
+#> [10,] -0.8919211       -Inf       -Inf -Inf
+#> [11,]  0.4356833  0.3773956 -0.2242679 -Inf
+#> [12,]  0.1333364       -Inf       -Inf -Inf
+```
+
+
+* It is seen to be an array with dimensions `[1,1,1:12,1:4]`. 
+
+* The first dimension corresponds to the number of modalities, one in this example, the second dimension corresponds to the number of readers, also one in this example. The third dimension is the total number of cases, $K_1+K_2 = 12$ in this example, because NLs are possible on *both* non-diseased and diseased cases. 
+
+* The fourth dimension is 4, as the simulator generated, over 12 cases, a maximum of 4 latent NLs per case. 
+
+* Note that all listed ratings are greater than $\zeta_1 = -1$. 
+
+* Case 1, the first non-diseased case, has a single NL mark rated 0.7635935 and the remaining 3 locations are filled with $-\infty$s. 
+
+* Case 6, the first diseased case, has zero NL marks and all 4 locations for it are filled with $-\infty$s. 
+
+* Case 11, the sixth diseased case, has three NL marks rated 0.4356833, 0.3773956, -0.2242679 and the remaining location for it is $-\infty$. 
+
+
+#### The structure of the LL member
+
+
+
+```r
+frocDataRaw$ratings$LL[1,1,,]
+#>           [,1]      [,2]
+#> [1,]      -Inf      -Inf
+#> [2,] 0.9428932      -Inf
+#> [3,] 0.9438713      -Inf
+#> [4,] 0.3090462      -Inf
+#> [5,] 0.5218499      -Inf
+#> [6,] 0.7642934      -Inf
+#> [7,] 1.3876716 0.8972123
+```
+
+
+* It is seen to be an array with dimensions `[1,1,1:7,1:2]`. 
+
+* The first dimension corresponds to the number of modalities, one in this example, the second dimension corresponds to the number of readers, also one in this example. The third dimension is the total number of diseased cases, $K_2 = 7$ in this example, because LLs are only possible on diseased cases. 
+
+* The fourth dimension is 2, as the maximum number of lesions per diseased case is 2. 
+
+* Note that all listed ratings are greater than $\zeta_1 = -1$. 
+
+* Case 1, the first diseased case, has zero LL marks and both locations are filled with $-\infty$s. 
+
+* Case 2, the second diseased case, has one LL mark rated 0.9428932 and the remaining location is $-\infty$. 
+
+* Case 7, the seventh diseased case, has two LL marks rated 1.3876716, 0.8972123 and zero locations with $-\infty$. 
+
+
+### Explanation of the code, continued
+
+Returning to the explanation of the code, \@ref(raw-plots-code1): 
+
+* Lines 23 - 25 use the `PlotEmpiricalOperatingCharacteristics` function to calculate the FROC plot object, which is saved to `p1`. Note the argument `opChType = "FROC"`, for the desired FROC plot. 
+
+* Lines 28 - 31 use the `PlotEmpiricalOperatingCharacteristics` function to calculate the AFROC plot object, which is saved to `p2`. Note the argument `opChType = "AFROC"`. 
+
+* Finally, lines 33 - 35 use the `PlotEmpiricalOperatingCharacteristics` function to calculate the ROC plot object, which is saved to `p3`. Note the argument `opChType = "ROC"`.
+
+
+In summary, the code generates FROC, AFROC and ROC plots shown in the top row of Fig. \@ref(fig:froc-afroc-roc-raw-seed1). The discreteness, i.e., the relatively big jumps between data points, is due to the small numbers of cases. Increasing the numbers of cases to $K_1 = 50$ and $K_2 = 70$ yields the lower row of plots in Fig. \@ref(fig:froc-afroc-roc-raw-seed1). The fact that the upper row left plot does not seem to match the lower row left plot, especially near NLF = 0.25, is due to sampling variability with few cases. 
+
+
+
+
+
+<div class="figure">
+<img src="13-froc-paradigm-empirical-plots_files/figure-html/froc-afroc-roc-raw-seed1-1.png" alt="Raw FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-raw-seed1)Raw FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below</p>
+</div>
+
+
+Fig. \@ref(fig:froc-afroc-roc-raw-seed1) Raw FROC, AFROC and ROC plots with `seed` = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases. Model parameters are $\mu$ = 1, $\lambda$ = 1, $\nu$ = 1 and $\zeta_1$ = -1. The discreteness (jumps) in the upper row is due to the small number of cases. The decreased discreteness in the lower row is due to the larger numbers of cases. If the number of cases is increased further, the plots will approach continuous plots, like those shown in Chapter \@ref(froc-paradigm). Note that the AFROC and ROC plots are contained within the unit square, unlike the semi-constrained FROC plot.    
+
+#### Effect of seed on raw plots
+
+Shown next are similar plots but this time `seed` = 2.
+
+
+
+
+
+
+
+
+
+<div class="figure">
+<img src="13-froc-paradigm-empirical-plots_files/figure-html/froc-afroc-roc-raw-seed2-1.png" alt="Raw FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-raw-seed2)Raw FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below</p>
+</div>
+
+Fig. \@ref(fig:froc-afroc-roc-raw-seed2) Raw FROC, AFROC and ROC plots with `seed` = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases. Model parameters are $\mu$ = 1, $\lambda$ = 1, $\nu$ = 1 and $\zeta_1$ = -1. Note the large variability in the upper row plots as compared to those in Fig. \@ref(fig:froc-afroc-roc-raw-seed1). The effect of case-sampling variability is most apparent for small datasets.     
+
+
+### Key differences from the ROC paradigm:
 
 * In a ROC study, each case generates exactly one rating. 
+
 * In a FROC study, each case can generate zero or more (0, 1, 2, …) mark-rating pairs. 
+
 * The number of marks per case is a random variable as is the rating of each mark. 
+
 * Each mark corresponds to a distinct location on the image and associated with it is a rating, i.e., confidence level in presence of disease at the region indicated by the mark.
 
-
 * In the ROC paradigm, each non-diseased case generates one FP and each diseased case generates one TP. 
+
 * In a FROC study, each non-diseased case can generate zero or more NLs and each diseased case can generate zero or more NLs and zero or more LLs. 
+
 * The number of lesions in the case limits the number of LLs.
 
-Is it any wonder that some19-22 have issues with this paradigm? It is more complicated than ROC, no doubt about it. Clinical data does not fit neatly into the 2 x 2 truth table of ROC analysis.
 
-### Dimensioning of the NL and LL arrays
+## Binned FROC/AFROC/ROC plots 
 
-Copy and paste the command lines into the Console window to reproduce these values. An explanation of how R prints out arrays may be helpful. frocDataRaw$NL[1,1,,] is 2 x 2 array, specifically [12,5]. The output shows the row and column indices of the printed values. For example, -0.4115108 is at row 8 and column 2. The first five rows (since K1 = 5) refer to non-diseased cases and the rest refer to diseased cases. The number of columns of NL is just large enough to accommodate the case(s) generating the most NLs. For the sixth diseased case, i.e., the 11th sequentially numbered case, the simulator actually generated four latent NLs – this fact can be confirmed by going "into" the simulator function in debug mode. Only three values are listed (0.4356833, 0.3773956, -0.2242679) because the fourth z-sample fell below zeta1 and is therefore shown as  Inf. Recall the simulator returns actual marks, not latent marks . For the LL array, the third dimension has seven values (since K2 = 7) and the fourth dimension has two values because at least one diseased case had two lesions, §13.10.3.1. 
+In the preceding example, continuous ratings data was available and data binning was not employed. Shown next is the code for generating the plots when the data is binned. 
+
+### Code for binned plots {#binned-plots-code1}
+
+```{.r .numberLines}
+seed <- 1;set.seed(seed)
+zeta1 <- -1
+K1 <- 5
+K2 <- 7 
+Lmax <- 2
+Lk2 <- floor(runif(K2, 1, Lmax + 1))
+
+frocDataRaw <- SimulateFrocDataset(
+  mu = mu, 
+  lambda = lambda, 
+  nu = nu, 
+  I = 1,
+  J = 1,
+  K1 = K1, 
+  K2 = K2, 
+  perCase = Lk2, 
+  zeta1 = zeta1
+)
+
+frocDataBinned <- DfBinDataset(
+  frocDataRaw, 
+  desiredNumBins = 5,
+  opChType = "FROC")
+
+p1 <- PlotEmpiricalOperatingCharacteristics(
+  dataset = frocDataBinned, 
+  trts= 1, rdrs = 1, opChType = "FROC", 
+  legend.position = "NULL")$Plot
+
+p2 <- PlotEmpiricalOperatingCharacteristics(
+  dataset = frocDataBinned, 
+  trts= 1, rdrs = 1, opChType = "AFROC", 
+  legend.position = "NULL")$Plot
+
+p3 <- PlotEmpiricalOperatingCharacteristics(
+  dataset = frocDataBinned, 
+  trts= 1, rdrs = 1, opChType = "ROC", 
+  legend.position = "NULL")$Plot
+```
 
 
-## Example: binned FROC plots 
-In the preceding example, continuous ratings data was available and data binning was not employed. Shown next are FROC plots when the data is binned. The code is in mainOCsBinned.R. Insert a breakpoint at line 16, ensure that the number of cases is set to 5/7, the lowest reporting threshold is set to -1 and source the file yielding Fig. 13.2 (D). Next, exit debug mode, increase the sample size to 50/70 and source the code again, yielding Fig. 13.2 (E). Set the lowest reporting threshold to +1 and source the file yielding Fig. 13.2 (F).
+
+
+
+
+<div class="figure">
+<img src="13-froc-paradigm-empirical-plots_files/figure-html/froc-afroc-roc-binned-seed1-1.png" alt="Binned FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-binned-seed1)Binned FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below</p>
+</div>
+
+#### Effect of seed on binned plots
+Shown next are corresponding plots with `seed` = 2.
+
+
+
+
+
+
+
+
+<div class="figure">
+<img src="13-froc-paradigm-empirical-plots_files/figure-html/froc-afroc-roc-binned-seed2-1.png" alt="Binned FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-binned-seed2)Binned FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below</p>
+</div>
+
+
+The code is in mainOCsBinned.R. Insert a breakpoint at line 16, ensure that the number of cases is set to 5/7, the lowest reporting threshold is set to -1 and source the file yielding Fig. 13.2 (D). Next, exit debug mode, increase the sample size to 50/70 and source the code again, yielding Fig. 13.2 (E). Set the lowest reporting threshold to +1 and source the file yielding Fig. 13.2 (F).
 
 
 In §13.11.2, the six command lines are those preceded by a > symbol. The rest are output produced by program. The reader should copy and paste the commands into the Console window and hit Enter to confirm the output values. The table() function converts an array into a counts table. In the first usage, there are 120 x 4 = 480 elements in the array: see confirmatory commands/output in §13.11.2. From the output of table(frocDataBinned$NL) one sees that there are 378 entries in the NL array that equal  Inf, 49 entries that equal 1, etc. These sum to 480. Because the 4th dimension of the NL array is determined by cases with the most NLs, therefore, on cases with fewer NLs, this dimension is "padded" with –Infs. One does not know how many of the 378 –Infs are latent NLs. The actual number of latent NLs could be considerably smaller, and the number of marked NLs even smaller (as this is determined by  ). The last three statements are important to understand and will be further explicated below.
@@ -500,7 +783,7 @@ The code for the AFROC is in mainOCsRaw.R, §13.10.1, specifically lines 18 – 
  
 Fig. 13.4 This figure shows the structure of the inferred ROC dataset object. Compare to Fig. 13.3 for the FROC dataset object. Unlike the former, the lesionNum, lesionID and lesionWeight arrays are filled with ones.
 
-False positive ROC ratings are stored in the first K1 positions of the $NL array , and true positive ratings are stored in the $LL array, which has length K2. The fourth dimension of either array has unit length, as there is no need to accommodate multiple decisions per case. Copy and paste commands into the Console window to produce §13.12.1. The conversion from the NL and LL arrays to retRocRaw$NL and retRocRaw$LL arrays should be transparent. In this example, the LL-ratings are highest, but this is not always true. The reader should experiment with the parameters on Line 6 (try increasing lambda to 10 to generate 10 times more NLs, on the average; then chances that one of them has the highest rating on a diseased case are larger) and/or seed values to convince yourself that the conversion to highest rating always works. [The -2000 is used as a numeric "stand-in" for negative infinity. The author trusts no user will use a rating scale that extends below  2000.]
+False positive ROC ratings are stored in the first K1 positions of the $NL array , and true positive ratings are stored in the $LL array, which has length K2. The fourth dimension of either array has unit length, as there is no need to accommodate multiple decisions per case. Copy and paste commands into the Console window to produce §13.12.1. The conversion from the NL and LL arrays to retRocRaw\$NL and retRocRaw\$LL arrays should be transparent. In this example, the LL-ratings are highest, but this is not always true. The reader should experiment with the parameters on Line 6 (try increasing lambda to 10 to generate 10 times more NLs, on the average; then chances that one of them has the highest rating on a diseased case are larger) and/or seed values to convince yourself that the conversion to highest rating always works. [The -2000 is used as a numeric "stand-in" for negative infinity. The author trusts no user will use a rating scale that extends below  2000.]
 
 
 
