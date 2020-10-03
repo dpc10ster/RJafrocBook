@@ -1,0 +1,67 @@
+# FROC vs. AFROC {#froc-paradigm-froc-vs-afroc}
+
+
+
+
+## Introduction {#froc-paradigm-froc-vs-afroc-froc-vs-afrocs-intro}
+The FROC curve was introduce in 1978 in [@RN2453] and ever since then it has become a widely accepted method for evaluating performance in the free-response paradigm. In the previous chapter I issued a recommendation against its continued usage. Instead, I recommended adoption of the wAFROC / AUC as the preferred operating characteristic / figure of merit in assessing performance in the free-response paradigm. This chapter details some studies supporting my recommendation.
+
+
+
+
+![(\#fig:froc-paradigm-froc-vs-afroc-plot1)Left panel: FROC curves for the CAD observer (red line) and RAD observer (green line); Right panel: corresponding wAFROC curves](13-froc-paradigm-froc-vs-afroc_files/figure-latex/froc-paradigm-froc-vs-afroc-plot1-1.pdf) 
+
+
+Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1): Left panel: FROC curves for the CAD observer (red line) for $\mu = 1$ and $\zeta_1 = -1$, and the RAD observer, $\mu = 1.5$ and $\zeta_1 = 1.5$ (green line). Note the much steeper rise and shorter horizontal traverse of the RAD observer in the left panel, suggestive of superior performance, which is difficult to quantify from the FROC curves, as a universal AUC measure cannot be defined and, if defined over the common NLF range where both curves contribute, would ignore most NLs from the CAD observer. Right panel: Corresponding AFROC curves for CAD observer (red line) and the RAD observer (green line). The AUC under the RAD observer is clearly greater than that for the CAD observer, even though the AUC estimate is biased downward against RAD. AUCs under the two AFROC plots are 0.608 for CAD and 0.674 for RAD. (C) FROC curves for CAD observer and the RAD observer for  , which is impractical with radiologist observers but possible with CAD. (D) AFROC curves for CAD observer and the RAD observer for  . AUCs under the two AFROC plots are 0.601 for CAD and 0.778 for RAD. 
+
+## FROC vs. AFROC
+Fig. 13.6 (A) shows FROC plots and (B) shows AFROC plots for two simulated observers, a CAD observer (i.e., a computer aided detection system for masses for screening mammography) and a RAD (expert radiologist) observer. The code to generate these plots, and explanations, are in Appendix 13.A.1, file mainFrocVsAfroc.R. Parameters that do not change between the two observers are  ,  ,   and  . The large numbers of cases was used to minimize sampling variability. In plots (A) and (B) CAD corresponds to   and   while RAD corresponds to   and  . Increasing  , which results in increased separation of the two unit variance normal distributions, increases performance; recall the solar analogy in Chapter 12. Changing   does not alter performance; rather it decreases the observed range of the curve. If   is larger, as in RAD, fewer NL and LL ratings exceed the higher threshold, and therefore less of the curve is observed. The situation is analogous to the equal–variance binormal model, where a separation parameter determined AUC for the ROC curve, while   determines the operating point on the curve; as   increases, the operating point moves down the ROC curve, so the "observed" part, extending from the origin to the operating point, shrinks. 
+
+The code also prints the AUCs under the two AFROC plots in Fig. 13.6 (B). For CAD it is 0.608 and for RAD, it is 0.674. The RAD observer has larger AUC, consistent with the visual impression in Fig. 13.6 (B) and as expected from the larger  . The reader should try different seed values to be convinced that the higher performance of RAD is not a sampling artifact.
+
+ 
+
+From the left plot one suspects the RAD observer is performing better than CAD, because of the much steeper rise and much shorter traverse along the NLF axis for the RAD observer as compared to CAD. The RAD observer is better at finding lesions and producing fewer NLs, both of which are desirable characteristics. One suspects that if this observer could be induced to relax the threshold and report more NLs, then LLF would exceed that of the CAD observer while $\text{NLF}_{\text{max}}$ would remain smaller than the corresponding value for CAD. 
+
+Fig. 13.6 left panels corresponds to the left panel in Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1), the only difference being that $\zeta_1 = -\infty$, so the entire latent FROC curves are visible for both observers. This confirms the expectation that RAD is actually the better observer. Fig. 13.6 (D) shows corresponding AFROC curves for  , the corresponding AUCs are 0.601 and 0.778.  
+
+Plots (C) and (D) are only possible with a simulator. In practice, one cannot get the RAD observer to report every suspicious region (CAD is a different matter, at least at the designer level). Therefore, one is restricted to analyzing Fig. 13.6 (A) and (B). Based on the FROC curves in plot A, it is difficult to quantify the intuition described in the previous paragraph. One option is to compare the AUCs under the two curves in the common range of NLF where both curves contribute LLF values. Since the RAD observer generates the smaller  , denoted  , this means one can compare the AUCs under the two curves in the common range NLF = 0 to  . It is obvious from Fig. 13.6 (A) that in this range the RAD observer yields the larger AUC (imagine dropping a vertical line from the end-point of the RAD curve to the x-axis; the relevant areas under the two curves are to the left of this line). However, this would entail a big price in terms of ignored data, namely all NLs (and corresponding LLs) of the CAD observer contributing to  >   are ignored. This is in addition to ignored information in unmarked cases that is inherent in the FROC curve. 
+
+The AFROC plots (B) show clearly that the RAD observer is performing better than the CAD observer. Since the AFROC is contained within the unit square, there is no question how to extend the curve: one simply connects the observed end-point to (1,1) with a straight line. Actually, the AFROC AUC for the RAD observer is underestimated: had the observer relaxed the criterion the straight-line extension would have started from a higher value of the ordinate, yielding an even larger difference, see plot (D). In spite of the underestimation, which affects RAD more than it affects CAD, see plot (D), the AFROC still shows superior performance for the RAD observer in plot (B). 
+
+The following code snippets are provided to show how to extract the coordinates of the end-point (CAD threshold set to -1 and RAD threshold set to 1.5).
+
+This looks like gobbledygook; the first statement extracts from the NLF array those with class 1, which corresponds to CAD, and takes the maximum of the returned values. The next command gives the corresponding maximum for RAD. The next two commands repeat these for the LLF arrays. One can use the str() command to unravel what is going on, as shown below:
+
+Bottom line: the end-point coordinates are:   = 0.828,   = 0.049,   = 0.619, and  = 0.398. These values confirm the visual estimates from the plots in Fig. 13.6.
+
+Two other examples are given. Fig. 13.7 (A) exaggerates the difference between CAD and RAD, almost to the point of being unfair to CAD. The CAD parameters are the same as in Fig. 13.6, but the RAD parameters are mu = 2 and $\zeta_1$ = +2. Doubling the separation parameter over that of CAD has a huge effect on performance. The end-point coordinates for RAD are:   = 0.015,   = 0.421. This time AUC under the common region defined by NLF = zero to NLF =   would exclude almost all of the NL and LL marks made by CAD. The AFROCs in plot B show the markedly greater performance of RAD compared to CAD (the AUCs are 0.608 for CAD and 0.708 for RAD). The difference is larger, in spite of the downward bias working against the AFROC-RAD-AUC, Fig. 13.6 (D).
+
+ 
+Fig. 13.7 (A) FROC curves for CAD observer (red line) and the RAD observer (green line). The CAD observer is identical to that shown in Fig. 13.6. The RAD observer is characterized by mu = 2 and $\zeta_1$ = 2. This time it is impossible to compare the two FROC curves, as the common range is very small. However, AFROC clearly shows the expected superiority of the RAD observer, in spite of the severe underestimate of the corresponding AUC. AUCs under the two AFROC plots are 0.608 for CAD and 0.708 for RAD. Plots C and D correspond to A and B, respectively, with $\zeta_1$ = $-\infty$ for both readers. AUCs under the two AFROC plots are 0.601 for CAD and 0.872 for RAD.
+
+The final example, Fig. 13.8 shows that when there is a small difference in performance, then there is less loss of information from using the FROC as a basis for measuring performance. The CAD parameters are the same as in Fig. 13.6 but the RAD parameters are mu = 1.1 and $\zeta_1$ = -1. This time there is much more common overlap in plot (A) and the area measure is counting most of the marks for both readers (but still not accounting for unmarked non-diseased cases). The superior AFROC-based performance of RAD is also apparent in (B). 
+
+A misconception exists that using the rating of only one NL mark, as in AFROC, must sacrifice statistical power. In fact, the chosen mark is a special one, namely the highest rated NL mark on a non-diseased case, which carries more information than a randomly chosen NL mark. If the sampling distribution of the z-sample were uniform, then the highest sample is a sufficient statistic, meaning that it carries all the information in the samples. The highest rated z-sampler from a normal distribution is not a sufficient statistic, so there is some loss of information, but not as much as would occur with a randomly picked z-sample.
+
+ 
+(A)	 
+(B)
+ 
+(C)	 
+(D)
+Fig. 13.8: (A, B) FROC/AFROC curves for CAD and RAD observers. The CAD observer is identical to that shown in Fig. 13.7 (A, B). The RAD observer is characterized by mu = 1.1 and $\zeta_1$ = -1. This time it is possible to compare the two FROC curves, as the common NLF range is large. Both FROC and AFROC show the expected slight superiority of the RAD observer. AUCs under the two AFROC plots are 0.608 for CAD and 0.634 for RAD. Plots C and D correspond to A and B, respectively, with $\zeta_1$ = $-\infty$ for both observers. Since $\zeta_1$ in A and B is already quite small, lowering it to  $-\infty$ does not pick up too many marks. AUCs under the two AFROC plots in D are 0.601 for CAD and 0.624 for RAD.
+13.16.4: Other issues with the FROC
+Loss of statistical power is not the only issue with the FROC. Because it counts NLs on both diseased and non-diseased cases, the curve depends on disease-prevalence in the dataset. Because the numbers of LLs per case is variable, the curve gives undue importance to those diseased cases with unusually large numbers of lesions. As noted in 13.16.2, the clinical importance of a NL on a non-diseased case differs from that on a diseased case. The FROC curve ignores this distinction.
+
+
+
+
+
+
+
+## Discussion{#froc-paradigm-froc-vs-afroc-froc-vs-afrocs-Discussion}
+
+
+## References {#froc-paradigm-froc-vs-afroc-froc-vs-afrocs-references}
+
