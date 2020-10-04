@@ -1,6 +1,4 @@
-CadVsRad <- function(muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lmax, initSeed) {
-  set.seed(initSeed)
-  Lk2 <- floor(runif(K2, 1, Lmax + 1))
+CadVsRad <- function(muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lk2, initSeed) {
   
   seed <- initSeed
   set.seed(seed)
@@ -16,6 +14,7 @@ CadVsRad <- function(muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lmax, initSeed) {
     perCase = Lk2,
     zeta1 = zeta1Cad)
   frocCad$descriptions$readerID <- "CAD"
+  fomCad <- UtilFigureOfMerit(frocCad, FOM = "wAFROC")
   
   seed <- initSeed
   set.seed(seed)
@@ -32,6 +31,7 @@ CadVsRad <- function(muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lmax, initSeed) {
     zeta1 = zeta1Rad)
   
   frocRad$descriptions$readerID <- "RAD"
+  fomRad <- UtilFigureOfMerit(frocRad, FOM = "wAFROC")
   
   # following code merges the to single 
   # modality single reader datasets into 
@@ -98,6 +98,8 @@ CadVsRad <- function(muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lmax, initSeed) {
     opChType = "wAFROC", maxDiscrete = 25)
   
   return(list(froc = froc,
-              wafroc = wafroc))
+              wafroc = wafroc,
+              fomCad = fomCad,
+              fomRad = fomRad))
   
 }
