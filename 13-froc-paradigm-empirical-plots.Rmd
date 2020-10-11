@@ -1,4 +1,4 @@
-# FROC paradigm empirical plots {#froc-paradigm-empirical-plots-empirical-plots}
+# FROC paradigm empirical plots {#froc-paradigm-empirical-plots}
 
 ```{r setup, include = FALSE}
   knitr::opts_chunk$set(
@@ -31,21 +31,23 @@ To distinguish between perceived suspicious regions and regions that were actual
 * A non-diseased case can only have latent NLs. A diseased case can have latent NLs and latent LLs. 
 
 ```{r froc-paradigm-frocNotation, echo=FALSE}
-frocNotation = array(dim = c(14,3))
+frocNotation = array(dim = c(16,3))
 frocNotation[1,]  <- c("1", "t", "Case-level truth: 1 for non-diseased and 2 for diseased")
-frocNotation[2,]  <- c("1", "$K_t$", "Number of cases with case-level truth t")
-frocNotation[3,]  <- c("2", "$k_t t$", "Case $k_t$ in case-level truth t")
-frocNotation[4,]  <- c("3", "s", "Mark-level truth: 1 for NL and 2 for LL")
-frocNotation[5,]  <- c("4", "$l_s s$", "Mark $l_s$ in mark-level truth s")
-frocNotation[6,]  <- c("5", "$z_{k_t t l_1 1}$", "z-sample for case $k_t t$ and mark $l_1 1$")
-frocNotation[7,]  <- c("6", "$z_{k_2 2 l_2 2}$", "z-sample for case $k_2 2$ and mark $l_2 2$")
-frocNotation[8,]  <- c("7", "$R_{FROC}$", "Number of FROC bins")
-frocNotation[9,]  <- c("8", "$\\zeta_1$", "Lowest reporting threshold")
-frocNotation[10,]  <- c("9", "$\\zeta_r\\quad(r=2,3,...,R_{FROC})$", "Other reporting thresholds")
-frocNotation[11,]  <- c("9", "$\\zeta_0, \\zeta{R_{FROC}}+1)$", "Dummy thresholds")
-frocNotation[12,]  <- c("10", "$N_{k_t t}$", "Number of NLs on case $k_t t$")
-frocNotation[13,]  <- c("11", "$L_{k_2}$", "Number of lesions on case $k_2 2$")
-frocNotation[14,]  <- c("12", "$L_T$", "Total number of lesions in dataset")
+frocNotation[2,]  <- c("2", "$K_t$", "Number of cases with case-level truth t")
+frocNotation[3,]  <- c("3", "$k_t t$", "Case $k_t$ in case-level truth t")
+frocNotation[4,]  <- c("4", "s", "Mark-level truth: 1 for NL and 2 for LL")
+frocNotation[5,]  <- c("5", "$l_s s$", "Mark $l_s$ in mark-level truth s")
+frocNotation[6,]  <- c("6", "$z_{k_t t l_1 1}$", "z-sample for case $k_t t$ and mark $l_1 1$")
+frocNotation[7,]  <- c("7", "$z_{k_2 2 l_2 2}$", "z-sample for case $k_2 2$ and mark $l_2 2$")
+frocNotation[8,]  <- c("8", "$R_{FROC}$", "Number of FROC bins")
+frocNotation[9,]  <- c("9", "$\\zeta_1$", "Lowest reporting threshold")
+frocNotation[10,]  <- c("10", "$\\zeta_r\\quad(r=2,3,...,R_{FROC})$", "Other reporting thresholds")
+frocNotation[11,]  <- c("11", "$\\zeta_0, \\zeta{R_{FROC}}+1)$", "Dummy thresholds")
+frocNotation[12,]  <- c("12", "$N_{k_t t}$", "Number of NLs on case $k_t t$")
+frocNotation[13,]  <- c("13", "$L_{k_2}$", "Number of lesions on case $k_2 2$")
+frocNotation[14,]  <- c("14", "$L_{k_2}$", "Number of lesions on case $k_2 2$")
+frocNotation[15,]  <- c("15", "$L_{max}$", "Maximum number of lesions per case in dataset")
+frocNotation[16,]  <- c("16", "$L_T$", "Total number of lesions in dataset")
 df <- as.data.frame(frocNotation)
 colnames(df) <- c("Row number", "Symbol", "Meaning")
 knitr::kable(df, caption = "FROC notation,; all marks refer to latent marks; see details", escape = FALSE)
@@ -388,7 +390,7 @@ TPF_r \equiv TPF_{\zeta_r} = \frac{1}{K_2}\sum_{k_2=1}^{K_2} \mathbb{I}\left ( T
 The definition of $FPF_r$ is the same as before, i.e., Eqn. \@ref(eq:froc-paradigm-FPF). The inferred empirical ROC plot connects adjacent points $\left( FPF_r, TPF_r \right )$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1).
 
 
-## The weighted-AFROC (wAFROC) plot
+## The weighted-AFROC (wAFROC) plot {#froc-paradigm-wAFROC-plot}
 The AFROC ordinate defined in Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) gives equal importance to every lesion on a case. Therefore, a case with more lesions will have more influence on the AFROC (this is explained in depth in TBA Chapter 14). This is undesirable since each case (i.e., patient) should get equal importance in the analysis. As with ROC analysis, one wishes to draw conclusions about the population of cases and each case is regarded as an equally valid sample from the population. In particular, one does not want the analysis to be skewed towards cases with greater than average number of lesions. ^[Historical note: the author became aware of how serious this issue could be when a researcher contacted him about using FROC methodology for nuclear medicine bone scan images, where the number of lesions on diseased cases can vary from a few to a hundred!] 
 
 Another issue is that the AFROC assigns equal clinical importance to each lesion in a case. Lesion weights were introduced [@RN1385] to allow for the possibility that the clinical importance of finding a lesion might be lesion-dependent [@RN1966] (the referenced paper should be of interest to the more advanced reader). For example, it is possible that an easy to find lesion is less clinically important than a harder to find one, therefore the figure-of-merit should give more importance to the harder to find one. Clinical importance in this context could be the mortality associated with the specific lesion type, which can be obtained from epidemiological studies [@desantis2011breast]. Let $W_{k_2 l_2} \geq 0$ denote the weight (i.e., clinical importance) of lesion $l_2$ in diseased case $k_2$ (since weights are only applicable to diseased cases, one can, without ambiguity, drop the case-level and location-level truth subscripts, i.e., $W_{k_2 2 l_2 2}$ would be superfluous). For each diseased case $k_2 2$ the weights are subject to the constraint:
@@ -404,7 +406,7 @@ The constraint assures that the each diseased case exerts equal importance in de
 
 The weighted lesion localization fraction $\text{wLLF}_r$ is defined by [@RN2484]:
 
- \begin{equation}
+\begin{equation}
 \text{wLLF}_r \equiv \text{wLLF}_{\zeta_r} = \frac{1}{K_2}\sum_{k_2=1}^{K_2}\sum_{l_2=1}^{L_{k_2}}W_{k_2 l_2} \mathbb{I}\left ( z_{k_2 l_2 2} \geq \zeta_r \right )
 (\#eq:froc-paradigm-wLLFr)
 \end{equation}
@@ -437,7 +439,7 @@ FPF_r^1 \equiv FPF_r^1\left ( \zeta_r \right ) = \frac{1}{K_1+K_2}\sum_{t=1}^{2}
 Note the subtle differences between Eqn. \@ref(eq:froc-paradigm-FPF) and Eqn. \@ref(eq:froc-paradigm-FPF1). The latter counts "FPs" on non-diseased and diseased cases while Eqn. \@ref(eq:froc-paradigm-FPF) counts FPs on non-diseased cases only, and for that reason the denominators in the two equations are different. The advisability of allowing a diseased case to be both a TP and a FP is questionable from both clinical and statistical considerations. However, allowing this possibility leads to the following definition: the empirical alternative FROC1 (AFROC1) plot connects adjacent operating points $\left ( FPF_r^1, \text{LLF}_r \right )$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1). The only difference between AFROC1 and the AFROC plot is in the x-axis. 
 
 
-## The weighted-AFROC1 (wAFROC1) plot
+## The weighted-AFROC1 (wAFROC1) plot {#froc-paradigm-wAFROC1-plot}
 The empirical weighted-AFROC1 (wAFROC1) plot connects adjacent operating points $\left ( FPF_r^1, \text{wLLF}_r \right )$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1). The only difference between it and the wAFROC plot is in the x-axis. 
 
 So far, the description has been limited to abstract definitions of various operating characteristics possible with FROC data. Now it is time to put numbers into the formulae and see actual plots. The starting point is the FROC plot. 
