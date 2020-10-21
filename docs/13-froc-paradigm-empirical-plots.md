@@ -11,19 +11,30 @@ Here is the organization of this chapter. A distinction between latent  and actu
 The second part, §13.10 – §13.15, consists of coded examples of operating characteristics. An important section is devoted to some confusion about location level "true negatives", traceable to misapplication of ROC terminology to location-specific tasks. The chapter concludes with recommendations on which operating characteristics to use and which to avoid.
 
 ## Latent vs. actual marks {#froc-paradigm-empirical-plots-latent-vs-acutal-marks}
-From Chapter \@ref(froc-paradigm), FROC data consists of mark-rating pairs. Each mark indicates the location of a region suspicious enough to warrant reporting and the rating is the associated confidence level. A mark is recorded as lesion localization (LL) if it is sufficiently close to a true lesion, according to the adopted proximity criterion, and otherwise it is recorded as non-lesion localization (NL). 
+FROC data consists of mark-rating pairs. Each mark indicates the location of a region suspicious enough to warrant reporting and the rating is the associated confidence level. A mark is recorded as lesion localization (LL) if it is sufficiently close to a true lesion, according to the adopted proximity criterion, and otherwise it is recorded as non-lesion localization (NL). 
 
-To distinguish between perceived suspicious regions and regions that were actually marked, it is necessary to introduce the distinction between latent marks and actual marks. 
+To distinguish between perceived suspicious regions and regions that were actually marked, it is necessary to introduce the distinction between *latent* marks and *actual* marks. 
 
-* A *latent* mark is defined as a suspicious region, regardless of whether it was marked. A latent mark becomes an *actual* mark if it is marked.
-
+* A *latent* mark is defined as a suspicious region, regardless of whether or not it was marked. A latent mark becomes an *actual* mark if it is marked. 
 * A latent mark is a latent LL if it is close to a true lesion and otherwise it is a latent NL. 
-
 * A non-diseased case can only have latent NLs. A diseased case can have latent NLs and latent LLs. 
+
+### ROC vs. FROC binning
+Recall from Section \@ref(binaryTaskDecisionVariablelModel) that the ROC paradigm requires the existence of a *case-dependent* decision variable, or z-sample $z$, and a case-independent decision threshold $\zeta_r$, and the rule that if $\zeta_r \leq z < \zeta_{r+1}$ the case is rated $r + 1$, where $r = 0, 1, ..., R_{ROC}-1$ and $R_{ROC}$ is the number of ROC study bins. By definition dummy cutoffs are defined as $\zeta_0 = -\infty$ and $\zeta_{R_{ROC}} = \infty$. 
+
+Analogously, FROC data requires the existence of a *case and location-dependent* z-sample for each latent mark and a *case and location-independent* reporting threshold $\zeta_r$ and the rule that a latent mark is marked and rated $r$ if $\zeta_r \leq z < \zeta_{r+1}$, where $r = 1, ..., R_{FROC}$ and $R_{FROC}$ is the number of FROC study bins. By definition dummy cutoffs are defined as $\zeta_0 = -\infty$ and $\zeta_{R_{FROC}+1} = \infty$. For the same numbers of non-dummy cutoffs, the number of FROC bins is one less than the number of ROC bins. For example, 4 non-dummy cutoffs $\zeta_1, \zeta_2, \zeta_3, \zeta_4$ correspond to a 5-rating ROC study or a 4-rating FROC study.
+
+
+### FROC notation
+*Clear notation is vital to understanding this paradigm.* FROC notation is summarized in Table \@ref(tab:froc-paradigm-frocNotation). The table is organized into three columns, the first column is the row number, the second column has the symbol(s), and the third column has the meaning(s) of the symbol(s). 
+
+One needs to account, in the notation, for case and location dependencies of z and for distinction between case-level and location-level ground truth. For example, a diseased case can have many regions that are non-diseased and a few diseased regions (the lesions). One also has to account for cases with no marks. 
+
+In the following table summarizing FROC notation, **all marks are latent marks**.
 
 \begin{table}
 
-\caption{(\#tab:froc-paradigm-frocNotation)FROC notation,; all marks refer to latent marks; see details}
+\caption{(\#tab:froc-paradigm-frocNotation)FROC notation; all marks refer to latent marks; see footnotes}
 \centering
 \begin{tabular}[t]{l|l|l}
 \hline
@@ -49,49 +60,46 @@ Row number & Symbol & Meaning\\
 \hline
 10 & $\zeta_r\quad(r=2,3,...,R_{FROC})$ & Other reporting thresholds\\
 \hline
-11 & $\zeta_0, \zeta{R_{FROC}}+1)$ & Dummy thresholds\\
+11 & $\zeta_0, \zeta_{R_{FROC}+1}$ & Dummy thresholds\\
 \hline
 12 & $N_{k_t t}$ & Number of NLs on case $k_t t$\\
 \hline
 13 & $L_{k_2}$ & Number of lesions on case $k_2 2$\\
 \hline
-14 & $L_{k_2}$ & Number of lesions on case $k_2 2$\\
+14 & $L_{max}$ & Maximum number of lesions per case in dataset\\
 \hline
-15 & $L_{max}$ & Maximum number of lesions per case in dataset\\
-\hline
-16 & $L_T$ & Total number of lesions in dataset\\
+15 & $L_T$ & Total number of lesions in dataset\\
 \hline
 \end{tabular}
 \end{table}
 
-Details: In row 10-11 the thresholds are ordered as in $\zeta_r < \zeta_{r+1}$, and one defines dummy thresholds $\zeta_0 = -\infty$ and  $\zeta_{R_{FROC}+1} = +\infty$.
+#### Footnotes
+1. In row 9-11 the thresholds are ordered, $\zeta_r < \zeta_{r+1}$, and one defines dummy thresholds $\zeta_0 = -\infty$ and $\zeta_{R_{FROC}+1} = +\infty$.
 
-### FROC notation TBA
-Recall from Section \@ref(binaryTaskDecisionVariablelModel) that the ROC paradigm requires the existence of a *case-dependent* decision variable $z$ and a case-independent decision threshold $\zeta$, and the rule that if $z \geq \zeta$ the case is diagnosed as diseased and otherwise the case is diagnosed as non-diseased. Analogously, FROC data requires the existence of a *case and location-dependent* z-sample associated with each latent mark and a *case and location-independent* reporting threshold $\zeta$ and the rule that a latent mark is marked if $z \geq \zeta$. One needs to account, in the notation, for case and location dependencies of z and for distinction between case-level and location-level ground truth. For example, a diseased case can have many regions that are non-diseased and a few diseased regions (the lesions). 
+### Comments on Table \@ref(tab:froc-paradigm-frocNotation)
+* Row 1: The case-truth index $t$ refers to the case (or patient), with $t = 1$ for non-diseased and $t = 2$ for diseased cases. As a useful mnemonic, $t$ is for *truth*. 
+* Row 2: $K_t$ is the number of cases with truth state $t$; specifically, $K_1$ is the number of non-diseased cases and $K_2$ the number of diseased cases. 
+* Row 3: Two indices $k_t t$ are needed to select case $k_t$ in truth state $t$. As a useful mnemonic, $k$ is for *case*. 
+* Rows 4 and 5: For a similar reason, two indices $l_s s$ are needed to select latent mark $l_s$ in location level truth state $s$, where $s = 1$ corresponds to a latent NL and $s = 2$ corresponds to a latent LL. One can think of $l_s$ as indexing the locations of different latent marks with location-level truth state $s$. As a useful mnemonic, $l$ is for *location*. 
+* Row 6: The z-sample for case $k_t t$ and **latent NL mark** $l_1 1$ is denoted $z_{k_t t l_1 1}$. Latent NL marks are possible on non-diseased and diseased cases (both values of $t$ are allowed). The range of a z-sample is $-\infty < z_{k_t t l_1 1} < \infty$, provided $l_1 \neq \varnothing$; otherwise, it is an *unobservable event*. 
+* Row 7: The z-sample of a **latent LL** is $z_{k_2 2 l_2 2}$. Unmarked lesions are assigned negative infinity ratings and are observable events. The null-set notation is unnecessary for them. 
+* Row 8: $R_{FROC}$ is the number of bins in the FROC study.
+* Row 9, 10 and 11: The cutoffs in the FROC study. 
+* Row 12: $N_{k_t t}$ is the total number of latent NL marks on case $k_t t$.
+* Row 13: $L_{k_2}$ is the number of lesions in diseased case $k_2 2$. Since lesions can only occur on diseased cases, a second case-truth subscript, as in $L_{k_2 2}$, is superfluous. 
+* Row 14: $L_{max}$ is the maximum number of lesions per case in the dataset.
+* Row 15: $L_T$ is the total number of lesions in the dataset.
 
-*Clear notation is vital to understanding this paradigm.* FROC notation is summarized in Table \@ref(tab:froc-paradigm-frocNotation). The table is organized into three columns, the first column is the row number, the second column has the symbol(s), and the third column has the meaning(s) of the symbol(s). 
+### Unpredictable number of marks per case
+*The number of marks on an image is an a-priori-unknown modality-reader-case dependent non-negative random integer. It is incorrect to estimate it by dividing the image area by the lesion area because not all regions of the image are equally likely to have lesions, lesions do not have the same size, and most important, clinicians don't work that way. The best insight into the number of latent NLs per case is obtained from eye-tracking studies [@RN1490], and even here the information is incomplete, as eye-tracking studies can only measure foveal gaze and not lesions found by peripheral vision. Experts tend to have smaller $N_{k_t t}$ than non-experts. Based on the author's experience, in screening mammography, clinical considerations limit the number of regions per case (4-views) that an expert will consider for marking to typically less than three. About 80% on non-diseased cases have no marks. The obvious reason is that because of the low disease prevalence marking too many cases would result in unacceptably high recall rates.*
 
-* Row 1: The case-truth index $t$ still refers to the case (or patient), with $t = 1$ for non-diseased and $t = 2$ for diseased cases. 
+### What determines if a latent mark is actually marked
+* A latent mark is actually marked if $z_{k_t t l_s s} \geq \zeta_1$, where $\zeta_1$ is the lowest reporting threshold adopted by the observer. Additional thresholds are needed to accommodate more than one FROC bins. If marked, a latent NL is recorded as an actual NL. 
+  + If not marked, a latent NL is an *unobservable event*. This is a source of confusion among some researchers who use the misleading term location level "true negative" for unmarked latent NLs. 
+  + In contrast, unmarked lesions are observable events – one knows (trivially) which lesions were not marked. In the analyses, unmarked lesions are assigned $-\infty$ ratings, which is guaranteed to be smaller than any rating used by the observer. 
 
-* Row 2: Two indices $k_t t$ are needed to select case $k_t$ in truth state $t$. As a useful mnemonic, $k$ is for *case*. 
-
-* Row 3 and 4: For a similar reason, two indices $l_s s$ are needed to select latent mark $l_s$ in location level truth state $s$, where $s = 1$ corresponds to a latent NL and $s = 2$ corresponds to a latent LL. One can think of $l_s$  as indexing the locations of different latent marks with local truth state $s$. As a useful mnemonic, $l$ is for *location*. 
-
-* Row 5: The z-sample for case $k_t t$ and latent NL mark $l_1 1$ is denoted $z_{k_t t l_1 1}$. Latent NL marks are possible on non-diseased and diseased cases (both values of $t$ are allowed). The range of a z-sample is $-\infty < z_{k_t t l_1 1} < \infty$, provided $l_1 \neq \emptyset$; otherwise, it is an *unobservable event*. The z-sample of a latent LL is $z_{k_2 2 l_2 2}$. Unmarked lesions are assigned the null set labels and assigned negative infinity ratings; this is the meaning of $\left ( z_{k_2 2l_2 2} \mid l_2 = \emptyset \right )$.
-
-* Row 6 and 7: A latent mark is actually marked if $z_{k_t t l_s s} \geq \zeta_1$, where $\zeta_1$ is the lowest reporting threshold adopted by the observer. Additional thresholds are needed to accommodate greater than one FROC bins. If marked, a latent NL is recorded as an actual NL, and likewise if marked, a latent LL is recorded as an actual LL. 
-
-  + If not marked, a latent NL is an *unobservable event*. This is a major source of confusion among researchers familiar with ROC who use the highly misleading term location level "true negative" for unmarked latent NLs. 
-
-  + In contrast, unmarked lesions are observable events – one knows (trivially) which lesions were not marked. In the analyses, unmarked lesions are assigned $\-infty$ ratings, guaranteed to be smaller than any rating used by the observer. 
-
-Row 8: $N_{k_t t}$ is the total number of latent NL marks on case $k_t t$.
-
-*It is an a-priori-unknown modality-reader-case dependent non-negative random integer. It is incorrect to estimate it by dividing the image area by the lesion area because not all regions of the image are equally likely to have lesions, lesions do not have the same size, and most important, clinicians don't work that way. The best insight into the number of latent NLs per case is obtained from eye-tracking studies [@RN1490], and even here the information is tenuous, as eye-tracking studies can only measure foveal gaze and not lesions found by peripheral vision. Experts tend to have smaller $N_{k_t t}$ than non-experts. Based on the author's experience, in screening mammography, clinical considerations limit the number of regions per case (4-views) that an expert will consider for marking to relatively small numbers, typically less than about three. About 80% on non-diseased cases have no marks. The obvious reason is that because of the low disease prevalence marking too many cases would result in unacceptably high recall rates.*
-
-* Row 9: $L_{k_2} > 0$ is the number of lesions in diseased case $k_2 2$. Since lesions can only occur on diseased cases, a second case-truth subscript, as in $L_{k_2 2}$, is also superfluous. $L_T$ is the total number of lesions in the dataset.
-
-The label $l_1 = \{1, 2, ..., N_{k_t t}\}$ indexes latent NL marks, provided the case has at least one NL mark, and otherwise $N_{k_t t} = 0$ and $l_1 = \emptyset$, the null set. The possible values of $l_1$  are $l_1 = \left \{ \emptyset \right \}\oplus \left \{ 1,2,...N_{k_t t} \right \}$. The null set applies when the case has no latent NL marks and $\oplus$ is the "exclusive-or" symbol ("exclusive-or" is used in the English sense: "one or the other, but not neither nor both"). In other words, $l_1$ can *either* be the null set or take on positive integer values. Likewise, $l_2 = \left \{ 1,2,...,L_{k_2 2} \right \}$ indexes latent LL marks. Unmarked LLs are assigned negative infinity ratings. The null set notation is not needed for latent LLs. 
+### Labeling of NL marks
+The label $l_1 = \{1, 2, ..., N_{k_t t}\}$ indexes latent NL marks, provided the case has at least one NL mark, and otherwise $N_{k_t t} = 0$ and $l_1 = \varnothing$, the null set. The possible values of $l_1$  are $l_1 = \left \{ \varnothing \right \}\oplus \left \{ 1,2,...N_{k_t t} \right \}$. The null set applies when the case has no latent NL marks and $\oplus$ is the "exclusive-or" symbol ("exclusive-or" is used in the English sense: "one or the other, but not neither nor both"). In other words, $l_1$ can *either* be the null set or take on positive integer values. Likewise, $l_2 = \left \{ 1,2,...,L_{k_2 2} \right \}$ indexes latent LL marks. Unmarked LLs are assigned negative infinity ratings. The null set notation is not needed for latent LLs. 
 
 Having covered notation, attention turns to the empirical plots possible with FROC data. The historical starting point is the FROC plot.
 
@@ -114,7 +122,7 @@ Eqn. \@ref(eq:froc-paradigm-NLF-LLF) is equivalent to:
 \begin{equation}
 \left.
 \begin{aligned} 
-\text{NLF}\left ( \zeta_r \right ) =& \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_r \mid l_1 \neq \emptyset \right ) \\
+\text{NLF}\left ( \zeta_r \right ) =& \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_r \mid l_1 \neq \varnothing \right ) \\
 \text{LLF}\left ( \zeta_r \right ) =& \frac{1}{L_T} \sum_{k_2=1}^{K_2} \sum_{l_2=1}^{L_{k_2}} \mathbb{I} \left ( z_{k_2 2 l_2 2} \geq \zeta_r  \right ) 
 \end{aligned}
 \right \}
@@ -123,9 +131,9 @@ Eqn. \@ref(eq:froc-paradigm-NLF-LLF) is equivalent to:
 
 The indicator function, $\mathbb{I}$, yields unity if its argument is true and zero otherwise, so it acts like a counter. 
 
-In Eqn. \@ref(eq:froc-paradigm-NLF-LLF2), regarding the first equation, the conditioning $l_1 \neq \emptyset$ and $z_{k_t t l_1 1} \geq \zeta_r$ ensure that only marked non-diseased regions contribute to NLF. The summations yield the total number of NLs in the dataset with z-samples  $\geq \zeta_r$ and dividing by the total number of cases yields $\text{NLF}\left ( \zeta_r \right )$. Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) also shows explicitly that NLs on both non-diseased and diseased cases contribute to NLF. 
+In Eqn. \@ref(eq:froc-paradigm-NLF-LLF2), regarding the first equation, the conditioning $l_1 \neq \varnothing$ and $z_{k_t t l_1 1} \geq \zeta_r$ ensure that only marked non-diseased regions contribute to NLF. The summations yield the total number of NLs in the dataset with z-samples  $\geq \zeta_r$ and dividing by the total number of cases yields $\text{NLF}\left ( \zeta_r \right )$. Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) also shows explicitly that NLs on both non-diseased and diseased cases contribute to NLF. 
 
-In Eqn. \@ref(eq:froc-paradigm-NLF-LLF2), regarding the second equation, because unmarked lesions are assigned the  $-\infty$ rating, Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) need not be conditioned on $l_2 \neq \emptyset$. A summation over $t$ is not needed as only diseased cases contribute and both truth state indices on the right hand side of Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) are set to $t = s = 2$. The denominator is the total number of lesions in the dataset. 
+In Eqn. \@ref(eq:froc-paradigm-NLF-LLF2), regarding the second equation, because unmarked lesions are assigned the  $-\infty$ rating, Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) need not be conditioned on $l_2 \neq \varnothing$. A summation over $t$ is not needed as only diseased cases contribute and both truth state indices on the right hand side of Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) are set to $t = s = 2$. The denominator is the total number of lesions in the dataset. 
 
 
 TBA The empirical FROC plot connects adjacent operating points $\left (\text{NLF}\left ( \zeta_r \right ), \text{LLF}\left ( \zeta_r \right )  \right )$, including the origin (0,0) *but not (1,1)*, with straight lines. 
@@ -143,8 +151,8 @@ To understand this important statement, consider the expression, using Eqn. (13.
 \begin{equation}
 \left.
 \begin{aligned} 
-\text{NLF}_0 =& \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_0 \mid l_1 \neq \emptyset \right ) \\
-=& \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq -\infty \mid l_1 \neq \emptyset \right ) \\
+\text{NLF}_0 =& \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_0 \mid l_1 \neq \varnothing \right ) \\
+=& \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq -\infty \mid l_1 \neq \varnothing \right ) \\
 \end{aligned}
 \right \}
 (\#eq:froc-paradigm-NLF0)
@@ -156,7 +164,7 @@ The right hand side can be separated into two terms, the contribution of latent 
 \begin{equation}
 \left.
 \begin{aligned} 
-\text{NLF}_1 =& \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_1 \mid l_1 \neq \emptyset \right ) \\
+\text{NLF}_1 =& \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_1 \mid l_1 \neq \varnothing \right ) \\
 =& \frac{N_T}{K_1+K_2}
 \end{aligned}
 \right \}
@@ -169,7 +177,7 @@ This is the abscissa of the observed end-point. Since each case could have zero 
 The 2nd term is: 	
 
 \begin{equation}
-\left (\frac{1}{K_1+K_2}   \right )\sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( -\infty \leq z_{k_t t l_1 1} < \zeta_1 \mid l_1 \neq \emptyset \right )=\frac{?}{K_1+K_2}
+\left (\frac{1}{K_1+K_2}   \right )\sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( -\infty \leq z_{k_t t l_1 1} < \zeta_1 \mid l_1 \neq \varnothing \right )=\frac{?}{K_1+K_2}
 (\#eq:froc-paradigm-NLF0a)
 \end{equation} 
 
@@ -238,15 +246,15 @@ The highest z-sample ROC false positive (FP) rating for non-diseased case $k_1 1
 \begin{equation}
 \left.
 \begin{aligned}
-FP_{k_1 1}=&\max\left ( z_{k_1 1 l_1 1 } \mid z_{k_1 1 l_1 1 } \geq \zeta_1 \right ) \\
-=& -\infty \mid l_1 = \emptyset  
+FP_{k_1 1}=&\max_{l1} \left ( z_{k_1 1 l_1 1 } \mid l_1 \neq \varnothing \right ) \\
+=& -\infty \mid l_1 = \varnothing  
  \end{aligned}
 \right \}
 (\#eq:froc-paradigm-FP)
 \end{equation}
 
 
-The single vertical bar $\mid$ is the conditioning operator; e.g., $A \mid B$ is event A assuming condition B is true. It ensures that only marked regions enter the calculation. The basic idea is simple: $FP_{k_1 1}$ is the maximum z-sample over all marked locations occurring on non-diseased case $k_1 1$ , or  $-\infty$ if the case has no marks. Assignment of the $-\infty$ rating is allowed because an unmarked non-diseased case is an observable event. The corresponding false positive fraction is defined by: 
+The single vertical bar $\mid$ is the conditioning operator; e.g., $A \mid B$ is event A assuming condition B is true. If the case has at least one NL mark, then $l_1 \neq \varnothing$, where $\varnothing$ is the null set, and the first definition applies. If the case has no marks, then $l_1 = \varnothing$, and the second definition applies. The conditioning ensures that only marked regions enter the calculation. $FP_{k_1 1}$ is the maximum z-sample over all marked locations occurring on non-diseased case $k_1 1$ , or  $-\infty$ if the case has no marks. Assignment of the $-\infty$ rating is allowed because an unmarked non-diseased case is an observable event. The corresponding false positive fraction is defined by: 
 
 \begin{equation}
 \left.
@@ -259,12 +267,14 @@ FPF_r \equiv FPF \left ( \zeta_r \right ) =& \frac{1}{K_1} \sum_{k_1=1}^{K_1} \m
 \end{equation}
 
 
-The indicator function is a logical operator. If $\max_{l_1}\left (\right )$ is greater than or equal to $\zeta_r$, it yields unity, and otherwise it yields zero. The maximum is taken over all marked NLs. Lesion localization fraction,  $LLF_r$, is defined, as before, by Eqn. \@ref(eq:froc-paradigm-NLF-LLF2). The empirical alternative FROC (AFROC) plot connects adjacent operating points $\left( FPF_r, LLF_r  \right)$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1). 
+The indicator function is a logical operator yielding one if its argument is true and zero otherwise. Therefore, if $FP_{k_1 1} \geq \zeta_r$  it yields unity, and otherwise it yields zero. The maximum is taken over all marked NLs: the conditioning $z_{k_1 1 l_1 1} \geq \zeta_r$ ensures that $l_1 \neq \varnothing$. 
+
+Lesion localization fraction,  $LLF_r$, is defined, as before, by Eqn. \@ref(eq:froc-paradigm-NLF-LLF2). The empirical alternative FROC (AFROC) plot connects adjacent operating points $\left( FPF_r, LLF_r  \right)$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1). 
 
 The area under this plot is defined as the empirical AFROC AUC. A computational formula for it will be given in the next chapter.
 
 ### The constrained property of the observed end-point of the AFROC
-Since $\zeta_{R_{FROC}+1 = \infty}$, according to Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) and Eqn. \@ref(eq:froc-paradigm-FPF), $r = R_{FROC}+1$  yields the trivial operating point (0,0) and $r = 0$ yields the trivial point (1,1):
+Since $\zeta_{R_{FROC}+1} = \infty$, according to Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) and Eqn. \@ref(eq:froc-paradigm-FPF), $r = R_{FROC}+1$  yields the trivial operating point (0,0). Likewise, since $\zeta_0 = -\infty$, $r = 0$ yields the trivial point (1,1):
 
 \begin{equation}
 \left.
@@ -347,8 +357,8 @@ The inferred true positive (TP) z-sample for diseased case $k_2 2$ is defined by
 \begin{equation}
 \left.
 \begin{aligned}
-TP_{k_2 2}=& \max_{l_1 l_2}\left ( \left (z_{k_2 2 l_1 2} ,z_{k_2 2 l_2 2}  \right ) \mid l_1 \neq \emptyset \right )\\
-=& -\infty \mid\left ( l_1 = \emptyset \land z_{k_2 2 l_2 2} = -\infty  \right )
+TP_{k_2 2}=& \max_{l_1 l_2}\left ( \left (z_{k_2 2 l_1 2} ,z_{k_2 2 l_2 2}  \right ) \mid l_1 \neq \varnothing \right )\\
+=& -\infty \mid\left ( l_1 = \varnothing \land z_{k_2 2 l_2 2} = -\infty  \right )
 \end{aligned}
 \right \}
 (\#eq:froc-paradigm-TP)
@@ -398,14 +408,14 @@ Historically the AFROC originally used a different definition of FPF, which is r
 \begin{equation}
 \left.
 \begin{aligned}
-FP_{k_t t}^1 =& \max_{l_1} \left ( z_{k_t t l_1 1 } \mid  l_1 \neq \emptyset \right )\\
-=& -\infty \mid l_1 = \emptyset
+FP_{k_t t}^1 =& \max_{l_1} \left ( z_{k_t t l_1 1 } \mid  l_1 \neq \varnothing \right )\\
+=& -\infty \mid l_1 = \varnothing
 \end{aligned}
 \right \}
 (\#eq:froc-paradigm-FP1)
 \end{equation}
 
-$FP_{k_t t}^1$ is the maximum over all marked NL z- samples, labeled by the location index $l_1$, occurring on case $k_t t$, or $-\infty$ if $l_1 = \emptyset$. One is allowed to assign the  $-\infty$ rating because a case with no NL marks is an observable event. The corresponding false positive fraction $FPF_r^1$ is defined by [the "1" superscript is necessary to distinguish it from Eqn. \@ref(eq:froc-paradigm-FPF)]: 
+$FP_{k_t t}^1$ is the maximum over all marked NL z- samples, labeled by the location index $l_1$, occurring on case $k_t t$, or $-\infty$ if $l_1 = \varnothing$. One is allowed to assign the  $-\infty$ rating because a case with no NL marks is an observable event. The corresponding false positive fraction $FPF_r^1$ is defined by [the "1" superscript is necessary to distinguish it from Eqn. \@ref(eq:froc-paradigm-FPF)]: 
 
 \begin{equation}
 FPF_r^1 \equiv FPF_r^1\left ( \zeta_r \right ) = \frac{1}{K_1+K_2}\sum_{t=1}^{2}\sum_{k_t=1}^{K_t} \mathbb{I}\left ( FP_{k_t t}^1 \geq \zeta_r \right )

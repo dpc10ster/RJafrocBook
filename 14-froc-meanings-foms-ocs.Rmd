@@ -19,29 +19,44 @@ library(here)
 As of 10/6/20
 
 ## Introduction {#froc-meanings-intro}
-The previous chapter focused on empirical *plots* possible with FROC data. Examples are the FROC, AFROC, wAFROC, inferred ROC, etc. Expressions were given for computing operating points for each plot. Because of the ambiguity in interpreting sensitivity-specificity pairs in ROC analysis, operating points should almost never be used as figures of merit. Rather one should focus on area measures derived from operating characteristics. 
+The previous chapter focused on *empirical plots* possible with FROC data, for example, the FROC, AFROC, wAFROC and inferred ROC plots. Expressions were given for computing *operating points* for each plot. Because of the ambiguity in ordering the two values associated with each operating points (e.g., sensitivity-specificity pairs in ROC plots), operating points should not be used as figures of merit. Rather one should use *area measures* derived from operating characteristics. This chapter is devoted to such measures for FROC data. 
 
-In this chapter, the empirical area under a plot is generically denoted $A_{oc}$, where the "oc" subscript denotes the applicable operating characteristic. For example, the area under the empirical weighted-AFROC is denoted $A_{\text{wAFROC}}$. Calculating areas from operating points using planimetry or geometry is tedious. Needed are formulae for calculating them directly from ratings. An example of this was encountered before in TBA Chapter 05, where it was shown that the area under the empirical ROC plot $A_{\text{ROC}}$ equaled the Wilcoxon statistic. 
+A generic empirical area under a plot is denoted $A_{oc}$, where the "oc" subscript denotes the applicable operating characteristic. For example, the area under the empirical wAFROC is denoted $A_{\text{wAFROC}}$. Calculating areas from operating points using planimetry or geometry is tedious. Needed are formulae for calculating them directly from ratings. In this sense this chapter is analogous to Chapter \@ref(empiricalAUC) where it was shown that the area under the empirical ROC plot $A_{\text{ROC}}$ equaled the Wilcoxon statistic calculated directly from the ratings. 
 
-A distinction is being made between *empirical AUC under a plot*, i.e., an area measure, and an *FOM-statistic*, generically denoted $\theta$, that is computed directly from the ratings. The FOM-statistic is a scalar function of the ratings intended to quantify performance. While any function of the ratings is a possible FOM-statistic, whether a proposed function is useful depends upon whether it can be related to the area under a meaningful operating characteristic. This chapter derives formulae for FOM-statistics $\theta_{\text{oc}}$, which yield the same values as the empirical areas $A_{\text{oc}}$ under the corresponding empirical operating characteristics. The meanings of these FOM-statistics are discussed1. 
+Consider the distinction between *empirical AUC under a plot*, i.e., an area measure, and a *FOM-statistic*, generically denoted $\theta$, that can be computed directly from the ratings. While any function of the ratings is a possible FOM-statistic, whether it is useful depends upon whether it can be related to the area under an operating characteristic. This chapter derives formulae for FOM-statistics $\theta_{\text{oc}}$, which yield the same values as the areas $A_{\text{oc}}$ under the corresponding empirical operating characteristics. The meanings of these FOM-statistics are discussed [@RN2484]. 
 
-Here is the organization of the chapter. Expressions for the empirical AFROC FOM-statistic $\theta_{\text{AFROC}}$ and the empirical weighted-AFROC FOM-statistic $\theta_{\text{wAFROC}}$ are presented and their limiting values for chance-level and perfect performances are explored. Two important theorems are stated, whose proofs are in Online Appendix 14.A. The first theorem proves the equality between the empirical wAFROC FOM-statistic $\theta_{\text{wAFROC}}$ and the area $A_{\text{wAFROC}}$ under the empirical wAFROC plot. A similar equality applies to the empirical AFROC FOM-statistic $\theta_{\text{AFROC}}$ and the area $A_{\text{AFROC}}$ under the empirical AFROC plot. The second theorem derives an expression for the area under the straight-line extension of the wAFROC (or AFROC) from the observed end-point to (1,1), and explains why it is essential to include this area. A section explaining, with a small simulated-dataset, how NL and LL ratings and lesion weights determine the AFROC and wAFROC empirical plots follows. It shows explicitly that the wAFROC gives equal importance to all diseased cases, a desirable statistical characteristic, while the AFROC gives excessive importance to cases with more lesions. The small numbers of cases makes the explanations easier to follow and permits "hand-calculation" of the operating points. This is followed by physical interpretation of the corresponding AUCs / FOM-statistics. It shows explicitly how the comparisons implied in FOM-statistic properly credit and penalize the observer for correct and incorrect decisions, respectively. This section gives probabilistic meanings to the AFROC and wAFROC AUCs.  
+Here is the organization of the chapter. Expressions for the empirical AFROC FOM-statistic $\theta_{\text{AFROC}}$ and the empirical weighted-AFROC FOM-statistic $\theta_{\text{wAFROC}}$ are presented and their limiting values for chance-level and perfect performances are explored. Two important theorems are stated, whose proofs are in TBA Online Appendix 14.A. The first theorem proves the equality between the empirical wAFROC FOM-statistic $\theta_{\text{wAFROC}}$ and the area $A_{\text{wAFROC}}$ under the empirical wAFROC plot ^[A similar equality applies to the empirical AFROC FOM-statistic $\theta_{\text{AFROC}}$ and the area $A_{\text{AFROC}}$ under the empirical AFROC plot]. The second theorem derives an expression for the area under the straight-line extension of the wAFROC from the observed end-point to (1,1), and explains why it is essential to include this area. A small simulated-dataset is used to illustrate how NL and LL ratings and lesion weights determine the wAFROC empirical plot. It demonstrates that the wAFROC gives equal importance to all diseased cases, a desirable statistical characteristic. Corresponding results ignoring the weights shows that the AFROC gives excessive importance to cases with more lesions. This is followed by physical interpretation of the corresponding AUCs / FOM-statistics. It shows explicitly how the ratings comparisons implied in FOM-statistic properly credit and penalize the observer for correct and incorrect decisions, respectively. This section gives probabilistic meanings to the AFROC and wAFROC AUCs.
 
-Detailed derivations of FOM-statistics applicable to the areas under the empirical FROC plot, the AFROC1 and wAFROC1 plots are not given. Instead, the results for all plots are summarized in TBA Online Appendix 14.C, which shows that the definitions "work", i.e., the FOM-statistics yield the correct areas as determined by numerical integrations.
+Detailed derivations of FOM-statistics applicable to the areas under the empirical FROC plot, the AFROC1 and wAFROC1 plots are not given. Instead, the results for all plots are summarized in TBA Online Appendix 14.C, which shows that the definitions "work", i.e., the FOM-statistics yield the correct areas as determined by numerical integration.
 
 
 ## Empirical AFROC FOM-statistic
-The empirical AFROC AUC was defined in §13.4.2 as the area under the empirical AFROC. The corresponding FOM-statistic   is defined2 in terms of a quasi-Wilcoxon statistic  by (the kernel function   was defined in Eqn. (5.10)):
+$A_{\text{AFROC}}$ was defined in \@ref(froc-paradigm-wAFROC-plot) as the area under the empirical AFROC. The corresponding FOM-statistic $\theta_{\text{AFROC}}$ is defined next. One calculates the rating of the highest rated NL mark $\text{FP}_{k_1 1}$ on each non-diseased case $k_1 1$ ($-\infty$ if the case has no NL marks) and compares it to each LL rating using the kernel function $\psi(H,LL)$ defined in Eqn. \@ref(eq:empiricalAUC-PsiFunction). The kernel function comparison yields 1 if the LL rating is higher, 0.5 if the ratings are identical and zero otherwise. A summation is performed over all cases and all lesions. 
 
-\begin{equation} 
-\theta_{\text{AFROC}}=\frac{1}{K_1 L_T}\sum_{k_1=1}^{K_1}\sum_{k_2=1}^{K_2}\sum_{l_2=1}^{L_{k_2}}\psi\left ( max_{l_1}\left ( z_{k_1 1 l_1 1} \mid z_{k_1 1 l_1 1} \geq \zeta_1\right ), z_{k_2 2 l_2 2} \right )
+The highest rating $\text{FP}_{k_1 1}$ on non-diseased case $k_1 1$ is defined as: 
+
+\begin{equation}
+\left.
+\begin{aligned}
+\text{FP}_{k_1 1}  =&  \max_{l_1} \left ( z_{k_1 1 l_1 1} \mid  l_1 \neq \varnothing \right )\\
+\text{FP}_{k_1 1}  =&  -\infty\mid l_1 = \varnothing
+\end{aligned}
+\right \}
+(\#eq:froc-meanings-R-k1)
+\end{equation}
+
+If the case has at least one NL mark, then $l_1 \neq \varnothing$, where $\varnothing$ is the null set, and the first definition applies. If the case has no marks, then $l_1 = \varnothing$, and the second definition applies. [Since every lesion is assigned a rating, albeit a negative infinity for an unmarked lesion, a conditioning for marked lesions is not needed.] The next equation sums over all cases and lesions:
+
+
+\begin{equation}
+\begin{aligned} 
+\theta_{\text{AFROC}} =& \frac{1}{K_1 L_T}\sum_{k_1=1}^{K_1}\sum_{k_2=1}^{K_2}\sum_{l_2=1}^{L_{k_2}}\psi\left ( \text{FP}_{k_1 1}, z_{k_2 2 l_2 2} \right )\\
+\end {aligned}
 (\#eq:froc-meanings-theta-afroc)
 \end{equation}
 
-
-FROC notation was summarized in Table \@ref(tab:froc-paradigm-frocNotation). The conditioning $z_{k_1 1 l_1 1} \geq \zeta_1$ ensures that only marked regions contribute to $\theta_{\text{AFROC}}$. [In Chapter \@ref(froc-paradigm-empirical-plots), the relevant formulae ensured that only marked regions contributed to operating points. A similar requirement needs to be imposed in expressions for FOM-statistics.] 
-
-The FOM-statistic $\theta_{\text{AFROC}}$ achieves its highest value, unity, if and only if every lesion is rated higher than every mark on every non-diseased case, for then the $\psi$ function always yields unity, and the summations yield :
+### Upper limit for AFROC FOM-statistic
+The FOM-statistic $\theta_{\text{AFROC}}$ achieves its highest value, unity, if and only if every lesion is rated higher than any mark on non-diseased cases, for then the $\psi$ function always yields unity, and the summations yield :
 
 \begin{equation}
 \left. 
@@ -56,6 +71,7 @@ The FOM-statistic $\theta_{\text{AFROC}}$ achieves its highest value, unity, if 
 \end{equation}
 
 
+### Range of AFROC FOM-statistic
 If, on the other hand, every lesion is rated lower than every mark on every non-diseased case, the $\psi$ function yields zero, and the FOM-statistic is zero. Therefore,
 
 \begin{equation}
@@ -67,18 +83,19 @@ If, on the other hand, every lesion is rated lower than every mark on every non-
 Eqn. \@ref(eq:froc-meanings-theta-afroc-limits) shows that $\theta_{\text{AFROC}}$ behaves like a probability but its range is *twice* that of $\theta_{\text{ROC}}$; recall that $0.5 \leq \theta_{\text{ROC}} \leq 1$. This has the consequence that treatment or modality related differences between $\theta_{\text{AFROC}}$ (i.e., effect sizes) are larger relative to the corresponding ROC effect sizes (just as temperature differences in the Fahrenheit scale are larger than the same differences expressed in the Celsius scale). This has important implications for FROC sample size estimation, Chapter TBA. 
 
 
-This is explained further in Chapter 18. Eqn. (14.3) is another reason why the "chance diagonal" of the AFROC corresponding to AUC = 0.5, does not reflect chance-level performance. An area under the AFROC equal to 0.5 is actually reasonable performance, being smack in the middle of the allowed range. An example of this was given in §13.4.2.2 for the case of an expert radiologist who does not mark any cases. 
+Eqn. \@ref(eq:froc-meanings-theta-afroc-limits) is a reason why the "chance diagonal" of the AFROC, corresponding to AUC = 0.5, does not, in fact, reflect chance-level performance. An area under the AFROC equal to 0.5 is actually reasonable performance, being smack in the middle of the allowed range. An example of this was given in TBA §13.4.2.2 for the case of an expert radiologist who does not mark any cases. 
 
 
 ## Empirical weighted-AFROC FOM-statistic 
-The empirical weighted-AFROC plot and lesion weights were defined in TBA §13.7. The empirical weighted-AFROC FOM-statistic [@RN1385] is defined in terms of a quasi-Wilcoxon statistic:
+The empirical weighted-AFROC plot and lesion weights were defined in TBA §13.7. The empirical weighted-AFROC FOM-statistic [@RN1385] is defined by including the lesion weights $W_{k_2 l_2}$ inside the summations (but outside the kernel function):
 
 
-\begin{equation} 
-\theta_{\text{wAFROC}}=\frac{1}{K_1 K_2}\sum_{k_1=1}^{K_1}\sum_{k_2=1}^{K_2}\sum_{l_2=1}^{L_{k_2}}W_{k_2 l_2}\psi\left ( max_{l_1}\left ( z_{k_1 1 l_1 1} \mid z_{k_1 1 l_1 1} \geq \zeta_1\right ), z_{k_2 2 l_2 2} \right )
+\begin{equation}
+\begin{aligned} 
+\theta_{\text{wAFROC}} =& \frac{1}{K_1 K_2}\sum_{k_1=1}^{K_1}\sum_{k_2=1}^{K_2}\sum_{l_2=1}^{L_{k_2}}W_{k_2 l_2}\psi\left ( \text{FP}_{k_1 1}, z_{k_2 2 l_2 2} \right )\\
+\end {aligned}
 (\#eq:froc-meanings-theta-wafroc)
 \end{equation}
-
 
 The weights obey the constraint:
 
