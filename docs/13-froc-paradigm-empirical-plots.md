@@ -52,48 +52,98 @@ r = 1, 2, ..., R_{FROC}\\
 
 FROC notation is summarized in Table \@ref(tab:froc-paradigm-frocNotation), in which **all marks are latent marks**. The table is organized into three columns, the first column is the row number, the second column has the symbol(s), and the third column has the meaning(s) of the symbol(s). 
 
-\begin{table}
-
-\caption{(\#tab:froc-paradigm-frocNotation)FROC notation; all marks refer to latent marks; see comments}
-\centering
-\begin{tabular}[t]{l|l|l}
-\hline
-Row & Symbol & Meaning\\
-\hline
-1 & t & Case-level truth: 1 for non-diseased and 2 for diseased\\
-\hline
-2 & $K_t$ & Number of cases with case-level truth t\\
-\hline
-3 & $k_t t$ & Case $k_t$ in case-level truth t\\
-\hline
-4 & s & Mark-level truth: 1 for NL and 2 for LL\\
-\hline
-5 & $l_s s$ & Mark $l_s$ in mark-level truth s\\
-\hline
-6 & $z_{k_t t l_1 1}$ & z-sample for case $k_t t$ and mark $l_1 1$\\
-\hline
-7 & $z_{k_2 2 l_2 2}$ & z-sample for case $k_2 2$ and mark $l_2 2$\\
-\hline
-8 & $R_{FROC}$ & Number of FROC bins\\
-\hline
-9 & $\zeta_1$ & Lowest reporting threshold\\
-\hline
-10 & $\zeta_r$ & Other non-dummy reporting thresholds\\
-\hline
-11 & $\zeta_0, \zeta_{R_{FROC}+1}$ & Dummy thresholds\\
-\hline
-12 & $N_{k_t t}$ & Number of NLs on case $k_t t$\\
-\hline
-13 & $L_{k_2 2}$ & Number of lesions on case $k_2 2$\\
-\hline
-13 & $W_{k_2 l_2}$ & Weight of lesion $l_2 2$ on case $k_2 2$\\
-\hline
-14 & $L_{max}$ & Maximum number of lesions per case in dataset\\
-\hline
-15 & $L_T$ & Total number of lesions in dataset\\
-\hline
-\end{tabular}
-\end{table}
+<table>
+<caption>(\#tab:froc-paradigm-frocNotation)FROC notation; all marks refer to latent marks; see comments</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Row </th>
+   <th style="text-align:left;"> Symbol </th>
+   <th style="text-align:left;"> Meaning </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:left;"> Case-level truth: 1 for non-diseased and 2 for diseased </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> $K_t$ </td>
+   <td style="text-align:left;"> Number of cases with case-level truth t </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:left;"> $k_t t$ </td>
+   <td style="text-align:left;"> Case $k_t$ in case-level truth t </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:left;"> s </td>
+   <td style="text-align:left;"> Mark-level truth: 1 for NL and 2 for LL </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 5 </td>
+   <td style="text-align:left;"> $l_s s$ </td>
+   <td style="text-align:left;"> Mark $l_s$ in mark-level truth s </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 6 </td>
+   <td style="text-align:left;"> $z_{k_t t l_1 1}$ </td>
+   <td style="text-align:left;"> z-sample for case $k_t t$ and mark $l_1 1$ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 7 </td>
+   <td style="text-align:left;"> $z_{k_2 2 l_2 2}$ </td>
+   <td style="text-align:left;"> z-sample for case $k_2 2$ and mark $l_2 2$ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 8 </td>
+   <td style="text-align:left;"> $R_{FROC}$ </td>
+   <td style="text-align:left;"> Number of FROC bins </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 9 </td>
+   <td style="text-align:left;"> $\zeta_1$ </td>
+   <td style="text-align:left;"> Lowest reporting threshold </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 10 </td>
+   <td style="text-align:left;"> $\zeta_r$ </td>
+   <td style="text-align:left;"> Other non-dummy reporting thresholds </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 11 </td>
+   <td style="text-align:left;"> $\zeta_0, \zeta_{R_{FROC}+1}$ </td>
+   <td style="text-align:left;"> Dummy thresholds </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 12 </td>
+   <td style="text-align:left;"> $N_{k_t t}$ </td>
+   <td style="text-align:left;"> Number of NLs on case $k_t t$ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 13 </td>
+   <td style="text-align:left;"> $L_{k_2 2}$ </td>
+   <td style="text-align:left;"> Number of lesions on case $k_2 2$ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 13 </td>
+   <td style="text-align:left;"> $W_{k_2 l_2}$ </td>
+   <td style="text-align:left;"> Weight of lesion $l_2 2$ on case $k_2 2$ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 14 </td>
+   <td style="text-align:left;"> $L_{max}$ </td>
+   <td style="text-align:left;"> Maximum number of lesions per case in dataset </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 15 </td>
+   <td style="text-align:left;"> $L_T$ </td>
+   <td style="text-align:left;"> Total number of lesions in dataset </td>
+  </tr>
+</tbody>
+</table>
 
 
 ### Comments on Table \@ref(tab:froc-paradigm-frocNotation)
@@ -373,7 +423,10 @@ The chance level FROC was addressed in the previous chapter; it is a "flat-liner
 
 
 
-![(\#fig:froc-afroc-chance-level)The left figure is the near guessing observer's FROC and the right figure is the corresponding AFROC for for $\mu=0.01$.](13-froc-paradigm-empirical-plots_files/figure-latex/froc-afroc-chance-level-1.pdf) 
+<div class="figure">
+<img src="13-froc-paradigm-empirical-plots_files/figure-html/froc-afroc-chance-level-1.png" alt="The left figure is the near guessing observer's FROC and the right figure is the corresponding AFROC for for $\mu=0.01$." width="672" />
+<p class="caption">(\#fig:froc-afroc-chance-level)The left figure is the near guessing observer's FROC and the right figure is the corresponding AFROC for for $\mu=0.01$.</p>
+</div>
 
 Fig. \@ref(fig:froc-afroc-chance-level) shows "near guessing" FROC and AFROC plots for $\mu  = 0.1$. These plots were generated by the code with $\mu$ = 0.1, $\lambda$ = 1, $\nu$ = 0.1, $\zeta_1$ = -1, $K_1$ = 50, $K_2$ = 70. One does not expect to observe curves like these with radiologists as they rarely guess in the clinic – there is too much at stake.
 
@@ -656,7 +709,10 @@ In summary, the code generates FROC, AFROC and ROC plots shown in the top row of
 
 
 
-![(\#fig:froc-afroc-roc-raw-seed1)Raw FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below](13-froc-paradigm-empirical-plots_files/figure-latex/froc-afroc-roc-raw-seed1-1.pdf) 
+<div class="figure">
+<img src="13-froc-paradigm-empirical-plots_files/figure-html/froc-afroc-roc-raw-seed1-1.png" alt="Raw FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-raw-seed1)Raw FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below</p>
+</div>
 
 
 Fig. \@ref(fig:froc-afroc-roc-raw-seed1) Raw FROC, AFROC and ROC plots with `seed` = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases. Model parameters are $\mu$ = 1, $\lambda$ = 1, $\nu$ = 1 and $\zeta_1$ = -1. The discreteness (jumps) in the upper row is due to the small number of cases. The decreased discreteness in the lower row is due to the larger numbers of cases. If the number of cases is increased further, the plots will approach continuous plots, like those shown in Chapter \@ref(froc-paradigm). Note that the AFROC and ROC plots are contained within the unit square, unlike the semi-constrained FROC plot.    
@@ -673,7 +729,10 @@ Shown next are similar plots but this time `seed` = 2.
 
 
 
-![(\#fig:froc-afroc-roc-raw-seed2)Raw FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below](13-froc-paradigm-empirical-plots_files/figure-latex/froc-afroc-roc-raw-seed2-1.pdf) 
+<div class="figure">
+<img src="13-froc-paradigm-empirical-plots_files/figure-html/froc-afroc-roc-raw-seed2-1.png" alt="Raw FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-raw-seed2)Raw FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below</p>
+</div>
 
 Fig. \@ref(fig:froc-afroc-roc-raw-seed2) Raw FROC, AFROC and ROC plots with `seed` = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases. Model parameters are $\mu$ = 1, $\lambda$ = 1, $\nu$ = 1 and $\zeta_1$ = -1. Note the large variability in the upper row plots as compared to those in Fig. \@ref(fig:froc-afroc-roc-raw-seed1). The effect of case-sampling variability is most apparent for small datasets.     
 
@@ -751,7 +810,10 @@ This is similar to the code for the raw plots except that at lines 20-23 we have
 
 
 
-![(\#fig:froc-afroc-roc-binned-seed1)Binned FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below](13-froc-paradigm-empirical-plots_files/figure-latex/froc-afroc-roc-binned-seed1-1.pdf) 
+<div class="figure">
+<img src="13-froc-paradigm-empirical-plots_files/figure-html/froc-afroc-roc-binned-seed1-1.png" alt="Binned FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-binned-seed1)Binned FROC, AFROC and ROC plots with seed = 1: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below</p>
+</div>
 
 #### Effect of seed on binned plots
 Shown next are corresponding plots with `seed` = 2.
@@ -763,7 +825,10 @@ Shown next are corresponding plots with `seed` = 2.
 
 
 
-![(\#fig:froc-afroc-roc-binned-seed2)Binned FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below](13-froc-paradigm-empirical-plots_files/figure-latex/froc-afroc-roc-binned-seed2-1.pdf) 
+<div class="figure">
+<img src="13-froc-paradigm-empirical-plots_files/figure-html/froc-afroc-roc-binned-seed2-1.png" alt="Binned FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-binned-seed2)Binned FROC, AFROC and ROC plots with seed = 2: the top row is for $K_1 = 5$ and $K_2 = 7$ cases while the bottom row is for $K_1 = 50$ and $K_2 = 70$ cases, details below</p>
+</div>
 
 
 ### Structure of the binned data
@@ -836,28 +901,62 @@ Table \@tef(tab:recommendations-froc-paradigm) summarizes the different operatin
 
 
 
-\begin{table}
-
-\caption{(\#tab:recommendations-froc-paradigm)Summary of operating characteristics possible with FROC data and recommendations. In most cases the AUC under the wAFROC is the desirable operating characteristic.}
-\centering
-\begin{tabular}[t]{l|l|l|l|l}
-\hline
-Operating characteristic & Abscissa & Ordinate & Comments & Recommendation\\
-\hline
-ROC & FPF & TPF & Highest rating used to infer FPF and TPF & Yes, if overall sensitivity and specificity are desired\\
-\hline
-FROC & NLF & LLF & Defined by marks; unmarked cases do not contribute & No\\
-\hline
-AFROC & FPF & LLF & Highest rating used to infer FPF & Yes, if number of lesions per case less than 4 and weighting not relevant\\
-\hline
-AFROC1 & FPF1 & LLF & Highest NL ratings over every case contribute to FPF1 & Yes, only when there are zero non-diseased cases and lesion weighting not relevant\\
-\hline
-wAFROC & FPF & wLLF & Weights, which sum to unity, affect ordinate only & Yes\\
-\hline
-wAFROC1 & FPF1 & wLLF & Weights affect ordinate only; maximum NL rating over every case contributes to FPF1 & Yes, only when there are zero non-diseased cases\\
-\hline
-\end{tabular}
-\end{table}
+<table>
+<caption>(\#tab:recommendations-froc-paradigm)Summary of operating characteristics possible with FROC data and recommendations. In most cases the AUC under the wAFROC is the desirable operating characteristic.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Operating characteristic </th>
+   <th style="text-align:left;"> Abscissa </th>
+   <th style="text-align:left;"> Ordinate </th>
+   <th style="text-align:left;"> Comments </th>
+   <th style="text-align:left;"> Recommendation </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> ROC </td>
+   <td style="text-align:left;"> FPF </td>
+   <td style="text-align:left;"> TPF </td>
+   <td style="text-align:left;"> Highest rating used to infer FPF and TPF </td>
+   <td style="text-align:left;"> Yes, if overall sensitivity and specificity are desired </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> FROC </td>
+   <td style="text-align:left;"> NLF </td>
+   <td style="text-align:left;"> LLF </td>
+   <td style="text-align:left;"> Defined by marks; unmarked cases do not contribute </td>
+   <td style="text-align:left;"> No </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> AFROC </td>
+   <td style="text-align:left;"> FPF </td>
+   <td style="text-align:left;"> LLF </td>
+   <td style="text-align:left;"> Highest rating used to infer FPF </td>
+   <td style="text-align:left;"> Yes, if number of lesions per case less than 4 and weighting not relevant </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> AFROC1 </td>
+   <td style="text-align:left;"> FPF1 </td>
+   <td style="text-align:left;"> LLF </td>
+   <td style="text-align:left;"> Highest NL ratings over every case contribute to FPF1 </td>
+   <td style="text-align:left;"> Yes, only when there are zero non-diseased cases and lesion weighting not relevant </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> wAFROC </td>
+   <td style="text-align:left;"> FPF </td>
+   <td style="text-align:left;"> wLLF </td>
+   <td style="text-align:left;"> Weights, which sum to unity, affect ordinate only </td>
+   <td style="text-align:left;"> Yes </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> wAFROC1 </td>
+   <td style="text-align:left;"> FPF1 </td>
+   <td style="text-align:left;"> wLLF </td>
+   <td style="text-align:left;"> Weights affect ordinate only; maximum NL rating over every case contributes to FPF1 </td>
+   <td style="text-align:left;"> Yes, only when there are zero non-diseased cases </td>
+  </tr>
+</tbody>
+</table>
 
 
 The recommendations are based on the author's experience with simulation testing and many clinical datasets. They involve a compromise between statistical power (the ability to discriminate between modalities that are actually different) and reliability of the analysis (i.e., it yields the right p-value).
