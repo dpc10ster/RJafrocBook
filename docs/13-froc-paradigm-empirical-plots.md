@@ -128,17 +128,17 @@ FROC notation is summarized in Table \@ref(tab:froc-paradigm-frocNotation), in w
    <td style="text-align:left;"> Number of lesions on case $k_2 2$ </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 13 </td>
+   <td style="text-align:left;"> 14 </td>
    <td style="text-align:left;"> $W_{k_2 l_2}$ </td>
    <td style="text-align:left;"> Weight of lesion $l_2 2$ on case $k_2 2$ </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 14 </td>
+   <td style="text-align:left;"> 15 </td>
    <td style="text-align:left;"> $L_{max}$ </td>
    <td style="text-align:left;"> Maximum number of lesions per case in dataset </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 15 </td>
+   <td style="text-align:left;"> 16 </td>
    <td style="text-align:left;"> $L_T$ </td>
    <td style="text-align:left;"> Total number of lesions in dataset </td>
   </tr>
