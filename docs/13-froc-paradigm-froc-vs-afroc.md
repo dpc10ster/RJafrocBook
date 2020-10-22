@@ -10,7 +10,7 @@
 * Don't need columns 1 and 3 in table
 
 ## Introduction {#froc-paradigm-froc-vs-afroc-froc-vs-afrocs-intro}
-The FROC curve was introduced in [@RN2453] and ever since has been widely used for evaluating performance in the free-response paradigm, particularly in CAD algorithm development. Typically CAD researchers report "sensitivity was observed to be xx at yy false positives per image." Alternatively, using less ambiguous terminology, they report an observed operating point on the FROC, as in "LLF was observed to be xx at NLF = yy". 
+The FROC curve was introduced in [@bunch1977free] and ever since has been widely used for evaluating performance in the free-response paradigm, particularly in CAD algorithm development. Typically CAD researchers report "sensitivity was observed to be xx at yy false positives per image." Alternatively, using less ambiguous terminology, they report an observed operating point on the FROC, as in "LLF was observed to be xx at NLF = yy". 
 
 In the previous chapter I issued a recommendation against its continued usage. Instead, I recommended adoption of the wAFROC / AUC as the preferred operating characteristic / figure of merit in assessing performance in the free-response paradigm. This chapter details some studies supporting my recommendation.
 
