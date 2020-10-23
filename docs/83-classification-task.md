@@ -1,0 +1,90 @@
+# Classification tasks {#classification-tasks}
+
+
+
+
+## Introduction TBA {#classification-tasks-intro}
+
+This is in progress; the topic arose from an email exchange outlined below.
+
+## email 1
+
+1) Have multiple classes been considered in the newest version? That means there are, for example, three types of lesions (type 1, 2, 3) in an image. Then the observer may annotate the correct location, but indicate the wrong type of the lesion (e.g. the ground truth is type2, but the observer indicates it as type1).
+If not, do you know any statistical analysis method that can consider this type of error?
+2) If I remember correctly, the acceptance radius R was the same value for all the tested images, can we now set a different value for each test image?
+
+
+## response 1
+Taking your second question first:
+The acceptance radius is selected by you, in consultation with expert readers, along lines described in my book. It is outside the scope of the analysis software.
+
+Regarding your first question:
+**A key point is that spatial localization (as currently handled) is a special case of localization-with-classification (which is your interest).** 
+
+The `TP` and `FP` Excel worksheets are relatively easy to handle. If you have 3 types of lesions, and each localization mark is associated with an indicated perceived lesion type, e.g., `Type1`, `Type2` or `Type3`, and if the perceived localization and perceived type both agree with the truth, then the rating goes in the `TP` worksheet, otherwise the rating goes in the `FP` worksheet. 
+
+The `Truth` worksheet is more complex. The number of lesions in the `Truth` worksheet for a particular case is the sum of all lesions of all types in that case. Ideally the `Truth` worksheet should have an extra column for `lesionType`, but extensive modifications to existing code is required to implement this.
+
+In the meantime, you can “fool” the current software by doing the localization-classification book-keeping yourself. I will illustrate with one example.
+
+Suppose case 1 has four lesions, two of `Type1`, one of `Type2` and one of `Type3.` 
+
+Then in the Truth worksheet `lesionID` column for that case, there will be four integer entries: 1, 2, 3 and 4. The 1 refers to the first lesion (of `Type1` - you need to keep track of this), 2 to the second lesion (also of `Type1` - etc), 3 to the third lesion (`Type2` - etc) and 4 to the fourth lesion (of `Type3` - etc).
+
+If `lesionID` 2 is correctly localized and classified (i.e., as `Type1`), then the corresponding rating belongs in the TP worksheet with `lesionID` = 2. 
+If `lesionID` 3 is correctly localized and classified (i.e., as `Type2`), then the corresponding rating belongs in the TP …  with `lesionID` = 3. 
+Etc.
+
+If `lesionID` 1 is correctly localized but incorrectly classified (i.e., as `Type2` or `Type3`), then the rating belongs in the FP worksheet. 
+Any mark not corresponding (in location) to an actual lesion (the classification is irrelevant) goes in the FP worksheet.
+
+This scoring scheme would reward readers who get both location and classification correct and penalize them otherwise. More complex reward/penalization schemes can be worked out using lesion weights, but I would try the simple approach first.
+
+One more thing: the classification types should be distinct, with little overlap. Otherwise one faces an issue similar to the “acceptance radius” issue with location.
+
+
+
+## email 2
+
+I'm clear now about my first question. I'll try the simple approach.
+
+For the second question, I mean that for example, if the test images have different resolutions, the acceptance radius will be a ratio of the input image size, rather than a fixed value.
+So I'm wondering if this value can be modified for each input image in the existing code ?
+
+
+## response 2
+Yes, what you are suggesting is reasonable. 
+
+When we encountered this issue in the 2016 Radiology study, the images were of very different sizes - conventional chest x-rays vs. images on CRT monitors. We never encountered the need for a hard acceptance radius - if in doubt, an independent radiologist was consulted to determine if the localization was acceptable. This is a clinical issue - super accuracy (e.g., pixel level) is not required for the radiologist and the surgeon to agree that they are talking about the same lesion.
+
+In any case, images are not input to my software (`RJafroc`) so this has to be done independently.
+
+## email 3
+
+I may need to add more explanations for this question. 
+
+Since I'm evaluating actually if I can use the JAFROC-1 in the case of object detection and localization in CV (computer-vision) problems.
+The state-of-the-art is to calculate firstly the IoU (Intersection over union), then predefine an IoU threshold (say 0.5) in classifying whether the prediction is a true positive or a false positive (similar to acceptance radius), finally calculate the Average Precision (AP) which represents the area under the precision-recall curve.
+Since there is no True Negative cases in this scenario, ROC is not used. Instead, they use the precision-recall curve.
+
+So I'm wondering if the JAFROC-1 will have a higher statistical power than this state-of-the-art.
+
+## response 3
+
+I am not familiar with precision recall curves and thanks for you brief explanation. Is the area under the precision-recall curve bounded or unbounded? If unbounded, I see problems with its usage, similar to problems with using the area under the FROC curve. [The areas under the ROC and AFROC curves are bounded.] The TN event does not exist in FROC studies, in the sense that it is an unobservable event: this is a misconception that I have discussed before. [TN event does exist in ROC studies.]
+
+In most medical imaging studies I am not comfortable with FOMs that do not include normal cases. Therefore, I do not recommend such studies and use of JAFROC1 FOM is not recommended. 
+
+Of course, there could be situations where JAFROC1 FOM is appropriate, but, to get to your question, I have not studied power vs. precision recall curve in such situations.
+
+Statistical power is an important consideration, but it is not the only consideration. Clinical relevance is another important consideration. You need to decide on what is the most appropriate method for your study.
+
+
+
+
+
+## Discussion{#classification-tasks-discussion}
+
+
+## References {#classification-tasks--references}
+

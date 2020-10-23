@@ -286,16 +286,18 @@ If $FP_{k_1 1} \geq \zeta_r$  the indicator function yields unity, and otherwise
 ### Inferred TPF
 The inferred true positive (TP) z-sample for diseased case $k_2 2$ is defined by: 
 
+
 \begin{equation}
 \left.
 \begin{aligned}
-TP_{k_2 2}=& \max_{l_1 l_2}\left ( \left (z_{k_2 2 l_1 2} ,z_{k_2 2 l_2 2}  \right ) \mid l_1 \neq \varnothing \right )\\
-=& \left (\max_{l_2}  \left ( z_{k_2 2 l_2 2}  \right )  \right ) \mid\left ( l_1 = \varnothing \land \left (\max_{l_2}{\left (z_{k_2 2 l_2 2}  \right )} \neq -\infty  \right )  \right )\\
-=& \left (-\infty  \right ) \mid \left ( l_1 = \varnothing \land\left ( \max_{l_2}{\left (z_{k_2 2 l_2 2}  \right )} = -\infty  \right )  \right )\\
+TP_{k_2 2}=& \textstyle\max_{l_1 l_2}\left ( \left (z_{k_2 2 l_1 2} ,z_{k_2 2 l_2 2}  \right ) \mid l_1 \neq \varnothing \right )\\
+=& \left (\textstyle\max_{l_2}  \left ( z_{k_2 2 l_2 2}  \right )  \right ) \mid\left ( l_1 = \varnothing \land \left (\textstyle\max_{l_2}{\left (z_{k_2 2 l_2 2}  \right )} \neq -\infty  \right )  \right )\\
+=& \left (-\infty  \right ) \mid \left ( l_1 = \varnothing \land\left ( \textstyle\max_{l_2}{\left (z_{k_2 2 l_2 2}  \right )} = -\infty  \right )  \right )\\
 \end{aligned}
 \right \}
 (\#eq:froc-paradigm-TP)
 \end{equation}
+
 
 Here $\land$ is the logical AND operator. 
 
@@ -320,7 +322,7 @@ The inferred empirical ROC plot connects adjacent points $\left( FPF_r, TPF_r \r
 Fig. 4 in [@bunch1977free] anticipated another way of visualizing FROC data. I subsequently termed^[The late Prof. Richard Swensson did not like the author's choice of the word "alternative" in naming this operating characteristic. The author had no idea in 1989 how important this operating characteristic would later turn out to be, otherwise a more meaningful name might have been proposed.] this the *alternative FROC (AFROC)* plot [@RN761]. The AFROC is defined as the plot of $LLF(\zeta)$ along the ordinate vs. $\text{FPF}(\zeta)$ along the abscissa. $LLF_r \equiv LLF(\zeta_r)$ was defined in the second equation in \@ref(eq:froc-paradigm-NLF-LLF2) and $FPF_r \equiv FPF(\zeta_r)$ was defined in the first equation in \@ref(eq:froc-paradigm-FPF).
 
 
-### The constrained property of the observed end-point of the AFROC
+### The constrained property of the observed end-point of the AFROC {#froc-paradigm-AFROC-constrained}
 Since $\zeta_{R_{FROC}+1} = \infty$, according to Eqn. \@ref(eq:froc-paradigm-NLF-LLF2) and Eqn. \@ref(eq:froc-paradigm-FPF), $r = R_{FROC}+1$  yields the trivial operating point (0,0). Likewise, since $\zeta_0 = -\infty$, $r = 0$ yields the trivial point (1,1):
 
 \begin{equation}
@@ -890,7 +892,10 @@ FPF_r^1 \equiv FPF_r^1\left ( \zeta_r \right ) = \frac{1}{K_1+K_2}\sum_{t=1}^{2}
 \end{equation}
 
 
-Note the subtle differences between Eqn. \@ref(eq:froc-paradigm-FPF) and Eqn. \@ref(eq:froc-paradigm-FPF1). The latter counts "FPs" on non-diseased and diseased cases while Eqn. \@ref(eq:froc-paradigm-FPF) counts FPs on non-diseased cases only, and for that reason the denominators in the two equations are different. The advisability of allowing a diseased case to be both a TP and a FP is questionable from both clinical and statistical considerations. However, allowing this possibility leads to the following definition: the empirical alternative FROC1 (AFROC1) plot connects adjacent operating points $\left ( FPF_r^1, \text{LLF}_r \right )$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1). The only difference between AFROC1 and the AFROC plot is in the x-axis. 
+Note the subtle differences between Eqn. \@ref(eq:froc-paradigm-FPF) and Eqn. \@ref(eq:froc-paradigm-FPF1). The latter counts "FPs" on non-diseased and diseased cases while Eqn. \@ref(eq:froc-paradigm-FPF) counts FPs on non-diseased cases only, and for that reason the denominators in the two equations are different. The advisability of allowing a diseased case to be both a TP and a FP is questionable from both clinical and statistical considerations. However, allowing this possibility leads to the following definition. 
+
+Definition:
+The empirical alternative FROC1 (AFROC1) plot connects adjacent operating points $\left ( FPF_r^1, \text{LLF}_r \right )$, including the origin (0,0), with straight lines plus a straight-line segment connecting the observed end-point to (1,1). The only difference between AFROC1 and the AFROC plot is in the x-axis. 
 
 
 ### The weighted-AFROC1 (wAFROC1) plot {#froc-paradigm-wAFROC1}
