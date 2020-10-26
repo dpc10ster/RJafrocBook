@@ -69,7 +69,7 @@ r = 1, 2, ..., R_{FROC}\\
 \end{equation}
 
 
-### FROC notation
+## FROC notation {#froc-paradigm-notation}
 *Clear notation is vital to understanding this paradigm.* The notation needs to account for case and location dependencies of ratings and the distinction between case-level and location-level ground truth. For example, a diseased case can have many regions that are non-diseased and diseased regions (the lesions). The notation also has to account for cases with no marks and the varying and a-priori unpredictable number of marks per case. 
 
 FROC notation is summarized in Table \@ref(tab:froc-paradigm-frocNotation), in which **all marks are latent marks**. The table is organized into three columns, the first column is the row number, the second column has the symbol(s), and the third column has the meaning(s) of the symbol(s). 
@@ -109,7 +109,7 @@ knitr::kable(df, caption = "FROC notation; all marks refer to latent marks; see 
 
    + $l_1 = \{1, 2, ..., N_{k_t t}\}$ indexes latent NL marks, provided the case has at least one NL mark, and otherwise $N_{k_t t} = 0$ and $l_1 = \varnothing$, the null set. 
    
-   + The possible values of $l_1$  are $l_1 = \left \{ \varnothing \right \}\oplus \left \{ 1,2,...N_{k_t t} \right \}$. The null set applies when the case has no latent NL marks and $\oplus$ is the "exclusive-or" symbol ("exclusive-or" is used in the English sense: "one or the other, but not neither nor both"). In other words, $l_1$ can *either* be the null set or take on positive integer values. 
+   + The possible values of $l_1$ are $l_1 = \left \{ \varnothing \right \}\oplus \left \{ 1,2,...N_{k_t t} \right \}$. The null set applies when the case has no latent NL marks and $\oplus$ is the "exclusive-or" symbol ("exclusive-or" is used in the English sense: "one or the other, but not neither nor both"). In other words, $l_1$ can *either* be the null set or take on values $1,2,...N_{k_t t}$. 
    
    + Likewise, $l_2 = \left \{ 1,2,...,L_{k_2 2} \right \}$ indexes latent LL marks. Unmarked LLs are assigned negative infinity ratings. The null set notation is not needed for latent LLs. 
 
@@ -132,6 +132,10 @@ knitr::kable(df, caption = "FROC notation; all marks refer to latent marks; see 
 
 * Row 16: $L_T$ is the total number of lesions in the dataset.  
 
+### Discussion: cases with zero latent NL marks
+This aspect of FROC data, **that there could be cases with no NL marks, no matter how low the reporting threshold**, has created problems both from conceptual and notational viewpoints. Taking the conceptual issue first, my thinking (prior to 2004) was that as the reporting threshold $\zeta_1$ is lowered, the number of marks per non-diseased case increases almost indefinitely. My visualization of this process was each case "filling up" with NL marks ^[I expected the number of NL marks per image to be limited only by the ratio of image size to lesion size, i.e., larger values for smaller lesions.]. The early modeling [@chakraborty1989maximum] predicts that the abscissa of the FROC curve should approach $\infty$ as the reporting threshold is lowered to $\zeta_1 = -\infty$. However, observed FROC curves end in a plateau, with a finite limiting abscissa. This mismatch between experiment and theory is one reason I introduced the radiological search model (RSM) [@RN1564]. I will have much more to say about this in a subsequent chapter, but for now I state one prediction of the RSM: the number of latent NL marks is a Poisson distributed random integer. This means that the actual number of latent NL marks per case can be 0, 1, 2, etc. A consequence of the RSM is that the abscissa of the FROC curve does not extend indefinitely to the right, rather it ends at a finite value. With this background, let us return to the conceptual issue: why does the observer not keep "filling-up" the image with NL marks? The answer is that **the observer only marks regions that have a finite non-zero chance of being a lesion**. For example, if the actual number of latent NLs on a particular case is 2, then, as the reporting threshold is lowered, the observer will make at most two NL marks. Having exhausted these two regions the observer will not mark any more regions because there are no more regions to be marked - all other regions in the image have, in the opinion of the observer, zero chance of being a lesion.
+
+The notational issue is how to handle images with no latent NL marks. Basically it involves restricting summations over cases $k_ t t$ to those cases which have at least one latent NL mark, i.e., $N_{k_t t} \neq 0$. This is illustrated in the next section.
 
 This completes FROC notation. 
 
@@ -160,10 +164,9 @@ Due to the ordering of the thresholds, i.e., $\zeta_1 < \zeta_2 ... < \zeta_{R_{
 
 
 \begin{equation}
-\text{NLF}_r  = \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_r \right ) 
+\text{NLF}_r  = \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \mathbb{I} \left ( N_{k_t t} \neq 0 \right )\sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_r \right ) 
 (\#eq:froc-paradigm-NLFr)
 \end{equation} 
-
 
 \begin{equation}
 \text{LLF}_r  = \frac{1}{L_T} \sum_{k_2=1}^{K_2} \sum_{l_2=1}^{L_{k_2 2}} \mathbb{I} \left ( z_{k_2 2 l_2 2} \geq \zeta_r  \right ) 
@@ -171,40 +174,41 @@ Due to the ordering of the thresholds, i.e., $\zeta_1 < \zeta_2 ... < \zeta_{R_{
 \end{equation} 
 
 
-The indicator function, $\mathbb{I}$, yields unity if its argument is true and zero otherwise, so it acts like a counter. In Eqn. \@ref(eq:froc-paradigm-NLFr) the summations yield the total number of NLs in the dataset with z-samples $\geq \zeta_r$ and dividing by the total number of cases yields $\text{NLF}_r$. This equation also shows explicitly that NLs on both non-diseased ($t=1$) and diseased ($t=2$) cases contribute to NLF. 
+In these equations the indicator functions, $\mathbb{I}()$, yield unity if the argument is true and zero otherwise. 
 
-In Eqn. \@ref(eq:froc-paradigm-LLFr) a summation over $t$ is not needed as only diseased cases contribute to LLF. The denominator $L_T$ is the total number of lesions in the dataset. 
+In Eqn. \@ref(eq:froc-paradigm-NLFr) the first usage of the indicator function, namely $\mathbb{I} \left ( N_{k_t t} \neq 0 \right )$, ensures that **only cases with at least one latent NL** are counted. Recall that $N_{k_t t}$ is the total number of latent NLs in case $k_t t$. Not including this term would cause the summation over $l_1$ to be undefined for cases with zero latent NLs. The second usage of the indicator function, namely $\mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_r \right )$, counts over all NL marks with ratings $\geq \zeta_r$. The three summations yield the total number of NLs in the dataset with z-samples $\geq \zeta_r$ and dividing by the total number of cases yields $\text{NLF}_r$. This equation also shows explicitly that NLs on both non-diseased ($t=1$) and diseased ($t=2$) cases contribute to NLF. 
+
+In Eqn. \@ref(eq:froc-paradigm-LLFr) a summation over $t$ is not needed as only diseased cases contribute to LLF. Analogous to the "first-usage of the indicator function" term in Eqn. \@ref(eq:froc-paradigm-NLFr), a term like $\mathbb{I} \left ( L_{k_2 2} \neq 0 \right )$ is superfluous since $L_{k_2 2} > 0$. However, analogous to the "second-usage" term in Eqn. \@ref(eq:froc-paradigm-NLFr), the term $\mathbb{I} \left ( z_{k_2 2 l_2 2} \geq \zeta_r \right )$ is needed to count over all LL marks with ratings $\geq \zeta_r$. Dividing by $L_T$, the total number of lesions in the dataset, yields $\text{LLF}_r$. 
 
 The empirical FROC plot connects adjacent operating points $\left (\text{NLF}_r, \text{LLF}_r \right )$, including the origin (0,0) **but not (1,1)**, with straight lines. 
 
 ### The semi-constrained property of the observed end-point of the FROC plot {#froc-paradigm-froc-plot-semi-constrained} 
-The term *semi-constrained* means that while the observed end-point *ordinate* is constrained to the range (0,1) the corresponding *abscissa* is not. The operating points are labeled by $r$, with $r = 1$ corresponding to the upper most observed point, $r = 2$ is the next lower operating point, and $r = R_{FROC}$ corresponds to the operating point closest to the origin. 
+The operating points are labeled by $r$, with $r = 1$ corresponding to the upper most observed point, $r = 2$ is the next lower operating point, and $r = R_{FROC}$ corresponds to the operating point closest to the origin. 
 
-Since $\zeta_{R_{FROC}+1} = \infty$, then according to Eqn. \@ref(eq:froc-paradigm-NLFr) and Eqn. \@ref(eq:froc-paradigm-LLFr), $r = R_{FROC}+1$  yields the trivial operating point (0,0). However, at the other end $r = 0$ does not yield a defined point. To understand this consider the expression for $NLF_0$, using Eqn. \@ref(eq:froc-paradigm-NLFr) with $r = 0$: 
+The term *semi-constrained* means that while the observed end-point *ordinate* is constrained to the range (0,1) the corresponding *abscissa* is not so constrained. 
+
+Since $\zeta_{R_{FROC}+1} = \infty$ according to Eqn. \@ref(eq:froc-paradigm-NLFr) and Eqn. \@ref(eq:froc-paradigm-LLFr), $r = R_{FROC}+1$  yields the trivial operating point (0,0). However, at the other end $r = 0$ does not yield a defined point. To understand this consider the expression for $NLF_0$, using Eqn. \@ref(eq:froc-paradigm-NLFr) with $r = 0$: 
 
 \begin{equation}
-\text{NLF}_0 = \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq -\infty \mid l_1 \neq \varnothing \right ) 
+\text{NLF}_0 = \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \mathbb{I} \left ( N_{k_t t} \neq 0 \right ) \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq -\infty \right ) 
 (\#eq:froc-paradigm-NLF0)
 \end{equation} 
-
-The single vertical bar $\mid$ is the conditioning operator; e.g., $A \mid B$ is event A assuming condition B is true. Note the conditioning on cases with at least one latent NL as cases with zero latent NLs would have $l_1 = \varnothing$, which would "break" the summation over $l_1$. 
 
 The right hand side can be separated into two terms, the contribution of latent NLs with z-samples in the range $z \geq \zeta_1$ and those in the range $-\infty \leq z < \zeta_1$. The first term equals the abscissa of the upper-most *observed* operating point, $NLF_1$:
 
 \begin{equation}
-\text{NLF}_1 = \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_1 \mid l_1 \neq \varnothing \right ) 
+\text{NLF}_1 = \frac{1}{K_1+K_2} \sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \mathbb{I} \left ( N_{k_t t} \neq 0 \right ) \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( z_{k_t t l_1 1} \geq \zeta_1 \right ) 
 (\#eq:froc-paradigm-NLF11)
 \end{equation} 
 
-STOP
-(This time the null-set conditioning is not needed as $z_{k_t t l_1 1} \geq \zeta_1$ implies $l_1 \neq \varnothing$.) This is the abscissa of the *observed* end-point. Since each case could have an unconstrained number of NLs, $NLF_1$ is unconstrained and, in particular, can exceed unity. *Unlike the ROC plot, which is completely contained in the unit square, the FROC plot is not.*
+This is the abscissa of the *observed* end-point. Since each case could have an unconstrained number of NLs, $NLF_1$ is unconstrained and, in particular, need not equal unity. *Unlike the ROC plot, which is completely contained in the unit square, the FROC plot is not.*
 
 The 2nd term is: 	
 
 \begin{equation}
 \left. 
 \begin{aligned} 
-\text{2nd term}=&\left (\frac{1}{K_1+K_2}   \right )\sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( -\infty \leq z_{k_t t l_1 1} < \zeta_1 \mid l_1 \neq \varnothing \right )\\
+\text{2nd term}=&\left (\frac{1}{K_1+K_2} \right )\sum_{t=1}^{2} \sum_{k_t=1}^{K_t} \mathbb{I} \left ( N_{k_t t} \neq 0 \right ) \sum_{l_1=1}^{N_{k_t t}} \mathbb{I} \left ( -\infty \leq z_{k_t t l_1 1} < \zeta_1 \right )\\
 =&\frac{\text{unknown number}}{K_1+K_2}
 \end{aligned}
 \right \} 
@@ -212,7 +216,7 @@ The 2nd term is:
 \end{equation} 
 
 
-It represents the contribution of unmarked NLs (i.e., latent NLs whose z-samples were below $\zeta_1$). It determines how much further to the right the observer's NLF would have moved, relative to $NLF_1$, if one could get the observer to lower the reporting criterion to $-\infty$. **Since in practice the observer will not oblige, this term cannot be evaluated. Another way of stating this is that unmarked latent NLs represent unobservable events.**
+It represents the contribution of unmarked NLs (i.e., latent NLs whose z-samples were below $\zeta_1$). It determines how much further to the right the observer's NLF would have moved, relative to $NLF_1$, if one could get the observer to lower the reporting criterion to $-\infty$. **Since the observer may not oblige, this term cannot, in general, be evaluated.** Another way of stating the basic problem is that **unmarked latent NLs represent unobservable events**.
 
 Turning our attention to $LLF_0$:
 
@@ -227,7 +231,7 @@ Turning our attention to $LLF_0$:
 \end{equation}
 
 
-Unlike unmarked latent NLs, unmarked lesions can safely be assigned the $-\infty$ rating, because an unmarked lesion is an observable event. The right hand side of Eqn. \@ref(eq:froc-paradigm-LLF0) evaluates to unity. However, since the corresponding abscissa $NLF_0$ is undefined, one cannot plot this point. It follows that the observed FROC end-point is semi-constrained, in the sense that its abscissa is not limited to the range (0,1).
+Unlike unmarked latent NLs, unmarked lesions can safely be assigned the $-\infty$ rating, because an unmarked lesion is an observable event. The right hand side of Eqn. \@ref(eq:froc-paradigm-LLF0) evaluates to unity. However, since the corresponding abscissa $NLF_0$ is undefined, one cannot plot this point. It follows that the observed FROC end-point is semi-constrained, in the sense that its abscissa is not equal to the range (0,1).
 
 The next lower value of LLF can be plotted: 
 
@@ -332,7 +336,7 @@ The inferred empirical ROC plot connects adjacent points $\left( FPF_r, TPF_r \r
 
 
 ## The alternative FROC (AFROC) plot {#froc-paradigm-AFROC}
-Fig. 4 in [@bunch1977free] anticipated another way of visualizing FROC data. I subsequently termed^[The late Prof. Richard Swensson did not like the author's choice of the word "alternative" in naming this operating characteristic. The author had no idea in 1989 how important this operating characteristic would later turn out to be, otherwise a more meaningful name might have been proposed.] this the *alternative FROC (AFROC)* plot [@RN761]. The AFROC is defined as the plot of $LLF(\zeta)$ along the ordinate vs. $\text{FPF}(\zeta)$ along the abscissa. $LLF_r \equiv LLF(\zeta_r)$ was defined in Eqn. \@ref(eq:froc-paradigm-LLFr) and $FPF_r \equiv FPF(\zeta_r)$ was defined in Eqn. \@ref(eq:froc-paradigm-FPF).
+Fig. 4 in [@bunch1977free] anticipated another way of visualizing FROC data. I subsequently termed^[The late Prof. Richard Swensson did not like the author's choice of the word "alternative" in naming this operating characteristic. The author had no idea in 1989 how important this operating characteristic would later turn out to be, otherwise a more meaningful name might have been proposed.] this the *alternative FROC (AFROC)* plot [@chakraborty1989maximum]. The AFROC is defined as the plot of $LLF(\zeta)$ along the ordinate vs. $\text{FPF}(\zeta)$ along the abscissa. $LLF_r \equiv LLF(\zeta_r)$ was defined in Eqn. \@ref(eq:froc-paradigm-LLFr) and $FPF_r \equiv FPF(\zeta_r)$ was defined in Eqn. \@ref(eq:froc-paradigm-FPF).
 
 
 ### The constrained property of the observed end-point of the AFROC {#froc-paradigm-AFROC-constrained}
@@ -1001,7 +1005,7 @@ So one might wonder, why not ask the radiologists to report everything they see,
 ## Comments and recommendations
 
 ### Why not use NLs on diseased cases?
-The original definition of the AFROC [@RN761; @RN206], but missing the "1" nowadays appended to the acronym, was introduced in 1989. It used the maximum rated NL on every case to define the FPF-axis. The paper [@RN1496] suggested the same procedure. At that time, it seemed a good idea to include all available information and not discard any highest rated NLs. Usage of the AFROC1 as the basis of analysis is not recommended: the only exception is when the case-set contains only diseased cases although it is not clear to the author why anyone would wish to conduct an observer performance study with diseased cases only, since it sheds no light on the basic imaging task of discriminating non-diseased from diseased cases.
+The original definition of the AFROC [@chakraborty1989maximum; @RN206], but missing the "1" nowadays appended to the acronym, was introduced in 1989. It used the maximum rated NL on every case to define the FPF-axis. The paper [@RN1496] suggested the same procedure. At that time, it seemed a good idea to include all available information and not discard any highest rated NLs. Usage of the AFROC1 as the basis of analysis is not recommended: the only exception is when the case-set contains only diseased cases although it is not clear to the author why anyone would wish to conduct an observer performance study with diseased cases only, since it sheds no light on the basic imaging task of discriminating non-diseased from diseased cases.
 
 The reason for excluding highest rated NLs on diseased cases is that they have a fundamentally different role in the clinic from those on non-diseased cases. A recall due to a highest rated NL on a diseased case where the lesion was not seen is actually not that bad. It would be better if the recall were for the right reason, i.e., the lesion was seen, but with a recall for the wrong reason at least the doctors get a second chance to find the lesion. On the other hand, a recall resulting from a highest rated NL on a non-diseased case is unequivocally bad. The patient is unnecessarily subjected to further imaging and perhaps invasive procedures like needle-biopsy in order to rule out cancer that she does not have. All this costs money, not to mention the physical and emotional trauma inflicted on the patient. 
 
