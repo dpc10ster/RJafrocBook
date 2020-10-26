@@ -80,6 +80,24 @@ Of course, there could be situations where JAFROC1 FOM is appropriate, but, to g
 Statistical power is an important consideration, but it is not the only consideration. Clinical relevance is another important consideration. You need to decide on what is the most appropriate method for your study.
 
 
+## email 4
+We have 4322 cases and 14 algorithmic readers. Actually, the maximum number of classes per case is 6, but the class type is already coded in the TP/FP worksheets, eg. when the predicted class type matches the ground truth class type, it will be put in TP, if not, it will be put in FP. So we can *not* (sic) get the class information from the excel file. 
+
+## response 4
+Excerpt from my earlier email: 
+
+>
+Suppose case 1 has four lesions, two of Type1, one of Type2 and one of Type3.
+Then in the Truth worksheet lesionID column for that case, there will be four integer entries: 1, 2, 3 and 4. The 1 refers to the first lesion (of Type1 - you need to keep track of this), 2 to the second lesion (also of Type1 - etc), 3 to the third lesion (Type2 - etc) and 4 to the fourth lesion (of Type3 - etc).
+If lesionID 2 is correctly localized and classified (i.e., as Type1), then the corresponding rating belongs in the TP worksheet with lesionID = 2. If lesionID 3 is correctly localized and classified (i.e., as Type2), then the corresponding rating belongs in the TP … with lesionID = 3. Etc.
+If lesionID 1 is correctly localized but incorrectly classified (i.e., as Type2 or Type3), then the rating belongs in the FP worksheet. Any mark not corresponding (in location) to an actual lesion (the classification is irrelevant) goes in the FP worksheet.
+
+The class type must appear in the `Truth` sheet under `lesionID`. This establishes the TRUE class type for each lesion. The way you currently have the `Truth` sheet structured the program thinks that the maximum number of classes is 144, not six.
+
+The class type must also appear in `TP` sheet if the lesion was correctly located and classified. The FP sheet does not have a `lesionID` field. Both correctly located but incorrectly classified lesions and incorrectly localized lesions go in this sheet. 
+
+
+
 
 
 
