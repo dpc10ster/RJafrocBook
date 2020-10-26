@@ -11,7 +11,7 @@
 
 ## Introduction {#frocdataformatIntro}
 * See my book @RN2680 for full details.
-* In the Free-response Receiver Operating Characteristic (FROC) paradigm [@RN761] the observer searches each case for signs of **localized disease** and marks and rates localized regions that are sufficiently suspicious for disease presence. 
+* In the Free-response Receiver Operating Characteristic (FROC) paradigm [chakraborty1989maximum] the observer searches each case for signs of **localized disease** and marks and rates localized regions that are sufficiently suspicious for disease presence. 
 * FROC data consists of **mark-rating pairs**, where each mark is a localized-region that was considered sufficiently suspicious for presence of a localized lesion and the rating is the corresponding confidence level. 
 * By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (`LL`) - if it is close to a real lesion - or a non-lesion localization (`NL`) otherwise. 
 * The observer assigns a rating to each region. The rating, as in the ROC paradigm, can be an integer or quasi-continuous (e.g., 0 – 100), or a floating point value, as long as higher numbers represent greater confidence in presence of a lesion at the indicated region.
@@ -37,10 +37,14 @@ The `Truth` worksheet contains 6 columns: `CaseID`, `LesionID`, `Weight`, `Reade
 * `ModalityID`: a comma-separated listing of modalities (or treatments), each represented by a unique **integer**, that apply to each case. In the example each cell has the value `0, 1`. **Each cell has to be text formatted.**
 * `Paradigm`: In the example shown below, the contents are `FROC` and `crossed`. It informs the software that this is an `FROC` dataset and the design is "crossed", as in **TBA chapter xx**.
 
-<div class="figure" style="text-align: center">
-<img src="images/frocCrTruth.png" alt="Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx" width="50%" height="20%" />
-<p class="caption">(\#fig:frocCrTruth)Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocCrTruth} 
+
+}
+
+\caption{Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}(\#fig:frocCrTruth)
+\end{figure}
 
 
 ## The structure of an FROC dataset
@@ -97,10 +101,14 @@ x$lesionWeight
 
 ## The false positive (FP) ratings
 These are found in the `FP` or `NL` worksheet, see below.
-<div class="figure" style="text-align: center">
-<img src="images/frocCrNL.png" alt="Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx" width="50%" height="20%" />
-<p class="caption">(\#fig:frocCrNL)Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocCrNL} 
+
+}
+
+\caption{Fig. 2: FP/NL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}(\#fig:frocCrNL)
+\end{figure}
 
 * It consists of 4 columns, of equal length. **The common length is unpredictable.** It could be zero if the dataset has no NL marks (a distinct possibility if the lesions are very easy to find and the modality and/or observer has high performance). All one knows is that the common length is an integer greater than or equal to zero.
 * In the example dataset, the common length is 0.
@@ -118,10 +126,14 @@ These are found in the `FP` or `NL` worksheet, see below.
 ## The true positive (TP) ratings
 These are found in the `TP` or `LL` worksheet, see below.
 
-<div class="figure" style="text-align: center">
-<img src="images/frocCrLL.png" alt="Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx" width="50%" height="20%" />
-<p class="caption">(\#fig:frocCrLL)Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/frocCrLL} 
+
+}
+
+\caption{Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx}(\#fig:frocCrLL)
+\end{figure}
 
 * This worksheet can only have diseased cases. The presence of a non-diseased case in this worksheet will generate an error.
 * The common vertical length, 31 in this example, is a-priori unpredictable. Given the structure of the `Truth` worsheet for this dataset, the maximum length would be 9 times 2 times 3, assuming every lesion is marked for each modality, reader and diseased case. The 9 comes from the total number of non-zero entries in the `LesionID` column of the `Truth` worksheet.
