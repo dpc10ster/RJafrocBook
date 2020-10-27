@@ -339,7 +339,7 @@ alphaPowerPlot <- ggplot(mapping = aes(x = EmpAlpha, y = EmpPower)) +
 print(alphaPowerPlot)
 ```
 
-<img src="08-hypothesis-testing_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+![](08-hypothesis-testing_files/figure-latex/unnamed-chunk-7-1.pdf)<!-- --> 
 
 Relevant line numbers are shown above as comments. Line 6 creates two variables, `muNH` = 1.5 (the binormal model separation parameter under the NH) and `muAH` = 2.1 (the separation parameter under the AH). Under either hypotheses, the same diseased case standard deviation `sigma` = 1.3 and 50 non-diseased and 52 diseased cases are assumed. As before, lines 8 – 14 use the "brute force" technique to determine population AUC and standard deviation of AUC under the NH condition. Line 16 defines the number of trials `T` = 2000. Line 17 creates a vector `mu` containing the NH and AH values defined at line 6. Line 18 creates `alphaArr`, a sequence of 10 equally spaced values in the range 0.05 to 0.95, which represent 10 values for $\alpha$. Line 19 creates two arrays of length 10 each, named `EmpAlpha` and `EmpPower`, to hold the values of the observed Type-I error rate, i.e., empirical $\alpha$, and the empirical power, respectively. The program will run `T` = 2000 NH and `T` = 2000 AH trials using as $\alpha$ each successive value in `alphaArr` and save the observed Type-I error rates and observed powers to the arrays `EmpAlpha` and `EmpPower`, respectively. 
 

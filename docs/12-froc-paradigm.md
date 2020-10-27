@@ -26,10 +26,9 @@ There are three location-specific paradigms:
 * the location ROC (LROC) [@RN211; @RN1311; @RN209]; 
 * the region of interest (ROI) [@RN55; @RN1345]. 
 
-<div class="figure">
-<img src="images/4Paradigms.png" alt="Upper Left: ROC, Upper Right: FROC, Lower Left: LROC, Lower Right: ROI" width="100%" />
-<p class="caption">(\#fig:froc-paradigm-4Paradigms)Upper Left: ROC, Upper Right: FROC, Lower Left: LROC, Lower Right: ROI</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/4Paradigms} \caption{Upper Left: ROC, Upper Right: FROC, Lower Left: LROC, Lower Right: ROI}(\#fig:froc-paradigm-4Paradigms)
+\end{figure}
 
 Fig. \@ref(fig:froc-paradigm-4Paradigms): A mammogram interpreted according to current observer performance paradigms. The arrows indicate two real lesions and the three light crosses indicate suspicious regions. Evidently the radiologist saw one of the lesions, missed the other lesion and mistook two normal structures for lesions. ROC (top-left): the radiologist assigns a single confidence level that somewhere in the image there is at least one lesion. FROC (top-right): the dark crosses indicate suspicious regions that are marked and the accompanying numerals are the FROC ratings. LROC (bottom-left): the radiologist provides a single rating that somewhere in the image there is at least one lesion and marks the most suspicious region. ROI (bottom-right): the image is divided into a number of regions-of-interest (by the researcher) and the radiologist rates each ROI for presence of at least one lesion somewhere within the ROI.
 
@@ -100,49 +99,26 @@ Table \@ref(tab:FrocRocRatingsComparison): comparison of ROC and FROC rating sca
 
 
 
-<table>
-<caption>(\#tab:FrocRocRatingsComparison)Comparison of ROC and FROC rating scales: note that the FROC rating is one less than the corresponding ROC rating and that there is no rating corresponding to ROC-1.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> ROC Rating </th>
-   <th style="text-align:left;"> Observers Description </th>
-   <th style="text-align:left;"> FROC Rating </th>
-   <th style="text-align:left;"> Observers Description </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> Definitely not diseased </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> Image is not marked </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> Probably not diseased </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> Just possible it is a lesion </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 3 </td>
-   <td style="text-align:left;"> Possibly diseased </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> Possibly a lesion </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 4 </td>
-   <td style="text-align:left;"> Probably diseased </td>
-   <td style="text-align:left;"> 3 </td>
-   <td style="text-align:left;"> Probably a lesion </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 5 </td>
-   <td style="text-align:left;"> Definitely diseased </td>
-   <td style="text-align:left;"> 4 </td>
-   <td style="text-align:left;"> Definitely a lesion </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:FrocRocRatingsComparison)Comparison of ROC and FROC rating scales: note that the FROC rating is one less than the corresponding ROC rating and that there is no rating corresponding to ROC-1.}
+\centering
+\begin{tabular}[t]{l|l|l|l}
+\hline
+ROC Rating & Observers Description & FROC Rating & Observers Description\\
+\hline
+1 & Definitely not diseased & NA & Image is not marked\\
+\hline
+2 & Probably not diseased & 1 & Just possible it is a lesion\\
+\hline
+3 & Possibly diseased & 2 & Possibly a lesion\\
+\hline
+4 & Probably diseased & 3 & Probably a lesion\\
+\hline
+5 & Definitely diseased & 4 & Definitely a lesion\\
+\hline
+\end{tabular}
+\end{table}
 
 
 The FROC rating is one less than the corresponding ROC rating because the ROC-1 rating is not used by the observer; the observer indicates such images by the simple expedient of not marking them. 
@@ -189,18 +165,12 @@ TBA
 
 
 
-<div class="figure">
-<img src="12-froc-paradigm_files/figure-html/froc-paradigm-plots-1.png" alt="FROC plots: top row correspond to raw data population plots and the lower row to binned plots wthe fewer cases, see details below." width="672" />
-<p class="caption">(\#fig:froc-paradigm-plots)FROC plots: top row correspond to raw data population plots and the lower row to binned plots wthe fewer cases, see details below.</p>
-</div>
+![(\#fig:froc-paradigm-plots)FROC plots: top row correspond to raw data population plots and the lower row to binned plots wthe fewer cases, see details below.](12-froc-paradigm_files/figure-latex/froc-paradigm-plots-1.pdf) 
 
 
 
 
-<div class="figure">
-<img src="12-froc-paradigm_files/figure-html/froc-paradigm-plots2-1.png" alt="The left figure is the raw FROC curve for $\mu=10$ and the right figure is for $\mu=0.01$, see details below." width="672" />
-<p class="caption">(\#fig:froc-paradigm-plots2)The left figure is the raw FROC curve for $\mu=10$ and the right figure is for $\mu=0.01$, see details below.</p>
-</div>
+![(\#fig:froc-paradigm-plots2)The left figure is the raw FROC curve for $\mu=10$ and the right figure is for $\mu=0.01$, see details below.](12-froc-paradigm_files/figure-latex/froc-paradigm-plots2-1.pdf) 
 
 
 Fig. \@ref(fig:froc-paradigm-plots): Top row, left to right: Population FROC plots for $\mu$ = 0.5, 1, 2; the other parameters are $\lambda$ = 1, $\nu$ = 1, $\zeta_1 = -\infty$ and $L_{max} = 2$ is the maximum number of lesions per case in the dataset. The plots in the bottom row, left to right correspond to 50 non-diseased and 70 diseased cases, where the data was binned into 5 bins, and other parameters are unchanged. As $\mu$ increases, the uppermost point moves upwards and to the left, approaching the top-left corner in the limit $\mu = \infty$. 
