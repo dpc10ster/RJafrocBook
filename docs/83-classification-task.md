@@ -110,11 +110,21 @@ The class type must also appear in `TP` sheet if the lesion was correctly locate
 * The dataset has 3 cases: 9, 17 and 19. 
 
 ### `Truth` sheet
+<div class="figure" style="text-align: center">
+<img src="images/classification/File1Truth.png" alt="Truth worksheet for File1.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File1Truth)Truth worksheet for File1.xlsx</p>
+</div>
+
 * Case 9 has two lesions, with classes `C1` and `C4`. 
 * Case 17 has four lesions, with classes `C1`, `C2`, `C3`and `C4`. 
 * Case 19 has one lesion, with class `C2`. 
 
 ### `TP` sheet
+<div class="figure" style="text-align: center">
+<img src="images/classification/File1TP.png" alt="TP worksheet for File1.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File1TP)TP worksheet for File1.xlsx</p>
+</div>
+
 * This holds CL-CC marks. 
 
 #### Case 9
@@ -129,6 +139,11 @@ The class type must also appear in `TP` sheet if the lesion was correctly locate
 * None.  
 
 ### `FP` sheet
+<div class="figure" style="text-align: center">
+<img src="images/classification/File1FP.png" alt="FP worksheet for File1.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File1FP)FP worksheet for File1.xlsx</p>
+</div>
+
 * This holds IL-NA and CL-IC marks. 
 
 #### Case 9
@@ -136,7 +151,7 @@ The class type must also appear in `TP` sheet if the lesion was correctly locate
 * IL-NA mark rated 1.2. 
 
 #### Case 17
-* CL-IC mark rated 1.5, `C3` classified as `C2`. 
+* CL-IC mark rated 7, `C3` classified as `C2`. 
 * IL-NA mark rated 2.3. 
 * IL-NA mark rated 2.1. 
 
@@ -145,45 +160,69 @@ The class type must also appear in `TP` sheet if the lesion was correctly locate
 * IL-NA mark rated 1.4. 
 * CL-IC mark rated 6.1, `C2` classified as `C3`. 
 
-## code
+### Code file this file
 
 
 ```r
-fileName <- system.file("extdata", "/toyFiles/FROC/frocLocatClass.xlsx", package = "RJafroc", mustWork = TRUE)
+fileName <- "R/CH83-ClassificationTask/File1.xlsx"
 x <- DfReadDataFile(fileName = fileName)
-str(x)
-#> List of 3
-#>  $ ratings     :List of 3
-#>   ..$ NL   : num [1, 1, 1:3, 1:3] 5.5 1.5 1.4 1.2 2.3 ...
-#>   ..$ LL   : num [1, 1, 1:3, 1:4] 5 6.1 5.7 -Inf 7.1 ...
-#>   ..$ LL_IL: logi NA
-#>  $ lesions     :List of 3
-#>   ..$ perCase: int [1:3] 2 4 1
-#>   ..$ IDs    : num [1:3, 1:4] 1 1 1 2 2 ...
-#>   ..$ weights: num [1:3, 1:4] 0.5 0.25 1 0.5 0.25 ...
-#>  $ descriptions:List of 7
-#>   ..$ fileName     : chr "frocLocatClass"
-#>   ..$ type         : chr "FROC"
-#>   ..$ name         : logi NA
-#>   ..$ truthTableStr: num [1, 1, 1:3, 1:5] 1 NA NA 1 1 1 1 1 NA NA ...
-#>   ..$ design       : chr "FCTRL"
-#>   ..$ modalityID   : Named chr "1"
-#>   .. ..- attr(*, "names")= chr "1"
-#>   ..$ readerID     : Named chr "1"
-#>   .. ..- attr(*, "names")= chr "1"
 x$ratings$NL[1,1,,]
 #>      [,1] [,2] [,3]
 #> [1,]  5.5  1.2 -Inf
-#> [2,]  1.5  2.3  2.1
+#> [2,]  7.0  2.3  2.1
 #> [3,]  1.4  6.1 -Inf
 x$ratings$LL[1,1,,]
 #>      [,1] [,2] [,3] [,4]
 #> [1,]  5.0 -Inf -Inf -Inf
-#> [2,]  6.1  7.1  2.3 -Inf
+#> [2,]  6.1  7.1 -Inf  2.3
 #> [3,]  5.7 -Inf -Inf -Inf
 ```
 
+The FOM is shown next:
 
+```r
+print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
+#>           rdr1
+#> trt1 0.2361111
+```
+
+### Code file 2
+I increased the LL rating for case 19 to 10; this should increase the FOM.
+
+<div class="figure" style="text-align: center">
+<img src="images/classification/File2TP.png" alt="TP worksheet for File2.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File2TP)TP worksheet for File2.xlsx</p>
+</div>
+
+
+
+```r
+fileName <- "R/CH83-ClassificationTask/File2.xlsx"
+x <- DfReadDataFile(fileName = fileName)
+print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
+#>           rdr1
+#> trt1 0.4583333
+```
+
+
+### Code file 3
+Starting with original file, I transferred a CL-IC for case 17 to the TP sheet. This should increase the FOM as credit is given for CL-CC.
+
+<div class="figure" style="text-align: center">
+<img src="images/classification/File3TP.png" alt="TP and FP worksheets for File3.xlsx" width="50%" height="20%" /><img src="images/classification/File3FP.png" alt="TP and FP worksheets for File3.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File3TPFP)TP and FP worksheets for File3.xlsx</p>
+</div>
+
+
+
+
+```r
+fileName <- "R/CH83-ClassificationTask/File3.xlsx"
+x <- DfReadDataFile(fileName = fileName)
+print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
+#>           rdr1
+#> trt1 0.5277778
+```
 
 
 ## Discussion{#classification-tasks-discussion}

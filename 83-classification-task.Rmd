@@ -119,11 +119,19 @@ The class type must also appear in `TP` sheet if the lesion was correctly locate
 * The dataset has 3 cases: 9, 17 and 19. 
 
 ### `Truth` sheet
+```{r File1Truth, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Truth worksheet for File1.xlsx",fig.show='hold',fig.align='center'}
+knitr::include_graphics("images/classification/File1Truth.png")
+``` 
+
 * Case 9 has two lesions, with classes `C1` and `C4`. 
 * Case 17 has four lesions, with classes `C1`, `C2`, `C3`and `C4`. 
 * Case 19 has one lesion, with class `C2`. 
 
 ### `TP` sheet
+```{r File1TP, echo=FALSE,out.width="50%",out.height="20%",fig.cap="TP worksheet for File1.xlsx",fig.show='hold',fig.align='center'}
+knitr::include_graphics("images/classification/File1TP.png")
+``` 
+
 * This holds CL-CC marks. 
 
 #### Case 9
@@ -138,6 +146,10 @@ The class type must also appear in `TP` sheet if the lesion was correctly locate
 * None.  
 
 ### `FP` sheet
+```{r File1FP, echo=FALSE,out.width="50%",out.height="20%",fig.cap="FP worksheet for File1.xlsx",fig.show='hold',fig.align='center'}
+knitr::include_graphics("images/classification/File1FP.png")
+``` 
+
 * This holds IL-NA and CL-IC marks. 
 
 #### Case 9
@@ -145,7 +157,7 @@ The class type must also appear in `TP` sheet if the lesion was correctly locate
 * IL-NA mark rated 1.2. 
 
 #### Case 17
-* CL-IC mark rated 1.5, `C3` classified as `C2`. 
+* CL-IC mark rated 7, `C3` classified as `C2`. 
 * IL-NA mark rated 2.3. 
 * IL-NA mark rated 2.1. 
 
@@ -154,17 +166,49 @@ The class type must also appear in `TP` sheet if the lesion was correctly locate
 * IL-NA mark rated 1.4. 
 * CL-IC mark rated 6.1, `C2` classified as `C3`. 
 
-## Code
+### Code file this file
 
 ```{r}
-fileName <- system.file("extdata", "/toyFiles/FROC/frocLocatClass.xlsx", package = "RJafroc", mustWork = TRUE)
+fileName <- "R/CH83-ClassificationTask/File1.xlsx"
 x <- DfReadDataFile(fileName = fileName)
-str(x)
 x$ratings$NL[1,1,,]
 x$ratings$LL[1,1,,]
 ```
 
+The FOM is shown next:
+```{r}
+print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
+```
 
+### Code file 2
+I increased the LL rating for case 19 to 10; this should increase the FOM.
+
+```{r File2TP, echo=FALSE,out.width="50%",out.height="20%",fig.cap="TP worksheet for File2.xlsx",fig.show='hold',fig.align='center'}
+knitr::include_graphics("images/classification/File2TP.png")
+``` 
+
+
+```{r}
+fileName <- "R/CH83-ClassificationTask/File2.xlsx"
+x <- DfReadDataFile(fileName = fileName)
+print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
+```
+
+
+### Code file 3
+Starting with original file, I transferred a CL-IC for case 17 to the TP sheet. This should increase the FOM as credit is given for CL-CC.
+
+```{r File3TPFP, echo=FALSE,out.width="50%",out.height="20%",fig.cap="TP and FP worksheets for File3.xlsx",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("images/classification/File3TP.png", "images/classification/File3FP.png"))
+``` 
+
+
+
+```{r}
+fileName <- "R/CH83-ClassificationTask/File3.xlsx"
+x <- DfReadDataFile(fileName = fileName)
+print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
+```
 
 
 ## Discussion{#classification-tasks-discussion}

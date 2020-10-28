@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-10-26}
+\date{2020-10-28}
 
 \begin{document}
 \maketitle
@@ -6370,7 +6370,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.4044949          1   0.23597243}
+\CommentTok{\#\textgreater{} 1    1.2866095          1   0.25667373}
 \end{Highlighting}
 \end{Shaded}
 
@@ -12090,7 +12090,7 @@ So I'm wondering if the JAFROC-1 will have a higher statistical power than this 
 \hypertarget{response-3}{%
 \section{response 3}\label{response-3}}
 
-I am not familiar with precision recall curves and thanks for you brief explanation. Is the area under the precision-recall curve bounded or unbounded? If unbounded, I see problems with its usage, similar to problems with using the area under the FROC curve. {[}The areas under the ROC and AFROC curves are bounded.{]} The TN event does not exist in FROC studies, in the sense that it is an unobservable event: this is a misconception that I have discussed before. {[}TN event does exist in ROC studies.{]}
+I am not familiar with precision recall curves and thanks for you brief explanation. Is the area under the precision-recall curve bounded or unbounded? If unbounded, I see problems with its usage, similar to problems with using the area under the FROC curve. {[}The areas under the ROC and AFROC curves are bounded.{]} The TN mark does not exist in FROC studies, in the sense that it is an unobservable mark: this is a misconception that I have discussed before. {[}TN mark does exist in ROC studies.{]}
 
 In most medical imaging studies I am not comfortable with FOMs that do not include normal cases. Therefore, I do not recommend such studies and use of JAFROC1 FOM is not recommended.
 
@@ -12119,8 +12119,189 @@ The class type must appear in the \texttt{Truth} sheet under \texttt{lesionID}. 
 
 The class type must also appear in \texttt{TP} sheet if the lesion was correctly located and classified. The FP sheet does not have a \texttt{lesionID} field. Both correctly located but incorrectly classified lesions and incorrectly localized lesions go in this sheet.
 
+\hypertarget{abbreviations}{%
+\subsection{Abbreviations}\label{abbreviations}}
+
+\begin{itemize}
+\tightlist
+\item
+  Correct-localization correct-classification = CL-CC
+\item
+  Correct-localization incorrect-classification = CL-IC
+\item
+  Incorrect-localization classification not applicable = IL-NA
+\end{itemize}
+
+\hypertarget{detailed-example}{%
+\section{Detailed example}\label{detailed-example}}
+
+\begin{itemize}
+\tightlist
+\item
+  This example is implemented in file \texttt{frocLocatClass.xlsx}.
+\item
+  There are four classes of lesions: \texttt{C1}, \texttt{C2}, \texttt{C3}and \texttt{C4}.
+\item
+  The rating scale is 1 - 10 and positive-directed.
+\item
+  The dataset has 3 cases: 9, 17 and 19.
+\end{itemize}
+
+\hypertarget{truth-sheet}{%
+\subsection{\texorpdfstring{\texttt{Truth} sheet}{Truth sheet}}\label{truth-sheet}}
+
+\begin{itemize}
+\tightlist
+\item
+  Case 9 has two lesions, with classes \texttt{C1} and \texttt{C4}.
+\item
+  Case 17 has four lesions, with classes \texttt{C1}, \texttt{C2}, \texttt{C3}and \texttt{C4}.
+\item
+  Case 19 has one lesion, with class \texttt{C2}.
+\end{itemize}
+
+\hypertarget{tp-sheet}{%
+\subsection{\texorpdfstring{\texttt{TP} sheet}{TP sheet}}\label{tp-sheet}}
+
+\begin{itemize}
+\tightlist
+\item
+  This holds CL-CC marks.
+\end{itemize}
+
+\hypertarget{case-9}{%
+\subsubsection{Case 9}\label{case-9}}
+
+\begin{itemize}
+\tightlist
+\item
+  Lesion \texttt{C1}, \texttt{lesionID} = 1, CL-CC mark rated 5.
+\end{itemize}
+
+\hypertarget{case-17}{%
+\subsubsection{Case 17}\label{case-17}}
+
+\begin{itemize}
+\tightlist
+\item
+  Lesion \texttt{C1}, \texttt{lesionID} = 1, CL-CC mark rated 6.1.
+\item
+  Lesion \texttt{C2}, \texttt{lesionID} = 2, CL-CC mark rated 7.1.
+\item
+  Lesion \texttt{C4}, \texttt{lesionID} = 4, CL-CC mark rated 2.3.
+\end{itemize}
+
+\hypertarget{case-19}{%
+\subsubsection{Case 19}\label{case-19}}
+
+\begin{itemize}
+\tightlist
+\item
+  None.
+\end{itemize}
+
+\hypertarget{fp-sheet}{%
+\subsection{\texorpdfstring{\texttt{FP} sheet}{FP sheet}}\label{fp-sheet}}
+
+\begin{itemize}
+\tightlist
+\item
+  This holds IL-NA and CL-IC marks.
+\end{itemize}
+
+\hypertarget{case-9-1}{%
+\subsubsection{Case 9}\label{case-9-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  CL-IC mark rated 5.5, \texttt{C2} classified as \texttt{C3}. This misclassification is especially bad as \texttt{C3} does not exist on this case.
+\item
+  IL-NA mark rated 1.2.
+\end{itemize}
+
+\hypertarget{case-17-1}{%
+\subsubsection{Case 17}\label{case-17-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  CL-IC mark rated 1.5, \texttt{C3} classified as \texttt{C2}.
+\item
+  IL-NA mark rated 2.3.
+\item
+  IL-NA mark rated 2.1.
+\end{itemize}
+
+\hypertarget{case-19-1}{%
+\subsubsection{Case 19}\label{case-19-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  IL-NA mark rated 1.4.
+\item
+  CL-IC mark rated 6.1, \texttt{C2} classified as \texttt{C3}.
+\end{itemize}
+
+\hypertarget{code}{%
+\section{Code}\label{code}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fileName \textless{}{-}}\StringTok{ "R/CH83{-}ClassificationTask/frocLocatClass.xlsx"}
+\NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(}\DataTypeTok{fileName =}\NormalTok{ fileName)}
+\KeywordTok{str}\NormalTok{(x)}
+\CommentTok{\#\textgreater{} List of 3}
+\CommentTok{\#\textgreater{}  $ ratings     :List of 3}
+\CommentTok{\#\textgreater{}   ..$ NL   : num [1, 1, 1:3, 1:3] 5.5 1.5 1.4 1.2 2.3 ...}
+\CommentTok{\#\textgreater{}   ..$ LL   : num [1, 1, 1:3, 1:4] 5 6.1 5.7 {-}Inf 7.1 ...}
+\CommentTok{\#\textgreater{}   ..$ LL\_IL: logi NA}
+\CommentTok{\#\textgreater{}  $ lesions     :List of 3}
+\CommentTok{\#\textgreater{}   ..$ perCase: int [1:3] 2 4 1}
+\CommentTok{\#\textgreater{}   ..$ IDs    : num [1:3, 1:4] 1 1 1 2 2 ...}
+\CommentTok{\#\textgreater{}   ..$ weights: num [1:3, 1:4] 0.5 0.25 1 0.5 0.25 ...}
+\CommentTok{\#\textgreater{}  $ descriptions:List of 7}
+\CommentTok{\#\textgreater{}   ..$ fileName     : chr "frocLocatClass"}
+\CommentTok{\#\textgreater{}   ..$ type         : chr "FROC"}
+\CommentTok{\#\textgreater{}   ..$ name         : logi NA}
+\CommentTok{\#\textgreater{}   ..$ truthTableStr: num [1, 1, 1:3, 1:5] 1 NA NA 1 1 1 1 1 NA NA ...}
+\CommentTok{\#\textgreater{}   ..$ design       : chr "FCTRL"}
+\CommentTok{\#\textgreater{}   ..$ modalityID   : Named chr "1"}
+\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr "1"}
+\CommentTok{\#\textgreater{}   ..$ readerID     : Named chr "1"}
+\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr "1"}
+\NormalTok{x}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,]}
+\CommentTok{\#\textgreater{}      [,1] [,2] [,3]}
+\CommentTok{\#\textgreater{} [1,]  5.5  1.2 {-}Inf}
+\CommentTok{\#\textgreater{} [2,]  1.5  2.3  2.1}
+\CommentTok{\#\textgreater{} [3,]  1.4  6.1 {-}Inf}
+\NormalTok{x}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{LL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,]}
+\CommentTok{\#\textgreater{}      [,1] [,2] [,3] [,4]}
+\CommentTok{\#\textgreater{} [1,]  5.0 {-}Inf {-}Inf {-}Inf}
+\CommentTok{\#\textgreater{} [2,]  6.1  7.1  2.3 {-}Inf}
+\CommentTok{\#\textgreater{} [3,]  5.7 {-}Inf {-}Inf {-}Inf}
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{classification-tasks-discussion}{%
 \section{Discussion}\label{classification-tasks-discussion}}
+
+\hypertarget{detritus}{%
+\subsection{Detritus}\label{detritus}}
+
+This project started with an idea on how to extend localization analysis software (RJafroc) to localization-classification tasks. I exchanged several emails with Dr.~Lu discussing this. Since this is new research the required data format is not in the RJafroc-documentation. I thought I provided clear instructions, but I did assume familiarity with localization task analysis.
+
+The class type has to be coded as sequential integers starting with 1: e.g., 1, 2, 3, 4, 5, 6. These go in the lesion ID column of the Truth sheet. If a case has class 3 and 5 lesions, there will be two entries ~ ~The 1 means the lesion with class 1, etc. If class 2 is incorrectly located or correctly located but incorrectly classified, there will be an entry for this case in the FP sheet.
+
+The same integers need to be used in the TP sheet. If lesion 3 is correctly located and classified then you will have an entry with 3 in the lesion ID field.
+
+PS:
+The class has to be coded as sequential integers starting with 1: e.g., 1, 2, 3, 4, 5, 6. If a case has two lesions, one of class 3 and the other of class 5, then there will be two entries for this case, one with lesionID = 3 and the other with lesionID = 5. Another case with 6 lesions, all of distinct classes, will have 6 rows on entries under LesionID.
+
+The 1 means the lesion with class 1, etc. If class 2 is incorrectly located or correctly located but incorrectly classified, there will be an entry for this case in the FP sheet.
+
+The same integers need to be used in the TP sheet. If lesion 3 is correctly located and classified then you will have an entry with 3 in the lesion ID field.
 
 \hypertarget{classification-tasks--references}{%
 \section{References}\label{classification-tasks--references}}
