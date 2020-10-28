@@ -97,14 +97,14 @@ The class type must appear in the `Truth` sheet under `lesionID`. This establish
 The class type must also appear in `TP` sheet if the lesion was correctly located and classified. The FP sheet does not have a `lesionID` field. Both correctly located but incorrectly classified lesions and incorrectly localized lesions go in this sheet. 
 
 
-### Abbreviations
+## Abbreviations
 * Correct-localization correct-classification = CL-CC
 * Correct-localization incorrect-classification = CL-IC
 * Incorrect-localization classification not applicable = IL-NA
 
 
-## Detailed example
-* This example is implemented in file `frocLocatClass.xlsx`. 
+## Example, File1
+* This example is implemented in file `File1.xlsx`. 
 * There are four classes of lesions: `C1`, `C2`, `C3`and `C4`.
 * The rating scale is 1 - 10 and positive-directed. 
 * The dataset has 3 cases: 9, 17 and 19. 
@@ -136,7 +136,7 @@ The class type must also appear in `TP` sheet if the lesion was correctly locate
 * Lesion `C4`, `lesionID` = 4, CL-CC mark rated 2.3. 
 
 #### Case 19
-* None.  
+* Lesion `C2`, `lesionID` = 1, CL-CC mark rated 5.7. 
 
 ### `FP` sheet
 <div class="figure" style="text-align: center">
@@ -186,7 +186,7 @@ print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
 #> trt1 0.2361111
 ```
 
-### Code file 2
+## Example, File2
 I increased the LL rating for case 19 to 10; this should increase the FOM.
 
 <div class="figure" style="text-align: center">
@@ -205,7 +205,7 @@ print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
 ```
 
 
-### Code file 3
+## Example, File3
 Starting with original file, I transferred a CL-IC for case 17 to the TP sheet. This should increase the FOM as credit is given for CL-CC.
 
 <div class="figure" style="text-align: center">
@@ -226,7 +226,7 @@ print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
 
 
 ## Discussion{#classification-tasks-discussion}
-### Detritus
+## Detritus
 This project started with an idea on how to extend localization analysis software (RJafroc) to localization-classification tasks. I exchanged several emails with Dr. Lu discussing this. Since this is new research the required data format is not in the RJafroc-documentation. I thought I provided clear instructions, but I did assume familiarity with localization task analysis.
 
 The class type has to be coded as sequential integers starting with 1: e.g., 1, 2, 3, 4, 5, 6. These go in the lesion ID column of the Truth sheet. If a case has class 3 and 5 lesions, there will be two entries    The 1 means the lesion with class 1, etc. If class 2 is incorrectly located or correctly located but incorrectly classified, there will be an entry for this case in the FP sheet. 
