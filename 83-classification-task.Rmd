@@ -80,7 +80,7 @@ So I'm wondering if the JAFROC-1 will have a higher statistical power than this 
 
 ## response 3
 
-I am not familiar with precision recall curves and thanks for you brief explanation. Is the area under the precision-recall curve bounded or unbounded? If unbounded, I see problems with its usage, similar to problems with using the area under the FROC curve. [The areas under the ROC and AFROC curves are bounded.] The TN event does not exist in FROC studies, in the sense that it is an unobservable event: this is a misconception that I have discussed before. [TN event does exist in ROC studies.]
+I am not familiar with precision recall curves and thanks for you brief explanation. Is the area under the precision-recall curve bounded or unbounded? If unbounded, I see problems with its usage, similar to problems with using the area under the FROC curve. [The areas under the ROC and AFROC curves are bounded.] The TN mark does not exist in FROC studies, in the sense that it is an unobservable mark: this is a misconception that I have discussed before. [TN mark does exist in ROC studies.]
 
 In most medical imaging studies I am not comfortable with FOMs that do not include normal cases. Therefore, I do not recommend such studies and use of JAFROC1 FOM is not recommended. 
 
@@ -106,12 +106,82 @@ The class type must appear in the `Truth` sheet under `lesionID`. This establish
 The class type must also appear in `TP` sheet if the lesion was correctly located and classified. The FP sheet does not have a `lesionID` field. Both correctly located but incorrectly classified lesions and incorrectly localized lesions go in this sheet. 
 
 
+### Abbreviations
+* Correct-localization correct-classification = CL-CC
+* Correct-localization incorrect-classification = CL-IC
+* Incorrect-localization classification not applicable = IL-NA
+
+
+## Detailed example
+* This example is implemented in file `frocLocatClass.xlsx`. 
+* There are four classes of lesions: `C1`, `C2`, `C3`and `C4`.
+* The rating scale is 1 - 10 and positive-directed. 
+* The dataset has 3 cases: 9, 17 and 19. 
+
+### `Truth` sheet
+* Case 9 has two lesions, with classes `C1` and `C4`. 
+* Case 17 has four lesions, with classes `C1`, `C2`, `C3`and `C4`. 
+* Case 19 has one lesion, with class `C2`. 
+
+### `TP` sheet
+* This holds CL-CC marks. 
+
+#### Case 9
+* Lesion `C1`, `lesionID` = 1, CL-CC mark rated 5. 
+
+#### Case 17
+* Lesion `C1`, `lesionID` = 1, CL-CC mark rated 6.1. 
+* Lesion `C2`, `lesionID` = 2, CL-CC mark rated 7.1. 
+* Lesion `C4`, `lesionID` = 4, CL-CC mark rated 2.3. 
+
+#### Case 19
+* None.  
+
+### `FP` sheet
+* This holds IL-NA and CL-IC marks. 
+
+#### Case 9
+* CL-IC mark rated 5.5, `C2` classified as `C3`. This misclassification is especially bad as `C3` does not exist on this case. 
+* IL-NA mark rated 1.2. 
+
+#### Case 17
+* CL-IC mark rated 1.5, `C3` classified as `C2`. 
+* IL-NA mark rated 2.3. 
+* IL-NA mark rated 2.1. 
+
+
+#### Case 19
+* IL-NA mark rated 1.4. 
+* CL-IC mark rated 6.1, `C2` classified as `C3`. 
+
+## Code
+
+```{r}
+fileName <- system.file("extdata", "/toyFiles/FROC/frocLocatClass.xlsx", package = "RJafroc", mustWork = TRUE)
+x <- DfReadDataFile(fileName = fileName)
+str(x)
+x$ratings$NL[1,1,,]
+x$ratings$LL[1,1,,]
+```
 
 
 
 
 ## Discussion{#classification-tasks-discussion}
+### Detritus
+This project started with an idea on how to extend localization analysis software (RJafroc) to localization-classification tasks. I exchanged several emails with Dr. Lu discussing this. Since this is new research the required data format is not in the RJafroc-documentation. I thought I provided clear instructions, but I did assume familiarity with localization task analysis.
 
+The class type has to be coded as sequential integers starting with 1: e.g., 1, 2, 3, 4, 5, 6. These go in the lesion ID column of the Truth sheet. If a case has class 3 and 5 lesions, there will be two entries    The 1 means the lesion with class 1, etc. If class 2 is incorrectly located or correctly located but incorrectly classified, there will be an entry for this case in the FP sheet. 
+
+The same integers need to be used in the TP sheet. If lesion 3 is correctly located and classified then you will have an entry with 3 in the lesion ID field. 
+
+PS: 
+The class has to be coded as sequential integers starting with 1: e.g., 1, 2, 3, 4, 5, 6. If a case has two lesions, one of class 3 and the other of class 5, then there will be two entries for this case, one with lesionID = 3 and the other with lesionID = 5.  Another case with 6 lesions, all of distinct classes, will have 6 rows on entries under LesionID. 
+
+
+The 1 means the lesion with class 1, etc. If class 2 is incorrectly located or correctly located but incorrectly classified, there will be an entry for this case in the FP sheet. 
+
+The same integers need to be used in the TP sheet. If lesion 3 is correctly located and classified then you will have an entry with 3 in the lesion ID field.
 
 ## References {#classification-tasks--references}
 
