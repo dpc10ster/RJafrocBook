@@ -4,7 +4,6 @@ author: "Dev P. Chakraborty, PhD"
 date: "2020-10-28"
 site: bookdown::bookdown_site
 output: 
-   bookdown::html_document: default
    bookdown::pdf_document: default
 documentclass: book
 bibliography: [packages.bib, myRefs.bib]

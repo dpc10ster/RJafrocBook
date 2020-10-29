@@ -6370,7 +6370,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.2866095          1   0.25667373}
+\CommentTok{\#\textgreater{} 1    1.3333158          1    0.2482162}
 \end{Highlighting}
 \end{Shaded}
 
@@ -12120,7 +12120,7 @@ The class type must appear in the \texttt{Truth} sheet under \texttt{lesionID}. 
 The class type must also appear in \texttt{TP} sheet if the lesion was correctly located and classified. The FP sheet does not have a \texttt{lesionID} field. Both correctly located but incorrectly classified lesions and incorrectly localized lesions go in this sheet.
 
 \hypertarget{abbreviations}{%
-\subsection{Abbreviations}\label{abbreviations}}
+\section{Abbreviations}\label{abbreviations}}
 
 \begin{itemize}
 \tightlist
@@ -12132,13 +12132,13 @@ The class type must also appear in \texttt{TP} sheet if the lesion was correctly
   Incorrect-localization classification not applicable = IL-NA
 \end{itemize}
 
-\hypertarget{detailed-example}{%
-\section{Detailed example}\label{detailed-example}}
+\hypertarget{example-file1}{%
+\section{Example, File1}\label{example-file1}}
 
 \begin{itemize}
 \tightlist
 \item
-  This example is implemented in file \texttt{frocLocatClass.xlsx}.
+  This example is implemented in file \texttt{File1.xlsx}.
 \item
   There are four classes of lesions: \texttt{C1}, \texttt{C2}, \texttt{C3}and \texttt{C4}.
 \item
@@ -12149,6 +12149,15 @@ The class type must also appear in \texttt{TP} sheet if the lesion was correctly
 
 \hypertarget{truth-sheet}{%
 \subsection{\texorpdfstring{\texttt{Truth} sheet}{Truth sheet}}\label{truth-sheet}}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File1Truth} 
+
+}
+
+\caption{Truth worksheet for File1.xlsx}\label{fig:File1Truth}
+\end{figure}
 
 \begin{itemize}
 \tightlist
@@ -12162,6 +12171,15 @@ The class type must also appear in \texttt{TP} sheet if the lesion was correctly
 
 \hypertarget{tp-sheet}{%
 \subsection{\texorpdfstring{\texttt{TP} sheet}{TP sheet}}\label{tp-sheet}}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File1TP} 
+
+}
+
+\caption{TP worksheet for File1.xlsx}\label{fig:File1TP}
+\end{figure}
 
 \begin{itemize}
 \tightlist
@@ -12197,11 +12215,20 @@ The class type must also appear in \texttt{TP} sheet if the lesion was correctly
 \begin{itemize}
 \tightlist
 \item
-  None.
+  Lesion \texttt{C2}, \texttt{lesionID} = 1, CL-CC mark rated 5.7.
 \end{itemize}
 
 \hypertarget{fp-sheet}{%
 \subsection{\texorpdfstring{\texttt{FP} sheet}{FP sheet}}\label{fp-sheet}}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File1FP} 
+
+}
+
+\caption{FP worksheet for File1.xlsx}\label{fig:File1FP}
+\end{figure}
 
 \begin{itemize}
 \tightlist
@@ -12226,7 +12253,7 @@ The class type must also appear in \texttt{TP} sheet if the lesion was correctly
 \begin{itemize}
 \tightlist
 \item
-  CL-IC mark rated 1.5, \texttt{C3} classified as \texttt{C2}.
+  CL-IC mark rated 7, \texttt{C3} classified as \texttt{C2}.
 \item
   IL-NA mark rated 2.3.
 \item
@@ -12244,43 +12271,82 @@ The class type must also appear in \texttt{TP} sheet if the lesion was correctly
   CL-IC mark rated 6.1, \texttt{C2} classified as \texttt{C3}.
 \end{itemize}
 
-\hypertarget{code}{%
-\section{Code}\label{code}}
+\hypertarget{the-two-ratings-arrays}{%
+\subsection{The two ratings arrays}\label{the-two-ratings-arrays}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fileName \textless{}{-}}\StringTok{ "R/CH83{-}ClassificationTask/frocLocatClass.xlsx"}
+\NormalTok{fileName \textless{}{-}}\StringTok{ "R/CH83{-}ClassificationTask/File1.xlsx"}
 \NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(}\DataTypeTok{fileName =}\NormalTok{ fileName)}
-\KeywordTok{str}\NormalTok{(x)}
-\CommentTok{\#\textgreater{} List of 3}
-\CommentTok{\#\textgreater{}  $ ratings     :List of 3}
-\CommentTok{\#\textgreater{}   ..$ NL   : num [1, 1, 1:3, 1:3] 5.5 1.5 1.4 1.2 2.3 ...}
-\CommentTok{\#\textgreater{}   ..$ LL   : num [1, 1, 1:3, 1:4] 5 6.1 5.7 {-}Inf 7.1 ...}
-\CommentTok{\#\textgreater{}   ..$ LL\_IL: logi NA}
-\CommentTok{\#\textgreater{}  $ lesions     :List of 3}
-\CommentTok{\#\textgreater{}   ..$ perCase: int [1:3] 2 4 1}
-\CommentTok{\#\textgreater{}   ..$ IDs    : num [1:3, 1:4] 1 1 1 2 2 ...}
-\CommentTok{\#\textgreater{}   ..$ weights: num [1:3, 1:4] 0.5 0.25 1 0.5 0.25 ...}
-\CommentTok{\#\textgreater{}  $ descriptions:List of 7}
-\CommentTok{\#\textgreater{}   ..$ fileName     : chr "frocLocatClass"}
-\CommentTok{\#\textgreater{}   ..$ type         : chr "FROC"}
-\CommentTok{\#\textgreater{}   ..$ name         : logi NA}
-\CommentTok{\#\textgreater{}   ..$ truthTableStr: num [1, 1, 1:3, 1:5] 1 NA NA 1 1 1 1 1 NA NA ...}
-\CommentTok{\#\textgreater{}   ..$ design       : chr "FCTRL"}
-\CommentTok{\#\textgreater{}   ..$ modalityID   : Named chr "1"}
-\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr "1"}
-\CommentTok{\#\textgreater{}   ..$ readerID     : Named chr "1"}
-\CommentTok{\#\textgreater{}   .. ..{-} attr(*, "names")= chr "1"}
 \NormalTok{x}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,]}
 \CommentTok{\#\textgreater{}      [,1] [,2] [,3]}
 \CommentTok{\#\textgreater{} [1,]  5.5  1.2 {-}Inf}
-\CommentTok{\#\textgreater{} [2,]  1.5  2.3  2.1}
+\CommentTok{\#\textgreater{} [2,]  7.0  2.3  2.1}
 \CommentTok{\#\textgreater{} [3,]  1.4  6.1 {-}Inf}
 \NormalTok{x}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{LL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,]}
 \CommentTok{\#\textgreater{}      [,1] [,2] [,3] [,4]}
 \CommentTok{\#\textgreater{} [1,]  5.0 {-}Inf {-}Inf {-}Inf}
-\CommentTok{\#\textgreater{} [2,]  6.1  7.1  2.3 {-}Inf}
+\CommentTok{\#\textgreater{} [2,]  6.1  7.1 {-}Inf  2.3}
 \CommentTok{\#\textgreater{} [3,]  5.7 {-}Inf {-}Inf {-}Inf}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{the-fom-is-shown-next}{%
+\subsection{The FOM is shown next:}\label{the-fom-is-shown-next}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{UtilFigureOfMerit}\NormalTok{(x, }\DataTypeTok{FOM =} \StringTok{"wAFROC1"}\NormalTok{))}
+\CommentTok{\#\textgreater{}           rdr1}
+\CommentTok{\#\textgreater{} trt1 0.2361111}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{example-file2}{%
+\section{Example, File2}\label{example-file2}}
+
+I increased the LL rating for case 19 to 10; this should increase the FOM.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File2TP} 
+
+}
+
+\caption{TP worksheet for File2.xlsx}\label{fig:File2TP}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fileName \textless{}{-}}\StringTok{ "R/CH83{-}ClassificationTask/File2.xlsx"}
+\NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(}\DataTypeTok{fileName =}\NormalTok{ fileName)}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{UtilFigureOfMerit}\NormalTok{(x, }\DataTypeTok{FOM =} \StringTok{"wAFROC1"}\NormalTok{))}
+\CommentTok{\#\textgreater{}           rdr1}
+\CommentTok{\#\textgreater{} trt1 0.4583333}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{example-file3}{%
+\section{Example, File3}\label{example-file3}}
+
+Starting with original file, I transferred a CL-IC for case 17 to the TP sheet. This should increase the FOM as credit is given for CL-CC.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File3TP} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File3FP} 
+
+}
+
+\caption{TP and FP worksheets for File3.xlsx}\label{fig:File3TPFP}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fileName \textless{}{-}}\StringTok{ "R/CH83{-}ClassificationTask/File3.xlsx"}
+\NormalTok{x \textless{}{-}}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(}\DataTypeTok{fileName =}\NormalTok{ fileName)}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{UtilFigureOfMerit}\NormalTok{(x, }\DataTypeTok{FOM =} \StringTok{"wAFROC1"}\NormalTok{))}
+\CommentTok{\#\textgreater{}           rdr1}
+\CommentTok{\#\textgreater{} trt1 0.5277778}
 \end{Highlighting}
 \end{Shaded}
 
@@ -12288,7 +12354,7 @@ The class type must also appear in \texttt{TP} sheet if the lesion was correctly
 \section{Discussion}\label{classification-tasks-discussion}}
 
 \hypertarget{detritus}{%
-\subsection{Detritus}\label{detritus}}
+\section{Detritus}\label{detritus}}
 
 This project started with an idea on how to extend localization analysis software (RJafroc) to localization-classification tasks. I exchanged several emails with Dr.~Lu discussing this. Since this is new research the required data format is not in the RJafroc-documentation. I thought I provided clear instructions, but I did assume familiarity with localization task analysis.
 
