@@ -3,181 +3,109 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Classification tasks {#classification-tasks}
+
+# Localization - classification tasks {#classification-tasks}
 
 
 
+## Introduction {#classification-tasks-intro}
 
-## Introduction TBA {#classification-tasks-intro}
+TBA: This project is a works-in-progress.
 
-This is in progress; the topic arose from an email exchange outlined below.
+## Abbreviations {#classification-tasks-abbreviations}
 
-## email 1
+-   Correct-localization correct-classification = **CL-CC**
+-   Correct-localization incorrect-classification = **CL-IC**
+-   Incorrect-localization classification not applicable = **IL-NA**
 
-1) Have multiple classes been considered in the newest version? That means there are, for example, three types of lesions (type 1, 2, 3) in an image. Then the observer may annotate the correct location, but indicate the wrong type of the lesion (e.g. the ground truth is type2, but the observer indicates it as type1).
-If not, do you know any statistical analysis method that can consider this type of error?
-2) If I remember correctly, the acceptance radius R was the same value for all the tested images, can we now set a different value for each test image?
+## History and basic idea {#classification-tasks-basic-idea}
 
+This project started with a request to extend localization analysis software `RJafroc` to localization-classification tasks. Since this is new research the required data format is not in the `RJafroc` documentation. Some familiarity with basic localization task analysis is assumed.
 
-## response 1
-Taking your second question first:
-The acceptance radius is selected by you, in consultation with expert readers, along lines described in my book. It is outside the scope of the analysis software.
+The basic idea is that spatial localization is a special case of localization-with-classification.
 
-Regarding your first question:
-**A key point is that spatial localization (as currently handled) is a special case of localization-with-classification (which is your interest).** 
+## First example, File1.xlsx {#classification-tasks-example1}
 
-The `TP` and `FP` Excel worksheets are relatively easy to handle. If you have 3 types of lesions, and each localization mark is associated with an indicated perceived lesion type, e.g., `Type1`, `Type2` or `Type3`, and if the perceived localization and perceived type both agree with the truth, then the rating goes in the `TP` worksheet, otherwise the rating goes in the `FP` worksheet. 
+-   This example is implemented in file `File1.xlsx`.
+-   There are four classes of lesions: `C1`, `C2`, `C3`and `C4`.
+-   The rating scale is 1 - 10 and positive-directed.
+-   The dataset has 3 cases: 9, 17 and 19.
 
-The `Truth` worksheet is more complex. The number of lesions in the `Truth` worksheet for a particular case is the sum of all lesions of all types in that case. Ideally the `Truth` worksheet should have an extra column for `lesionType`, but extensive modifications to existing code is required to implement this.
+### `Truth` sheet {#classification-tasks-example1-truth}
 
-In the meantime, you can “fool” the current software by doing the localization-classification book-keeping yourself. I will illustrate with one example.
+This has the ground truth of for cases and lesions, and specifies their class types.
 
-Suppose case 1 has four lesions, two of `Type1`, one of `Type2` and one of `Type3.` 
-
-Then in the Truth worksheet `lesionID` column for that case, there will be four integer entries: 1, 2, 3 and 4. The 1 refers to the first lesion (of `Type1` - you need to keep track of this), 2 to the second lesion (also of `Type1` - etc), 3 to the third lesion (`Type2` - etc) and 4 to the fourth lesion (of `Type3` - etc).
-
-If `lesionID` 2 is correctly localized and classified (i.e., as `Type1`), then the corresponding rating belongs in the TP worksheet with `lesionID` = 2. 
-If `lesionID` 3 is correctly localized and classified (i.e., as `Type2`), then the corresponding rating belongs in the TP …  with `lesionID` = 3. 
-Etc.
-
-If `lesionID` 1 is correctly localized but incorrectly classified (i.e., as `Type2` or `Type3`), then the rating belongs in the FP worksheet. 
-Any mark not corresponding (in location) to an actual lesion (the classification is irrelevant) goes in the FP worksheet.
-
-This scoring scheme would reward readers who get both location and classification correct and penalize them otherwise. More complex reward/penalization schemes can be worked out using lesion weights, but I would try the simple approach first.
-
-One more thing: the classification types should be distinct, with little overlap. Otherwise one faces an issue similar to the “acceptance radius” issue with location.
-
-
-
-## email 2
-
-I'm clear now about my first question. I'll try the simple approach.
-
-For the second question, I mean that for example, if the test images have different resolutions, the acceptance radius will be a ratio of the input image size, rather than a fixed value.
-So I'm wondering if this value can be modified for each input image in the existing code ?
-
-
-## response 2
-Yes, what you are suggesting is reasonable. 
-
-When we encountered this issue in the 2016 Radiology study, the images were of very different sizes - conventional chest x-rays vs. images on CRT monitors. We never encountered the need for a hard acceptance radius - if in doubt, an independent radiologist was consulted to determine if the localization was acceptable. This is a clinical issue - super accuracy (e.g., pixel level) is not required for the radiologist and the surgeon to agree that they are talking about the same lesion.
-
-In any case, images are not input to my software (`RJafroc`) so this has to be done independently.
-
-## email 3
-
-I may need to add more explanations for this question. 
-
-Since I'm evaluating actually if I can use the JAFROC-1 in the case of object detection and localization in CV (computer-vision) problems.
-The state-of-the-art is to calculate firstly the IoU (Intersection over union), then predefine an IoU threshold (say 0.5) in classifying whether the prediction is a true positive or a false positive (similar to acceptance radius), finally calculate the Average Precision (AP) which represents the area under the precision-recall curve.
-Since there is no True Negative cases in this scenario, ROC is not used. Instead, they use the precision-recall curve.
-
-So I'm wondering if the JAFROC-1 will have a higher statistical power than this state-of-the-art.
-
-## response 3
-
-I am not familiar with precision recall curves and thanks for you brief explanation. Is the area under the precision-recall curve bounded or unbounded? If unbounded, I see problems with its usage, similar to problems with using the area under the FROC curve. [The areas under the ROC and AFROC curves are bounded.] The TN mark does not exist in FROC studies, in the sense that it is an unobservable mark: this is a misconception that I have discussed before. [TN mark does exist in ROC studies.]
-
-In most medical imaging studies I am not comfortable with FOMs that do not include normal cases. Therefore, I do not recommend such studies and use of JAFROC1 FOM is not recommended. 
-
-Of course, there could be situations where JAFROC1 FOM is appropriate, but, to get to your question, I have not studied power vs. precision recall curve in such situations.
-
-Statistical power is an important consideration, but it is not the only consideration. Clinical relevance is another important consideration. You need to decide on what is the most appropriate method for your study.
-
-
-## email 4
-We have 4322 cases and 14 algorithmic readers. Actually, the maximum number of classes per case is 6, but the class type is already coded in the TP/FP worksheets, eg. when the predicted class type matches the ground truth class type, it will be put in TP, if not, it will be put in FP. So we can *not* (sic) get the class information from the excel file. 
-
-## response 4
-Excerpt from my earlier email: 
-
->
-Suppose case 1 has four lesions, two of Type1, one of Type2 and one of Type3.
-Then in the Truth worksheet lesionID column for that case, there will be four integer entries: 1, 2, 3 and 4. The 1 refers to the first lesion (of Type1 - you need to keep track of this), 2 to the second lesion (also of Type1 - etc), 3 to the third lesion (Type2 - etc) and 4 to the fourth lesion (of Type3 - etc).
-If lesionID 2 is correctly localized and classified (i.e., as Type1), then the corresponding rating belongs in the TP worksheet with lesionID = 2. If lesionID 3 is correctly localized and classified (i.e., as Type2), then the corresponding rating belongs in the TP … with lesionID = 3. Etc.
-If lesionID 1 is correctly localized but incorrectly classified (i.e., as Type2 or Type3), then the rating belongs in the FP worksheet. Any mark not corresponding (in location) to an actual lesion (the classification is irrelevant) goes in the FP worksheet.
-
-The class type must appear in the `Truth` sheet under `lesionID`. This establishes the TRUE class type for each lesion. The way you currently have the `Truth` sheet structured the program thinks that the maximum number of classes is 144, not six.
-
-The class type must also appear in `TP` sheet if the lesion was correctly located and classified. The FP sheet does not have a `lesionID` field. Both correctly located but incorrectly classified lesions and incorrectly localized lesions go in this sheet. 
-
-
-## Abbreviations
-* Correct-localization correct-classification = CL-CC
-* Correct-localization incorrect-classification = CL-IC
-* Incorrect-localization classification not applicable = IL-NA
-
-
-## Example, File1
-* This example is implemented in file `File1.xlsx`. 
-* There are four classes of lesions: `C1`, `C2`, `C3`and `C4`.
-* The rating scale is 1 - 10 and positive-directed. 
-* The dataset has 3 cases: 9, 17 and 19. 
-
-### `Truth` sheet
 \begin{figure}
 
 {\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File1Truth} 
 
 }
 
-\caption{Truth worksheet for File1.xlsx}\label{fig:File1Truth}
+\caption{Truth worksheet for File1.xlsx}(\#fig:File1Truth)
 \end{figure}
 
-* Case 9 has two lesions, with classes `C1` and `C4`. 
-* Case 17 has four lesions, with classes `C1`, `C2`, `C3`and `C4`. 
-* Case 19 has one lesion, with class `C2`. 
+-   Case 9 has two lesions, with classes `C1` and `C4`.
+-   Case 17 has four lesions, with classes `C1`, `C2`, `C3`and `C4`.
+-   Case 19 has one lesion, with class `C2`.
 
-### `TP` sheet
+### `TP` sheet {#classification-tasks-example1-tp}
+
+This holds CL-CC marks.
+
 \begin{figure}
 
 {\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File1TP} 
 
 }
 
-\caption{TP worksheet for File1.xlsx}\label{fig:File1TP}
+\caption{TP worksheet for File1.xlsx}(\#fig:File1TP)
 \end{figure}
 
-* This holds CL-CC marks. 
+#### Case 9 {#classification-tasks-example1-case9}
 
-#### Case 9
-* Lesion `C1`, `lesionID` = 1, CL-CC mark rated 5. 
+-   Lesion `C1`, `lesionID` = 1, **CL-CC** mark rated 5.
 
-#### Case 17
-* Lesion `C1`, `lesionID` = 1, CL-CC mark rated 6.1. 
-* Lesion `C2`, `lesionID` = 2, CL-CC mark rated 7.1. 
-* Lesion `C4`, `lesionID` = 4, CL-CC mark rated 2.3. 
+#### Case 17 {#classification-tasks-example1-case17}
 
-#### Case 19
-* Lesion `C2`, `lesionID` = 1, CL-CC mark rated 5.7. 
+-   Lesion `C1`, `lesionID` = 1, **CL-CC** mark rated 6.1.
+-   Lesion `C2`, `lesionID` = 2, **CL-CC** mark rated 7.1.
+-   Lesion `C4`, `lesionID` = 4, **CL-CC** mark rated 2.3.
 
-### `FP` sheet
+#### Case 19 {#classification-tasks-example1-case19}
+
+-   Lesion `C2`, `lesionID` = 1, **CL-CC** mark rated 5.7.
+
+### `FP` sheet {#classification-tasks-example1-fp}
+
+This holds **IL-NA** and **CL-IC** marks.
+
 \begin{figure}
 
 {\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File1FP} 
 
 }
 
-\caption{FP worksheet for File1.xlsx}\label{fig:File1FP}
+\caption{FP worksheet for File1.xlsx}(\#fig:File1FP)
 \end{figure}
 
-* This holds IL-NA and CL-IC marks. 
+#### Case 9 {#classification-tasks-example1-fp-case9}
 
-#### Case 9
-* CL-IC mark rated 5.5, `C2` classified as `C3`. This misclassification is especially bad as `C3` does not exist on this case. 
-* IL-NA mark rated 1.2. 
+-   **CL-IC** mark rated 5.5, `C2` classified as `C3`. This misclassification is especially bad as `C3` does not exist on this case.
+-   **IL-NA** mark rated 1.2.
 
-#### Case 17
-* CL-IC mark rated 7, `C3` classified as `C2`. 
-* IL-NA mark rated 2.3. 
-* IL-NA mark rated 2.1. 
+#### Case 17 {#classification-tasks-example1-fp-case17}
 
+-   **CL-IC** mark rated 7, `C3` classified as `C2`.
+-   **IL-NA** mark rated 2.3.
+-   **IL-NA** mark rated 2.1.
 
-#### Case 19
-* IL-NA mark rated 1.4. 
-* CL-IC mark rated 6.1, `C2` classified as `C3`. 
+#### Case 19 {#classification-tasks-example1-fp-case19}
+
+-   **IL-NA** mark rated 1.4.
+-   **CL-IC** mark rated 6.1, `C2` classified as `C3`.
 
 ### The two ratings arrays
+
 
 ```r
 fileName <- "R/CH83-ClassificationTask/File1.xlsx"
@@ -196,14 +124,16 @@ x$ratings$LL[1,1,,]
 
 ### The FOM is shown next:
 
+
 ```r
 print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
 #>           rdr1
 #> trt1 0.2361111
 ```
 
-## Example, File2
-I increased the LL rating for case 19 to 10; this should increase the FOM.
+## Second example, File2.xlsx {#classification-tasks-example2}
+
+I increased the LL rating for case 19 to 10; this should increase the FOM. This example is implemented in file `File2.xlsx`.
 
 \begin{figure}
 
@@ -211,9 +141,8 @@ I increased the LL rating for case 19 to 10; this should increase the FOM.
 
 }
 
-\caption{TP worksheet for File2.xlsx}\label{fig:File2TP}
+\caption{TP worksheet for File2.xlsx}(\#fig:File2TP)
 \end{figure}
-
 
 
 ```r
@@ -224,9 +153,9 @@ print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
 #> trt1 0.4583333
 ```
 
+## Third example, File3.xlsx {#classification-tasks-example3}
 
-## Example, File3
-Starting with original file, I transferred a CL-IC for case 17 to the TP sheet. This should increase the FOM as credit is given for CL-CC.
+Starting with original file, I transferred a **CL-IC** for case 17 to the TP sheet, where it is a **CL_CC** mark. This should increase the FOM as credit is given for **CL-CC.** This example is implemented in file `File3.xlsx`.
 
 \begin{figure}
 
@@ -234,10 +163,8 @@ Starting with original file, I transferred a CL-IC for case 17 to the TP sheet. 
 
 }
 
-\caption{TP and FP worksheets for File3.xlsx}\label{fig:File3TPFP}
+\caption{TP and FP worksheets for File3.xlsx}(\#fig:File3TPFP)
 \end{figure}
-
-
 
 
 ```r
@@ -248,22 +175,77 @@ print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
 #> trt1 0.5277778
 ```
 
+## Fourth example, File4.xlsx {#classification-tasks-example4}
 
-## Discussion{#classification-tasks-discussion}
-## Detritus
-This project started with an idea on how to extend localization analysis software (RJafroc) to localization-classification tasks. I exchanged several emails with Dr. Lu discussing this. Since this is new research the required data format is not in the RJafroc-documentation. I thought I provided clear instructions, but I did assume familiarity with localization task analysis.
+So far we have dealt with one modality and one reader.
 
-The class type has to be coded as sequential integers starting with 1: e.g., 1, 2, 3, 4, 5, 6. These go in the lesion ID column of the Truth sheet. If a case has class 3 and 5 lesions, there will be two entries    The 1 means the lesion with class 1, etc. If class 2 is incorrectly located or correctly located but incorrectly classified, there will be an entry for this case in the FP sheet. 
+-   Additional algorithmic readers can be added under `readerID`.
+-   They should not be added as additional treatments (has to do with treatment being regarded as a fixed factor and reader as as random factor in the analysis).
+-   The starting point is `File3.xlsx`. I duplicated the data from this for two additional readers to create a single-modality three-reader dataset `File4.xlsx`.
+-   Shown next are the three worksheets.
 
-The same integers need to be used in the TP sheet. If lesion 3 is correctly located and classified then you will have an entry with 3 in the lesion ID field. 
+\begin{figure}
 
-PS: 
-The class has to be coded as sequential integers starting with 1: e.g., 1, 2, 3, 4, 5, 6. If a case has two lesions, one of class 3 and the other of class 5, then there will be two entries for this case, one with lesionID = 3 and the other with lesionID = 5.  Another case with 6 lesions, all of distinct classes, will have 6 rows on entries under LesionID. 
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File4Truth} 
+
+}
+
+\caption{Truth worksheet for File4.xlsx}(\#fig:File4Truth)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File4TP} 
+
+}
+
+\caption{TP worksheet for File4.xlsx}(\#fig:File4TP)
+\end{figure}
+
+-   Note that the three FOMS are identical.
 
 
-The 1 means the lesion with class 1, etc. If class 2 is incorrectly located or correctly located but incorrectly classified, there will be an entry for this case in the FP sheet. 
+```r
+fileName <- "R/CH83-ClassificationTask/File4.xlsx"
+x <- DfReadDataFile(fileName = fileName)
+print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
+#>           rdr1      rdr2      rdr3
+#> trt1 0.5277778 0.5277778 0.5277778
+```
 
-The same integers need to be used in the TP sheet. If lesion 3 is correctly located and classified then you will have an entry with 3 in the lesion ID field.
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File4FP} 
+
+}
+
+\caption{FP worksheet for File4.xlsx}(\#fig:File4FP)
+\end{figure}
+
+## Fifth example, File5.xlsx {#classification-tasks-example5}
+
+-   Need to add some randomness to the ratins.
+-   I randomly added to the ratings from a uniform distribution in the range -0.5 to +0.5.
+-   This is very crude, as in practice the the number of marks will also vary from reader to reader.
+-   But file `File5.xlsx` should give one the general idea of how to extend to several algorithmic readers.
+-   Note that now the FOMs are not identical.
+
+
+```r
+fileName <- "R/CH83-ClassificationTask/File5.xlsx"
+x <- DfReadDataFile(fileName = fileName)
+print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
+#>           rdr1      rdr2      rdr3
+#> trt1 0.3611111 0.5555556 0.4444444
+```
+
+## Precautions {#classification-tasks-precautions}
+
+-   Unlike regular `RJafroc` analysis, there is no error checking of the classification codes `C1`, etc. For example, if a lesion with class `C1` is recorded in the TP sheet as a **CL-CC** and it is also mistakenly recorded in the FP sheet as a **CL-IC**, the program does not know about the mistake. Multiple FP on the same case are allowed in FROC analysis.
+-   I suggest that the extra columns in the sample files be recorded for your dataset. This will enable me to subsequently include error-checking code for data entry mistakes.
+-   For example, the columns `Designation`, `ClassTrue` and `ClassRx` in the `FP` sheet are currently not read by the software.
+-   To make further progress you need to drastically reduce the file size (once the new method is fully developed you can always add the remaining cases and readers). The current file size makes it impossible to fully develop the system. Most studies in this field are done with 2-3 modalities and about 100-200 cases.
+
+## Discussion {#classification-tasks-discussion}
 
 ## References {#classification-tasks--references}
-
