@@ -22,7 +22,7 @@ TBA: This project is a works-in-progress.
 
 This project started with a request to extend localization analysis software `RJafroc` to localization-classification tasks. Since this is new research the required data format is not in the `RJafroc` documentation. Some familiarity with basic localization task analysis is assumed.
 
-The basic idea is that spatial localization is a special case of localization-with-classification.
+The basic idea is that spatial localization is a special case of localization-with-classification. **CL-CC** marks are put in TP sheet and other are put in FP sheet.
 
 ## First example, File1.xlsx {#classification-tasks-example1}
 
@@ -69,7 +69,9 @@ This holds CL-CC marks.
 
 ### `FP` sheet {#classification-tasks-example1-fp}
 
-This holds **IL-NA** and **CL-IC** marks.
+-   This holds **IL-NA** and **CL-IC** marks.
+-   `ClassTrue` is the true class of the lesion.
+-   `ClassDx` is the indicated or diagnosed class of the lesion.
 
 <div class="figure" style="text-align: center">
 <img src="images/classification/File1FP.png" alt="FP worksheet for File1.xlsx" width="50%" height="20%" />
@@ -78,7 +80,7 @@ This holds **IL-NA** and **CL-IC** marks.
 
 #### Case 9 {#classification-tasks-example1-fp-case9}
 
--   **CL-IC** mark rated 5.5, `C2` classified as `C3`. This misclassification is especially bad as `C3` does not exist on this case.
+-   **CL-IC** mark rated 5.5, `C2` classified as `C3`.
 -   **IL-NA** mark rated 1.2.
 
 #### Case 17 {#classification-tasks-example1-fp-case17}
@@ -110,7 +112,7 @@ x$ratings$LL[1,1,,]
 #> [3,]  5.7 -Inf -Inf -Inf
 ```
 
-### The FOM is shown next:
+The FOM is shown next:
 
 
 ```r
@@ -174,7 +176,12 @@ So far we have dealt with one modality and one reader.
 <p class="caption">(\#fig:File4TP)TP worksheet for File4.xlsx</p>
 </div>
 
--   Note that the three FOMS are identical.
+<div class="figure" style="text-align: center">
+<img src="images/classification/File4FP.png" alt="FP worksheet for File4.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File4FP)FP worksheet for File4.xlsx</p>
+</div>
+
+-   Shown next are the three FOMs. Note that they are identical.
 
 
 ```r
@@ -184,11 +191,6 @@ print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
 #>           rdr1      rdr2      rdr3
 #> trt1 0.5277778 0.5277778 0.5277778
 ```
-
-<div class="figure" style="text-align: center">
-<img src="images/classification/File4FP.png" alt="FP worksheet for File4.xlsx" width="50%" height="20%" />
-<p class="caption">(\#fig:File4FP)FP worksheet for File4.xlsx</p>
-</div>
 
 ## Fifth example, File5.xlsx {#classification-tasks-example5}
 
