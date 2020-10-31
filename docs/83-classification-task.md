@@ -35,14 +35,10 @@ The basic idea is that spatial localization is a special case of localization-wi
 
 This has the ground truth of for cases and lesions, and specifies their class types.
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File1Truth} 
-
-}
-
-\caption{Truth worksheet for File1.xlsx}(\#fig:File1Truth)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/classification/File1Truth.png" alt="Truth worksheet for File1.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File1Truth)Truth worksheet for File1.xlsx</p>
+</div>
 
 -   Case 9 has two lesions, with classes `C1` and `C4`.
 -   Case 17 has four lesions, with classes `C1`, `C2`, `C3`and `C4`.
@@ -52,14 +48,10 @@ This has the ground truth of for cases and lesions, and specifies their class ty
 
 This holds CL-CC marks.
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File1TP} 
-
-}
-
-\caption{TP worksheet for File1.xlsx}(\#fig:File1TP)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/classification/File1TP.png" alt="TP worksheet for File1.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File1TP)TP worksheet for File1.xlsx</p>
+</div>
 
 #### Case 9 {#classification-tasks-example1-case9}
 
@@ -79,14 +71,10 @@ This holds CL-CC marks.
 
 This holds **IL-NA** and **CL-IC** marks.
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File1FP} 
-
-}
-
-\caption{FP worksheet for File1.xlsx}(\#fig:File1FP)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/classification/File1FP.png" alt="FP worksheet for File1.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File1FP)FP worksheet for File1.xlsx</p>
+</div>
 
 #### Case 9 {#classification-tasks-example1-fp-case9}
 
@@ -135,14 +123,10 @@ print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
 
 I increased the LL rating for case 19 to 10; this should increase the FOM. This example is implemented in file `File2.xlsx`.
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File2TP} 
-
-}
-
-\caption{TP worksheet for File2.xlsx}(\#fig:File2TP)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/classification/File2TP.png" alt="TP worksheet for File2.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File2TP)TP worksheet for File2.xlsx</p>
+</div>
 
 
 ```r
@@ -157,14 +141,10 @@ print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
 
 Starting with original file, I transferred a **CL-IC** for case 17 to the TP sheet, where it is a **CL_CC** mark. This should increase the FOM as credit is given for **CL-CC.** This example is implemented in file `File3.xlsx`.
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File3TP} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File3FP} 
-
-}
-
-\caption{TP and FP worksheets for File3.xlsx}(\#fig:File3TPFP)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/classification/File3TP.png" alt="TP and FP worksheets for File3.xlsx" width="50%" height="20%" /><img src="images/classification/File3FP.png" alt="TP and FP worksheets for File3.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File3TPFP)TP and FP worksheets for File3.xlsx</p>
+</div>
 
 
 ```r
@@ -184,23 +164,15 @@ So far we have dealt with one modality and one reader.
 -   The starting point is `File3.xlsx`. I duplicated the data from this for two additional readers to create a single-modality three-reader dataset `File4.xlsx`.
 -   Shown next are the three worksheets.
 
-\begin{figure}
+<div class="figure" style="text-align: center">
+<img src="images/classification/File4Truth.png" alt="Truth worksheet for File4.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File4Truth)Truth worksheet for File4.xlsx</p>
+</div>
 
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File4Truth} 
-
-}
-
-\caption{Truth worksheet for File4.xlsx}(\#fig:File4Truth)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File4TP} 
-
-}
-
-\caption{TP worksheet for File4.xlsx}(\#fig:File4TP)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/classification/File4TP.png" alt="TP worksheet for File4.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File4TP)TP worksheet for File4.xlsx</p>
+</div>
 
 -   Note that the three FOMS are identical.
 
@@ -213,18 +185,14 @@ print(UtilFigureOfMerit(x, FOM = "wAFROC1"))
 #> trt1 0.5277778 0.5277778 0.5277778
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/classification/File4FP} 
-
-}
-
-\caption{FP worksheet for File4.xlsx}(\#fig:File4FP)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/classification/File4FP.png" alt="FP worksheet for File4.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:File4FP)FP worksheet for File4.xlsx</p>
+</div>
 
 ## Fifth example, File5.xlsx {#classification-tasks-example5}
 
--   Need to add some randomness to the ratins.
+-   Need to add some randomness to the ratings.
 -   I randomly added to the ratings from a uniform distribution in the range -0.5 to +0.5.
 -   This is very crude, as in practice the the number of marks will also vary from reader to reader.
 -   But file `File5.xlsx` should give one the general idea of how to extend to several algorithmic readers.
