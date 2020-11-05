@@ -1,7 +1,7 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2020-11-04"
+date: "2020-11-05"
 site: bookdown::bookdown_site
 output: 
    bookdown::pdf_document: default
@@ -51,6 +51,7 @@ description: "Updated observer-performance book based on RJafroc."
 * Change third person to first person in references to myself.
 
 ## Chapters needing heavy edits {-}
+* 12-froc.
 * 13-froc-empirical.
 
 
