@@ -1,7 +1,7 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2020-10-30"
+date: "2020-11-04"
 site: bookdown::bookdown_site
 output: 
    bookdown::pdf_document: default
@@ -18,7 +18,7 @@ description: "Updated observer-performance book based on RJafroc."
 
 
 # Preface {-}
-* This book is currently (as of August 2020) in preparation. 
+* This book is currently (as of November 2020) in preparation. 
 * It is intended as an online update to my "physical" book [@RN2680]. Since its publication in 2017 the `RJafroc` package, on which the `R` code examples in the book depend, has evolved considerably, causing many of the examples to "break". This also gives me the opportunity to improve on the book and include additional material.
 * The physical book chapters are labeled (book), to distinguish them from the chapters in this online book.
 
@@ -49,4 +49,8 @@ description: "Updated observer-performance book based on RJafroc."
 * Check Bamber theorem derivation.
 * Parts labeled TBA need to be updated on final revision.
 * Change third person to first person in references to myself.
+
+## Chapters needing heavy edits {-}
+* 13-froc-empirical.
+
 
