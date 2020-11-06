@@ -53,5 +53,6 @@ description: "Updated observer-performance book based on RJafroc."
 ## Chapters needing heavy edits {-}
 * 12-froc.
 * 13-froc-empirical.
+* 13-froc-empirical-examples.
 
 

@@ -11,13 +11,11 @@
   library(gridExtra)
 ```
 
-## Introduction TBA {#froc-empirical-intro}
+## Introduction {#froc-empirical-intro}
 
-Operating characteristics are visual depicters of performance. Quantities derived from operating characteristics can serve as quantitative measures of performance, i.e., figures of merit (FOMs). This chapter defines empirical operating characteristics possible with FROC data.
+TBA Operating characteristics are visual depicters of performance. Quantities derived from operating characteristics can serve as quantitative measures of performance, i.e., figures of merit (FOMs). This chapter defines empirical operating characteristics possible with FROC data.
 
-Here is the organization of this chapter. A distinction between latent and actual marks is made followed by a summary of FROC notation applicable to a single dataset, where modality and reader indices are not needed. This is a key table, which will be referred to in later chapters. Following this, the chapter is organized into two main parts: formalism and examples. The formalism sections, §13.3 -- §13.9, give formulae for calculating different empirical operating characteristics. When applied to the FROC plot the formalism is used to demonstrate an important fact, namely the semi-constrained property of the observed FROC end-point, unlike the constrained ROC end-point, whose upper limit is (1,1).
-
-The second part, §13.10 -- §13.15, consists of coded examples of operating characteristics. An important section is devoted to some confusion about location level "true negatives", traceable to misapplication of ROC terminology to location-specific tasks. The chapter concludes with recommendations on which operating characteristics to use and which to avoid.
+Here is the organization of this chapter. A distinction between latent and actual marks is made followed by a summary of FROC notation applicable to a single modality single reader dataset. This is a key table, which will be used in later chapters. Following this, different empirical operating characteristics proposed for FROC data are described. Formulae are given for calculating each empirical operating characteristic. The observed end-point of an operating characteristic is defined as that operating point achieved by cumulating all the ratings. For the FROC plot it is demonstrated that the observed FROC curve is not contained in the unit square, unlike the other operating characteristics, which are contained in the unit square.
 
 ## Mark rating pairs {#froc-empirical-mark-rating-pairs}
 
@@ -487,7 +485,7 @@ The empirical weighted-AFROC1 (wAFROC1) plot connects adjacent operating points 
 
 ## The EFROC plot {#froc-empirical-EFROC}
 
-An exponentially transformed FROC (EFROC) plot has been proposed [@RN2366] that, like the AFROC, is contained within the unit square. The EFROC inferred FPF is defined by (this represents another way of inferring ROC data, albeit only FPF, from FROC data):
+An *exponentially transformed FROC* (EFROC) plot has been proposed [@RN2366] that, like the AFROC, is contained within the unit square. The EFROC inferred FPF is defined by (this represents another way of inferring ROC data, albeit only FPF, from FROC data):
 
 ```{=tex}
 \begin{equation}
@@ -504,80 +502,9 @@ The empirical EFROC plot connects adjacent operating points $\left ( FPF_r^1, \t
 $A_{\text{EFROC}}$ has the advantage, compared to $A_{\text{FROC}}$, of being defined by points contained within the unit square. It has the advantage over the AFROC of using all NL ratings, not just the highest rated ones. In my opinion this is a mixed blessing. The effect on statistical power compared to $A_{\text{AFROC}}$ has not been studied, but I expect the advantage to be minimal (because the highest rated NL contains more information than a randomly selected NL mark). A disadvantage is that cases with more LLs get more importance in the analysis; this can be corrected by replacing LLF with wLLF, essentially yielding a weighted version of the EFROC AUC. Another disadvantage is that inclusion of NLs on diseased cases causes the EFROC AUC to depend on diseased prevalence. *The EFROC represents the first recognition by someone other than me, of significant limitations of the FROC curve, and that an operating characteristic for FROC data that is completely contained within the unit square is highly desirable.*
 
 
-## Comments and recommendations
-
-### Why not use NLs on diseased cases?
-
-The original definition of the AFROC [@chakraborty1989maximum; @RN206], but missing the "1" nowadays appended to the acronym, was introduced in 1989. It used the maximum rated NL on every case to define the FPF-axis. The paper [@RN1496] suggested the same procedure. At that time, it seemed a good idea to include all available information and not discard any highest rated NLs. Usage of the AFROC1 as the basis of analysis is not recommended: the only exception is when the case-set contains only diseased cases although it is not clear to the author why anyone would wish to conduct an observer performance study with diseased cases only, since it sheds no light on the basic imaging task of discriminating non-diseased from diseased cases.
-
-The reason for excluding highest rated NLs on diseased cases is that they have a fundamentally different role in the clinic from those on non-diseased cases. A recall due to a highest rated NL on a diseased case where the lesion was not seen is actually not that bad. It would be better if the recall were for the right reason, i.e., the lesion was seen, but with a recall for the wrong reason at least the doctors get a second chance to find the lesion. On the other hand, a recall resulting from a highest rated NL on a non-diseased case is unequivocally bad. The patient is unnecessarily subjected to further imaging and perhaps invasive procedures like needle-biopsy in order to rule out cancer that she does not have. All this costs money, not to mention the physical and emotional trauma inflicted on the patient.
-
-Another reason, more subtle, is that including highest rated NLs makes the AFROC1 curve disease-prevalence dependent (this issue was mentioned earlier in connection with the EFROC). Two investigators sampling from the same population, but one using a low-prevalence dataset while the other uses an enriched high-prevalence dataset will obtain different AFROC1 curves for the same observer. This is because observers are generally less likely to mark NLs on diseased cases. This could be satisfaction of search effect26 where it is known that diseased cases are less likely to generate NL marks than non-diseased ones; it is as if finding a lesion "satisfies" the radiologist's need to find something in the patient's image that is explanatory of the patient's symptoms. Also, from the clinical perspective, finding a lesion is enough to trigger more extensive imaging, so it is not necessary to find every other reportable suspicious region in the image, because the radiologist knows that a more extensive workup is "in the works" for this patient. Suffice to say the author has datasets showing strong dependence of number of NLs per case on disease state. More commonly, the number of NLs per case (the abscissa of the upper most operating point on the FROC) is larger if calculated over non-diseased cases than over diseased cases. So the observed FROC and the AFROC1 will be disease prevalence dependent. If disease prevalence is very low, the curves will approach one limit, extending to larger $\text{NLF}_{\text{max}}$ and $\text{FPF}_{\text{max}}$, and if disease prevalence is high, the curve will approach a different limit, extending to lower $\text{NLF}_{\text{max}}$ and $\text{FPF}_{\text{max}}$. The logic is also an argument against using the FROC curve, but there are several other issues with the FROC, which are much more serious.
-
-### Recommendations
-
-Table \@tef(tab:recommendations-froc-empirical) summarizes the different operating characteristic possible with FROC data and the recommendations.
-
-```{r, echo=FALSE}
-table5 <- array(dim = c(6, 5))
-table5[1,] <- c("ROC", "FPF", "TPF", "Highest rating used to infer FPF and TPF", "Yes, if overall sensitivity and specificity are desired")
-table5[2,] <- c("FROC", "NLF", "LLF", "Defined by marks; unmarked cases do not contribute", "No")
-table5[3,] <- c("AFROC", "FPF", "LLF", "Highest rating used to infer FPF", "Yes, if number of lesions per case less than 4 and weighting not relevant")
-table5[4,] <- c("AFROC1", "FPF1", "LLF", "Highest NL ratings over every case contribute to FPF1", "Yes, only when there are zero non-diseased cases and lesion weighting not relevant")
-table5[5,] <- c("wAFROC", "FPF", "wLLF", "Weights, which sum to unity, affect ordinate only", "Yes")
-table5[6,] <- c("wAFROC1", "FPF1", "wLLF", "Weights affect ordinate only; maximum NL rating over every case contributes to FPF1", "Yes, only when there are zero non-diseased cases")
-df <- as.data.frame(table5)
-colnames(df) <- c("Operating characteristic","Abscissa", "Ordinate", "Comments", "Recommendation")
-```
-
-```{r recommendations-froc-empirical, echo=FALSE}
-knitr::kable(df, caption = "Summary of operating characteristics possible with FROC data and recommendations. In most cases the AUC under the wAFROC is the desirable operating characteristic.", escape = FALSE)
-```
-
-The recommendations are based on the author's experience with simulation testing and many clinical datasets. They involve a compromise between statistical power (the ability to discriminate between modalities that are actually different) and reliability of the analysis (i.e., it yields the right p-value).
-
--   AFROC1 vs. AFROC: Unlike the AFROC1 figures-of-merit, the AFROC figures-of-merit do not use non-lesion localization data on diseased cases, so there is loss of statistical power with using the AFROC FOM. However, AFROC analyses are more likely to be reliable. The AFROC1 figures-of-merit involve two types of comparisons: (i) those between LL-ratings and NL-ratings on non-diseased cases and (ii) those between LL-ratings and NL-ratings on diseased cases. The comparisons have different clinical implications, and mixing them does not appear to be desirable. The problem is avoided if one does not use the second type of comparison. This requires further study, but the issue does not arise if the dataset contains only diseased cases (e.g., nodule-free cases are rare in in lung cancer screening using low-dose computerized tomography) when the AFROC1 figures-of-merit should be used.
-
--   Weighted vs. non-weighted: Weighting (i.e., using wAFROC or wAFROC1 FOM) assures that all diseased cases get equal importance, regardless of the number of lesions on them, a desirable statistical characteristic, so weighted analysis is recommended. Based on the author's experience, there is little difference between the two analyses when the number of lesions varies from 1-3. There is some loss of statistical power in using weighted over non-weighted figures-of-merit, but the benefits, vs. ROC analysis, are largely retained. Unless there are clinical reasons for doing otherwise, equal weighting is recommended.
-
--   The (highest rating inferred) ROC curve is sometimes desirable to get case-level sensitivity and specificity, as these quantities have well understood meanings to clinicians. For example the highest non-trivial point in Fig. 13.5 (F), defined by counting all highest rated marks, yields a relatively stable estimate of sensitivity and specificity, as described in a recent publication27.
-
-A paper has questioned the validity of the highest rating assumption28. Two other methods of inferring ROC data from FROC data have been suggested5, and are implemented in `RJafroc`: the average rating and the stochastically dominant rating. The author has applied both methods of inferring ROC data, in addition to the highest rating method, to the data used in Ref. 28. The results are insensitive to the choice of inferring method: so if the highest rating method is not valid, neither are any of the other proposed methods . A paper supporting the validity of the highest rating assumption has since appeared29. The highest rating assumption has a long history. See for example Swensson's LROC paper30 and other papers published by Swensson & Judy. It is intuitive. If an observer sees a highly suspicious region and a less suspicious region, why would the observer want to dilute the severity of the condition by averaging the ratings? The highest rating captures the rating of the most significant clinical finding on the case, which is usually the reason for further clinical follow-up.
-
-The AFROC and wAFROC are contained within the unit square and provide valid area measures for comparing two treatments. Except in special cases this is not possible with the FROC.
-
 ## Discussion {#froc-empirical-Discussion}
 
-This chapter started with the difference between latent and actual marks and the notation to describe FROC data. The notation is exploited in deriving formulae for FROC, AFROC, and inferred ROC operating characteristics obtainable from FROC data. Coded examples are given of FROC, AFROC and ROC curves using a FROC data simulator. These allow examination of the FROC data structure at a deeper level than is possible with formalism alone.
+TBA This chapter started with the difference between latent and actual marks and the notation to describe FROC data. The notation is used in deriving formulae for FROC, inferred ROC, AFROC, wAFROC, AFROC1, wAFROC1 and EFROC operating characteristics. In each case an area measure was defined. With the exception of the FROC plot, all operating characteristics defined in this chapter are contained in the unit square. Discussion of the preferred operating characteristic is deferred to a subsequent chapter TBA.
 
-Since there are serious misunderstandings and confusion regarding the FROC paradigm, several key points are re-emphasized:
-
-1.  An important distinction is made between observable and unobservable events. Observable events, such as unmarked lesions, can safely be assigned the $-\infty$ rating. Negative infinity ratings cannot be assigned to unobservable events.
-2.  A location level "true negative" is an unobservable event and usage of this term has no place in the FROC lexicon. This is a serious misunderstanding among some experts in ROC methodology.
-3.  The FROC curve does not reach unit ordinate unless the lesions are easy to find.
-4.  The limiting end-point abscissa of the FROC, i.e., what the observer would have reached had the observer marked every latent NL, is unconstrained to the range (0,1).
-5.  The inclusion of NLs on diseased cases introduces an undesirable dependence of the FROC curve on disease prevalence. A valid operating characteristic, an example of which is the ROC, should be independent of disease prevalence.
-6.  The notion that maximum NLF is determined by the ratio of the image area to the lesion area is incorrect. This simplistic model is not supported by eye-movement data acquired on radiologists performing clinical tasks.
-7.  In contrast to the FROC, the limiting end-point of the AFROC is constrained, i.e., both coordinates are in the range (0,1).
-8.  For the observer, who does not generate any marks, the operating point is (0,0) and the AFROC is the inaccessible line connecting (0,0) to (1,1), contributing empirical AUC = 0.5. This observer has unit specificity but zero sensitivity, which is better than chance level performance (AUC = 0). The corresponding ROC observer displays chance level performance and gets no credit for perfect performance on non-diseased cases.
-9.  The weighted-AFROC curve is the preferred way to summarize performance in the FROC task. Usage of the FROC to derive measures of performance is strongly discouraged.
-10. The highest NL rating carries more information about the other NLs on the case than the rating of a randomly selected NL. The implication is that the AFROC does not sacrifice much power relative to FROC curve based measures.
-11. The highest rating method of inferring data is adequate for most purposes; alternatives such as average and stochastically dominant rating do not appear to have substantive advantages.
-12. The highest rating inferred ROC curve is a useful way to summarize case-level sensitivity and specificity from FROC data.
-
-It is ironic that the optimal way of summarizing FROC data, namely the AFROC, has been known for a long time, specifically 1977 in the Bunch et al papers3,31,32, although they imply that it is not the preferred way. It has also been known since 1989 in a paper by the author4, which states unambiguously that the area under the AFROC is an appropriate figure of merit for the FROC paradigm. Unfortunately, this recommendation has been largely ignored and CAD research, which would have benefited most from it, has proceeded, over more than two decades, almost entirely based on the FROC curve. Currently there is much controversy about CAD's effectiveness, especially for masses in breast cancer screening. The author believes that CAD's current poor performance is in part due to choice of the incorrect operating characteristic used to evaluate and optimize it.
-
-If the author appears to have "picked on others mistakes", and on CAD, it is with the objective of learning. The author has made his own share of mistakes15, which are unavoidable in science, and has contributed to some of the confusion, an example of which is the temporary recommendation of the AFROC1 noted above: progress in science rarely proceeds in a straight line.
-
-A legitimate concern at this point could be that most of the recommendations are based on the FROC data simulator. The author could have shown examples from actual datasets, and he has many, but chose not to do so. One does not know the truth with clinical datasets and varying parameters in a systematic manner is not possible. Details of the simulator are deferred to Chapter 16, as well as predictions of the simulator, Chapter 17.
-
-Having defined various operation characteristics associated with FROC data, and how to compute the coordinates of operating points, it is time to turn to formulae for figures of merit that can be derived from these plots, without recourse to planimetry (i.e., without actually "counting squares"), and their physical meanings, the subject of the next chapter.
-
-## Miscellaneous {#froc-empirical-miscellaneous}
-### TBA Cased based vs. view-based scoring {#froc-empirical-case-vs-view}
-
-So far, the implicit assumption has been that each case or patient is represented by one image. When a case has multiple images or views, the above definitions are referred to as *case-based scoring*. A *view-based scoring* of the data is also possible, in which the denominator in Eqn. \@ref(eq:froc-empirical-NLF1) is the total number of views. Furthermore, in view-based scoring multiple lesions on different views of the same case are counted as different lesions, even thought they may correspond to the same physical lesion [@RN1652]. The total number of lesion localizations is divided by the total number of lesions visible to the truth panel in all views, which is the counterpart of Eqn. \@ref(eq:froc-empirical-LLFr). When each case has a single image, the two definitions are equivalent. With four views per patient in screening mammography, case-based NLF is four times larger than view-based NLF. Since a superior system tends to have smaller NLF values, the tendency among researchers is to report view-based FROC curves, because it makes their systems "look better"[^froc-empirical-7].
-
-[^froc-empirical-7]: this is an actual private comment from a prominent CAD researcher
 
 ## References {#froc-empirical-references}
