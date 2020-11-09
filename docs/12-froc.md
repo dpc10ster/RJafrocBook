@@ -14,7 +14,7 @@ In clinical practice it is not only important to identify if the patient is dise
 
 For focal disease, the ROC paradigm restricts the collected information to a single rating representing the confidence level that there is disease *somewhere* in the patient's imaged anatomy. The emphasis on "somewhere" is because it begs the question: if the radiologist believes the disease is somewhere, why not have them to point to it? In fact they do "point to it" in the sense that they record the location(s) of suspect regions in their clinical report, but the ROC paradigm cannot use this information. Clinicians have long recognized problems with ignoring location [@BlackDwyer1990; @RN1921]. Neglect of location information leads to loss of statistical power: the basic reason for this is that there is additional noise in the measurement due to crediting the reader for correctly detecting the diseased patient but getting the wrong lesion location - i.e., being right for the wrong reason. One way of compensating for reduced statistical power is to increase the sample size, which increases the cost of the study and is also unethical because, by not using the optimal paradigm and analysis, one is subjecting more patients to imaging procedures [@RN2662].
 
-Here is an outline of this chapter. Four observer performance paradigms are compared, using a visual schematic, as to the kinds of information collected or ignored. An essential characteristic of the FROC paradigm, namely *visual search*, is introduced. The FROC paradigm and its historical context is described. A pioneering FROC study using phantom images is described. Key differences between FROC ratings and ROC data are noted. The FROC plot is introduced. The dependence of population and empirical FROC plots on a variable identified as *perceptual signal-to-noise-ratio (pSNR)* is shown. The expected dependence of the FROC curve on pSNR is illustrated with a "solar" analogy -- understanding this is key to obtaining a good intuitive feel for this paradigm. The finite extent of the FROC curve, characterized by an *end-point*, is noted.
+Here is an outline of this chapter. Four observer performance paradigms are compared, using a visual schematic, as to the kinds of information collected and ignored. An essential characteristic of the FROC paradigm, namely *visual search*, is introduced. The FROC paradigm and its historical context is described. A pioneering FROC study using phantom images is described. Key differences between FROC ratings and ROC data are noted. The FROC plot is introduced. The dependence of population and empirical FROC plots on a variable identified as *perceptual signal-to-noise-ratio (pSNR)* is shown. The expected dependence of the FROC curve on pSNR is illustrated with a "solar" analogy -- understanding this is key to obtaining a good intuitive feel for this paradigm. The finite extent of the FROC curve, characterized by an *end-point*, is noted.
 
 The starting point is a comparison of four observer performance paradigms.
 
@@ -28,10 +28,9 @@ All observer performance methods involve detecting the presence of true lesions;
 -   the location ROC (LROC) [@RN1311; @RN209];
 -   the region of interest (ROI) [@RN55].
 
-<div class="figure">
-<img src="images/4Paradigms.png" alt="Upper Left: ROC, Upper Right: FROC, Lower Left: LROC, Lower Right: ROI" width="100%" />
-<p class="caption">(\#fig:froc-paradigm-4Paradigms)Upper Left: ROC, Upper Right: FROC, Lower Left: LROC, Lower Right: ROI</p>
-</div>
+\begin{figure}
+\includegraphics[width=1\linewidth]{images/4Paradigms} \caption{Upper Left: ROC, Upper Right: FROC, Lower Left: LROC, Lower Right: ROI}(\#fig:froc-paradigm-4Paradigms)
+\end{figure}
 
 Fig. \@ref(fig:froc-paradigm-4Paradigms) shows a schematic mammogram interpreted according to current observer performance paradigms. The arrows point to two real lesions and the three light crosses indicate suspicious regions. Evidently the radiologist saw one of the lesions, missed the other lesion and mistook two normal structures for lesions.
 
@@ -119,49 +118,26 @@ Table \@ref(tab:FrocRocRatingsComparison): comparison of ROC and FROC rating sca
 
 
 
-<table>
-<caption>(\#tab:FrocRocRatingsComparison)Comparison of ROC and FROC rating scales: note that the FROC rating is one less than the corresponding ROC rating and that there is no rating corresponding to ROC-1.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> ROC Rating </th>
-   <th style="text-align:left;"> Observer's Description </th>
-   <th style="text-align:left;"> FROC Rating </th>
-   <th style="text-align:left;"> Observer's Description </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> Definitely not diseased </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> Image is not marked </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> Probably not diseased </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> Just possible it is a lesion </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 3 </td>
-   <td style="text-align:left;"> Possibly diseased </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> Possibly a lesion </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 4 </td>
-   <td style="text-align:left;"> Probably diseased </td>
-   <td style="text-align:left;"> 3 </td>
-   <td style="text-align:left;"> Probably a lesion </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 5 </td>
-   <td style="text-align:left;"> Definitely diseased </td>
-   <td style="text-align:left;"> 4 </td>
-   <td style="text-align:left;"> Definitely a lesion </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:FrocRocRatingsComparison)Comparison of ROC and FROC rating scales: note that the FROC rating is one less than the corresponding ROC rating and that there is no rating corresponding to ROC-1.}
+\centering
+\begin{tabular}[t]{l|l|l|l}
+\hline
+ROC Rating & Observer's Description & FROC Rating & Observer's Description\\
+\hline
+1 & Definitely not diseased & NA & Image is not marked\\
+\hline
+2 & Probably not diseased & 1 & Just possible it is a lesion\\
+\hline
+3 & Possibly diseased & 2 & Possibly a lesion\\
+\hline
+4 & Probably diseased & 3 & Probably a lesion\\
+\hline
+5 & Definitely diseased & 4 & Definitely a lesion\\
+\hline
+\end{tabular}
+\end{table}
 
 The FROC rating is one less than the corresponding ROC rating because the ROC-1 rating is not used by the observer; the observer indicates such images by the simple expedient of *not* marking them.
 
@@ -199,10 +175,14 @@ The RSM simulator is characterized by three parameters $\mu$, $\lambda$ and $\nu
 
 Fig. \@ref(fig:froc-paradigm-plots) (A - C) shows simulated population FROC plots when the ratings are not binned, i.e., *raw FROC plots*, where the ratings were generated by the `RJafroc` function `SimulateFrocDataset()`. The help page for this function is shown below.
 
-<div class="figure" style="text-align: center">
-<img src="images/12-froc/SimulateFrocDataset.png" alt="Help page for RJafroc function SimulateFrocDataset"  />
-<p class="caption">(\#fig:HelpSimulateFrocDataset)Help page for RJafroc function SimulateFrocDataset</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics{images/12-froc/SimulateFrocDataset} 
+
+}
+
+\caption{Help page for RJafroc function SimulateFrocDataset}(\#fig:HelpSimulateFrocDataset)
+\end{figure}
 
 For now ignore the distinction between *intrinsic* and *physical* parameters. As evident from the following code, one supplies the function with the parameters of the RSM: $\mu, \lambda, \nu$, the threshold parameter $\zeta_1 = -\infty$, the number of treatments $I = 1$, the number of readers $J = 1$, the number of non-diseased cases $K_1$, the number of diseased cases $K_2$, and the number of lesions per each diseased case `Lk2`. In this example the maximum number of lesions per case `Lmax` has been specified to be two.
 
@@ -283,10 +263,7 @@ for (i in 1:3) {
 }
 ```
 
-<div class="figure">
-<img src="12-froc_files/figure-html/froc-paradigm-plots-1.png" alt="FROC plots: A, B, C correspond to raw population plots and D, E, F to binned plots with fewer cases." width="672" />
-<p class="caption">(\#fig:froc-paradigm-plots)FROC plots: A, B, C correspond to raw population plots and D, E, F to binned plots with fewer cases.</p>
-</div>
+![(\#fig:froc-paradigm-plots)FROC plots: A, B, C correspond to raw population plots and D, E, F to binned plots with fewer cases.](12-froc_files/figure-latex/froc-paradigm-plots-1.pdf) 
 
 Fig. \@ref(fig:froc-paradigm-plots): Plots (A) -- (C): Population FROC plots for $\mu$ = 0.5, 1, 2; the other parameters are $\lambda$ = 1, $\nu$ = 1, $\zeta_1 = -\infty$ and $L_{max} = 2$ is the maximum number of lesions per case in the dataset. Plots (D) -- (F) correspond to 50 non-diseased and 70 diseased cases, where the data was binned into 5 bins, and other parameters are unchanged. As $\mu$ increases, the uppermost point moves upwards and to the left (the latter trend is somewhat hidden by the changing scale factor of the x-axis).
 
@@ -352,10 +329,7 @@ for (i in 1:2) {
 }
 ```
 
-<div class="figure">
-<img src="12-froc_files/figure-html/froc-paradigm-plots2-1.png" alt="A: raw FROC curve for $\mu=10$, B: raw FROC for $\mu=0.01$." width="672" />
-<p class="caption">(\#fig:froc-paradigm-plots2)A: raw FROC curve for $\mu=10$, B: raw FROC for $\mu=0.01$.</p>
-</div>
+![(\#fig:froc-paradigm-plots2)A: raw FROC curve for $\mu=10$, B: raw FROC for $\mu=0.01$.](12-froc_files/figure-latex/froc-paradigm-plots2-1.pdf) 
 
 Fig. \@ref(fig:froc-paradigm-plots2): (A): FROC plot for $\mu = 10$. Note the small range of the NLF axis (it only extends to 0.1). In this limit the ordinate reaches unity, but the abscissa is limited to a small value. (B): This plot corresponds to $\mu = 0.01$, depicting near chance-level performance. Note the greatly increased traverse in the x-directions and the slight upturn in the plot near $\text{NLF} = 100$.
 
@@ -391,7 +365,7 @@ Think of the eye as two cameras: a low-resolution camera (peripheral vision) wit
 
 Since the large field-of-view low-resolution peripheral vision system has complementary properties to the small field-of-view high-resolution foveal vision system, one expects an inverse correlation between search and lesion-classification performances. Stated generally, search involves two complementary processes: finding the suspicious regions and deciding if the found region is actually a lesion, and that there should be an inverse correlation between performance in the two tasks, see TBA Chapter 19.
 
-When cloud cover completely blocks the fictitious random-position sun there is no stimulus to trigger the peripheral vision system to guide the fovea to the correct location. Lacking any stimulus, the observer is reduced to guessing and is led to different conclusions depending upon the benefits and costs involved. If, for example, the guessing observer earns a dollar for each LL and is fined a dollar for each NL, then the observer will likely not make any marks as the chance of winning a dollar is much smaller than losing many dollars. For this observer $\text{LLF}_{max} = 0$ and $\text{NLF}_{max} = 0$, and the operating point is "stuck" at the origin. If, on the other hand, the observer is told every LL is worth a dollar and there is no penalty to NLs, then with no risk of losing the observer will "fill up" the sky with marks. In either situation the locations of the marks will lie on a grid determined by the ratio of the 4π solid angle (subtended by the spherical sky) and the solid angle $\Omega$ subtended by the sun. By marking every possible grid location the observer is trivially guaranteed to "detect" the sun and earn a dollar irrespective of its random location and reach $LLF = 1$, but now the observer will generate lots of non-lesion localizations, so $\text{NLF}_{max}$ will be large:
+When cloud cover completely blocks the fictitious random-position sun there is no stimulus to trigger the peripheral vision system to guide the fovea to the correct location. Lacking any stimulus, the observer is reduced to guessing and is led to different conclusions depending upon the benefits and costs involved. If, for example, the guessing observer earns a dollar for each LL and is fined a dollar for each NL, then the observer will likely not make any marks as the chance of winning a dollar is much smaller than losing many dollars. For this observer $\text{LLF}_{max} = 0$ and $\text{NLF}_{max} = 0$, and the operating point is "stuck" at the origin. If, on the other hand, the observer is told every LL is worth a dollar and there is no penalty to NLs, then with no risk of losing the observer will "fill up" the sky with marks. In either situation the locations of the marks will lie on a grid determined by the ratio of the $4\pi$ solid angle (subtended by the spherical sky) and the solid angle $\Omega$ subtended by the sun. By marking every possible grid location the observer is trivially guaranteed to "detect" the sun and earn a dollar irrespective of its random location and reach $LLF = 1$, but now the observer will generate lots of non-lesion localizations, so $\text{NLF}_{max}$ will be large:
 
 $$\text{NLF}_{max} = 4\pi/\Omega$$
 
