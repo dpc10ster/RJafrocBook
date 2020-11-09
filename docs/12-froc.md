@@ -6,9 +6,9 @@
 
 ## Introduction {#froc-paradigm-intro}
 
-Until now focus has been on the receiver operating characteristic (ROC) paradigm. For diagnostic tasks such as detecting diffuse interstitial lung disease[^froc-1], or diseases similar to it, where *disease location is implicit* -- by definition diffuse interstitial lung disease is spread through, and confined to, lung tissues -- this is an appropriate paradigm in the sense that essential information is not being lost by limiting the radiologist's response in the study to a single rating categorizing the likelihood of presence of interstitial disease.
+Until now the focus has been on the receiver operating characteristic (ROC) paradigm. For diagnostic tasks such as detecting diffuse interstitial lung disease[^1], or diseases similar to it, where *disease location is implicit* -- by definition diffuse interstitial lung disease is spread through, and confined to, lung tissues -- this is an appropriate paradigm in the sense that essential information is not being lost by limiting the radiologist's response in the study to a single rating categorizing the likelihood of presence of interstitial disease.
 
-[^froc-1]: Diffuse interstitial lung disease refers to disease within both lungs that affects the interstitium or connective tissue that forms the support structure of the lungs' air sacs or alveoli. When one inhales, the alveoli fill with air and pass oxygen to the blood stream. When one exhales, carbon dioxide passes from the blood into the alveoli and is expelled from the body. When interstitial disease is present, the interstitium becomes inflamed and stiff, preventing the alveoli from fully expanding. This limits both the delivery of oxygen to the blood stream and the removal of carbon dioxide from the body. As the disease progresses, the interstitium scars with thickening of the walls of the alveoli, which further hampers lung function.
+[^1]: Diffuse interstitial lung disease refers to disease within both lungs that affects the interstitium or connective tissue that forms the support structure of the lungs' air sacs or alveoli. When one inhales, the alveoli fill with air and pass oxygen to the blood stream. When one exhales, carbon dioxide passes from the blood into the alveoli and is expelled from the body. When interstitial disease is present, the interstitium becomes inflamed and stiff, preventing the alveoli from fully expanding. This limits both the delivery of oxygen to the blood stream and the removal of carbon dioxide from the body. As the disease progresses, the interstitium scars with thickening of the walls of the alveoli, which further hampers lung function.
 
 In clinical practice it is not only important to identify if the patient is diseased, but also to offer further guidance to subsequent care-givers regarding other characteristics (such as type, location, size, extent) of the disease. In most clinical tasks, if the radiologist believes the patient may be diseased, there is a location (or more than one location) associated with the manifestation of the suspected disease. Physicians have a term for this: *focal disease: disease located at a specific region of the image*.
 
@@ -28,9 +28,10 @@ All observer performance methods involve detecting the presence of true lesions;
 -   the location ROC (LROC) [@RN1311; @RN209];
 -   the region of interest (ROI) [@RN55].
 
-\begin{figure}
-\includegraphics[width=1\linewidth]{images/4Paradigms} \caption{Upper Left: ROC, Upper Right: FROC, Lower Left: LROC, Lower Right: ROI}(\#fig:froc-paradigm-4Paradigms)
-\end{figure}
+<div class="figure">
+<img src="images/4Paradigms.png" alt="Upper Left: ROC, Upper Right: FROC, Lower Left: LROC, Lower Right: ROI" width="100%" />
+<p class="caption">(\#fig:froc-paradigm-4Paradigms)Upper Left: ROC, Upper Right: FROC, Lower Left: LROC, Lower Right: ROI</p>
+</div>
 
 Fig. \@ref(fig:froc-paradigm-4Paradigms) shows a schematic mammogram interpreted according to current observer performance paradigms. The arrows point to two real lesions and the three light crosses indicate suspicious regions. Evidently the radiologist saw one of the lesions, missed the other lesion and mistook two normal structures for lesions.
 
@@ -49,9 +50,9 @@ In Fig. \@ref(fig:froc-paradigm-4Paradigms), evidently the radiologist found one
 
 -   In the LROC paradigm, Fig. \@ref(fig:froc-paradigm-4Paradigms) (bottom-left), the radiologist provides a rating summarizing confidence that there is at least one lesion somewhere in the image (as in the ROC paradigm) and marks the most suspicious region in the image. In this example the rating might be LROC-5, the five rating being the same as in the ROC paradigm, and the mark may be the suspicious region rated FROC-4 in the FROC paradigm, and, since it is close to a true lesion, in LROC terminology it would be recorded as a *correct localization*. If the mark were not near a lesion it would be recorded as an *incorrect localization*. Only one mark is allowed in this paradigm, and in fact one mark is *required* on every image, even if the observer does not find any suspicious regions to report. The late Prof. Swensson has been the prime contributor to this paradigm.
 
--   In the region of interest (ROI) paradigm, the researcher segments the image into a number of regions-of-interest (ROIs) and the radiologist rates each ROI for presence of at least one suspicious region somewhere within the ROI. The rating is similar to the ROC rating, except it applies to the segmented ROI, not the whole image. Assuming a 1 -- 5 positive directed integer rating scale in Fig. \@ref(fig:froc-paradigm-4Paradigms) (bottom-right) there are four ROIs. The ROI at \~9 o'clock might be rated ROI-5 as it contains the most suspicious light cross, the one at \~11 o'clock might be rated ROI-1 as it does not contain any light crosses, the one at \~3 o'clock might be rated LROC-2 or 3 (the unmarked light cross would tend to increase the confidence level) and the one at \~7 o'clock might be rated ROI-1. In the example shown in Fig. \@ref(fig:froc-paradigm-4Paradigms) (bottom-right), each case yields 4 ratings. Prof. Obuchowski has been the principal contributor to this paradigm. [^froc-2]
+-   In the region of interest (ROI) paradigm, the researcher segments the image into a number of regions-of-interest (ROIs) and the radiologist rates each ROI for presence of at least one suspicious region somewhere within the ROI. The rating is similar to the ROC rating, except it applies to the segmented ROI, not the whole image. Assuming a 1 -- 5 positive directed integer rating scale in Fig. \@ref(fig:froc-paradigm-4Paradigms) (bottom-right) there are four ROIs. The ROI at \~9 o'clock might be rated ROI-5 as it contains the most suspicious light cross, the one at \~11 o'clock might be rated ROI-1 as it does not contain any light crosses, the one at \~3 o'clock might be rated LROC-2 or 3 (the unmarked light cross would tend to increase the confidence level) and the one at \~7 o'clock might be rated ROI-1. In the example shown in Fig. \@ref(fig:froc-paradigm-4Paradigms) (bottom-right), each case yields 4 ratings. Prof. Obuchowski has been the principal contributor to this paradigm. [^2]
 
-[^froc-2]: When different views of the same patient anatomy (perhaps in different modalities) are available, it is assumed that all images are segmented consistently, and the rating for each ROI takes into account all views of that ROI in the different views (or modalities). The segmentation shown in the figure is a schematic. In fact the ROIs could be clinically driven descriptors of location, such as "apex of lung" or "mediastinum", and the image does not have to have lines showing the ROIs (which would be distracting to the radiologist). The number of ROIs per image can be at the researcher's discretion and there is no requirement that every case have a fixed number of ROIs.
+[^2]: When different views of the same patient anatomy (perhaps in different modalities) are available, it is assumed that all images are segmented consistently, and the rating for each ROI takes into account all views of that ROI in the different views (or modalities). The segmentation shown in the figure is a schematic. In fact the ROIs could be clinically driven descriptors of location, such as "apex of lung" or "mediastinum", and the image does not have to have lines showing the ROIs (which would be distracting to the radiologist). The number of ROIs per image can be at the researcher's discretion and there is no requirement that every case have a fixed number of ROIs.
 
 The rest of this book part focuses on the FROC paradigm.
 
@@ -59,15 +60,15 @@ The rest of this book part focuses on the FROC paradigm.
 
 The FROC paradigm in medical imaging is equivalent to a visual search task. Any search task has two components: (i) finding something and (ii) acting on it. An example of a search task is looking for lost car-keys or a milk carton in the refrigerator. Success in a search task is finding the searched for object. Acting on it could be driving to work or drinking milk from the carton. There is search-expertise associated with any search task. Husbands are notoriously bad at finding the milk carton in the refrigerator (analogy due to Dr. Elizabeth Krupinski at an SPIE course taught jointly with the author). Like anything else, search expertise is honed by experience, i.e., lots of practice.
 
-Likewise, a medical imaging search task has two components (i) finding suspicious regions and (ii) acting on each finding ("finding", used as a noun, is the actual term used by clinicians in their reports), i.e., determining the relevance of each finding to the health of the patient, and whether to report it. A general feature of a medical imaging search task is that the radiologist does not know a-priori if the patient is diseased and, if diseased, how many lesions are present. In the breast-screening context, it is known a-priori that about 5 out of 1000 cases have cancers, so 99.5% of the time odds are that the case has no malignant lesions. [^froc-3] **The radiologist searches each image for lesions.** If a suspicious region is found, and provided it is sufficiently suspicious, the relevant location is marked and rated for confidence in being a lesion. The process is repeated for each suspicious region found in the case. A screening mammography report consists of a listing of search related findings. To summarize: **Free-response data consists of a variable number of mark-rating pairs per case.**
+Likewise, a medical imaging search task has two components (i) finding suspicious regions and (ii) acting on each finding ("finding", used as a noun, is the actual term used by clinicians in their reports), i.e., determining the relevance of each finding to the health of the patient, and whether to report it. A general feature of a medical imaging search task is that the radiologist does not know a-priori if the patient is diseased and, if diseased, how many lesions are present. In the breast-screening context, it is known a-priori that about 5 out of 1000 cases have cancers, so 99.5% of the time odds are that the case has no malignant lesions. [^3] **The radiologist searches each image for lesions.** If a suspicious region is found, and provided it is sufficiently suspicious, the relevant location is marked and rated for confidence in being a lesion. The process is repeated for each suspicious region found in the case. A screening mammography report consists of a listing of search related findings. To summarize: **Free-response data consists of a variable number of mark-rating pairs per case.**
 
-[^froc-3]: The probability of benign suspicious regions is much higher [@Ernster1981Epidemiology], about 13% for women aged 40-45.
+[^3]: The probability of benign suspicious regions is much higher [@Ernster1981Epidemiology], about 13% for women aged 40-45.
 
 ### Proximity criterion and scoring the data {#froc-paradigm-scoring-the-data}
 
-In the first two clinical applications of the FROC paradigm [@Chakraborty1986DigitalVsConv; @Niklason1986SimulatedPulmonary] the marks and ratings were indicated by a grease pencil on an acrylic overlay aligned, in a reproducible way, to the CRT displayed chest image. Credit for a correct detection and localization, termed a lesion-localization or LL-event [^froc-4], was given only if a mark was sufficiently close (as per proximity criterion, see below) to an actual diseased region; otherwise, the observer's mark-rating pair was scored as a non-lesion localization or NL-event.
+In the first two clinical applications of the FROC paradigm [@Chakraborty1986DigitalVsConv; @Niklason1986SimulatedPulmonary] the marks and ratings were indicated by a grease pencil on an acrylic overlay aligned, in a reproducible way, to the CRT displayed chest image. Credit for a correct detection and localization, termed a lesion-localization or LL-event [^4], was given only if a mark was sufficiently close (as per proximity criterion, see below) to an actual diseased region; otherwise, the observer's mark-rating pair was scored as a non-lesion localization or NL-event.
 
-[^froc-4]: The proper terminology for this paradigm has evolved. Older publications and some newer ones refer to this as a true positive (TP) event, thereby confusing a ROC related term that does not involve search with one that does.
+[^4]: The proper terminology for this paradigm has evolved. Older publications and some newer ones refer to this as a true positive (TP) event, thereby confusing a ROC related term that does not involve search with one that does.
 
 -   The use of ROC terminology, such as true positives or false positives to describe FROC data is not conducive to clarity, and is strongly discouraged.
 
@@ -80,21 +81,21 @@ Definition:
 
 What is meant by sufficiently close? One adopts an acceptance radius (for spherical lesions) or *proximity criterion* (the more general case). What constitutes "close enough" is a clinical decision the answer to which depends on the application. It is not necessary for two radiologists to point to the same pixel in order for them to agree that they are seeing the same suspicious region. Likewise, two physicians -- e.g., the radiologist finding the lesion on an x-ray and the surgeon responsible for resecting it -- do not have to agree on the exact center of a lesion in order to appropriately assess and treat it. More often than not, "clinical common sense" can be used to determine if a mark actually localized the real lesion. *When in doubt, the researcher should ask an independent radiologist (i.e., not one used in the observer study) how to score ambiguous marks. A rigid definition of the proximity criterion should not be used.*
 
-For roughly spherical nodules a simple rule can be used. If a circular lesion is 10 mm in diameter, one can use the "touching-coins" analogy to determine the criterion for a mark to be classified as lesion localization. Each coin is 10 mm in diameter, so if they touch, their centers are separated by 10 mm, and the rule is to classify any mark within 10 mm of an actual lesion center as a LL mark, and if the separation is greater, the mark is classified as a NL mark. A recent paper [@Dobbins2016MultiInstitutional] using FROC analysis gives more details on appropriate proximity criteria in the clinical context. [^froc-5]
+For roughly spherical nodules a simple rule can be used. If a circular lesion is 10 mm in diameter, one can use the "touching-coins" analogy to determine the criterion for a mark to be classified as lesion localization. Each coin is 10 mm in diameter, so if they touch, their centers are separated by 10 mm, and the rule is to classify any mark within 10 mm of an actual lesion center as a LL mark, and if the separation is greater, the mark is classified as a NL mark. A recent paper [@Dobbins2016MultiInstitutional] using FROC analysis gives more details on appropriate proximity criteria in the clinical context. [^5]
 
-[^froc-5]: Generally the proximity criterion is more stringent for smaller lesions than for larger one. However, for very small lesions allowance is made so that the criterion does not penalize the radiologist for normal marking "jitter". For 3D images the proximity criteria is different in the x-y plane vs. the slice thickness axis.
+[^5]: Generally the proximity criterion is more stringent for smaller lesions than for larger one. However, for very small lesions allowance is made so that the criterion does not penalize the radiologist for normal marking "jitter". For 3D images the proximity criteria is different in the x-y plane vs. the slice thickness axis.
 
 ### Multiple marks in the same vicinity
 
-Multiple marks near the same vicinity are rarely encountered with radiologists, especially if the perceived lesion is mass-like. [^froc-6] However, algorithmic readers, such as CAD, tend to find multiple regions in the same area. Algorithm designers generally incorporate a clustering step to reduce overlapping regions to a single region and assign the highest rating to it (i.e., the rating of the highest rated mark, not the rating of the closest mark. [^froc-7]
+Multiple marks near the same vicinity are rarely encountered with radiologists, especially if the perceived lesion is mass-like. [^6] However, algorithmic readers, such as CAD, tend to find multiple regions in the same area. Algorithm designers generally incorporate a clustering step to reduce overlapping regions to a single region and assign the highest rating to it (i.e., the rating of the highest rated mark, not the rating of the closest mark. [^7]
 
-[^froc-6]: The exception would be if the perceived lesions were speck-like objects in a mammogram, and even here radiologists tend to broadly outline the region containing perceived specks -- they do not mark individual specks with great precision.
+[^6]: The exception would be if the perceived lesions were speck-like objects in a mammogram, and even here radiologists tend to broadly outline the region containing perceived specks -- they do not mark individual specks with great precision.
 
-[^froc-7]: The reason for using the highest rating is that this gives full and deserved credit for the localization. Other marks in the same vicinity with lower ratings need to be discarded from the analysis; specifically, they should not be classified as NLs, because each mark has successfully located the true lesion to within the clinically acceptable criterion, i.e., any one of them is a good decision because it would result in a patient recall and point further diagnostics to the true location.
+[^7]: The reason for using the highest rating is that this gives full and deserved credit for the localization. Other marks in the same vicinity with lower ratings need to be discarded from the analysis; specifically, they should not be classified as NLs, because each mark has successfully located the true lesion to within the clinically acceptable criterion, i.e., any one of them is a good decision because it would result in a patient recall and point further diagnostics to the true location.
 
 ### Historical context
 
-The term "free-response" was coined by [@RN897] to describe a task involving the detection of brief audio tone(s) against a background of white-noise (white-noise is what one hears if an FM tuner is set to an unused frequency). The tone(s) could occur at any instant within an active listening interval, defined by an indicator light bulb that is turned on. The listener's task was to respond by pressing a button at the specific instant(s) when a tone(s) was perceived (heard). The listener was uncertain how many true tones could occur in an active listening interval and when they might occur. Therefore, the number of responses (button presses) per active interval was a priori unpredictable: it could be zero, one or more. The Egan et al study did not require the listener to rate each button press, but apart from this difference and with a two-dimensional image replacing the listening interval, the acoustic signal detection study is similar to a common task in medical imaging, namely, prior to interpreting a screening case for possible breast cancer, the radiologist does not know how many diseased regions are actually present and, if present, where they are located. Consequently the case (all 4 views and possibly prior images) is searched for regions that appear to be suspicious for cancer. If one or more suspicious regions are found, and the level of suspicion of at least one of them exceeds the radiologists' minimum reporting threshold, the radiologist reports the region(s). At the author's former institution (University of Pittsburgh, Department of Radiology) the radiologists digitally outline and annotate (describe) suspicious region(s) that are found. As one would expect from the low prevalence of breast cancer, in the screening context about 5 per 1000 cases in the US, and assuming expert-level radiologist interpretations, about 90% of breast cases do not generate any marks, implying case-level specificity of 90%. About 10% of cases generate one or more marks and are recalled for further comprehensive imaging (termed diagnostic workup). Of marked cases about 90% generate one mark, about 10% generate 2 marks, and a rare case generates 3 or more marks. Conceptually, a mammography report consists of the locations of regions that exceed the threshold and the corresponding levels of suspicion, reported as a Breast Imaging Reporting and Data System (BIRADS) rating (the BIRADS rating is actually determined after the diagnostic workup following a 0-screening rating; the screening rating itself is binary: 0 for recall or 1 for normal).
+The term "free-response" was coined by [@RN897] to describe a task involving the detection of brief audio tone(s) against a background of white-noise (white-noise is what one hears if an FM tuner is set to an unused frequency). The tone(s) could occur at any instant within an active listening interval, defined by an indicator light bulb that is turned on. The listener's task was to respond by pressing a button at the specific instant(s) when a tone(s) was perceived (heard). The listener was uncertain how many true tones could occur in an active listening interval and when they might occur. Therefore, the number of responses (button presses) per active interval was a priori unpredictable: it could be zero, one or more. The Egan et al study did not require the listener to rate each button press, but apart from this difference and with a two-dimensional image replacing the listening interval, the acoustic signal detection study is similar to a common task in medical imaging, namely, prior to interpreting a screening case for possible breast cancer, the radiologist does not know how many diseased regions are actually present and, if present, where they are located. Consequently the case (all 4 views and possibly prior images) is searched for regions that appear to be suspicious for cancer. If one or more suspicious regions are found, and the level of suspicion of at least one of them exceeds the radiologists' minimum reporting threshold, the radiologist reports the region(s). At the author's former institution (University of Pittsburgh, Department of Radiology) the radiologists digitally outline and annotate (describe) suspicious region(s) that are found. As one would expect from the low prevalence of breast cancer, in the screening context about 5 per 1000 cases in the US, and assuming expert-level radiologist interpretations, about 90% of breast cases do not generate any marks, implying case-level specificity of 90%. About 10% of cases generate one or more marks and are recalled for further comprehensive imaging (termed diagnostic workup). Of marked cases about 90% generate one mark, about 10% generate 2 marks, and a rare case generates 3 or more marks. Conceptually, a mammography report consists of the locations of regions that exceed the threshold and the corresponding levels of suspicion, reported as a Breast Imaging Reporting and Data System (BIRADS) rating (the BIRADS rating is actually assigned after the diagnostic workup following a 0-screening rating; the screening rating itself is binary: 0 for recall or 1 for normal).
 
 Described next is the first medical imaging application of this paradigm.
 
@@ -118,34 +119,57 @@ Table \@ref(tab:FrocRocRatingsComparison): comparison of ROC and FROC rating sca
 
 
 
-\begin{table}
-
-\caption{(\#tab:FrocRocRatingsComparison)Comparison of ROC and FROC rating scales: note that the FROC rating is one less than the corresponding ROC rating and that there is no rating corresponding to ROC-1.}
-\centering
-\begin{tabular}[t]{l|l|l|l}
-\hline
-ROC Rating & Observer's Description & FROC Rating & Observer's Description\\
-\hline
-1 & Definitely not diseased & NA & Image is not marked\\
-\hline
-2 & Probably not diseased & 1 & Just possible it is a lesion\\
-\hline
-3 & Possibly diseased & 2 & Possibly a lesion\\
-\hline
-4 & Probably diseased & 3 & Probably a lesion\\
-\hline
-5 & Definitely diseased & 4 & Definitely a lesion\\
-\hline
-\end{tabular}
-\end{table}
+<table>
+<caption>(\#tab:FrocRocRatingsComparison)Comparison of ROC and FROC rating scales: note that the FROC rating is one less than the corresponding ROC rating and that there is no rating corresponding to ROC-1.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> ROC Rating </th>
+   <th style="text-align:left;"> Observer's Description </th>
+   <th style="text-align:left;"> FROC Rating </th>
+   <th style="text-align:left;"> Observer's Description </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> Definitely not diseased </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> Image is not marked </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> Probably not diseased </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> Just possible it is a lesion </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:left;"> Possibly diseased </td>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> Possibly a lesion </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:left;"> Probably diseased </td>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:left;"> Probably a lesion </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 5 </td>
+   <td style="text-align:left;"> Definitely diseased </td>
+   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:left;"> Definitely a lesion </td>
+  </tr>
+</tbody>
+</table>
 
 The FROC rating is one less than the corresponding ROC rating because the ROC-1 rating is not used by the observer; the observer indicates such images by the simple expedient of *not* marking them.
 
 ### Scoring the data
 
-Scoring the data was defined \@ref(froc-paradigm-scoring-the-data) as the process of classifying each mark-rating pair as NL or LL according to the chosen proximity criterion. In the Bunch et al study, after each case was read the person running the study (i.e., Dr. Phil Bunch) compared the marks on the overlay to the true lesion locations on the contact radiographs and scored the marks as lesion localizations (LLs: lesions correctly localized to within about 1 mm radius) or non-lesion localizations (NLs: all other marks). [^froc-8]
+Scoring the data was defined \@ref(froc-paradigm-scoring-the-data) as the process of classifying each mark-rating pair as NL or LL according to the chosen proximity criterion. In the Bunch et al study, after each case was read the person running the study (i.e., Dr. Phil Bunch) compared the marks on the overlay to the true lesion locations on the contact radiographs and scored the marks as lesion localizations (LLs: lesions correctly localized to within about 1 mm radius) or non-lesion localizations (NLs: all other marks). [^8]
 
-[^froc-8]: Bunch et al actually used the terms "true positive" and "false positive" to describe these events. This practice, still used in publications in this field, is confusing because there is ambiguity about whether these terms, commonly used in the ROC paradigm, are being applied to the case as a whole or to specific regions in the case.
+[^8]: Bunch et al actually used the terms "true positive" and "false positive" to describe these events. This practice, still used in publications in this field, is confusing because there is ambiguity about whether these terms, commonly used in the ROC paradigm, are being applied to the case as a whole or to specific regions in the case.
 
 ## The free-response receiver operating characteristic (FROC) plot {#froc-paradigm-froc-plot}
 
@@ -161,7 +185,7 @@ The free-response receiver operating characteristic (FROC) plot was introduced, 
 
 While the ordinate LLF is a proper fraction, e.g., 30/40 assuming 30 LLs and 40 true lesions, the abscissa is an improper fraction that can exceed unity, like 35/21 assuming 35 NLs on 21 cases). The NLF notation is not ideal: as will become evident in the next chapter, it is used for notational symmetry and compactness.
 
-Following Miller's suggestion, [@bunch1977free, @bunch1977freeSPIE] plotted lesion localization fraction (LLF) along the ordinate vs. non-lesion localization fraction (NLF) along the abscissa. Corresponding to the different threshold ratings, pairs of (NLF, LLF) values, or operating points on the FROC, were plotted. For example, in a positive directed four-rating FROC study, such as employed by Bunch et al, 4 FROC operating points resulted: that corresponding to marks rated 4s; that corresponding to marks rated 4s or 3s; the 4s, 3s, or 2s; and finally the 4s, 3s, 2s, or 1s. An R-rating (integer R \> 0) FROC study yields at most R operating points. So Bunch et al were able to plot only 4 operating points per reader, Fig. 6 ibid. Lacking a method of fitting a continuous FROC curve to the operating points, they did the best they could, and manually "French-curved" fitted curves. In 1986, the author followed the same practice in his first paper on this topic9. In 1989 the author described1 a method for fitting such operating points, and developed software called FROCFIT, but the fitting method is obsolete, as the underlying statistical model has been superseded, see Chapter 18, and moreover, it is shown that the FROC plot is a poor visual descriptor of performance.
+Following Miller's suggestion, [@bunch1977free, @bunch1977freeSPIE] plotted lesion localization fraction (LLF) along the ordinate vs. non-lesion localization fraction (NLF) along the abscissa. Corresponding to the different threshold ratings, pairs of (NLF, LLF) values, or operating points on the FROC, were plotted. For example, in a positive directed four-rating FROC study, such as employed by Bunch et al, 4 FROC operating points resulted: that corresponding to marks rated 4s; that corresponding to marks rated 4s or 3s; the 4s, 3s, or 2s; and finally the 4s, 3s, 2s, or 1s. An R-rating (integer R \> 0) FROC study yields at most R operating points. So Bunch et al were able to plot only 4 operating points per reader, Fig. 6 ibid. Lacking a method of fitting a continuous FROC curve to the operating points, they did the best they could, and manually "French-curved" fitted curves. In 1986, the author followed the same practice in his first paper on this topic [@Chakraborty1986DigitalVsConv]. In 1989 the author described [@chakraborty1989maximum] a method for fitting such operating points, and developed software called FROCFIT, but the fitting method is obsolete, as the underlying statistical model has been superseded, and moreover, it is now known that the FROC plot is a poor visual descriptor of performance.
 
 If continuous ratings are used, the procedure is to start with a very high threshold so that none of the ratings exceed the threshold, and one gradually lowers the threshold. Every time the threshold crosses the rating of a mark, or possibly multiple marks, the total count of LLs and NLs exceeding the threshold is divided by the appropriate denominators yielding the ''raw'' FROC plot. For example, when an LL rating just exceeds the threshold, the operating point jumps up by 1/(total number of lesions), and if two LLs simultaneously just exceed the threshold, the operating point jumps up by 2/(total number of lesions). If an NL rating just exceeds the threshold, the operating point jumps to the right by 1/(total number of cases). If an LL rating and a NL rating simultaneously just exceed the threshold, the operating point moves diagonally, up by 1/(total number of lesions) and to the right by 1/(total number of cases). The reader should get the general idea by now and recognize that the cumulating procedure is very similar to the manner in which ROC operating points were calculated, the only differences being in the quantities being cumulated and the relevant denominators.
 
@@ -173,16 +197,12 @@ The RSM simulator is characterized by three parameters $\mu$, $\lambda$ and $\nu
 
 ## Population and binned FROC plots {#froc-paradigm-pop-binned-plots}
 
-Fig. 12.2 (A - C) shows simulated population FROC plots when the ratings are not binned, i.e., *raw FROC plots*, generated by `RJafroc` function `SimulateFrocDataset()`. The help page for this function is shown below.
+Fig. \@ref(fig:froc-paradigm-plots) (A - C) shows simulated population FROC plots when the ratings are not binned, i.e., *raw FROC plots*, where the ratings were generated by the `RJafroc` function `SimulateFrocDataset()`. The help page for this function is shown below.
 
-\begin{figure}
-
-{\centering \includegraphics{images/12-froc/SimulateFrocDataset} 
-
-}
-
-\caption{Help page for RJafroc function SimulateFrocDataset}(\#fig:HelpSimulateFrocDataset)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/12-froc/SimulateFrocDataset.png" alt="Help page for RJafroc function SimulateFrocDataset"  />
+<p class="caption">(\#fig:HelpSimulateFrocDataset)Help page for RJafroc function SimulateFrocDataset</p>
+</div>
 
 For now ignore the distinction between *intrinsic* and *physical* parameters. As evident from the following code, one supplies the function with the parameters of the RSM: $\mu, \lambda, \nu$, the threshold parameter $\zeta_1 = -\infty$, the number of treatments $I = 1$, the number of readers $J = 1$, the number of non-diseased cases $K_1$, the number of diseased cases $K_2$, and the number of lesions per each diseased case `Lk2`. In this example the maximum number of lesions per case `Lmax` has been specified to be two.
 
@@ -215,16 +235,16 @@ for (i in 1:3) {
     perCase = Lk2 
   )
   
-  froc <- PlotEmpiricalOperatingCharacteristics(
+  frocRaw <- PlotEmpiricalOperatingCharacteristics(
     dataset = frocDataRaw, 
     trts= 1, 
     rdrs = 1, 
     opChType = "FROC", 
     legend.position = "NULL")
   
-  if (i == 1) figA <- froc$Plot + ggtitle("A")
-  if (i == 2) figB <- froc$Plot + ggtitle("B")
-  if (i == 3) figC <- froc$Plot + ggtitle("C")
+  if (i == 1) figA <- frocRaw$Plot + ggtitle("A")
+  if (i == 2) figB <- frocRaw$Plot + ggtitle("B")
+  if (i == 3) figC <- frocRaw$Plot + ggtitle("C")
 }
 ```
 
@@ -237,7 +257,7 @@ K2 <- 70
 Lk2 <- floor(runif(K2, 1, Lmax + 1))
 for (i in 1:3) {
   mu <- mu_arr[i]
-  frocDataRaw <- SimulateFrocDataset(
+  frocDataRaw1 <- SimulateFrocDataset(
     mu = mu, 
     lambda = lambda, 
     nu = nu, 
@@ -248,22 +268,25 @@ for (i in 1:3) {
     K2 = K2, 
     perCase = Lk2 
   )
-  frocDataBin <- DfBinDataset(frocDataRaw, desiredNumBins = 5, opChType = "FROC")
+  frocDataBin <- DfBinDataset(frocDataRaw1, desiredNumBins = 5, opChType = "FROC")
   
-  froc <- PlotEmpiricalOperatingCharacteristics(
+  frocBin <- PlotEmpiricalOperatingCharacteristics(
     dataset = frocDataBin, 
     trts= 1, 
     rdrs = 1, 
     opChType = "FROC", 
     legend.position = "NULL")
   
-  if (i == 1) figD <- froc$Plot + ggtitle("D")
-  if (i == 2) figE <- froc$Plot + ggtitle("E")
-  if (i == 3) figF <- froc$Plot + ggtitle("F")
+  if (i == 1) figD <- frocBin$Plot + ggtitle("D")
+  if (i == 2) figE <- frocBin$Plot + ggtitle("E")
+  if (i == 3) figF <- frocBin$Plot + ggtitle("F")
 }
 ```
 
-![(\#fig:froc-paradigm-plots)FROC plots: A, B, C correspond to raw population plots and D, E, F to binned plots with fewer cases.](12-froc_files/figure-latex/froc-paradigm-plots-1.pdf) 
+<div class="figure">
+<img src="12-froc_files/figure-html/froc-paradigm-plots-1.png" alt="FROC plots: A, B, C correspond to raw population plots and D, E, F to binned plots with fewer cases." width="672" />
+<p class="caption">(\#fig:froc-paradigm-plots)FROC plots: A, B, C correspond to raw population plots and D, E, F to binned plots with fewer cases.</p>
+</div>
 
 Fig. \@ref(fig:froc-paradigm-plots): Plots (A) -- (C): Population FROC plots for $\mu$ = 0.5, 1, 2; the other parameters are $\lambda$ = 1, $\nu$ = 1, $\zeta_1 = -\infty$ and $L_{max} = 2$ is the maximum number of lesions per case in the dataset. Plots (D) -- (F) correspond to 50 non-diseased and 70 diseased cases, where the data was binned into 5 bins, and other parameters are unchanged. As $\mu$ increases, the uppermost point moves upwards and to the left (the latter trend is somewhat hidden by the changing scale factor of the x-axis).
 
@@ -271,19 +294,31 @@ Points to note:
 
 -   Plots (A) -- (C) show quasi-continuous plots, while (D) -- (F) show operating points, five per plot, connected by straight line segments, so they are termed *empirical FROC curves*, analogous to the empirical ROC curves encountered in previous chapters. At a "microscopic level" plots (A) -- (C) are also discrete, but one would need to "zoom in" to see the discrete behavior (upward and rightward jumps) as each rating crosses a sliding threshold.
 
--   The empirical plots in the bottom row (D - F) of Fig. 12.2 are subject to sampling variability and will not, in general, match the population plots. The reader may wish to experiment with different values of the `seed` variable in the code.
+-   The empirical plots in the bottom row (D - F) are subject to sampling variability and will not, in general, match the population plots. The reader may wish to experiment with different values of the `seed` variable in the code.
 
--   In general FROC plots do not extend indefinitely to the right. [^froc-9]
+-   In general FROC plots do not extend indefinitely to the right. [^9]
 
--   Like an ROC plot, the population FROC curve rises monotonically from the origin, initially with infinite slope (this may not be visually evident for Fig. \@ref(fig:froc-paradigm-plots) (A), but it is true). If all suspicious regions are marked, i.e., $\zeta_1 = -\infty$, the plot reaches its upper-right most limit, termed the end-point, with zero slope (again, this may not be visually evident for (A), but it is true). In general these characteristics, i.e., initial infinite slope and zero final slope, are not true for the empirical plots Fig. \@ref(fig:froc-paradigm-plots) (D -- F).
+[^9]: Fig. 5 in [@bunch1977free] is incorrect in implying, with the arrows, that the plots extend indefinitely to the right. Also there is a notation differences: P(TP) in Bunch et. al. is equivalent to LLF in this book. To avoid confusion with the $\lambda$ parameter of the radiological search model, the variable Bunch et al. call $\lambda$ is equivalent to NLF in this book.
 
--   *Assuming all suspicious regions are marked, the end-point represents a literal end of the extent of the population FROC curve.* This will become clearer in following chapters, but for now it should suffice to note that the region of the population FROC plot to the upper-right of the end-point is inaccessible to both the observer and the data analyst. [If sampling variability is involved it is possible for the observed end-point to extend into this inaccessible space.]
+<!-- -->
 
--   There is an inverse correlation between and analogous to that between sensitivity and specificity in ROC analysis. The end-point of the FROC tends to approach the point (0,1) as the perceptual SNR of the lesions approaches infinity. As decreases the FROC curve approaches the x-axis and extends to large values along the abscissa, as in Fig. 12.2 (B). This is the "chance-level" FROC, where the reader detects few lesions, and makes many NL marks.
+-   Like an ROC plot, the population FROC curve rises monotonically from the origin, initially with infinite slope (this may not be visually evident for Fig. \@ref(fig:froc-paradigm-plots) (A), but it is true, see next code segment). If all suspicious regions are marked, i.e., $\zeta_1 = -\infty$, the plot reaches its upper-right most limit, termed the end-point, with zero slope (again, this may not be visually evident for (A), but it is true). In general these characteristics, i.e., initial infinite slope and zero final slope, are not true for the empirical plots Fig. \@ref(fig:froc-paradigm-plots) (D -- F).
 
--   The slope of the population FROC decreases monotonically as the operating point moves up the curve, always staying non-negative and it approaches zero, flattening out at an ordinate less than unity. LLF reaches unity for large $\mu$, which can be confirmed by setting to a large value, e.g., $\mu = 10$, TBA Fig. 12.3 (A). [On the unit variance normal distribution scale, a value of 10, equivalent to 10 standard deviations, is effectively infinite.]
 
-[^froc-9]: Fig. 5 in [@bunch1977free] is incorrect in implying, with the arrows, that the plots extend indefinitely to the right. Also there is a notation differences: P(TP) in Bunch et. al. is equivalent to LLF in this book. To avoid confusion with the $\lambda$ parameter of the radiological search model, the variable Bunch et al. call $\lambda$ is equivalent to NLF in this book.
+```r
+y <- frocRaw$Points$genOrdinate
+x <- frocRaw$Points$genAbscissa
+str(x)
+#>  num [1:2264] 0 0 0 0 0 0 0 0 0 0 ...
+(y[2]-y[1])/(x[2]-x[1]) # slope at origin
+#> [1] Inf
+(y[2264]-y[2264-1])/(x[2264]-x[2264-1]) # slope at end-point
+#> [1] 0
+```
+
+-   *Assuming all suspicious regions are marked, the end-point represents a literal end of the extent of the population FROC curve.* This will become clearer in following chapters, but for now it should suffice to note that the region of the population FROC plot to the upper-right of the end-point is inaccessible to both the observer and the data analyst. [If sampling variability is significant it is possible for the observed end-point to randomly extend into this inaccessible region.]
+
+-   There is an inverse correlation between $\text{LLF}_{max}$ and $\text{NLF}_{max}$, analogous to that between sensitivity and specificity in the ROC paradigm. As the perceptual SNR $\mu$ of the lesions approaches infinity the end-point of the FROC approaches the point (0,1), as in the next coded example, Fig. \@ref(fig:froc-paradigm-plots2) (A). As $\mu$ decreases the FROC curve approaches the x-axis and extends to large values along the abscissa, as in Fig. \@ref(fig:froc-paradigm-plots2) (B). This is the "chance-level" FROC, where the reader detects few lesions, and makes many NL marks.
 
 
 ```r
@@ -305,27 +340,32 @@ for (i in 1:2) {
     perCase = Lk2 
   )
 
-  froc <- PlotEmpiricalOperatingCharacteristics(
+  frocLimits <- PlotEmpiricalOperatingCharacteristics(
     dataset = frocDataRaw, 
     trts= 1, 
     rdrs = 1, 
     opChType = "FROC", 
     legend.position = "NULL")
   
-  if (i == 1) figG <- froc$Plot + ggtitle("G")
-  if (i == 2) figH <- froc$Plot + ggtitle("H")
+  if (i == 1) figG <- frocLimits$Plot + ggtitle("A")
+  if (i == 2) figH <- frocLimits$Plot + ggtitle("B")
 }
 ```
 
-![(\#fig:froc-paradigm-plots2)The left figure is the raw FROC curve for $\mu=10$ and the right figure is for $\mu=0.01$.](12-froc_files/figure-latex/froc-paradigm-plots2-1.pdf) 
+<div class="figure">
+<img src="12-froc_files/figure-html/froc-paradigm-plots2-1.png" alt="A: raw FROC curve for $\mu=10$, B: raw FROC for $\mu=0.01$." width="672" />
+<p class="caption">(\#fig:froc-paradigm-plots2)A: raw FROC curve for $\mu=10$, B: raw FROC for $\mu=0.01$.</p>
+</div>
 
-Fig. \@ref(fig:froc-paradigm-plots2): Left: FROC plot for $\mu = 10$. Note the small range of the NLF axis (it only extends to 0.1). In this limit the ordinate reaches unity, but the abscissa is limited to a small value; see "solar analogy" TBA §12.6 for explanation. Right: This plot corresponds to $\mu = 0.01$, depicting near chance-level performance. Note the greatly increased traverse in the x-directions and the slight upturn in the plot near $\text{NLF} = 100$.
+Fig. \@ref(fig:froc-paradigm-plots2): (A): FROC plot for $\mu = 10$. Note the small range of the NLF axis (it only extends to 0.1). In this limit the ordinate reaches unity, but the abscissa is limited to a small value. (B): This plot corresponds to $\mu = 0.01$, depicting near chance-level performance. Note the greatly increased traverse in the x-directions and the slight upturn in the plot near $\text{NLF} = 100$.
+
+-   The slope of the population FROC, assuming all suspicious regions are marked, decreases monotonically as the operating point moves up the curve, always staying non-negative, and it approaches zero, flattening out at an ordinate generally less than unity. LLF reaches unity for large $\mu$, which can be confirmed by setting $\mu$ to a large value, e.g., $\mu = 10$, as in Fig. \@ref(fig:froc-paradigm-plots2) plot (A). [On the unit variance normal distribution scale, a value of 10, equivalent to 10 standard deviations, is effectively infinite.]
 
 ## Perceptual SNR {#froc-paradigm-perceptual-snr}
 
-Most readers, especially those with engineering backgrounds, are familiar with the concept of signal-to-noise-ratio, SNR. The shape and extent of the FROC plot is to a large extent determined by the *perceptual* [^froc-10] SNR of the lesions, pSNR, modeled by the $\mu$ parameter. Perceptual SNR is the ratio of perceptual signal to perceptual noise. To get to perceptual variables one needs a model of the eye-brain system that transforms physical image brightness variations to corresponding perceived brightness variations, and such models exist [@van1996perceptual; @RN1425; @RN1350]. For uniform background images, like the phantom images used by Bunch et al, physical signal can be measured by a *template* function that has the same attenuation profile as the true lesion. Assuming the template is aligned with the lesion the *cross-correlation* between the template function and the image pixel values is related to the numerator of SNR. The cross correlation is defined as the summed product of template function pixel values times the corresponding pixel values in the actual image. Next, one calculates the cross-correlation between the template function and the pixel values in the image when the template is centered over regions known to be *lesion free*. Subtracting the mean of these values (over several lesion free regions) from the centered value gives the numerator of SNR. The denominator is the standard deviation of the cross correlation values in the lesion free areas. Details on calculating *physical* SNR are in my CAMPI (computer analysis of mammography phantom images) work [@RN551; @RN601; @RN606; @RN337]. To calculate perceptual SNR one repeats these measurements but the visual process, or some model of it (e.g., the Sarnoff JNDMetrix visual discrimination model [@RN1350; @siddiqui2005discrete; @RN1590]), is used to filter the image prior to calculation of the cross-correlations.
+Most readers, especially those with engineering backgrounds, are familiar with the concept of signal-to-noise-ratio, SNR. The shape and extent of the FROC plot is to a large extent determined by the *perceptual* [^10] SNR of the lesions, pSNR, modeled by the $\mu$ parameter. Perceptual SNR is the ratio of perceptual signal to perceptual noise. To get to perceptual variables one needs a model of the eye-brain system that transforms physical image brightness variations to corresponding perceived brightness variations, and such models exist [@van1996perceptual; @RN1425; @RN1350]. For uniform background images, like the phantom images used by Bunch et al, physical signal can be measured by a *template* function that has the same attenuation profile as the true lesion. Assuming the template is aligned with the lesion the *cross-correlation* between the template function and the image pixel values is related to the numerator of SNR. The cross correlation is defined as the summed product of template function pixel values times the corresponding pixel values in the actual image. Next, one calculates the cross-correlation between the template function and the pixel values in the image when the template is centered over regions known to be *lesion free*. Subtracting the mean of these values (over several lesion free regions) from the centered value gives the numerator of SNR. The denominator is the standard deviation of the cross correlation values in the lesion free areas. Details on calculating *physical* SNR are in my CAMPI (computer analysis of mammography phantom images) work [@RN551; @RN601; @RN606; @RN337]. To calculate perceptual SNR one repeats these measurements but the visual process, or some model of it (e.g., the Sarnoff JNDMetrix visual discrimination model [@RN1350; @siddiqui2005discrete; @RN1590]), is used to filter the image prior to calculation of the cross-correlations.
 
-[^froc-10]: Since humans make the decisions, it would be incorrect to label these as physical signal-to-noise-ratios; that is the reason for qualifying them as perceptual SNRs.
+[^10]: Since humans make the decisions, it would be incorrect to label these as physical signal-to-noise-ratios; that is the reason for qualifying them as perceptual SNRs.
 
 An analogy may be helpful at this point. *Finding the sun in the sky is a search task, so it can be used to illustrate important concepts.*
 
@@ -359,7 +399,7 @@ The FROC plot for this guessing observer is the straight line joining (0,0) to $
 
 $$(0.5 \times \text{NLF}_{max},0.5)$$
 
-Radiologists do not guess -- there is much riding on their decisions to allow them that luxury -- so in the clinical situation, if the lesion is not seen, the radiologist will not mark the image at random.
+Radiologists do not guess -- there is much riding on their decisions -- so in the clinical situation, if the lesion is not seen, the radiologist will not mark the image at random.
 
 The analogy is not restricted to the sun, which one might argue is an almost infinite SNR object and therefore atypical. As another example, consider finding stars or planets. In clear skies, if one knows the constellations, one can still locate bright stars and planets like Venus or Jupiter. With less bright stars and / or obscuring clouds, there will be false-sightings and the FROC plot could approach a flat horizontal line at ordinate equal to zero, but the observer will not fill up the sky with false sightings of a desired star.
 
@@ -367,7 +407,7 @@ False sightings of objects in astronomy do occur. Finding a new astronomical obj
 
 ## Discussion {#froc-paradigm-discussion}
 
-This chapter has introduced the FROC paradigm, the terminology used to describe it and a common operating characteristic associated with it, namely the FROC. In the author's experience this paradigm there are several areas of possible confusion. The following suggestions may reduce further confusion:
+This chapter has introduced the FROC paradigm, the terminology used to describe it and a common operating characteristic associated with it, namely the FROC. There are several areas of possible confusion to avoid which consider the following suggestions:
 
 -   Avoid using the term "lesion-specific" to describe location-specific paradigms.
 -   Avoid using the term "lesion" when one means a "suspicious region" that may or may not be a true lesion.
@@ -375,10 +415,10 @@ This chapter has introduced the FROC paradigm, the terminology used to describe 
 -   Avoid using the FROC-1 rating to mean in effect "I see no signs of disease in this image ", when in fact it should be used as the lowest level of a reportable suspicious region. The former usage amounts to wasting a confidence level.
 -   Do not show FROC curves as reaching the unit ordinate, as this is the exception rather than the rule.
 -   Do not conceptualize FROC curves as extending to large values to the right.
--   Arbitrariness of the proximity criterion and multiple marks in the same region are not clinical constraints - they are problems only in the mind of the data analyst unfamiliar with clinical practice. Interactions with clinicians, preferably using a medical physicist, will allow selection of an appropriate proximity criterion for the task at hand and the latter problem only occurs with algorithmic observers and is readily fixed.
+-   Arbitrariness of the proximity criterion and multiple marks in the same region are not clinically important. Interactions with clinicians will allow selection of an appropriate proximity criterion for the task at hand and the multiple mark problem only occurs with algorithmic observers and is readily fixed.
 
 Additional points made in this chapter are: There is an inverse correlation between $\text{LLF}_{max}$ and $\text{NLF}_{max}$, analogous to that been sensitivity and specificity in ROC analysis. The observed end-point $(\text{NLF}_{max}, \text{LLF}_{max})$ of the FROC curve tends to approach the point (0,1) as the perceptual SNR of the lesions approaches infinity. The solar analogy is relevant to understanding the search task. In search tasks two types of expertise are at work: search and lesion-classification performances, and there exists an expected inverse correlation between them.
 
-The FROC plot is the first proposed way of visually summarizing FROC data. The next chapter deals with different empirical operating characteristics that can be defined from an FROC dataset.
+The FROC plot is the first proposed way of visually summarizing FROC data. The next chapter deals with all empirical operating characteristics that can be defined from an FROC dataset.
 
 ## References {#froc-paradigm-references}
