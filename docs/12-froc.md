@@ -100,7 +100,7 @@ Described next is the first medical imaging application of this paradigm.
 
 ## A pioneering FROC study in medical imaging
 
-This section details an FROC paradigm phantom study with x-ray images conducted in 1978 that is often overlooked. With the obvious substitution of clinical images for the phantom images, this study is a template for how an FROC experiment should be conducted. A detailed description of it is provided to set up the paradigm, the terminology used to describe it, and concludes with the FROC plot, which is still widely (and *incorrectly*, see TBA Chapter 17) used as the basis for summarizing performance in this paradigm.
+This section details an FROC paradigm phantom study with x-ray images conducted in 1978 that is often overlooked. With the obvious substitution of clinical images for the phantom images, this study is a template for how an FROC experiment should be conducted. A detailed description of it is provided to set up the paradigm, the terminology used to describe it, and to introduce the FROC plot.
 
 ### Image preparation
 
@@ -155,9 +155,9 @@ The free-response receiver operating characteristic (FROC) plot was introduced, 
 
 -   Lesion localization fraction (LLF) is defined as the total number of LLs rated at or above the same threshold rating divided by the total number of lesions in the case set.
 
--   The FROC plot is defined as that of LLF (ordinate) vs. NLF as the threshold is varied.
+-   The FROC plot is defined as that of LLF (ordinate) vs. NLF as the threshold is varied. *Unlike the ROC plot which is completely contained in the unit square, the FROC plot is not.*
 
--   The upper-right most operating point is termed the *observed end-point* and its coordinated are denoted $(\text{NLF}_{max}, \text{LLF}_{max})$.
+-   The upper-right most operating point is termed the *observed end-point* and its coordinated are denoted $(\text{NLF}_{\text{max}}, \text{LLF}_{\text{max}})$.
 
 While the ordinate LLF is a proper fraction, e.g., 30/40 assuming 30 LLs and 40 true lesions, the abscissa is an improper fraction that can exceed unity, like 35/21 assuming 35 NLs on 21 cases). The NLF notation is not ideal: as will become evident in the next chapter, it is used for notational symmetry and compactness.
 
@@ -265,7 +265,7 @@ for (i in 1:3) {
 
 ![(\#fig:froc-paradigm-plots)FROC plots: A, B, C correspond to raw population plots and D, E, F to binned plots with fewer cases.](12-froc_files/figure-latex/froc-paradigm-plots-1.pdf) 
 
-Fig. \@ref(fig:froc-paradigm-plots): Plots (A) -- (C): Population FROC plots for $\mu$ = 0.5, 1, 2; the other parameters are $\lambda$ = 1, $\nu$ = 1, $\zeta_1 = -\infty$ and $L_{max} = 2$ is the maximum number of lesions per case in the dataset. Plots (D) -- (F) correspond to 50 non-diseased and 70 diseased cases, where the data was binned into 5 bins, and other parameters are unchanged. As $\mu$ increases, the uppermost point moves upwards and to the left (the latter trend is somewhat hidden by the changing scale factor of the x-axis).
+Fig. \@ref(fig:froc-paradigm-plots): Plots (A) -- (C): Population FROC plots for $\mu$ = 0.5, 1, 2; the other parameters are $\lambda$ = 1, $\nu$ = 1, $\zeta_1 = -\infty$ and $L_{\text{max}} = 2$ is the maximum number of lesions per case in the dataset. Plots (D) -- (F) correspond to 50 non-diseased and 70 diseased cases, where the data was binned into 5 bins, and other parameters are unchanged. As $\mu$ increases, the uppermost point moves upwards and to the left (the latter trend is somewhat hidden by the changing scale factor of the x-axis).
 
 Points to note:
 
@@ -295,7 +295,7 @@ str(x)
 
 -   *Assuming all suspicious regions are marked, the end-point represents a literal end of the extent of the population FROC curve.* This will become clearer in following chapters, but for now it should suffice to note that the region of the population FROC plot to the upper-right of the end-point is inaccessible to both the observer and the data analyst. [If sampling variability is significant it is possible for the observed end-point to randomly extend into this inaccessible region.]
 
--   There is an inverse correlation between $\text{LLF}_{max}$ and $\text{NLF}_{max}$, analogous to that between sensitivity and specificity in the ROC paradigm. As the perceptual SNR $\mu$ of the lesions approaches infinity the end-point of the FROC approaches the point (0,1), as in the next coded example, Fig. \@ref(fig:froc-paradigm-plots2) (A). As $\mu$ decreases the FROC curve approaches the x-axis and extends to large values along the abscissa, as in Fig. \@ref(fig:froc-paradigm-plots2) (B). This is the "chance-level" FROC, where the reader detects few lesions, and makes many NL marks.
+-   There is an inverse correlation between $\text{LLF}_{\text{max}}$ and $\text{NLF}_{\text{max}}$, analogous to that between sensitivity and specificity in the ROC paradigm. As the perceptual SNR $\mu$ of the lesions approaches infinity the end-point of the FROC approaches the point (0,1), as in the next coded example, Fig. \@ref(fig:froc-paradigm-plots2) (A). As $\mu$ decreases the FROC curve approaches the x-axis and extends to large values along the abscissa, as in Fig. \@ref(fig:froc-paradigm-plots2) (B). This is the "chance-level" FROC, where the reader detects few lesions, and makes many NL marks.
 
 
 ```r
@@ -351,13 +351,13 @@ FROC curve implications of this analogy are:
 
 -   Each 24-hour day corresponds to two "trials" in the [@RN897] sense, or two cases -- one diseased and one non-diseased -- in the medical imaging context.
 -   The denominator for calculating LLF is the total number of AM days, and the denominator for calculating NLF is twice the total number of 24-hour days.
--   Most important, $\text{LLF}_{max} = 1$ and $\text{NLF}_{max} = 0$.
+-   Most important, $\text{LLF}_{\text{max}} = 1$ and $\text{NLF}_{\text{max}} = 0$.
 
-In fact, even when the sun is not directly visible due to heavy cloud cover, since the actual location of the sun can be deduced from the local time and GPS coordinates, the rational observer will still "mark" the correct location of the sun and not make any false sun localizations or "non-lesion localizations", NLs. Consequently, even in this example $\text{LLF}_{max} = 1$ and $\text{NLF}_{max} = 0$.
+In fact, even when the sun is not directly visible due to heavy cloud cover, since the actual location of the sun can be deduced from the local time and GPS coordinates, the rational observer will still "mark" the correct location of the sun and not make any false sun localizations or "non-lesion localizations", NLs. Consequently, even in this example $\text{LLF}_{\text{max}} = 1$ and $\text{NLF}_{\text{max}} = 0$.
 
-The conclusion is that in a task where a target is known to be present in the field of view and its location is known, the observer will always reach $\text{LLF}_{max} = 1$ and $\text{NLF}_{max} = 0$. Why are LLF and NLF subscripted *max*? By randomly not marking the position of the sun even though it is visible, for example, using a coin toss to decide whether or not to mark the sun, the observer can "walk down" the y-axis of the FROC plot, reaching $LLF = 0$ and $NLF = 0$. Alternatively, the observer uses a very large threshold for reporting the sun, and as this threshold is lowered the operating point "walks down" the curve. The reason for allowing the observer to "walk down" the vertical is simply to demonstrate that a continuous FROC curve from the origin to the highest point (0,1) can, in fact, be realized.
+The conclusion is that in a task where a target is known to be present in the field of view and its location is known, the observer will always reach $\text{LLF}_{\text{max}} = 1$ and $\text{NLF}_{\text{max}} = 0$. Why are LLF and NLF subscripted *max*? By randomly not marking the position of the sun even though it is visible, for example, using a coin toss to decide whether or not to mark the sun, the observer can "walk down" the y-axis of the FROC plot, reaching $LLF = 0$ and $NLF = 0$. Alternatively, the observer uses a very large threshold for reporting the sun, and as this threshold is lowered the operating point "walks down" the curve. The reason for allowing the observer to "walk down" the vertical is simply to demonstrate that a continuous FROC curve from the origin to the highest point (0,1) can, in fact, be realized.
 
-Now consider a fictitious otherwise earth-like planet where the sun can be at random positions, rendering GPS coordinates and the local time useless. All one knows is that the sun is somewhere, in the upper or lower hemispheres subtended by the sky. If there are no clouds and consequently one can see the sun clearly during daytime, a reasonable observer would still correctly located the sun while not marking the sky with any incorrect sightings, so $\text{LLF}_{max} = 1$ and $\text{NLF}_{max} = 0$. This is because, in spite of the fact that the expected location is unknown, the high contrast sun is enough the trigger the peripheral vision system, so that even if the observer did not start out looking in the correct direction, peripheral vision will drag the observer's gaze to the correct location for foveal viewing.
+Now consider a fictitious otherwise earth-like planet where the sun can be at random positions, rendering GPS coordinates and the local time useless. All one knows is that the sun is somewhere, in the upper or lower hemispheres subtended by the sky. If there are no clouds and consequently one can see the sun clearly during daytime, a reasonable observer would still correctly located the sun while not marking the sky with any incorrect sightings, so $\text{LLF}_{\text{max}} = 1$ and $\text{NLF}_{\text{max}} = 0$. This is because, in spite of the fact that the expected location is unknown, the high contrast sun is enough the trigger the peripheral vision system, so that even if the observer did not start out looking in the correct direction, peripheral vision will drag the observer's gaze to the correct location for foveal viewing.
 
 The implication of this is that fundamentally different mechanisms from that considered in conventional observer performance methodology, namely *search* and *lesion-classification*, are involved. Search describes the process of *finding* the lesion while *not finding* non-lesions. Once a possible sun location has been found, classification describes the process, of recognizing that it is indeed the sun and marking it. Recall that search involves two steps: finding the object of the search and acting on it. Search and lesion-classification performances describe the abilities of an observer to efficiently perform these steps.
 
@@ -365,13 +365,13 @@ Think of the eye as two cameras: a low-resolution camera (peripheral vision) wit
 
 Since the large field-of-view low-resolution peripheral vision system has complementary properties to the small field-of-view high-resolution foveal vision system, one expects an inverse correlation between search and lesion-classification performances. Stated generally, search involves two complementary processes: finding the suspicious regions and deciding if the found region is actually a lesion, and that there should be an inverse correlation between performance in the two tasks, see TBA Chapter 19.
 
-When cloud cover completely blocks the fictitious random-position sun there is no stimulus to trigger the peripheral vision system to guide the fovea to the correct location. Lacking any stimulus, the observer is reduced to guessing and is led to different conclusions depending upon the benefits and costs involved. If, for example, the guessing observer earns a dollar for each LL and is fined a dollar for each NL, then the observer will likely not make any marks as the chance of winning a dollar is much smaller than losing many dollars. For this observer $\text{LLF}_{max} = 0$ and $\text{NLF}_{max} = 0$, and the operating point is "stuck" at the origin. If, on the other hand, the observer is told every LL is worth a dollar and there is no penalty to NLs, then with no risk of losing the observer will "fill up" the sky with marks. In either situation the locations of the marks will lie on a grid determined by the ratio of the $4\pi$ solid angle (subtended by the spherical sky) and the solid angle $\Omega$ subtended by the sun. By marking every possible grid location the observer is trivially guaranteed to "detect" the sun and earn a dollar irrespective of its random location and reach $LLF = 1$, but now the observer will generate lots of non-lesion localizations, so $\text{NLF}_{max}$ will be large:
+When cloud cover completely blocks the fictitious random-position sun there is no stimulus to trigger the peripheral vision system to guide the fovea to the correct location. Lacking any stimulus, the observer is reduced to guessing and is led to different conclusions depending upon the benefits and costs involved. If, for example, the guessing observer earns a dollar for each LL and is fined a dollar for each NL, then the observer will likely not make any marks as the chance of winning a dollar is much smaller than losing many dollars. For this observer $\text{LLF}_{\text{max}} = 0$ and $\text{NLF}_{\text{max}} = 0$, and the operating point is "stuck" at the origin. If, on the other hand, the observer is told every LL is worth a dollar and there is no penalty to NLs, then with no risk of losing the observer will "fill up" the sky with marks. In either situation the locations of the marks will lie on a grid determined by the ratio of the $4\pi$ solid angle (subtended by the spherical sky) and the solid angle $\Omega$ subtended by the sun. By marking every possible grid location the observer is trivially guaranteed to "detect" the sun and earn a dollar irrespective of its random location and reach $LLF = 1$, but now the observer will generate lots of non-lesion localizations, so $\text{NLF}_{\text{max}}$ will be large:
 
-$$\text{NLF}_{max} = 4\pi/\Omega$$
+$$\text{NLF}_{\text{max}} = 4\pi/\Omega$$
 
-The FROC plot for this guessing observer is the straight line joining (0,0) to $(\text{NLF}_{max},1)$. For example, if the observer fills up half the sky then the operating point, averaged over many trials, is
+The FROC plot for this guessing observer is the straight line joining (0,0) to $(\text{NLF}_{\text{max}},1)$. For example, if the observer fills up half the sky then the operating point, averaged over many trials, is
 
-$$(0.5 \times \text{NLF}_{max},0.5)$$
+$$(0.5 \times \text{NLF}_{\text{max}},0.5)$$
 
 Radiologists do not guess -- there is much riding on their decisions -- so in the clinical situation, if the lesion is not seen, the radiologist will not mark the image at random.
 
@@ -379,7 +379,7 @@ The analogy is not restricted to the sun, which one might argue is an almost inf
 
 False sightings of objects in astronomy do occur. Finding a new astronomical object is a search task, where as always one can have two outcomes, correct localization (LL) or incorrect localizations (NLs). At the time of writing there is a hunt for a new planet, possibly a gas giant , that is much further than even the newly demoted Pluto. There is an astronomer in Australia who is particularly good at finding super novae (an exploding star; one has to be looking in the right region of the sky at the right time to see the relatively brief explosion). His equipment is primitive by comparison to the huge telescope at Mt. Palomar, but his advantage is that he can rapidly point his 15" telescope at a new region of the sky and thereby cover a lot more sky, in a given unit of time, than is possible with the 200" Mt. Palomar telescope. His search expertise is particularly good. Once correctly pointed at the Mt. Palomar telescope will reveal a lot more detail about the object than is possible with the smaller telescope, i.e., the analogy is to high lesion-classification accuracy. In the medical imaging context this detail (the shape of the lesion, its edge characteristics, presence of other abnormal features, etc.) allows the radiologist to diagnose whether the lesion is malignant or benign. Once again one sees that there should be an inverse correlation between search and lesion-classification performances.
 
-## Discussion {#froc-paradigm-discussion}
+## Discussion and suggestions {#froc-paradigm-discussion}
 
 This chapter has introduced the FROC paradigm, the terminology used to describe it and a common operating characteristic associated with it, namely the FROC. There are several areas of possible confusion to avoid which consider the following suggestions:
 
@@ -391,7 +391,7 @@ This chapter has introduced the FROC paradigm, the terminology used to describe 
 -   Do not conceptualize FROC curves as extending to large values to the right.
 -   Arbitrariness of the proximity criterion and multiple marks in the same region are not clinically important. Interactions with clinicians will allow selection of an appropriate proximity criterion for the task at hand and the multiple mark problem only occurs with algorithmic observers and is readily fixed.
 
-Additional points made in this chapter are: There is an inverse correlation between $\text{LLF}_{max}$ and $\text{NLF}_{max}$, analogous to that been sensitivity and specificity in ROC analysis. The observed end-point $(\text{NLF}_{max}, \text{LLF}_{max})$ of the FROC curve tends to approach the point (0,1) as the perceptual SNR of the lesions approaches infinity. The solar analogy is relevant to understanding the search task. In search tasks two types of expertise are at work: search and lesion-classification performances, and there exists an expected inverse correlation between them.
+Additional points made in this chapter are: There is an inverse correlation between $\text{LLF}_{\text{max}}$ and $\text{NLF}_{\text{max}}$, analogous to that been sensitivity and specificity in ROC analysis. The observed end-point $(\text{NLF}_{\text{max}}, \text{LLF}_{\text{max}})$ of the FROC curve tends to approach the point (0,1) as the perceptual SNR of the lesions approaches infinity. The solar analogy is relevant to understanding the search task. In search tasks two types of expertise are at work: search and lesion-classification performances, and there exists an expected inverse correlation between them.
 
 The FROC plot is the first proposed way of visually summarizing FROC data. The next chapter deals with all empirical operating characteristics that can be defined from an FROC dataset.
 
