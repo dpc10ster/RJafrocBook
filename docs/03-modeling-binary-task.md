@@ -1,17 +1,17 @@
-# Modeling the Binary Task {#binaryTask}
+# Modeling the Binary Task {#binary-task}
 
 
 
 
-## Introduction {#binaryTaskIntro}
-Chapter \@ref(binaryTask0) introduced measures of performance associated with the binary decision task. Described in this chapter is a 2-parameter statistical model for the binary task, in other words it shows how one can predict quantities like sensitivity and specificity based on the values of the parameters of a statistical model. It introduces the fundamental concepts of a decision variable and a decision threshold (the latter is one of the parameters of the statistical model) that pervade this book, and shows how the decision threshold can be altered by varying experimental conditions. The receiver-operating characteristic (ROC) plot is introduced which shows how the dependence of sensitivity and specificity on the decision threshold is exploited by a measure of performance that is independent of decision threshold, namely the area AUC under the ROC curve. AUC turns out to be related to the other parameter of the model. 
+## Introduction {#binary-task-intro}
+Chapter \@ref(binary-task0) introduced measures of performance associated with the binary decision task. Described in this chapter is a 2-parameter statistical model for the binary task, in other words it shows how one can predict quantities like sensitivity and specificity based on the values of the parameters of a statistical model. It introduces the fundamental concepts of a decision variable and a decision threshold (the latter is one of the parameters of the statistical model) that pervade this book, and shows how the decision threshold can be altered by varying experimental conditions. The receiver-operating characteristic (ROC) plot is introduced which shows how the dependence of sensitivity and specificity on the decision threshold is exploited by a measure of performance that is independent of decision threshold, namely the area AUC under the ROC curve. AUC turns out to be related to the other parameter of the model. 
 
 The dependence of variability of the operating point on the numbers of cases is explored, introducing the concept of random sampling and how the results become more stable with larger numbers of cases, or larger sample sizes. These are perhaps intuitively obvious concepts but it is important to see them demonstrated, Online Appendix 3.A. Formulae for 95percent confidence intervals for estimates of sensitivity and specificity are derived and the calculations are shown explicitly,
 
-## Decision variable and decision threshold
+## Decision variable and decision threshold {#binary-task-z-sample-model}
 The model for the binary task involves three assumptions: (i) the existence of a decision variable associated with each case, (ii) the existence of a case-independent decision threshold for reporting individual cases as non-diseased or diseased and (iii) the adequacy of training session(s) in getting the observer to a steady state. In addition, common to all models is that the observer is "blinded" to the truth, while the researcher is not.
 
-### Existence of a decision variable {#binaryTaskDecisionVariablelModel}
+### Existence of a decision variable 
 **Assumption 1:** Each case presentation is associated with the occurrence (or realization) of a specific value of a random scalar sensory variable yielding a unidirectional measure of evidence of disease. The two italicized phrases introduce important terms.
 
 * By sensory variable one means one that is sensed internally by the observer (in the cognitive system, associated with the brain) and as such is not directly measureable in the traditional physical sense. A physical measurement, for example, might consist of measuring a voltage difference across two points with a voltmeter. The term “latent” is often used to describe the sensory variable because it turns out that transforming this variable by an arbitrary monotonic non-decreasing transformation has no effect on the ROC – this will become clearer later. Alternative terms are “psychophysical variable”, “perceived variable”, “perceptual variable” or “confidence level”. The last term is the most common. It is a subjective variable since its value is expected to depend on the observer: the same case shown to different observers could evoke different values of the sensory variable. Since one cannot measure it anyway, it would be a very strong assumption to assume that the two sensations are identical. In this book the term “latent decision variable”, or simply “decision variable” is used, which hopefully gets away from the semantics and focuses instead on what the variable is used for, namely making decisions. The symbol Z will be used for it and specific realized values are termed z-samples. It is a random in the sense that it varies randomly from case to case; unless the cases are similar in some respect, for example, two variants of the same case under different image processing conditions, or images of twins; in these instances the corresponding decision variables are expected to be correlated. In the binary paradigm model to be described, the decision variables corresponding to different cases are assumed mutually independent.
@@ -30,20 +30,20 @@ From assumption #2, it follows that:
 
 \begin{equation} 
 1-Sp=FPF=P(Z\ge \zeta|T=1)
-(\#eq:binaryTaskFPF)
+(\#eq:binary-taskFPF)
 \end{equation} 
 
 \begin{equation} 
 Se=TPF=P(Z\ge \zeta|T=2)
-(\#eq:binaryTaskTPF)
+(\#eq:binary-taskTPF)
 \end{equation} 
 
 **Explanation:** $P(Z\ge \zeta|T=1)$ is the probability that the Z-sample for a non-diseased case is greater than or equal to $\zeta$. According to assumption #2 these cases are incorrectly classified as diseased, i.e., they are FP decisions and the corresponding probability is false positive fraction $FPF$, which is the complement of specificity $Sp$. Likewise,  $P(Z\ge \zeta|T=2)$ denotes the probability that the Z-sample for a diseased case is greater than or equal to $\zeta$. These cases are correctly classified as diseased, i.e., these are TP decisions and the corresponding probability is true positive fraction $TPF$, which is sensitivity $Se$.
 
-There are several concepts implicit in Eqn. \@ref(eq:binaryTaskFPF) and Eqn. \@ref(eq:binaryTaskTPF). 
+There are several concepts implicit in Eqn. \@ref(eq:binary-taskFPF) and Eqn. \@ref(eq:binary-taskTPF). 
 
 * The Z-samples have an associated probability distribution; this is implicit in the notation $P(Z\ge \zeta|T=2)$ and $P(Z\ge \zeta|T=1)$. Diseased-cases are not homogenous; in some, disease is easy to detect, perhaps even obvious, in others the signs of disease are subtler, and in some, the disease is almost impossible to detect. Likewise, non-diseased cases are not homogenous. 
-* The probability distributions depend on the truth state $T$. The distribution of the Z-samples for non-diseased cases is in general different from that for the diseased cases. Generally, the distribution for $T = 2$ is shifted to the right of that for $T = 1$ (assuming a **positive-directed** decision variable scale). Later, specific distributional assumptions will be employed to obtain analytic expressions for the right hand sides of Eqn. \@ref(eq:binaryTaskFPF) and Eqn. \@ref(eq:binaryTaskTPF).
+* The probability distributions depend on the truth state $T$. The distribution of the Z-samples for non-diseased cases is in general different from that for the diseased cases. Generally, the distribution for $T = 2$ is shifted to the right of that for $T = 1$ (assuming a **positive-directed** decision variable scale). Later, specific distributional assumptions will be employed to obtain analytic expressions for the right hand sides of Eqn. \@ref(eq:binary-taskFPF) and Eqn. \@ref(eq:binary-taskTPF).
 * The equations imply that via choice of the decision threshold $\zeta$, $Se$ and $Sp$ are under the control of the observer. The lower the decision threshold the higher the sensitivity and the lower the specificity, and the converses are also true. Ideally both sensitivity and specificity should be large, i.e., unity (since they are probabilities they cannot exceed unity). The tradeoff between sensitivity and specificity says, essentially, that there is no “free lunch”. In general, the price paid for increased sensitivity is decreased specificity and vice-versa. 
 
 ### Adequacy of the training session
@@ -68,7 +68,7 @@ If a new study were conducted with a highly enriched set of cases, where the dis
 These examples show that by manipulating the relative costs of correct vs. incorrect decisions and / or by varying disease prevalence one can influence the radiologist’s decision threshold. These examples apply to laboratory studies. Clinical interpretations are subject to different cost-benefit considerations that are generally not under the researcher's control: actual (population) disease prevalence, the reputation of the radiologist, malpractice, etc.
 
 
-## The equal-variance binormal model
+## The equal-variance binormal model {#binary-task-equal-variance-binormal-model}
 Here is the model for the Z-samples. Using the notation $N(\mu,\sigma^2)$  for the normal (or "Gaussian") distribution with mean $\mu$ and variance $\sigma^2$, it is assumed: 
 1.	The Z-samples for non-diseased cases are distributed  $N(0,1)$. 
 2.	The Z-samples for diseased cases are distributed $N(\mu,1)$ with $\mu>0$. 
@@ -84,42 +84,42 @@ Z_{k_tt} \sim N(\mu_t,1) \\
 \mu_1=0\\ 
 \mu_2=\mu
 \end{matrix}\right\}
-(\#eq:binaryTaskeq-variance-binormal-model)
+(\#eq:binary-taskeq-variance-binormal-model)
 \end{equation} 
 
-In Eqn. \@ref(eq:binaryTaskeq-variance-binormal-model) the subscript $t$ denotes the truth, sometimes referred to as the "gold standard", with $t = 1$ denoting a non-diseased case and $t = 2$ denoting a diseased case. The variable $Z_{k_tt}$ denotes the random Z-sample for case $k_tt$, where $k_t$ is the index for cases with truth state $t$; for example $k_11=21$  denotes the 21st non-diseased case and  $k_22=3$ denotes the 3rd diseased case. To explicate $k_11=21$ further, the label $k_1$  indexes the case while the label $1$  indicates the truth of the case. The label $k_t$  ranges from $1,2,...,K_t$ , where $K_t$$  is the total number of cases with disease state $t$. 
+In Eqn. \@ref(eq:binary-taskeq-variance-binormal-model) the subscript $t$ denotes the truth, sometimes referred to as the "gold standard", with $t = 1$ denoting a non-diseased case and $t = 2$ denoting a diseased case. The variable $Z_{k_tt}$ denotes the random Z-sample for case $k_tt$, where $k_t$ is the index for cases with truth state $t$; for example $k_11=21$  denotes the 21st non-diseased case and  $k_22=3$ denotes the 3rd diseased case. To explicate $k_11=21$ further, the label $k_1$  indexes the case while the label $1$  indicates the truth of the case. The label $k_t$  ranges from $1,2,...,K_t$ , where $K_t$$  is the total number of cases with disease state $t$. 
 
 The author departs from usual convention, see for example paper by Hillis, which labels the cases with a single index $k$, which ranges from 1 to $K_1+K_2$, and one is left guessing as to the truth-state of each case. Also, the proposed notation extends readily to the FROC paradigm where two states of truth have to be distinguished, one at the case level and one at the location level.
 
-The first line in Eqn. \@ref(eq:binaryTaskeq-variance-binormal-model) states that $Z_{k_tt}$ is a random sample from the  $N(\mu_t,1)$ distribution, which has unit variance regardless of the value of $t$ (this is the reason for naming it the equal-variance binormal model). The remaining lines in Eqn. \@ref(eq:binaryTaskeq-variance-binormal-model) defines $\mu_1$ as zero and $\mu_2$ as $\mu$. Taken together, these equations state that non-diseased case Z-samples are distributed $N(0,1)$  and diseased case Z-samples are distributed $N(\mu,1)$. The name binormal arises from the two normal distributions underlying this model. It should not be confused with bivariate, which identifies a single distribution yielding two values per sample, where the two values could be correlated. In the binormal model, the samples from the two distributions are assumed independent of each other. 
+The first line in Eqn. \@ref(eq:binary-taskeq-variance-binormal-model) states that $Z_{k_tt}$ is a random sample from the  $N(\mu_t,1)$ distribution, which has unit variance regardless of the value of $t$ (this is the reason for naming it the equal-variance binormal model). The remaining lines in Eqn. \@ref(eq:binary-taskeq-variance-binormal-model) defines $\mu_1$ as zero and $\mu_2$ as $\mu$. Taken together, these equations state that non-diseased case Z-samples are distributed $N(0,1)$  and diseased case Z-samples are distributed $N(\mu,1)$. The name binormal arises from the two normal distributions underlying this model. It should not be confused with bivariate, which identifies a single distribution yielding two values per sample, where the two values could be correlated. In the binormal model, the samples from the two distributions are assumed independent of each other. 
 
 A few facts concerning the normal (or Gaussian) distribution are summarized next.
 
-## The normal distribution
+## The normal distribution {#binary-task-normal-distribution}
 In probability theory, a probability density function (pdf), or density of a continuous random variable, is a function giving the relative chance that the random variable takes on a given value. For a continuous distribution, the probability of the random variable being exactly equal to a given value is zero. The probability of the random variable falling in a range of values is given by the integral of this variable’s pdf function over that range. For the normal distribution $N(\mu,\sigma^2)$  the pdf is denoted $\phi(z|\mu,\sigma)$.
 
 By definition, 
 
 \begin{equation} 
 \phi\left ( z|\mu,\sigma \right )=P(z<Z<z+dz|Z \sim N(\mu,\sigma^2))
-(\#eq:binaryTask-phi-def)
+(\#eq:binary-task-phi-def)
 \end{equation}
 
-The right hand side of Eqn. \@ref(eq:binaryTask-phi-def) is the probability that the random variable $Z$, sampled from $N(\mu,\sigma^2)$, is between the fixed limits z and z + dz. For this reason $\phi(z|\mu,\sigma)$  is termed the probability density function. The special case  $\phi(z|0,1)$ is referred to as the **unit normal distribution**; it has zero mean and unit variance and the corresponding pdf is denoted $\phi(z)$. The defining equation for the pdf of this distribution is:
+The right hand side of Eqn. \@ref(eq:binary-task-phi-def) is the probability that the random variable $Z$, sampled from $N(\mu,\sigma^2)$, is between the fixed limits z and z + dz. For this reason $\phi(z|\mu,\sigma)$  is termed the probability density function. The special case  $\phi(z|0,1)$ is referred to as the **unit normal distribution**; it has zero mean and unit variance and the corresponding pdf is denoted $\phi(z)$. The defining equation for the pdf of this distribution is:
 
 \begin{equation} 
 \phi\left ( z \right )=\frac{1}{\sqrt{2\pi}}\exp\left ( -\frac{z^2}{2} \right )
-(\#eq:binaryTask-phi)
+(\#eq:binary-task-phi)
 \end{equation}
 
-The integral of $\phi(t)$ from $-\infty$ to $z$, as in Eqn. \@ref(eq:binaryTask-Phi), is the probability that a sample from the unit normal distribution is less than $z$. Regarded as a function of $z$, this is termed the cumulative distribution function (CDF) and is denoted, in this book, by the symbol $\Phi$ (sometimes the term probability distribution function is used for what we are terming the CDF). The function $\Phi(z)$, specific to the unit normal distribution, is defined by:
+The integral of $\phi(t)$ from $-\infty$ to $z$, as in Eqn. \@ref(eq:binary-task-Phi), is the probability that a sample from the unit normal distribution is less than $z$. Regarded as a function of $z$, this is termed the cumulative distribution function (CDF) and is denoted, in this book, by the symbol $\Phi$ (sometimes the term probability distribution function is used for what we are terming the CDF). The function $\Phi(z)$, specific to the unit normal distribution, is defined by:
 
 \begin{equation} 
 \Phi\left ( z \right )=\int_{-\infty }^{z}\phi(t)dt
-(\#eq:binaryTask-Phi)
+(\#eq:binary-task-Phi)
 \end{equation}
 
-Fig. \@ref(fig:binaryTask-plots1) shows plots, as functions of z, of the CDF and the pdf for the unit normal distribution. Since z-samples outside ±3 are unlikely, the plotted range, from -3 to +3 includes most of the distribution. The pdf is the familiar bell-shaped curve, centered at zero; the corresponding R function is `dnorm()`, i.e., density of the normal distribution. The CDF $\Phi(z)$ increases monotonically from 0 to unity as z increases from $-\infty$ to $+\infty$. It is the sigmoid (S-shaped) shaped curve in Fig. \@ref(fig:binaryTask-plots1); the corresponding `R` function is `pnorm()`. 
+Fig. \@ref(fig:binary-task-plots1) shows plots, as functions of z, of the CDF and the pdf for the unit normal distribution. Since z-samples outside ±3 are unlikely, the plotted range, from -3 to +3 includes most of the distribution. The pdf is the familiar bell-shaped curve, centered at zero; the corresponding R function is `dnorm()`, i.e., density of the normal distribution. The CDF $\Phi(z)$ increases monotonically from 0 to unity as z increases from $-\infty$ to $+\infty$. It is the sigmoid (S-shaped) shaped curve in Fig. \@ref(fig:binary-task-plots1); the corresponding `R` function is `pnorm()`. 
 
 The sigmoid shaped curve is the CDF, or cumulative distribution function, of the N(0,1) distribution, while the bell-shaped curve is the corresponding pdf, or probability density function. The dashed line corresponds to the reporting threshold $\zeta$. The area under the pdf to the left of $\zeta$ equals the value of CDF at the selected  $\zeta$, i.e., 0.841 (`pnorm(1)` = 0.841). 
 
@@ -137,27 +137,30 @@ pdfcdfPlot <- ggplot(
 print(pdfcdfPlot)
 ```
 
-![(\#fig:binaryTask-plots1)pdf-CDF plots for unit normal.](03-modeling-binary-task_files/figure-latex/binaryTask-plots1-1.pdf) 
+<div class="figure">
+<img src="03-modeling-binary-task_files/figure-html/binary-task-plots1-1.png" alt="pdf-CDF plots for unit normal." width="672" />
+<p class="caption">(\#fig:binary-task-plots1)pdf-CDF plots for unit normal.</p>
+</div>
 
-A related function is the inverse of Eqn. \@ref(eq:binaryTask-Phi). Suppose the left hand side of Eqn. \@ref(eq:binaryTask-Phi) is denoted $p$, which is a probability in the range 0 to 1. 
+A related function is the inverse of Eqn. \@ref(eq:binary-task-Phi). Suppose the left hand side of Eqn. \@ref(eq:binary-task-Phi) is denoted $p$, which is a probability in the range 0 to 1. 
 
 \begin{equation} 
 p=\Phi\left ( z \right )=\int_{-\infty }^{z}\phi(t)dt
-(\#eq:binaryTask-Phi2)
+(\#eq:binary-task-Phi2)
 \end{equation}
 
-The inverse of $\Phi(z)$ is that function which when applied to $p$ yields the upper limit $z$ in Eqn. \@ref(eq:binaryTask-Phi), i.e.,
+The inverse of $\Phi(z)$ is that function which when applied to $p$ yields the upper limit $z$ in Eqn. \@ref(eq:binary-task-Phi), i.e.,
 
 \begin{equation} 
 \Phi^{-1}(p) = z
-(\#eq:binaryTask-PhiInvDef)
+(\#eq:binary-task-PhiInvDef)
 \end{equation}
 
 Since $p=\Phi(z)$ it follows that
 
 \begin{equation} 
 \Phi(\Phi^{-1}(z))=z
-(\#eq:binaryTask-PhiInvDef2)
+(\#eq:binary-task-PhiInvDef2)
 \end{equation}
 
 This nicely satisfies the property of an inverse function. The inverse function is known in statistical terminology as the quantile function, implemented in `R` as the `qnorm()` function. Think of `pnorm()` as a probability and `qnorm()` as value on the z-axis. 
@@ -180,19 +183,19 @@ The first command `qnorm(0.025)` demonstrates the identity:
 
 \begin{equation} 
 \Phi^{-1}(0.025)=-1.959964
-(\#eq:binaryTask-Phi-Inv-alpha-by2)
+(\#eq:binary-task-Phi-Inv-alpha-by2)
 \end{equation}
 
 The next command `qnorm(1-0.025)` demonstrates the identity:
 
 \begin{equation} 
 \Phi^{-1}(1-0.025)=+1.959964
-(\#eq:binaryTask-PhiInv-One-Minus-alphaby2)
+(\#eq:binary-task-PhiInv-One-Minus-alphaby2)
 \end{equation}
 
 The last two commands demonstrate that `pnorm` and `qnorm`, applied in either order, are inverses of each other. 
 
-Eqn. \@ref(eq:binaryTask-Phi-Inv-alpha-by2) means that the (rounded) value -1.96 is such that the area under the pdf to the left of this value is 0.025. Similarly, Eqn. \@ref(eq:binaryTask-PhiInv-One-Minus-alphaby2) means that the (rounded) value +1.96 is such that the area under the pdf to the left of this value is 1-0.025 = 0.975. In other words, -1.96 captures, to its left, the 2.5th percentile of the unit-normal distribution, and 1.96 captures, to its left, the 97.5th percentile of the unit-normal distribution, Fig. \@ref(fig:binaryTask-shaded-tails). Since between them they capture 95percent of the unit-normal pdf, these two values can be used to estimate 95percent confidence intervals. 
+Eqn. \@ref(eq:binary-task-Phi-Inv-alpha-by2) means that the (rounded) value -1.96 is such that the area under the pdf to the left of this value is 0.025. Similarly, Eqn. \@ref(eq:binary-task-PhiInv-One-Minus-alphaby2) means that the (rounded) value +1.96 is such that the area under the pdf to the left of this value is 1-0.025 = 0.975. In other words, -1.96 captures, to its left, the 2.5th percentile of the unit-normal distribution, and 1.96 captures, to its left, the 97.5th percentile of the unit-normal distribution, Fig. \@ref(fig:binary-task-shaded-tails). Since between them they capture 95percent of the unit-normal pdf, these two values can be used to estimate 95percent confidence intervals. 
 
 
 ```r
@@ -227,16 +230,19 @@ shadedTails <- shadedTails +
 print(shadedTails)
 ```
 
-![(\#fig:binaryTask-shaded-tails)Illustrating that 95percent of the total area under the unit normal pdf is contained in the range |Z| < 1.96, which can be used to construct a 95percent confidence interval for an estimate of a suitably normalized statistic. The area contained in each shaded tail is 2.5percent.](03-modeling-binary-task_files/figure-latex/binaryTask-shaded-tails-1.pdf) 
+<div class="figure">
+<img src="03-modeling-binary-task_files/figure-html/binary-task-shaded-tails-1.png" alt="Illustrating that 95percent of the total area under the unit normal pdf is contained in the range |Z| &lt; 1.96, which can be used to construct a 95percent confidence interval for an estimate of a suitably normalized statistic. The area contained in each shaded tail is 2.5percent." width="672" />
+<p class="caption">(\#fig:binary-task-shaded-tails)Illustrating that 95percent of the total area under the unit normal pdf is contained in the range |Z| < 1.96, which can be used to construct a 95percent confidence interval for an estimate of a suitably normalized statistic. The area contained in each shaded tail is 2.5percent.</p>
+</div>
 
 **If one knows that a variable is distributed as a unit-normal random variable, then the observed value minus 1.96 defines the lower limit of its 95percent confidence interval, and the observed value plus 1.96 defines the upper limit of its 95percent confidence interval.**
 
-## Analytic expressions for specificity and sensitivity
+## Analytic expressions for specificity and sensitivity {#binary-task-sensitivity-specificity}
 Specificity corresponding to threshold $\zeta$ is the probability that a Z-sample from a non-diseased case is smaller than $\zeta$. By definition, this is the CDF corresponding to the threshold $\zeta$. In other words:
 
 \begin{equation} 
 Sp\left ( \zeta \right )=P\left ( Z_{k_11} < \zeta\mid Z_{k_11} \sim N\left ( 0,1 \right )\right ) = \Phi\left ( \zeta \right )
-(\#eq:binaryTask-Specificity)
+(\#eq:binary-task-Specificity)
 \end{equation}
 
 The expression for sensitivity can be derived tediously by starting with the fact that $Z_{k_22}$ and then using calculus to obtain the probability that a z-sample for a disease-present case exceeds $\zeta$. A quicker way is to consider the random variable obtaining by shifting the origin to  $\mu$. A little thought should convince the reader that $Z_{k_22}-\mu$  must be distributed as $N(0,1)$. Therefore, the desired probability is (the last step follows from the identity in Eqn. (3.7), with z replaced by $\zeta-\mu$ :
@@ -249,7 +255,7 @@ Se\left ( \zeta \right )\\
 =1-P\left (\left ( Z_{k_22} -\mu  \right ) < \left ( \zeta -\mu  \right )\right ) \\
 = 1-\Phi\left ( \zeta -\mu \right )
 \end{aligned}
-(\#eq:binaryTask-Sensitivity1)
+(\#eq:binary-task-Sensitivity1)
 \end{equation}
 
 A little thought (based on the definition of the CDF function and the symmetry of the unit-normal pdf function) should convince the reader that:
@@ -257,7 +263,7 @@ A little thought (based on the definition of the CDF function and the symmetry o
 \begin{equation} 
 1-\Phi(\zeta)=-\Phi(\zeta)\\
 1-\Phi(\zeta-\mu)=\Phi(\mu-\zeta)
-(\#eq:binaryTask-Sensitivity2)
+(\#eq:binary-task-Sensitivity2)
 \end{equation}
 
 Instead of carrying the "1 minus " around, one can use the more compact notation. Summarizing, the analytical formulae for the specificity and sensitivity for the equal-variance binormal model are: 
@@ -265,26 +271,26 @@ Instead of carrying the "1 minus " around, one can use the more compact notation
 \begin{equation} 
 Sp\left ( \zeta \right ) = \Phi(\zeta)\\
 Se\left ( \zeta \right ) = \Phi(\mu-\zeta)
-(\#eq:binaryTask-Sensitivity-Specificity)
+(\#eq:binary-task-Sensitivity-Specificity)
 \end{equation}
 
 In these equations, the threshold $\zeta$ appears with different signs because specificity is the area under a pdf to the **left** of a threshold, while sensitivity is the area to the **right**.
 
 **As probabilities, both sensitivity and specificity are restricted to the range 0 to 1. The observer’s performance could be characterized by specifying sensitivity and specificity, i.e., a pair of numbers. If both sensitivity and specificity of an imaging system are greater than the corresponding values for another system, then the 1st system is unambiguously better than the 2nd. But what if sensitivity is greater for the 1st but specificity is greater for the 2nd? Now the comparison is ambiguous. It is difficult to unambiguously compare two pairs of performance indices. Clearly, a scalar measure is desirable that combines sensitivity and specificity into a single measure of diagnostic performance.**
 
-The parameter $\mu$  satisfies the requirements of a scalar figure of merit (FOM). Eqn. \@ref(eq:binaryTask-Sensitivity-Specificity) can be solved for $\mu$  as follows. Inverting the equations yields: 
+The parameter $\mu$  satisfies the requirements of a scalar figure of merit (FOM). Eqn. \@ref(eq:binary-task-Sensitivity-Specificity) can be solved for $\mu$  as follows. Inverting the equations yields: 
 
 \begin{equation} 
 \zeta =\Phi^{-1} \left (Sp\left ( \zeta \right )  \right )\\
 \mu - \zeta = \Phi^{-1} \left (Se\left ( \zeta \right )  \right )
-(\#eq:binaryTask-SolveForMuZeta)
+(\#eq:binary-task-SolveForMuZeta)
 \end{equation}
 
 Eliminating $\zeta$ yields:
 
 \begin{equation} 
 \mu = \Phi^{-1} \left (Sp\left ( \zeta \right )  \right ) + \Phi^{-1} \left (Se\left ( \zeta \right )  \right )
-(\#eq:binaryTask-SolveForMu)
+(\#eq:binary-task-SolveForMu)
 \end{equation}
 
 This is a useful relation, as it converts a *pair* of numbers that is hard to compare between two modalities, in the sense described above, into a *single* FOM. Now it is almost trivial to compare two modalities: the one with the higher $\mu$  wins. In reality, the comparison is not trivial since like sensitivity and specificity, $\mu$ has to be estimated from a finite dataset and is therefore subject to sampling variability.
@@ -350,13 +356,16 @@ shadedPlots <- shadedPlots + xlab(label = "z-sample")
 print(shadedPlots)
 ```
 
-![(\#fig:binaryTask-shaded-plots)The equal-variance binormal model for mu = 3  and  zeta = 1; the blue curve, centered at zero, corresponds to the pdf of non-diseased cases and the red one, centered at mu = 3, corresponds to the pdf of diseased cases. The left edge of the blue shaded region represents the threshold zeta, currently set at unity. The red shaded area, including the common portion with the vertical red lines, is sensitivity. The blue shaded area including the common portion with the vertical red lines is 1-specificity.](03-modeling-binary-task_files/figure-latex/binaryTask-shaded-plots-1.pdf) 
+<div class="figure">
+<img src="03-modeling-binary-task_files/figure-html/binary-task-shaded-plots-1.png" alt="The equal-variance binormal model for mu = 3  and  zeta = 1; the blue curve, centered at zero, corresponds to the pdf of non-diseased cases and the red one, centered at mu = 3, corresponds to the pdf of diseased cases. The left edge of the blue shaded region represents the threshold zeta, currently set at unity. The red shaded area, including the common portion with the vertical red lines, is sensitivity. The blue shaded area including the common portion with the vertical red lines is 1-specificity." width="672" />
+<p class="caption">(\#fig:binary-task-shaded-plots)The equal-variance binormal model for mu = 3  and  zeta = 1; the blue curve, centered at zero, corresponds to the pdf of non-diseased cases and the red one, centered at mu = 3, corresponds to the pdf of diseased cases. The left edge of the blue shaded region represents the threshold zeta, currently set at unity. The red shaded area, including the common portion with the vertical red lines, is sensitivity. The blue shaded area including the common portion with the vertical red lines is 1-specificity.</p>
+</div>
 
-Fig. \@ref(fig:binaryTask-shaded-plots) shows the equal-variance binormal model for $\mu = 3$  and $\zeta = 1$. The blue-shaded area, including the "common" portion with the vertical red lines, is the probability that a z-sample from a non-diseased case exceeds $\zeta = 1$, which is the complement of specificity, i.e., it is false positive fraction, which is 1 - `pnorm(1)` = 0.159. The red shaded area, including the "common" portion with the vertical red lines, is the probability that a z-sample from a diseased case exceeds $\zeta = 1$, which is sensitivity or true positive fraction, which is `pnorm(3-1)`= 0.977.
+Fig. \@ref(fig:binary-task-shaded-plots) shows the equal-variance binormal model for $\mu = 3$  and $\zeta = 1$. The blue-shaded area, including the "common" portion with the vertical red lines, is the probability that a z-sample from a non-diseased case exceeds $\zeta = 1$, which is the complement of specificity, i.e., it is false positive fraction, which is 1 - `pnorm(1)` = 0.159. The red shaded area, including the "common" portion with the vertical red lines, is the probability that a z-sample from a diseased case exceeds $\zeta = 1$, which is sensitivity or true positive fraction, which is `pnorm(3-1)`= 0.977.
 
 Demonstrated next are these concepts using R examples.
 
-## Demonstration of the concepts of sensitivity and specificity
+## Demonstration of the concepts of sensitivity and specificity {#binary-task-sensitivity-specificity-demo}
 
 ### Estimating mu from a finite sample
 The following code simulates 9 non-diseased and 11 diseased cases. The $\mu$ parameter is 1.5 and $\zeta$ is $\mu/2$. Shown are the calculations of sensitivity and specificity and the value of estimated $\mu$. 
@@ -458,7 +467,7 @@ cat("seed = ", seed,
 #> Est. of mu =  1.57
 ```
 
-Notice that now the values are less sensitive to seed. Table \@ref(tab:binaryTask0SeSpMuvsCaseSizeSeed) illustrates this trend with ever increasing sample sizes (the reader should confirm the listed values).
+Notice that now the values are less sensitive to seed. Table \@ref(tab:binary-task0SeSpMuvsCaseSizeSeed) illustrates this trend with ever increasing sample sizes (the reader should confirm the listed values).
 
 
 ```r
@@ -477,34 +486,93 @@ df <- as.data.frame(results)
 colnames(df) <- c("K1","K2","seed","Se","Sp","mu")
 ```
 
-\begin{table}
-
-\caption{(\#tab:binaryTask0SeSpMuvsCaseSizeSeed)Effect of sample size and seed on estimates of sensitivity, specificity and the mu-parameter.}
-\centering
-\begin{tabular}[t]{r|r|r|r|r|r}
-\hline
-K1 & K2 & seed & Se & Sp & mu\\
-\hline
-9 & 11 & 100 & 0.889 & 0.909 & 2.556\\
-\hline
-9 & 11 & 101 & 0.778 & 0.545 & 0.879\\
-\hline
-90 & 110 & 100 & 0.778 & 0.836 & 1.744\\
-\hline
-90 & 110 & 101 & 0.811 & 0.755 & 1.571\\
-\hline
-900 & 1100 & 100 & 0.764 & 0.761 & 1.430\\
-\hline
-900 & 1100 & 101 & 0.807 & 0.759 & 1.569\\
-\hline
-9000 & 11000 & 100 & 0.774 & 0.772 & 1.496\\
-\hline
-9000 & 11000 & 101 & 0.771 & 0.775 & 1.498\\
-\hline
-Inf & Inf & NA & 0.773 & 0.773 & 1.500\\
-\hline
-\end{tabular}
-\end{table}
+<table>
+<caption>(\#tab:binary-task0SeSpMuvsCaseSizeSeed)Effect of sample size and seed on estimates of sensitivity, specificity and the mu-parameter.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> K1 </th>
+   <th style="text-align:right;"> K2 </th>
+   <th style="text-align:right;"> seed </th>
+   <th style="text-align:right;"> Se </th>
+   <th style="text-align:right;"> Sp </th>
+   <th style="text-align:right;"> mu </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 11 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0.889 </td>
+   <td style="text-align:right;"> 0.909 </td>
+   <td style="text-align:right;"> 2.556 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 11 </td>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:right;"> 0.778 </td>
+   <td style="text-align:right;"> 0.545 </td>
+   <td style="text-align:right;"> 0.879 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 90 </td>
+   <td style="text-align:right;"> 110 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0.778 </td>
+   <td style="text-align:right;"> 0.836 </td>
+   <td style="text-align:right;"> 1.744 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 90 </td>
+   <td style="text-align:right;"> 110 </td>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:right;"> 0.811 </td>
+   <td style="text-align:right;"> 0.755 </td>
+   <td style="text-align:right;"> 1.571 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 900 </td>
+   <td style="text-align:right;"> 1100 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0.764 </td>
+   <td style="text-align:right;"> 0.761 </td>
+   <td style="text-align:right;"> 1.430 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 900 </td>
+   <td style="text-align:right;"> 1100 </td>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:right;"> 0.807 </td>
+   <td style="text-align:right;"> 0.759 </td>
+   <td style="text-align:right;"> 1.569 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9000 </td>
+   <td style="text-align:right;"> 11000 </td>
+   <td style="text-align:right;"> 100 </td>
+   <td style="text-align:right;"> 0.774 </td>
+   <td style="text-align:right;"> 0.772 </td>
+   <td style="text-align:right;"> 1.496 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9000 </td>
+   <td style="text-align:right;"> 11000 </td>
+   <td style="text-align:right;"> 101 </td>
+   <td style="text-align:right;"> 0.771 </td>
+   <td style="text-align:right;"> 0.775 </td>
+   <td style="text-align:right;"> 1.498 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> Inf </td>
+   <td style="text-align:right;"> Inf </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> 0.773 </td>
+   <td style="text-align:right;"> 0.773 </td>
+   <td style="text-align:right;"> 1.500 </td>
+  </tr>
+</tbody>
+</table>
 
 As the numbers of cases increase, the sensitivity and specificity converge to a common value, around 0.773 and the estimate of the separation parameter converges to the known value.
 
@@ -516,15 +584,15 @@ pnorm(0.75) # example 1
 #> [1] 1.5
 ```
 
-Because the threshold is halfway between the two distributions, as in this example, sensitivity and specificity are identical. In words, with two unit variance distributions separated by 1.5, the area under the diseased distribution (centered at 1.5) above 0.75, namely sensitivity, equals the area under the non-diseased distribution  (centered at zero) below 0.75, namely specificity, and the common value is $\Phi(0.75)= 0.773$, yielding the last row of Table \@ref(tab:binaryTask0SeSpMuvsCaseSizeSeed), and example 1 in the above code snippet. Example 2 in the above code snippet illustrates Eqn. \@ref(eq:binaryTask-SolveForMu). The factor of two arises since in this example sensitivity and specificity are identical.
+Because the threshold is halfway between the two distributions, as in this example, sensitivity and specificity are identical. In words, with two unit variance distributions separated by 1.5, the area under the diseased distribution (centered at 1.5) above 0.75, namely sensitivity, equals the area under the non-diseased distribution  (centered at zero) below 0.75, namely specificity, and the common value is $\Phi(0.75)= 0.773$, yielding the last row of Table \@ref(tab:binary-task0SeSpMuvsCaseSizeSeed), and example 1 in the above code snippet. Example 2 in the above code snippet illustrates Eqn. \@ref(eq:binary-task-SolveForMu). The factor of two arises since in this example sensitivity and specificity are identical.
 
-From Table \@ref(tab:binaryTask0SeSpMuvsCaseSizeSeed), for the same numbers of cases but different seeds, comparing pairs of sensitivity and specificity values is more difficult as two pairs of numbers (i.e., four numbers) are involved. Comparing a single pair of $\mu$ values is easier as only two numbers are involved. The tendency of the pairs to become independent of case sample is discernible with fewer cases with  $\mu$, around 90/110 cases, than with sensitivity and specificity pairs. The numbers in the table might appear disheartening in terms of the implied numbers of cases needed to detect a difference in specificity. Even with 200 cases, the difference in specificity for two seed values is 0.081, which is actually a large effect considering that the scale extends from 0 to 1.0. A similar comment applies to differences in sensitivity. The situation is not quite that bad. One uses an area measure that combines sensitivity and specificity yielding less variability in the combined measure. One uses the ratings paradigm, which is more efficient than the binary one used in this chapter. Finally, one takes advantage of correlations that exist between the interpretations in matched-case matched-reader interpretations in two modalities that tend to decrease variability in the AUC-difference even further (most applications of ROC methods involved detecting differences in AUCs not absolute values).
+From Table \@ref(tab:binary-task0SeSpMuvsCaseSizeSeed), for the same numbers of cases but different seeds, comparing pairs of sensitivity and specificity values is more difficult as two pairs of numbers (i.e., four numbers) are involved. Comparing a single pair of $\mu$ values is easier as only two numbers are involved. The tendency of the pairs to become independent of case sample is discernible with fewer cases with  $\mu$, around 90/110 cases, than with sensitivity and specificity pairs. The numbers in the table might appear disheartening in terms of the implied numbers of cases needed to detect a difference in specificity. Even with 200 cases, the difference in specificity for two seed values is 0.081, which is actually a large effect considering that the scale extends from 0 to 1.0. A similar comment applies to differences in sensitivity. The situation is not quite that bad. One uses an area measure that combines sensitivity and specificity yielding less variability in the combined measure. One uses the ratings paradigm, which is more efficient than the binary one used in this chapter. Finally, one takes advantage of correlations that exist between the interpretations in matched-case matched-reader interpretations in two modalities that tend to decrease variability in the AUC-difference even further (most applications of ROC methods involved detecting differences in AUCs not absolute values).
 
-## Inverse variation of sensitivity and specificity and the need for a single FOM
-The variation of sensitivity and specificity is modeled in the binormal model by the threshold parameter $\zeta$. From Eqn. \@ref(eq:binaryTask-Specificity), specificity at threshold $\zeta$ is $\Phi(\zeta)$ and the corresponding expression for sensitivity is $\Phi(\mu-\zeta)$. Since the threshold  $\zeta$ appears with a minus sign, the dependence of sensitivity on $\zeta$ will be the opposite of the corresponding dependence of specificity on $\zeta$. In Fig. \@ref(fig:binaryTask-shaded-plots), the left edge of the blue shaded region represents the threshold $\zeta = 1$. As $\zeta = 1$ is moved towards the left, specificity decreases but sensitivity increases. Specificity decreases because less of the non-diseased distribution lies to the left of the new threshold, in other words fewer non-diseased cases are correctly diagnosed as non-diseased. Sensitivity increases because more of the diseased distribution lies to the right of the new threshold, in other words more diseased cases are correctly diagnosed as diseased. If an observer has higher sensitivity than another observer, but lower specificity, it is difficult to unambiguously compare them. It is not impossible [@RN2637]. The unambiguous comparison is difficult for the following reason. Assuming the second observer can be coaxed into adopting a lower threshold, thereby decreasing specificity to match that of the first observer, then it is possible that the second observer's sensitivity, formerly smaller, could now be greater than that of the first observer. A single figure of merit is desirable to the sensitivity - specificity analysis. It is possible to leverage the inverse variation of sensitivity and specificity by combing them into a single scalar measure, as was done with the $\mu$ parameter in the previous section, Eqn. \@ref(eq:binaryTask-SolveForMu). An equivalent way is by using the area under the ROC plot, discussed next.
+## Inverse variation of sensitivity and specificity and the need for a single FOM {#binary-task-sensitivity-specificity-inverse-variation}
+The variation of sensitivity and specificity is modeled in the binormal model by the threshold parameter $\zeta$. From Eqn. \@ref(eq:binary-task-Specificity), specificity at threshold $\zeta$ is $\Phi(\zeta)$ and the corresponding expression for sensitivity is $\Phi(\mu-\zeta)$. Since the threshold  $\zeta$ appears with a minus sign, the dependence of sensitivity on $\zeta$ will be the opposite of the corresponding dependence of specificity on $\zeta$. In Fig. \@ref(fig:binary-task-shaded-plots), the left edge of the blue shaded region represents the threshold $\zeta = 1$. As $\zeta = 1$ is moved towards the left, specificity decreases but sensitivity increases. Specificity decreases because less of the non-diseased distribution lies to the left of the new threshold, in other words fewer non-diseased cases are correctly diagnosed as non-diseased. Sensitivity increases because more of the diseased distribution lies to the right of the new threshold, in other words more diseased cases are correctly diagnosed as diseased. If an observer has higher sensitivity than another observer, but lower specificity, it is difficult to unambiguously compare them. It is not impossible [@RN2637]. The unambiguous comparison is difficult for the following reason. Assuming the second observer can be coaxed into adopting a lower threshold, thereby decreasing specificity to match that of the first observer, then it is possible that the second observer's sensitivity, formerly smaller, could now be greater than that of the first observer. A single figure of merit is desirable to the sensitivity - specificity analysis. It is possible to leverage the inverse variation of sensitivity and specificity by combing them into a single scalar measure, as was done with the $\mu$ parameter in the previous section, Eqn. \@ref(eq:binary-task-SolveForMu). An equivalent way is by using the area under the ROC plot, discussed next.
 
-## The ROC curve
-The receiver operating characteristic (ROC) is defined as the plot of sensitivity (y-axis) vs. 1-specificity (x-axis). Equivalently, it is the plot of TPF (y-axis) vs. FPF (x-axis). From Eqn. \@ref(eq:binaryTask-Sensitivity-Specificity) it follows that:
+## The ROC curve {#binary-task-roc-curve}
+The receiver operating characteristic (ROC) is defined as the plot of sensitivity (y-axis) vs. 1-specificity (x-axis). Equivalently, it is the plot of TPF (y-axis) vs. FPF (x-axis). From Eqn. \@ref(eq:binary-task-Sensitivity-Specificity) it follows that:
 
 \begin{equation} 
 \begin{aligned} 
@@ -534,19 +602,19 @@ FPF\left ( \zeta \right ) &= 1 - Sp\left ( \zeta \right ) \\
 TPF\left ( \zeta \right ) &= Se\left ( \zeta \right ) \\
 &=\Phi\left (\mu -\zeta \right )\\ 
 \end{aligned} 
-(\#eq:binaryTask-FPF-TPF)
+(\#eq:binary-task-FPF-TPF)
 \end{equation}
 
 Specifying  $\zeta$ selects a particular operating point on this plot and varying $\zeta$ from $+\infty$ to $-\infty$ causes the operating point to trace out the ROC curve from the origin (0,0) to (1,1). Specifically, as $\zeta$  is decreased from $+\infty$ to $-\infty$, the operating point rises from the origin (0,0) to the end-point (1,1). In general, as  $\zeta$ increases, the operating point moves down the curve, and conversely, as $\zeta$ decreases the operating point moves up the curve. The operating point $O(\zeta|\mu)$ for the equal variance binormal model is (the notation assumes the $\mu$ parameter is fixed and $\zeta$ is varied by the observer in response to interpretation conditions): 
 
 \begin{equation} 
 O\left ( \zeta \mid \mu \right ) = \left ( \Phi(-\zeta), \Phi(\mu-\zeta) \right ) \\
-(\#eq:binaryTask-OpPt)
+(\#eq:binary-task-OpPt)
 \end{equation}
 
 The operating point predicted by the above equation lies exactly on the theoretical ROC curve. This condition can only be achieved with very large numbers of cases, so that sampling variability is very small. In practice, with finite datasets, the operating point will almost never be exactly on the theoretical curve.
 
-**The ROC curve is the locus of the operating point for fixed $\mu$ and variable  $\zeta$. Fig. \@ref(fig:binaryTask-RocCurvesEqVarModel) shows examples of equal-variance binormal model ROC curves for different values of $\mu$. Each curve is labeled with the corresponding value of $\mu$. Each has the property that TPF is a monotonically increasing function of FPF and the slope decreases monotonically as the operating point moves up the curve. As $\mu$ increases the curves get progressively upward-left shifted, approaching the top-left corner of the ROC plot. In the limit $\mu = \infty$  the curve degenerates into two line segments, a vertical one connecting the origin to (0,1) and a horizontal one connecting (0,1) to (1,1) – the ROC plot for a perfect observer.**
+**The ROC curve is the locus of the operating point for fixed $\mu$ and variable  $\zeta$. Fig. \@ref(fig:binary-task-RocCurvesEqVarModel) shows examples of equal-variance binormal model ROC curves for different values of $\mu$. Each curve is labeled with the corresponding value of $\mu$. Each has the property that TPF is a monotonically increasing function of FPF and the slope decreases monotonically as the operating point moves up the curve. As $\mu$ increases the curves get progressively upward-left shifted, approaching the top-left corner of the ROC plot. In the limit $\mu = \infty$  the curve degenerates into two line segments, a vertical one connecting the origin to (0,1) and a horizontal one connecting (0,1) to (1,1) – the ROC plot for a perfect observer.**
 
 
 ```r
@@ -580,19 +648,22 @@ rocPlot <- rocPlot +
 print(rocPlot)
 ```
 
-![(\#fig:binaryTask-RocCurvesEqVarModel)ROC plots predicted by the equal variance binormal model for different values of mu. As mu increases the intersection of the curve with the negative diagonal moves closer to the ideal operating point, (0,1) at which sensitivity and specificity are both equal to unity.](03-modeling-binary-task_files/figure-latex/binaryTask-RocCurvesEqVarModel-1.pdf) 
+<div class="figure">
+<img src="03-modeling-binary-task_files/figure-html/binary-task-RocCurvesEqVarModel-1.png" alt="ROC plots predicted by the equal variance binormal model for different values of mu. As mu increases the intersection of the curve with the negative diagonal moves closer to the ideal operating point, (0,1) at which sensitivity and specificity are both equal to unity." width="672" />
+<p class="caption">(\#fig:binary-task-RocCurvesEqVarModel)ROC plots predicted by the equal variance binormal model for different values of mu. As mu increases the intersection of the curve with the negative diagonal moves closer to the ideal operating point, (0,1) at which sensitivity and specificity are both equal to unity.</p>
+</div>
 
 ### The chance diagonal
-In Fig. \@ref(fig:binaryTask-RocCurvesEqVarModel) the ROC curve for $\mu=0$  is the positive diagonal of the ROC plot, termed the chance diagonal. Along this curve $TPF = FPF$ and the observer’s performance is at chance level. In the equal variance binormal model, for $\mu=0$, the pdf of the diseased distribution is identical to that of the non-diseased distribution: both are centered at the origin. Therefore, no matter the choice of threshold  $\zeta$, $TPF = FPF$. Setting $\mu=0$ in Eqn. \@ref(eq:binaryTask-FPF-TPF) yields:
+In Fig. \@ref(fig:binary-task-RocCurvesEqVarModel) the ROC curve for $\mu=0$  is the positive diagonal of the ROC plot, termed the chance diagonal. Along this curve $TPF = FPF$ and the observer’s performance is at chance level. In the equal variance binormal model, for $\mu=0$, the pdf of the diseased distribution is identical to that of the non-diseased distribution: both are centered at the origin. Therefore, no matter the choice of threshold  $\zeta$, $TPF = FPF$. Setting $\mu=0$ in Eqn. \@ref(eq:binary-task-FPF-TPF) yields:
 
 $$TPF\left ( \zeta \right )=FPF\left ( \zeta \right )=\Phi\left ( -\zeta \right )$$
-In this special case, the red and blue curves in Fig. \@ref(fig:binaryTask-shaded-plots) coincide. The observer is unable to find any difference between the two distributions. This can happen if the cancers are of such low visibility so that diseased cases are indistinguishable from non-diseased ones, or the observer’s skill level is so poor that the observer is unable to make use of distinguishing characteristics between diseased and non-diseased cases that do exist, and which experts exploit. 
+In this special case, the red and blue curves in Fig. \@ref(fig:binary-task-shaded-plots) coincide. The observer is unable to find any difference between the two distributions. This can happen if the cancers are of such low visibility so that diseased cases are indistinguishable from non-diseased ones, or the observer’s skill level is so poor that the observer is unable to make use of distinguishing characteristics between diseased and non-diseased cases that do exist, and which experts exploit. 
 
 ### The guessing observer
 If the cases are indeed impossibly difficult and/or the observer has zero skill at discriminating between them, the observer has no option but to guess. This rarely happens in the clinic, as too much is at stake and this paragraph is intended to make a pedagogical point that the observer can move the operating point along the change diagonal. If there is no special incentive, the observer tosses a coin and if the coin lands head up, the observer states: “case is diseased” and otherwise states: “case is non-diseased”. When this procedure is averaged over many non-diseased and diseased cases, it will result in the operating point (0.5, 0.5). [Many cases are assumed as otherwise, due to sampling variability, the operating point will not be on the theoretical ROC curve.] To move the operating point downward, e.g., to (0.1, 0.1) the observer randomly selects an integer number between 1 and 10, equivalent to a 10-sided "coin". Whenever a one "shows up", the observer states “case is diseased” and otherwise the observer states “case is non-diseased”. To move the operating point to (0.2, 0.2) whenever a one or two "shows up", the observer states “case is diseased” and otherwise the observer states “case is non-diseased”. One can appreciate that simply by changing the probability of stating “case is diseased” the observer can place the operating point anywhere on the chance diagonal, but wherever the operating point is placed, it will satisfy TPF = FPF. 
 
 ### Symmetry with respect to negative diagonal
-A characteristic of the ROC curves shown in Fig. \@ref(fig:binaryTask-RocCurvesEqVarModel) is that they are symmetric with respect to the negative diagonal, defined as the straight line joining (0,1) and (1,0) which is shown as the dotted straight line in Fig. \@ref(fig:binaryTask-RocCurvesEqVarModel). The symmetry property is due to the equal variance nature of the binormal model and is not true for models considered in later chapters. The intersection between the ROC curve and the negative diagonal corresponds to  $\zeta = \mu/2$, in which case the operating point is:
+A characteristic of the ROC curves shown in Fig. \@ref(fig:binary-task-RocCurvesEqVarModel) is that they are symmetric with respect to the negative diagonal, defined as the straight line joining (0,1) and (1,0) which is shown as the dotted straight line in Fig. \@ref(fig:binary-task-RocCurvesEqVarModel). The symmetry property is due to the equal variance nature of the binormal model and is not true for models considered in later chapters. The intersection between the ROC curve and the negative diagonal corresponds to  $\zeta = \mu/2$, in which case the operating point is:
 
 \begin{equation} 
 \begin{aligned} 
@@ -600,7 +671,7 @@ FPF\left ( \zeta \right ) &=\Phi\left ( -\mu/2 \right )\\
 \\
 TPF\left ( \zeta \right ) &=\Phi\left (\mu/2 \right )\\ 
 \end{aligned} 
-(\#eq:binaryTask-NegDiagIntersection)
+(\#eq:binary-task-NegDiagIntersection)
 \end{equation}
 
 The first equation implies:
@@ -610,7 +681,7 @@ Therefore,
 
 \begin{equation} 
 TPF\left ( \zeta \right ) = 1-FPF\left ( \zeta \right )
-(\#eq:binaryTask-NegDiagIntersection2)
+(\#eq:binary-task-NegDiagIntersection2)
 \end{equation}
 
 This equation describes a straight line with unit intercept and slope equal to minus 1, which is the negative diagonal. Since TPF = sensitivity and FPF = 1- specificity, another way of stating this is that at the intersection with the negative diagonal, sensitivity equals specificity. 
@@ -623,19 +694,19 @@ The area AUC (abbreviation for area under curve) under the ROC curve suggests it
 A_{z;\sigma = 1} &= \int_{0}^{1}TPF(\zeta)d(FPF(\zeta))\\
 &=\int_{0}^{1}FPF(\zeta)d(TPF(\zeta))\\
 \end{aligned}
-(\#eq:binaryTask-Az-EqVarModel)
+(\#eq:binary-task-Az-EqVarModel)
 \end{equation}
 
-Eqn. \@ref(eq:binaryTask-Az-EqVarModel) has the following equivalent interpretations: 
+Eqn. \@ref(eq:binary-task-Az-EqVarModel) has the following equivalent interpretations: 
 
 * The first form performs the integration using thin vertical strips, e.g., extending from x to x + dx, where for convenience x is a temporary symbol for FPF. The area can be interpreted as the average TPF over all possible values of FPF.
 * The second form performs the integration using thin horizontal strips, e.g., extending from y to y + dy, where for convenience y is a temporary symbol for TPF. The area can be interpreted as the average FPF over all possible values of TPF.
 
-By convention, the symbol $A_z$ is used for the area under the binormal model predicted ROC curve. In Eqn. \@ref(eq:binaryTask-Az-EqVarModel), the extra subscript $\sigma = 1$ is necessary to distinguish it from another one corresponding to the unequal variance binormal model to be derived later. It can be shown that: 
+By convention, the symbol $A_z$ is used for the area under the binormal model predicted ROC curve. In Eqn. \@ref(eq:binary-task-Az-EqVarModel), the extra subscript $\sigma = 1$ is necessary to distinguish it from another one corresponding to the unequal variance binormal model to be derived later. It can be shown that: 
 
 \begin{equation} 
 A_{z;\sigma = 1} = \Phi\left ( \frac{\mu} {\sqrt{2}} \right )
-(\#eq:binaryTask-Az-EqVarModel2)
+(\#eq:binary-task-Az-EqVarModel2)
 \end{equation}
 
 Since the ROC curve is bounded by the unit square, AUC must be between zero and one. If $\mu$ is non-negative, the area under the ROC curve must be between 0.5 and 1. The chance diagonal, corresponding to  $\mu = 0$, yields $A_{z;\sigma = 1} = 0.5$, while the perfect ROC curve, corresponding to infinite yields unit area. Since it is a scalar quantity, AUC can be used to less-ambiguously quantify performance in the ROC task than is possible using sensitivity - specificity pairs. 
@@ -660,16 +731,16 @@ Property (c): The slope of the ROC curve can be derived by differentiation ($\mu
 &=exp(\mu(\zeta-\mu/2)) \propto exp(\mu \zeta)\\
 \end{aligned}
 \right \}
-(\#eq:binaryTask-slopeROC1)
+(\#eq:binary-task-slopeROC1)
 \end{equation}
 
 The above derivation uses the fact that the differential of the CDF function yields the pdf function, i.e., 
 
 $$d\Phi(\zeta)=P\left ( \zeta < Z < \zeta + d \zeta \right ) = \phi(\zeta)d\zeta$$
 
-Since the slope of the ROC curve can be expressed as a power of $e$, it is always non-negative. Provided $\mu > 0$, then, in the limit $\zeta\rightarrow \infty$, the slope at the origin approaches $\infty$. Eqn. \@ref(eq:binaryTask-slopeROC1) also implies that in the limit $\zeta\rightarrow -\infty$  the slope of the ROC curve at the end-point (1,1) approaches zero, i.e., the slope is a monotone increasing function of  $\zeta$. As $\zeta$  decrease from $+\infty$ to $-\infty$, the slope decreases monotonically from $+\infty$ to 0.
+Since the slope of the ROC curve can be expressed as a power of $e$, it is always non-negative. Provided $\mu > 0$, then, in the limit $\zeta\rightarrow \infty$, the slope at the origin approaches $\infty$. Eqn. \@ref(eq:binary-task-slopeROC1) also implies that in the limit $\zeta\rightarrow -\infty$  the slope of the ROC curve at the end-point (1,1) approaches zero, i.e., the slope is a monotone increasing function of  $\zeta$. As $\zeta$  decrease from $+\infty$ to $-\infty$, the slope decreases monotonically from $+\infty$ to 0.
 
-Fig. \@ref(fig:binaryTask-MainAnalyticalROC) is the ROC curve for the equal-variance binormal model for  . The entire curve is defined by  . Specifying a particular value of corresponds to specifying a particular point on the ROC curve. In Fig. 3.5 the open circle corresponds to the operating point (0.159, 0.977) defined by   = 1; pnorm(-1) = 0.159; pnorm(3-1) = 0.977. The operating point lies exactly on the curve, as this is a predicted operating point. 
+Fig. \@ref(fig:binary-task-MainAnalyticalROC) is the ROC curve for the equal-variance binormal model for  . The entire curve is defined by  . Specifying a particular value of corresponds to specifying a particular point on the ROC curve. In Fig. 3.5 the open circle corresponds to the operating point (0.159, 0.977) defined by   = 1; pnorm(-1) = 0.159; pnorm(3-1) = 0.977. The operating point lies exactly on the curve, as this is a predicted operating point. 
 
 
 ```r
@@ -693,7 +764,10 @@ rocPlot <- ggplot(
 print(rocPlot)
 ```
 
-![(\#fig:binaryTask-MainAnalyticalROC)ROC curve predicted by equal variance binormal model for mu = 3. The circled operating point corresponds to zeta = 1. The operating point falls exactly on the curve, as these are analytical results. Due to sampling variability, with finite numbers of cases, this is not observed in practice.](03-modeling-binary-task_files/figure-latex/binaryTask-MainAnalyticalROC-1.pdf) 
+<div class="figure">
+<img src="03-modeling-binary-task_files/figure-html/binary-task-MainAnalyticalROC-1.png" alt="ROC curve predicted by equal variance binormal model for mu = 3. The circled operating point corresponds to zeta = 1. The operating point falls exactly on the curve, as these are analytical results. Due to sampling variability, with finite numbers of cases, this is not observed in practice." width="672" />
+<p class="caption">(\#fig:binary-task-MainAnalyticalROC)ROC curve predicted by equal variance binormal model for mu = 3. The circled operating point corresponds to zeta = 1. The operating point falls exactly on the curve, as these are analytical results. Due to sampling variability, with finite numbers of cases, this is not observed in practice.</p>
+</div>
 
 
 ### Physical interpretation of the mu-parameter
@@ -707,7 +781,7 @@ pnorm(3/sqrt(2))
 
 For electrical signals, SNR can be measured with instruments but, in the context of decisions, measured is the perceptual SNR. Physical characteristics that differentiate non-diseased from diseased cases, and how well they are displayed will affect it; in addition the eye-sight of the observer is an obvious factor; not so obvious is how information is processed by the cognitive system, and the role of the observer’s experience in making similar decisions (i.e., expertise). 
 
-## Assigning confidence intervals to an operating point
+## Assigning confidence intervals to an operating point {#binary-task-confidence-intervals}
 * The notation in the following equations follows that introduced in Chapter 02.
 * A $(1-\alpha)$  confidence interval (CI) of a statistic is the range that is expected to contain the true value of the statistic with probability $(1-\alpha)$. 
 * It should be clear that a 99 percent CI is wider than a 95 percent CI, and a 90percentCI is narrower; in general, the higher the confidence that the interval contains the true value, the wider the range of the CI. 
@@ -719,47 +793,47 @@ For electrical signals, SNR can be measured with instruments but, in the context
 
 \begin{equation} 
 n(FP) \sim B\left ( K_1, \widehat{FPF} \right )
-(\#eq:binaryTask-BinDistrFPF)
+(\#eq:binary-task-BinDistrFPF)
 \end{equation}
 
-In Eqn. \@ref(eq:binaryTask-BinDistrFPF), $B(n,p)$ denotes the binomial distribution with success probability $p$ and trial size $n$: 
+In Eqn. \@ref(eq:binary-task-BinDistrFPF), $B(n,p)$ denotes the binomial distribution with success probability $p$ and trial size $n$: 
 
 \begin{equation} 
 \left.\begin{matrix}
 k \sim B\left ( n, p \right )\\
 k=0,1,2,...,n\\
 \end{matrix}\right\}
-(\#eq:binaryTask-BinDistrDef)
+(\#eq:binary-task-BinDistrDef)
 \end{equation}
 
-Eqn. \@ref(eq:binaryTask-BinDistrDef) states that $k$ is a random sample from the binomial distribution $B(n,p)$. For reference, the probability mass function $\text{pmf}$ of $B(n,p)$ is defined by (the subscript $Bin$ denotes a binomial distribution):
+Eqn. \@ref(eq:binary-task-BinDistrDef) states that $k$ is a random sample from the binomial distribution $B(n,p)$. For reference, the probability mass function $\text{pmf}$ of $B(n,p)$ is defined by (the subscript $Bin$ denotes a binomial distribution):
 
 \begin{equation} 
 \text{pmf}_{Bin}\left ( k;n,p \right )=\binom{n}{k}p^k(1-p)^{n-k}
-(\#eq:binaryTask-BinDistrDef2)
+(\#eq:binary-task-BinDistrDef2)
 \end{equation}
 
 For a discrete distribution, one has probability *mass* function; in contrast, for a continuous distribution one has a probability *density* function.
 
-The binomial coefficient $\binom{n}{k}$ appearing in Eqn. \@ref(eq:binaryTask-BinDistrDef2), to be read as "$n$ pick $k$", is defined by:
+The binomial coefficient $\binom{n}{k}$ appearing in Eqn. \@ref(eq:binary-task-BinDistrDef2), to be read as "$n$ pick $k$", is defined by:
 
 \begin{equation} 
 \binom{n}{k}=\frac{n!}{k!(n-k)!}
-(\#eq:binaryTask-BinCoeff)
+(\#eq:binary-task-BinCoeff)
 \end{equation}
 
 From the properties of the binomial distribution the variance of n(FP) is given by:
 
 \begin{equation} 
 \sigma_{n(FP)}^2=K_1\widehat{FPF}\left ( 1 - \widehat{FPF} \right )
-(\#eq:binaryTask-Var-n-FP)
+(\#eq:binary-task-Var-n-FP)
 \end{equation}
 
 It follows that $FPF$ has mean $\widehat{FPF}$ and variance $\sigma_{FPF}^2$ given by (using theorem $Var(aX) = a^2 Var(X)$, where $a$ is a constant, equal to $1/K_1$ in this case):
 
 \begin{equation} 
 \sigma_{FPF}^2 = \frac{\widehat{FPF}\left ( 1 - \widehat{FPF} \right )}{K_1}
-(\#eq:binaryTask-Var-FPF)
+(\#eq:binary-task-Var-FPF)
 \end{equation}
 
 For large $K_1$ the distribution of $FPF$ approaches a normal distribution as follows:
@@ -770,10 +844,10 @@ This immediately allows us to write down the confidence interval for $\widehat{F
 
 \begin{equation} 
 CI_{1-\alpha}^{FPF}=\left ( \widehat{FPF} - z_{\alpha/2} \sigma_{FPF}, \widehat{FPF} + z_{\alpha/2} \sigma_{FPF} \right )
-(\#eq:binaryTask-CI-FPF)
+(\#eq:binary-task-CI-FPF)
 \end{equation}
 
-In Eqn. \@ref(eq:binaryTask-CI-FPF), $z_{\alpha/2}$ is the upper $\alpha/2$ quantile of the unit normal distribution, i.e., the area to the *right* under the unit normal distribution pdf from $z_{\alpha/2}$ to $\infty$ equals $\alpha/2$.  It is the complement (i.e., plus goes to minus) of $\Phi^{-1}(\alpha/2)$ introduced earlier; the difference is that the latter uses the area to the *left*. The following code might help. 
+In Eqn. \@ref(eq:binary-task-CI-FPF), $z_{\alpha/2}$ is the upper $\alpha/2$ quantile of the unit normal distribution, i.e., the area to the *right* under the unit normal distribution pdf from $z_{\alpha/2}$ to $\infty$ equals $\alpha/2$.  It is the complement (i.e., plus goes to minus) of $\Phi^{-1}(\alpha/2)$ introduced earlier; the difference is that the latter uses the area to the *left*. The following code might help. 
 
 
 ```r
@@ -796,7 +870,7 @@ z_{\alpha/2} &=\Phi^{-1}\left ( 1-\alpha/2 \right )\\
 \\
 \end{aligned}
 \right \} 
-(\#eq:binaryTask-def-z-alpha2)
+(\#eq:binary-task-def-z-alpha2)
 \end{equation} 
 
 The normal approximation is adequate if both of the following two conditions are both met: $K_1\widehat{FPF} > 10$ and $K_1(1-\widehat{FPF}) > 10$. This means, essentially, that $\widehat{FPF}$ is not too close to zero or 1.  
@@ -805,14 +879,14 @@ Similarly, an approximate symmetric $(1-\alpha)$  confidence interval for TPF is
 
 \begin{equation} 
 CI_{1-\alpha}^{TPF}=\left ( \widehat{TPF} - z_{\alpha/2} \sigma_{TPF}, \widehat{TPF} + z_{\alpha/2} \sigma_{TPF} \right )
-(\#eq:binaryTask-CI-TPF)
+(\#eq:binary-task-CI-TPF)
 \end{equation}
 
-In Eqn. \@ref(eq:binaryTask-CI-TPF), 
+In Eqn. \@ref(eq:binary-task-CI-TPF), 
 
 \begin{equation} 
 \sigma_{TPF}^2 = \frac{\widehat{TPF}\left ( 1 - \widehat{TPF} \right )}{K_2}
-(\#eq:binaryTask-Var-TPF)
+(\#eq:binary-task-Var-TPF)
 \end{equation}
 
 The confidence intervals are largest when the probabilities (FPF or TPF) are close to 0.5 and decrease inversely as the square root of the relevant number of cases. The symmetric binomial distribution based estimates can stray outside the allowed range (0 to 1). Exact confidence intervals9 that are asymmetric around the central value and which are guaranteed to be in the allowed range can be calculated: it is implemented in `R` in function `binom.test() `and used below (The approximate confidence intervals can exceed the allowed ranges, but the exact confidence intervals do not):
@@ -869,8 +943,8 @@ cat("Exact 95percent CI on Sensitivity = ",
 
 Note the usage of the *absolute* value of the `qnorm()` function; `qnorm` is the lower quantile function for the unit normal distribution, identical to $\Phi^{-1}(0.025)$, i.e., about -1.96, and $z_{\alpha/2}$ is the upper quantile. 
 
-## Variability in sensitivity and specificity: the Beam et al study
-In this study [@RN1087] fifty accredited mammography centers were randomly sampled in the United States. “Accredited” is a legal/regulatory term implying, among other things, that the radiologists interpreting the breast cases were “board certified” by the American Board of Radiology. One hundred eight (108) certified radiologists from these centers gave blinded interpretation to a common set of 79 randomly selected enriched screening cases containing 45 cases with cancer and the rest normal or with benign lesions. Ground truth for these women had been established either by biopsy or by 2-year follow-up (establishing truth is often the most time consuming part of conducting an ROC study). The observed range of sensitivity (TPF) was 53percent and the range of FPF was 63percent; the corresponding range for AUC was 21percent, Table \@ref(tab:binaryTask0BeamStudy). 
+## Variability in sensitivity and specificity: the Beam et al study {#binary-task-beam-study}
+In this study [@RN1087] fifty accredited mammography centers were randomly sampled in the United States. “Accredited” is a legal/regulatory term implying, among other things, that the radiologists interpreting the breast cases were “board certified” by the American Board of Radiology. One hundred eight (108) certified radiologists from these centers gave blinded interpretation to a common set of 79 randomly selected enriched screening cases containing 45 cases with cancer and the rest normal or with benign lesions. Ground truth for these women had been established either by biopsy or by 2-year follow-up (establishing truth is often the most time consuming part of conducting an ROC study). The observed range of sensitivity (TPF) was 53percent and the range of FPF was 63percent; the corresponding range for AUC was 21percent, Table \@ref(tab:binary-task0BeamStudy). 
 
 
 ```r
@@ -883,38 +957,54 @@ rownames(df) <- c("Sensiivity","Specificity","AUC")
 colnames(df) <- c("Min","Max","Range")
 ```
 
-\begin{table}
+<table>
+<caption>(\#tab:binary-task0BeamStudy)The variability of 108 radiologists on a common dataset of screening mammograms. Note the reduced variability when one uses AUC, which accounts for variations in reporting thresholds (AUC variability range is 21percent compared to 53percent for sensitivity and 63percent for specificity).</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> Min </th>
+   <th style="text-align:right;"> Max </th>
+   <th style="text-align:right;"> Range </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Sensiivity </td>
+   <td style="text-align:right;"> 46.70 </td>
+   <td style="text-align:right;"> 100.00 </td>
+   <td style="text-align:right;"> 53.30 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Specificity </td>
+   <td style="text-align:right;"> 36.30 </td>
+   <td style="text-align:right;"> 99.30 </td>
+   <td style="text-align:right;"> 63.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> AUC </td>
+   <td style="text-align:right;"> 0.74 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.21 </td>
+  </tr>
+</tbody>
+</table>
 
-\caption{(\#tab:binaryTask0BeamStudy)The variability of 108 radiologists on a common dataset of screening mammograms. Note the reduced variability when one uses AUC, which accounts for variations in reporting thresholds (AUC variability range is 21percent compared to 53percent for sensitivity and 63percent for specificity).}
-\centering
-\begin{tabular}[t]{l|r|r|r}
-\hline
-  & Min & Max & Range\\
-\hline
-Sensiivity & 46.70 & 100.00 & 53.30\\
-\hline
-Specificity & 36.30 & 99.30 & 63.00\\
-\hline
-AUC & 0.74 & 0.95 & 0.21\\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{figure}
-\includegraphics[width=0.8\linewidth]{images/BeamStudy} \caption{Schematic, patterned from the Beam et al study, showing the ROC operating points of 108 mammographers. Wide variability in sensitivity (40percent) and specificity (45percent) are evident. Radiologists (B) and (C) appear to be trading sensitivity for specificity and vice versa, while radiologist A's performance is intrinsically superior. See summary of important principles below.}(\#fig:BeamStudyFig)
-\end{figure}
+<div class="figure">
+<img src="images/BeamStudy.png" alt="Schematic, patterned from the Beam et al study, showing the ROC operating points of 108 mammographers. Wide variability in sensitivity (40percent) and specificity (45percent) are evident. Radiologists (B) and (C) appear to be trading sensitivity for specificity and vice versa, while radiologist A's performance is intrinsically superior. See summary of important principles below." width="80%" />
+<p class="caption">(\#fig:BeamStudyFig)Schematic, patterned from the Beam et al study, showing the ROC operating points of 108 mammographers. Wide variability in sensitivity (40percent) and specificity (45percent) are evident. Radiologists (B) and (C) appear to be trading sensitivity for specificity and vice versa, while radiologist A's performance is intrinsically superior. See summary of important principles below.</p>
+</div>
 
 In Fig. \@ref(fig:BeamStudyFig), a schematic of the data, if one looks at the points labeled (B) and (C) one can mentally construct a smooth ROC curve that starts at (0,0), passes roughly through these points and ends at (1,1). In this sense, the intrinsic performances (i.e., AUCs or equivalently the   parameter) of the two radiologists are similar. The only difference between them is that radiologist (B) is using lower threshold relative to the radiologist (C). Radiologist (C) is more concerned with minimizing FPs while radiologist (B) is more concerned with maximizing sensitivity. By appropriate feedback radiologist (C) can perhaps be induced to change the threshold to that of radiologist (B), or they both could be induced to achieve a happy compromise. An example of feedback might be: “you are missing too many cancers and this could get us all into trouble; worry less about reduced specificity and more about increasing your sensitivity”. In contrast, radiologist (A) has intrinsically greater performance (B) or (C). No change in threshold is going to get the other two to a similar level of performance as radiologist A. Extensive training will be needed to bring the under-performing radiologists to the expert level represented by radiologist A. 
 
-Fig. \@ref(fig:BeamStudyFig) and Table \@ref(tab:binaryTask0BeamStudy) illustrate several important principles.
+Fig. \@ref(fig:BeamStudyFig) and Table \@ref(tab:binary-task0BeamStudy) illustrate several important principles.
 1.	Since an operating point is characterized by two values, unless both numbers are higher (e.g., radiologist A vs. B or C), it is difficult to unambiguously compare them. 
 2.	While sensitivity and specificity depend on the reporting threshold, the area under the ROC plot is independent of it. Using the area under the ROC curve one can unambiguously compare two readers. 
 3.	Combining sensitivity and the complement of specificity into a single AUC measure yields the additional benefit of lower variability. In Fig. \@ref(fig:BeamStudyFig), the range for sensitivity is 53 percent while that for specificity is 63 percent. In contrast, the range for AUC is only 21 percent. This means that much of the observed variations in sensitivity and specificity are due to variations in thresholds, and using AUC eliminates this source of variability. Decreased variability of a measure is a highly desirable characteristic as it implies the measurement is more precise, making it easier to detect genuine changes between readers and / or modalities.
 
 
-## Summary{#binaryTask-Summary}
-
-## Discussion{#binaryTask-Discussion}
+## Summary{#binary-task-summary}
+TBA
+## Discussion{#binary-task-discussion}
 The concepts of sensitivity and specificity are of fundamental importance and are widely used in the medical imaging literature. However, it is important to realize that sensitivity and specificity do not provide a complete picture of diagnostic performance, since they represent performance at a particular threshold. As demonstrated in Fig. 3.6, expert observers can and do operate at different points, and the reporting threshold depends on cost-benefit considerations, disease prevalence and personal reporting styles. If using sensitivity and specificity the dependence on reporting threshold often makes it difficult to unambiguously compare observers. Even if one does compare them, there is loss of statistical power (equivalent to loss of precision of the measurement) due to the additional source of variability introduced by the varying thresholds.
 
 The ROC curve is the locus of operating points as the threshold is varied. It and AUC are completely defined by the   parameter of the equal variance binormal model. Since both are independent of reporting threshold  , they overcome the ambiguity inherent in comparing sensitivity/specificity pairs. Both are scalar measures of performance. AUC is widely used in assessing imaging systems. It should impress the reader that a subjective internal sensory perception of disease presence and an equally subjective internal threshold can be translated into an objective performance measure, such as the area under an ROC curve or equivalently, the   parameter. The latter has the physical meaning of a perceptual signal to noise ratio. 
@@ -925,5 +1015,5 @@ The properties of the unit normal distribution and the binomial distribution wer
 
 This chapter has been demonstrated the equal variance binormal model with R examples. These were used to illustrate important concepts of case-sampling variability and its dependence on the numbers of cases. Again, while relegated for organizational reasons to online appendices, these appendices are essential components of the book. Most of the techniques demonstrated there will be reused in the remaining chapters. The motivated reader can learn much from studying the online material and running the different main-level functions contained in the software-directory corresponding to this chapter.
 
-## References {#binaryTask-references}
+## References {#binary-task-references}
 
