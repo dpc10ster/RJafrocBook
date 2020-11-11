@@ -55,7 +55,7 @@ O\left ( \zeta \right ) = \left ( FPF\left ( \zeta \right ), TPF\left ( \zeta \r
 (\#eq:empirical-OperatingPoint)
 \end{equation}
 
-The essential difference between Eqn. \@ref(eq:empiricalAUC-FPF-TPF) and Eqn. \@ref(eq:binaryTask-FPF-TPF) is that the former is non-parametric while the latter is parametric. In TBA Chapter 03 analytical (or parametric, i.e., model parameter dependent) operating points were obtained. In contrast, here one uses the observed ratings to calculate the empirical operating point. 
+The essential difference between Eqn. \@ref(eq:empiricalAUC-FPF-TPF) and Eqn. \@ref(eq:binary-task-FPF-TPF) is that the former is non-parametric while the latter is parametric. In TBA Chapter 03 analytical (or parametric, i.e., model parameter dependent) operating points were obtained. In contrast, here one uses the observed ratings to calculate the empirical operating point. 
 
 ## Empirical operating points from ratings data
 Consider a ratings ROC study with $R$ bins. Describing an R-rating empirical ROC plot requires $R-1$ ordered empirical thresholds, see Eqn. \@ref(eq:ratingsParadigm-EmpZeta).

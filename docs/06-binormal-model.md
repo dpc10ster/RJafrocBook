@@ -362,7 +362,7 @@ The last line contains the least squares estimated values, $a$ = 1.3288 and $b$ 
 \zeta_r = - \Phi^{-1}\left ( FPF_r \right )
 \end{equation*} 
 
-These are "rigid" estimates that assume no error in the FPF values. As was shown in Chapter \@ref(binaryTask), 95% confidence intervals apply to these estimates.
+These are "rigid" estimates that assume no error in the FPF values. As was shown in Chapter \@ref(binary-task), 95% confidence intervals apply to these estimates.
 
 A historical note: prior to computers and easy access to statistical functions the analyst had to use a special plotting paper, termed “double probability paper”, that converted probabilities into x and y distances using the inverse function.
 

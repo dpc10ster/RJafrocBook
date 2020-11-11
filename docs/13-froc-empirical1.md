@@ -31,7 +31,7 @@ To distinguish between suspicious regions that were considered for marking and r
 
 ### Binning rule
 
-Recall from Section \@ref(binaryTaskDecisionVariablelModel) that ROC data modeling requires the existence of a *case-dependent* decision variable, or z-sample $z$, and case-independent decision thresholds $\zeta_r$, where $r = 0, 1, ..., R_{ROC}-1$ and $R_{ROC}$ is the number of ROC study bins, and the rule that if $\zeta_r \leq z < \zeta_{r+1}$ the case is rated $r + 1$. Dummy cutoffs are defined as $\zeta_0 = -\infty$ and $\zeta_{R_{ROC}} = \infty$. The z-sample applies to the whole case. To summarize:
+Recall from Section \@ref(binary-task-z-sample-model) that ROC data modeling requires the existence of a *case-dependent* decision variable, or z-sample $z$, and case-independent decision thresholds $\zeta_r$, where $r = 0, 1, ..., R_{ROC}-1$ and $R_{ROC}$ is the number of ROC study bins, and the rule that if $\zeta_r \leq z < \zeta_{r+1}$ the case is rated $r + 1$. Dummy cutoffs are defined as $\zeta_0 = -\infty$ and $\zeta_{R_{ROC}} = \infty$. The z-sample applies to the whole case. To summarize:
 
 ```{=tex}
 \begin{equation}
@@ -67,98 +67,48 @@ r = 1, 2, ..., R_{FROC}\\
 
 FROC notation is summarized in Table \@ref(tab:froc-empirical-notation), in which **all marks are latent marks**. The table is organized into three columns, the first column is the row number, the second column has the symbol(s), and the third column has the meaning(s) of the symbol(s).
 
-<table>
-<caption>(\#tab:froc-empirical-notation)FROC notation; all marks refer to latent marks; see comments</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> Row </th>
-   <th style="text-align:left;"> Symbol </th>
-   <th style="text-align:left;"> Meaning </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> t </td>
-   <td style="text-align:left;"> Case-level truth: 1 for non-diseased and 2 for diseased </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> $K_t$ </td>
-   <td style="text-align:left;"> Number of cases with case-level truth t </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 3 </td>
-   <td style="text-align:left;"> $k_t t$ </td>
-   <td style="text-align:left;"> Case $k_t$ in case-level truth t </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 4 </td>
-   <td style="text-align:left;"> s </td>
-   <td style="text-align:left;"> Mark-level truth: 1 for NL and 2 for LL </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 5 </td>
-   <td style="text-align:left;"> $l_s s$ </td>
-   <td style="text-align:left;"> Mark $l_s$ in mark-level truth s </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 6 </td>
-   <td style="text-align:left;"> $z_{k_t t l_1 1}$ </td>
-   <td style="text-align:left;"> z-sample for case $k_t t$ and mark $l_1 1$ </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 7 </td>
-   <td style="text-align:left;"> $z_{k_2 2 l_2 2}$ </td>
-   <td style="text-align:left;"> z-sample for case $k_2 2$ and mark $l_2 2$ </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 8 </td>
-   <td style="text-align:left;"> $R_{FROC}$ </td>
-   <td style="text-align:left;"> Number of FROC bins </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 9 </td>
-   <td style="text-align:left;"> $\zeta_1$ </td>
-   <td style="text-align:left;"> Lowest reporting threshold </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 10 </td>
-   <td style="text-align:left;"> $\zeta_r$ </td>
-   <td style="text-align:left;"> Other non-dummy reporting thresholds </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 11 </td>
-   <td style="text-align:left;"> $\zeta_0, \zeta_{R_{FROC}+1}$ </td>
-   <td style="text-align:left;"> Dummy thresholds </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 12 </td>
-   <td style="text-align:left;"> $N_{k_t t}$ </td>
-   <td style="text-align:left;"> Number of NLs on case $k_t t$ </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 13 </td>
-   <td style="text-align:left;"> $L_{k_2 2}$ </td>
-   <td style="text-align:left;"> Number of lesions on case $k_2 2$ </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 14 </td>
-   <td style="text-align:left;"> $W_{k_2 l_2}$ </td>
-   <td style="text-align:left;"> Weight of lesion $l_2 2$ on case $k_2 2$ </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 15 </td>
-   <td style="text-align:left;"> $L_{max}$ </td>
-   <td style="text-align:left;"> Maximum number of lesions per case in dataset </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 16 </td>
-   <td style="text-align:left;"> $L_T$ </td>
-   <td style="text-align:left;"> Total number of lesions in dataset </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:froc-empirical-notation)FROC notation; all marks refer to latent marks; see comments}
+\centering
+\begin{tabular}[t]{l|l|l}
+\hline
+Row & Symbol & Meaning\\
+\hline
+1 & t & Case-level truth: 1 for non-diseased and 2 for diseased\\
+\hline
+2 & $K_t$ & Number of cases with case-level truth t\\
+\hline
+3 & $k_t t$ & Case $k_t$ in case-level truth t\\
+\hline
+4 & s & Mark-level truth: 1 for NL and 2 for LL\\
+\hline
+5 & $l_s s$ & Mark $l_s$ in mark-level truth s\\
+\hline
+6 & $z_{k_t t l_1 1}$ & z-sample for case $k_t t$ and mark $l_1 1$\\
+\hline
+7 & $z_{k_2 2 l_2 2}$ & z-sample for case $k_2 2$ and mark $l_2 2$\\
+\hline
+8 & $R_{FROC}$ & Number of FROC bins\\
+\hline
+9 & $\zeta_1$ & Lowest reporting threshold\\
+\hline
+10 & $\zeta_r$ & Other non-dummy reporting thresholds\\
+\hline
+11 & $\zeta_0, \zeta_{R_{FROC}+1}$ & Dummy thresholds\\
+\hline
+12 & $N_{k_t t}$ & Number of NLs on case $k_t t$\\
+\hline
+13 & $L_{k_2 2}$ & Number of lesions on case $k_2 2$\\
+\hline
+14 & $W_{k_2 l_2}$ & Weight of lesion $l_2 2$ on case $k_2 2$\\
+\hline
+15 & $L_{max}$ & Maximum number of lesions per case in dataset\\
+\hline
+16 & $L_T$ & Total number of lesions in dataset\\
+\hline
+\end{tabular}
+\end{table}
 
 ### Comments on Table \@ref(tab:froc-empirical-notation)
 
