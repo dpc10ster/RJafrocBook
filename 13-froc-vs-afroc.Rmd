@@ -26,6 +26,8 @@ This chapter recommends adoption of the wAFROC as the preferred operating charac
 
 ## FROC vs. wAFROC
 
+This section examines RSM-predicted FROC and wAFROC plots for a simulated CAD (algorithmic) and RAD (radiologist) observers. Recall, from Section \@ref(froc-paradigm-preview-rsm), that the RSM is defined by 3 parameters $\mu, \lambda, \nu$ and the lowest reporting threshold parameter $\zeta_1$ which determines if latent localizations are actually marked.
+
 ```{r, cache = TRUE, attr.source = ".numberLines"}
 source(here("R/CH13-GenerateCadVsRadPlots/GenerateCadVsRadPlots.R"))
 
@@ -42,7 +44,7 @@ seed <- 1
 set.seed(seed)
 Lk2 <- floor(runif(K2, 1, Lmax + 1))
 
-ret <- GenerateCadVsRadPlots (
+ret1AB <- GenerateCadVsRadPlots (
   muCad, 
   muRad, 
   zeta1Cad, 
@@ -52,15 +54,15 @@ ret <- GenerateCadVsRadPlots (
   Lk2, 
   seed)
 
-froc1A <- ret$froc$Plot + labs(tag = "A")
-wafroc1B <- ret$wafroc$Plot + labs(tag = "B")
-fomCad1B <- ret$fomCad
-fomRad1B <- ret$fomRad
+froc1A <- ret1AB$froc$Plot + labs(tag = "A")
+wafroc1B <- ret1AB$wafroc$Plot + labs(tag = "B")
+fomCad1B <- ret1AB$fomCad
+fomRad1B <- ret1AB$fomRad
 
 zeta1Cad <- -Inf
 zeta1Rad <- -Inf
 
-ret <- GenerateCadVsRadPlots (
+ret1CD <- GenerateCadVsRadPlots (
   muCad, 
   muRad, 
   zeta1Cad, 
@@ -70,13 +72,13 @@ ret <- GenerateCadVsRadPlots (
   Lk2, 
   seed)
 
-froc1C <- ret$froc$Plot + labs(tag = "C")
-wafroc1D <- ret$wafroc$Plot + labs(tag = "D")
-fomCad1D <- ret$fomCad
-fomRad1D <- ret$fomRad
+froc1C <- ret1CD$froc$Plot + labs(tag = "C")
+wafroc1D <- ret1CD$wafroc$Plot + labs(tag = "D")
+fomCad1D <- ret1CD$fomCad
+fomRad1D <- ret1CD$fomRad
 ```
 
-This section examines RSM-predicted FROC and wAFROC plots for a simulated CAD (algorithmic) and RAD (radiologist) observers. Recall, from Section \@ref(froc-paradigm-preview-rsm), that the RSM is defined by 3 parameters $\mu, \lambda, \nu$ and the lowest reporting threshold parameter $\zeta_1$ which determines if latent localizations are actually marked. Both CAD and RAD observers share the same $\lambda, \nu$. These are defined at lines 3 and 4 of the preceding code: $\lambda = \nu = 1$. The number of simulated cases is defined, lines 5-6, by $K_1 = 500$ and $K_2 = 700$. The simulated CAD observer is defined at line 7 by by $\mu_{CAD} = 1$ and the simulated RAD observer is defined at line 8 by $\mu_{RAD} = 1.5$. The corresponding threshold parameters are (lines 9 -10) $\zeta_{1} = -1$ for CAD and $\zeta_{1} = 1.5$ for RAD. The maximum number of lesions per case is defined at line 11 by `Lmax` = 2. The actual number of lesions per case `Lk2` is determined at line 14 (`Lk2` is a $K_2$ length array consisting of random integers 1 or 2).
+Both CAD and RAD observers share the same $\lambda, \nu$. These are defined at lines 3 and 4 of the preceding code: $\lambda = \nu = 1$. The number of simulated cases is defined, lines 5-6, by $K_1 = 500$ and $K_2 = 700$. The simulated CAD observer $\mu$ parameter is defined at line 7 by by $\mu_{CAD} = 1$ and that of the simulated RAD observer is defined at line 8 by $\mu_{RAD} = 1.5$. The corresponding threshold parameters are (lines 9 -10) $\zeta_{1} = -1$ for CAD and $\zeta_{1} = 1.5$ for RAD. The maximum number of lesions per case is defined at line 11 by `Lmax` = 2. The actual number of lesions per case `Lk2` is determined at line 14 (`Lk2` is a $K_2$ length array consisting of random integers 1 or 2).
 
 Line 16 calls the helper function `GenerateCadVsRadPlots()` (the file containing this function is sourced at line 1), which calculates the FROC and wAFROC plots and other statistics. The FROC is extracted at line 26 and labeled A, while the wAFROC is extracted at line 27 and labeled B. The following code extracts the coordinates of the end-points of the respective curves.
 
@@ -101,21 +103,23 @@ The coordinates of the end-point of the CAD FROC in plot A are (`r nlfCad1A`, `r
 
 [^froc-vs-afroc-1]: The basic issue is the lack of a common NLF range for the two plots. If a common NLF range is "forced", for example defined as the common NLF range 0 to `r max(froc1A$data$genAbscissa[froc1A$data$Reader == "R: RAD"])` where both curves contribute, it would ignore most NLs from the CAD observer.
 
-CAD algorithm developers typically quote LLF at a specified NLF. According to the two plots in A, the RAD observer is better if the NLF value is chosen to less than `r max(froc1A$data$genAbscissa[froc1A$data$Reader == "R: RAD"])` (this is the maximum NLF value for the RAD plot in A) while there is no basis for comparison for larger values of NLF (because the RAD observer does not provide any data beyond the observed end-point). A similar problem was encountered in ROC analysis when comparing a pair of sensitivity-specificity values, where, given differing choices of thresholds, ambiguous results can be obtained, see Section \@ref(binary-task-beam-study). Indeed, this was the rationale for using AUC under the ROC curve as an unambiguous measure of performance.
+CAD algorithm developers typically quote LLF at a specified NLF. According to the two plots in A, the RAD observer is better if the NLF value is chosen to less than `r max(froc1A$data$genAbscissa[froc1A$data$Reader == "R: RAD"])` (this is the maximum NLF value for the RAD plot in A) but there is no basis for comparison for larger values of NLF (because the RAD observer does not provide any data beyond the observed end-point). A similar problem was encountered in ROC analysis when comparing a pair of sensitivity-specificity values, where, given differing choices of thresholds, ambiguous results can be obtained, see Section \@ref(binary-task-beam-study). Indeed, this was the rationale for using AUC under the ROC curve as an unambiguous measure of performance.
 
 wAFROC curves, for the same datasets, whose FROC curves are shown in plot A, are shown in plot B. **Like the ROC, the wAFROC is contained within the unit square, a highly desirable characteristic, which solves the lack of a common NLF range problem with the FROC.** The wAFROC AUC under the RAD observer is visibly greater than that for the CAD observer, even though -- due to his higher threshold -- his AUC estimate is actually biased downward against him [^froc-vs-afroc-2]. AUCs under the two wAFROC plots in B are `r fomCad1B` for CAD and `r fomRad1B` for RAD, consistent with the visual impression of RAD \> CAD.
 
 [^froc-vs-afroc-2]: Because the RAD observer is adopting a high threshold $\zeta_1 = 1.5$, his $\text{LLF}_{\text{max}}$ is smaller than it would have been with a lower threshold, and consequently the area under the large straight line segment from the uppermost non-trivial operating point to (1,1) is smaller than would have been the case with a lower threshold.
 
-Since plots A and B are based on different choices of lowest reporting threshold, it is pertinent to ask what happens for identical thresholds. Lines 23-24 set the two threshold parameters to $-\infty$ and line 25 calls the function `GenerateCadVsRadPlots()` with these new values. The FROC is extracted at line 44 and labeled C, while the wAFROC is extracted at line 45 and labeled D.
+Since plots A and B are based on different choices of lowest reporting threshold, it is pertinent to ask what happens for identical thresholds. Lines 31-32 set the two threshold parameters to $-\infty$ and line 34 calls the function `GenerateCadVsRadPlots()` with these new values. The FROC is extracted at line 44 and labeled C, while the wAFROC is extracted at line 45 and labeled D.
 
-The coordinates of the end-point of the CAD FROC in plot C are (`r nlfCad1C`, `r llfCad1C`). Those of the RAD FROC plot in C are (`r nlfRad1C`, `r llfRad1C`). The RAD observer has higher LLF at lower NLF, and there is no doubt that he is better. Plot C confirms that RAD is actually the better observer *over the entire NLF range*.
+The coordinates of the end-point of the CAD FROC in plot C are (`r nlfCad1C`, `r llfCad1C`). Those of the RAD FROC plot in C are (`r nlfRad1C`, `r llfRad1C`). The RAD observer has higher LLF at lower NLF, and there is no doubt that he is better. Plot C confirms that RAD is actually the better observer *over his entire NLF range*.
 
 Plot D shows the corresponding wAFROC curves. The AUCs are `r fomCad1D` for CAD and `r fomRad1D` for RAD, confirming that the RAD observer is indeed better. Moreover, this comparison, based on comparing two scalars, is unambiguous. [^froc-vs-afroc-3]
 
 [^froc-vs-afroc-3]: The differences from the previous values (corresponding to plot B) namely `r fomCad1B` for CAD and `r fomRad1B` for RAD, is much larger -- and visually striking -- for the RAD observer than for the CAD observer. This is because the CAD observer was already adopting a low threshold $\zeta_1 = -1$ in plot B, so lowering it to $-\infty$ in plot D has a smaller effect.
 
-## Two other examples.
+### Large difference in performance
+
+It is interesting to compare the two readers when there is large difference in performance. In Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot2) (A), which exaggerates the difference between CAD and RAD, the CAD parameters are the same as in Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1), but the RAD parameters are $\mu_{RAD} = 2$ and $\zeta_1 = +2$. Doubling the separation parameter over that of CAD, $\mu_{CAD} = 1$, has a huge effect on performance.
 
 ```{r, cache = TRUE, echo=FALSE}
 source(here("R/CH13-GenerateCadVsRadPlots/GenerateCadVsRadPlots.R"))
@@ -133,22 +137,22 @@ seed <- 1
 set.seed(seed)
 Lk2 <- floor(runif(K2, 1, Lmax + 1))
 
-ret <- GenerateCadVsRadPlots (muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lk2, seed)
+ret2AB <- GenerateCadVsRadPlots (muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lk2, seed)
 
-froc2A <- ret$froc$Plot + labs(tag = "A")
-wafroc2B <- ret$wafroc$Plot + labs(tag = "B")
-fomCad2B <- ret$fomCad
-fomRad2B <- ret$fomRad
+froc2A <- ret2AB$froc$Plot + labs(tag = "A")
+wafroc2B <- ret2AB$wafroc$Plot + labs(tag = "B")
+fomCad2B <- ret2AB$fomCad
+fomRad2B <- ret2AB$fomRad
 
 zeta1Cad <- -Inf
 zeta1Rad <- -Inf
 
-ret <- GenerateCadVsRadPlots (muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lk2, seed)
+ret2CD <- GenerateCadVsRadPlots (muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lk2, seed)
 
-froc2C <- ret$froc$Plot + labs(tag = "C")
-wafroc2D <- ret$wafroc$Plot + labs(tag = "D")
-fomCad2D <- ret$fomCad
-fomRad2D <- ret$fomRad
+froc2C <- ret2CD$froc$Plot + labs(tag = "C")
+wafroc2D <- ret2CD$wafroc$Plot + labs(tag = "D")
+fomCad2D <- ret2CD$fomCad
+fomRad2D <- ret2CD$fomRad
 ```
 
 ```{r, echo=FALSE}
@@ -164,17 +168,19 @@ nlfRad2C <- max(froc2C$data$genAbscissa[froc2C$data$Reader == "R: RAD"])
 llfRad2C <- max(froc2C$data$genOrdinate[froc2C$data$Reader == "R: RAD"]) 
 ```
 
-In Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot2) (A), which exaggerates the difference between CAD and RAD, the CAD parameters are the same as in Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1), but the RAD parameters are $\mu = 2$ and $\zeta_1 = +2$. Doubling the separation parameter over that of CAD has a huge effect on performance. The end-point coordinates of the FROC for RAD are (`r nlfRad2A`, `r llfRad2A`). The common region defined by NLF = 0 to NLF = `r nlfRad2A` would exclude almost all of the NL and LL marks made by CAD. The wAFROCs in plot B show the markedly greater performance of RAD compared to CAD (the AUCs are `r fomCad2B` for CAD and `r fomRad2B` for RAD). The difference is larger, in spite of the downward bias working against the wAFROC RAD AUC, Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1) (D).
+The end-point coordinates of the FROC for RAD are (`r nlfRad2A`, `r llfRad2A`). The common NLF region defined by NLF = 0 to NLF = `r nlfRad2A` *would exclude almost all of the marks made by CAD*. The wAFROC plots in plot B show the markedly greater performance of RAD over CAD (the AUCs are `r fomCad2B` for CAD and `r fomRad2B` for RAD). The difference is larger (compared to Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1) plot B), in spite of the greater downward bias working against the RAD observer.
+
+Plots C and D correspond to A and B, respectively, with $\zeta_1$ = $-\infty$ for both readers. It reveals the full extent of the curves, when each observer marks every suspicious region, as long as it exists and no matter how low its z-sample.
 
 ```{r froc-paradigm-froc-vs-afroc-plot2, fig.cap="Plots A and B are for CAD $\\zeta_1 = -1$ and RAD $\\zeta_1 = 2$ and plots C and D are plots for CAD $\\zeta_1 = -\\infty$ and RAD $\\zeta_1 = -\\infty$. A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves.", fig.show='hold', echo=FALSE}
 grid.arrange(froc2A,wafroc2B,froc2C,wafroc2D,nrow=2,ncol=2)
 ```
 
-Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot2) (A) FROC curves for CAD observer and the RAD observer. The CAD observer is identical to that shown in Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1). The RAD observer is characterized by $\mu = 2$ and $\zeta_1 = 2$. This time it is impossible to compare the two FROC curves, as the common range is very small. However, wAFROC, plot B, clearly shows the expected superiority of the RAD observer, in spite of the severe underestimate of the corresponding AUC. AUCs under the two wAFROC plots are 0.608 for CAD and 0.708 for RAD. Plots C and D correspond to A and B, respectively, with $\zeta_1$ = $-\infty$ for both readers. AUCs under the two wAFROC plots are `r fomCad2B` for CAD and `r fomRad2B` for RAD.
+Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot2) (A) FROC curves for CAD observer and the RAD observer. The CAD observer is identical to that shown in Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1). The RAD observer is characterized by $\mu = 2$ and $\zeta_1 = 2$. This time it is impossible to compare the two FROC curves, as the common range is very small. However, wAFROC, plot B, clearly shows the expected superiority of the RAD observer, in spite of the severe underestimate of the corresponding AUC. 
 
-### An example where the FROC can be used for comparisons
+### Small difference in performance
 
-The final example, Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot3) shows that *when there is a small difference in performance*, there is less ambiguity in using the FROC as a basis for measuring performance. The CAD parameters are the same as in Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1) but the RAD parameters are $\mu = 1.1$ and $\zeta_1= -1$. This time there is much more common overlap in plot (A) and the area measure is counting most of the marks for both readers (but still not accounting for unmarked non-diseased cases). The superior wAFROC-based performance of RAD is also apparent in (B).
+The final example, Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot3) shows that *when there is a small difference in performance*, there is less ambiguity in using the FROC as a basis for measuring performance. The CAD parameters are the same as in Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1) but the RAD parameters are $\mu = 1.1$ and $\zeta_1= -1$. This time there is much more common NLF range overlap in plot A and one is counting most of the marks for the CAD reader. The superior wAFROC-based performance of RAD is also apparent in B. Plots C and D correspond to $\zeta_1 = -\infty$, and they confirm the similar performances (apparent in plots A and B) with a slight superiority for RAD.
 
 ```{r, cache = TRUE, echo=FALSE}
 source(here("R/CH13-GenerateCadVsRadPlots/GenerateCadVsRadPlots.R"))
@@ -192,27 +198,40 @@ seed <- 1
 set.seed(seed)
 Lk2 <- floor(runif(K2, 1, Lmax + 1))
 
-ret <- GenerateCadVsRadPlots (muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lk2, seed)
+ret3AB <- GenerateCadVsRadPlots (muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lk2, seed)
 
-froc3A <- ret$froc$Plot + labs(tag = "A")
-wafroc3B <- ret$wafroc$Plot + labs(tag = "B")
-fomCad3B <- ret$fomCad
-fomRad3B <- ret$fomRad
+froc3A <- ret3AB$froc$Plot + labs(tag = "A")
+wafroc3B <- ret3AB$wafroc$Plot + labs(tag = "B")
+fomCad3B <- ret3AB$fomCad
+fomRad3B <- ret3AB$fomRad
 
 zeta1Cad <- -Inf
 zeta1Rad <- -Inf
 
-ret <- GenerateCadVsRadPlots (muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lk2, seed)
+ret3CD <- GenerateCadVsRadPlots (muCad, muRad, zeta1Cad, zeta1Rad, K1, K2, Lk2, seed)
 
-froc3C <- ret$froc$Plot + labs(tag = "C")
-wafroc3D <- ret$wafroc$Plot + labs(tag = "D")
-fomCad3D <- ret$fomCad
-fomRad3D <- ret$fomRad
+froc3C <- ret3CD$froc$Plot + labs(tag = "C")
+wafroc3D <- ret3CD$wafroc$Plot + labs(tag = "D")
+fomCad3D <- ret3CD$fomCad
+fomRad3D <- ret3CD$fomRad
 ```
 
 ```{r froc-paradigm-froc-vs-afroc-plot3, fig.cap="Plots A and B are for CAD $\\zeta_1 = -1$ and RAD $\\zeta_1 = -1$ and plots C and D are plots for CAD $\\zeta_1 = -\\infty$ and RAD $\\zeta_1 = -\\infty$. A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves.", fig.show='hold', echo=FALSE}
 grid.arrange(froc3A,wafroc3B,froc3C,wafroc3D,nrow=2,ncol=2)
 ```
+
+**The bottom line is that in all three cases the wAFROC yields the right conclusion, while the FROC comparison can only be made when the two performances are similar.**
+
+## Summary of simulations
+In order to get a better overview, the following table summarizes the numerical values from the plots in this chapter. 
+
+* The first column refers to the figure number, for example, 1 refers to Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot1), 2 refers to Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot2), and 3 refers to Fig. \@ref(fig:froc-paradigm-froc-vs-afroc-plot3).
+* The next column is labeled "CAD-FROC-A", meaning the CAD FROC plots labeled A. 
+* The next column is labeled "RAD-FROC-A", meaning the RAD FROC plots labeled A. 
+* The next column is labeled "CAD-FROC-C", meaning the CAD FROC plots labeled C.
+* Etc.
+* do: means ditto: the values in that column are identical.
+
 
 ```{r, echo=FALSE}
 # extract coordinates of end-point
@@ -228,9 +247,9 @@ llfRad3C <- max(froc3C$data$genOrdinate[froc3C$data$Reader == "R: RAD"])
 ```
 
 ```{r froc-paradigm-froc-vs-afroc-summary-table, echo=FALSE}
-tableCells = array(dim = c(3,8))
-dig <- 3
-tableCells[1,]  <- c(paste0("(", as.character(format(nlfCad1A, digits = dig)), ", ", as.character(format(llfCad1A, digits = dig)), ")"),
+tableCells = array(dim = c(3,9))
+dig <- 4
+tableCells[1,]  <- c("1", paste0("(", as.character(format(nlfCad1A, digits = dig)), ", ", as.character(format(llfCad1A, digits = dig)), ")"),
                      paste0("(", as.character(format(nlfRad1A, digits = dig)), ", ", as.character(format(llfRad1A, digits = dig)), ")"),
                      paste0("(", as.character(format(nlfCad1C, digits = dig)), ", ", as.character(format(llfCad1C, digits = dig)), ")"),
                      paste0("(", as.character(format(nlfRad1C, digits = dig)), ", ", as.character(format(llfRad1C, digits = dig)), ")"),
@@ -238,28 +257,33 @@ tableCells[1,]  <- c(paste0("(", as.character(format(nlfCad1A, digits = dig)), "
                      as.character(format(fomRad1B, digits = dig)),
                      as.character(format(fomCad1D, digits = dig)),
                      as.character(format(fomRad1D, digits = dig)))
-tableCells[2,]  <- c(paste0("(", as.character(format(nlfCad2A, digits = dig)), ", ", as.character(format(llfCad2A, digits = dig)), ")"),
+tableCells[2,]  <- c("2", "do:",
                      paste0("(", as.character(format(nlfRad2A, digits = dig)), ", ", as.character(format(llfRad2A, digits = dig)), ")"),
-                     paste0("(", as.character(format(nlfCad2C, digits = dig)), ", ", as.character(format(llfCad2C, digits = dig)), ")"),
+                     "do:",
                      paste0("(", as.character(format(nlfRad2C, digits = dig)), ", ", as.character(format(llfRad2C, digits = dig)), ")"),
-                     as.character(format(fomCad2B, digits = dig)),
+                     "do:",
                      as.character(format(fomRad2B, digits = dig)),
-                     as.character(format(fomCad2D, digits = dig)),
+                     "do:",
                      as.character(format(fomRad2D, digits = dig)))
-tableCells[3,]  <- c(paste0("(", as.character(format(nlfCad3A, digits = dig)), ", ", as.character(format(llfCad3A, digits = dig)), ")"),
+tableCells[3,]  <- c("3", "do:",
                      paste0("(", as.character(format(nlfRad3A, digits = dig)), ", ", as.character(format(llfRad3A, digits = dig)), ")"),
-                     paste0("(", as.character(format(nlfCad3C, digits = dig)), ", ", as.character(format(llfCad3C, digits = dig)), ")"),
+                     "do:",
                      paste0("(", as.character(format(nlfRad3C, digits = dig)), ", ", as.character(format(llfRad3C, digits = dig)), ")"),
-                     as.character(format(fomCad2B, digits = dig)),
-                     as.character(format(fomRad2B, digits = dig)),
-                     as.character(format(fomCad2D, digits = dig)),
-                     as.character(format(fomRad2D, digits = dig)))
+                     "do:",
+                     as.character(format(fomRad3B, digits = dig)),
+                     "do:",
+                     as.character(format(fomRad3D, digits = dig)))
 df <- as.data.frame(tableCells)
 rownames(df) <- c("1","2","3")
-colnames(df) <- c("CAD-FROC","RAD-FROC","CAD-FROC1","RAD-FROC1","CAD-wAFROC", "RAD-wAFROC","CAD-wAFROC1", "RAD-wAFROC1")
-knitr::kable(df, caption = "TBA Representative counts table.", escape = FALSE)
+colnames(df) <- c("Fig#", "CAD-FROC-A","RAD-FROC-A","CAD-FROC-C","RAD-FROC-C","CAD-wAFROC-B", "RAD-wAFROC-B","CAD-wAFROC-D", "RAD-wAFROC-D")
+knitr::kable(df, caption = "Summary of simulations: Fig# refers to the figure number in this chapter, A refers to plot A, B refers to plot B, etc. do: means ditto, i.e., same value as above.", escape = FALSE)
 ```
 
+## Comments {#froc-vs-wafroc-comments}
+TBA
+
+
+## To be moved {#froc-vs-wafroc-to-move}
 A misconception exists that using the rating of only one NL mark, as in wAFROC, must sacrifice statistical power. In fact, the chosen mark is a special one, namely the highest rated NL mark on a non-diseased case, which carries more information than a randomly chosen NL mark. If the sampling distribution of the z-sample were uniform, then the highest sample is a sufficient statistic, meaning that it carries all the information in the samples. The highest rated z-sampler from a normal distribution is not a sufficient statistic, so there is some loss of information, but not as much as would occur with a randomly picked z-sample.
 
 (A) 
