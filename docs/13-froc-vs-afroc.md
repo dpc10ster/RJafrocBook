@@ -1,4 +1,4 @@
-# FROC vs. wAFROC {#froc-paradigm-froc-vs-afroc}
+# FROC vs. wAFROC {#froc-vs-afroc}
 
 
 
@@ -132,38 +132,71 @@ The final example, Fig. \@ref(fig:froc-vs-afroc-plot3) shows that *when there is
 
 **The bottom line is that in all three cases the wAFROC yields the right conclusion, while the FROC comparison can only be made when the two performances are similar.**
 
-## Summary of simulations
-In order to get a better overview, the following table summarizes the numerical values from the plots in this chapter. 
 
-* The first column refers to the figure number, for example, 1 refers to Fig. \@ref(fig:froc-vs-afroc-plot1), 2 refers to Fig. \@ref(fig:froc-vs-afroc-plot2), and 3 refers to Fig. \@ref(fig:froc-vs-afroc-plot3).
-* The next column is labeled "CAD-FROC-A", meaning the CAD FROC plots labeled A. 
-* The next column is labeled "RAD-FROC-A", meaning the RAD FROC plots labeled A. 
-* The next column is labeled "CAD-FROC-C", meaning the CAD FROC plots labeled C.
-* Etc.
-* do: means ditto: the values in that column are identical.
+
+## Summary of simulations
+In order to get a better overview, the following tables summarize the numerical values from the plots in this chapter. The first table refers to CAD, and the second to the RAD observer.
+
+
+
 
 
 
 
 \begin{table}
 
-\caption{(\#tab:froc-paradigm-froc-vs-afroc-summary-table)Summary of simulations: Fig refers to the figure number in this chapter, A refers to plot A, B refers to plot B, etc. do: means ditto, i.e., same value as above.}
+\caption{(\#tab:froc-vs-afroc-summary-table-cad)Summary of CAD simulations: A refers to plot A, B refers to plot B, etc.}
 \centering
-\begin{tabular}[t]{l|l|l|l|l|l|l|l|l}
+\begin{tabular}[t]{l|l|l|l}
 \hline
-Fig & CAD-FROC-A & RAD-FROC-A & CAD-FROC-C & RAD-FROC-C & CAD-wAFROC-B & RAD-wAFROC-B & CAD-wAFROC-D & RAD-wAFROC-D\\
+FROC-A & FROC-C & wAFROC-B & wAFROC-D\\
 \hline
-1 & (0.8258, 0.5904) & (0.04917, 0.3981) & (1.002, 0.6048) & (0.6392, 0.775) & 0.5731 & 0.6737 & 0.5605 & 0.778\\
-\hline
-2 & do: & (0.015, 0.4212) & do: & (0.5, 0.8654) & do: & 0.7075 & do: & 0.872\\
-\hline
-3 & do: & (0.7458, 0.6644) & do: & (0.9008, 0.6779) & do: & 0.6341 & do: & 0.6238\\
+(0.8258, 0.5904) & (1.002, 0.6048) & 0.5731 & 0.5605\\
 \hline
 \end{tabular}
 \end{table}
 
+
+### Summary of CAD simulations
+* The first column is labeled "FROC-A", meaning the CAD FROC plots labeled A, which are identical for Fig. \@ref(fig:froc-vs-afroc-plot1), Fig. \@ref(fig:froc-vs-afroc-plot2) and Fig. \@ref(fig:froc-vs-afroc-plot3). 
+* The second column is labeled "FROC-C", meaning the CAD FROC plots labeled C, which are identical for the three figures. 
+* The third column is labeled "wAFROC-B", meaning the CAD wAFROC plots labeled B, which are identical for the three figures.
+* The last column is labeled "wAFROC-D", meaning the CAD wAFROC plots labeled D, which are identical for the three figures.
+
+
+
+
+
+\begin{table}
+
+\caption{(\#tab:froc-vs-afroc-summary-table-rad)Summary of RAD simulations: Fig refers to the figure number in this chapter, A refers to plot A, B refers to plot B, etc.}
+\centering
+\begin{tabular}[t]{l|l|l|l|l}
+\hline
+Fig & FROC-A & FROC-C & wAFROC-B & wAFROC-D\\
+\hline
+1 & (0.04917, 0.3981) & (0.6392, 0.775) & 0.6737 & 0.778\\
+\hline
+2 & (0.015, 0.4212) & (0.5, 0.8654) & 0.7075 & 0.872\\
+\hline
+3 & (0.7458, 0.6644) & (0.9008, 0.6779) & 0.6341 & 0.6238\\
+\hline
+\end{tabular}
+\end{table}
+
+
+### Summary of RAD simulations
+
+* The first column refers to the figure number, for example, "1" refers to Fig. \@ref(fig:froc-vs-afroc-plot1), "2" refers to Fig. \@ref(fig:froc-vs-afroc-plot2), and "3" refers to Fig. \@ref(fig:froc-vs-afroc-plot3).
+* The second column is labeled "FROC-A", meaning the RAD FROC plot labeled A. 
+* The third column is labeled "FROC-C", meaning the RAD FROC plots labeled C. 
+* The fourth column is labeled "wAFROC-B", meaning the RAD wAFROC plots labeled B.
+* The last column is labeled "wAFROC-D", meaning the RAD wAFROC plots labeled D.
+
+
 ## Comments {#froc-vs-wafroc-comments}
-TBA
+* The CAD plots are identical for the three figures. A *fixed* CAD dataset is being compared to *varying* RAD datasets.
+* 
 
 
 ## To be moved {#froc-vs-wafroc-to-move}

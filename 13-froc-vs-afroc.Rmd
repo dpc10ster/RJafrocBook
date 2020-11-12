@@ -1,4 +1,4 @@
-# FROC vs. wAFROC {#froc-paradigm-froc-vs-afroc}
+# FROC vs. wAFROC {#froc-vs-afroc}
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -222,16 +222,10 @@ grid.arrange(froc3A,wafroc3B,froc3C,wafroc3D,nrow=2,ncol=2)
 
 **The bottom line is that in all three cases the wAFROC yields the right conclusion, while the FROC comparison can only be made when the two performances are similar.**
 
+
+
 ## Summary of simulations
-In order to get a better overview, the following table summarizes the numerical values from the plots in this chapter. 
-
-* The first column refers to the figure number, for example, 1 refers to Fig. \@ref(fig:froc-vs-afroc-plot1), 2 refers to Fig. \@ref(fig:froc-vs-afroc-plot2), and 3 refers to Fig. \@ref(fig:froc-vs-afroc-plot3).
-* The next column is labeled "CAD-FROC-A", meaning the CAD FROC plots labeled A. 
-* The next column is labeled "RAD-FROC-A", meaning the RAD FROC plots labeled A. 
-* The next column is labeled "CAD-FROC-C", meaning the CAD FROC plots labeled C.
-* Etc.
-* do: means ditto: the values in that column are identical.
-
+In order to get a better overview, the following tables summarize the numerical values from the plots in this chapter. The first table refers to CAD, and the second to the RAD observer.
 
 ```{r, echo=FALSE}
 # extract coordinates of end-point
@@ -246,41 +240,88 @@ nlfRad3C <- max(froc3C$data$genAbscissa[froc3C$data$Reader == "R: RAD"])
 llfRad3C <- max(froc3C$data$genOrdinate[froc3C$data$Reader == "R: RAD"]) 
 ```
 
-```{r froc-paradigm-froc-vs-afroc-summary-table, echo=FALSE}
-tableCells = array(dim = c(3,9))
+
+```{r cad, echo=FALSE}
 dig <- 4
-tableCells[1,]  <- c("1", paste0("(", as.character(format(nlfCad1A, digits = dig)), ", ", as.character(format(llfCad1A, digits = dig)), ")"),
-                     paste0("(", as.character(format(nlfRad1A, digits = dig)), ", ", as.character(format(llfRad1A, digits = dig)), ")"),
-                     paste0("(", as.character(format(nlfCad1C, digits = dig)), ", ", as.character(format(llfCad1C, digits = dig)), ")"),
-                     paste0("(", as.character(format(nlfRad1C, digits = dig)), ", ", as.character(format(llfRad1C, digits = dig)), ")"),
-                     as.character(format(fomCad1B, digits = dig)),
-                     as.character(format(fomRad1B, digits = dig)),
-                     as.character(format(fomCad1D, digits = dig)),
-                     as.character(format(fomRad1D, digits = dig)))
-tableCells[2,]  <- c("2", "do:",
-                     paste0("(", as.character(format(nlfRad2A, digits = dig)), ", ", as.character(format(llfRad2A, digits = dig)), ")"),
-                     "do:",
-                     paste0("(", as.character(format(nlfRad2C, digits = dig)), ", ", as.character(format(llfRad2C, digits = dig)), ")"),
-                     "do:",
-                     as.character(format(fomRad2B, digits = dig)),
-                     "do:",
-                     as.character(format(fomRad2D, digits = dig)))
-tableCells[3,]  <- c("3", "do:",
-                     paste0("(", as.character(format(nlfRad3A, digits = dig)), ", ", as.character(format(llfRad3A, digits = dig)), ")"),
-                     "do:",
-                     paste0("(", as.character(format(nlfRad3C, digits = dig)), ", ", as.character(format(llfRad3C, digits = dig)), ")"),
-                     "do:",
-                     as.character(format(fomRad3B, digits = dig)),
-                     "do:",
-                     as.character(format(fomRad3D, digits = dig)))
-df <- as.data.frame(tableCells)
-rownames(df) <- c("1","2","3")
-colnames(df) <- c("Fig", "CAD-FROC-A","RAD-FROC-A","CAD-FROC-C","RAD-FROC-C","CAD-wAFROC-B", "RAD-wAFROC-B","CAD-wAFROC-D", "RAD-wAFROC-D")
-knitr::kable(df, caption = "Summary of simulations: Fig refers to the figure number in this chapter, A refers to plot A, B refers to plot B, etc. do: means ditto, i.e., same value as above.", escape = FALSE)
+
+cell1 <- paste0("(", as.character(format(nlfCad1A, digits = dig)), ", ", as.character(format(llfCad1A, digits = dig)), ")")
+cell2 <- paste0("(", as.character(format(nlfCad1C, digits = dig)), ", ", as.character(format(llfCad1C, digits = dig)), ")")
+cell3 <- as.character(format(fomCad1B, digits = dig))
+cell4 <- as.character(format(fomCad1D, digits = dig))
+
 ```
 
+
+```{r froc-vs-afroc-summary-table-cad, echo=FALSE}
+tableCells = array(dim = c(1,4))
+
+tableCells[1, 1]  <- cell1
+tableCells[1, 2]  <- cell2
+tableCells[1, 3]  <- cell3
+tableCells[1, 4]  <- cell4
+
+df <- as.data.frame(tableCells)
+colnames(df) <- c("FROC-A", "FROC-C", "wAFROC-B", "wAFROC-D")
+knitr::kable(df, caption = "Summary of CAD simulations: A refers to plot A, B refers to plot B, etc.", escape = FALSE)
+```
+
+
+### Summary of CAD simulations
+* The first column is labeled "FROC-A", meaning the CAD FROC plots labeled A, which are identical for Fig. \@ref(fig:froc-vs-afroc-plot1), Fig. \@ref(fig:froc-vs-afroc-plot2) and Fig. \@ref(fig:froc-vs-afroc-plot3). 
+* The second column is labeled "FROC-C", meaning the CAD FROC plots labeled C, which are identical for the three figures. 
+* The third column is labeled "wAFROC-B", meaning the CAD wAFROC plots labeled B, which are identical for the three figures.
+* The last column is labeled "wAFROC-D", meaning the CAD wAFROC plots labeled D, which are identical for the three figures.
+
+
+```{r, echo=FALSE}
+
+cell_11 <- "1"
+cell_12 <- paste0("(", as.character(format(nlfRad1A, digits = dig)), ", ", as.character(format(llfRad1A, digits = dig)), ")")
+cell_13 <- paste0("(", as.character(format(nlfRad1C, digits = dig)), ", ", as.character(format(llfRad1C, digits = dig)), ")")
+cell_14 <- as.character(format(fomRad1B, digits = dig))
+cell_15 <- as.character(format(fomRad1D, digits = dig))
+
+cell_21 <- "2"
+cell_22 <- paste0("(", as.character(format(nlfRad2A, digits = dig)), ", ", as.character(format(llfRad2A, digits = dig)), ")")
+cell_23 <- paste0("(", as.character(format(nlfRad2C, digits = dig)), ", ", as.character(format(llfRad2C, digits = dig)), ")")
+cell_24 <- as.character(format(fomRad2B, digits = dig))
+cell_25 <- as.character(format(fomRad2D, digits = dig))
+
+cell_31 <- "3"
+cell_32 <- paste0("(", as.character(format(nlfRad3A, digits = dig)), ", ", as.character(format(llfRad3A, digits = dig)), ")")
+cell_33 <- paste0("(", as.character(format(nlfRad3C, digits = dig)), ", ", as.character(format(llfRad3C, digits = dig)), ")")
+cell_34 <- as.character(format(fomRad3B, digits = dig))
+cell_35 <- as.character(format(fomRad3D, digits = dig))
+```
+
+
+```{r froc-vs-afroc-summary-table-rad, echo=FALSE}
+tableCells = array(dim = c(3,5))
+
+tableCells[1,]  <- c(cell_11, cell_12, cell_13, cell_14, cell_15)
+tableCells[2,]  <- c(cell_21, cell_22, cell_23, cell_24, cell_25)
+tableCells[3,]  <- c(cell_31, cell_32, cell_33, cell_34, cell_35)
+                     
+df <- as.data.frame(tableCells)
+rownames(df) <- c("1","2","3")
+colnames(df) <- c("Fig", "FROC-A", "FROC-C", "wAFROC-B", "wAFROC-D")
+knitr::kable(df, caption = "Summary of RAD simulations: Fig refers to the figure number in this chapter, A refers to plot A, B refers to plot B, etc.", escape = FALSE)
+```
+
+
+### Summary of RAD simulations
+
+* The first column refers to the figure number, for example, "1" refers to Fig. \@ref(fig:froc-vs-afroc-plot1), "2" refers to Fig. \@ref(fig:froc-vs-afroc-plot2), and "3" refers to Fig. \@ref(fig:froc-vs-afroc-plot3).
+* The second column is labeled "FROC-A", meaning the RAD FROC plot labeled A. 
+* The third column is labeled "FROC-C", meaning the RAD FROC plots labeled C. 
+* The fourth column is labeled "wAFROC-B", meaning the RAD wAFROC plots labeled B.
+* The last column is labeled "wAFROC-D", meaning the RAD wAFROC plots labeled D.
+
+
 ## Comments {#froc-vs-wafroc-comments}
-TBA
+* For the same figure label the CAD plots are identical for the three figures, i.e., a *fixed* CAD dataset is being compared to *varying* RAD datasets.
+* The first RAD dataset might be considered an average radiologist, the second one that is a super-expert and the third is only nominally better than CAD.
+* 
 
 
 ## To be moved {#froc-vs-wafroc-to-move}
