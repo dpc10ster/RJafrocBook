@@ -367,7 +367,7 @@ knitr::kable(df, caption = "Summary of RAD simulations: Fig refers to the figure
 -   The first RAD dataset, Fig. \@ref(fig:froc-vs-afroc-plot1) A or B, might be considered an average radiologist, the second one, Fig. \@ref(fig:froc-vs-afroc-plot2) A or B, is a super-expert and the third one, Fig. \@ref(fig:froc-vs-afroc-plot3) A or B, is only nominally better than CAD.
 -   Plots C and D are for hypothetical CAD and RAD readers that report all suspicious regions. The differences between A and C are minimal for the CAD observer, but marked for the RAD observer. Likewise for the differences between B and D.
 
-## FROC gives incorrect performance ordering {#froc-vs-wafroc-froc-incorrect-ordering}
+## TBA FROC gives incorrect performance ordering {#froc-vs-wafroc-froc-incorrect-ordering}
 
 Presented next are four plots arranged to best show the effect of a change in threshold for CAD and RAD. The plots are not new, in fact they are related to Fig. \@ref(fig:froc-vs-afroc-plot1) and Fig. \@ref(fig:froc-vs-afroc-plot2), but they are arranged differently. The explanation follows after the figure.
 
@@ -440,6 +440,42 @@ The essential reason why the wAFROC gives the correct ordering but the FROC does
 Note that the direction of the threshold-change effect depends on the starting point on the FROC: if one starts on the relatively flat portion of the FROC, then lowering the threshold all the way to $-\infty$ decreases performance; if one starts on the relatively steep portion, then lowering the threshold all the way to $-\infty$ increases performance. An intermediate starting point can be found where there is no threshold-change effect.
 
 The argument depends critically on the area under the straight line extension from the end-point to (1,1) being included in the wAFROC-AUC. If this were not allowed one could argue that the end-point of the blue curve (`r fpfRad2B`, `r llfRad2B`) -- quite visible as the sharp inflection in plot D -- lies on the same wAFROC curve as the end-point of the red curve (`r fpfRad2D`, `r llfRad2D`) -- not so readily visible. The justification for the straight line extension is deferred to Chapter \@ref(froc-meanings).
+
+
+## Finding optimal operating point on the FROC
+
+```{r, cache = TRUE, echo=FALSE}
+
+lambda <- nu <- 1
+mu <- 1
+K1 <- 500
+K2 <- 700
+zeta1Arr <- seq(-2,2,0.5)
+fomCad <- array(dim = length(zeta1Arr))
+Lmax <- 2
+seed <- 1
+set.seed(seed)
+Lk2 <- floor(runif(K2, 1, Lmax + 1))
+
+for (i in 1:length(zeta1Arr)) {
+  frocCad <- SimulateFrocDataset (
+    mu,
+    lambda,
+    nu,
+    zeta1 = zeta1Arr[i],
+    I = 1,
+    J = 1,
+    K1,
+    K2,
+    perCase = Lk2)
+  
+  frocCad$descriptions$readerID <- "CAD"
+  fomCad[i] <- UtilFigureOfMerit(frocCad, FOM = "wAFROC")
+  cat("zeta1 = ", zeta1Arr[i], "fom = ", as.numeric(fomCad[i]), "\n")
+  
+}
+
+```
 
 
 ## To be moved {#froc-vs-wafroc-to-move}
