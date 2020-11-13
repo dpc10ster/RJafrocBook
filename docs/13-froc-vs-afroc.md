@@ -19,7 +19,7 @@ This section examines RSM-predicted FROC and wAFROC plots for a simulated CAD (a
 
 
 ```{.r .numberLines}
-source(here("R/CH13-GenerateCadVsRadPlots/GenerateCadVsRadPlots.R"))
+source(here("R/CH13-CadVsRadPlots/CadVsRadPlots.R"))
 
 nu <- 1
 lambda <- 1
@@ -34,9 +34,11 @@ seed <- 1
 set.seed(seed)
 Lk2 <- floor(runif(K2, 1, Lmax + 1))
 
-ret1AB <- GenerateCadVsRadPlots (
+ret1AB <- CadVsRadPlots (
   muCad, 
   muRad, 
+  lambda, 
+  nu, 
   zeta1Cad, 
   zeta1Rad, 
   K1, 
@@ -52,9 +54,11 @@ wafroc_rad_1B <- ret1AB$fomRad
 zeta1Cad <- -Inf
 zeta1Rad <- -Inf
 
-ret1CD <- GenerateCadVsRadPlots (
+ret1CD <- CadVsRadPlots (
   muCad, 
   muRad, 
+  lambda, 
+  nu, 
   zeta1Cad, 
   zeta1Rad, 
   K1, 
@@ -68,9 +72,18 @@ wafroc_cad_1D <- ret1CD$fomCad
 wafroc_rad_1D <- ret1CD$fomRad
 ```
 
+
+
+<div class="figure">
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot1-1.png" alt="Plots A and B are for CAD $\zeta_1 = -1$ and RAD $\zeta_1 = 1.5$ and plots C and D are plots for CAD $\zeta_1 = -\infty$ and RAD $\zeta_1 = -\infty$. Plots A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot1)Plots A and B are for CAD $\zeta_1 = -1$ and RAD $\zeta_1 = 1.5$ and plots C and D are plots for CAD $\zeta_1 = -\infty$ and RAD $\zeta_1 = -\infty$. Plots A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves.</p>
+</div>
+
+
+
 Both CAD and RAD observers share the same $\lambda, \nu$. These are defined at lines 3 and 4 of the preceding code: $\lambda = \nu = 1$. The number of simulated cases is defined, lines 5-6, by $K_1 = 500$ and $K_2 = 700$. The simulated CAD observer $\mu$ parameter is defined at line 7 by by $\mu_{CAD} = 1$ and that of the simulated RAD observer is defined at line 8 by $\mu_{RAD} = 1.5$. The corresponding threshold parameters are (lines 9 -10) $\zeta_{1} = -1$ for CAD and $\zeta_{1} = 1.5$ for RAD. The maximum number of lesions per case is defined at line 11 by `Lmax` = 2. The actual number of lesions per case `Lk2` is determined at line 14 (`Lk2` is a $K_2$ length array consisting of random integers 1 or 2).
 
-Line 16 calls the helper function `GenerateCadVsRadPlots()` (the file containing this function is sourced at line 1), which calculates the FROC and wAFROC plots and other statistics. The FROC is extracted at line 26 and labeled A, while the wAFROC is extracted at line 27 and labeled B. The following code extracts the coordinates of the end-points of the respective curves.
+Line 16 calls the helper function `CadVsRadPlots()` (the file containing this function is sourced at line 1), which calculates the FROC and wAFROC plots and other statistics. The FROC is extracted at line 26 and labeled A, while the wAFROC is extracted at line 27 and labeled B. The following code extracts the coordinates of the end-points of the respective curves.
 
 
 ```r
@@ -86,11 +99,6 @@ nlfRad1C <- max(froc_plot_1C$data$genAbscissa[froc_plot_1C$data$Reader == "R: RA
 llfRad1C <- max(froc_plot_1C$data$genOrdinate[froc_plot_1C$data$Reader == "R: RAD"]) 
 ```
 
-<div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot1-1.png" alt="Plots A and B are for CAD $\zeta_1 = -1$ and RAD $\zeta_1 = 1.5$ and plots C and D are plots for CAD $\zeta_1 = -\infty$ and RAD $\zeta_1 = -\infty$. Plots A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot1)Plots A and B are for CAD $\zeta_1 = -1$ and RAD $\zeta_1 = 1.5$ and plots C and D are plots for CAD $\zeta_1 = -\infty$ and RAD $\zeta_1 = -\infty$. Plots A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves.</p>
-</div>
-
 The coordinates of the end-point of the CAD FROC in plot A are (0.8258333, 0.5903846). Those of the RAD FROC plot in A are (0.0491667, 0.3980769). The FROC for the CAD observer extends to much larger NLF values while that for the RAD observer is relatively short and steeper, as in Fig. \@ref(fig:froc-vs-afroc-plot1), plot A. One suspects the RAD observer is performing better than CAD. He is better at finding lesions and producing fewer NLs, both of which are desirable characteristics. One suspects that *if* he could be induced to relax the threshold and report more NLs, his LLF would exceed that of the CAD observer while still maintaining a lower $\text{NLF}_{\text{max}}$. However, lacking the ability to induce the radiologist to relax his threshold, it is not possible to quantify this suspicion from the observed FROC curves. [^froc-vs-afroc-1]
 
 [^froc-vs-afroc-1]: The basic issue is the lack of a common NLF range for the two plots. If a common NLF range is "forced", for example defined as the common NLF range 0 to 0.0491667 where both curves contribute, it would ignore most NLs from the CAD observer.
@@ -101,7 +109,7 @@ wAFROC curves, for the same datasets, whose FROC curves are shown in plot A, are
 
 [^froc-vs-afroc-2]: Because the RAD observer is adopting a high threshold $\zeta_1 = 1.5$, his $\text{LLF}_{\text{max}}$ is smaller than it would have been with a lower threshold, and consequently the area under the large straight line segment from the uppermost non-trivial operating point to (1,1) is smaller than would have been the case with a lower threshold.
 
-Since plots A and B are based on different choices of lowest reporting threshold, it is pertinent to ask what happens for identical thresholds. Lines 31-32 set the two threshold parameters to $-\infty$ and line 34 calls the function `GenerateCadVsRadPlots()` with these new values. The FROC is extracted at line 44 and labeled C, while the wAFROC is extracted at line 45 and labeled D.
+Since plots A and B are based on different choices of lowest reporting threshold, it is pertinent to ask what happens for identical thresholds. Lines 31-32 set the two threshold parameters to $-\infty$ and line 34 calls the function `CadVsRadPlots()` with these new values. The FROC is extracted at line 44 and labeled C, while the wAFROC is extracted at line 45 and labeled D.
 
 The coordinates of the end-point of the CAD FROC in plot C are (1.0025, 0.6048077). Those of the RAD FROC plot in C are (0.6391667, 0.775). The RAD observer has higher LLF at lower NLF, and there is no doubt that he is better. Plot C confirms that RAD is actually the better observer *over his entire NLF range*.
 
@@ -128,9 +136,9 @@ Plots C and D correspond to A and B, respectively, with $\zeta_1$ = $-\infty$ fo
 
 Fig. \@ref(fig:froc-vs-afroc-plot2) (A) FROC curves for CAD observer and the RAD observer. The CAD observer is identical to that shown in Fig. \@ref(fig:froc-vs-afroc-plot1). The RAD observer is characterized by $\mu = 2$ and $\zeta_1 = 2$. This time it is impossible to compare the two FROC curves, as the common range is very small. However, wAFROC, plot B, clearly shows the expected superiority of the RAD observer, in spite of the severe underestimate of the corresponding AUC. 
 
-### Small difference in performance
+### Small difference in performance, identical thresholds
 
-The final example, Fig. \@ref(fig:froc-vs-afroc-plot3) shows that *when there is a small difference in performance*, there is less ambiguity in using the FROC as a basis for measuring performance. The CAD parameters are the same as in Fig. \@ref(fig:froc-vs-afroc-plot1) but the RAD parameters are $\mu = 1.1$ and $\zeta_1= -1$. This time there is much more common NLF range overlap in plot A and one is counting most of the marks for the CAD reader. The superior wAFROC-based performance of RAD is also apparent in B. Plots C and D correspond to $\zeta_1 = -\infty$, and they confirm the similar performances (apparent in plots A and B) with a slight superiority for RAD.
+The final example, Fig. \@ref(fig:froc-vs-afroc-plot3) shows that *when there is a small difference in performance*, there is less ambiguity in using the FROC as a basis for measuring performance. The CAD parameters are the same as in Fig. \@ref(fig:froc-vs-afroc-plot1) but the RAD parameters are $\mu = 1.1$ and $\zeta_1= -1$. In other words, the $\mu$ parameter is 10% larger and the thresholds are identical. This time there is much more common NLF range overlap in plot A and one is counting most of the marks for the CAD reader. The superior wAFROC-based performance of RAD is also apparent in B. Plots C and D correspond to $\zeta_1 = -\infty$, and they confirm the similar performances (apparent in plots A and B) with a slight superiority for RAD.
 
 
 
@@ -235,11 +243,75 @@ In order to get a better overview, the following tables summarize the numerical 
 * The first RAD dataset, Fig. \@ref(fig:froc-vs-afroc-plot1) A or B, might be considered an average radiologist, the second one, Fig. \@ref(fig:froc-vs-afroc-plot2) A or B, is a super-expert and the third one, Fig. \@ref(fig:froc-vs-afroc-plot3) A or B, is only nominally better than CAD.
 * Plots C and D are for hypothetical CAD and RAD readers that report all suspicious regions. The differences between A and C are minimal for the CAD observer, but marked for the RAD observer. Likewise for the differences between B and D.
 
-## FROC gives incorrect performance ordering {#froc-vs-wafroc-froc-incorrect-ordering}
-* With reference to Table \@ref(tab:froc-vs-afroc-summary-table-cad), consider the differences between FROC-A and FROC-C: both end-point NLF and LLF *increase* when $\zeta_1$ is reduced from -1 to $-\infty$. The observer in A and that in C are operating on the same underlying FROC curve: A's end-point is lower than C's end-point because A's threshold is higher. **If one believes that a change in reporting threshold should not affect performance, then their performances, according to FROC curve, are identical. [In the ROC paradigm two points on the same underlying ROC curve represent the same intrinsic performance -- all that is happening is that they are employing different thresholds that represent different tradeoffs between sensitivity and specificity.] But, extending this concept to the FROC curve leads to a wrong conclusion -- see next point.**
-* The difference between CAD wAFROC-B (0.5730971) and CAD wAFROC-D (0.5604857`) are in the opposite direction. This is not a sampling artifact. **The wAFROC gives the correct ordering of the two observers, one that is missed by the FROC.** The wAFROC, being contained in the unit square, gives the complete picture. The FROC, not constrained to the unit square, does not.
-* The argument can be made more convincing by comparing the RAD observers' FROC curves in Fig. \@ref(fig:froc-vs-afroc-plot2) A and C. The RAD-FROC curve for A is a short near vertical segment from (0,0) to (0.015, 0.4211538). That for the RAD-FROC curve for C is a sweeping curve all the way from (0,0) to (0.5, 0.8653846). Since the two well-separated end-points lie on the same underlying FROC curve, the performances must be identical. But look at the corresponding wAFROC AUCs: plot B yields wAFROC AUC = 0.7075193, while plot D yields wAFROC AUC = 0.8720286. A dramatic difference.   
 
+```r
+source(here("R/CH13-CadVsRadPlots/CadVsRadPlots.R"))
+
+nu <- 1
+lambda <- 1
+K1 <- 500
+K2 <- 700
+muCad <- 1.0
+muRad <- 2.0
+zeta1Cad <- -1
+zeta1Rad <- 2.0
+Lmax <- 2
+seed <- 1
+set.seed(seed)
+Lk2 <- floor(runif(K2, 1, Lmax + 1))
+
+ret4AB <- ZetaEffectPlots (
+  muCad, 
+  lambda, 
+  nu, 
+  zeta1Cad, 
+  K1, 
+  K2, 
+  Lk2, 
+  seed,
+  label = "CAD-")
+
+froc_plot_4A <- ret4AB$froc$Plot + labs(tag = "A")
+wafroc_plot_4B <- ret4AB$wafroc$Plot + labs(tag = "B")
+wafroc_zeta1_4B <- ret4AB$fomCad
+wafroc_negInf_4B <- ret4AB$fomRad
+
+ret4CD <- ZetaEffectPlots (
+  muRad, 
+  lambda, 
+  nu, 
+  zeta1Rad, 
+  K1, 
+  K2, 
+  Lk2, 
+  seed,
+  label = "RAD-")
+
+froc_plot_4C <- ret4CD$froc$Plot + labs(tag = "C")
+wafroc_plot_4D <- ret4CD$wafroc$Plot + labs(tag = "D")
+wafroc_zeta1_4D <- ret4CD$fom_zeta1
+wafroc_negInf_4D <- ret4CD$fom_negInf
+```
+
+
+
+<div class="figure">
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot4-1.png" alt="Plot A is the CAD FROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = -1$ and the red plot, which is mostly buried under the blue plot, but the red extension is visible, is for $\zeta_1 = -\infty$. Plot B is the CAD wAFROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = -1$ and the red plot is for $\zeta_1 = -\infty$." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot4)Plot A is the CAD FROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = -1$ and the red plot, which is mostly buried under the blue plot, but the red extension is visible, is for $\zeta_1 = -\infty$. Plot B is the CAD wAFROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = -1$ and the red plot is for $\zeta_1 = -\infty$.</p>
+</div>
+
+
+<div class="figure">
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot5-1.png" alt="Plot C is the RAD FROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = 2$ and the red plot, which is partially buried under the blue plot, but the red extension is visible, is for $\zeta_1 = -\infty$. Plot D is the RAD wAFROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = 2$ and the red plot is for $\zeta_1 = -\infty$." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot5)Plot C is the RAD FROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = 2$ and the red plot, which is partially buried under the blue plot, but the red extension is visible, is for $\zeta_1 = -\infty$. Plot D is the RAD wAFROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = 2$ and the red plot is for $\zeta_1 = -\infty$.</p>
+</div>
+
+
+## FROC gives incorrect performance ordering {#froc-vs-wafroc-froc-incorrect-ordering}
+1. With reference to Table \@ref(tab:froc-vs-afroc-summary-table-cad), consider the differences between FROC-A and FROC-C: both end-point NLF and LLF *increase* when $\zeta_1$ is reduced from -1 to $-\infty$. The observer in A and that in C are operating on the same underlying FROC curve: A's end-point is lower than C's end-point because A's threshold is higher. **If one believes that a change in reporting threshold should not affect performance, then their performances, according to FROC curve, are identical. [In the ROC paradigm two points on the same underlying ROC curve represent the same intrinsic performance -- all that is happening is that they are employing different thresholds that represent different tradeoffs between sensitivity and specificity.] But, extending this concept to the FROC curve leads to a wrong conclusion -- see next point.**
+1. The difference between CAD wAFROC-B (0.5730971) and CAD wAFROC-D (0.5604857`) are in the opposite direction. This is not a sampling artifact. **The wAFROC gives the correct ordering of the two observers, one that is missed by the FROC.** The wAFROC, being contained in the unit square, gives the complete picture. The FROC, not constrained to the unit square, does not.
+1. The argument can be made more convincing by comparing the RAD observers' FROC curves in Fig. \@ref(fig:froc-vs-afroc-plot2) A and C. The RAD-FROC curve for A is a short near vertical segment from (0,0) to (0.015, 0.4211538). That for the RAD-FROC curve for C is a sweeping curve all the way from (0,0) to (0.5, 0.8653846). Since the two well-separated end-points lie on the same underlying FROC curve, the performances must be identical. But look at the corresponding wAFROC AUCs: plot B yields wAFROC AUC = 0.7075193, while plot D yields wAFROC AUC = 0.8720286. A dramatic difference.   
+1. 
 
 ## To be moved {#froc-vs-wafroc-to-move}
 A misconception exists that using the rating of only one NL mark, as in wAFROC, must sacrifice statistical power. In fact, the chosen mark is a special one, namely the highest rated NL mark on a non-diseased case, which carries more information than a randomly chosen NL mark. If the sampling distribution of the z-sample were uniform, then the highest sample is a sufficient statistic, meaning that it carries all the information in the samples. The highest rated z-sampler from a normal distribution is not a sufficient statistic, so there is some loss of information, but not as much as would occur with a randomly picked z-sample. 

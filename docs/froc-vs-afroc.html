@@ -24,7 +24,7 @@
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2020-11-12" />
+<meta name="date" content="2020-11-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -621,7 +621,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="19.2" data-path="froc-vs-afroc.html"><a href="froc-vs-afroc.html#froc-vs.-wafroc"><i class="fa fa-check"></i><b>19.2</b> FROC vs. wAFROC</a>
 <ul>
 <li class="chapter" data-level="19.2.1" data-path="froc-vs-afroc.html"><a href="froc-vs-afroc.html#large-difference-in-performance"><i class="fa fa-check"></i><b>19.2.1</b> Large difference in performance</a></li>
-<li class="chapter" data-level="19.2.2" data-path="froc-vs-afroc.html"><a href="froc-vs-afroc.html#small-difference-in-performance"><i class="fa fa-check"></i><b>19.2.2</b> Small difference in performance</a></li>
+<li class="chapter" data-level="19.2.2" data-path="froc-vs-afroc.html"><a href="froc-vs-afroc.html#small-difference-in-performance-identical-thresholds"><i class="fa fa-check"></i><b>19.2.2</b> Small difference in performance, identical thresholds</a></li>
 </ul></li>
 <li class="chapter" data-level="19.3" data-path="froc-vs-afroc.html"><a href="froc-vs-afroc.html#summary-of-simulations"><i class="fa fa-check"></i><b>19.3</b> Summary of simulations</a>
 <ul>
@@ -760,7 +760,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="froc-vs.-wafroc" class="section level2" number="19.2">
 <h2><span class="header-section-number">19.2</span> FROC vs. wAFROC</h2>
 <p>This section examines RSM-predicted FROC and wAFROC plots for a simulated CAD (algorithmic) and RAD (radiologist) observers. Recall, from Section <a href="RocSampleSizeOR.html#froc-paradigm-preview-rsm">16.11</a>, that the RSM is defined by 3 parameters <span class="math inline">\(\mu, \lambda, \nu\)</span> and the lowest reporting threshold parameter <span class="math inline">\(\zeta_1\)</span> which determines if latent localizations are actually marked.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb1-1"><a href="froc-vs-afroc.html#cb1-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;R/CH13-GenerateCadVsRadPlots/GenerateCadVsRadPlots.R&quot;</span>))</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb1-1"><a href="froc-vs-afroc.html#cb1-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;R/CH13-CadVsRadPlots/CadVsRadPlots.R&quot;</span>))</span>
 <span id="cb1-2"><a href="froc-vs-afroc.html#cb1-2"></a></span>
 <span id="cb1-3"><a href="froc-vs-afroc.html#cb1-3"></a>nu <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb1-4"><a href="froc-vs-afroc.html#cb1-4"></a>lambda <span class="ot">&lt;-</span> <span class="dv">1</span></span>
@@ -775,40 +775,50 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-13"><a href="froc-vs-afroc.html#cb1-13"></a><span class="fu">set.seed</span>(seed)</span>
 <span id="cb1-14"><a href="froc-vs-afroc.html#cb1-14"></a>Lk2 <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(K2, <span class="dv">1</span>, Lmax <span class="sc">+</span> <span class="dv">1</span>))</span>
 <span id="cb1-15"><a href="froc-vs-afroc.html#cb1-15"></a></span>
-<span id="cb1-16"><a href="froc-vs-afroc.html#cb1-16"></a>ret1AB <span class="ot">&lt;-</span> <span class="fu">GenerateCadVsRadPlots</span> (</span>
+<span id="cb1-16"><a href="froc-vs-afroc.html#cb1-16"></a>ret1AB <span class="ot">&lt;-</span> <span class="fu">CadVsRadPlots</span> (</span>
 <span id="cb1-17"><a href="froc-vs-afroc.html#cb1-17"></a>  muCad, </span>
 <span id="cb1-18"><a href="froc-vs-afroc.html#cb1-18"></a>  muRad, </span>
-<span id="cb1-19"><a href="froc-vs-afroc.html#cb1-19"></a>  zeta1Cad, </span>
-<span id="cb1-20"><a href="froc-vs-afroc.html#cb1-20"></a>  zeta1Rad, </span>
-<span id="cb1-21"><a href="froc-vs-afroc.html#cb1-21"></a>  K1, </span>
-<span id="cb1-22"><a href="froc-vs-afroc.html#cb1-22"></a>  K2, </span>
-<span id="cb1-23"><a href="froc-vs-afroc.html#cb1-23"></a>  Lk2, </span>
-<span id="cb1-24"><a href="froc-vs-afroc.html#cb1-24"></a>  seed)</span>
-<span id="cb1-25"><a href="froc-vs-afroc.html#cb1-25"></a></span>
-<span id="cb1-26"><a href="froc-vs-afroc.html#cb1-26"></a>froc_plot_1A <span class="ot">&lt;-</span> ret1AB<span class="sc">$</span>froc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;A&quot;</span>)</span>
-<span id="cb1-27"><a href="froc-vs-afroc.html#cb1-27"></a>wafroc_plot_1B <span class="ot">&lt;-</span> ret1AB<span class="sc">$</span>wafroc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;B&quot;</span>)</span>
-<span id="cb1-28"><a href="froc-vs-afroc.html#cb1-28"></a>wafroc_cad_1B <span class="ot">&lt;-</span> ret1AB<span class="sc">$</span>fomCad</span>
-<span id="cb1-29"><a href="froc-vs-afroc.html#cb1-29"></a>wafroc_rad_1B <span class="ot">&lt;-</span> ret1AB<span class="sc">$</span>fomRad</span>
-<span id="cb1-30"><a href="froc-vs-afroc.html#cb1-30"></a></span>
-<span id="cb1-31"><a href="froc-vs-afroc.html#cb1-31"></a>zeta1Cad <span class="ot">&lt;-</span> <span class="sc">-</span><span class="cn">Inf</span></span>
-<span id="cb1-32"><a href="froc-vs-afroc.html#cb1-32"></a>zeta1Rad <span class="ot">&lt;-</span> <span class="sc">-</span><span class="cn">Inf</span></span>
-<span id="cb1-33"><a href="froc-vs-afroc.html#cb1-33"></a></span>
-<span id="cb1-34"><a href="froc-vs-afroc.html#cb1-34"></a>ret1CD <span class="ot">&lt;-</span> <span class="fu">GenerateCadVsRadPlots</span> (</span>
-<span id="cb1-35"><a href="froc-vs-afroc.html#cb1-35"></a>  muCad, </span>
-<span id="cb1-36"><a href="froc-vs-afroc.html#cb1-36"></a>  muRad, </span>
-<span id="cb1-37"><a href="froc-vs-afroc.html#cb1-37"></a>  zeta1Cad, </span>
-<span id="cb1-38"><a href="froc-vs-afroc.html#cb1-38"></a>  zeta1Rad, </span>
-<span id="cb1-39"><a href="froc-vs-afroc.html#cb1-39"></a>  K1, </span>
-<span id="cb1-40"><a href="froc-vs-afroc.html#cb1-40"></a>  K2, </span>
-<span id="cb1-41"><a href="froc-vs-afroc.html#cb1-41"></a>  Lk2, </span>
-<span id="cb1-42"><a href="froc-vs-afroc.html#cb1-42"></a>  seed)</span>
-<span id="cb1-43"><a href="froc-vs-afroc.html#cb1-43"></a></span>
-<span id="cb1-44"><a href="froc-vs-afroc.html#cb1-44"></a>froc_plot_1C <span class="ot">&lt;-</span> ret1CD<span class="sc">$</span>froc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;C&quot;</span>)</span>
-<span id="cb1-45"><a href="froc-vs-afroc.html#cb1-45"></a>wafroc_plot_1D <span class="ot">&lt;-</span> ret1CD<span class="sc">$</span>wafroc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;D&quot;</span>)</span>
-<span id="cb1-46"><a href="froc-vs-afroc.html#cb1-46"></a>wafroc_cad_1D <span class="ot">&lt;-</span> ret1CD<span class="sc">$</span>fomCad</span>
-<span id="cb1-47"><a href="froc-vs-afroc.html#cb1-47"></a>wafroc_rad_1D <span class="ot">&lt;-</span> ret1CD<span class="sc">$</span>fomRad</span></code></pre></div>
+<span id="cb1-19"><a href="froc-vs-afroc.html#cb1-19"></a>  lambda, </span>
+<span id="cb1-20"><a href="froc-vs-afroc.html#cb1-20"></a>  nu, </span>
+<span id="cb1-21"><a href="froc-vs-afroc.html#cb1-21"></a>  zeta1Cad, </span>
+<span id="cb1-22"><a href="froc-vs-afroc.html#cb1-22"></a>  zeta1Rad, </span>
+<span id="cb1-23"><a href="froc-vs-afroc.html#cb1-23"></a>  K1, </span>
+<span id="cb1-24"><a href="froc-vs-afroc.html#cb1-24"></a>  K2, </span>
+<span id="cb1-25"><a href="froc-vs-afroc.html#cb1-25"></a>  Lk2, </span>
+<span id="cb1-26"><a href="froc-vs-afroc.html#cb1-26"></a>  seed)</span>
+<span id="cb1-27"><a href="froc-vs-afroc.html#cb1-27"></a></span>
+<span id="cb1-28"><a href="froc-vs-afroc.html#cb1-28"></a>froc_plot_1A <span class="ot">&lt;-</span> ret1AB<span class="sc">$</span>froc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;A&quot;</span>)</span>
+<span id="cb1-29"><a href="froc-vs-afroc.html#cb1-29"></a>wafroc_plot_1B <span class="ot">&lt;-</span> ret1AB<span class="sc">$</span>wafroc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;B&quot;</span>)</span>
+<span id="cb1-30"><a href="froc-vs-afroc.html#cb1-30"></a>wafroc_cad_1B <span class="ot">&lt;-</span> ret1AB<span class="sc">$</span>fomCad</span>
+<span id="cb1-31"><a href="froc-vs-afroc.html#cb1-31"></a>wafroc_rad_1B <span class="ot">&lt;-</span> ret1AB<span class="sc">$</span>fomRad</span>
+<span id="cb1-32"><a href="froc-vs-afroc.html#cb1-32"></a></span>
+<span id="cb1-33"><a href="froc-vs-afroc.html#cb1-33"></a>zeta1Cad <span class="ot">&lt;-</span> <span class="sc">-</span><span class="cn">Inf</span></span>
+<span id="cb1-34"><a href="froc-vs-afroc.html#cb1-34"></a>zeta1Rad <span class="ot">&lt;-</span> <span class="sc">-</span><span class="cn">Inf</span></span>
+<span id="cb1-35"><a href="froc-vs-afroc.html#cb1-35"></a></span>
+<span id="cb1-36"><a href="froc-vs-afroc.html#cb1-36"></a>ret1CD <span class="ot">&lt;-</span> <span class="fu">CadVsRadPlots</span> (</span>
+<span id="cb1-37"><a href="froc-vs-afroc.html#cb1-37"></a>  muCad, </span>
+<span id="cb1-38"><a href="froc-vs-afroc.html#cb1-38"></a>  muRad, </span>
+<span id="cb1-39"><a href="froc-vs-afroc.html#cb1-39"></a>  lambda, </span>
+<span id="cb1-40"><a href="froc-vs-afroc.html#cb1-40"></a>  nu, </span>
+<span id="cb1-41"><a href="froc-vs-afroc.html#cb1-41"></a>  zeta1Cad, </span>
+<span id="cb1-42"><a href="froc-vs-afroc.html#cb1-42"></a>  zeta1Rad, </span>
+<span id="cb1-43"><a href="froc-vs-afroc.html#cb1-43"></a>  K1, </span>
+<span id="cb1-44"><a href="froc-vs-afroc.html#cb1-44"></a>  K2, </span>
+<span id="cb1-45"><a href="froc-vs-afroc.html#cb1-45"></a>  Lk2, </span>
+<span id="cb1-46"><a href="froc-vs-afroc.html#cb1-46"></a>  seed)</span>
+<span id="cb1-47"><a href="froc-vs-afroc.html#cb1-47"></a></span>
+<span id="cb1-48"><a href="froc-vs-afroc.html#cb1-48"></a>froc_plot_1C <span class="ot">&lt;-</span> ret1CD<span class="sc">$</span>froc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;C&quot;</span>)</span>
+<span id="cb1-49"><a href="froc-vs-afroc.html#cb1-49"></a>wafroc_plot_1D <span class="ot">&lt;-</span> ret1CD<span class="sc">$</span>wafroc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;D&quot;</span>)</span>
+<span id="cb1-50"><a href="froc-vs-afroc.html#cb1-50"></a>wafroc_cad_1D <span class="ot">&lt;-</span> ret1CD<span class="sc">$</span>fomCad</span>
+<span id="cb1-51"><a href="froc-vs-afroc.html#cb1-51"></a>wafroc_rad_1D <span class="ot">&lt;-</span> ret1CD<span class="sc">$</span>fomRad</span></code></pre></div>
+<div class="figure"><span id="fig:froc-vs-afroc-plot1"></span>
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot1-1.png" alt="Plots A and B are for CAD $\zeta_1 = -1$ and RAD $\zeta_1 = 1.5$ and plots C and D are plots for CAD $\zeta_1 = -\infty$ and RAD $\zeta_1 = -\infty$. Plots A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves." width="672" />
+<p class="caption">
+FIGURE 19.1: Plots A and B are for CAD <span class="math inline">\(\zeta_1 = -1\)</span> and RAD <span class="math inline">\(\zeta_1 = 1.5\)</span> and plots C and D are plots for CAD <span class="math inline">\(\zeta_1 = -\infty\)</span> and RAD <span class="math inline">\(\zeta_1 = -\infty\)</span>. Plots A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves.
+</p>
+</div>
 <p>Both CAD and RAD observers share the same <span class="math inline">\(\lambda, \nu\)</span>. These are defined at lines 3 and 4 of the preceding code: <span class="math inline">\(\lambda = \nu = 1\)</span>. The number of simulated cases is defined, lines 5-6, by <span class="math inline">\(K_1 = 500\)</span> and <span class="math inline">\(K_2 = 700\)</span>. The simulated CAD observer <span class="math inline">\(\mu\)</span> parameter is defined at line 7 by by <span class="math inline">\(\mu_{CAD} = 1\)</span> and that of the simulated RAD observer is defined at line 8 by <span class="math inline">\(\mu_{RAD} = 1.5\)</span>. The corresponding threshold parameters are (lines 9 -10) <span class="math inline">\(\zeta_{1} = -1\)</span> for CAD and <span class="math inline">\(\zeta_{1} = 1.5\)</span> for RAD. The maximum number of lesions per case is defined at line 11 by <code>Lmax</code> = 2. The actual number of lesions per case <code>Lk2</code> is determined at line 14 (<code>Lk2</code> is a <span class="math inline">\(K_2\)</span> length array consisting of random integers 1 or 2).</p>
-<p>Line 16 calls the helper function <code>GenerateCadVsRadPlots()</code> (the file containing this function is sourced at line 1), which calculates the FROC and wAFROC plots and other statistics. The FROC is extracted at line 26 and labeled A, while the wAFROC is extracted at line 27 and labeled B. The following code extracts the coordinates of the end-points of the respective curves.</p>
+<p>Line 16 calls the helper function <code>CadVsRadPlots()</code> (the file containing this function is sourced at line 1), which calculates the FROC and wAFROC plots and other statistics. The FROC is extracted at line 26 and labeled A, while the wAFROC is extracted at line 27 and labeled B. The following code extracts the coordinates of the end-points of the respective curves.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="froc-vs-afroc.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract coordinates of end-point</span></span>
 <span id="cb2-2"><a href="froc-vs-afroc.html#cb2-2" aria-hidden="true" tabindex="-1"></a>nlfCad1A <span class="ot">&lt;-</span> <span class="fu">max</span>(froc_plot_1A<span class="sc">$</span>data<span class="sc">$</span>genAbscissa[froc_plot_1A<span class="sc">$</span>data<span class="sc">$</span>Reader <span class="sc">==</span> <span class="st">&quot;R: CAD&quot;</span>]) </span>
 <span id="cb2-3"><a href="froc-vs-afroc.html#cb2-3" aria-hidden="true" tabindex="-1"></a>llfCad1A <span class="ot">&lt;-</span> <span class="fu">max</span>(froc_plot_1A<span class="sc">$</span>data<span class="sc">$</span>genOrdinate[froc_plot_1A<span class="sc">$</span>data<span class="sc">$</span>Reader <span class="sc">==</span> <span class="st">&quot;R: CAD&quot;</span>]) </span>
@@ -819,16 +829,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-8"><a href="froc-vs-afroc.html#cb2-8" aria-hidden="true" tabindex="-1"></a>llfCad1C <span class="ot">&lt;-</span> <span class="fu">max</span>(froc_plot_1C<span class="sc">$</span>data<span class="sc">$</span>genOrdinate[froc_plot_1C<span class="sc">$</span>data<span class="sc">$</span>Reader <span class="sc">==</span> <span class="st">&quot;R: CAD&quot;</span>]) </span>
 <span id="cb2-9"><a href="froc-vs-afroc.html#cb2-9" aria-hidden="true" tabindex="-1"></a>nlfRad1C <span class="ot">&lt;-</span> <span class="fu">max</span>(froc_plot_1C<span class="sc">$</span>data<span class="sc">$</span>genAbscissa[froc_plot_1C<span class="sc">$</span>data<span class="sc">$</span>Reader <span class="sc">==</span> <span class="st">&quot;R: RAD&quot;</span>]) </span>
 <span id="cb2-10"><a href="froc-vs-afroc.html#cb2-10" aria-hidden="true" tabindex="-1"></a>llfRad1C <span class="ot">&lt;-</span> <span class="fu">max</span>(froc_plot_1C<span class="sc">$</span>data<span class="sc">$</span>genOrdinate[froc_plot_1C<span class="sc">$</span>data<span class="sc">$</span>Reader <span class="sc">==</span> <span class="st">&quot;R: RAD&quot;</span>]) </span></code></pre></div>
-<div class="figure"><span id="fig:froc-vs-afroc-plot1"></span>
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot1-1.png" alt="Plots A and B are for CAD $\zeta_1 = -1$ and RAD $\zeta_1 = 1.5$ and plots C and D are plots for CAD $\zeta_1 = -\infty$ and RAD $\zeta_1 = -\infty$. Plots A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves." width="672" />
-<p class="caption">
-FIGURE 19.1: Plots A and B are for CAD <span class="math inline">\(\zeta_1 = -1\)</span> and RAD <span class="math inline">\(\zeta_1 = 1.5\)</span> and plots C and D are plots for CAD <span class="math inline">\(\zeta_1 = -\infty\)</span> and RAD <span class="math inline">\(\zeta_1 = -\infty\)</span>. Plots A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves.
-</p>
-</div>
 <p>The coordinates of the end-point of the CAD FROC in plot A are (0.8258333, 0.5903846). Those of the RAD FROC plot in A are (0.0491667, 0.3980769). The FROC for the CAD observer extends to much larger NLF values while that for the RAD observer is relatively short and steeper, as in Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot1">19.1</a>, plot A. One suspects the RAD observer is performing better than CAD. He is better at finding lesions and producing fewer NLs, both of which are desirable characteristics. One suspects that <em>if</em> he could be induced to relax the threshold and report more NLs, his LLF would exceed that of the CAD observer while still maintaining a lower <span class="math inline">\(\text{NLF}_{\text{max}}\)</span>. However, lacking the ability to induce the radiologist to relax his threshold, it is not possible to quantify this suspicion from the observed FROC curves.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <p>CAD algorithm developers typically quote LLF at a specified NLF. According to the two plots in A, the RAD observer is better if the NLF value is chosen to less than 0.0491667 (this is the maximum NLF value for the RAD plot in A) but there is no basis for comparison for larger values of NLF (because the RAD observer does not provide any data beyond the observed end-point). A similar problem was encountered in ROC analysis when comparing a pair of sensitivity-specificity values, where, given differing choices of thresholds, ambiguous results can be obtained, see Section <a href="binary-task.html#binary-task-beam-study">3.12</a>. Indeed, this was the rationale for using AUC under the ROC curve as an unambiguous measure of performance.</p>
 <p>wAFROC curves, for the same datasets, whose FROC curves are shown in plot A, are shown in plot B. <strong>Like the ROC, the wAFROC is contained within the unit square, a highly desirable characteristic, which solves the lack of a common NLF range problem with the FROC.</strong> The wAFROC AUC under the RAD observer is visibly greater than that for the CAD observer, even though – due to his higher threshold – his AUC estimate is actually biased downward against him.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> AUCs under the two wAFROC plots in B are 0.5730971 for CAD and 0.67371 for RAD, consistent with the visual impression of RAD &gt; CAD.</p>
-<p>Since plots A and B are based on different choices of lowest reporting threshold, it is pertinent to ask what happens for identical thresholds. Lines 31-32 set the two threshold parameters to <span class="math inline">\(-\infty\)</span> and line 34 calls the function <code>GenerateCadVsRadPlots()</code> with these new values. The FROC is extracted at line 44 and labeled C, while the wAFROC is extracted at line 45 and labeled D.</p>
+<p>Since plots A and B are based on different choices of lowest reporting threshold, it is pertinent to ask what happens for identical thresholds. Lines 31-32 set the two threshold parameters to <span class="math inline">\(-\infty\)</span> and line 34 calls the function <code>CadVsRadPlots()</code> with these new values. The FROC is extracted at line 44 and labeled C, while the wAFROC is extracted at line 45 and labeled D.</p>
 <p>The coordinates of the end-point of the CAD FROC in plot C are (1.0025, 0.6048077). Those of the RAD FROC plot in C are (0.6391667, 0.775). The RAD observer has higher LLF at lower NLF, and there is no doubt that he is better. Plot C confirms that RAD is actually the better observer <em>over his entire NLF range</em>.</p>
 <p>Plot D shows the corresponding wAFROC curves. The AUCs are 0.5604857 for CAD and 0.7779929 for RAD, confirming that the RAD observer is indeed better. Moreover, this comparison, based on comparing two scalars, is unambiguous.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
 <div id="large-difference-in-performance" class="section level3" number="19.2.1">
@@ -844,9 +848,9 @@ FIGURE 19.2: Plots A and B are for CAD <span class="math inline">\(\zeta_1 = -1\
 </div>
 <p>Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot2">19.2</a> (A) FROC curves for CAD observer and the RAD observer. The CAD observer is identical to that shown in Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot1">19.1</a>. The RAD observer is characterized by <span class="math inline">\(\mu = 2\)</span> and <span class="math inline">\(\zeta_1 = 2\)</span>. This time it is impossible to compare the two FROC curves, as the common range is very small. However, wAFROC, plot B, clearly shows the expected superiority of the RAD observer, in spite of the severe underestimate of the corresponding AUC.</p>
 </div>
-<div id="small-difference-in-performance" class="section level3" number="19.2.2">
-<h3><span class="header-section-number">19.2.2</span> Small difference in performance</h3>
-<p>The final example, Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot3">19.3</a> shows that <em>when there is a small difference in performance</em>, there is less ambiguity in using the FROC as a basis for measuring performance. The CAD parameters are the same as in Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot1">19.1</a> but the RAD parameters are <span class="math inline">\(\mu = 1.1\)</span> and <span class="math inline">\(\zeta_1= -1\)</span>. This time there is much more common NLF range overlap in plot A and one is counting most of the marks for the CAD reader. The superior wAFROC-based performance of RAD is also apparent in B. Plots C and D correspond to <span class="math inline">\(\zeta_1 = -\infty\)</span>, and they confirm the similar performances (apparent in plots A and B) with a slight superiority for RAD.</p>
+<div id="small-difference-in-performance-identical-thresholds" class="section level3" number="19.2.2">
+<h3><span class="header-section-number">19.2.2</span> Small difference in performance, identical thresholds</h3>
+<p>The final example, Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot3">19.3</a> shows that <em>when there is a small difference in performance</em>, there is less ambiguity in using the FROC as a basis for measuring performance. The CAD parameters are the same as in Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot1">19.1</a> but the RAD parameters are <span class="math inline">\(\mu = 1.1\)</span> and <span class="math inline">\(\zeta_1= -1\)</span>. In other words, the <span class="math inline">\(\mu\)</span> parameter is 10% larger and the thresholds are identical. This time there is much more common NLF range overlap in plot A and one is counting most of the marks for the CAD reader. The superior wAFROC-based performance of RAD is also apparent in B. Plots C and D correspond to <span class="math inline">\(\zeta_1 = -\infty\)</span>, and they confirm the similar performances (apparent in plots A and B) with a slight superiority for RAD.</p>
 <div class="figure"><span id="fig:froc-vs-afroc-plot3"></span>
 <img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot3-1.png" alt="Plots A and B are for CAD $\zeta_1 = -1$ and RAD $\zeta_1 = -1$ and plots C and D are plots for CAD $\zeta_1 = -\infty$ and RAD $\zeta_1 = -\infty$. A and C: FROC curves for the CAD and RAD observers. B and D: corresponding wAFROC curves." width="672" />
 <p class="caption">
@@ -1001,14 +1005,74 @@ wAFROC-D
 <li>The first RAD dataset, Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot1">19.1</a> A or B, might be considered an average radiologist, the second one, Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot2">19.2</a> A or B, is a super-expert and the third one, Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot3">19.3</a> A or B, is only nominally better than CAD.</li>
 <li>Plots C and D are for hypothetical CAD and RAD readers that report all suspicious regions. The differences between A and C are minimal for the CAD observer, but marked for the RAD observer. Likewise for the differences between B and D.</li>
 </ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="froc-vs-afroc.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;R/CH13-CadVsRadPlots/CadVsRadPlots.R&quot;</span>))</span>
+<span id="cb3-2"><a href="froc-vs-afroc.html#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="froc-vs-afroc.html#cb3-3" aria-hidden="true" tabindex="-1"></a>nu <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb3-4"><a href="froc-vs-afroc.html#cb3-4" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb3-5"><a href="froc-vs-afroc.html#cb3-5" aria-hidden="true" tabindex="-1"></a>K1 <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb3-6"><a href="froc-vs-afroc.html#cb3-6" aria-hidden="true" tabindex="-1"></a>K2 <span class="ot">&lt;-</span> <span class="dv">700</span></span>
+<span id="cb3-7"><a href="froc-vs-afroc.html#cb3-7" aria-hidden="true" tabindex="-1"></a>muCad <span class="ot">&lt;-</span> <span class="fl">1.0</span></span>
+<span id="cb3-8"><a href="froc-vs-afroc.html#cb3-8" aria-hidden="true" tabindex="-1"></a>muRad <span class="ot">&lt;-</span> <span class="fl">2.0</span></span>
+<span id="cb3-9"><a href="froc-vs-afroc.html#cb3-9" aria-hidden="true" tabindex="-1"></a>zeta1Cad <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb3-10"><a href="froc-vs-afroc.html#cb3-10" aria-hidden="true" tabindex="-1"></a>zeta1Rad <span class="ot">&lt;-</span> <span class="fl">2.0</span></span>
+<span id="cb3-11"><a href="froc-vs-afroc.html#cb3-11" aria-hidden="true" tabindex="-1"></a>Lmax <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb3-12"><a href="froc-vs-afroc.html#cb3-12" aria-hidden="true" tabindex="-1"></a>seed <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb3-13"><a href="froc-vs-afroc.html#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(seed)</span>
+<span id="cb3-14"><a href="froc-vs-afroc.html#cb3-14" aria-hidden="true" tabindex="-1"></a>Lk2 <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(K2, <span class="dv">1</span>, Lmax <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb3-15"><a href="froc-vs-afroc.html#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="froc-vs-afroc.html#cb3-16" aria-hidden="true" tabindex="-1"></a>ret4AB <span class="ot">&lt;-</span> <span class="fu">ZetaEffectPlots</span> (</span>
+<span id="cb3-17"><a href="froc-vs-afroc.html#cb3-17" aria-hidden="true" tabindex="-1"></a>  muCad, </span>
+<span id="cb3-18"><a href="froc-vs-afroc.html#cb3-18" aria-hidden="true" tabindex="-1"></a>  lambda, </span>
+<span id="cb3-19"><a href="froc-vs-afroc.html#cb3-19" aria-hidden="true" tabindex="-1"></a>  nu, </span>
+<span id="cb3-20"><a href="froc-vs-afroc.html#cb3-20" aria-hidden="true" tabindex="-1"></a>  zeta1Cad, </span>
+<span id="cb3-21"><a href="froc-vs-afroc.html#cb3-21" aria-hidden="true" tabindex="-1"></a>  K1, </span>
+<span id="cb3-22"><a href="froc-vs-afroc.html#cb3-22" aria-hidden="true" tabindex="-1"></a>  K2, </span>
+<span id="cb3-23"><a href="froc-vs-afroc.html#cb3-23" aria-hidden="true" tabindex="-1"></a>  Lk2, </span>
+<span id="cb3-24"><a href="froc-vs-afroc.html#cb3-24" aria-hidden="true" tabindex="-1"></a>  seed,</span>
+<span id="cb3-25"><a href="froc-vs-afroc.html#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="st">&quot;CAD-&quot;</span>)</span>
+<span id="cb3-26"><a href="froc-vs-afroc.html#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="froc-vs-afroc.html#cb3-27" aria-hidden="true" tabindex="-1"></a>froc_plot_4A <span class="ot">&lt;-</span> ret4AB<span class="sc">$</span>froc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;A&quot;</span>)</span>
+<span id="cb3-28"><a href="froc-vs-afroc.html#cb3-28" aria-hidden="true" tabindex="-1"></a>wafroc_plot_4B <span class="ot">&lt;-</span> ret4AB<span class="sc">$</span>wafroc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;B&quot;</span>)</span>
+<span id="cb3-29"><a href="froc-vs-afroc.html#cb3-29" aria-hidden="true" tabindex="-1"></a>wafroc_zeta1_4B <span class="ot">&lt;-</span> ret4AB<span class="sc">$</span>fomCad</span>
+<span id="cb3-30"><a href="froc-vs-afroc.html#cb3-30" aria-hidden="true" tabindex="-1"></a>wafroc_negInf_4B <span class="ot">&lt;-</span> ret4AB<span class="sc">$</span>fomRad</span>
+<span id="cb3-31"><a href="froc-vs-afroc.html#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="froc-vs-afroc.html#cb3-32" aria-hidden="true" tabindex="-1"></a>ret4CD <span class="ot">&lt;-</span> <span class="fu">ZetaEffectPlots</span> (</span>
+<span id="cb3-33"><a href="froc-vs-afroc.html#cb3-33" aria-hidden="true" tabindex="-1"></a>  muRad, </span>
+<span id="cb3-34"><a href="froc-vs-afroc.html#cb3-34" aria-hidden="true" tabindex="-1"></a>  lambda, </span>
+<span id="cb3-35"><a href="froc-vs-afroc.html#cb3-35" aria-hidden="true" tabindex="-1"></a>  nu, </span>
+<span id="cb3-36"><a href="froc-vs-afroc.html#cb3-36" aria-hidden="true" tabindex="-1"></a>  zeta1Rad, </span>
+<span id="cb3-37"><a href="froc-vs-afroc.html#cb3-37" aria-hidden="true" tabindex="-1"></a>  K1, </span>
+<span id="cb3-38"><a href="froc-vs-afroc.html#cb3-38" aria-hidden="true" tabindex="-1"></a>  K2, </span>
+<span id="cb3-39"><a href="froc-vs-afroc.html#cb3-39" aria-hidden="true" tabindex="-1"></a>  Lk2, </span>
+<span id="cb3-40"><a href="froc-vs-afroc.html#cb3-40" aria-hidden="true" tabindex="-1"></a>  seed,</span>
+<span id="cb3-41"><a href="froc-vs-afroc.html#cb3-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="st">&quot;RAD-&quot;</span>)</span>
+<span id="cb3-42"><a href="froc-vs-afroc.html#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-43"><a href="froc-vs-afroc.html#cb3-43" aria-hidden="true" tabindex="-1"></a>froc_plot_4C <span class="ot">&lt;-</span> ret4CD<span class="sc">$</span>froc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;C&quot;</span>)</span>
+<span id="cb3-44"><a href="froc-vs-afroc.html#cb3-44" aria-hidden="true" tabindex="-1"></a>wafroc_plot_4D <span class="ot">&lt;-</span> ret4CD<span class="sc">$</span>wafroc<span class="sc">$</span>Plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">tag =</span> <span class="st">&quot;D&quot;</span>)</span>
+<span id="cb3-45"><a href="froc-vs-afroc.html#cb3-45" aria-hidden="true" tabindex="-1"></a>wafroc_zeta1_4D <span class="ot">&lt;-</span> ret4CD<span class="sc">$</span>fom_zeta1</span>
+<span id="cb3-46"><a href="froc-vs-afroc.html#cb3-46" aria-hidden="true" tabindex="-1"></a>wafroc_negInf_4D <span class="ot">&lt;-</span> ret4CD<span class="sc">$</span>fom_negInf</span></code></pre></div>
+<div class="figure"><span id="fig:froc-vs-afroc-plot4"></span>
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot4-1.png" alt="Plot A is the CAD FROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = -1$ and the red plot, which is mostly buried under the blue plot, but the red extension is visible, is for $\zeta_1 = -\infty$. Plot B is the CAD wAFROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = -1$ and the red plot is for $\zeta_1 = -\infty$." width="672" />
+<p class="caption">
+FIGURE 19.4: Plot A is the CAD FROC for two values of <span class="math inline">\(\zeta_1\)</span>: the green plot is for <span class="math inline">\(\zeta_1 = -1\)</span> and the red plot, which is mostly buried under the blue plot, but the red extension is visible, is for <span class="math inline">\(\zeta_1 = -\infty\)</span>. Plot B is the CAD wAFROC for two values of <span class="math inline">\(\zeta_1\)</span>: the green plot is for <span class="math inline">\(\zeta_1 = -1\)</span> and the red plot is for <span class="math inline">\(\zeta_1 = -\infty\)</span>.
+</p>
+</div>
+<div class="figure"><span id="fig:froc-vs-afroc-plot5"></span>
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot5-1.png" alt="Plot C is the RAD FROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = 2$ and the red plot, which is partially buried under the blue plot, but the red extension is visible, is for $\zeta_1 = -\infty$. Plot D is the RAD wAFROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = 2$ and the red plot is for $\zeta_1 = -\infty$." width="672" />
+<p class="caption">
+FIGURE 19.5: Plot C is the RAD FROC for two values of <span class="math inline">\(\zeta_1\)</span>: the green plot is for <span class="math inline">\(\zeta_1 = 2\)</span> and the red plot, which is partially buried under the blue plot, but the red extension is visible, is for <span class="math inline">\(\zeta_1 = -\infty\)</span>. Plot D is the RAD wAFROC for two values of <span class="math inline">\(\zeta_1\)</span>: the green plot is for <span class="math inline">\(\zeta_1 = 2\)</span> and the red plot is for <span class="math inline">\(\zeta_1 = -\infty\)</span>.
+</p>
+</div>
 </div>
 <div id="froc-vs-wafroc-froc-incorrect-ordering" class="section level2" number="19.5">
 <h2><span class="header-section-number">19.5</span> FROC gives incorrect performance ordering</h2>
-<ul>
+<ol style="list-style-type: decimal">
 <li>With reference to Table <a href="froc-vs-afroc.html#tab:froc-vs-afroc-summary-table-cad">19.1</a>, consider the differences between FROC-A and FROC-C: both end-point NLF and LLF <em>increase</em> when <span class="math inline">\(\zeta_1\)</span> is reduced from -1 to <span class="math inline">\(-\infty\)</span>. The observer in A and that in C are operating on the same underlying FROC curve: A’s end-point is lower than C’s end-point because A’s threshold is higher. <strong>If one believes that a change in reporting threshold should not affect performance, then their performances, according to FROC curve, are identical. [In the ROC paradigm two points on the same underlying ROC curve represent the same intrinsic performance – all that is happening is that they are employing different thresholds that represent different tradeoffs between sensitivity and specificity.] But, extending this concept to the FROC curve leads to a wrong conclusion – see next point.</strong></li>
 <li>The difference between CAD wAFROC-B (0.5730971) and CAD wAFROC-D (0.5604857`) are in the opposite direction. This is not a sampling artifact. <strong>The wAFROC gives the correct ordering of the two observers, one that is missed by the FROC.</strong> The wAFROC, being contained in the unit square, gives the complete picture. The FROC, not constrained to the unit square, does not.</li>
-<li>The argument can be made more convincing by comparing the RAD observers’ FROC curves in Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot2">19.2</a> A and C. The RAD-FROC curve for A is a short near vertical segment from (0,0) to (0.015, 0.4211538). That for the RAD-FROC curve for C is a sweeping curve all the way from (0,0) to (0.5, 0.8653846). Since the two well-separated end-points lie on the same underlying FROC curve, the performances must be identical. But look at the corresponding wAFROC AUCs: plot B yields wAFROC AUC = 0.7075193, while plot D yields wAFROC AUC = 0.8720286. A dramatic difference.</li>
-</ul>
+<li>The argument can be made more convincing by comparing the RAD observers’ FROC curves in Fig. <a href="froc-vs-afroc.html#fig:froc-vs-afroc-plot2">19.2</a> A and C. The RAD-FROC curve for A is a short near vertical segment from (0,0) to (0.015, 0.4211538). That for the RAD-FROC curve for C is a sweeping curve all the way from (0,0) to (0.5, 0.8653846). Since the two well-separated end-points lie on the same underlying FROC curve, the performances must be identical. But look at the corresponding wAFROC AUCs: plot B yields wAFROC AUC = 0.7075193, while plot D yields wAFROC AUC = 0.8720286. A dramatic difference.<br />
+</li>
+<li></li>
+</ol>
 </div>
 <div id="froc-vs-wafroc-to-move" class="section level2" number="19.6">
 <h2><span class="header-section-number">19.6</span> To be moved</h2>
