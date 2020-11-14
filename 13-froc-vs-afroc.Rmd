@@ -191,8 +191,8 @@ llfCad2C <- max(froc_plot_2C$data$genOrdinate[froc_plot_2C$data$Reader == "R: CA
 nlfRad2C <- max(froc_plot_2C$data$genAbscissa[froc_plot_2C$data$Reader == "R: RAD"]) 
 llfRad2C <- max(froc_plot_2C$data$genOrdinate[froc_plot_2C$data$Reader == "R: RAD"]) 
 
-fpfRad2B <- wafroc_plot_2B$data$genAbscissa[wafroc_plot_2B$data$Reader == "R: RAD"][446]
-fpfRad2D <- wafroc_plot_2D$data$genAbscissa[wafroc_plot_2D$data$Reader == "R: RAD"][1084]
+x <- wafroc_plot_2B$data$genAbscissa[wafroc_plot_2B$data$Reader == "R: RAD"];fpfRad2B <- x[length(x)-1]
+x <- wafroc_plot_2D$data$genAbscissa[wafroc_plot_2D$data$Reader == "R: RAD"];fpfRad2D <- x[length(x)-1]
 llfRad2B <- max(froc_plot_2A$data$genOrdinate[froc_plot_2A$data$Reader == "R: RAD"]) # llf is identical to that of A
 llfRad2D <- max(froc_plot_2C$data$genOrdinate[froc_plot_2C$data$Reader == "R: RAD"]) # llf is identical to that of C
 ```
@@ -368,10 +368,10 @@ knitr::kable(df, caption = "Summary of RAD simulations: Fig refers to the figure
 -   Plots C and D are for hypothetical CAD and RAD readers that report all suspicious regions. The differences between A and C are minimal for the CAD observer, but marked for the RAD observer. Likewise for the differences between B and D.
 
 ## TBA FROC gives incorrect performance ordering {#froc-vs-wafroc-froc-incorrect-ordering}
+A basic principle of ROC methodology is that two points on the same operating characteristic represent the same performance.
+Presented next are four plots arranged to best show the effect of a change in threshold for CAD and RAD. The plots are related to Fig. \@ref(fig:froc-vs-afroc-plot1) and Fig. \@ref(fig:froc-vs-afroc-plot2), but they are arranged differently. The explanation follows after the figure.
 
-Presented next are four plots arranged to best show the effect of a change in threshold for CAD and RAD. The plots are not new, in fact they are related to Fig. \@ref(fig:froc-vs-afroc-plot1) and Fig. \@ref(fig:froc-vs-afroc-plot2), but they are arranged differently. The explanation follows after the figure.
-
-```{r, cache = TRUE, echo=FALSE}
+```{r ZetaEffectPlots, cache = TRUE, echo=FALSE}
 source(here("R/CH13-CadVsRadPlots/CadVsRadPlots.R"))
 
 nu <- 1
@@ -441,42 +441,136 @@ Note that the direction of the threshold-change effect depends on the starting p
 
 The argument depends critically on the area under the straight line extension from the end-point to (1,1) being included in the wAFROC-AUC. If this were not allowed one could argue that the end-point of the blue curve (`r fpfRad2B`, `r llfRad2B`) -- quite visible as the sharp inflection in plot D -- lies on the same wAFROC curve as the end-point of the red curve (`r fpfRad2D`, `r llfRad2D`) -- not so readily visible. The justification for the straight line extension is deferred to Chapter \@ref(froc-meanings).
 
+```{r do_one_mu,cache=TRUE, echo=FALSE}
+do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, K1, K2, Lk2, seed) {
+  
+  for (i in 1:length(zeta1Arr)) {
+    frocCad <- SimulateFrocDataset (
+      mu = mu,
+      lambda = lambda,
+      nu = nu,
+      zeta1 = zeta1Arr[i],
+      I = 1,
+      J = 1,
+      K1 = K1,
+      K2 = K2,
+      perCase = Lk2,
+      seed = seed)
+    
+    frocCad$descriptions$readerID <- "CAD"
+    fomArray[i] <- as.numeric(UtilFigureOfMerit(frocCad, FOM = "wAFROC"))
+    #cat("zeta1 = ", zeta1Arr[i], "fom = ", as.numeric(fomArray[i]), "\n")
+  }
+  #cat("\n")
+  myData <- data.frame(zeta1Arr = zeta1Arr, fomArray = fomArray)
+  p <- ggplot2::ggplot(myData, aes(x = zeta1Arr, y = fomArray)) + geom_line()
+  zetaMax <- zeta1Arr[which.max(fomArray)]
+  return(list(
+    p = p,
+    zetaMax = zetaMax
+  ))
+}
+```
+
 
 ## Finding optimal operating point on the FROC
 
-```{r, cache = TRUE, echo=FALSE}
+**Optimal operating point for RAD**
+
+```{r optOperatingPointRad, cache = TRUE, echo=FALSE}
 
 lambda <- nu <- 1
-mu <- 1
+mu_arr <- c(1, 1.5, 2, 2.5)
+max_fomArray <- nlfArr <- zetaMaxArr <- array(dim = length(mu_arr))
+plotArr <- array(list(), length(mu_arr))
 K1 <- 500
 K2 <- 700
-zeta1Arr <- seq(-2,2,0.5)
-fomCad <- array(dim = length(zeta1Arr))
 Lmax <- 2
 seed <- 1
 set.seed(seed)
 Lk2 <- floor(runif(K2, 1, Lmax + 1))
 
-for (i in 1:length(zeta1Arr)) {
+for (i in 1:length(mu_arr)) {
+  zeta1Arr <- seq(-1,1,0.1)
+  fomArray <- array(dim = length(zeta1Arr))
+  x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
+  plotArr[[i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
+  zetaMaxArr[i] <- x$zetaMax
   frocCad <- SimulateFrocDataset (
-    mu,
-    lambda,
-    nu,
-    zeta1 = zeta1Arr[i],
+    mu = mu_arr[i],
+    lambda = lambda,
+    nu = nu,
+    zeta1 = x$zetaMax,
     I = 1,
     J = 1,
-    K1,
-    K2,
-    perCase = Lk2)
-  
-  frocCad$descriptions$readerID <- "CAD"
-  fomCad[i] <- UtilFigureOfMerit(frocCad, FOM = "wAFROC")
-  cat("zeta1 = ", zeta1Arr[i], "fom = ", as.numeric(fomCad[i]), "\n")
-  
+    K1 = K1,
+    K2 = K2,
+    perCase = Lk2,
+    seed = seed)
+  max_fomArray[i] <- as.numeric(UtilFigureOfMerit(frocCad, FOM = "wAFROC"))
+  phys <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
+  nlfArr[i] <- phys$lambdaP*pnorm(-zetaMaxArr[i])
 }
-
 ```
 
+```{r printRAD, echo=FALSE}
+print(as.data.frame(mu_arr))
+print(as.data.frame(zetaMaxArr))
+print(as.data.frame(max_fomArray))
+print(as.data.frame(nlfArr))
+```
+
+```{r froc-vs-afroc-plot5, fig.cap="TBA. See below.", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
+```
+
+**Optimal operating point for CAD**
+```{r optOperatingPointCad, cache = TRUE, echo=FALSE}
+
+lambda <- 10
+mu_arr <- c(1, 1.5, 2, 2.5)
+max_fomArray <- nlfArr <- zetaMaxArr <- array(dim = length(mu_arr))
+plotArr <- array(list(), length(mu_arr))
+K1 <- 500
+K2 <- 700
+Lmax <- 2
+seed <- 1
+set.seed(seed)
+Lk2 <- floor(runif(K2, 1, Lmax + 1))
+
+for (i in 1:length(mu_arr)) {
+  zeta1Arr <- seq(-1,2,0.1)
+  fomArray <- array(dim = length(zeta1Arr))
+  x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
+  plotArr[[i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
+  zetaMaxArr[i] <- x$zetaMax
+  frocCad <- SimulateFrocDataset (
+    mu = mu_arr[i],
+    lambda = lambda,
+    nu = nu,
+    zeta1 = x$zetaMax,
+    I = 1,
+    J = 1,
+    K1 = K1,
+    K2 = K2,
+    perCase = Lk2,
+    seed = seed)
+  max_fomArray[i] <- as.numeric(UtilFigureOfMerit(frocCad, FOM = "wAFROC"))
+  phys <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
+  nlfArr[i] <- phys$lambdaP*pnorm(-zetaMaxArr[i])
+}
+```
+
+```{r printCAD}
+print(as.data.frame(mu_arr))
+print(as.data.frame(zetaMaxArr))
+print(as.data.frame(max_fomArray))
+print(as.data.frame(nlfArr))
+```
+
+```{r froc-vs-afroc-plot6, fig.cap="TBA. See below.", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
+```
 
 ## To be moved {#froc-vs-wafroc-to-move}
 

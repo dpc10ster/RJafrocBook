@@ -43,7 +43,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 p1A <- PlotEmpiricalOperatingCharacteristics(
@@ -94,15 +95,15 @@ It is seen to consist of three `list` members: `ratings`, `lesions` and `descrip
 
 #### The structure of the `ratings` member
 
-The `ratings` member is itself a `list` of 3, consisting of ``NL`` the non-lesion localization ratings, ``LL`` the lesion localization ratings and `LL_IL` the incorrect localization ratings. The last member is needed for LROC datasets and can be ignored for now.
+The `ratings` member is itself a `list` of 3, consisting of `NL` the non-lesion localization ratings, `LL` the lesion localization ratings and `LL_IL` the incorrect localization ratings. The last member is needed for LROC datasets and can be ignored for now.
 
-#### The structure of the ``NL`` member
+#### The structure of the `NL` member
 
 ```{r}
 frocDataRaw$ratings$NL[1,1,,]
 ```
 
--   It is seen to be an array with dimensions `[1,1,1:12,1:4]`.
+-   It is seen to be an array with dimensions [1,1,1:12,1:4].
 
 -   Note that all listed ratings are greater than $\zeta_1 = -1$. Unmarked locations are assigned the $-\infty$ rating.
 
@@ -135,7 +136,8 @@ frocDataRaw1 <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 ```
 
@@ -143,7 +145,7 @@ frocDataRaw1 <- SimulateFrocDataset(
 frocDataRaw1$ratings$NL[1,1,,]
 ```
 
-#### The structure of the ``LL`` member
+#### The structure of the `LL` member
 
 ```{r}
 frocDataRaw$ratings$LL[1,1,,]
@@ -195,7 +197,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 p1D <- PlotEmpiricalOperatingCharacteristics(
@@ -244,7 +247,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 p2A <- PlotEmpiricalOperatingCharacteristics(
@@ -279,7 +283,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 p2D <- PlotEmpiricalOperatingCharacteristics(
@@ -344,7 +349,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 p3A <- PlotEmpiricalOperatingCharacteristics(
@@ -413,7 +419,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 frocDataBinned <- DfBinDataset(
@@ -456,7 +463,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 frocDataBinned <- DfBinDataset(
@@ -508,7 +516,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 frocDataBinned <- DfBinDataset(
@@ -549,7 +558,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 frocDataBinned <- DfBinDataset(
@@ -585,10 +595,10 @@ table(frocDataBinnedSeed1$ratings$NL)
 sum(as.numeric(table(frocDataBinnedSeed1$ratings$NL)))
 ```
 
--   The `table()` function converts an array into a counts table. 
--   There are 120 x 4 = 480 elements in the `NL` array to be "tabled". 
--   From the output one sees that there are 378 entries in the `NL` array that equal $-\infty$, 50 that equal 1, 15 that equal 2, 12 that equal 3, and 25 that equal 4 (none of the NLs were binned into the rating "5" category). These sum to 480 (see code output above). 
--   Because the fourth dimension of the `NL` array is determined by cases with the *most* NLs, on the *unknown number* (to the data analyst) of cases with *fewer* NLs, this dimension is "padded" with negative-infinities.  
+-   The `table()` function converts an array into a counts table.
+-   There are 120 x 4 = 480 elements in the `NL` array to be "tabled".
+-   From the output one sees that there are 378 entries in the `NL` array that equal $-\infty$, 50 that equal 1, 15 that equal 2, 12 that equal 3, and 25 that equal 4 (none of the NLs were binned into the rating "5" category). These sum to 480 (see code output above).
+-   Because the fourth dimension of the `NL` array is determined by cases with the *most* NLs, on the *unknown number* (to the data analyst) of cases with *fewer* NLs, this dimension is "padded" with negative-infinities.\
 -   Because of the unknown number of negative-infinity paddings, one does not know how many of the 378 *observed* negative-infinities are *actually* latent NLs. The *actual* number of latent NLs could be considerably smaller - and the number of *marked* NLs even smaller - as this is determined by those latent NLs whose z-samples $\geq \zeta_1$. Notice that in the special case $\zeta_1 = -\infty$ the observer marks all latent NL, in which case the observed count equal the actual count.
 
 ```{r}
@@ -599,14 +609,15 @@ sum(Lk2Seed1)
 sum(Lk2Seed1) - sum(as.vector(table(frocDataBinnedSeed1$ratings$LL))[2:6])
 ```
 
--   The ``LL`` array contains 70 x 2 = 140 values to be "tabled". 
--   From the output one sees that there are 78 entries in the ``LL`` array that equal $-\infty$, 10 entries that equal 1, 5 entries that equal 2, 8 entries that equal 3, 35 entries that equal 4, and 4 entries that equal 5. These sum to 140, the product of the lengths of the third and fourth dimensions of the `LL` array. 
--   The number of negative-infinity counts is 78. This is smaller than 140 because, of the varying numbers of lesions, some of the location-holders are filled with negative infinities.   
--   The *known* total number of lesions -- each of which contributes a latent `LL` -- is 104, see 2nd last line of above code output.  
--   Summing the ``LL`` counts in bins 1 through 5 (corresponding to table columns 2-6, since column 1 applies to the negative-infinities) and subtracting from the total number of lesions one gets: 104 -- (10+5+8+35+4) = 104 -- 62 = 42, see last line of above code output. 
--   Therefore, the number of unmarked lesions is 42. The listed value (78) is an overestimate because it includes the $-\infty$ counts from the fourth dimension negative-infinity "padding" of the ``LL`` array. 
+-   The `LL` array contains 70 x 2 = 140 values to be "tabled".
+-   From the output one sees that there are 78 entries in the `LL` array that equal $-\infty$, 10 entries that equal 1, 5 entries that equal 2, 8 entries that equal 3, 35 entries that equal 4, and 4 entries that equal 5. These sum to 140, the product of the lengths of the third and fourth dimensions of the `LL` array.
+-   The number of negative-infinity counts is 78. This is smaller than 140 because, of the varying numbers of lesions, some of the location-holders are filled with negative infinities.\
+-   The *known* total number of lesions -- each of which contributes a latent `LL` -- is 104, see 2nd last line of above code output.\
+-   Summing the `LL` counts in bins 1 through 5 (corresponding to table columns 2-6, since column 1 applies to the negative-infinities) and subtracting from the total number of lesions one gets: 104 -- (10+5+8+35+4) = 104 -- 62 = 42, see last line of above code output.
+-   Therefore, the number of unmarked lesions is 42. The listed value (78) is an overestimate because it includes the $-\infty$ counts from the fourth dimension negative-infinity "padding" of the `LL` array.
 
 ## Summary {#froc-empirical-examples-summary}
+
 The preceding detailed example illustrates a key point: *The total number of latent `NL`s in the dataset is generally unknown to the data analyst, unlike the total number of latent `LL`s, which is known*. The only exception to this rule is if $\zeta_1 = -\infty$, in which case the observer marks all latent `NL` (and `LL`) sites.
 
 ## Discussion {#froc-empirical-examples-Discussion}

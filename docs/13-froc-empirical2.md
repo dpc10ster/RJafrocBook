@@ -35,7 +35,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 p1A <- PlotEmpiricalOperatingCharacteristics(
@@ -87,8 +88,8 @@ Lines 11-21 uses the function `SimulateFrocDataset` to simulate the dataset obje
 str(frocDataRaw)
 #> List of 3
 #>  $ ratings     :List of 3
-#>   ..$ NL   : num [1, 1, 1:12, 1:4] 0.764 -0.799 -Inf -Inf -Inf ...
-#>   ..$ LL   : num [1, 1, 1:7, 1:2] -Inf 0.943 0.944 0.309 0.522 ...
+#>   ..$ NL   : num [1, 1, 1:12, 1:3] -Inf 0.487 0.738 0.576 -Inf ...
+#>   ..$ LL   : num [1, 1, 1:7, 1:2] -Inf -Inf -0.238 1.919 -Inf ...
 #>   ..$ LL_IL: logi NA
 #>  $ lesions     :List of 3
 #>   ..$ perCase: num [1:7] 1 1 2 2 1 2 2
@@ -108,37 +109,37 @@ It is seen to consist of three `list` members: `ratings`, `lesions` and `descrip
 
 #### The structure of the `ratings` member
 
-The `ratings` member is itself a `list` of 3, consisting of ``NL`` the non-lesion localization ratings, ``LL`` the lesion localization ratings and `LL_IL` the incorrect localization ratings. The last member is needed for LROC datasets and can be ignored for now.
+The `ratings` member is itself a `list` of 3, consisting of `NL` the non-lesion localization ratings, `LL` the lesion localization ratings and `LL_IL` the incorrect localization ratings. The last member is needed for LROC datasets and can be ignored for now.
 
-#### The structure of the ``NL`` member
+#### The structure of the `NL` member
 
 
 ```r
 frocDataRaw$ratings$NL[1,1,,]
-#>             [,1]       [,2]       [,3] [,4]
-#>  [1,]  0.7635935       -Inf       -Inf -Inf
-#>  [2,] -0.7990092       -Inf       -Inf -Inf
-#>  [3,]       -Inf       -Inf       -Inf -Inf
-#>  [4,]       -Inf       -Inf       -Inf -Inf
-#>  [5,]       -Inf       -Inf       -Inf -Inf
-#>  [6,]       -Inf       -Inf       -Inf -Inf
-#>  [7,] -0.2894616       -Inf       -Inf -Inf
-#>  [8,] -0.2992151 -0.4115108       -Inf -Inf
-#>  [9,]  0.2522234       -Inf       -Inf -Inf
-#> [10,] -0.8919211       -Inf       -Inf -Inf
-#> [11,]  0.4356833  0.3773956 -0.2242679 -Inf
-#> [12,]  0.1333364       -Inf       -Inf -Inf
+#>              [,1]       [,2] [,3]
+#>  [1,]        -Inf       -Inf -Inf
+#>  [2,]  0.48742905       -Inf -Inf
+#>  [3,]  0.73832471       -Inf -Inf
+#>  [4,]  0.57578135 -0.3053884 -Inf
+#>  [5,]        -Inf       -Inf -Inf
+#>  [6,]  1.51178117  0.3898432 -Inf
+#>  [7,]  1.12493092 -0.6212406 -Inf
+#>  [8,] -0.04493361       -Inf -Inf
+#>  [9,] -0.01619026       -Inf -Inf
+#> [10,]        -Inf       -Inf -Inf
+#> [11,]        -Inf       -Inf -Inf
+#> [12,]        -Inf       -Inf -Inf
 ```
 
--   It is seen to be an array with dimensions `[1,1,1:12,1:4]`.
+-   It is seen to be an array with dimensions [1,1,1:12,1:4].
 
 -   Note that all listed ratings are greater than $\zeta_1 = -1$. Unmarked locations are assigned the $-\infty$ rating.
 
--   Case 1, the first non-diseased case, has a single `NL` mark rated 0.7635935 and the remaining 3 locations are filled with $-\infty$s.
+-   Case 1, the first non-diseased case, has a single `NL` mark rated -\infty{} and the remaining 3 locations are filled with $-\infty$s.
 
 -   Case 6, the first diseased case, has zero `NL` marks and all 4 locations for it are filled with $-\infty$s. [As seen below, this case actually generated a rating in the first location, but it fell below $\zeta_1 = -1$.]
 
--   Case 11, the sixth diseased case, has three `NL` marks rated 0.4356833, 0.3773956, -0.2242679 and the remaining location for it is $-\infty$. As noted below, this case generated a fourth rating that fell below $\zeta_1 = -1$.
+-   Case 11, the sixth diseased case, has three `NL` marks rated -\infty{}, -\infty{}, -\infty{} and the remaining location for it is $-\infty$. As noted below, this case generated a fourth rating that fell below $\zeta_1 = -1$.
 
 -   The first dimension corresponds to the number of modalities, one in this example, the second dimension corresponds to the number of readers, also one in this example.
 
@@ -151,34 +152,34 @@ frocDataRaw$ratings$NL[1,1,,]
 
 ```r
 frocDataRaw1$ratings$NL[1,1,,]
-#>             [,1]       [,2]       [,3]      [,4]
-#>  [1,]  0.7635935       -Inf       -Inf      -Inf
-#>  [2,] -0.7990092       -Inf       -Inf      -Inf
-#>  [3,]       -Inf       -Inf       -Inf      -Inf
-#>  [4,]       -Inf       -Inf       -Inf      -Inf
-#>  [5,]       -Inf       -Inf       -Inf      -Inf
-#>  [6,] -1.1476570       -Inf       -Inf      -Inf
-#>  [7,] -0.2894616       -Inf       -Inf      -Inf
-#>  [8,] -0.2992151 -0.4115108       -Inf      -Inf
-#>  [9,]  0.2522234       -Inf       -Inf      -Inf
-#> [10,] -0.8919211       -Inf       -Inf      -Inf
-#> [11,]  0.4356833  0.3773956 -0.2242679 -1.237538
-#> [12,]  0.1333364       -Inf       -Inf      -Inf
+#>              [,1]       [,2]    [,3]
+#>  [1,]        -Inf       -Inf    -Inf
+#>  [2,]  0.48742905       -Inf    -Inf
+#>  [3,]  0.73832471       -Inf    -Inf
+#>  [4,]  0.57578135 -0.3053884    -Inf
+#>  [5,]        -Inf       -Inf    -Inf
+#>  [6,]  1.51178117  0.3898432    -Inf
+#>  [7,]  1.12493092 -0.6212406 -2.2147
+#>  [8,] -0.04493361       -Inf    -Inf
+#>  [9,] -0.01619026       -Inf    -Inf
+#> [10,]        -Inf       -Inf    -Inf
+#> [11,]        -Inf       -Inf    -Inf
+#> [12,]        -Inf       -Inf    -Inf
 ```
 
-#### The structure of the ``LL`` member
+#### The structure of the `LL` member
 
 
 ```r
 frocDataRaw$ratings$LL[1,1,,]
-#>           [,1]      [,2]
-#> [1,]      -Inf      -Inf
-#> [2,] 0.9428932      -Inf
-#> [3,] 0.9438713      -Inf
-#> [4,] 0.3090462      -Inf
-#> [5,] 0.5218499      -Inf
-#> [6,] 0.7642934      -Inf
-#> [7,] 1.3876716 0.8972123
+#>            [,1]      [,2]
+#> [1,]       -Inf      -Inf
+#> [2,]       -Inf      -Inf
+#> [3,] -0.2375384      -Inf
+#> [4,]  1.9189774      -Inf
+#> [5,]       -Inf      -Inf
+#> [6,]  1.0745650      -Inf
+#> [7,]  1.5036080 0.9428932
 ```
 
 -   It is seen to be an array with dimensions `[1,1,1:7,1:2]`.
@@ -193,23 +194,23 @@ frocDataRaw$ratings$LL[1,1,,]
 
 -   Case 1, the first diseased case, has zero `LL` marks and both locations are filled with $-\infty$s.
 
--   Case 2, the second diseased case, has one `LL` mark rated 0.9428932 and the remaining location is $-\infty$.
+-   Case 2, the second diseased case, has one `LL` mark rated -\infty{} and the remaining location is $-\infty$.
 
--   Case 7, the seventh diseased case, has two `LL` marks rated 1.3876716, 0.8972123 and zero locations with $-\infty$.
+-   Case 7, the seventh diseased case, has two `LL` marks rated 1.503608, 0.9428932 and zero locations with $-\infty$.
 
 -   The following output shows that setting $\zeta_1 = -\infty$ does not reveal any more latent LLs.
 
 
 ```r
 frocDataRaw1$ratings$LL[1,1,,]
-#>           [,1]      [,2]
-#> [1,]      -Inf      -Inf
-#> [2,] 0.9428932      -Inf
-#> [3,] 0.9438713      -Inf
-#> [4,] 0.3090462      -Inf
-#> [5,] 0.5218499      -Inf
-#> [6,] 0.7642934      -Inf
-#> [7,] 1.3876716 0.8972123
+#>            [,1]      [,2]
+#> [1,]       -Inf      -Inf
+#> [2,]       -Inf      -Inf
+#> [3,] -0.2375384      -Inf
+#> [4,]  1.9189774      -Inf
+#> [5,]       -Inf      -Inf
+#> [6,]  1.0745650      -Inf
+#> [7,]  1.5036080 0.9428932
 ```
 
 -   Lines 23 - 25 use the `PlotEmpiricalOperatingCharacteristics` function to calculate the FROC plot `ggplot` object, which is saved to `p1A`. Note the argument `opChType = "FROC"`, for the desired FROC plot.
@@ -222,7 +223,10 @@ In summary, the code generates FROC, AFROC and ROC plots shown in the top row of
 
 
 
-![(\#fig:froc-afroc-roc-raw-seed1)Raw FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases.](13-froc-empirical2_files/figure-latex/froc-afroc-roc-raw-seed1-1.pdf) 
+<div class="figure">
+<img src="13-froc-empirical2_files/figure-html/froc-afroc-roc-raw-seed1-1.png" alt="Raw FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases." width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-raw-seed1)Raw FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases.</p>
+</div>
 
 Fig. \@ref(fig:froc-afroc-roc-raw-seed1) Raw FROC, AFROC and ROC plots with `seed` = 1: Plots A, B and C are for $K_1 = 5$ and $K_2 = 7$ cases while D, E and F are for $K_1 = 50$ and $K_2 = 70$ cases. Model parameters are $\mu$ = 1, $\lambda$ = 1, $\nu$ = 1 and $\zeta_1$ = -1. The discreteness (jumps) in A, B and C is due to the small number of cases. The decreased discreteness in D, E and F is due to the larger numbers of cases. If the number of cases is increased further, the plots will approach continuous plots, like those shown in Chapter \@ref(froc-paradigm). Note that the AFROC (B and E) and ROC plots (C and F), are each contained within unit squares, unlike the semi-constrained FROC plots A and D.
 
@@ -234,7 +238,10 @@ Shown next are similar plots but this time `seed` = 2.
 
 
 
-![(\#fig:froc-afroc-roc-raw-seed2)Raw FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases.](13-froc-empirical2_files/figure-latex/froc-afroc-roc-raw-seed2-1.pdf) 
+<div class="figure">
+<img src="13-froc-empirical2_files/figure-html/froc-afroc-roc-raw-seed2-1.png" alt="Raw FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases." width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-raw-seed2)Raw FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases.</p>
+</div>
 
 Fig. \@ref(fig:froc-afroc-roc-raw-seed2) Raw FROC, AFROC and ROC plots with `seed` = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases. Model parameters are $\mu$ = 1, $\lambda$ = 1, $\nu$ = 1 and $\zeta_1$ = -1. Note the large variability in the upper row plots as compared to those in Fig. \@ref(fig:froc-afroc-roc-raw-seed1).
 
@@ -260,7 +267,10 @@ The chance level FROC was addressed in the previous chapter; it is a "flat-liner
 
 
 
-![(\#fig:froc-afroc-chance-level)Plot A is the near guessing observer's FROC and plot B is the corresponding AFROC for $\mu=0.01$.](13-froc-empirical2_files/figure-latex/froc-afroc-chance-level-1.pdf) 
+<div class="figure">
+<img src="13-froc-empirical2_files/figure-html/froc-afroc-chance-level-1.png" alt="Plot A is the near guessing observer's FROC and plot B is the corresponding AFROC for $\mu=0.01$." width="672" />
+<p class="caption">(\#fig:froc-afroc-chance-level)Plot A is the near guessing observer's FROC and plot B is the corresponding AFROC for $\mu=0.01$.</p>
+</div>
 
 Fig. \@ref(fig:froc-afroc-chance-level) shows "near guessing" FROC (plot A) and AFROC (plot B) plots for $\mu = 0.1$. These plots were generated by the code with $\mu$ = 0.1, $\lambda$ = 1, $\nu$ = 0.1, $\zeta_1$ = -1, $K_1$ = 50, $K_2$ = 70.
 
@@ -270,7 +280,7 @@ The AFROC of a guessing observer is not the line connecting (0,0) to (1,1). A gu
 
 ## Location-level "true-negatives"
 
-The quotes are intended to draw attention to confusion that can result when one inappropriately applies ROC terminology to the FROC paradigm. For the 5 / 7 dataset, seed = 1, and reporting threshold set to -1, the first non-diseased case has one `NL` rated 0.7635935. The remaining three entries for this case are filled with $-\infty$.
+The quotes are intended to draw attention to confusion that can result when one inappropriately applies ROC terminology to the FROC paradigm. For the 5 / 7 dataset, seed = 1, and reporting threshold set to -1, the first non-diseased case has one `NL` rated -\infty{}. The remaining three entries for this case are filled with $-\infty$.
 
 What really happened is only known if one has access to the internals of the simulator. To the data analyst the following possibilities are indistinguishable:
 
@@ -279,7 +289,7 @@ What really happened is only known if one has access to the internals of the sim
 -   Two latent NLs, one of whose ratings exceeded $\zeta_1$, i.e., one location-level "true negative" occurred on this case.
 -   One latent `NL`, whose rating exceeded $\zeta_1$, i.e., 0 location-level "true negatives" occurred on this case.
 
-The second non-diseased case has one `NL` mark rated -0.7990092 and similar ambiguities occur regarding the number of latent NLs. The third, fourth and fifth non-diseased cases have no marks. All four locations-holders on each of these cases are filled with $-\infty$, which indicates un-assigned values corresponding to either absence of any latent `NL` or presence of one or more latent NLs that did not exceed $\zeta_1$ and therefore did not get marked.
+The second non-diseased case has one `NL` mark rated 0.4874291 and similar ambiguities occur regarding the number of latent NLs. The third, fourth and fifth non-diseased cases have no marks. All four locations-holders on each of these cases are filled with $-\infty$, which indicates un-assigned values corresponding to either absence of any latent `NL` or presence of one or more latent NLs that did not exceed $\zeta_1$ and therefore did not get marked.
 
 To summarize: absence of an actual `NL` mark, indicated by a $-\infty$ rating, could be due to either (i) non-occurrence of the corresponding latent `NL` or (ii) occurrence of the latent `NL` but its rating did not exceed $\zeta_1$. One cannot distinguish between the two possibilities, as in either scenario, the corresponding rating is assigned the $-\infty$ value and either scenario would explain the absence of a mark.
 
@@ -314,7 +324,8 @@ frocDataRaw <- SimulateFrocDataset(
   K1 = K1, 
   K2 = K2, 
   perCase = Lk2, 
-  zeta1 = zeta1
+  zeta1 = zeta1,
+  seed = seed
 )
 
 frocDataBinned <- DfBinDataset(
@@ -342,7 +353,10 @@ This is similar to the code for the raw plots except that at lines 21-24 we have
 
 
 
-![(\#fig:froc-afroc-roc-binned-seed1)Binned FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases](13-froc-empirical2_files/figure-latex/froc-afroc-roc-binned-seed1-1.pdf) 
+<div class="figure">
+<img src="13-froc-empirical2_files/figure-html/froc-afroc-roc-binned-seed1-1.png" alt="Binned FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-binned-seed1)Binned FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases</p>
+</div>
 
 ### Effect of `seed` on binned plots
 
@@ -352,52 +366,56 @@ Shown next are corresponding plots with `seed` = 2.
 
 
 
-![(\#fig:froc-afroc-roc-binned-seed2)Binned FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases](13-froc-empirical2_files/figure-latex/froc-afroc-roc-binned-seed2-1.pdf) 
+<div class="figure">
+<img src="13-froc-empirical2_files/figure-html/froc-afroc-roc-binned-seed2-1.png" alt="Binned FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-binned-seed2)Binned FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases</p>
+</div>
 
 ## Structure of the binned data {#froc-empirical-examples-str-binned-data}
 
 
 ```r
 str(frocDataBinnedSeed1$ratings$NL)
-#>  num [1, 1, 1:120, 1:4] -Inf 3 -Inf -Inf 1 ...
+#>  num [1, 1, 1:120, 1:4] -Inf 4 2 3 -Inf ...
 table(frocDataBinnedSeed1$ratings$NL)
 #> 
 #> -Inf    1    2    3    4 
-#>  378   50   15   12   25
+#>  376   35   30   23   16
 sum(as.numeric(table(frocDataBinnedSeed1$ratings$NL)))
 #> [1] 480
 ```
 
--   The `table()` function converts an array into a counts table. 
--   There are 120 x 4 = 480 elements in the `NL` array to be "tabled". 
--   From the output one sees that there are 378 entries in the `NL` array that equal $-\infty$, 50 that equal 1, 15 that equal 2, 12 that equal 3, and 25 that equal 4 (none of the NLs were binned into the rating "5" category). These sum to 480 (see code output above). 
--   Because the fourth dimension of the `NL` array is determined by cases with the *most* NLs, on the *unknown number* (to the data analyst) of cases with *fewer* NLs, this dimension is "padded" with negative-infinities.  
+-   The `table()` function converts an array into a counts table.
+-   There are 120 x 4 = 480 elements in the `NL` array to be "tabled".
+-   From the output one sees that there are 378 entries in the `NL` array that equal $-\infty$, 50 that equal 1, 15 that equal 2, 12 that equal 3, and 25 that equal 4 (none of the NLs were binned into the rating "5" category). These sum to 480 (see code output above).
+-   Because the fourth dimension of the `NL` array is determined by cases with the *most* NLs, on the *unknown number* (to the data analyst) of cases with *fewer* NLs, this dimension is "padded" with negative-infinities.\
 -   Because of the unknown number of negative-infinity paddings, one does not know how many of the 378 *observed* negative-infinities are *actually* latent NLs. The *actual* number of latent NLs could be considerably smaller - and the number of *marked* NLs even smaller - as this is determined by those latent NLs whose z-samples $\geq \zeta_1$. Notice that in the special case $\zeta_1 = -\infty$ the observer marks all latent NL, in which case the observed count equal the actual count.
 
 
 ```r
 str(frocDataBinnedSeed1$ratings$LL)
-#>  num [1, 1, 1:70, 1:2] -Inf 4 4 3 1 ...
+#>  num [1, 1, 1:70, 1:2] 3 4 4 4 3 ...
 table(frocDataBinnedSeed1$ratings$LL)
 #> 
 #> -Inf    1    2    3    4    5 
-#>   78   10    5    8   35    4
+#>   79    5   10   17   24    5
 sum(as.numeric(table(frocDataBinnedSeed1$ratings$LL)))
 #> [1] 140
 sum(Lk2Seed1)
 #> [1] 104
 sum(Lk2Seed1) - sum(as.vector(table(frocDataBinnedSeed1$ratings$LL))[2:6])
-#> [1] 42
+#> [1] 43
 ```
 
--   The ``LL`` array contains 70 x 2 = 140 values to be "tabled". 
--   From the output one sees that there are 78 entries in the ``LL`` array that equal $-\infty$, 10 entries that equal 1, 5 entries that equal 2, 8 entries that equal 3, 35 entries that equal 4, and 4 entries that equal 5. These sum to 140, the product of the lengths of the third and fourth dimensions of the `LL` array. 
--   The number of negative-infinity counts is 78. This is smaller than 140 because, of the varying numbers of lesions, some of the location-holders are filled with negative infinities.   
--   The *known* total number of lesions -- each of which contributes a latent `LL` -- is 104, see 2nd last line of above code output.  
--   Summing the ``LL`` counts in bins 1 through 5 (corresponding to table columns 2-6, since column 1 applies to the negative-infinities) and subtracting from the total number of lesions one gets: 104 -- (10+5+8+35+4) = 104 -- 62 = 42, see last line of above code output. 
--   Therefore, the number of unmarked lesions is 42. The listed value (78) is an overestimate because it includes the $-\infty$ counts from the fourth dimension negative-infinity "padding" of the ``LL`` array. 
+-   The `LL` array contains 70 x 2 = 140 values to be "tabled".
+-   From the output one sees that there are 78 entries in the `LL` array that equal $-\infty$, 10 entries that equal 1, 5 entries that equal 2, 8 entries that equal 3, 35 entries that equal 4, and 4 entries that equal 5. These sum to 140, the product of the lengths of the third and fourth dimensions of the `LL` array.
+-   The number of negative-infinity counts is 78. This is smaller than 140 because, of the varying numbers of lesions, some of the location-holders are filled with negative infinities.\
+-   The *known* total number of lesions -- each of which contributes a latent `LL` -- is 104, see 2nd last line of above code output.\
+-   Summing the `LL` counts in bins 1 through 5 (corresponding to table columns 2-6, since column 1 applies to the negative-infinities) and subtracting from the total number of lesions one gets: 104 -- (10+5+8+35+4) = 104 -- 62 = 42, see last line of above code output.
+-   Therefore, the number of unmarked lesions is 42. The listed value (78) is an overestimate because it includes the $-\infty$ counts from the fourth dimension negative-infinity "padding" of the `LL` array.
 
 ## Summary {#froc-empirical-examples-summary}
+
 The preceding detailed example illustrates a key point: *The total number of latent `NL`s in the dataset is generally unknown to the data analyst, unlike the total number of latent `LL`s, which is known*. The only exception to this rule is if $\zeta_1 = -\infty$, in which case the observer marks all latent `NL` (and `LL`) sites.
 
 ## Discussion {#froc-empirical-examples-Discussion}
