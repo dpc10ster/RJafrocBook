@@ -73,10 +73,7 @@ The $\lambda$ and $\nu$ parameters are defined at lines 3 and 4 of the preceding
 * `ret$roc_1_F`: the ROC AUC for RAD-1, i.e., the area under the curve labeled "R: 1" in panel F.
 * `ret$roc_2_F`: the ROC AUC for RAD-2, i.e., the area under the curve labeled "R: 2" in panel F.
 
-<div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot1-1.png" alt="Plots A and B are for 1 $\zeta_1 = -1$ and 2 $\zeta_1 = 1.5$ and plots C and D are plots for 1 $\zeta_1 = -\infty$ and 2 $\zeta_1 = -\infty$. Plots A and C: FROC curves for the 1 and 2 observers. B and D: corresponding wAFROC curves." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot1)Plots A and B are for 1 $\zeta_1 = -1$ and 2 $\zeta_1 = 1.5$ and plots C and D are plots for 1 $\zeta_1 = -\infty$ and 2 $\zeta_1 = -\infty$. Plots A and C: FROC curves for the 1 and 2 observers. B and D: corresponding wAFROC curves.</p>
-</div>
+![(\#fig:froc-vs-afroc-plot1)Plots A and B are for 1 $\zeta_1 = -1$ and 2 $\zeta_1 = 1.5$ and plots C and D are plots for 1 $\zeta_1 = -\infty$ and 2 $\zeta_1 = -\infty$. Plots A and C: FROC curves for the 1 and 2 observers. B and D: corresponding wAFROC curves.](13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot1-1.pdf) 
 
 
 
@@ -85,12 +82,12 @@ The coordinates of the end-point of the RAD-1 FROC in plot A are (0.8258333, 0.5
 
 Algorithm developers typically quote LLF at a specified NLF. According to the two plots in A, the RAD-2 observer is better if the NLF value is chosen to less than 0.0491667 (this is the maximum NLF value for the RAD-2 plot in A) but there is no basis for comparison for larger values of NLF (because the RAD-2 observer does not provide any data beyond the observed end-point). A similar problem was encountered in ROC analysis when comparing a pair of sensitivity-specificity values, where, given differing choices of thresholds, ambiguous results can be obtained, see Section \@ref(binary-task-beam-study). Indeed, this was the rationale for using AUC under the ROC curve as an unambiguous measure of performance.
 
-Plot B shows wAFROC curves for the same datasets whose FROC curves are shown in plot A. **The wAFROC is contained within the unit square, a highly desirable characteristic, which solves the lack of a common NLF range problem with the FROC.** The wAFROC AUC under the RAD-2 observer is visibly greater than that for the RAD-1 observer, even though -- due to his higher threshold -- his AUC estimate is actually biased downward (because the RAD-2 observer is adopting a high threshold, his $\text{LLF}_{\text{max}}$ is smaller than it would have been with a lower threshold, and consequently the area under the large straight line segment from the uppermost non-trivial operating point to (1,1) is smaller). AUCs under the two wAFROC plots in B are 0.5730971 for RAD-1 and 0.67371 for RAD-2.
+Plot B shows wAFROC curves for the same datasets whose FROC curves are shown in plot A. **The wAFROC is contained within the unit square, a highly desirable characteristic, which solves the lack of a common NLF range problem with the FROC.** The wAFROC AUC under the RAD-2 observer is visibly greater than that for the RAD-1 observer, even though -- due to his higher threshold -- his AUC estimate is actually biased downward (because the RAD-2 observer is adopting a high threshold, his $\text{LLF}_{\text{max}}$ is smaller than it would have been with a lower threshold, and consequently the area under the large straight line segment from the uppermost non-trivial operating point to (1,1) is smaller). AUCs under the two wAFROC plots in B are 0.573097142857143 for RAD-1 and 0.67371 for RAD-2.
 
 
-Plot C shows ROC curves. Since the curves cross, it is not clear which has the larger AUC. AUCs under the two curves in C are 0.7499371 for RAD-1 and 0.7452829 for RAD-2, which are close, but here is an example where the ordering given by the wAFROC is opposite to that given by the ROC. 
+Plot C shows ROC curves. Since the curves cross, it is not clear which has the larger AUC. AUCs under the two curves in C are 0.749937142857143 for RAD-1 and 0.745282857142857 for RAD-2, which are close, but here is an example where the ordering given by the wAFROC is opposite to that given by the ROC. 
 
-Plots D, E and F correspond to A, B and C with this important difference: the two threshold parameters are set to $-\infty$. The coordinates of the end-point of the RAD-1 FROC in panel D are (1.0025, 0.6048077). Those of the RAD-2 FROC in panel D are (0.6391667, 0.775). The RAD-2 observer has higher LLF at lower NLF, and there can be no doubt that he is better. Panels E and F confirm that RAD-2 is actually the better observer *over the entire FPF range*. AUCs under the two wAFROC curves in E are 0.5604857 for RAD-1 and 0.7779929 for RAD-2. AUCs under the two ROC curves in F are 0.7513343 for RAD-1 and 0.8825686 for RAD-2. These confirm the visual impressions of plots in panels E and F. Notice that each ROC AUC is larger than the corresponding wAFROC AUC. This is because the probability of a lesion localization (case is declared positive *and* a lesion is correctly localized) is smaller than the probability of a true positive (case is declared positive). In other words, the ROC is everywhere above the wAFROC.
+Plots D, E and F correspond to A, B and C with this important difference: the two threshold parameters are set to $-\infty$. The coordinates of the end-point of the RAD-1 FROC in panel D are (1.0025, 0.6048077). Those of the RAD-2 FROC in panel D are (0.6391667, 0.775). The RAD-2 observer has higher LLF at lower NLF, and there can be no doubt that he is better. Panels E and F confirm that RAD-2 is actually the better observer *over the entire FPF range*. AUCs under the two wAFROC curves in E are 0.560485714285714 for RAD-1 and 0.777992857142857 for RAD-2. AUCs under the two ROC curves in F are 0.751334285714286 for RAD-1 and 0.882568571428571 for RAD-2. These confirm the visual impressions of plots in panels E and F. Notice that each ROC AUC is larger than the corresponding wAFROC AUC. This is because the probability of a lesion localization (case is declared positive *and* a lesion is correctly localized) is smaller than the probability of a true positive (case is declared positive). In other words, the ROC is everywhere above the wAFROC.
 
 
 ### Large difference in performance
@@ -100,17 +97,14 @@ Plots D, E and F correspond to A, B and C with this important difference: the tw
 
 
 
-<div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot2-1.png" alt="Plots A and B are for 1 $\zeta_1 = -1$ and 2 $\zeta_1 = 2$ and plots C and D are plots for 1 $\zeta_1 = -\infty$ and 2 $\zeta_1 = -\infty$. A and C: FROC curves for the RAD-1 and RAD-2 observers. B and D: corresponding wAFROC curves." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot2)Plots A and B are for 1 $\zeta_1 = -1$ and 2 $\zeta_1 = 2$ and plots C and D are plots for 1 $\zeta_1 = -\infty$ and 2 $\zeta_1 = -\infty$. A and C: FROC curves for the RAD-1 and RAD-2 observers. B and D: corresponding wAFROC curves.</p>
-</div>
+![(\#fig:froc-vs-afroc-plot2)Plots A and B are for 1 $\zeta_1 = -1$ and 2 $\zeta_1 = 2$ and plots C and D are plots for 1 $\zeta_1 = -\infty$ and 2 $\zeta_1 = -\infty$. A and C: FROC curves for the RAD-1 and RAD-2 observers. B and D: corresponding wAFROC curves.](13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot2-1.pdf) 
 
 TBA Fig. \@ref(fig:froc-vs-afroc-plot2) (A) FROC curves for RAD-1 observer and the RAD-2 observer. The RAD-1 observer is identical to that shown in Fig. \@ref(fig:froc-vs-afroc-plot1). The RAD-2 observer is characterized by $\mu = 2$ and $\zeta_1 = 2$. This time it is impossible to compare the two FROC curves, as the common range is very small. However, wAFROC, plot B, clearly shows the expected superiority of the RAD-2 observer, in spite of the severe underestimate of the corresponding AUC.
 
 
-In Fig. \@ref(fig:froc-vs-afroc-plot2) panel A, the RAD-1 parameters are the same as in Fig. \@ref(fig:froc-vs-afroc-plot1), but the RAD-2 parameters are $\mu_{2} = 2$ and $\zeta_1 = +2$. Doubling the separation parameter over that of RAD-1 ($\mu_{1} = 1$) has a huge effect on performance. The end-point coordinates of the FROC for RAD-1 are (0.8258333, 0.5903846). The end-point coordinates of the FROC for RAD-2 are (0.015, 0.4211538). The common NLF region defined by NLF = 0 to NLF = 0.015 *would exclude almost all of the marks made by RAD-1*. The wAFROC plots in panel B show the markedly greater performance of RAD-2 over RAD-1 (the AUCs are 0.5730971 for RAD-1 and 0.7075193 for RAD-2). The inter-reader difference is larger (compared to Fig. \@ref(fig:froc-vs-afroc-plot1) plot B), despite the greater downward bias working against the RAD-2 observer. Panel C shows ROC plots for the two observers. Although the curves cross, it is evident that RAD-2 has the greater AUC. The AUCs are 0.7499371 for RAD-1 and 0.7721557 for RAD-2.
+In Fig. \@ref(fig:froc-vs-afroc-plot2) panel A, the RAD-1 parameters are the same as in Fig. \@ref(fig:froc-vs-afroc-plot1), but the RAD-2 parameters are $\mu_{2} = 2$ and $\zeta_1 = +2$. Doubling the separation parameter over that of RAD-1 ($\mu_{1} = 1$) has a huge effect on performance. The end-point coordinates of the FROC for RAD-1 are (0.8258333, 0.5903846). The end-point coordinates of the FROC for RAD-2 are (0.015, 0.4211538). The common NLF region defined by NLF = 0 to NLF = 0.015 *would exclude almost all of the marks made by RAD-1*. The wAFROC plots in panel B show the markedly greater performance of RAD-2 over RAD-1 (the AUCs are 0.573097142857143 for RAD-1 and 0.707519285714286 for RAD-2). The inter-reader difference is larger (compared to Fig. \@ref(fig:froc-vs-afroc-plot1) plot B), despite the greater downward bias working against the RAD-2 observer. Panel C shows ROC plots for the two observers. Although the curves cross, it is evident that RAD-2 has the greater AUC. The AUCs are 0.749937142857143 for RAD-1 and 0.772155714285714 for RAD-2.
 
-Plots D, E and F correspond to A, B and C with the difference that the two threshold parameters are set to $-\infty$. The coordinates of the end-point of the RAD-1 FROC in panel D are (1.0025, 0.6048077). Those of the RAD-2 FROC in panel D are (0.5, 0.8653846). The RAD-2 observer has higher LLF at lower NLF, and there can be no doubt that he is better. Panels E and F confirm that RAD-2 is actually the better observer *over the entire FPF range*. AUCs under the two wAFROC curves in E are 0.5604857 for RAD-1 and 0.8720286 for RAD-2. AUCs under the two ROC curves in F are 0.7513343 for RAD-1 and 0.9343214 for RAD-2. These confirm the visual impressions of plots in panels E and F. Notice that each ROC AUC is larger than the corresponding wAFROC AUC. 
+Plots D, E and F correspond to A, B and C with the difference that the two threshold parameters are set to $-\infty$. The coordinates of the end-point of the RAD-1 FROC in panel D are (1.0025, 0.6048077). Those of the RAD-2 FROC in panel D are (0.5, 0.8653846). The RAD-2 observer has higher LLF at lower NLF, and there can be no doubt that he is better. Panels E and F confirm that RAD-2 is actually the better observer *over the entire FPF range*. AUCs under the two wAFROC curves in E are 0.560485714285714 for RAD-1 and 0.872028571428571 for RAD-2. AUCs under the two ROC curves in F are 0.751334285714286 for RAD-1 and 0.934321428571429 for RAD-2. These confirm the visual impressions of plots in panels E and F. Notice that each ROC AUC is larger than the corresponding wAFROC AUC. 
 
 ### Small difference in performance and identical thresholds
 
@@ -118,23 +112,20 @@ Plots D, E and F correspond to A, B and C with the difference that the two thres
 
 
 
-<div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot3-1.png" alt="Plots A and B are for 1 $\zeta_1 = -1$ and 2 $\zeta_1 = -1$ and plots C and D are plots for 1 $\zeta_1 = -\infty$ and 2 $\zeta_1 = -\infty$. A and C: FROC curves for the RAD-1 and RAD-2 observers. B and D: corresponding wAFROC curves." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot3)Plots A and B are for 1 $\zeta_1 = -1$ and 2 $\zeta_1 = -1$ and plots C and D are plots for 1 $\zeta_1 = -\infty$ and 2 $\zeta_1 = -\infty$. A and C: FROC curves for the RAD-1 and RAD-2 observers. B and D: corresponding wAFROC curves.</p>
-</div>
+![(\#fig:froc-vs-afroc-plot3)Plots A and B are for 1 $\zeta_1 = -1$ and 2 $\zeta_1 = -1$ and plots C and D are plots for 1 $\zeta_1 = -\infty$ and 2 $\zeta_1 = -\infty$. A and C: FROC curves for the RAD-1 and RAD-2 observers. B and D: corresponding wAFROC curves.](13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot3-1.pdf) 
 
 
 Notice also that in all three figures the wAFROC effect size (the difference in AUCs) is larger than the corresponding ROC effect size. 
 
-* For Fig. \@ref(fig:froc-vs-afroc-plot1), the wAFROC effect size is 0.1006129 and the ROC effect size is -0.0046543. 
-* For Fig. \@ref(fig:froc-vs-afroc-plot2), the wAFROC effect size is 0.1344221 and the ROC effect size is 0.0222186. 
-* For Fig. \@ref(fig:froc-vs-afroc-plot3), the wAFROC effect size is 0.0610014 and the ROC effect size is 0.0368543. 
+* For Fig. \@ref(fig:froc-vs-afroc-plot1), the wAFROC effect size is 0.100612857142857 and the ROC effect size is -0.00465428571428572. 
+* For Fig. \@ref(fig:froc-vs-afroc-plot2), the wAFROC effect size is 0.134422142857143 and the ROC effect size is 0.0222185714285714. 
+* For Fig. \@ref(fig:froc-vs-afroc-plot3), the wAFROC effect size is 0.0610014285714285 and the ROC effect size is 0.0368542857142857. 
 
 
 
-The final example, Fig. \@ref(fig:froc-vs-afroc-plot3) shows that *when there is a small difference in performance*, there is less ambiguity in using the FROC as a basis for measuring performance. The RAD-1 parameters are the same as in Fig. \@ref(fig:froc-vs-afroc-plot1) but the RAD-2 parameters are $\mu = 1.1$ and $\zeta_1= -1$. In other words, the $\mu$ parameter is 10% larger and the thresholds are identical. This time there is much more common NLF range overlap in plot A and one is counting most of the marks for the RAD-1 reader. The end-point coordinates of the FROC for RAD-1 are (0.8258333, 0.5903846). The end-point coordinates of the FROC for RAD-2 are (0.7458333, 0.6644231). The common NLF region defined by NLF = 0 to NLF = 0.7458333 includes almost all of the marks made by RAD-1. The wAFROC plots in panel B show the slight greater performance of RAD-2 over RAD-1 (the AUCs are 0.5730971 for RAD-1 and 0.6340986 for RAD-2). Panel C shows ROC plots for the two observers. Although the curves cross, it is evident that RAD-2 has the greater AUC. The AUCs are 0.7499371 for RAD-1 and 0.7721557 for RAD-2.
+The final example, Fig. \@ref(fig:froc-vs-afroc-plot3) shows that *when there is a small difference in performance*, there is less ambiguity in using the FROC as a basis for measuring performance. The RAD-1 parameters are the same as in Fig. \@ref(fig:froc-vs-afroc-plot1) but the RAD-2 parameters are $\mu = 1.1$ and $\zeta_1= -1$. In other words, the $\mu$ parameter is 10% larger and the thresholds are identical. This time there is much more common NLF range overlap in plot A and one is counting most of the marks for the RAD-1 reader. The end-point coordinates of the FROC for RAD-1 are (0.8258333, 0.5903846). The end-point coordinates of the FROC for RAD-2 are (0.7458333, 0.6644231). The common NLF region defined by NLF = 0 to NLF = 0.7458333 includes almost all of the marks made by RAD-1. The wAFROC plots in panel B show the slight greater performance of RAD-2 over RAD-1 (the AUCs are 0.573097142857143 for RAD-1 and 0.634098571428571 for RAD-2). Panel C shows ROC plots for the two observers. Although the curves cross, it is evident that RAD-2 has the greater AUC. The AUCs are 0.749937142857143 for RAD-1 and 0.772155714285714 for RAD-2.
 
-Plots D, E and F correspond to A, B and C with the difference that the two threshold parameters are set to $-\infty$. The coordinates of the end-point of the RAD-1 FROC in panel D are (1.0025, 0.6048077). Those of the RAD-2 FROC in panel D are (0.9008333, 0.6778846). Panels E and F confirm that RAD-2 is actually the better observer over the entire FPF range. AUCs under the two wAFROC curves in E are 0.5604857 for RAD-1 and 0.62384 for RAD-2. AUCs under the two ROC curves in F are 0.7513343 for RAD-1 and 0.7856543 for RAD-2. These confirm the visual impressions of plots in panels E and F. Notice that each ROC AUC is larger than the corresponding wAFROC AUC. 
+Plots D, E and F correspond to A, B and C with the difference that the two threshold parameters are set to $-\infty$. The coordinates of the end-point of the RAD-1 FROC in panel D are (1.0025, 0.6048077). Those of the RAD-2 FROC in panel D are (0.9008333, 0.6778846). Panels E and F confirm that RAD-2 is actually the better observer over the entire FPF range. AUCs under the two wAFROC curves in E are 0.560485714285714 for RAD-1 and 0.62384 for RAD-2. AUCs under the two ROC curves in F are 0.751334285714286 for RAD-1 and 0.785654285714286 for RAD-2. These confirm the visual impressions of plots in panels E and F. Notice that each ROC AUC is larger than the corresponding wAFROC AUC. 
 
 
 ## Summary of simulations
@@ -146,29 +137,18 @@ In order to get a better overview, the following tables summarize the numerical 
 
 
 
-<table>
-<caption>(\#tab:froc-vs-afroc-summary-table-cad)Summary of RAD-1 simulations: A refers to plot A, B refers to plot B, etc.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> FROC-A </th>
-   <th style="text-align:left;"> FROC-D </th>
-   <th style="text-align:left;"> wAFROC-B </th>
-   <th style="text-align:left;"> wAFROC-E </th>
-   <th style="text-align:left;"> ROC-C </th>
-   <th style="text-align:left;"> ROC-F </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> (0.8258, 0.5904) </td>
-   <td style="text-align:left;"> (1.002, 0.6048) </td>
-   <td style="text-align:left;"> 0.5731 </td>
-   <td style="text-align:left;"> 0.5605 </td>
-   <td style="text-align:left;"> 0.7499 </td>
-   <td style="text-align:left;"> 0.7513 </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:froc-vs-afroc-summary-table-cad)Summary of RAD-1 simulations: A refers to plot A, B refers to plot B, etc.}
+\centering
+\begin{tabular}[t]{l|l|l|l|l|l}
+\hline
+FROC-A & FROC-D & wAFROC-B & wAFROC-E & ROC-C & ROC-F\\
+\hline
+(0.8258, 0.5904) & (1.002, 0.6048) & 0.5731 & 0.5605 & 0.7499 & 0.7513\\
+\hline
+\end{tabular}
+\end{table}
 
 
 -   The first column is labeled "FROC-A", meaning the RAD-1 FROC plots labeled A, which are identical for the three figures Fig. \@ref(fig:froc-vs-afroc-plot1), Fig. \@ref(fig:froc-vs-afroc-plot2) and Fig. \@ref(fig:froc-vs-afroc-plot3).
@@ -180,49 +160,22 @@ In order to get a better overview, the following tables summarize the numerical 
 
 
 
-<table>
-<caption>(\#tab:froc-vs-afroc-summary-table-rad)Summary of RAD-2 simulations: Fig refers to the figure number in this chapter, A refers to plot A, B refers to plot B, etc.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> Fig </th>
-   <th style="text-align:left;"> FROC-A </th>
-   <th style="text-align:left;"> FROC-D </th>
-   <th style="text-align:left;"> wAFROC-B </th>
-   <th style="text-align:left;"> wAFROC-E </th>
-   <th style="text-align:left;"> ROC-C </th>
-   <th style="text-align:left;"> ROC-F </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> (0.04917, 0.3981) </td>
-   <td style="text-align:left;"> (0.6392, 0.775) </td>
-   <td style="text-align:left;"> 0.6737 </td>
-   <td style="text-align:left;"> 0.778 </td>
-   <td style="text-align:left;"> 0.7453 </td>
-   <td style="text-align:left;"> 0.8826 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> (0.015, 0.4212) </td>
-   <td style="text-align:left;"> (0.5, 0.8654) </td>
-   <td style="text-align:left;"> 0.7075 </td>
-   <td style="text-align:left;"> 0.872 </td>
-   <td style="text-align:left;"> 0.7722 </td>
-   <td style="text-align:left;"> 0.9343 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 3 </td>
-   <td style="text-align:left;"> (0.7458, 0.6644) </td>
-   <td style="text-align:left;"> (0.9008, 0.6779) </td>
-   <td style="text-align:left;"> 0.6341 </td>
-   <td style="text-align:left;"> 0.6238 </td>
-   <td style="text-align:left;"> 0.7868 </td>
-   <td style="text-align:left;"> 0.7857 </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:froc-vs-afroc-summary-table-rad)Summary of RAD-2 simulations: Fig refers to the figure number in this chapter, A refers to plot A, B refers to plot B, etc.}
+\centering
+\begin{tabular}[t]{l|l|l|l|l|l|l}
+\hline
+Fig & FROC-A & FROC-D & wAFROC-B & wAFROC-E & ROC-C & ROC-F\\
+\hline
+1 & (0.04917, 0.3981) & (0.6392, 0.775) & 0.6737 & 0.778 & 0.7453 & 0.8826\\
+\hline
+2 & (0.015, 0.4212) & (0.5, 0.8654) & 0.7075 & 0.872 & 0.7722 & 0.9343\\
+\hline
+3 & (0.7458, 0.6644) & (0.9008, 0.6779) & 0.6341 & 0.6238 & 0.7868 & 0.7857\\
+\hline
+\end{tabular}
+\end{table}
 
 -   The first column refers to the figure number, for example, "1" refers to Fig. \@ref(fig:froc-vs-afroc-plot1), "2" refers to Fig. \@ref(fig:froc-vs-afroc-plot2), and "3" refers to Fig. \@ref(fig:froc-vs-afroc-plot3).
 -   The second column is labeled "FROC-A", meaning the RAD-2 FROC plot labeled A.
@@ -245,10 +198,7 @@ Presented next are four plots arranged to best show the effect of a change in th
 
 
 
-<div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot4-1.png" alt="1/2 FROC/wAFROC plots for two values of threshold. See below." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot4)1/2 FROC/wAFROC plots for two values of threshold. See below.</p>
-</div>
+![(\#fig:froc-vs-afroc-plot4)1/2 FROC/wAFROC plots for two values of threshold. See below.](13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot4-1.pdf) 
 
 TBA Fig. \@ref(fig:froc-vs-afroc-plot4): Plot A is the RAD-1 FROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = -1$ and the red plot, which is mostly buried under the blue plot but the short red extension is visible, is for $\zeta_1 = -\infty$. Plot B is the RAD-1 wAFROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = -1$ and the red plot is for $\zeta_1 = -\infty$. Plot C is the RAD-2 FROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = 2$ and the red plot, which is partially buried under the blue plot but the long red extension is visible, is for $\zeta_1 = -\infty$. Plot D is the RAD-2 wAFROC for two values of $\zeta_1$: the green plot is for $\zeta_1 = 2$ and the red plot is for $\zeta_1 = -\infty$.
 
@@ -257,9 +207,9 @@ In the ROC paradigm, two points on the same underlying ROC curve represent the s
 In the following the red curve always refers to $\zeta_1 = -\infty$ while the blue curve always refers to $\zeta_1 = -1$.
 
 1.  Plot A: The RAD-1 blue plot is completely buried (i.e., identical curves) under the RAD-1 red plot, except for a short red extension. This is because the two plots correspond to identical values of the RSM parameters $\mu, \lambda, \nu$, the only difference is in the threshold parameter $\zeta_1$: the blue corresponds to $\zeta_1 = -1$ while the red corresponds to $\zeta_1 = -\infty$. If the only difference in the curves is due to the effect of threshold, one has to conclude that the intrinsic performances of the two observers, i.e., 1 with different thresholds, are in fact identical. In fact this is an incorrect conclusion, see below, which argues against the notion that the FROC curve is meaningful.
-2.  Plot B: this time the RAD-1 curve extends all the way from (0,0) to (1,1) and so does the RAD-2 curve (most of which is buried under the blue one). A relatively small performance difference is evident: the blue curve has higher wAFROC-AUC = 0.5730971, than the red one, wAFROC-AUC = 0.5604857. The reason for this can be understood by noting that with the chosen $\mu = 1$ threshold $\zeta_1 = -1$ one is starting out on the relatively flat portion of the FROC. Upon extending it to higher NLF by lowering the threshold to $\zeta_1 = -\infty$, the increase in the LLF is modest, but NLF has increased substantially. Since relatively few additional lesions are being localized but the penalty is more NLs, intrinsic performance for the red curve is expected to decrease. The difference in performance is 0.0126114. *The wAFROC gives the correct ordering of the two observers, one that is missed by the FROC.* The argument is more convincing upon comparing the observers' in Fig. \@ref(fig:froc-vs-afroc-plot4) C and D.
+2.  Plot B: this time the RAD-1 curve extends all the way from (0,0) to (1,1) and so does the RAD-2 curve (most of which is buried under the blue one). A relatively small performance difference is evident: the blue curve has higher wAFROC-AUC = 0.573097142857143, than the red one, wAFROC-AUC = 0.560485714285714. The reason for this can be understood by noting that with the chosen $\mu = 1$ threshold $\zeta_1 = -1$ one is starting out on the relatively flat portion of the FROC. Upon extending it to higher NLF by lowering the threshold to $\zeta_1 = -\infty$, the increase in the LLF is modest, but NLF has increased substantially. Since relatively few additional lesions are being localized but the penalty is more NLs, intrinsic performance for the red curve is expected to decrease. The difference in performance is 0.0126114285714286. *The wAFROC gives the correct ordering of the two observers, one that is missed by the FROC.* The argument is more convincing upon comparing the observers' in Fig. \@ref(fig:froc-vs-afroc-plot4) C and D.
 3.  Plot C: the RAD-2 FROC plot is partially buried under the RAD-1 plot, a short near vertical segment from (0,0) to (0.015, 0.4211538), in the region near the origin. Thereafter the RAD-2 FROC plot resumes a sweeping curve all the way to (0.5, 0.8653846). Since the two curves are identical except for changing thresholds, one must conclude based on the FROC, that the two performances are identical.
-4.  Plot D: the RAD-2 blue curve extends all the way from (0,0) to (1,1) and so does the RAD-2 red curve (a short portion of which, near the origin, is buried under the blue one). A large performance difference is evident: the red curve has higher wAFROC-AUC = 0.8720286, than the blue one, wAFROC-AUC = 0.7075193. The explanation for this is that with the chosen 2 parameters -- $\mu = 2$ and initial threshold $\zeta_1 = 2$ -- one is starting on the relatively steep portion of the FROC and extending it to both higher LLF and higher NLF. Since many additional lesions are being localized, and one is counting only the highest rated NL on each non-diseased case, the penalty of more NLs is more than outweighed by the increased number of lesions localized. The difference in performance is 0.1645093. Again, the wAFROC gives the correct ordering of the two observers, one that is missed by the FROC.
+4.  Plot D: the RAD-2 blue curve extends all the way from (0,0) to (1,1) and so does the RAD-2 red curve (a short portion of which, near the origin, is buried under the blue one). A large performance difference is evident: the red curve has higher wAFROC-AUC = 0.872028571428571, than the blue one, wAFROC-AUC = 0.707519285714286. The explanation for this is that with the chosen 2 parameters -- $\mu = 2$ and initial threshold $\zeta_1 = 2$ -- one is starting on the relatively steep portion of the FROC and extending it to both higher LLF and higher NLF. Since many additional lesions are being localized, and one is counting only the highest rated NL on each non-diseased case, the penalty of more NLs is more than outweighed by the increased number of lesions localized. The difference in performance is 0.164509285714286. Again, the wAFROC gives the correct ordering of the two observers, one that is missed by the FROC.
 
 The essential reason why the wAFROC gives the correct ordering but the FROC does not is that the wAFROC, being contained in the unit square, gives the complete picture. The FROC, not so constrained to the unit square, does not. 
 
@@ -300,10 +250,7 @@ The argument depends critically on the area under the straight line extension fr
 #> 4 0.2317039
 ```
 
-<div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot5-1.png" alt="TBA. See below." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot5)TBA. See below.</p>
-</div>
+![(\#fig:froc-vs-afroc-plot5)TBA. See below.](13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot5-1.pdf) 
 
 **Optimal operating point for 1**
 
@@ -336,10 +283,7 @@ print(as.data.frame(nlfArr))
 #> 4 0.3230266
 ```
 
-<div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot6-1.png" alt="TBA. See below." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot6)TBA. See below.</p>
-</div>
+![(\#fig:froc-vs-afroc-plot6)TBA. See below.](13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot6-1.pdf) 
 
 ## Discussion {#froc-vs-wafroc-Discussion}
 
