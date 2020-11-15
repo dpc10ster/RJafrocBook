@@ -234,21 +234,14 @@ Let us examine the ratings.
 
 ```r
 frocData$ratings$NL[1,1,,]
-#>             [,1]       [,2] [,3]
-#> [1,]        -Inf       -Inf -Inf
-#> [2,] -0.07807201 -0.3786301 -Inf
-#> [3,]        -Inf       -Inf -Inf
-#> [4,]  0.16532641       -Inf -Inf
-#> [5,]        -Inf       -Inf -Inf
-#> [6,] -0.42814814       -Inf -Inf
-#> [7,]        -Inf       -Inf -Inf
-#> [8,]        -Inf       -Inf -Inf
+#> [1]        -Inf        -Inf -0.55038878 -0.85096178        -Inf        -Inf
+#> [7]        -Inf -0.08676427
 frocData$ratings$LL[1,1,,]
-#>          [,1]      [,2]
-#> [1,] 2.573255      -Inf
-#> [2,] 2.058557      -Inf
-#> [3,] 2.483985 1.6033996
-#> [4,] 2.470344 0.8567917
+#>          [,1]     [,2]
+#> [1,] 2.897436     -Inf
+#> [2,] 1.920118     -Inf
+#> [3,] 2.495235 2.097470
+#> [4,] 2.567562 2.218381
 ```
 
 The length of the third dimension of the NL array is eight (4 non-diseased + 4 diseased cases). The fifth sequential case corresponds to NLs on the first diseased case, etc. The simulated z-samples displayed in §14.5.2 are shown in Table \@ref(tab:froc-meanings-table-non-diseased) for non-diseased and in Table \@ref(tab:froc-meanings-table-diseased) for diseased cases. The columns labeled list the case-location indexing subscripts, the columns labeled list the corresponding z-samples, when realized and otherwise NAs are listed. Column 5 in Table \@ref(tab:froc-meanings-table-non-diseased) illustrates the conversion of the NL z-samples to FP z-samples according to the highest-rating assumption (the first non-diseased case illustrates the rule that in the absence of any marks the FP rating is ∞). The tables show that the simulator did not realize any z-sample on the first non-diseased case (alternatively, if it did, the z-sample(s) fell below ; one cannot tell the difference), and for the second lesion on the third diseased case. Because non-diseased cases have no lesions, all z-samples listed in Table \@ref(tab:froc-meanings-table-non-diseased) are NLs. In contrast, in Table \@ref(tab:froc-meanings-table-diseased), each case can generate NLs and LLs. The second column of Table \@ref(tab:froc-meanings-table-diseased) lists the number of lesions per diseased case . Columns 3 and 4 illustrate NL indexing and z-samples and columns 5 and 6 illustrate LL indexing and z-samples. Column 8 illustrates the conversion of the NL and LL z-samples to TP z-samples according to the highest-rating assumption. The last columns of Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased) label the correspondences of the z-samples to the operating points shown in Fig. 14.3 and Fig. 14.5. Unrealized z-samples, if any, are indicated by an asterisk.

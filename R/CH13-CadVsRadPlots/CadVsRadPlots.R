@@ -1,7 +1,5 @@
-CadVsRadPlots <- function(muCad, muRad, lambda, nu, zeta1Cad, zeta1Rad, K1, K2, Lk2, initSeed) {
+CadVsRadPlots <- function(muCad, muRad, lambda, nu, zeta1Cad, zeta1Rad, K1, K2, Lk2, seed) {
   
-  seed <- initSeed
-  set.seed(seed)
   # simulate CAD ratings
   frocCad <- SimulateFrocDataset(
     mu = muCad,
@@ -12,12 +10,12 @@ CadVsRadPlots <- function(muCad, muRad, lambda, nu, zeta1Cad, zeta1Rad, K1, K2, 
     K1 = K1,
     K2 = K2,
     perCase = Lk2,
-    zeta1 = zeta1Cad)
-  frocCad$descriptions$readerID <- "CAD"
-  fomCad <- UtilFigureOfMerit(frocCad, FOM = "wAFROC")
-  
-  seed <- initSeed
-  set.seed(seed)
+    zeta1 = zeta1Cad,
+    seed = seed)
+  #frocCad$descriptions$readerID <- "CAD"
+  wafroc1 <- UtilFigureOfMerit(frocCad, FOM = "wAFROC")
+  roc1 <- UtilFigureOfMerit(DfFroc2Roc(frocCad), FOM = "Wilcoxon")
+
   # simulate RAD ratings
   frocRad <- SimulateFrocDataset(
     mu = muRad,
@@ -28,11 +26,13 @@ CadVsRadPlots <- function(muCad, muRad, lambda, nu, zeta1Cad, zeta1Rad, K1, K2, 
     K1 = K1,
     K2 = K2,
     perCase = Lk2,
-    zeta1 = zeta1Rad)
+    zeta1 = zeta1Rad,
+    seed = seed)
   
-  frocRad$descriptions$readerID <- "RAD"
-  fomRad <- UtilFigureOfMerit(frocRad, FOM = "wAFROC")
-  
+  #frocRad$descriptions$readerID <- "RAD"
+  wafroc2 <- UtilFigureOfMerit(frocRad, FOM = "wAFROC")
+  roc2 <- UtilFigureOfMerit(DfFroc2Roc(frocRad), FOM = "Wilcoxon")
+
   # following code merges the two single 
   # modality single reader datasets into 
   # a single modality two reader dataset
@@ -76,40 +76,51 @@ CadVsRadPlots <- function(muCad, muRad, lambda, nu, zeta1Cad, zeta1Rad, K1, K2, 
     frocRad$ratings$LL,
     along = 2)
   
-  # convert the the combined NLs
+  # convert the combined NLs
   # and LLs to an RJafroc dataset
   frocComb <- Df2RJafrocDataset(
     NL = NLComb,
     LL = LLComb,
     InputIsCountsTable = FALSE,
     perCase = Lk2)
-  frocComb$descriptions$readerID <- c("CAD", "RAD")
+  #frocComb$descriptions$readerID <- c("CAD", "RAD")
   
   froc <- PlotEmpiricalOperatingCharacteristics(
     frocComb,
     trts= 1,
     rdrs = c(1, 2),
     opChType = "FROC", maxDiscrete = 25)
+  #froc$descriptions$readerID <- c("CAD1", "RAD1")
   
   wafroc <- PlotEmpiricalOperatingCharacteristics(
     frocComb,
     trts= 1,
     rdrs = c(1, 2),
     opChType = "wAFROC", maxDiscrete = 25)
+  #wafroc$descriptions$readerID <- c("CAD1", "RAD1")
+  
+  roc <- PlotEmpiricalOperatingCharacteristics(
+    frocComb,
+    trts= 1,
+    rdrs = c(1, 2),
+    opChType = "ROC", maxDiscrete = 25)
+  #roc$descriptions$readerID <- c("C2", "R3")
   
   return(list(froc = froc,
               wafroc = wafroc,
-              fomCad = fomCad,
-              fomRad = fomRad))
+              roc = roc,
+              wafroc1 = wafroc1,
+              wafroc2 = wafroc2,
+              roc1 = roc1,
+              roc2 = roc2
+  ))
   
 }
 
 
 # 2 FROC plots one with finite threshold and the other with -infinity threshold
-ZetaEffectPlots <- function(mu, lambda, nu, zeta1, K1, K2, Lk2, initSeed, label) {
+ZetaEffectPlots <- function(mu, lambda, nu, zeta1, K1, K2, Lk2, seed, label) {
   
-  seed <- initSeed
-  set.seed(seed)
   # simulate ratings using zeta1
   froc_zeta1 <- SimulateFrocDataset(
     mu = mu,
@@ -120,13 +131,12 @@ ZetaEffectPlots <- function(mu, lambda, nu, zeta1, K1, K2, Lk2, initSeed, label)
     K1 = K1,
     K2 = K2,
     perCase = Lk2,
-    zeta1 = zeta1)
+    zeta1 = zeta1,
+    seed = seed)
   
   froc_zeta1$descriptions$readerID <- paste0(label,"zeta1")
   fom_zeta1 <- UtilFigureOfMerit(froc_zeta1, FOM = "wAFROC")
   
-  seed <- initSeed
-  set.seed(seed)
   # simulate ratings using -Inf
   froc_negInf <- SimulateFrocDataset(
     mu = mu,
@@ -137,7 +147,8 @@ ZetaEffectPlots <- function(mu, lambda, nu, zeta1, K1, K2, Lk2, initSeed, label)
     K1 = K1,
     K2 = K2,
     perCase = Lk2,
-    zeta1 = -Inf)
+    zeta1 = -Inf,
+    seed = seed)
   
   froc_negInf$descriptions$readerID <- paste0(label,"negInf")
   fom_negInf <- UtilFigureOfMerit(froc_negInf, FOM = "wAFROC")
