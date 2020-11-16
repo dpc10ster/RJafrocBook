@@ -241,33 +241,56 @@ In order to get a better overview, the following tables summarize the numerical 
 
 
 ## The optimal operating point on the FROC
+Algorithm developers are familiar with this problem. Given a CAD system that yields mark-rating data, where the ratings are on a continuous scale (often termed malignancy index), how does one select the optimal reporting threshold? Only mark-rating data with ratings exceeding the optimal threshold are to be displayed to the radiologist. From the previous examples it is evident that performance, as measured by the wAFROC or ROC AUCs, depends on the choice of reporting threshold: see for example the differences between the columns labeled "wAFROC-B" and  "wAFROC-E" and between the columns labeled "ROC-C" and  "ROC-F". This section examines the effect of changing the reporting threshold $\zeta_1$ on the wAFROC AUC, with the object of determining the value that maximizes the AUC. Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of NL marks as an expert radiologist. The $\nu = 1$ parameter is kept at the same value as in the previous simulations. Four values of the $\mu$ parameter are considered: 1, 1.5, 2 and 2.5. All else being equal, performance improves with increasing $\mu$. To minimize sampling variability, the number of non-diseased cases is $K_1 = 5000$ and the number of diseased cases is $K_2 = 7000$. 
 
-**Optimal operating point for RAD-2**
+For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computation for each value of $\zeta_1$ and determines that value of $zeta_1$ that maximizes AUC; this is denoted $zeta_{\text{max}}$. Finally, for the optimal $zeta_1$ one calculates the corresponding NLF value.
+
+## Simulations for $\lambda = 10$
 
 
+```r
+lambda <- 10 
+nu <- 1
+mu_arr <- c(1, 1.5, 2, 2.5)
+max_fomArray <- llfArr <- nlfArr <- zetaMaxArr <- array(dim = length(mu_arr))
+plotArr <- array(list(), length(mu_arr))
+K1 <- 5000
+K2 <- 7000
+Lmax <- 2
+seed <- 1
+set.seed(seed)
+Lk2 <- floor(runif(K2, 1, Lmax + 1))
+
+for (i in 1:length(mu_arr)) {
+  if (i == 1) zeta1Arr <- seq(1.5,3.5,0.1) else zeta1Arr <- seq(0.5,2.5,0.1)
+  fomArray <- array(dim = length(zeta1Arr))
+  x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
+  plotArr[[i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
+  zetaMaxArr[i] <- x$zetaMax
+  froc1 <- SimulateFrocDataset (
+    mu = mu_arr[i],
+    lambda = lambda,
+    nu = nu,
+    zeta1 = x$zetaMax,
+    I = 1,
+    J = 1,
+    K1 = K1,
+    K2 = K2,
+    perCase = Lk2,
+    seed = seed)
+  max_fomArray[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
+  physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
+  nlfArr[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
+  llfArr[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
+}
+```
 
 
 ```
-#>   mu_arr
-#> 1    1.0
-#> 2    1.5
-#> 3    2.0
-#> 4    2.5
-#>   zetaMaxArr
-#> 1        0.4
-#> 2       -0.3
-#> 3       -0.2
-#> 4        0.1
-#>   max_fomArray
-#> 1    0.6050725
-#> 2    0.7817727
-#> 3    0.8809098
-#> 4    0.9346086
-#>      nlfArr
-#> 1 0.3445783
-#> 2 0.4119409
-#> 3 0.2896299
-#> 4 0.1840689
+#>             mu = 1  mu = 1.5    mu = 2  mu = 2.5
+#> maxFOM 0.502236657 0.5562810 0.6987578 0.8383320
+#> NLF    0.006871379 0.1914437 0.4037833 0.6346210
+#> LLF    0.008788655 0.2676925 0.6275277 0.8565917
 ```
 
 <div class="figure">
@@ -276,36 +299,16 @@ In order to get a better overview, the following tables summarize the numerical 
 </div>
 
 
-**Optimal operating point for RAD-1**
+## Simulations for $\lambda = 1$
 
 
 
 
-```r
-print(as.data.frame(mu_arr))
-#>   mu_arr
-#> 1    1.0
-#> 2    1.5
-#> 3    2.0
-#> 4    2.5
-print(as.data.frame(zetaMaxArr))
-#>   zetaMaxArr
-#> 1        2.0
-#> 2        1.9
-#> 3        1.4
-#> 4        1.0
-print(as.data.frame(max_fomArray))
-#>   max_fomArray
-#> 1    0.4478684
-#> 2    0.5562810
-#> 3    0.6987578
-#> 4    0.8383320
-print(as.data.frame(nlfArr))
-#>      nlfArr
-#> 1 0.2275013
-#> 2 0.1914437
-#> 3 0.4037833
-#> 4 0.6346210
+```
+#>           mu = 1  mu = 1.5    mu = 2  mu = 2.5
+#> maxFOM 0.6050725 0.7817727 0.8809098 0.9346086
+#> NLF    0.3445783 0.4119409 0.2896299 0.1840689
+#> LLF    0.4587595 0.7489567 0.8526429 0.9103904
 ```
 
 <div class="figure">

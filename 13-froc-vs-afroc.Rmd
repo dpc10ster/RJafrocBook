@@ -416,7 +416,7 @@ knitr::kable(df, caption = "Summary of RAD-2 simulations: Fig refers to the figu
 -   Plots D, E and F are for hypothetical RAD-1 and RAD-2 observers that report *all* suspicious regions. The differences between A and D are minimal for the RAD-1 observer, but marked for the RAD-2 observer. Likewise for the differences between B and E.
 
 
-```{r do_one_mu,cache=TRUE, echo=FALSE}
+```{r do_one_mu, echo=FALSE}
 do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, K1, K2, Lk2, seed) {
   
   
@@ -433,13 +433,10 @@ do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, K1, K2, Lk2, seed) {
       perCase = Lk2,
       seed = seed)
     
-    froc1$descriptions$readerID <- "1"
     fomArray[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
-    #cat("zeta1 = ", zeta1Arr[i], "fom = ", as.numeric(fomArray[i]), "\n")
   }
-  #cat("\n")
-  myData <- data.frame(zeta1Arr = zeta1Arr, fomArray = fomArray)
-  p <- ggplot2::ggplot(myData, aes(x = zeta1Arr, y = fomArray)) + geom_line()
+  myData <- data.frame(zeta1 = zeta1Arr, fom = fomArray)
+  p <- ggplot2::ggplot(myData, aes(x = zeta1, y = fom)) + geom_line()
   zetaMax <- zeta1Arr[which.max(fomArray)]
   return(list(
     p = p,
@@ -450,14 +447,68 @@ do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, K1, K2, Lk2, seed) {
 
 
 ## The optimal operating point on the FROC
+Algorithm developers are familiar with this problem. Given a CAD system that yields mark-rating data, where the ratings are on a continuous scale (often termed malignancy index), how does one select the optimal reporting threshold? Only mark-rating data with ratings exceeding the optimal threshold are to be displayed to the radiologist. From the previous examples it is evident that performance, as measured by the wAFROC or ROC AUCs, depends on the choice of reporting threshold: see for example the differences between the columns labeled "wAFROC-B" and  "wAFROC-E" and between the columns labeled "ROC-C" and  "ROC-F". This section examines the effect of changing the reporting threshold $\zeta_1$ on the wAFROC AUC, with the object of determining the value that maximizes the AUC. Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of NL marks as an expert radiologist. The $\nu = 1$ parameter is kept at the same value as in the previous simulations. Four values of the $\mu$ parameter are considered: 1, 1.5, 2 and 2.5. All else being equal, performance improves with increasing $\mu$. To minimize sampling variability, the number of non-diseased cases is $K_1 = 5000$ and the number of diseased cases is $K_2 = 7000$. 
 
-**Optimal operating point for RAD-2**
+For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computation for each value of $\zeta_1$ and determines that value of $zeta_1$ that maximizes AUC; this is denoted $zeta_{\text{max}}$. Finally, for the optimal $zeta_1$ one calculates the corresponding NLF value.
 
-```{r optOperatingPointRad, cache = TRUE, echo=FALSE}
+## Simulations for $\lambda = 10$
 
-lambda <- nu <- 1
+```{r optOperatingPointLambda10, cache = TRUE, echo=TRUE}
+lambda <- 10 
+nu <- 1
 mu_arr <- c(1, 1.5, 2, 2.5)
-max_fomArray <- nlfArr <- zetaMaxArr <- array(dim = length(mu_arr))
+max_fomArray <- llfArr <- nlfArr <- zetaMaxArr <- array(dim = length(mu_arr))
+plotArr <- array(list(), length(mu_arr))
+K1 <- 5000
+K2 <- 7000
+Lmax <- 2
+seed <- 1
+set.seed(seed)
+Lk2 <- floor(runif(K2, 1, Lmax + 1))
+
+for (i in 1:length(mu_arr)) {
+  if (i == 1) zeta1Arr <- seq(1.5,3.5,0.1) else zeta1Arr <- seq(0.5,2.5,0.1)
+  fomArray <- array(dim = length(zeta1Arr))
+  x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
+  plotArr[[i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
+  zetaMaxArr[i] <- x$zetaMax
+  froc1 <- SimulateFrocDataset (
+    mu = mu_arr[i],
+    lambda = lambda,
+    nu = nu,
+    zeta1 = x$zetaMax,
+    I = 1,
+    J = 1,
+    K1 = K1,
+    K2 = K2,
+    perCase = Lk2,
+    seed = seed)
+  max_fomArray[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
+  physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
+  nlfArr[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
+  llfArr[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
+}
+```
+
+```{r printLambda10, echo=FALSE}
+x <- as.data.frame(rbind(t(max_fomArray), t(nlfArr), t(llfArr)))
+colnames(x) <- paste0("mu = ", as.character(mu_arr))
+rownames(x) <- c("maxFOM", "NLF", "LLF")
+print(x)
+```
+
+```{r froc-vs-afroc-plot5, fig.cap="TBA. See below.", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
+```
+
+
+## Simulations for $\lambda = 1$
+
+```{r optOperatingPointLambda1, cache = TRUE, echo=FALSE}
+lambda <- 1
+nu <- 1
+mu_arr <- c(1, 1.5, 2, 2.5)
+max_fomArray <- llfArr <- nlfArr <- zetaMaxArr <- array(dim = length(mu_arr))
 plotArr <- array(list(), length(mu_arr))
 K1 <- 5000
 K2 <- 7000
@@ -484,66 +535,17 @@ for (i in 1:length(mu_arr)) {
     perCase = Lk2,
     seed = seed)
   max_fomArray[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
-  phys <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
-  nlfArr[i] <- phys$lambdaP*pnorm(-zetaMaxArr[i])
+  physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
+  nlfArr[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
+  llfArr[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
 }
 ```
 
-```{r printRAD, echo=FALSE}
-print(as.data.frame(mu_arr))
-print(as.data.frame(zetaMaxArr))
-print(as.data.frame(max_fomArray))
-print(as.data.frame(nlfArr))
-```
-
-```{r froc-vs-afroc-plot5, fig.cap="TBA. See below.", fig.show='hold', echo=FALSE}
-grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
-```
-
-
-**Optimal operating point for RAD-1**
-
-```{r optOperatingPointCad, cache = TRUE, echo=FALSE}
-
-lambda <- 10
-mu_arr <- c(1, 1.5, 2, 2.5)
-max_fomArray <- nlfArr <- zetaMaxArr <- array(dim = length(mu_arr))
-plotArr <- array(list(), length(mu_arr))
-K1 <- 5000
-K2 <- 7000
-Lmax <- 2
-seed <- 1
-set.seed(seed)
-Lk2 <- floor(runif(K2, 1, Lmax + 1))
-
-for (i in 1:length(mu_arr)) {
-  zeta1Arr <- seq(-1,2,0.1)
-  fomArray <- array(dim = length(zeta1Arr))
-  x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
-  plotArr[[i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
-  zetaMaxArr[i] <- x$zetaMax
-  froc1 <- SimulateFrocDataset (
-    mu = mu_arr[i],
-    lambda = lambda,
-    nu = nu,
-    zeta1 = x$zetaMax,
-    I = 1,
-    J = 1,
-    K1 = K1,
-    K2 = K2,
-    perCase = Lk2,
-    seed = seed)
-  max_fomArray[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
-  phys <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
-  nlfArr[i] <- phys$lambdaP*pnorm(-zetaMaxArr[i])
-}
-```
-
-```{r printCAD}
-print(as.data.frame(mu_arr))
-print(as.data.frame(zetaMaxArr))
-print(as.data.frame(max_fomArray))
-print(as.data.frame(nlfArr))
+```{r Lambda1, echo=FALSE}
+x <- as.data.frame(rbind(t(max_fomArray), t(nlfArr), t(llfArr)))
+colnames(x) <- paste0("mu = ", as.character(mu_arr))
+rownames(x) <- c("maxFOM", "NLF", "LLF")
+print(x)
 ```
 
 ```{r froc-vs-afroc-plot6, fig.cap="TBA. See below.", fig.show='hold', echo=FALSE}
