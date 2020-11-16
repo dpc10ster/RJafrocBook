@@ -294,8 +294,8 @@ for (i in 1:length(mu_arr)) {
 ```
 
 <div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot5-1.png" alt="TBA. See below." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot5)TBA. See below.</p>
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot5-1.png" alt="Variation of fom vs. $\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes fom)." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot5)Variation of fom vs. $\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes fom).</p>
 </div>
 
 
@@ -312,8 +312,8 @@ for (i in 1:length(mu_arr)) {
 ```
 
 <div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot6-1.png" alt="TBA. See below." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot6)TBA. See below.</p>
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot6-1.png" alt="Variation of fom vs. $\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes fom)." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot6)Variation of fom vs. $\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes fom).</p>
 </div>
 
 ## Discussion {#froc-vs-wafroc-Discussion}
