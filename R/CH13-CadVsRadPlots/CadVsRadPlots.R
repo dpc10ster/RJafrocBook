@@ -1,4 +1,4 @@
-CadVsRadPlots <- function(muCad, muRad, lambda, nu, zeta1Cad, zeta1Rad, K1, K2, Lk2, seed) {
+CadVsRadPlots <- function(muCad, muRad, lambda, nu, zeta1_1, zeta1_2, K1, K2, Lk2, seed) {
   
   # simulate CAD ratings
   frocCad <- SimulateFrocDataset(
@@ -10,7 +10,7 @@ CadVsRadPlots <- function(muCad, muRad, lambda, nu, zeta1Cad, zeta1Rad, K1, K2, 
     K1 = K1,
     K2 = K2,
     perCase = Lk2,
-    zeta1 = zeta1Cad,
+    zeta1 = zeta1_1,
     seed = seed)
   #frocCad$descriptions$readerID <- "CAD"
   wafroc1 <- UtilFigureOfMerit(frocCad, FOM = "wAFROC")
@@ -26,7 +26,7 @@ CadVsRadPlots <- function(muCad, muRad, lambda, nu, zeta1Cad, zeta1Rad, K1, K2, 
     K1 = K1,
     K2 = K2,
     perCase = Lk2,
-    zeta1 = zeta1Rad,
+    zeta1 = zeta1_2,
     seed = seed)
   
   #frocRad$descriptions$readerID <- "RAD"
