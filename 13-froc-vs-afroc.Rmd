@@ -461,8 +461,8 @@ nu <- 1
 mu_arr <- c(1, 1.5, 2, 2.5)
 maxFomArr_10 <- llfArr_10 <- nlfArr_10 <- zetaMaxArr <- array(dim = length(mu_arr))
 plotArr <- array(list(), length(mu_arr))
-K1 <- 5000
-K2 <- 7000
+K1 <- 500
+K2 <- 700
 Lmax <- 2
 seed <- 1
 set.seed(seed)
@@ -507,8 +507,8 @@ nu <- 1
 mu_arr <- c(1, 1.5, 2, 2.5)
 maxFomArr_01 <- llfArr_01 <- nlfArr_01 <- zetaMaxArr <- array(dim = length(mu_arr))
 plotArr <- array(list(), length(mu_arr))
-K1 <- 5000
-K2 <- 7000
+K1 <- 500
+K2 <- 700
 Lmax <- 2
 seed <- 1
 set.seed(seed)
@@ -544,22 +544,22 @@ for (i in 1:length(mu_arr)) {
 grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
 ```
 
-
-
 ```{r froc-vs-afroc-cad-optim-zeta1, echo=FALSE}
-x1 <- cbind(c("AUC_10", "NLF_10", "LLF_10"), (as.data.frame(rbind(t(maxFomArr_10), t(nlfArr_10), t(llfArr_10)))))
-colnames(x1) <- c("measure", paste0("mu = ", as.character(mu_arr)))
-x2 <- cbind(c("AUC_01", "NLF_01", "LLF_01"), (as.data.frame(rbind(t(maxFomArr_01), t(nlfArr_01), t(llfArr_01)))))
-colnames(x2) <- c("measure", paste0("mu = ", as.character(mu_arr)))
-x <- rbind(x1, x2)
-y <- c("AUC_10", "AUC_01", "NLF_10", "LLF_10", "NLF_01", "LLF_01")
-x %>% slice(match(y, measure)) -> xFinal
+x1 <- as.data.frame(rbind(t(maxFomArr_10), t(nlfArr_10), t(llfArr_10)))
+x2 <- as.data.frame(rbind(t(maxFomArr_01), t(nlfArr_01), t(llfArr_01)))
+x12 <- rbind(x1, x2)
+x12 <- cbind(c("AUC10", "NLF10", "LLF10", "AUC01", "NLF01", "LLF01"), x12)
+colnames(x12) <- c("measure", paste0("muVal", as.character(mu_arr)))
+y <- c("AUC10", "AUC01", "NLF10", "LLF10", "NLF01", "LLF01")
+x12 %>% slice(match(y, measure)) -> xFinal
 ```
 
 
 ```{r froc-vs-afroc-cad-optim-table, echo=FALSE}
-knitr::kable(xFinal, digits = 5, caption = "Summary of CAD optimal threshold simulations: \"measure\" refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC_10 is the wAFROC AUC for $\\lambda = 10$, AUC_01 is the wAFROC AUC for $\\lambda = 01$, NLF_10 is NLF for $\\lambda = 1$, ..., LLF_01 is LLF for $\\lambda = 1$.", escape = FALSE)
+knitr::kable(xFinal, digits = 5, caption = "Summary of CAD optimal threshold simulations: \"measure\" refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC_10 is the wAFROC AUC for lambda = 10, AUC_01 is the wAFROC AUC for lambda = 01, NLF_10 is NLF for lambda = 1, ..., LLF_01 is LLF for lambda = 1.", escape = FALSE)
 ```
+
+
 
 ## Discussion {#froc-vs-wafroc-Discussion}
 

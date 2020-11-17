@@ -2,6 +2,7 @@
 
 
 
+
 ## Introduction {#froc-empirical-examples-intro}
 
 The previous chapter introduced definitions and formulae for the various operating characteristics possible with FROC data. This chapter illustrates these definitions with numerical values and plots. The RSM simulator, introduced in Section \@ref(froc-paradigm-preview-rsm), is used to generate FROC datasets under controlled conditions. Structure of the FROC dataset. TBA.
