@@ -11,6 +11,7 @@ library(kableExtra)
 library(gridExtra)
 library(abind)
 library(here)
+library(dplyr)
 ```
 
 ## Introduction {#froc-vs-wafroc-intro}
@@ -435,8 +436,8 @@ do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, K1, K2, Lk2, seed) {
     
     fomArray[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
   }
-  myData <- data.frame(zeta1 = zeta1Arr, fom = fomArray)
-  p <- ggplot2::ggplot(myData, aes(x = zeta1, y = fom)) + geom_line()
+  myData <- data.frame(zeta1 = zeta1Arr, AUC = fomArray)
+  p <- ggplot2::ggplot(myData, aes(x = zeta1, y = AUC)) + geom_line()
   zetaMax <- zeta1Arr[which.max(fomArray)]
   return(list(
     p = p,
@@ -454,10 +455,11 @@ For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computatio
 ## Simulations for $\lambda = 10$
 
 ```{r optOperatingPointLambda10, cache = TRUE, echo=TRUE}
+
 lambda <- 10 
 nu <- 1
 mu_arr <- c(1, 1.5, 2, 2.5)
-max_fomArray <- llfArr <- nlfArr <- zetaMaxArr <- array(dim = length(mu_arr))
+maxFomArr_10 <- llfArr_10 <- nlfArr_10 <- zetaMaxArr <- array(dim = length(mu_arr))
 plotArr <- array(list(), length(mu_arr))
 K1 <- 5000
 K2 <- 7000
@@ -483,21 +485,15 @@ for (i in 1:length(mu_arr)) {
     K2 = K2,
     perCase = Lk2,
     seed = seed)
-  max_fomArray[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
+  maxFomArr_10[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
   physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
-  nlfArr[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
-  llfArr[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
+  nlfArr_10[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
+  llfArr_10[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
 }
 ```
 
-```{r printLambda10, echo=FALSE}
-x <- as.data.frame(rbind(t(max_fomArray), t(nlfArr), t(llfArr)))
-colnames(x) <- paste0("mu = ", as.character(mu_arr))
-rownames(x) <- c("maxFOM", "NLF", "LLF")
-print(x)
-```
 
-```{r froc-vs-afroc-plot5, fig.cap="Variation of fom vs. $\\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes fom).", fig.show='hold', echo=FALSE}
+```{r froc-vs-afroc-plot5, fig.cap="Variation of AUC vs. $\\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
 grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
 ```
 
@@ -505,10 +501,11 @@ grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol
 ## Simulations for $\lambda = 1$
 
 ```{r optOperatingPointLambda1, cache = TRUE, echo=FALSE}
+
 lambda <- 1
 nu <- 1
 mu_arr <- c(1, 1.5, 2, 2.5)
-max_fomArray <- llfArr <- nlfArr <- zetaMaxArr <- array(dim = length(mu_arr))
+maxFomArr_01 <- llfArr_01 <- nlfArr_01 <- zetaMaxArr <- array(dim = length(mu_arr))
 plotArr <- array(list(), length(mu_arr))
 K1 <- 5000
 K2 <- 7000
@@ -534,22 +531,34 @@ for (i in 1:length(mu_arr)) {
     K2 = K2,
     perCase = Lk2,
     seed = seed)
-  max_fomArray[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
+  maxFomArr_01[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
   physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
-  nlfArr[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
-  llfArr[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
+  nlfArr_01[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
+  llfArr_01[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
 }
 ```
 
-```{r Lambda1, echo=FALSE}
-x <- as.data.frame(rbind(t(max_fomArray), t(nlfArr), t(llfArr)))
-colnames(x) <- paste0("mu = ", as.character(mu_arr))
-rownames(x) <- c("maxFOM", "NLF", "LLF")
-print(x)
+
+
+```{r froc-vs-afroc-plot6, fig.cap="Variation of AUC vs. $\\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
 ```
 
-```{r froc-vs-afroc-plot6, fig.cap="Variation of fom vs. $\\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes fom).", fig.show='hold', echo=FALSE}
-grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
+
+
+```{r froc-vs-afroc-cad-optim-zeta1, echo=FALSE}
+x1 <- cbind(c("AUC_10", "NLF_10", "LLF_10"), (as.data.frame(rbind(t(maxFomArr_10), t(nlfArr_10), t(llfArr_10)))))
+colnames(x1) <- c("measure", paste0("mu = ", as.character(mu_arr)))
+x2 <- cbind(c("AUC_01", "NLF_01", "LLF_01"), (as.data.frame(rbind(t(maxFomArr_01), t(nlfArr_01), t(llfArr_01)))))
+colnames(x2) <- c("measure", paste0("mu = ", as.character(mu_arr)))
+x <- rbind(x1, x2)
+y <- c("AUC_10", "AUC_01", "NLF_10", "LLF_10", "NLF_01", "LLF_01")
+x %>% slice(match(y, measure)) -> xFinal
+```
+
+
+```{r froc-vs-afroc-cad-optim-table, echo=FALSE}
+knitr::kable(xFinal, digits = 5, caption = "Summary of CAD optimal threshold simulations: \"measure\" refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC_10 is the wAFROC AUC for $\\lambda = 10$, AUC_01 is the wAFROC AUC for $\\lambda = 01$, NLF_10 is NLF for $\\lambda = 1$, ..., LLF_01 is LLF for $\\lambda = 1$.", escape = FALSE)
 ```
 
 ## Discussion {#froc-vs-wafroc-Discussion}

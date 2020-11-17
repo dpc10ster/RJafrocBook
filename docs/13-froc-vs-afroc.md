@@ -249,10 +249,11 @@ For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computatio
 
 
 ```r
+
 lambda <- 10 
 nu <- 1
 mu_arr <- c(1, 1.5, 2, 2.5)
-max_fomArray <- llfArr <- nlfArr <- zetaMaxArr <- array(dim = length(mu_arr))
+maxFomArr_10 <- llfArr_10 <- nlfArr_10 <- zetaMaxArr <- array(dim = length(mu_arr))
 plotArr <- array(list(), length(mu_arr))
 K1 <- 5000
 K2 <- 7000
@@ -278,24 +279,17 @@ for (i in 1:length(mu_arr)) {
     K2 = K2,
     perCase = Lk2,
     seed = seed)
-  max_fomArray[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
+  maxFomArr_10[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
   physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
-  nlfArr[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
-  llfArr[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
+  nlfArr_10[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
+  llfArr_10[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
 }
 ```
 
 
-```
-#>             mu = 1  mu = 1.5    mu = 2  mu = 2.5
-#> maxFOM 0.502236657 0.5562810 0.6987578 0.8383320
-#> NLF    0.006871379 0.1914437 0.4037833 0.6346210
-#> LLF    0.008788655 0.2676925 0.6275277 0.8565917
-```
-
 <div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot5-1.png" alt="Variation of fom vs. $\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes fom)." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot5)Variation of fom vs. $\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes fom).</p>
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot5-1.png" alt="Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot5)Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC).</p>
 </div>
 
 
@@ -304,17 +298,73 @@ for (i in 1:length(mu_arr)) {
 
 
 
-```
-#>           mu = 1  mu = 1.5    mu = 2  mu = 2.5
-#> maxFOM 0.6050725 0.7817727 0.8809098 0.9346086
-#> NLF    0.3445783 0.4119409 0.2896299 0.1840689
-#> LLF    0.4587595 0.7489567 0.8526429 0.9103904
-```
 
 <div class="figure">
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot6-1.png" alt="Variation of fom vs. $\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes fom)." width="672" />
-<p class="caption">(\#fig:froc-vs-afroc-plot6)Variation of fom vs. $\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes fom).</p>
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot6-1.png" alt="Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot6)Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC).</p>
 </div>
+
+
+
+
+
+
+<table>
+<caption>(\#tab:froc-vs-afroc-cad-optim-table)Summary of CAD optimal threshold simulations: "measure" refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC_10 is the wAFROC AUC for $\lambda = 10$, AUC_01 is the wAFROC AUC for $\lambda = 01$, NLF_10 is NLF for $\lambda = 1$, ..., LLF_01 is LLF for $\lambda = 1$.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> measure </th>
+   <th style="text-align:right;"> mu = 1 </th>
+   <th style="text-align:right;"> mu = 1.5 </th>
+   <th style="text-align:right;"> mu = 2 </th>
+   <th style="text-align:right;"> mu = 2.5 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> AUC_10 </td>
+   <td style="text-align:right;"> 0.50224 </td>
+   <td style="text-align:right;"> 0.55628 </td>
+   <td style="text-align:right;"> 0.69876 </td>
+   <td style="text-align:right;"> 0.83833 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> AUC_01 </td>
+   <td style="text-align:right;"> 0.60507 </td>
+   <td style="text-align:right;"> 0.78177 </td>
+   <td style="text-align:right;"> 0.88091 </td>
+   <td style="text-align:right;"> 0.93461 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> NLF_10 </td>
+   <td style="text-align:right;"> 0.00687 </td>
+   <td style="text-align:right;"> 0.19144 </td>
+   <td style="text-align:right;"> 0.40378 </td>
+   <td style="text-align:right;"> 0.63462 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> LLF_10 </td>
+   <td style="text-align:right;"> 0.00879 </td>
+   <td style="text-align:right;"> 0.26769 </td>
+   <td style="text-align:right;"> 0.62753 </td>
+   <td style="text-align:right;"> 0.85659 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> NLF_01 </td>
+   <td style="text-align:right;"> 0.34458 </td>
+   <td style="text-align:right;"> 0.41194 </td>
+   <td style="text-align:right;"> 0.28963 </td>
+   <td style="text-align:right;"> 0.18407 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> LLF_01 </td>
+   <td style="text-align:right;"> 0.45876 </td>
+   <td style="text-align:right;"> 0.74896 </td>
+   <td style="text-align:right;"> 0.85264 </td>
+   <td style="text-align:right;"> 0.91039 </td>
+  </tr>
+</tbody>
+</table>
 
 ## Discussion {#froc-vs-wafroc-Discussion}
 

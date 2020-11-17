@@ -1018,63 +1018,184 @@ ROC-F
 </div>
 <div id="simulations-for-lambda-10" class="section level2" number="19.7">
 <h2><span class="header-section-number">19.7</span> Simulations for <span class="math inline">\(\lambda = 10\)</span></h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="froc-vs-afroc.html#cb2-1" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">10</span> </span>
-<span id="cb2-2"><a href="froc-vs-afroc.html#cb2-2" aria-hidden="true" tabindex="-1"></a>nu <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb2-3"><a href="froc-vs-afroc.html#cb2-3" aria-hidden="true" tabindex="-1"></a>mu_arr <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">1.5</span>, <span class="dv">2</span>, <span class="fl">2.5</span>)</span>
-<span id="cb2-4"><a href="froc-vs-afroc.html#cb2-4" aria-hidden="true" tabindex="-1"></a>max_fomArray <span class="ot">&lt;-</span> llfArr <span class="ot">&lt;-</span> nlfArr <span class="ot">&lt;-</span> zetaMaxArr <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> <span class="fu">length</span>(mu_arr))</span>
-<span id="cb2-5"><a href="froc-vs-afroc.html#cb2-5" aria-hidden="true" tabindex="-1"></a>plotArr <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">list</span>(), <span class="fu">length</span>(mu_arr))</span>
-<span id="cb2-6"><a href="froc-vs-afroc.html#cb2-6" aria-hidden="true" tabindex="-1"></a>K1 <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
-<span id="cb2-7"><a href="froc-vs-afroc.html#cb2-7" aria-hidden="true" tabindex="-1"></a>K2 <span class="ot">&lt;-</span> <span class="dv">7000</span></span>
-<span id="cb2-8"><a href="froc-vs-afroc.html#cb2-8" aria-hidden="true" tabindex="-1"></a>Lmax <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb2-9"><a href="froc-vs-afroc.html#cb2-9" aria-hidden="true" tabindex="-1"></a>seed <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb2-10"><a href="froc-vs-afroc.html#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(seed)</span>
-<span id="cb2-11"><a href="froc-vs-afroc.html#cb2-11" aria-hidden="true" tabindex="-1"></a>Lk2 <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(K2, <span class="dv">1</span>, Lmax <span class="sc">+</span> <span class="dv">1</span>))</span>
-<span id="cb2-12"><a href="froc-vs-afroc.html#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="froc-vs-afroc.html#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(mu_arr)) {</span>
-<span id="cb2-14"><a href="froc-vs-afroc.html#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">1</span>) zeta1Arr <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">1.5</span>,<span class="fl">3.5</span>,<span class="fl">0.1</span>) <span class="cf">else</span> zeta1Arr <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="fl">2.5</span>,<span class="fl">0.1</span>)</span>
-<span id="cb2-15"><a href="froc-vs-afroc.html#cb2-15" aria-hidden="true" tabindex="-1"></a>  fomArray <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> <span class="fu">length</span>(zeta1Arr))</span>
-<span id="cb2-16"><a href="froc-vs-afroc.html#cb2-16" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">do_one_mu</span> (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)</span>
-<span id="cb2-17"><a href="froc-vs-afroc.html#cb2-17" aria-hidden="true" tabindex="-1"></a>  plotArr[[i]] <span class="ot">&lt;-</span> x<span class="sc">$</span>p <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">&quot;mu = &quot;</span>, <span class="fu">as.character</span>(mu_arr[i]), <span class="st">&quot;, zetaMax = &quot;</span>,  <span class="fu">as.character</span>(x<span class="sc">$</span>zetaMax)))</span>
-<span id="cb2-18"><a href="froc-vs-afroc.html#cb2-18" aria-hidden="true" tabindex="-1"></a>  zetaMaxArr[i] <span class="ot">&lt;-</span> x<span class="sc">$</span>zetaMax</span>
-<span id="cb2-19"><a href="froc-vs-afroc.html#cb2-19" aria-hidden="true" tabindex="-1"></a>  froc1 <span class="ot">&lt;-</span> <span class="fu">SimulateFrocDataset</span> (</span>
-<span id="cb2-20"><a href="froc-vs-afroc.html#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu =</span> mu_arr[i],</span>
-<span id="cb2-21"><a href="froc-vs-afroc.html#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">lambda =</span> lambda,</span>
-<span id="cb2-22"><a href="froc-vs-afroc.html#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">nu =</span> nu,</span>
-<span id="cb2-23"><a href="froc-vs-afroc.html#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">zeta1 =</span> x<span class="sc">$</span>zetaMax,</span>
-<span id="cb2-24"><a href="froc-vs-afroc.html#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">I =</span> <span class="dv">1</span>,</span>
-<span id="cb2-25"><a href="froc-vs-afroc.html#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">J =</span> <span class="dv">1</span>,</span>
-<span id="cb2-26"><a href="froc-vs-afroc.html#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">K1 =</span> K1,</span>
-<span id="cb2-27"><a href="froc-vs-afroc.html#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">K2 =</span> K2,</span>
-<span id="cb2-28"><a href="froc-vs-afroc.html#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">perCase =</span> Lk2,</span>
-<span id="cb2-29"><a href="froc-vs-afroc.html#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> seed)</span>
-<span id="cb2-30"><a href="froc-vs-afroc.html#cb2-30" aria-hidden="true" tabindex="-1"></a>  max_fomArray[i] <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">UtilFigureOfMerit</span>(froc1, <span class="at">FOM =</span> <span class="st">&quot;wAFROC&quot;</span>))</span>
-<span id="cb2-31"><a href="froc-vs-afroc.html#cb2-31" aria-hidden="true" tabindex="-1"></a>  physicalValues <span class="ot">&lt;-</span> <span class="fu">UtilIntrinsic2PhysicalRSM</span>(mu_arr[i], lambda, nu)</span>
-<span id="cb2-32"><a href="froc-vs-afroc.html#cb2-32" aria-hidden="true" tabindex="-1"></a>  nlfArr[i] <span class="ot">&lt;-</span> physicalValues<span class="sc">$</span>lambdaP<span class="sc">*</span><span class="fu">pnorm</span>(<span class="sc">-</span>zetaMaxArr[i])</span>
-<span id="cb2-33"><a href="froc-vs-afroc.html#cb2-33" aria-hidden="true" tabindex="-1"></a>  llfArr[i] <span class="ot">&lt;-</span> physicalValues<span class="sc">$</span>nuP<span class="sc">*</span><span class="fu">pnorm</span>(mu_arr[i]<span class="sc">-</span>zetaMaxArr[i])</span>
-<span id="cb2-34"><a href="froc-vs-afroc.html#cb2-34" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<pre><code>#&gt;             mu = 1  mu = 1.5    mu = 2  mu = 2.5
-#&gt; maxFOM 0.502236657 0.5562810 0.6987578 0.8383320
-#&gt; NLF    0.006871379 0.1914437 0.4037833 0.6346210
-#&gt; LLF    0.008788655 0.2676925 0.6275277 0.8565917</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="froc-vs-afroc.html#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="froc-vs-afroc.html#cb2-2" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">10</span> </span>
+<span id="cb2-3"><a href="froc-vs-afroc.html#cb2-3" aria-hidden="true" tabindex="-1"></a>nu <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-4"><a href="froc-vs-afroc.html#cb2-4" aria-hidden="true" tabindex="-1"></a>mu_arr <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">1.5</span>, <span class="dv">2</span>, <span class="fl">2.5</span>)</span>
+<span id="cb2-5"><a href="froc-vs-afroc.html#cb2-5" aria-hidden="true" tabindex="-1"></a>maxFomArr_10 <span class="ot">&lt;-</span> llfArr_10 <span class="ot">&lt;-</span> nlfArr_10 <span class="ot">&lt;-</span> zetaMaxArr <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> <span class="fu">length</span>(mu_arr))</span>
+<span id="cb2-6"><a href="froc-vs-afroc.html#cb2-6" aria-hidden="true" tabindex="-1"></a>plotArr <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">list</span>(), <span class="fu">length</span>(mu_arr))</span>
+<span id="cb2-7"><a href="froc-vs-afroc.html#cb2-7" aria-hidden="true" tabindex="-1"></a>K1 <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb2-8"><a href="froc-vs-afroc.html#cb2-8" aria-hidden="true" tabindex="-1"></a>K2 <span class="ot">&lt;-</span> <span class="dv">7000</span></span>
+<span id="cb2-9"><a href="froc-vs-afroc.html#cb2-9" aria-hidden="true" tabindex="-1"></a>Lmax <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb2-10"><a href="froc-vs-afroc.html#cb2-10" aria-hidden="true" tabindex="-1"></a>seed <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-11"><a href="froc-vs-afroc.html#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(seed)</span>
+<span id="cb2-12"><a href="froc-vs-afroc.html#cb2-12" aria-hidden="true" tabindex="-1"></a>Lk2 <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(K2, <span class="dv">1</span>, Lmax <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb2-13"><a href="froc-vs-afroc.html#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="froc-vs-afroc.html#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(mu_arr)) {</span>
+<span id="cb2-15"><a href="froc-vs-afroc.html#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">1</span>) zeta1Arr <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">1.5</span>,<span class="fl">3.5</span>,<span class="fl">0.1</span>) <span class="cf">else</span> zeta1Arr <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="fl">2.5</span>,<span class="fl">0.1</span>)</span>
+<span id="cb2-16"><a href="froc-vs-afroc.html#cb2-16" aria-hidden="true" tabindex="-1"></a>  fomArray <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="at">dim =</span> <span class="fu">length</span>(zeta1Arr))</span>
+<span id="cb2-17"><a href="froc-vs-afroc.html#cb2-17" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">do_one_mu</span> (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)</span>
+<span id="cb2-18"><a href="froc-vs-afroc.html#cb2-18" aria-hidden="true" tabindex="-1"></a>  plotArr[[i]] <span class="ot">&lt;-</span> x<span class="sc">$</span>p <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">&quot;mu = &quot;</span>, <span class="fu">as.character</span>(mu_arr[i]), <span class="st">&quot;, zetaMax = &quot;</span>,  <span class="fu">as.character</span>(x<span class="sc">$</span>zetaMax)))</span>
+<span id="cb2-19"><a href="froc-vs-afroc.html#cb2-19" aria-hidden="true" tabindex="-1"></a>  zetaMaxArr[i] <span class="ot">&lt;-</span> x<span class="sc">$</span>zetaMax</span>
+<span id="cb2-20"><a href="froc-vs-afroc.html#cb2-20" aria-hidden="true" tabindex="-1"></a>  froc1 <span class="ot">&lt;-</span> <span class="fu">SimulateFrocDataset</span> (</span>
+<span id="cb2-21"><a href="froc-vs-afroc.html#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu =</span> mu_arr[i],</span>
+<span id="cb2-22"><a href="froc-vs-afroc.html#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">lambda =</span> lambda,</span>
+<span id="cb2-23"><a href="froc-vs-afroc.html#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">nu =</span> nu,</span>
+<span id="cb2-24"><a href="froc-vs-afroc.html#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">zeta1 =</span> x<span class="sc">$</span>zetaMax,</span>
+<span id="cb2-25"><a href="froc-vs-afroc.html#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">I =</span> <span class="dv">1</span>,</span>
+<span id="cb2-26"><a href="froc-vs-afroc.html#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">J =</span> <span class="dv">1</span>,</span>
+<span id="cb2-27"><a href="froc-vs-afroc.html#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">K1 =</span> K1,</span>
+<span id="cb2-28"><a href="froc-vs-afroc.html#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">K2 =</span> K2,</span>
+<span id="cb2-29"><a href="froc-vs-afroc.html#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">perCase =</span> Lk2,</span>
+<span id="cb2-30"><a href="froc-vs-afroc.html#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> seed)</span>
+<span id="cb2-31"><a href="froc-vs-afroc.html#cb2-31" aria-hidden="true" tabindex="-1"></a>  maxFomArr_10[i] <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">UtilFigureOfMerit</span>(froc1, <span class="at">FOM =</span> <span class="st">&quot;wAFROC&quot;</span>))</span>
+<span id="cb2-32"><a href="froc-vs-afroc.html#cb2-32" aria-hidden="true" tabindex="-1"></a>  physicalValues <span class="ot">&lt;-</span> <span class="fu">UtilIntrinsic2PhysicalRSM</span>(mu_arr[i], lambda, nu)</span>
+<span id="cb2-33"><a href="froc-vs-afroc.html#cb2-33" aria-hidden="true" tabindex="-1"></a>  nlfArr_10[i] <span class="ot">&lt;-</span> physicalValues<span class="sc">$</span>lambdaP<span class="sc">*</span><span class="fu">pnorm</span>(<span class="sc">-</span>zetaMaxArr[i])</span>
+<span id="cb2-34"><a href="froc-vs-afroc.html#cb2-34" aria-hidden="true" tabindex="-1"></a>  llfArr_10[i] <span class="ot">&lt;-</span> physicalValues<span class="sc">$</span>nuP<span class="sc">*</span><span class="fu">pnorm</span>(mu_arr[i]<span class="sc">-</span>zetaMaxArr[i])</span>
+<span id="cb2-35"><a href="froc-vs-afroc.html#cb2-35" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <div class="figure"><span id="fig:froc-vs-afroc-plot5"></span>
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot5-1.png" alt="Variation of fom vs. $\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes fom)." width="672" />
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot5-1.png" alt="Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
 <p class="caption">
-FIGURE 19.4: Variation of fom vs. <span class="math inline">\(\zeta_1\)</span>; fom is the wAFROC AUC. The plots are labeled by the value of <span class="math inline">\(\mu\)</span> and zetaMax (the value of <span class="math inline">\(\zeta_1\)</span> that maximizes fom).
+FIGURE 19.4: Variation of AUC vs. <span class="math inline">\(\zeta_1\)</span>; AUC is the wAFROC AUC. The plots are labeled by the value of <span class="math inline">\(\mu\)</span> and zetaMax (the value of <span class="math inline">\(\zeta_1\)</span> that maximizes AUC).
 </p>
 </div>
 </div>
 <div id="simulations-for-lambda-1" class="section level2" number="19.8">
 <h2><span class="header-section-number">19.8</span> Simulations for <span class="math inline">\(\lambda = 1\)</span></h2>
-<pre><code>#&gt;           mu = 1  mu = 1.5    mu = 2  mu = 2.5
-#&gt; maxFOM 0.6050725 0.7817727 0.8809098 0.9346086
-#&gt; NLF    0.3445783 0.4119409 0.2896299 0.1840689
-#&gt; LLF    0.4587595 0.7489567 0.8526429 0.9103904</code></pre>
 <div class="figure"><span id="fig:froc-vs-afroc-plot6"></span>
-<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot6-1.png" alt="Variation of fom vs. $\zeta_1$; fom is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes fom)." width="672" />
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot6-1.png" alt="Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
 <p class="caption">
-FIGURE 19.5: Variation of fom vs. <span class="math inline">\(\zeta_1\)</span>; fom is the wAFROC AUC. The plots are labeled by the value of <span class="math inline">\(\mu\)</span> and zetaMax (the value of <span class="math inline">\(\zeta_1\)</span> that maximizes fom).
+FIGURE 19.5: Variation of AUC vs. <span class="math inline">\(\zeta_1\)</span>; AUC is the wAFROC AUC. The plots are labeled by the value of <span class="math inline">\(\mu\)</span> and zetaMax (the value of <span class="math inline">\(\zeta_1\)</span> that maximizes AUC).
 </p>
 </div>
+<table>
+<caption>
+<span id="tab:froc-vs-afroc-cad-optim-table">TABLE 19.3: </span>Summary of CAD optimal threshold simulations: “measure” refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC_10 is the wAFROC AUC for <span class="math inline">\(\lambda = 10\)</span>, AUC_01 is the wAFROC AUC for <span class="math inline">\(\lambda = 01\)</span>, NLF_10 is NLF for <span class="math inline">\(\lambda = 1\)</span>, …, LLF_01 is LLF for <span class="math inline">\(\lambda = 1\)</span>.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+measure
+</th>
+<th style="text-align:right;">
+mu = 1
+</th>
+<th style="text-align:right;">
+mu = 1.5
+</th>
+<th style="text-align:right;">
+mu = 2
+</th>
+<th style="text-align:right;">
+mu = 2.5
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+AUC_10
+</td>
+<td style="text-align:right;">
+0.50224
+</td>
+<td style="text-align:right;">
+0.55628
+</td>
+<td style="text-align:right;">
+0.69876
+</td>
+<td style="text-align:right;">
+0.83833
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AUC_01
+</td>
+<td style="text-align:right;">
+0.60507
+</td>
+<td style="text-align:right;">
+0.78177
+</td>
+<td style="text-align:right;">
+0.88091
+</td>
+<td style="text-align:right;">
+0.93461
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NLF_10
+</td>
+<td style="text-align:right;">
+0.00687
+</td>
+<td style="text-align:right;">
+0.19144
+</td>
+<td style="text-align:right;">
+0.40378
+</td>
+<td style="text-align:right;">
+0.63462
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LLF_10
+</td>
+<td style="text-align:right;">
+0.00879
+</td>
+<td style="text-align:right;">
+0.26769
+</td>
+<td style="text-align:right;">
+0.62753
+</td>
+<td style="text-align:right;">
+0.85659
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NLF_01
+</td>
+<td style="text-align:right;">
+0.34458
+</td>
+<td style="text-align:right;">
+0.41194
+</td>
+<td style="text-align:right;">
+0.28963
+</td>
+<td style="text-align:right;">
+0.18407
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LLF_01
+</td>
+<td style="text-align:right;">
+0.45876
+</td>
+<td style="text-align:right;">
+0.74896
+</td>
+<td style="text-align:right;">
+0.85264
+</td>
+<td style="text-align:right;">
+0.91039
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="froc-vs-wafroc-Discussion" class="section level2" number="19.9">
 <h2><span class="header-section-number">19.9</span> Discussion</h2>
