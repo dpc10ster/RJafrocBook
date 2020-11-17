@@ -6389,7 +6389,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"} \OtherTok{=}\NormalTok{ ret4}\SpecialCharTok{$}\NormalTok{FRRC}\SpecialCharTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"} \OtherTok{=}\NormalTok{ ret4}\SpecialCharTok{$}\NormalTok{FRRC}\SpecialCharTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.1816602          1   0.27701826}
+\CommentTok{\#\textgreater{} 1    1.1006011          1   0.29413423}
 \end{Highlighting}
 \end{Shaded}
 
@@ -10965,7 +10965,7 @@ Algorithm developers are familiar with this problem. Given a CAD system that yie
 For each \(\mu\) one scans \(\zeta_1\), repeating the simulations and AUC computation for each value of \(\zeta_1\) and determines that value of \(zeta_1\) that maximizes AUC; this is denoted \(zeta_{\text{max}}\). Finally, for the optimal \(zeta_1\) one calculates the corresponding NLF value.
 
 \hypertarget{simulations-for-lambda-10}{%
-\section{\texorpdfstring{Simulations for \(\lambda = 10\)}{Simulations for \textbackslash lambda = 10}}\label{simulations-for-lambda-10}}
+\subsection{\texorpdfstring{Simulations for \(\lambda = 10\)}{Simulations for \textbackslash lambda = 10}}\label{simulations-for-lambda-10}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -11014,7 +11014,7 @@ For each \(\mu\) one scans \(\zeta_1\), repeating the simulations and AUC comput
 \end{figure}
 
 \hypertarget{simulations-for-lambda-1}{%
-\section{\texorpdfstring{Simulations for \(\lambda = 1\)}{Simulations for \textbackslash lambda = 1}}\label{simulations-for-lambda-1}}
+\subsection{\texorpdfstring{Simulations for \(\lambda = 1\)}{Simulations for \textbackslash lambda = 1}}\label{simulations-for-lambda-1}}
 
 \begin{figure}
 \centering
@@ -11022,11 +11022,10 @@ For each \(\mu\) one scans \(\zeta_1\), repeating the simulations and AUC comput
 \caption{\label{fig:froc-vs-afroc-plot6}Variation of AUC vs.~\(\zeta_1\); AUC is the wAFROC AUC. The plots are labeled by the value of \(\mu\) and zetaMax (the value of \(\zeta_1\) that maximizes AUC).}
 \end{figure}
 
-\textbackslash begin\{table\}
+\begin{table}
 
-\textbackslash caption\{\label{tab:froc-vs-afroc-cad-optim-table}Summary of CAD optimal threshold simulations: ``measure'' refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC\_10 is the wAFROC AUC for lambda = 10, AUC\_01 is the wAFROC AUC for lambda = 01, NLF\_10 is NLF for lambda = 1, \ldots, LLF\_01 is LLF for lambda = 1.\}
+\caption{\label{tab:froc-vs-afroc-cad-optim-table}Summary of CAD optimal threshold simulations: "measure" refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for lambda = 01, NLF10 is NLF for lambda = 1, ..., LLF01 is LLF for lambda = 1.}
 \centering
-
 \begin{tabular}[t]{l|r|r|r|r}
 \hline
 measure & muVal1 & muVal1.5 & muVal2 & muVal2.5\\
@@ -11044,8 +11043,30 @@ NLF01 & 0.38209 & 0.41194 & 0.30896 & 0.23170\\
 LLF01 & 0.47917 & 0.74896 & 0.85539 & 0.91473\\
 \hline
 \end{tabular}
+\end{table}
 
-\textbackslash end\{table\}
+\hypertarget{froc-vs-wafroc-comments-threshold-optimization}{%
+\subsection{Comments}\label{froc-vs-wafroc-comments-threshold-optimization}}
+
+The results in Table \ref{tab:froc-vs-afroc-cad-optim-table} are organized to allow ready comparison between AUCs and the operating points for the two values of \(\lambda\). The first two rows compare the AUCs. The next two rows show the operating point (NLF, LLF) for \(\lambda = 10\) and the final two rows are the operating point for \(\lambda = 1\). The following trend are evident.
+
+\begin{itemize}
+\tightlist
+\item
+  All else being equal, AUC increases with increasing \(\mu\). Increasing the separation of the two unit variance normal distributions that determine the ratings of NLs and LLs leads to higher performance
+\item
+  All else being equal, AUC increases with decreasing \(\lambda\). Decreasing the propensity of the observer to generate NLs leads to increasing performance.
+\item
+  For each value of \(\lambda\) optimal LLF increases with increasing \(\mu\).
+\item
+  For \(\lambda = 10\) optimal NLF increases with increasing \(\mu\).
+\item
+  For \(\lambda = 0\) optimal NLF peaks around \(\mu = 1.5\).
+\end{itemize}
+
+For \(\lambda = 10\) and \(\mu = 1\), AUC performance is quite low, in fact AUC = \texttt{r\ maxFomArr\_10{[}1{]}}, and the optimal operating point of the algorithm is near the origin, specifically, NLF = 0.009676 and LLF = 0.0112925. If the algorithm is poor, the sensible choice is to only show those marks that have, according to the algorithm, high confidence level for being right (note that an operating point near the origin corresponds to a high value of \(\zeta_1\)). For higher values of \(\mu\) AUC performance increases and it makes sense to then show marks with a somewhat lower confidence level, corresponding to moving up the curve. While it is true that one is possibly showing more NLs, the fraction of LLs increases even more. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \ref{tab:froc-vs-afroc-cad-optim-table}.
+
+TBA
 
 \hypertarget{froc-vs-wafroc-Discussion}{%
 \section{Discussion}\label{froc-vs-wafroc-Discussion}}
@@ -11258,14 +11279,14 @@ According to Eqn. \eqref{eq:froc-meanings-A0}, \(A_0\) increases as \(\text{FPF}
 \NormalTok{p2 }\OtherTok{\textless{}{-}}\NormalTok{ p2}\SpecialCharTok{$}\NormalTok{Plot }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"B"}\NormalTok{)}
 
 \FunctionTok{cat}\NormalTok{(}\StringTok{"AFROC AUC = "}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{UtilFigureOfMerit}\NormalTok{(frocData, }\AttributeTok{FOM =} \StringTok{"AFROC"}\NormalTok{)),}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} AFROC AUC =  0.8333333}
+\CommentTok{\#\textgreater{} AFROC AUC =  0.9166667}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[numbers=left,,]
 \FunctionTok{cat}\NormalTok{(}\StringTok{"wAFROC AUC = "}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{UtilFigureOfMerit}\NormalTok{(frocData, }\AttributeTok{FOM =} \StringTok{"wAFROC"}\NormalTok{)),}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} wAFROC AUC =  0.8875}
+\CommentTok{\#\textgreater{} wAFROC AUC =  0.95}
 \end{Highlighting}
 \end{Shaded}
 
@@ -11289,21 +11310,21 @@ Let us examine the ratings.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{frocData}\SpecialCharTok{$}\NormalTok{ratings}\SpecialCharTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,]}
-\CommentTok{\#\textgreater{}            [,1]      [,2]}
-\CommentTok{\#\textgreater{} [1,]  0.5264611 {-}0.210997}
-\CommentTok{\#\textgreater{} [2,]       {-}Inf      {-}Inf}
-\CommentTok{\#\textgreater{} [3,] {-}0.1300406      {-}Inf}
-\CommentTok{\#\textgreater{} [4,]       {-}Inf      {-}Inf}
-\CommentTok{\#\textgreater{} [5,]       {-}Inf      {-}Inf}
-\CommentTok{\#\textgreater{} [6,] {-}0.4021824      {-}Inf}
-\CommentTok{\#\textgreater{} [7,]       {-}Inf      {-}Inf}
-\CommentTok{\#\textgreater{} [8,]  1.4970203      {-}Inf}
+\CommentTok{\#\textgreater{}            [,1]     [,2]}
+\CommentTok{\#\textgreater{} [1,]       {-}Inf     {-}Inf}
+\CommentTok{\#\textgreater{} [2,]       {-}Inf     {-}Inf}
+\CommentTok{\#\textgreater{} [3,]       {-}Inf     {-}Inf}
+\CommentTok{\#\textgreater{} [4,]       {-}Inf     {-}Inf}
+\CommentTok{\#\textgreater{} [5,]       {-}Inf     {-}Inf}
+\CommentTok{\#\textgreater{} [6,]       {-}Inf     {-}Inf}
+\CommentTok{\#\textgreater{} [7,]  1.4778125 0.218675}
+\CommentTok{\#\textgreater{} [8,] {-}0.9775298     {-}Inf}
 \NormalTok{frocData}\SpecialCharTok{$}\NormalTok{ratings}\SpecialCharTok{$}\NormalTok{LL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,]}
-\CommentTok{\#\textgreater{}          [,1]      [,2]}
-\CommentTok{\#\textgreater{} [1,] 2.583450      {-}Inf}
-\CommentTok{\#\textgreater{} [2,] 2.807678      {-}Inf}
-\CommentTok{\#\textgreater{} [3,] 1.165553      {-}Inf}
-\CommentTok{\#\textgreater{} [4,] 1.353505 0.3900343}
+\CommentTok{\#\textgreater{}           [,1]     [,2]}
+\CommentTok{\#\textgreater{} [1,] 1.4680082     {-}Inf}
+\CommentTok{\#\textgreater{} [2,] 0.7073883     {-}Inf}
+\CommentTok{\#\textgreater{} [3,] 0.4319307     {-}Inf}
+\CommentTok{\#\textgreater{} [4,] 3.6178537 1.635758}
 \end{Highlighting}
 \end{Shaded}
 

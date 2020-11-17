@@ -245,7 +245,7 @@ Algorithm developers are familiar with this problem. Given a CAD system that yie
 
 For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computation for each value of $\zeta_1$ and determines that value of $zeta_1$ that maximizes AUC; this is denoted $zeta_{\text{max}}$. Finally, for the optimal $zeta_1$ one calculates the corresponding NLF value.
 
-## Simulations for $\lambda = 10$
+### Simulations for $\lambda = 10$
 
 
 ```r
@@ -293,7 +293,7 @@ for (i in 1:length(mu_arr)) {
 </div>
 
 
-## Simulations for $\lambda = 1$
+### Simulations for $\lambda = 1$
 
 
 
@@ -363,6 +363,20 @@ for (i in 1:length(mu_arr)) {
   </tr>
 </tbody>
 </table>
+
+
+### Comments {#froc-vs-wafroc-comments-threshold-optimization}
+The results in Table \@ref(tab:froc-vs-afroc-cad-optim-table) are organized to allow ready comparison between AUCs and the operating points for the two values of $\lambda$. The first two rows compare the AUCs. The next two rows show the operating point (NLF, LLF) for $\lambda = 10$ and the final two rows are the operating point for $\lambda = 1$. The following trend are evident.
+
+* All else being equal, AUC increases with increasing $\mu$. Increasing the separation of the two unit variance normal distributions that determine the ratings of NLs and LLs leads to higher performance
+* All else being equal, AUC increases with decreasing $\lambda$. Decreasing the propensity of the observer to generate NLs leads to increasing performance. 
+* For each value of $\lambda$ optimal LLF increases with increasing $\mu$. 
+* For $\lambda = 10$ optimal NLF increases with increasing $\mu$. 
+* For $\lambda = 0$ optimal NLF peaks around $\mu = 1.5$. 
+
+For $\lambda = 10$ and $\mu = 1$, AUC performance is quite low, in fact AUC = 0.5046429, and the optimal operating point of the algorithm is near the origin, specifically, NLF = 0.009676 and LLF = 0.0112925. If the algorithm is poor, the sensible choice is to only show those marks that have, according to the algorithm, high confidence level for being right (note that an operating point near the origin corresponds to a high value of $\zeta_1$). For higher values of $\mu$ AUC performance increases and it makes sense to then show marks with a somewhat lower confidence level, corresponding to moving up the curve. While it is true that one is possibly showing more NLs, the fraction of LLs increases even more. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \@ref(tab:froc-vs-afroc-cad-optim-table).    
+
+TBA
 
 
 
