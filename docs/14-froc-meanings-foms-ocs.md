@@ -205,12 +205,12 @@ p2 <- PlotEmpiricalOperatingCharacteristics(
 p2 <- p2$Plot + ggtitle("B")
 
 cat("AFROC AUC = ", as.numeric(UtilFigureOfMerit(frocData, FOM = "AFROC")),"\n")
-#> AFROC AUC =  0.9166667
+#> AFROC AUC =  0.875
 ```
 
 ```{.r .numberLines}
 cat("wAFROC AUC = ", as.numeric(UtilFigureOfMerit(frocData, FOM = "wAFROC")),"\n")
-#> wAFROC AUC =  0.95
+#> wAFROC AUC =  0.925
 ```
 
 ![(\#fig:froc-meanings-linearPlot-wafroc)Left: AFROC plot; right: corresponding wAFROC plot.](14-froc-meanings-foms-ocs_files/figure-latex/froc-meanings-linearPlot-wafroc-1.pdf) 
@@ -228,21 +228,21 @@ Let us examine the ratings.
 
 ```r
 frocData$ratings$NL[1,1,,]
-#>            [,1]     [,2]
-#> [1,]       -Inf     -Inf
-#> [2,]       -Inf     -Inf
-#> [3,]       -Inf     -Inf
-#> [4,]       -Inf     -Inf
-#> [5,]       -Inf     -Inf
-#> [6,]       -Inf     -Inf
-#> [7,]  1.4778125 0.218675
-#> [8,] -0.9775298     -Inf
+#>             [,1]       [,2] [,3]
+#> [1,] -0.97482240       -Inf -Inf
+#> [2,]        -Inf       -Inf -Inf
+#> [3,]        -Inf       -Inf -Inf
+#> [4,] -0.83559088       -Inf -Inf
+#> [5,]        -Inf       -Inf -Inf
+#> [6,]        -Inf       -Inf -Inf
+#> [7,] -0.06311580 -0.2868613 -Inf
+#> [8,]  0.03975656       -Inf -Inf
 frocData$ratings$LL[1,1,,]
-#>           [,1]     [,2]
-#> [1,] 1.4680082     -Inf
-#> [2,] 0.7073883     -Inf
-#> [3,] 0.4319307     -Inf
-#> [4,] 3.6178537 1.635758
+#>          [,1]      [,2]
+#> [1,] 2.003539      -Inf
+#> [2,] 3.757526      -Inf
+#> [3,] 1.513600      -Inf
+#> [4,] 3.687075 0.6357838
 ```
 
 The length of the third dimension of the NL array is eight (4 non-diseased + 4 diseased cases). The fifth sequential case corresponds to NLs on the first diseased case, etc. The simulated z-samples displayed in §14.5.2 are shown in Table \@ref(tab:froc-meanings-table-non-diseased) for non-diseased and in Table \@ref(tab:froc-meanings-table-diseased) for diseased cases. The columns labeled list the case-location indexing subscripts, the columns labeled list the corresponding z-samples, when realized and otherwise NAs are listed. Column 5 in Table \@ref(tab:froc-meanings-table-non-diseased) illustrates the conversion of the NL z-samples to FP z-samples according to the highest-rating assumption (the first non-diseased case illustrates the rule that in the absence of any marks the FP rating is ∞). The tables show that the simulator did not realize any z-sample on the first non-diseased case (alternatively, if it did, the z-sample(s) fell below ; one cannot tell the difference), and for the second lesion on the third diseased case. Because non-diseased cases have no lesions, all z-samples listed in Table \@ref(tab:froc-meanings-table-non-diseased) are NLs. In contrast, in Table \@ref(tab:froc-meanings-table-diseased), each case can generate NLs and LLs. The second column of Table \@ref(tab:froc-meanings-table-diseased) lists the number of lesions per diseased case . Columns 3 and 4 illustrate NL indexing and z-samples and columns 5 and 6 illustrate LL indexing and z-samples. Column 8 illustrates the conversion of the NL and LL z-samples to TP z-samples according to the highest-rating assumption. The last columns of Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased) label the correspondences of the z-samples to the operating points shown in Fig. 14.3 and Fig. 14.5. Unrealized z-samples, if any, are indicated by an asterisk.

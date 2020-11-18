@@ -119,6 +119,8 @@ Plots D, E and F correspond to A, B and C with the difference that the two thres
 
 
 
+
+
 <div class="figure">
 <img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot3-1.png" alt="Similar to preceding figure but with the following changes. All RAD_2 curves are for $\mu = 1.1$ and for panels A, B and C, $\zeta_1 = -1$ for RAD-2." width="672" />
 <p class="caption">(\#fig:froc-vs-afroc-plot3)Similar to preceding figure but with the following changes. All RAD_2 curves are for $\mu = 1.1$ and for panels A, B and C, $\zeta_1 = -1$ for RAD-2.</p>
@@ -237,10 +239,10 @@ In order to get a better overview, the following tables summarize the numerical 
 -   Plots D, E and F are for hypothetical RAD-1 and RAD-2 observers that report *all* suspicious regions. The differences between A and D are minimal for the RAD-1 observer, but marked for the RAD-2 observer. Likewise for the differences between B and E.
 
 
-
-
-
 ## The optimal operating point on the FROC
+
+
+
 Algorithm developers are familiar with this problem. Given a CAD system that yields mark-rating data, where the ratings are on a continuous scale (often termed malignancy index), how does one select the optimal reporting threshold? Only mark-rating data with ratings exceeding the optimal threshold are to be displayed to the radiologist. From the previous examples it is evident that performance, as measured by the wAFROC or ROC AUCs, depends on the choice of reporting threshold: see for example the differences between the columns labeled "wAFROC-B" and  "wAFROC-E" and between the columns labeled "ROC-C" and  "ROC-F". This section examines the effect of changing the reporting threshold $\zeta_1$ on the wAFROC AUC, with the object of determining the value that maximizes the AUC. Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of NL marks as an expert radiologist. The $\nu = 1$ parameter is kept at the same value as in the previous simulations. Four values of the $\mu$ parameter are considered: 1, 1.5, 2 and 2.5. All else being equal, performance improves with increasing $\mu$. To minimize sampling variability, the number of non-diseased cases is $K_1 = 5000$ and the number of diseased cases is $K_2 = 7000$. 
 
 For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computation for each value of $\zeta_1$ and determines that value of $zeta_1$ that maximizes AUC; this is denoted $zeta_{\text{max}}$. Finally, for the optimal $zeta_1$ one calculates the corresponding NLF value.
@@ -253,21 +255,22 @@ For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computatio
 lambda <- 10 
 nu <- 1
 mu_arr <- c(1, 1.5, 2, 2.5)
-maxFomArr_10 <- llfArr_10 <- nlfArr_10 <- zetaMaxArr <- array(dim = length(mu_arr))
+maxFomArr_10 <- llfArr_10 <- nlfArr_10 <- array(dim = length(mu_arr))
+zetaMaxArr <- array(dim = c(2, length(mu_arr)))
 plotArr <- array(list(), length(mu_arr))
-K1 <- 500
-K2 <- 700
+K1 <- 5000
+K2 <- 7000
 Lmax <- 2
 seed <- 1
 set.seed(seed)
 Lk2 <- floor(runif(K2, 1, Lmax + 1))
 
 for (i in 1:length(mu_arr)) {
-  if (i == 1) zeta1Arr <- seq(1.5,3.5,0.1) else zeta1Arr <- seq(0.5,2.5,0.1)
+  if (i == 1) zeta1Arr <- seq(1.5,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
   fomArray <- array(dim = length(zeta1Arr))
   x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
   plotArr[[i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
-  zetaMaxArr[i] <- x$zetaMax
+  zetaMaxArr[1,i] <- x$zetaMax
   froc1 <- SimulateFrocDataset (
     mu = mu_arr[i],
     lambda = lambda,
@@ -281,8 +284,8 @@ for (i in 1:length(mu_arr)) {
     seed = seed)
   maxFomArr_10[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
   physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
-  nlfArr_10[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
-  llfArr_10[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
+  nlfArr_10[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[1,i])
+  llfArr_10[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[1,i])
 }
 ```
 
@@ -321,52 +324,52 @@ for (i in 1:length(mu_arr)) {
 <tbody>
   <tr>
    <td style="text-align:left;"> AUC10 </td>
-   <td style="text-align:right;"> 0.50464 </td>
-   <td style="text-align:right;"> 0.56108 </td>
-   <td style="text-align:right;"> 0.69017 </td>
-   <td style="text-align:right;"> 0.82014 </td>
+   <td style="text-align:right;"> 0.50224 </td>
+   <td style="text-align:right;"> 0.55628 </td>
+   <td style="text-align:right;"> 0.69876 </td>
+   <td style="text-align:right;"> 0.83833 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> AUC01 </td>
-   <td style="text-align:right;"> 0.59410 </td>
-   <td style="text-align:right;"> 0.78500 </td>
-   <td style="text-align:right;"> 0.87782 </td>
-   <td style="text-align:right;"> 0.93210 </td>
+   <td style="text-align:right;"> 0.60507 </td>
+   <td style="text-align:right;"> 0.78199 </td>
+   <td style="text-align:right;"> 0.88091 </td>
+   <td style="text-align:right;"> 0.93461 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> NLF10 </td>
-   <td style="text-align:right;"> 0.00968 </td>
-   <td style="text-align:right;"> 0.09269 </td>
-   <td style="text-align:right;"> 0.48400 </td>
-   <td style="text-align:right;"> 0.32303 </td>
+   <td style="text-align:right;"> 0.00687 </td>
+   <td style="text-align:right;"> 0.19144 </td>
+   <td style="text-align:right;"> 0.40378 </td>
+   <td style="text-align:right;"> 0.63462 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> LLF10 </td>
-   <td style="text-align:right;"> 0.01129 </td>
-   <td style="text-align:right;"> 0.18797 </td>
-   <td style="text-align:right;"> 0.65545 </td>
-   <td style="text-align:right;"> 0.79339 </td>
+   <td style="text-align:right;"> 0.00879 </td>
+   <td style="text-align:right;"> 0.26769 </td>
+   <td style="text-align:right;"> 0.62753 </td>
+   <td style="text-align:right;"> 0.85659 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> NLF01 </td>
-   <td style="text-align:right;"> 0.38209 </td>
-   <td style="text-align:right;"> 0.41194 </td>
-   <td style="text-align:right;"> 0.30896 </td>
-   <td style="text-align:right;"> 0.23170 </td>
+   <td style="text-align:right;"> 0.34458 </td>
+   <td style="text-align:right;"> 0.42455 </td>
+   <td style="text-align:right;"> 0.28963 </td>
+   <td style="text-align:right;"> 0.18407 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> LLF01 </td>
-   <td style="text-align:right;"> 0.47917 </td>
-   <td style="text-align:right;"> 0.74896 </td>
-   <td style="text-align:right;"> 0.85539 </td>
-   <td style="text-align:right;"> 0.91473 </td>
+   <td style="text-align:right;"> 0.45876 </td>
+   <td style="text-align:right;"> 0.75189 </td>
+   <td style="text-align:right;"> 0.85264 </td>
+   <td style="text-align:right;"> 0.91039 </td>
   </tr>
 </tbody>
 </table>
 
 
 ### Comments {#froc-vs-wafroc-comments-threshold-optimization}
-The results in Table \@ref(tab:froc-vs-afroc-cad-optim-table) are organized to allow ready comparison between AUCs and the operating points for the two values of $\lambda$. The first two rows compare the AUCs. The next two rows show the operating point (NLF, LLF) for $\lambda = 10$ and the final two rows are the operating point for $\lambda = 1$. The following trend are evident.
+The results in Table \@ref(tab:froc-vs-afroc-cad-optim-table) are organized to allow ready comparison between AUCs and the operating points for the two values of $\lambda$. The first two rows compare the AUCs. The next two rows show the operating point (NLF, LLF) for $\lambda = 10$ and the final two rows are the operating point for $\lambda = 1$. The following trends are evident.
 
 * All else being equal, AUC increases with increasing $\mu$. Increasing the separation of the two unit variance normal distributions that determine the ratings of NLs and LLs leads to higher performance
 * All else being equal, AUC increases with decreasing $\lambda$. Decreasing the propensity of the observer to generate NLs leads to increasing performance. 
@@ -374,11 +377,41 @@ The results in Table \@ref(tab:froc-vs-afroc-cad-optim-table) are organized to a
 * For $\lambda = 10$ optimal NLF increases with increasing $\mu$. 
 * For $\lambda = 0$ optimal NLF peaks around $\mu = 1.5$. 
 
-For $\lambda = 10$ and $\mu = 1$, AUC performance is quite low, in fact AUC = 0.5046429, and the optimal operating point of the algorithm is near the origin, specifically, NLF = 0.009676 and LLF = 0.0112925. If the algorithm is poor, the sensible choice is to only show those marks that have, according to the algorithm, high confidence level for being right (note that an operating point near the origin corresponds to a high value of $\zeta_1$). For higher values of $\mu$ AUC performance increases and it makes sense to then show marks with a somewhat lower confidence level, corresponding to moving up the curve. While it is true that one is possibly showing more NLs, the fraction of LLs increases even more. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \@ref(tab:froc-vs-afroc-cad-optim-table).    
-
-TBA
+For $\lambda = 10$ and $\mu = 1$ AUC performance is quite low, in fact AUC = 0.5022367, and the optimal operating point of the algorithm is near the origin, specifically, NLF = 0.0068714 and LLF = 0.0087887. If the algorithm is this poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, high confidence level for being right (note that an operating point near the origin corresponds to a high value of $\zeta_1$). For higher values of $\mu$ AUC performance increases and it makes sense to then show marks with a somewhat lower confidence level, corresponding to moving up the curve. While it is true that one is possibly showing more NLs, the fraction of LLs increases even more. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \@ref(tab:froc-vs-afroc-cad-optim-table).    
 
 
+
+
+
+
+
+
+
+<div class="figure">
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot7a-1.png" alt="TBA Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot7a)TBA Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC).</p>
+</div>
+
+
+
+<div class="figure">
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot7b-1.png" alt="TBA Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot7b)TBA Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC).</p>
+</div>
+
+
+
+<div class="figure">
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot7c-1.png" alt="TBA Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot7c)TBA Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC).</p>
+</div>
+
+
+
+<div class="figure">
+<img src="13-froc-vs-afroc_files/figure-html/froc-vs-afroc-plot7d-1.png" alt="TBA Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
+<p class="caption">(\#fig:froc-vs-afroc-plot7d)TBA Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC).</p>
+</div>
 
 ## Discussion {#froc-vs-wafroc-Discussion}
 

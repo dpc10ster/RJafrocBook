@@ -248,7 +248,7 @@ In Fig. \@ref(fig:froc-vs-afroc-plot2) panel A, the RAD-1 parameters are the sam
 Plots D, E and F correspond to A, B and C with the difference that the two threshold parameters are set to $-\infty$. The coordinates of the end-point of the RAD-1 FROC in panel D are (`r nlf_1_2D`, `r llf_1_2D`). Those of the RAD-2 FROC in panel D are (`r nlf_2_2D`, `r llf_2_2D`). The RAD-2 observer has higher LLF at lower NLF, and there can be no doubt that he is better. Panels E and F confirm that RAD-2 is actually the better observer *over the entire FPF range*. AUCs under the two wAFROC curves in E are `r wafroc_1_2E` for RAD-1 and `r wafroc_2_2E` for RAD-2. AUCs under the two ROC curves in F are `r roc_1_2F` for RAD-1 and `r roc_2_2F` for RAD-2. These confirm the visual impressions of panels in panels E and F. Notice that each ROC AUC is larger than the corresponding wAFROC AUC. 
 
 ### Small difference in performance and identical thresholds
-```{r Fig3, cache = FALSE, echo=FALSE}
+```{r fig3, cache = FALSE, echo=FALSE}
 source(here("R/CH13-CadVsRadPlots/CadVsRadPlots.R"))
 
 nu <- 1
@@ -281,6 +281,8 @@ wafroc_2_3E <- ret$wafroc_2_E
 roc_1_3F <- ret$roc_1_F
 roc_2_3F <- ret$roc_2_F
 ```
+
+
 
 ```{r extractEndPts3, echo=FALSE}
 # extract coordinates of end-point
@@ -417,6 +419,7 @@ knitr::kable(df, caption = "Summary of RAD-2 simulations: Fig refers to the figu
 -   Plots D, E and F are for hypothetical RAD-1 and RAD-2 observers that report *all* suspicious regions. The differences between A and D are minimal for the RAD-1 observer, but marked for the RAD-2 observer. Likewise for the differences between B and E.
 
 
+## The optimal operating point on the FROC
 ```{r do_one_mu, echo=FALSE}
 do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, K1, K2, Lk2, seed) {
   
@@ -447,7 +450,6 @@ do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, K1, K2, Lk2, seed) {
 ```
 
 
-## The optimal operating point on the FROC
 Algorithm developers are familiar with this problem. Given a CAD system that yields mark-rating data, where the ratings are on a continuous scale (often termed malignancy index), how does one select the optimal reporting threshold? Only mark-rating data with ratings exceeding the optimal threshold are to be displayed to the radiologist. From the previous examples it is evident that performance, as measured by the wAFROC or ROC AUCs, depends on the choice of reporting threshold: see for example the differences between the columns labeled "wAFROC-B" and  "wAFROC-E" and between the columns labeled "ROC-C" and  "ROC-F". This section examines the effect of changing the reporting threshold $\zeta_1$ on the wAFROC AUC, with the object of determining the value that maximizes the AUC. Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of NL marks as an expert radiologist. The $\nu = 1$ parameter is kept at the same value as in the previous simulations. Four values of the $\mu$ parameter are considered: 1, 1.5, 2 and 2.5. All else being equal, performance improves with increasing $\mu$. To minimize sampling variability, the number of non-diseased cases is $K_1 = 5000$ and the number of diseased cases is $K_2 = 7000$. 
 
 For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computation for each value of $\zeta_1$ and determines that value of $zeta_1$ that maximizes AUC; this is denoted $zeta_{\text{max}}$. Finally, for the optimal $zeta_1$ one calculates the corresponding NLF value.
@@ -459,21 +461,22 @@ For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computatio
 lambda <- 10 
 nu <- 1
 mu_arr <- c(1, 1.5, 2, 2.5)
-maxFomArr_10 <- llfArr_10 <- nlfArr_10 <- zetaMaxArr <- array(dim = length(mu_arr))
+maxFomArr_10 <- llfArr_10 <- nlfArr_10 <- array(dim = length(mu_arr))
+zetaMaxArr <- array(dim = c(2, length(mu_arr)))
 plotArr <- array(list(), length(mu_arr))
-K1 <- 500
-K2 <- 700
+K1 <- 5000
+K2 <- 7000
 Lmax <- 2
 seed <- 1
 set.seed(seed)
 Lk2 <- floor(runif(K2, 1, Lmax + 1))
 
 for (i in 1:length(mu_arr)) {
-  if (i == 1) zeta1Arr <- seq(1.5,3.5,0.1) else zeta1Arr <- seq(0.5,2.5,0.1)
+  if (i == 1) zeta1Arr <- seq(1.5,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
   fomArray <- array(dim = length(zeta1Arr))
   x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
   plotArr[[i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
-  zetaMaxArr[i] <- x$zetaMax
+  zetaMaxArr[1,i] <- x$zetaMax
   froc1 <- SimulateFrocDataset (
     mu = mu_arr[i],
     lambda = lambda,
@@ -487,8 +490,8 @@ for (i in 1:length(mu_arr)) {
     seed = seed)
   maxFomArr_10[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
   physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
-  nlfArr_10[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
-  llfArr_10[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
+  nlfArr_10[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[1,i])
+  llfArr_10[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[1,i])
 }
 ```
 
@@ -500,26 +503,26 @@ grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol
 
 ### Simulations for $\lambda = 1$
 
-```{r optOperatingPointLambda1, cache = TRUE, echo=FALSE}
+```{r optOperatingPointLambda01, cache = TRUE, echo=FALSE}
 
 lambda <- 1
 nu <- 1
 mu_arr <- c(1, 1.5, 2, 2.5)
-maxFomArr_01 <- llfArr_01 <- nlfArr_01 <- zetaMaxArr <- array(dim = length(mu_arr))
+maxFomArr_01 <- llfArr_01 <- nlfArr_01 <- array(dim = length(mu_arr))
 plotArr <- array(list(), length(mu_arr))
-K1 <- 500
-K2 <- 700
+K1 <- 5000
+K2 <- 7000
 Lmax <- 2
 seed <- 1
 set.seed(seed)
 Lk2 <- floor(runif(K2, 1, Lmax + 1))
 
 for (i in 1:length(mu_arr)) {
-  zeta1Arr <- seq(-1,1,0.1)
+  zeta1Arr <- seq(-1,1,0.05)
   fomArray <- array(dim = length(zeta1Arr))
   x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
   plotArr[[i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
-  zetaMaxArr[i] <- x$zetaMax
+  zetaMaxArr[2,i] <- x$zetaMax
   froc1 <- SimulateFrocDataset (
     mu = mu_arr[i],
     lambda = lambda,
@@ -533,8 +536,8 @@ for (i in 1:length(mu_arr)) {
     seed = seed)
   maxFomArr_01[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
   physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambda, nu)
-  nlfArr_01[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[i])
-  llfArr_01[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[i])
+  nlfArr_01[i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[2,i])
+  llfArr_01[i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[2,i])
 }
 ```
 
@@ -561,7 +564,7 @@ knitr::kable(xFinal, digits = 5, caption = "Summary of CAD optimal threshold sim
 
 
 ### Comments {#froc-vs-wafroc-comments-threshold-optimization}
-The results in Table \@ref(tab:froc-vs-afroc-cad-optim-table) are organized to allow ready comparison between AUCs and the operating points for the two values of $\lambda$. The first two rows compare the AUCs. The next two rows show the operating point (NLF, LLF) for $\lambda = 10$ and the final two rows are the operating point for $\lambda = 1$. The following trend are evident.
+The results in Table \@ref(tab:froc-vs-afroc-cad-optim-table) are organized to allow ready comparison between AUCs and the operating points for the two values of $\lambda$. The first two rows compare the AUCs. The next two rows show the operating point (NLF, LLF) for $\lambda = 10$ and the final two rows are the operating point for $\lambda = 1$. The following trends are evident.
 
 * All else being equal, AUC increases with increasing $\mu$. Increasing the separation of the two unit variance normal distributions that determine the ratings of NLs and LLs leads to higher performance
 * All else being equal, AUC increases with decreasing $\lambda$. Decreasing the propensity of the observer to generate NLs leads to increasing performance. 
@@ -569,11 +572,123 @@ The results in Table \@ref(tab:froc-vs-afroc-cad-optim-table) are organized to a
 * For $\lambda = 10$ optimal NLF increases with increasing $\mu$. 
 * For $\lambda = 0$ optimal NLF peaks around $\mu = 1.5$. 
 
-For $\lambda = 10$ and $\mu = 1$, AUC performance is quite low, in fact AUC = `r maxFomArr_10[1]`, and the optimal operating point of the algorithm is near the origin, specifically, NLF = `r nlfArr_10[1]` and LLF = `r llfArr_10[1]`. If the algorithm is this poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, high confidence level for being right (note that an operating point near the origin corresponds to a high value of $\zeta_1$). For higher values of $\mu$ AUC performance increases and it makes sense to then show marks with a somewhat lower confidence level, corresponding to moving up the curve. While it is true that one is possibly showing more NLs, the fraction of LLs increases even more. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \@ref(tab:froc-vs-afroc-cad-optim-table).    
-
-TBA
+For $\lambda = 10$ and $\mu = 1$ AUC performance is quite low, in fact AUC = `r maxFomArr_10[1]`, and the optimal operating point of the algorithm is near the origin, specifically, NLF = `r nlfArr_10[1]` and LLF = `r llfArr_10[1]`. If the algorithm is this poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, high confidence level for being right (note that an operating point near the origin corresponds to a high value of $\zeta_1$). For higher values of $\mu$ AUC performance increases and it makes sense to then show marks with a somewhat lower confidence level, corresponding to moving up the curve. While it is true that one is possibly showing more NLs, the fraction of LLs increases even more. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \@ref(tab:froc-vs-afroc-cad-optim-table).    
 
 
+```{r do_one_froc, echo=FALSE}
+do_one_froc <- function(mu, lambda, nu, zeta1, K1, K2, Lk2, seed) {
+  
+  froc <- SimulateFrocDataset (
+    mu = mu,
+    lambda = lambda,
+    nu = nu,
+    zeta1 = zeta1,
+    I = 1,
+    J = 1,
+    K1 = K1,
+    K2 = K2,
+    perCase = Lk2,
+    seed = seed)
+  
+  froc <- PlotEmpiricalOperatingCharacteristics(
+    froc,
+    trts= 1,
+    rdrs = 1,
+    opChType = "FROC", maxDiscrete = 25)
+  
+  return(froc)
+}
+```
+
+
+```{r optOpPntShowAllFrocs, cache = TRUE, echo=FALSE}
+
+lambdaArr <- c(10,1) 
+nu <- 1
+#mu_arr <- c(1, 1.5, 2, 2.5) #already defined above
+#zetaMaxArr                  #already defined above
+plotArr <- array(list(), dim = c(2,length(mu_arr)))
+K1 <- 5000
+K2 <- 7000
+Lmax <- 2
+seed <- 1
+set.seed(seed)
+Lk2 <- floor(runif(K2, 1, Lmax + 1))
+pts <- array(dim = c(2, 2, 4)) # lambda, nlf/llf, 4-values of mu
+pts[1,1,1] <- nlfArr_10[1]
+pts[1,2,1] <- llfArr_10[1]
+pts[1,1,2] <- nlfArr_10[2]
+pts[1,2,2] <- llfArr_10[2]
+pts[1,1,3] <- nlfArr_10[3]
+pts[1,2,3] <- llfArr_10[3]
+pts[1,1,4] <- nlfArr_10[4]
+pts[1,2,4] <- llfArr_10[4]
+
+pts[2,1,1] <- nlfArr_01[1]
+pts[2,2,1] <- llfArr_01[1]
+pts[2,1,2] <- nlfArr_01[2]
+pts[2,2,2] <- llfArr_01[2]
+pts[2,1,3] <- nlfArr_01[3]
+pts[2,2,3] <- llfArr_01[3]
+pts[2,1,4] <- nlfArr_01[4]
+pts[2,2,4] <- llfArr_01[4]
+
+extra <- array(dim = c(2, 4))
+extra[1,] <- 0.1
+extra[2,] <- 0.1
+extra[2,2] <- 0.5
+for (j in 1:2) {
+  for (i in 1:length(mu_arr)) {
+    
+    vline <- data.frame(genAbscissa = NULL, genOrdinate = NULL)
+    vline <- rbind(vline, data.frame(genAbscissa = pts[j,1,i], genOrdinate = 0))
+    vline <- rbind(vline, data.frame(genAbscissa = pts[j,1,i], genOrdinate = pts[j,2,i]))
+    
+    x <- do_one_froc (mu_arr[i], 
+                      lambdaArr[j], 
+                      nu,
+                      zetaMaxArr[j,i] - extra[j,i], # to keep vertical line in the range of the plot
+                      K1, 
+                      K2, 
+                      Lk2, 
+                      seed)
+    plotArr[[j,i]] <- x$Plot + geom_line(data = vline, color = "red")  + 
+      ggtitle(paste0(as.character(lambdaArr[j]),
+                     "-",
+                     as.character(mu_arr[i])))
+    #print(plotArr[[j,i]])
+    
+  }
+}
+```
+
+
+
+```{r froc-vs-afroc-plot7a, fig.cap="TBA Variation of AUC vs. $\\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[1,1]],
+             plotArr[[1,2]], nrow = 1, ncol = 2)
+```             
+
+
+
+```{r froc-vs-afroc-plot7b, fig.cap="TBA Variation of AUC vs. $\\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[1,3]],
+             plotArr[[1,4]], nrow = 1, ncol = 2)
+```             
+
+
+
+```{r froc-vs-afroc-plot7c, fig.cap="TBA Variation of AUC vs. $\\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[2,1]],
+             plotArr[[2,2]], nrow = 1, ncol = 2)
+```             
+
+
+
+```{r froc-vs-afroc-plot7d, fig.cap="TBA Variation of AUC vs. $\\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[2,3]],
+             plotArr[[2,4]], nrow = 1, ncol = 2)
+```             
 
 ## Discussion {#froc-vs-wafroc-Discussion}
 
