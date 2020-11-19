@@ -6389,7 +6389,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"} \OtherTok{=}\NormalTok{ ret4}\SpecialCharTok{$}\NormalTok{FRRC}\SpecialCharTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"} \OtherTok{=}\NormalTok{ ret4}\SpecialCharTok{$}\NormalTok{FRRC}\SpecialCharTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.2601894          1   0.26161524}
+\CommentTok{\#\textgreater{} 1    1.2192911          1   0.26949981}
 \end{Highlighting}
 \end{Shaded}
 
@@ -10844,8 +10844,8 @@ The final example, Fig. \ref{fig:froc-vs-afroc-plot3} shows that \emph{when ther
 
 Plots D, E and F correspond to A, B and C with the difference that the two threshold parameters are set to \(-\infty\). The coordinates of the end-point of the RAD-1 FROC in panel D are (1.0025, 0.6048077). Those of the RAD-2 FROC in panel D are (0.9008333, 0.6778846). Panels E and F confirm that RAD-2 is actually the better observer over the entire FPF range. AUCs under the two wAFROC curves in E are 0.560485714285714 for RAD-1 and 0.62384 for RAD-2. AUCs under the two ROC curves in F are 0.751334285714286 for RAD-1 and 0.785654285714286 for RAD-2. These confirm the visual impressions of panels in panels E and F. Notice that each ROC AUC is larger than the corresponding wAFROC AUC.
 
-\hypertarget{froc-vs-afroc-effect-sizes}{%
-\section{Effect size comparison}\label{froc-vs-afroc-effect-sizes}}
+STOP convert this to a table
+\#\# Effect size comparison \{\#froc-vs-afroc-effect-sizes\}
 
 In all three figures the wAFROC effect size (the difference in AUCs) is larger than the corresponding ROC effect size.
 
@@ -10965,10 +10965,33 @@ Fig & wAFROC-B & wAFROC-E & ROC-C & ROC-F\\
   Plots D, E and F are for hypothetical RAD-1 and RAD-2 observers that report \emph{all} suspicious regions. The differences between A and D are minimal for the RAD-1 observer, but marked for the RAD-2 observer. Likewise for the differences between B and E.
 \end{itemize}
 
+\hypertarget{froc-vs-wafroc-Discussion}{%
+\section{Discussion}\label{froc-vs-wafroc-Discussion}}
+
+\hypertarget{froc-vs-wafroc-references}{%
+\section{References}\label{froc-vs-wafroc-references}}
+
+\hypertarget{optim-op-point}{%
+\chapter{Optimal operating point on FROC}\label{optim-op-point}}
+
+\begin{verbatim}
+output:
+  rmarkdown::pdf_document:
+    fig_caption: yes        
+    includes:  
+      in_header: R/learn/my_header.tex
+\end{verbatim}
+
+\hypertarget{optim-op-point-intro}{%
+\section{Introduction}\label{optim-op-point-intro}}
+
+TBA
+Algorithm developers are familiar with this problem. Given a CAD system that yields mark-rating data, where the ratings are on a continuous scale (often termed malignancy index), how does one select the optimal reporting threshold? Only mark-rating data with ratings exceeding the optimal threshold are to be displayed to the radiologist. From the previous examples it is evident that performance, as measured by the wAFROC or ROC AUCs, depends on the choice of reporting threshold: see for example the differences between the columns labeled ``wAFROC-B'' and ``wAFROC-E'' and between the columns labeled ``ROC-C'' and ``ROC-F''.
+
 \hypertarget{the-optimal-operating-point-on-the-froc}{%
 \section{The optimal operating point on the FROC}\label{the-optimal-operating-point-on-the-froc}}
 
-Algorithm developers are familiar with this problem. Given a CAD system that yields mark-rating data, where the ratings are on a continuous scale (often termed malignancy index), how does one select the optimal reporting threshold? Only mark-rating data with ratings exceeding the optimal threshold are to be displayed to the radiologist. From the previous examples it is evident that performance, as measured by the wAFROC or ROC AUCs, depends on the choice of reporting threshold: see for example the differences between the columns labeled ``wAFROC-B'' and ``wAFROC-E'' and between the columns labeled ``ROC-C'' and ``ROC-F''. This section examines the effect of changing the reporting threshold \(\zeta_1\) on the wAFROC AUC, with the object of determining the value that maximizes the AUC. Two values of the \(\lambda\) parameter are considered: \(\lambda = 10\) and \(\lambda = 1\). The first value would characterize a CAD system that generates about 10 times the number of NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of NL marks as an expert radiologist. The \(\nu = 1\) parameter is kept at the same value as in the previous simulations. Four values of the \(\mu\) parameter are considered: 1, 1.5, 2 and 2.5. All else being equal, performance improves with increasing \(\mu\). To minimize sampling variability, the number of non-diseased cases is \(K_1 = 5000\) and the number of diseased cases is \(K_2 = 7000\).
+This chapter examines the effect of changing the reporting threshold \(\zeta_1\) on the wAFROC AUC, with the object of determining the value that maximizes the AUC. Two values of the \(\lambda\) parameter are considered: \(\lambda = 10\) and \(\lambda = 1\). The first value would characterize a CAD system that generates about 10 times the number of NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of NL marks as an expert radiologist. The \(\nu = 1\) parameter is kept at the same value as in the previous simulations. Four values of the \(\mu\) parameter are considered: 1, 1.5, 2 and 2.5. All else being equal, performance improves with increasing \(\mu\). To minimize sampling variability, the number of non-diseased cases is \(K_1 = 5000\) and the number of diseased cases is \(K_2 = 7000\).
 
 For each \(\mu\) one scans \(\zeta_1\), repeating the simulations and AUC computation for each value of \(\zeta_1\) and determines that value of \(zeta_1\) that maximizes AUC; this is denoted \(zeta_{\text{max}}\). Finally, for the optimal \(zeta_1\) one calculates the corresponding NLF value.
 
@@ -10977,8 +11000,8 @@ For each \(\mu\) one scans \(\zeta_1\), repeating the simulations and AUC comput
 
 \begin{figure}
 \centering
-\includegraphics{13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot5-1.pdf}
-\caption{\label{fig:froc-vs-afroc-plot5}Variation of AUC vs.~\(\zeta_1\); AUC is the wAFROC AUC. The plots are labeled by the value of \(\mu\) and zetaMax (the value of \(\zeta_1\) that maximizes AUC).}
+\includegraphics{13-optim-op-point_files/figure-latex/optim-op-point-plot5-1.pdf}
+\caption{\label{fig:optim-op-point-plot5}Variation of AUC vs.~\(\zeta_1\); AUC is the wAFROC AUC. The plots are labeled by the value of \(\mu\) and zetaMax (the value of \(\zeta_1\) that maximizes AUC).}
 \end{figure}
 
 \hypertarget{simulations-for-lambda-1}{%
@@ -10986,16 +11009,16 @@ For each \(\mu\) one scans \(\zeta_1\), repeating the simulations and AUC comput
 
 \begin{figure}
 \centering
-\includegraphics{13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot6-1.pdf}
-\caption{\label{fig:froc-vs-afroc-plot6}Variation of AUC vs.~\(\zeta_1\); AUC is the wAFROC AUC. The plots are labeled by the value of \(\mu\) and zetaMax (the value of \(\zeta_1\) that maximizes AUC).}
+\includegraphics{13-optim-op-point_files/figure-latex/optim-op-point-plot6-1.pdf}
+\caption{\label{fig:optim-op-point-plot6}Variation of AUC vs.~\(\zeta_1\); AUC is the wAFROC AUC. The plots are labeled by the value of \(\mu\) and zetaMax (the value of \(\zeta_1\) that maximizes AUC).}
 \end{figure}
 
-\hypertarget{froc-vs-wafroc-comments-threshold-optimization}{%
-\subsection{Comments}\label{froc-vs-wafroc-comments-threshold-optimization}}
+\hypertarget{optim-op-point-comments-threshold-optimization}{%
+\subsection{Comments}\label{optim-op-point-comments-threshold-optimization}}
 
 \begin{table}
 
-\caption{\label{tab:froc-vs-afroc-cad-optim-table}Summary of CAD optimal threshold simulations: "measure" refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for lambda = 01, NLF10 is NLF for lambda = 1, ..., LLF01 is LLF for lambda = 1.}
+\caption{\label{tab:optim-op-point-cad-optim-table}Summary of CAD optimal threshold simulations: "measure" refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for lambda = 01, NLF10 is NLF for lambda = 1, ..., LLF01 is LLF for lambda = 1.}
 \centering
 \begin{tabular}[t]{l|r|r|r|r}
 \hline
@@ -11016,7 +11039,7 @@ LLF01 & 0.45813 & 0.75553 & 0.85349 & 0.90996\\
 \end{tabular}
 \end{table}
 
-In Table \ref{tab:froc-vs-afroc-cad-optim-table} the first two rows compare the AUCs, the next two rows show the operating point (NLF, LLF) for \(\lambda = 10\) and the final two rows are the operating point for \(\lambda = 1\). The following trends are evident.
+In Table \ref{tab:optim-op-point-cad-optim-table} the first two rows compare the AUCs, the next two rows show the operating point (NLF, LLF) for \(\lambda = 10\) and the final two rows are the operating point for \(\lambda = 1\). The following trends are evident.
 
 \begin{itemize}
 \tightlist
@@ -11034,14 +11057,14 @@ In Table \ref{tab:froc-vs-afroc-cad-optim-table} the first two rows compare the 
 
 \begin{figure}
 \centering
-\includegraphics{13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot7a-1.pdf}
-\caption{\label{fig:froc-vs-afroc-plot7a}The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-1 is the FROC plot for \(\lambda = 10\) and \(\mu = 1\). The plot labeled 10-1.5 is the FROC plot for \(\lambda = 10\) and \(\mu = 1.5\).}
+\includegraphics{13-optim-op-point_files/figure-latex/optim-op-point-plot7a-1.pdf}
+\caption{\label{fig:optim-op-point-plot7a}The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-1 is the FROC plot for \(\lambda = 10\) and \(\mu = 1\). The plot labeled 10-1.5 is the FROC plot for \(\lambda = 10\) and \(\mu = 1.5\).}
 \end{figure}
 
 \begin{itemize}
 \tightlist
 \item
-  In Fig. \ref{fig:froc-vs-afroc-plot7a} the plot labeled 10-1 is a FROC plot for \(\lambda = 10\) and \(\mu = 1\); AUC performance is quite low, AUC = 0.5022367 and the optimal operating point of the algorithm is near the origin, specifically, NLF = 0.0056667 and LLF = 0.0096337. If the algorithm is this poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, high confidence level for being right (note that an operating point near the origin corresponds to a high value of \(\zeta_1\)). For higher values of \(\mu\) AUC performance increases and it makes sense to then show marks with a somewhat lower confidence level, corresponding to moving up the curve. While it is true that one is possibly showing more NLs, the fraction of LLs increases even more. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \ref{tab:froc-vs-afroc-cad-optim-table}. Performance of the algorithm is very poor and it makes sense to set a high threshold corresponding to a low value of NLF = 0.0056667. The observer is only shown very high confidence level marks.
+  In Fig. \ref{fig:optim-op-point-plot7a} the plot labeled 10-1 is a FROC plot for \(\lambda = 10\) and \(\mu = 1\); AUC performance is quite low, AUC = 0.5022367 and the optimal operating point of the algorithm is near the origin, specifically, NLF = 0.0056667 and LLF = 0.0096337. If the algorithm is this poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, high confidence level for being right (note that an operating point near the origin corresponds to a high value of \(\zeta_1\)). For higher values of \(\mu\) AUC performance increases and it makes sense to then show marks with a somewhat lower confidence level, corresponding to moving up the curve. While it is true that one is possibly showing more NLs, the fraction of LLs increases even more. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \ref{tab:optim-op-point-cad-optim-table}. Performance of the algorithm is very poor and it makes sense to set a high threshold corresponding to a low value of NLF = 0.0056667. The observer is only shown very high confidence level marks.
 \item
   In the plot labeled 10-1.5 the FROC plot is for \(\lambda = 10\) and \(\mu = 1.5\). Performance is better and it makes sense to set the threshold at a lower value, corresponding to a higher NLF = 0.1958333, and because of the increased algorithm performance it makes sense to show him lower confidence level marks.
 \end{itemize}
@@ -11050,33 +11073,33 @@ STOP
 
 \begin{figure}
 \centering
-\includegraphics{13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot7b-1.pdf}
-\caption{\label{fig:froc-vs-afroc-plot7b}The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-2 is the FROC plot for \(\lambda = 10\) and \(\mu = 2\). The plot labeled 10-2.5 is FROC plot for \(\lambda = 10\) and \(\mu = 2.5\).}
+\includegraphics{13-optim-op-point_files/figure-latex/optim-op-point-plot7b-1.pdf}
+\caption{\label{fig:optim-op-point-plot7b}The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-2 is the FROC plot for \(\lambda = 10\) and \(\mu = 2\). The plot labeled 10-2.5 is FROC plot for \(\lambda = 10\) and \(\mu = 2.5\).}
 \end{figure}
 
-Fig. \ref{fig:froc-vs-afroc-plot7b}: Plot labeled 10-1: The vertical red line is at NLF = 0.3984167. Plot labeled 10-1.5: The vertical red line is at NLF = 0.6330833.
+Fig. \ref{fig:optim-op-point-plot7b}: Plot labeled 10-1: The vertical red line is at NLF = 0.3984167. Plot labeled 10-1.5: The vertical red line is at NLF = 0.6330833.
 
 \begin{figure}
 \centering
-\includegraphics{13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot7c-1.pdf}
-\caption{\label{fig:froc-vs-afroc-plot7c}The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-1 is the FROC plot for \(\lambda = 1\) and \(\mu = 1\). The plot labeled 10-1.5 is the FROC plot for \(\lambda = 1\) and \(\mu = 1.5\).}
+\includegraphics{13-optim-op-point_files/figure-latex/optim-op-point-plot7c-1.pdf}
+\caption{\label{fig:optim-op-point-plot7c}The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-1 is the FROC plot for \(\lambda = 1\) and \(\mu = 1\). The plot labeled 10-1.5 is the FROC plot for \(\lambda = 1\) and \(\mu = 1.5\).}
 \end{figure}
 
-Fig. \ref{fig:froc-vs-afroc-plot7c}: Plot labeled 1-1: The vertical red line is at NLF = 0.33925. Plot labeled 1-1.5: The vertical red line is at NLF = 0.4209167.
+Fig. \ref{fig:optim-op-point-plot7c}: Plot labeled 1-1: The vertical red line is at NLF = 0.33925. Plot labeled 1-1.5: The vertical red line is at NLF = 0.4209167.
 
 \begin{figure}
 \centering
-\includegraphics{13-froc-vs-afroc_files/figure-latex/froc-vs-afroc-plot7d-1.pdf}
-\caption{\label{fig:froc-vs-afroc-plot7d}The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-2 is the FROC plot for \(\lambda = 1\) and \(\mu = 2\). The plot labeled 1-2.5 is the FROC plot for \(\lambda = 1\) and \(\mu = 2.5\).}
+\includegraphics{13-optim-op-point_files/figure-latex/optim-op-point-plot7d-1.pdf}
+\caption{\label{fig:optim-op-point-plot7d}The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-2 is the FROC plot for \(\lambda = 1\) and \(\mu = 2\). The plot labeled 1-2.5 is the FROC plot for \(\lambda = 1\) and \(\mu = 2.5\).}
 \end{figure}
 
-Fig. \ref{fig:froc-vs-afroc-plot7d}: Plot labeled 1-2: The vertical red line is at NLF = 0.2874167. Plot labeled 1-2.5: The vertical red line is at NLF = 0.18475.
+Fig. \ref{fig:optim-op-point-plot7d}: Plot labeled 1-2: The vertical red line is at NLF = 0.2874167. Plot labeled 1-2.5: The vertical red line is at NLF = 0.18475.
 
-\hypertarget{froc-vs-wafroc-Discussion}{%
-\section{Discussion}\label{froc-vs-wafroc-Discussion}}
+\hypertarget{optim-op-point-Discussion}{%
+\section{Discussion}\label{optim-op-point-Discussion}}
 
-\hypertarget{froc-vs-wafroc-references}{%
-\section{References}\label{froc-vs-wafroc-references}}
+\hypertarget{optim-op-point-references}{%
+\section{References}\label{optim-op-point-references}}
 
 \hypertarget{froc-meanings}{%
 \chapter{Meanings of FROC figures of merit}\label{froc-meanings}}
@@ -11283,14 +11306,14 @@ According to Eqn. \eqref{eq:froc-meanings-A0}, \(A_0\) increases as \(\text{FPF}
 \NormalTok{p2 }\OtherTok{\textless{}{-}}\NormalTok{ p2}\SpecialCharTok{$}\NormalTok{Plot }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"B"}\NormalTok{)}
 
 \FunctionTok{cat}\NormalTok{(}\StringTok{"AFROC AUC = "}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{UtilFigureOfMerit}\NormalTok{(frocData, }\AttributeTok{FOM =} \StringTok{"AFROC"}\NormalTok{)),}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} AFROC AUC =  0.8958333}
+\CommentTok{\#\textgreater{} AFROC AUC =  0.9166667}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[numbers=left,,]
 \FunctionTok{cat}\NormalTok{(}\StringTok{"wAFROC AUC = "}\NormalTok{, }\FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{UtilFigureOfMerit}\NormalTok{(frocData, }\AttributeTok{FOM =} \StringTok{"wAFROC"}\NormalTok{)),}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\CommentTok{\#\textgreater{} wAFROC AUC =  0.84375}
+\CommentTok{\#\textgreater{} wAFROC AUC =  0.95}
 \end{Highlighting}
 \end{Shaded}
 
@@ -11314,21 +11337,13 @@ Let us examine the ratings.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{frocData}\SpecialCharTok{$}\NormalTok{ratings}\SpecialCharTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,]}
-\CommentTok{\#\textgreater{}           [,1] [,2]}
-\CommentTok{\#\textgreater{} [1,]      {-}Inf {-}Inf}
-\CommentTok{\#\textgreater{} [2,]      {-}Inf {-}Inf}
-\CommentTok{\#\textgreater{} [3,] 0.8261741 {-}Inf}
-\CommentTok{\#\textgreater{} [4,]      {-}Inf {-}Inf}
-\CommentTok{\#\textgreater{} [5,]      {-}Inf {-}Inf}
-\CommentTok{\#\textgreater{} [6,]      {-}Inf {-}Inf}
-\CommentTok{\#\textgreater{} [7,]      {-}Inf {-}Inf}
-\CommentTok{\#\textgreater{} [8,] 0.1929272 {-}Inf}
+\CommentTok{\#\textgreater{} [1]    {-}Inf    {-}Inf    {-}Inf    {-}Inf    {-}Inf    {-}Inf    {-}Inf 1.20382}
 \NormalTok{frocData}\SpecialCharTok{$}\NormalTok{ratings}\SpecialCharTok{$}\NormalTok{LL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,]}
-\CommentTok{\#\textgreater{}          [,1]     [,2]}
-\CommentTok{\#\textgreater{} [1,]     {-}Inf     {-}Inf}
-\CommentTok{\#\textgreater{} [2,] 2.557588     {-}Inf}
-\CommentTok{\#\textgreater{} [3,] 4.188748 1.090023}
-\CommentTok{\#\textgreater{} [4,] 4.178053 1.793981}
+\CommentTok{\#\textgreater{}          [,1]      [,2]}
+\CommentTok{\#\textgreater{} [1,] 2.312600      {-}Inf}
+\CommentTok{\#\textgreater{} [2,] 1.496620      {-}Inf}
+\CommentTok{\#\textgreater{} [3,] 2.464060      {-}Inf}
+\CommentTok{\#\textgreater{} [4,] 3.461839 0.9989637}
 \end{Highlighting}
 \end{Shaded}
 
