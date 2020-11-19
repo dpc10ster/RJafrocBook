@@ -131,29 +131,13 @@ The final example, Fig. \@ref(fig:froc-vs-afroc-plot3) shows that *when there is
 
 Plots D, E and F correspond to A, B and C with the difference that the two threshold parameters are set to $-\infty$. The coordinates of the end-point of the RAD-1 FROC in panel D are (1.0025, 0.6048077). Those of the RAD-2 FROC in panel D are (0.9008333, 0.6778846). Panels E and F confirm that RAD-2 is actually the better observer over the entire FPF range. AUCs under the two wAFROC curves in E are 0.560485714285714 for RAD-1 and 0.62384 for RAD-2. AUCs under the two ROC curves in F are 0.751334285714286 for RAD-1 and 0.785654285714286 for RAD-2. These confirm the visual impressions of panels in panels E and F. Notice that each ROC AUC is larger than the corresponding wAFROC AUC. 
 
-STOP convert this to a table
-## Effect size comparison {#froc-vs-afroc-effect-sizes}
-
-In all three figures the wAFROC effect size (the difference in AUCs) is larger than the corresponding ROC effect size. 
-
-* For Fig. \@ref(fig:froc-vs-afroc-plot1) panels B and C:
-   + The wAFROC effect size is 0.100612857142857, 
-   + The ROC effect size is -0.00465428571428572. 
-* For Fig. \@ref(fig:froc-vs-afroc-plot2) panels B and C: 
-   + The wAFROC effect size is 0.134422142857143, 
-   + The ROC effect size is 0.0222185714285714. 
-* For Fig. \@ref(fig:froc-vs-afroc-plot3) panels B and C: 
-   + The wAFROC effect size is 0.0610014285714285, 
-   + The ROC effect size is 0.0368542857142857. 
-
-Since effect size enters as the *square* in sample size formulas, it is no wonder that wAFROC yields greater statistical power than ROC. The small difference example is more typical of modality comparison studies where the modalities being compared are only slightly different. In this case the wAFROC effect size is about twice the corresponding ROC value - see chapter on FROC sample size TBA.
-
-
 ## Summary of simulations
 
-In order to get a better overview, the following tables summarize the numerical values from the plots in this chapter. Table \@ref(tab:froc-vs-afroc-summary-table-rdr1) refers to the RAD-1 observer, and Table \@ref(tab:froc-vs-afroc-summary-table-rdr2) refers to the RAD-2 observer.
+The following tables summarize the numerical values from the plots in this chapter. Table \@ref(tab:froc-vs-afroc-summary-table-rdr1) refers to the RAD-1 observer, and Table \@ref(tab:froc-vs-afroc-summary-table-rdr2) refers to the RAD-2 observer.
 
 ### Summary of RAD-1 simulations
+
+
 
 
 
@@ -205,14 +189,61 @@ Fig & wAFROC-B & wAFROC-E & ROC-C & ROC-F\\
 -   The fourth column is labeled "ROC-C", meaning the RAD-2 ROC AUC corresponding to the blue curve in panel C.
 -   The fifth column is labeled "ROC-F", meaning the RAD-2 ROC AUC corresponding to the blue curve in panel F.
 
-
-
-## Comments {#froc-vs-wafroc-comments}
+### Comments {#froc-vs-wafroc-comments}
 
 -   For the same figure label the RAD-1 panels are identical in the three figures. This is the reason why Table \@ref(tab:froc-vs-afroc-summary-table-rdr1) has only one row. A *fixed* RAD-1 dataset is being compared to *varying* RAD-2 datasets.
 -   The first RAD-2 dataset, Fig. \@ref(fig:froc-vs-afroc-plot1) A, B or C, might be considered representative of an average radiologist, the second one, Fig. \@ref(fig:froc-vs-afroc-plot2) A, B or C, is a super-expert and the third one, Fig. \@ref(fig:froc-vs-afroc-plot3) A, B or C, is only nominally better than RAD-1.
 -   Plots D, E and F are for hypothetical RAD-1 and RAD-2 observers that report *all* suspicious regions. The differences between A and D are minimal for the RAD-1 observer, but marked for the RAD-2 observer. Likewise for the differences between B and E.
 
+
+## Effect size comparison {#froc-vs-afroc-effect-sizes}
+
+* The effect size is defined as the AUC -- calculated using either wAFROC or ROC -- difference between RDR-2 and RDR-1 for the same figure. For example, for Fig. \@ref(fig:froc-vs-afroc-plot2) and the wAFROC AUC effect size, one takes the difference between the AUCs under the RAD-2 (blue) minus RAD-1 (red) curves in panel B. 
+* In all three figures the wAFROC effect size (ES) is larger than the corresponding ROC effect size. 
+* For Fig. \@ref(fig:froc-vs-afroc-plot1) panels B and C:
+   + The wAFROC effect size is 0.100612857142857, 
+   + The ROC effect size is -0.00465428571428572. 
+* For Fig. \@ref(fig:froc-vs-afroc-plot2) panels B and C: 
+   + The wAFROC effect size is 0.134422142857143, 
+   + The ROC effect size is 0.0222185714285714. 
+* For Fig. \@ref(fig:froc-vs-afroc-plot3) panels B and C: 
+   + The wAFROC effect size is 0.0610014285714285, 
+   + The ROC effect size is 0.0368542857142857. 
+
+
+These results are summarized in Table \@ref(tab:froc-vs-afroc-effect-size-rdr2). 
+
+Since effect size enters as the *square* in sample size formulas, wAFROC yields greater statistical power than ROC. The "small difference" example, corresponding to row number 2, is more typical of modality comparison studies where the modalities being compared are only slightly different. In this case the wAFROC effect size is about twice the corresponding ROC value - see chapter on FROC sample size TBA.
+
+
+
+\begin{table}
+
+\caption{(\#tab:froc-vs-afroc-effect-size-rdr2)Effect size comparions for RAD-1 simulations: Fig refers to the figure number in this chapter.}
+\centering
+\begin{tabular}[t]{l|l|l}
+\hline
+Fig & ES-wAFROC & ES-ROC\\
+\hline
+1 & 0.1006 & -0.004654\\
+\hline
+2 & 0.1344 & 0.02222\\
+\hline
+3 & 0.061 & 0.03685\\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+## Performance depends on $\zeta_1$ {#froc-vs-wafroc-peformance-depends-on-zeta1}
+Consider the wAFROC AUCs for the RAD-2 curves in Fig. \@ref(fig:froc-vs-afroc-plot2) panels B and E. The wAFROC AUC for RAD-2 in panel B is 0.707519285714286 while that for RAD-2 in panel E is 0.872028571428571. The only difference between the simulation parameters for the two curves are $\zeta_1 = 2$ for panel B and $\zeta_1 = -\infty$ for panel E. Clearly wAFROC AUC depends on the value of $\zeta_1$. 
+
+A similar result applies when considering the ROC curves in Fig. \@ref(fig:froc-vs-afroc-plot2) panels C and F. The ROC AUC for RAD-2 in panel C is 0.772155714285714 while that for RAD-2 in panel F is 0.934321428571429. Clearly ROC AUC also depends on the value of $\zeta_1$. 
+
+The reason is that in panels B and C the respective AUCs are depressed due to high value of threshold parameter. The (very good) radiologist is seriously under-reporting and choosing to operate near the origin of a steep wAFROC/ROC curve. It as as if in an ROC study the reader is giving too much importance to specificity and therefore not achieving higher sensitivity.
+
+*Since performance depends on threshold, this opens up the possibility of optimizing performance by finding the threshold that maximizes AUC. This is the subject of the next chapter.*
 
 ## Discussion {#froc-vs-wafroc-Discussion}
 
