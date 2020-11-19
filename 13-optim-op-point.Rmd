@@ -1,16 +1,12 @@
 # Optimal operating point on FROC {#optim-op-point}
 
-```
+---
 output:
   rmarkdown::pdf_document:
     fig_caption: yes        
     includes:  
       in_header: R/learn/my_header.tex
-header-includes:
-   - \usepackage[justification=raggedright,labelfont=bf,singlelinecheck=false]{caption}
-  md_document:
-    preserve_yaml: false
-```
+---
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -283,7 +279,7 @@ x1 <- as.data.frame(rbind(t(maxFomArr_10), t(optOpPt[1,1,]), t(optOpPt[1,2,])))
 x2 <- as.data.frame(rbind(t(maxFomArr_01), t(optOpPt[2,1,]), t(optOpPt[2,2,])))
 x12 <- rbind(x1, x2)
 x12 <- cbind(c("AUC10", "NLF10", "LLF10", "AUC01", "NLF01", "LLF01"), x12)
-colnames(x12) <- c("measure", paste0("muVal", as.character(mu_arr)))
+colnames(x12) <- c("measure", paste0("mu", as.character(mu_arr)))
 y <- c("AUC10", "AUC01", "NLF10", "LLF10", "NLF01", "LLF01")
 x12 %>% slice(match(y, measure)) -> xFinal
 ```
@@ -292,7 +288,7 @@ x12 %>% slice(match(y, measure)) -> xFinal
 ### Comments {#optim-op-point-comments-threshold-optimization}
 
 ```{r optim-op-point-cad-optim-table, echo=FALSE}
-knitr::kable(xFinal, digits = 5, caption = "Summary of CAD optimal threshold simulations: \"measure\" refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for lambda = 01, NLF10 is NLF for lambda = 1, ..., LLF01 is LLF for lambda = 1.", escape = FALSE)
+knitr::kable(xFinal, digits = 5, caption = "Summary of CAD optimal threshold simulations: \"measure\" refers to a performance measure, \"mu1\" refers to $\\mu = 1$, etc. The row labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for $\\lambda = 01$, NLF10 is NLF for $\\lambda = 1$, ..., LLF01 is LLF for $\\lambda = 1$.", escape = FALSE)
 ```
 
 In Table \@ref(tab:optim-op-point-cad-optim-table) the first two rows compare the AUCs, the next two rows show the operating point (NLF, LLF) for $\lambda = 10$ and the final two rows are the operating point for $\lambda = 1$. The following trends are evident.
