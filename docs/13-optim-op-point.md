@@ -136,46 +136,53 @@ Table \@ref(tab:optim-op-point-cad-optim-table) summarizes the results of the si
 * For $\lambda = 10$ optimal NLF increases with increasing $\mu$. 
 * For $\lambda = 1$ optimal NLF *peaks* around $\mu = 1.5$. 
 
-All of these observations make intuitive sense except, perhaps, that for NLF01. To understand the peaking behavior it is necessary to examine the FROC curves corresponding to the eight -- 2 $\lambda$ values and 4 $\mu$ values -- combinations of parameters. In the following eight plots the optimal value of NLF for each plot, corresponding to $\zeta_{\text{max}}$, are shown as red vertical lines. 
+All of these observations make intuitive sense except, perhaps, that for NLF01. To understand the peaking behavior it is necessary to examine the FROC curves corresponding to the eight -- two $\lambda$ values times four $\mu$ values -- combinations of parameters. In the following eight plots, each labeled by the appropriate $\lambda-\mu$ combination, the optimal value of NLF, corresponding to $\zeta_1 = \zeta_{\text{max}}$, is shown as a red vertical line. 
 
 <div class="figure">
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7a-1.png" alt="The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-1 is the FROC plot for $\lambda = 10$ and $\mu = 1$. The plot labeled 10-1.5 is the FROC plot for $\lambda = 10$ and $\mu = 1.5$." width="672" />
-<p class="caption">(\#fig:optim-op-point-plot7a)The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-1 is the FROC plot for $\lambda = 10$ and $\mu = 1$. The plot labeled 10-1.5 is the FROC plot for $\lambda = 10$ and $\mu = 1.5$.</p>
+<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7a-1.png" alt="FROC plots: the plot labeled 10-1 is for $\lambda = 10$ and $\mu = 1$, and that labeled 10-1.5 is for $\lambda = 10$ and $\mu = 1.5$." width="672" />
+<p class="caption">(\#fig:optim-op-point-plot7a)FROC plots: the plot labeled 10-1 is for $\lambda = 10$ and $\mu = 1$, and that labeled 10-1.5 is for $\lambda = 10$ and $\mu = 1.5$.</p>
 </div>
 
+#### Explanations {#optim-op-point-optim-threshold-explanations}
 
-* In Fig. \@ref(fig:optim-op-point-plot7a) the plot labeled 10-1 is the *extended* FROC curve for $\lambda = 10$ and $\mu = 1$. The meaning of *extended* is explained in the immediately following footnote.
-* The vertical red line is drawn at the *predicted* optimal NLF corresponding to $\zeta_{\text{max}}$ for this parameter combination, not the *empirical* NLF ^[Meaning of *extended*: due to sampling effects the predicted end-point will not, in general, coincide with the *empirical* end-point, but will be near it. In order to show a fuller extent of the FROC curve it is necessary to *extend* the observed curve beyond the predicted end-point. This was done by setting $\zeta_1$ = $\zeta_{\text{max}} - 0.5$, which has the effect of letting the curve run a little bit further to the right. As a concrete example the predicted end-point for the curve in question is (0.0068714, LLF = 0.0087887) while the empirical end-point is (0.0056667, LLF = 0.0096337) and the extended curve shown ends at (0.0364167, LLF = 0.0274704).].  
-* In Fig. \@ref(fig:optim-op-point-plot7a) AUC performance is quite low. In fact AUC = 0.5022367. The optimal operating point of the algorithm is actually rather close to the origin, specifically NLF = 0.0068714 and LLF = 0.0087887.
+* In Fig. \@ref(fig:optim-op-point-plot7b) and the plot labeled **10-1**: the vertical red line is at NLF = 0.0068714. The predicted end-point for the curve is (NLF = 0.0068714, LLF = 0.0087887) while the empirical end-point is (NLF = 0.0056667, LLF = 0.0096337) and the extended curve (defined below) ends at (NLF = 0.0364167, LLF = 0.0274704). In the plot labeled **10-1.5**: The vertical red line is at NLF = 0.1914437. The predicted end-point for the curve is (NLF = 0.1914437, LLF = 0.2676925) while the empirical end-point is (NLF = 0.1958333, LLF = 0.2757535) and the extended curve ends at (NLF = 0.53475, LLF = 0.4302747).
+
+* In Fig. \@ref(fig:optim-op-point-plot7a) the plot labeled **10-1** is the *extended* FROC curve for $\lambda = 10$ and $\mu = 1$.
+* Meaning of *extended*: due to sampling effects the predicted end-point will not, in general, coincide with the *empirical* end-point, but will be near it. In order to show a fuller extent of the FROC curve it is necessary to *extend* the observed curve beyond the predicted end-point. This was done by setting $\zeta_1$ = $\zeta_{\text{max}} - 0.5$, which has the effect of letting the curve run a little bit further to the right. As a concrete example the predicted end-point for the curve in question is (NLF = 0.0068714, LLF = 0.0087887) while the empirical end-point is (NLF = 0.0056667, LLF = 0.0096337) and the extended curve ends at (NLF = 0.0364167, LLF = 0.0274704).
+* The vertical red line is drawn at the *predicted* optimal NLF corresponding to $\zeta_{\text{max}}$ for this parameter combination, not the *empirical* NLF.  
+* In Fig. \@ref(fig:optim-op-point-plot7a) panel labeled 10-1, AUC performance is quite low. In fact AUC = 0.5022367. The optimal operating point of the algorithm is actually rather close to the origin, specifically NLF = 0.0068714 and LLF = 0.0087887.
 * Since algorithm performance is so poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, very high confidence level for being right (note that an operating point near the origin corresponds to a high value of $\zeta$). 
 * For higher values of $\mu$ shown in Fig. \@ref(fig:optim-op-point-plot7a) -- e.g., the plots labeled 10-1.5, 10-2 and 10-2.5 -- AUC performance progressively increases. It now makes sense to show marks with lower confidence levels corresponding to moving up the FROC curve. While it is true that one is also showing more NLs, the increase in the number of LLs shown is enough to compensate. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \@ref(tab:optim-op-point-cad-optim-table). 
-* It remains to explain the seemingly anomalous behavior seen in the fifth row of Table \@ref(tab:optim-op-point-cad-optim-table) - NLF shows a peak as a function of $\mu$. The relevant FROC curves are shown in In Fig. \@ref(fig:optim-op-point-plot7b). The basic reason is that as $\mu$ increases, the end-point of the FROC keeps moving upwards and to the left (approaching NLF = 0 and LLF = 1 in the limit of infinite $\mu$). Because of this effect the expected increase in NLF seen in the third row of the table is terminated - one literally runs out of FROC curve to move up on. Another way of explaining this is that in In Fig. \@ref(fig:optim-op-point-plot7a) the true end-point, i.e., that corresponding to $\zeta_1 = -\infty$, is much further to the right, than in Fig. \@ref(fig:optim-op-point-plot7b). This allows NLF to keep increasing in Fig. \@ref(fig:optim-op-point-plot7a) but not in Fig. \@ref(fig:optim-op-point-plot7b). 
+* It remains to explain the seemingly anomalous behavior seen in the fifth row of Table \@ref(tab:optim-op-point-cad-optim-table) - NLF shows a peak at $\mu = 1.5$ as a function of $\mu$ and thereafter NLF decreases. The relevant FROC curve is shown in Fig. \@ref(fig:optim-op-point-plot7c), panel labeled 1-1.5. The basic reason is that as $\mu$ increases, the end-point of the FROC keeps moving upwards and to the left (approaching NLF = 0 and LLF = 1 in the limit of infinite $\mu$). Because of this effect the expected increase in NLF seen in the third row of the table is terminated - one literally runs out of FROC curve to move up on. Another way of explaining this is that in In Fig. \@ref(fig:optim-op-point-plot7a) the true end-point, i.e., that corresponding to $\zeta_1 = -\infty$, is much further to the right, than in Fig. \@ref(fig:optim-op-point-plot7b). This allows NLF to keep increasing in Fig. \@ref(fig:optim-op-point-plot7a) but not in Fig. \@ref(fig:optim-op-point-plot7b). 
 
-STOP
-
-<div class="figure">
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7b-1.png" alt="The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-2 is the FROC plot for $\lambda = 10$ and $\mu = 2$. The plot labeled 10-2.5 is FROC plot for $\lambda = 10$ and $\mu = 2.5$." width="672" />
-<p class="caption">(\#fig:optim-op-point-plot7b)The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-2 is the FROC plot for $\lambda = 10$ and $\mu = 2$. The plot labeled 10-2.5 is FROC plot for $\lambda = 10$ and $\mu = 2.5$.</p>
-</div>
-
-
-Fig. \@ref(fig:optim-op-point-plot7b): Plot labeled 10-1: The vertical red line is at NLF = 0.4037833. Plot labeled 10-1.5: The vertical red line is at NLF = 0.634621.
 
 
 <div class="figure">
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7c-1.png" alt="The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-1 is the FROC plot for $\lambda = 1$ and $\mu = 1$. The plot labeled 10-1.5 is the FROC plot for $\lambda = 1$ and $\mu = 1.5$." width="672" />
-<p class="caption">(\#fig:optim-op-point-plot7c)The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-1 is the FROC plot for $\lambda = 1$ and $\mu = 1$. The plot labeled 10-1.5 is the FROC plot for $\lambda = 1$ and $\mu = 1.5$.</p>
+<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7b-1.png" alt="FROC plots: the plot labeled 10-2 is for $\lambda = 10$ and $\mu = 2$ and that labeled 10-2.5 is for $\lambda = 10$ and $\mu = 2.5$." width="672" />
+<p class="caption">(\#fig:optim-op-point-plot7b)FROC plots: the plot labeled 10-2 is for $\lambda = 10$ and $\mu = 2$ and that labeled 10-2.5 is for $\lambda = 10$ and $\mu = 2.5$.</p>
 </div>
 
-Fig. \@ref(fig:optim-op-point-plot7c): Plot labeled 1-1: The vertical red line is at NLF = 0.3445783. Plot labeled 1-1.5: The vertical red line is at NLF = 0.4245538.
+* In Fig. \@ref(fig:optim-op-point-plot7b) and the plot labeled **10-2**: The vertical red line is at NLF = 0.4037833. The predicted end-point for the curve is (NLF = 0.4037833, LLF = 0.6275277) while the empirical end-point is (NLF = 0.3984167, LLF = 0.631343) and the extended curve ends at (NLF = 0.9109167, LLF = 0.7486646). In the plot labeled **10-2.5**: The vertical red line is at NLF = 0.634621. The predicted end-point for the curve is (NLF = 0.634621, LLF = 0.8565917) while the empirical end-point is (NLF = 0.6330833, LLF = 0.8606448) and the extended curve ends at (NLF = 1.2324167, LLF = 0.9008966).
+
 
 
 <div class="figure">
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7d-1.png" alt="The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-2 is the FROC plot for $\lambda = 1$ and $\mu = 2$. The plot labeled 1-2.5 is the FROC plot for $\lambda = 1$ and $\mu = 2.5$." width="672" />
-<p class="caption">(\#fig:optim-op-point-plot7d)The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-2 is the FROC plot for $\lambda = 1$ and $\mu = 2$. The plot labeled 1-2.5 is the FROC plot for $\lambda = 1$ and $\mu = 2.5$.</p>
+<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7c-1.png" alt="FROC plots: the plot labeled 1-1 is for $\lambda = 1$ and $\mu = 1$ and that labeled 10-1.5 is for $\lambda = 1$ and $\mu = 1.5$." width="672" />
+<p class="caption">(\#fig:optim-op-point-plot7c)FROC plots: the plot labeled 1-1 is for $\lambda = 1$ and $\mu = 1$ and that labeled 10-1.5 is for $\lambda = 1$ and $\mu = 1.5$.</p>
 </div>
 
-Fig. \@ref(fig:optim-op-point-plot7d): Plot labeled 1-2: The vertical red line is at NLF = 0.2896299. Plot labeled 1-2.5: The vertical red line is at NLF = 0.1840689.
+* In Fig. \@ref(fig:optim-op-point-plot7c), the panel labeled **1-1**: The vertical red line is at NLF = 0.3445783. The predicted end-point for the curve is (NLF = 0.3445783, LLF = 0.4587595) while the empirical end-point is (NLF = 0.33925, LLF = 0.4581267) and the extended curve ends at (NLF = 0.5379167, LLF = 0.5411103). In the plot labeled **10-1.5**: The vertical red line is at NLF = 0.4245538. The predicted end-point for the curve is (NLF = 0.4245538, LLF = 0.7518882) while the empirical end-point is (NLF = 0.4209167, LLF = 0.7555322) and the extended curve ends at (NLF = 0.5386667, LLF = 0.7740366).
+
+
+
+
+<div class="figure">
+<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7d-1.png" alt="FROC plots: the plot labeled 1-2 is for $\lambda = 1$ and $\mu = 2$ and that labeled 1-2.5 is for $\lambda = 1$ and $\mu = 2.5$." width="672" />
+<p class="caption">(\#fig:optim-op-point-plot7d)FROC plots: the plot labeled 1-2 is for $\lambda = 1$ and $\mu = 2$ and that labeled 1-2.5 is for $\lambda = 1$ and $\mu = 2.5$.</p>
+</div>
+
+* In Fig. \@ref(fig:optim-op-point-plot7d), the panel labeled **1-2**: The vertical red line is at NLF = 0.2896299. The predicted end-point for the curve is (NLF = 0.2896299, LLF = 0.8526429) while the empirical end-point is (NLF = 0.2874167, LLF = 0.853491) and the extended curve ends at (NLF = 0.3786667, LLF = 0.8620755). In the plot labeled **10-2.5**: The vertical red line is at NLF = 0.1840689. The predicted end-point for the curve is (NLF = 0.1840689, LLF = 0.9103904) while the empirical end-point is (NLF = 0.18475, LLF = 0.909958) and the extended curve ends at (NLF = 0.2659167, LLF = 0.9144411).
+
 
 
 
