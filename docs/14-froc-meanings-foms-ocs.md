@@ -10,28 +10,41 @@ output:
 
 
 
-
 ## This chapter is in progress {#froc-meanings-intro1}
 
 TBA As of 11/20/20
 
 ## Introduction {#froc-meanings-intro}
 
-Chapter \@ref(froc-empirical) focused on empirical *plots* possible with FROC data, for example, the FROC, AFROC, wAFROC and inferred ROC plots. Expressions were given for computing *operating points* for each plot from the z-samples. Because of the ambiguity in ordering the two values associated with each operating points (e.g., sensitivity-specificity pairs in ROC plots), operating points should not be used as figures of merit. Rather one should use *area measures* derived from operating characteristics. This chapter is devoted to such measures for FROC data.
+Chapter \@ref(froc-empirical) focused on empirical plots possible with FROC data, for example, the FROC, AFROC, wAFROC and inferred ROC plots. Expressions were given for computing *operating points* for each plot from z-samples. Because of the ambiguity in ordering the two values associated with each operating points (e.g., sensitivity-specificity pairs in ROC plots), operating points should not be used as figures of merit. Rather one should use *area measures* derived from operating characteristics. This chapter is devoted to a number of such measures for FROC data.
 
-A generic empirical area under a plot is denoted $A_{\text{oc}}$, where the "oc" subscript denotes the applicable operating characteristic. For example, the area under the empirical wAFROC is denoted $A_{\text{wAFROC}}$. Calculating areas from operating points using planimetry or geometry is tedious at best. Needed are formulae for calculating them directly from ratings. In this sense this chapter is analogous to Chapter \@ref(empiricalAUC) where it was shown that the area under the empirical ROC plot $A_{\text{ROC}}$ equaled the Wilcoxon statistic calculated directly from the ratings, i.e., the Bamber theorem.
+A generic empirical area under a plot is denoted $A_{\text{oc}}$, where the "oc" subscript denotes the applicable operating characteristic. For example, the area under the empirical wAFROC is denoted $A_{\text{wAFROC}}$. Calculating areas from operating points using planimetry or geometry is tedious at best. *Needed are formulas for calculating them directly from ratings.* In this sense this chapter is analogous to Chapter \@ref(empiricalAUC) where it was shown that the area under the empirical ROC plot $A_{\text{ROC}}$ equaled the Wilcoxon statistic calculated directly from the ratings, i.e., the Bamber theorem.
 
-I make a distinction between *empirical AUC under a plot*, i.e., an area measure, and a *FOM-statistic*, generically denoted $\theta$, that can be computed directly from the ratings. While any function of the ratings is a possible FOM-statistic, whether it is useful depends upon whether it can be related to the area under an operating characteristic. This chapter derives formulae for FOM-statistics $\theta_{\text{oc}}$, which yield the same values as the areas $A_{\text{oc}}$ under the corresponding empirical operating characteristics. The meanings of these FOM-statistics are discussed [@RN2484].
+I make a distinction between *empirical AUC under a plot*, i.e., an area measure, and a *FOM-statistic*, generically denoted $\theta$, that can be computed directly from the ratings. While any function of the ratings is a possible FOM-statistic, whether it is useful depends upon whether it can be related to the area under an operating characteristic. This chapter derives formulas for FOM-statistics $\theta_{\text{oc}}$, which yield the same values as the areas $A_{\text{oc}}$ under the corresponding empirical operating characteristics. The meanings of these FOM-statistics are discussed [@RN2484].
 
-Here is the organization of the chapter. Expressions for the empirical AFROC FOM-statistic $\theta_{\text{AFROC}}$ and the empirical weighted-AFROC FOM-statistic $\theta_{\text{wAFROC}}$ are presented and their limiting values for chance-level and perfect performances are explored. Two important theorems are stated, whose proofs are in TBA Online Appendix 14.A. The first theorem proves the equality between the empirical wAFROC FOM-statistic $\theta_{\text{wAFROC}}$ and the area $A_{\text{wAFROC}}$ under the empirical wAFROC plot [^froc-meanings-foms-ocs-1]. The second theorem derives an expression for the area under the straight-line extension of the wAFROC from the observed end-point to (1,1), and explains why it is essential to include this area. A small simulated-dataset is used to illustrate how NL and LL ratings and lesion weights determine the wAFROC empirical plot. It demonstrates that the wAFROC gives equal importance to all diseased cases, a desirable statistical characteristic. Corresponding results ignoring the weights shows that the AFROC gives excessive importance to cases with more lesions. This is followed by physical interpretation of the corresponding AUCs / FOM-statistics. It shows explicitly how the ratings comparisons implied in FOM-statistic properly credit and penalize the observer for correct and incorrect decisions, respectively. This section gives probabilistic meanings to the AFROC and wAFROC AUCs.
+Here is the organization of the chapter.
 
-[^froc-meanings-foms-ocs-1]: A similar equality applies to the empirical AFROC FOM-statistic $\theta_{\text{AFROC}}$ and the area $A_{\text{AFROC}}$ under the empirical AFROC plot
+-   Expressions for the empirical AFROC FOM-statistic $\theta_{\text{AFROC}}$ and the empirical weighted-AFROC FOM-statistic $\theta_{\text{wAFROC}}$ are presented and their limiting values for chance-level and perfect performances are explored.
 
-Detailed derivations of FOM-statistics applicable to the areas under the empirical FROC plot, the AFROC1 and wAFROC1 plots are not given. Instead, the results for all plots are summarized in TBA Online Appendix 14.C, which shows that the definitions "work", i.e., the FOM-statistics yield the correct areas as determined by numerical integration.
+-   Two important theorems are stated, whose proofs are in [TBA Online Appendix 14.A].
+
+-   The first theorem proves the equality between the empirical wAFROC FOM-statistic $\theta_{\text{wAFROC}}$ and the area $A_{\text{wAFROC}}$ under the empirical wAFROC plot. [A similar equality applies to the empirical AFROC FOM-statistic $\theta_{\text{AFROC}}$ and the area $A_{\text{AFROC}}$ under the empirical AFROC plot.]
+
+-   The second theorem derives an expression for the area under the straight-line extension of the wAFROC from the observed end-point to (1,1), and explains why it is essential to include this area.
+
+-   A small simulated-dataset is used to illustrate how NL and LL ratings and lesion weights determine the wAFROC empirical plot.
+
+-   It demonstrates that the wAFROC gives equal importance to all diseased cases, a desirable statistical characteristic.
+
+-   Corresponding results but ignoring the weights show that the AFROC gives excessive importance to cases with more lesions.
+
+-   This is followed by physical interpretation of the AUC or FOM-statistics. It shows explicitly how the ratings comparisons implied in FOM-statistic properly credit and penalize the observer for correct and incorrect decisions, respectively. This section gives probabilistic meanings to the AFROC and wAFROC AUCs.
+
+-   Detailed derivations of FOM-statistics applicable to the areas under the empirical FROC plot, the AFROC1 and wAFROC1 plots are not given. Instead, the results for all plots are summarized in [TBA Online Appendix 14.C], which shows that the definitions "work", i.e., the FOM-statistics yield the correct areas as determined by numerical integration.
 
 ## Empirical AFROC FOM-statistic {#froc-meanings-afroc}
 
-$A_{\text{AFROC}}$ was defined in \@ref(froc-empirical-wAFROC) as the area under the empirical AFROC. The corresponding FOM-statistic $\theta_{\text{AFROC}}$ is defined next. One calculates the rating of the highest rated NL mark $\text{FP}_{k_1 1}$ on each non-diseased case $k_1 1$ ($-\infty$ if the case has no NL marks) and compares it to each LL rating using the kernel function $\psi(H,LL)$ defined in Eqn. \@ref(eq:empiricalAUC-PsiFunction). The kernel function comparison yields 1 if the LL rating is higher, 0.5 if the ratings are identical and zero otherwise. A summation is performed over all cases and all lesions.
+$A_{\text{AFROC}}$ was defined in \@ref(froc-empirical-wAFROC) as the area under the empirical AFROC. The corresponding FOM-statistic $\theta_{\text{AFROC}}$ is defined as follows: one calculates the rating of the highest rated NL mark $\text{FP}_{k_1 1}$ on each non-diseased case $k_1 1$ (or $-\infty$ if the case has no NL marks) and compares it to each LL rating using the kernel function $\psi(H,LL)$ defined in Eqn. \@ref(eq:empiricalAUC-PsiFunction). The kernel function comparison yields 1 if the LL rating is higher, 0.5 if the ratings are identical and zero otherwise. A summation is performed over all cases and all lesions.
 
 The highest rating $\text{FP}_{k_1 1}$ on non-diseased case $k_1 1$ is defined as:
 
@@ -47,7 +60,7 @@ The highest rating $\text{FP}_{k_1 1}$ on non-diseased case $k_1 1$ is defined a
 \end{equation}
 ```
 
-If the case has at least one NL mark, then $l_1 \neq \varnothing$, where $\varnothing$ is the null set, and the first definition applies. If the case has no marks, then $l_1 = \varnothing$, and the second definition applies. [Since every lesion is assigned a rating, albeit a negative infinity for an unmarked lesion, a conditioning for marked lesions is not needed.] The next equation sums over all cases and lesions:
+If the case has at least one NL mark, then $l_1 \neq \varnothing$, where $\varnothing$ is the null set, and the first definition applies. If the case has no marks, then $l_1 = \varnothing$, and the second definition applies. The next equation sums over all cases and lesions:
 
 ```{=tex}
 \begin{equation}
@@ -57,6 +70,9 @@ If the case has at least one NL mark, then $l_1 \neq \varnothing$, where $\varno
 (\#eq:froc-meanings-theta-afroc)
 \end{equation}
 ```
+
+Since every lesion is assigned a rating, albeit negative infinity for an unmarked lesion, the null set conditioning for marked lesions is not needed. 
+
 ### Upper limit for AFROC FOM-statistic
 
 The FOM-statistic $\theta_{\text{AFROC}}$ achieves its highest value, unity, if and only if every lesion is rated higher than any mark on non-diseased cases, for then the $\psi$ function always yields unity, and the summations yield :
@@ -74,6 +90,7 @@ The FOM-statistic $\theta_{\text{AFROC}}$ achieves its highest value, unity, if 
 (\#eq:froc-meanings-theta-afroc-unity)
 \end{equation}
 ```
+
 ### Range of AFROC FOM-statistic
 
 If, on the other hand, every lesion is rated lower than every mark on every non-diseased case, the $\psi$ function yields zero, and the FOM-statistic is zero. Therefore,
@@ -84,13 +101,13 @@ If, on the other hand, every lesion is rated lower than every mark on every non-
 (\#eq:froc-meanings-theta-afroc-limits)
 \end{equation}
 ```
-Eqn. \@ref(eq:froc-meanings-theta-afroc-limits) shows that $\theta_{\text{AFROC}}$ behaves like a probability but its range is *twice* that of $\theta_{\text{ROC}}$; recall that $0.5 \leq \theta_{\text{ROC}} \leq 1$. This has the consequence that treatment or modality related differences between $\theta_{\text{AFROC}}$ (i.e., effect sizes) are larger relative to the corresponding ROC effect sizes (just as temperature differences in the Fahrenheit scale are larger than the same differences expressed in the Celsius scale). This has important implications for FROC sample size estimation, Chapter TBA.
+Eqn. \@ref(eq:froc-meanings-theta-afroc-limits) shows that $\theta_{\text{AFROC}}$ behaves like a probability but its range is *twice* that of $\theta_{\text{ROC}}$; recall that $0.5 \leq \theta_{\text{ROC}} \leq 1$ (assuming the observer has equal or better than random performance and the observer does not have the direction of the rating scale accidentally reversed). This has the consequence that treatment or modality related differences between $\theta_{\text{AFROC}}$ (i.e., effect sizes) are larger relative to the corresponding ROC effect sizes (just as temperature differences in the Fahrenheit scale are larger than the same differences expressed in the Celsius scale). This has important implications for FROC sample size estimation, Chapter TBA.
 
-Eqn. \@ref(eq:froc-meanings-theta-afroc-limits) is a reason why the "chance diagonal" of the AFROC, corresponding to AUC = 0.5, does not, in fact, reflect chance-level performance. An area under the AFROC equal to 0.5 is actually reasonable performance, being smack in the middle of the allowed range. An example of this was given in TBA §13.4.2.2 for the case of an expert radiologist who does not mark any cases.
+Eqn. \@ref(eq:froc-meanings-theta-afroc-limits) is one reason why the "chance diagonal" of the AFROC, corresponding to AUC = 0.5, does not, in fact, reflect chance-level performance. An area under the AFROC equal to 0.5 is actually reasonable performance, being smack in the middle of the allowed range. An example of this was given in TBA §13.4.2.2 for the case of an expert radiologist who does not mark any cases.
 
 ## Empirical weighted-AFROC FOM-statistic {#froc-meanings-wafroc}
 
-The empirical weighted-AFROC plot and lesion weights were defined in TBA §13.7. The empirical weighted-AFROC FOM-statistic [@RN1385] is defined by including the lesion weights $W_{k_2 l_2}$ inside the summations (but outside the kernel function):
+The empirical weighted-AFROC plot and lesion weights were defined in Section \@ref(froc-empirical-wAFROC). The empirical weighted-AFROC FOM-statistic [@RN1385] is defined by including the lesion weights $W_{k_2 l_2}$ inside the summations (but outside the kernel function):
 
 ```{=tex}
 \begin{equation}
@@ -108,7 +125,7 @@ The weights obey the constraint:
 (\#eq:froc-meanings-theta-constraint-weights)
 \end{equation}
 ```
-In the special case of one lesion per diseased case, $\theta_{\text{AFROC}}$ and $\theta_{\text{wAFROC}}$ are identical. However, for more than one lesion per diseased case, they are not. For equally weighted lesions,
+This ensures, as will be shown later, that each diseased case contributes equally to the FOM, regardless of how many lesions are in it. In the special case of one lesion per diseased case, $\theta_{\text{AFROC}}$ and $\theta_{\text{wAFROC}}$ are identical. However, for more than one lesion per diseased case, they are not. For equally weighted lesions,
 
 ```{=tex}
 \begin{equation} 
@@ -116,7 +133,9 @@ W_{k_2 l_2} = \frac{1}{L_{k_2}}
 (\#eq:froc-meanings-theta-equal-weights)
 \end{equation}
 ```
-For example, for equally weighted lesions, for a case with three lesions, each weight equals one-third (1/3).
+For example, for equally weighted lesions and a case with three lesions, each weight equals one-third (1/3) [^froc-meanings-foms-ocs-1].
+
+[^froc-meanings-foms-ocs-1]: The `RJafroc` function `DfReadDataFile()` checks that the weights sum to unity to a precision of about 5 decimal places. The easy way to assign equal weights to all lesions on a diseased case is to set the corresponding `lesionWeights` field in the Excel file `Truth` worksheet to zeroes.
 
 ## Two Theorems {#froc-meanings-two-theorems}
 
@@ -148,7 +167,8 @@ FPF_i \equiv FPF \left ( \zeta_i \right ) =& \frac{1}{K_1} \sum_{k_1=1}^{K_1} \m
 (\#eq:froc-meanings-wLLFi)
 \end{equation}
 ```
-As usual, the summation in Eqn. \@ref(eq:froc-meanings-FPF) is conditioned on marked NLs. The conditioning is unnecessary for LLs.
+
+The summation in Eqn. \@ref(eq:froc-meanings-FPF) is conditioned on marked NLs [the conditioning is unnecessary for LLs].
 
 TBA Online Appendix 14.A proves the following theorems:
 
@@ -176,62 +196,27 @@ A_0 = \frac{\left ( 1 - \text{FPF}_1 \right )\left ( 1 + \text{wLLF}_1 \right )}
 ```
 According to Eqn. \@ref(eq:froc-meanings-A0), $A_0$ increases as $\text{FPF}_1$ decreases, i.e., as more non-diseased cases are *not marked* and as $\text{wLLF}_1$ increases, i.e., as more lesions, especially those with greater weights, *are marked*. Both observations are in keeping with the behavior of a valid FOM.
 
-**Failing to include the area under the straight-line extension results in not counting the positive contribution to the FOM of unmarked cases, each of which represents a perfect decision. For an optimal observer whose operating characteristic is the vertical line from (0,0) to (0,1) followed by the horizontal line from (0,1) to (1,1), the area under the straight-line extension comprises the entire AUC for the wAFROC. Excluding it would yield zero AUC for an optimal observer, which is obviously incorrect.**
+* **Failing to include the area under the straight-line extension results in not counting the positive contribution to the FOM of unmarked non-diseased cases, each of which represents a perfect decision.** 
+* For a perfect observer whose operating characteristic is the vertical line from (0,0) to (0,1) followed by the horizontal line from (0,1) to (1,1), *the area under the straight-line extension comprises the entire AUC*. Excluding it would yield zero AUC for a perfect observer, which is obviously incorrect. 
+* Stated equivalently, for the perfect observer $\text{FPF}_1 = 0$ and $\text{wLLF}_1 = 1$ and then, according to Eqn. \@ref(eq:froc-meanings-A0), the area under the straight line extension is $A_0 = 1$. This area must be included to give full credit to the observer.
 
 ## Understanding the AFROC and wAFROC empirical plots {#froc-meanings-understanding}
 
+Parameters of the simulation are $\mu = 2$, $\lambda = 1$, $\nu = 1$, $\zeta_1 = -1$ and $L_{max} = 2$. It simulates a dataset consisting of $K_1 = 4$ non-diseased cases and $K_2 = 4$ diseased cases. The first two diseased cases have one lesion each, and the remaining two have two lesions each.
 
-```{.r .numberLines}
-seed <- 1;set.seed(seed)
-K1 <- 4;K2 <- 4
-L_max <- 2;Lk2 <- ceiling(runif(K2) * L_max) 
-mu <- 2;lambda <- 1;nu <- 1 ;zeta1 <- -1
-frocData <- SimulateFrocDataset(
-  mu = mu, 
-  lambda = lambda, 
-  nu = nu,
-  zeta1 = zeta1,
-  I = 1, 
-  J = 1, 
-  K1 = K1, 
-  K2 = K2, 
-  perCase = Lk2)
 
-FP <- apply(frocData$ratings$NL, 3, max)
-FP <- FP[1:K1]
-frocData$lesions$weights[3, ] <- c(0.6, 0.4)
-frocData$lesions$weights[4, ] <- c(0.4, 0.6)
 
-p1 <- PlotEmpiricalOperatingCharacteristics(
-  frocData,trts = 1, 
-  rdrs = 1, 
-  opChType = "AFROC", 
-  legend.position = "NULL")
-p1 <- p1$Plot + ggtitle("A")
-
-p2 <- PlotEmpiricalOperatingCharacteristics(
-  frocData,
-  trts = 1, 
-  rdrs = 1, 
-  opChType = "wAFROC", 
-  legend.position = "NULL")
-p2 <- p2$Plot + ggtitle("B")
-
-cat("AFROC AUC = ", as.numeric(UtilFigureOfMerit(frocData, FOM = "AFROC")),"\n")
-#> AFROC AUC =  1
+```
+#> AFROC AUC =  0.7708333
+#> wAFROC AUC =  0.7875
 ```
 
-```{.r .numberLines}
-cat("wAFROC AUC = ", as.numeric(UtilFigureOfMerit(frocData, FOM = "wAFROC")),"\n")
-#> wAFROC AUC =  1
-```
 
 <div class="figure">
-<img src="14-froc-meanings-foms-ocs_files/figure-html/froc-meanings-linearPlot-wafroc-1.png" alt="Left: AFROC plot; right: corresponding wAFROC plot." width="672" />
-<p class="caption">(\#fig:froc-meanings-linearPlot-wafroc)Left: AFROC plot; right: corresponding wAFROC plot.</p>
+<img src="14-froc-meanings-foms-ocs_files/figure-html/plots-p1-p2-1.png" alt="Left: AFROC plot; Right: corresponding wAFROC plot." width="672" />
+<p class="caption">(\#fig:plots-p1-p2)Left: AFROC plot; Right: corresponding wAFROC plot.</p>
 </div>
 
-Parameters of the following simulation are $\mu = 2$, $\lambda = 1$, $\nu = 1$, $\zeta_1 = -1$ and $L_{max} = 2$. It simulates a dataset consisting of $K_1 = 4$ non-diseased cases and $K_2 = 4$ diseased cases. The first two diseased cases have one lesion each, and the remaining two have two lesions each.
 
 
 ```r
@@ -244,19 +229,26 @@ Let us examine the ratings.
 
 ```r
 frocData$ratings$NL[1,1,,]
-#> [1]      -Inf      -Inf      -Inf      -Inf      -Inf      -Inf 0.7888355
-#> [8]      -Inf
+#>            [,1]      [,2]
+#> [1,]       -Inf      -Inf
+#> [2,]  0.4874291      -Inf
+#> [3,]  0.7383247 0.5757814
+#> [4,] -0.3053884      -Inf
+#> [5,]  1.5117812      -Inf
+#> [6,]       -Inf      -Inf
+#> [7,]       -Inf      -Inf
+#> [8,]       -Inf      -Inf
 frocData$ratings$LL[1,1,,]
-#>          [,1]     [,2]
-#> [1,] 1.743472     -Inf
-#> [2,] 1.668463     -Inf
-#> [3,] 1.185268 1.172721
-#> [4,] 1.681773 1.518063
+#>            [,1]    [,2]
+#> [1,]  0.8523430    -Inf
+#> [2,] -0.2146999    -Inf
+#> [3,]  1.5884892    -Inf
+#> [4,]  2.9438362 1.98381
 ```
 
 The length of the third dimension of the NL array is eight (4 non-diseased + 4 diseased cases). The fifth sequential case corresponds to NLs on the first diseased case, etc. The simulated z-samples displayed in §14.5.2 are shown in Table \@ref(tab:froc-meanings-table-non-diseased) for non-diseased and in Table \@ref(tab:froc-meanings-table-diseased) for diseased cases. The columns labeled list the case-location indexing subscripts, the columns labeled list the corresponding z-samples, when realized and otherwise NAs are listed. Column 5 in Table \@ref(tab:froc-meanings-table-non-diseased) illustrates the conversion of the NL z-samples to FP z-samples according to the highest-rating assumption (the first non-diseased case illustrates the rule that in the absence of any marks the FP rating is ∞). The tables show that the simulator did not realize any z-sample on the first non-diseased case (alternatively, if it did, the z-sample(s) fell below ; one cannot tell the difference), and for the second lesion on the third diseased case. Because non-diseased cases have no lesions, all z-samples listed in Table \@ref(tab:froc-meanings-table-non-diseased) are NLs. In contrast, in Table \@ref(tab:froc-meanings-table-diseased), each case can generate NLs and LLs. The second column of Table \@ref(tab:froc-meanings-table-diseased) lists the number of lesions per diseased case . Columns 3 and 4 illustrate NL indexing and z-samples and columns 5 and 6 illustrate LL indexing and z-samples. Column 8 illustrates the conversion of the NL and LL z-samples to TP z-samples according to the highest-rating assumption. The last columns of Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased) label the correspondences of the z-samples to the operating points shown in Fig. 14.3 and Fig. 14.5. Unrealized z-samples, if any, are indicated by an asterisk.
 
-Table \@ref(tab:froc-meanings-table-non-diseased): Layout of mark-rating pairs on **non-diseased** cases, illustrating calculation of NL and FP ratings and corresponding to green NL circles in Fig. \@ref(fig:froc-meanings-linearPlot-afroc) and Fig. \@ref(fig:froc-meanings-linearPlot-wafroc). The first column is the case number. The second column has the location of NLs and the third column the corresponding ratings. The fourth column has the FP ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). NA = not applicable; \* = unmarked location.
+Table \@ref(tab:froc-meanings-table-non-diseased): Layout of mark-rating pairs on **non-diseased** cases, illustrating calculation of NL and FP ratings and corresponding to green NL circles in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc) and Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The first column is the case number. The second column has the location of NLs and the third column the corresponding ratings. The fourth column has the FP ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). NA = not applicable; \* = unmarked location.
 
 <table>
 <caption>(\#tab:froc-meanings-table-non-diseased)Layout of mark-rating  pairs on non-diseased cases.</caption>
@@ -329,7 +321,7 @@ Table \@ref(tab:froc-meanings-table-non-diseased): Layout of mark-rating pairs o
 </tbody>
 </table>
 
-Table \@ref(tab:froc-meanings-table-diseased): Layout of mark-rating pairs on **diseased** cases, illustrating the locations of NL and LL ratings, corresponding to green NL and red LL circles, respectively, in Fig. \@ref(fig:froc-meanings-linearPlot-afroc) and Fig. \@ref(fig:froc-meanings-linearPlot-wafroc). The first column is the case number. The second column has the number of lesions in the case. The third column has the location of NLs and the fourth column the corresponding ratings. The fifth column has the location of LLs and the sixth column the corresponding ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). NA = not applicable; \* = unmarked location
+Table \@ref(tab:froc-meanings-table-diseased): Layout of mark-rating pairs on **diseased** cases, illustrating the locations of NL and LL ratings, corresponding to green NL and red LL circles, respectively, in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc) and Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The first column is the case number. The second column has the number of lesions in the case. The third column has the location of NLs and the fourth column the corresponding ratings. The fifth column has the location of LLs and the sixth column the corresponding ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). NA = not applicable; \* = unmarked location
 
 <table>
 <caption>(\#tab:froc-meanings-table-diseased)Layout of mark-rating pairs on diseased cases.</caption>
@@ -433,7 +425,7 @@ Table \@ref(tab:froc-meanings-table-diseased): Layout of mark-rating pairs on **
 
 Understanding the data at a basic level, especially how z-samples are transformed to ratings, is aided by examples with very few cases. The following example is based on the same data involving 8 cases that were used to generate Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). It involves use of a linear or "one-dimensional" depiction of the ratings described next.
 
-In Fig. \@ref(fig:froc-meanings-linearPlot-afroc), plot A, FPs and LLs, represented by green and red circles, respectively, are shown ordered, from left to right, with higher z-samples to the right, henceforth referred to as a linear plot. Each circle is labeled using the $k_t t l_s s$ notation. For example, the right-most red circle corresponds to the LL z-sample originating from the first lesion in the fourth diseased case, i.e., $z_{4212}$. Consistent with the three unique values in the fifth column of Table \@ref(tab:froc-meanings-table-non-diseased), there are three green circles (FPs) [^froc-meanings-foms-ocs-2]. Likewise, consistent with the five unique values in the sixth column of Table \@ref(tab:froc-meanings-table-diseased), there are five red circles (LLs) [^froc-meanings-foms-ocs-3].
+In Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc), plot A, FPs and LLs, represented by green and red circles, respectively, are shown ordered, from left to right, with higher z-samples to the right, henceforth referred to as a linear plot. Each circle is labeled using the $k_t t l_s s$ notation. For example, the right-most red circle corresponds to the LL z-sample originating from the first lesion in the fourth diseased case, i.e., $z_{4212}$. Consistent with the three unique values in the fifth column of Table \@ref(tab:froc-meanings-table-non-diseased), there are three green circles (FPs) [^froc-meanings-foms-ocs-2]. Likewise, consistent with the five unique values in the sixth column of Table \@ref(tab:froc-meanings-table-diseased), there are five red circles (LLs) [^froc-meanings-foms-ocs-3].
 
 [^froc-meanings-foms-ocs-2]: Not counting $FP_{11}$, which occurs at $z = -\infty$, representing the first non-diseased case with no marks.
 
@@ -443,12 +435,13 @@ In Fig. \@ref(fig:froc-meanings-linearPlot-afroc), plot A, FPs and LLs, represen
 
 
 
+
 <div class="figure">
-<img src="14-froc-meanings-foms-ocs_files/figure-html/froc-meanings-linearPlot-afroc-1.png" alt="Plot A (AFROC generation) a one-dimensional depiction of the data in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased), showing z-samples used for plotting the AFROC; the red circles correspond to latent lesion localizations (LLs) and the green to latent false positives (FPs). Plot B (wAFROC generation): Data in same tables but this time including the weights, for plotting the weighted-AFROC plot; the sizes of the red circles code the lesions weights; the weights are shown below each z-sample." width="672" />
-<p class="caption">(\#fig:froc-meanings-linearPlot-afroc)Plot A (AFROC generation) a one-dimensional depiction of the data in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased), showing z-samples used for plotting the AFROC; the red circles correspond to latent lesion localizations (LLs) and the green to latent false positives (FPs). Plot B (wAFROC generation): Data in same tables but this time including the weights, for plotting the weighted-AFROC plot; the sizes of the red circles code the lesions weights; the weights are shown below each z-sample.</p>
+<img src="14-froc-meanings-foms-ocs_files/figure-html/froc-meanings-linear-plot-afroc-wafroc-1.png" alt="Plot A (AFROC generation) a one-dimensional depiction of the data in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased), showing z-samples used for plotting the AFROC; the red circles correspond to latent lesion localizations (LLs) and the green to latent false positives (FPs). Plot B (wAFROC generation): Data in same tables but this time including the weights, for plotting the weighted-AFROC plot; the sizes of the red circles code the lesions weights; the weights are shown below each z-sample." width="672" />
+<p class="caption">(\#fig:froc-meanings-linear-plot-afroc-wafroc)Plot A (AFROC generation) a one-dimensional depiction of the data in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased), showing z-samples used for plotting the AFROC; the red circles correspond to latent lesion localizations (LLs) and the green to latent false positives (FPs). Plot B (wAFROC generation): Data in same tables but this time including the weights, for plotting the weighted-AFROC plot; the sizes of the red circles code the lesions weights; the weights are shown below each z-sample.</p>
 </div>
 
-Starting from $\infty$, moving a virtual threshold continuously to the left generates the AFROC plot, see plot A in Fig. \@ref(fig:froc-meanings-linearPlot-afroc). As each FP is crossed, the operating point moves to the right by
+Starting from $\infty$, moving a virtual threshold continuously to the left generates the AFROC plot, see plot A in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). As each FP is crossed, the operating point moves to the right by
 
 $$\frac{1}{K_1} = 0.025$$
 
@@ -456,20 +449,23 @@ As each LL is crossed, the operating point moves up by
 
 $$\sum_{k_2=1}^{K_2}L_{k_2}=\frac{1}{6}$$
 
-Since it has one lesion, crossing the z-sample for the first case would result in an upward movement of 1/6, and likewise for the second case. Since the third case contains two lesions, crossing the corresponding z-samples would result in a net upward movement of the operating point by 1/3. *This behavior shows explicitly that the non-weighted method gives greater importance to diseased cases with more lesions, i.e., such case make a greater contribution to AUC.* The jumps from lesions in the same case need not be contiguous; they could be distributed, with intervening jumps from lesions on other cases but eventually the jumps will occur and contribute to the net upward movement. As an example, the jumps due to the two lesions on the fourth case are contiguous: see points A and B, in Fig. \@ref(fig:froc-meanings-linearPlot-wafroc). However, the jumps due to the two lesions on the 3rd case are not contiguous: the first lesion gives the point C, but the unmarked lesion on this case, indicated by the asterisk in Table \@ref(tab:froc-meanings-table-diseased), eventually contributes when the operating point moves diagonally from point H to (1,1).
+Since it has one lesion, crossing the z-sample for the first case would result in an upward movement of 1/6, and likewise for the second case. Since the third case contains two lesions, crossing the corresponding z-samples would result in a net upward movement of the operating point by 1/3. *This behavior shows explicitly that the non-weighted method gives greater importance to diseased cases with more lesions, i.e., such case make a greater contribution to AUC.* The jumps from lesions in the same case need not be contiguous; they could be distributed, with intervening jumps from lesions on other cases but eventually the jumps will occur and contribute to the net upward movement. As an example, the jumps due to the two lesions on the fourth case are contiguous: see points A and B, in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). However, the jumps due to the two lesions on the 3rd case are not contiguous: the first lesion gives the point C, but the unmarked lesion on this case, indicated by the asterisk in Table \@ref(tab:froc-meanings-table-diseased), eventually contributes when the operating point moves diagonally from point H to (1,1).
+
+
+
 
 
 
 
 
 <div class="figure">
-<img src="14-froc-meanings-foms-ocs_files/figure-html/froc-meanings-afroc-wafroc-1.png" alt="A: The empirical AFROC plot for the data shown in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). The labels correspond to the last columns of the tables. The corresponding one-dimensional depiction is plot A in Fig. \@ref(fig:froc-meanings-linearPlot-afroc). The area under the empirical plot is 0.7708. B: The empirical weighted-AFROC (wAFROC) plot for the data shown in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). The operating point labels correspond to the last columns of the tables. The corresponding one-dimensional plot is plot B in Fig. \@ref(fig:froc-meanings-linearPlot-afroc). The area under the wAFROC is 0.7875. " width="672" />
-<p class="caption">(\#fig:froc-meanings-afroc-wafroc)A: The empirical AFROC plot for the data shown in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). The labels correspond to the last columns of the tables. The corresponding one-dimensional depiction is plot A in Fig. \@ref(fig:froc-meanings-linearPlot-afroc). The area under the empirical plot is 0.7708. B: The empirical weighted-AFROC (wAFROC) plot for the data shown in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). The operating point labels correspond to the last columns of the tables. The corresponding one-dimensional plot is plot B in Fig. \@ref(fig:froc-meanings-linearPlot-afroc). The area under the wAFROC is 0.7875. </p>
+<img src="14-froc-meanings-foms-ocs_files/figure-html/froc-meanings-afroc-wafroc-1.png" alt="A: The empirical AFROC plot for the data shown in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). The labels correspond to the last columns of the tables. The corresponding one-dimensional depiction is plot A in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The area under the empirical plot is 0.7708. B: The empirical weighted-AFROC (wAFROC) plot for the data shown in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). The operating point labels correspond to the last columns of the tables. The corresponding one-dimensional plot is plot B in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The area under the wAFROC is 0.7875. " width="672" />
+<p class="caption">(\#fig:froc-meanings-afroc-wafroc)A: The empirical AFROC plot for the data shown in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). The labels correspond to the last columns of the tables. The corresponding one-dimensional depiction is plot A in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The area under the empirical plot is 0.7708. B: The empirical weighted-AFROC (wAFROC) plot for the data shown in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). The operating point labels correspond to the last columns of the tables. The corresponding one-dimensional plot is plot B in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The area under the wAFROC is 0.7875. </p>
 </div>
 
 ### The weighted-AFROC (wAFROC) plot {#froc-meanings-wAFROC-plot}
 
-Plot B in Fig. \@ref(fig:froc-meanings-linearPlot-afroc), which is analogous to plot A in the same figure, is a one-dimensional depiction of the data in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased) but this time the lesion weights, shown in Table \@ref(tab:froc-meanings-table-diseased), are incorporated, as indicated by varying the *size* of each red circle to indicate its weight (in Fig. \@ref(fig:froc-meanings-linearPlot-wafroc) all red circles were of the same size). In addition, each lesion is labeled with its rating and weight. [The listed weights in Table \@ref(tab:froc-meanings-table-diseased) were assigned arbitrarily subject to the rule that the weights on a case must sum to unity.]
+Plot B in Fig. \@ref(fig:froc-meanings-afroc-wafroc), which is analogous to plot A in the same figure, is a one-dimensional depiction of the data in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased) but this time the lesion weights, shown in Table \@ref(tab:froc-meanings-table-diseased), are incorporated, as indicated by varying the *size* of each red circle to indicate its weight (in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc) all red circles were of the same size). In addition, each lesion is labeled with its rating and weight. [The listed weights in Table \@ref(tab:froc-meanings-table-diseased) were assigned arbitrarily subject to the rule that the weights on a case must sum to unity.]
 
 Moving a virtual threshold continuously to the left generates the wAFROC plot, Fig. 14.5. The movement of the operating point in response to crossing FPs is the same as before. However, as each LL is crossed the operating point moves up by an amount that depends on the lesion:
 
