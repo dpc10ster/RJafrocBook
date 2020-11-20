@@ -29,10 +29,7 @@ The aim is determine the optimal operating point on an FROC. Two values of the $
 
 
 
-<div class="figure">
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot5-1.png" alt="Variation of AUC vs. $\zeta_1$ for $\lambda = 10$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (i.e., $\zeta_{\text{max}}$, the value of $\zeta_1$ that maximizes AUC)." width="672" />
-<p class="caption">(\#fig:optim-op-point-plot5)Variation of AUC vs. $\zeta_1$ for $\lambda = 10$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (i.e., $\zeta_{\text{max}}$, the value of $\zeta_1$ that maximizes AUC).</p>
-</div>
+![(\#fig:optim-op-point-plot5)Variation of AUC vs. $\zeta_1$ for $\lambda = 10$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (i.e., $\zeta_{\text{max}}$, the value of $\zeta_1$ that maximizes AUC).](13-optim-op-point_files/figure-latex/optim-op-point-plot5-1.pdf) 
 
 
 Fig. \@ref(fig:optim-op-point-plot5) corresponding to $\lambda = 10$ has four panels showing the variation of wAFROC AUC with $\zeta_1$. Each panel is labeled by the values of $\mu$ and  $\zeta_{\text{max}}$. For example, the panel labeled `mu = 1.5, zetaMax = 1.9` shows that AUC has a maximum at $\zeta_1 = 1.9$. For $\mu = 1$ the maximum is at the top of a broad plateau, but for higher values the maximum is better defined. 
@@ -44,10 +41,7 @@ Fig. \@ref(fig:optim-op-point-plot5) corresponding to $\lambda = 10$ has four pa
 
 
 
-<div class="figure">
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot6-1.png" alt="Variation of AUC vs. $\zeta_1$ for $\lambda = 1$." width="672" />
-<p class="caption">(\#fig:optim-op-point-plot6)Variation of AUC vs. $\zeta_1$ for $\lambda = 1$.</p>
-</div>
+![(\#fig:optim-op-point-plot6)Variation of AUC vs. $\zeta_1$ for $\lambda = 1$.](13-optim-op-point_files/figure-latex/optim-op-point-plot6-1.pdf) 
 
 Fig. \@ref(fig:optim-op-point-plot6) corresponds to $\lambda = 1$ and employs a similar labeling scheme as Fig. \@ref(fig:optim-op-point-plot5). For example, the panel labeled `mu = 1, zetaMax = 0.4` shows that AUC has a maximum at $\zeta_1 = 0.4$. For each maximum the optimal operating point on the FROC is determined as well as the wAFROC AUCs.
 
@@ -71,62 +65,28 @@ Fig. \@ref(fig:optim-op-point-plot6) corresponds to $\lambda = 1$ and employs a 
 ### Summary of simulations and comments {#optim-op-point-comments-threshold-optimization}
 
 
-<table>
-<caption>(\#tab:optim-op-point-cad-optim-table)Summary of optimal threshold values: "measure" refers to a performance measure, "mu1" refers to $\mu = 1$, etc. The row labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for $\lambda = 1$, NLF10 is NLF for $\lambda = 10$, ..., LLF01 is LLF for $\lambda = 1$.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> measure </th>
-   <th style="text-align:right;"> mu1 </th>
-   <th style="text-align:right;"> mu1.5 </th>
-   <th style="text-align:right;"> mu2 </th>
-   <th style="text-align:right;"> mu2.5 </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> AUC10 </td>
-   <td style="text-align:right;"> 0.50224 </td>
-   <td style="text-align:right;"> 0.55628 </td>
-   <td style="text-align:right;"> 0.69876 </td>
-   <td style="text-align:right;"> 0.83833 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> AUC01 </td>
-   <td style="text-align:right;"> 0.60507 </td>
-   <td style="text-align:right;"> 0.78199 </td>
-   <td style="text-align:right;"> 0.88091 </td>
-   <td style="text-align:right;"> 0.93461 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NLF10 </td>
-   <td style="text-align:right;"> 0.00687 </td>
-   <td style="text-align:right;"> 0.19144 </td>
-   <td style="text-align:right;"> 0.40378 </td>
-   <td style="text-align:right;"> 0.63462 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> LLF10 </td>
-   <td style="text-align:right;"> 0.00879 </td>
-   <td style="text-align:right;"> 0.26769 </td>
-   <td style="text-align:right;"> 0.62753 </td>
-   <td style="text-align:right;"> 0.85659 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NLF01 </td>
-   <td style="text-align:right;"> 0.34458 </td>
-   <td style="text-align:right;"> 0.42455 </td>
-   <td style="text-align:right;"> 0.28963 </td>
-   <td style="text-align:right;"> 0.18407 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> LLF01 </td>
-   <td style="text-align:right;"> 0.45876 </td>
-   <td style="text-align:right;"> 0.75189 </td>
-   <td style="text-align:right;"> 0.85264 </td>
-   <td style="text-align:right;"> 0.91039 </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:optim-op-point-cad-optim-table)Summary of optimal threshold values: "measure" refers to a performance measure, "mu1" refers to $\mu = 1$, etc. The row labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for $\lambda = 1$, NLF10 is NLF for $\lambda = 10$, ..., LLF01 is LLF for $\lambda = 1$.}
+\centering
+\begin{tabular}[t]{l|r|r|r|r}
+\hline
+measure & mu1 & mu1.5 & mu2 & mu2.5\\
+\hline
+AUC10 & 0.50224 & 0.55628 & 0.69876 & 0.83833\\
+\hline
+AUC01 & 0.60507 & 0.78199 & 0.88091 & 0.93461\\
+\hline
+NLF10 & 0.00687 & 0.19144 & 0.40378 & 0.63462\\
+\hline
+LLF10 & 0.00879 & 0.26769 & 0.62753 & 0.85659\\
+\hline
+NLF01 & 0.34458 & 0.42455 & 0.28963 & 0.18407\\
+\hline
+LLF01 & 0.45876 & 0.75189 & 0.85264 & 0.91039\\
+\hline
+\end{tabular}
+\end{table}
 
 Table \@ref(tab:optim-op-point-cad-optim-table) summarizes the results of the simulations. In this table the first two rows compare the AUCs for $\lambda=10$ and $\lambda=1$ for the four values of $\mu$. The next two rows show the operating point (NLF, LLF) for $\lambda = 10$ for the four values of $\mu$ and the final two rows are the operating point for $\lambda = 1$ for the four values of $\mu$. The following trends are evident.
 
@@ -138,10 +98,7 @@ Table \@ref(tab:optim-op-point-cad-optim-table) summarizes the results of the si
 
 All of these observations make intuitive sense except, perhaps, that for NLF01. To understand the peaking behavior it is necessary to examine the FROC curves corresponding to the eight -- 2 $\lambda$ values and 4 $\mu$ values -- combinations of parameters. In the following eight plots the optimal value of NLF for each plot, corresponding to $\zeta_{\text{max}}$, are shown as red vertical lines. 
 
-<div class="figure">
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7a-1.png" alt="The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-1 is the FROC plot for $\lambda = 10$ and $\mu = 1$. The plot labeled 10-1.5 is the FROC plot for $\lambda = 10$ and $\mu = 1.5$." width="672" />
-<p class="caption">(\#fig:optim-op-point-plot7a)The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-1 is the FROC plot for $\lambda = 10$ and $\mu = 1$. The plot labeled 10-1.5 is the FROC plot for $\lambda = 10$ and $\mu = 1.5$.</p>
-</div>
+![(\#fig:optim-op-point-plot7a)The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-1 is the FROC plot for $\lambda = 10$ and $\mu = 1$. The plot labeled 10-1.5 is the FROC plot for $\lambda = 10$ and $\mu = 1.5$.](13-optim-op-point_files/figure-latex/optim-op-point-plot7a-1.pdf) 
 
 
 * In Fig. \@ref(fig:optim-op-point-plot7a) the plot labeled 10-1 is the *extended* FROC curve for $\lambda = 10$ and $\mu = 1$. The meaning of *extended* is explained in the immediately following footnote.
@@ -153,27 +110,18 @@ All of these observations make intuitive sense except, perhaps, that for NLF01. 
 
 STOP
 
-<div class="figure">
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7b-1.png" alt="The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-2 is the FROC plot for $\lambda = 10$ and $\mu = 2$. The plot labeled 10-2.5 is FROC plot for $\lambda = 10$ and $\mu = 2.5$." width="672" />
-<p class="caption">(\#fig:optim-op-point-plot7b)The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-2 is the FROC plot for $\lambda = 10$ and $\mu = 2$. The plot labeled 10-2.5 is FROC plot for $\lambda = 10$ and $\mu = 2.5$.</p>
-</div>
+![(\#fig:optim-op-point-plot7b)The vertical red lines show the locations of the optimal NLFs. The plot labeled 10-2 is the FROC plot for $\lambda = 10$ and $\mu = 2$. The plot labeled 10-2.5 is FROC plot for $\lambda = 10$ and $\mu = 2.5$.](13-optim-op-point_files/figure-latex/optim-op-point-plot7b-1.pdf) 
 
 
 Fig. \@ref(fig:optim-op-point-plot7b): Plot labeled 10-1: The vertical red line is at NLF = 0.4037833. Plot labeled 10-1.5: The vertical red line is at NLF = 0.634621.
 
 
-<div class="figure">
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7c-1.png" alt="The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-1 is the FROC plot for $\lambda = 1$ and $\mu = 1$. The plot labeled 10-1.5 is the FROC plot for $\lambda = 1$ and $\mu = 1.5$." width="672" />
-<p class="caption">(\#fig:optim-op-point-plot7c)The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-1 is the FROC plot for $\lambda = 1$ and $\mu = 1$. The plot labeled 10-1.5 is the FROC plot for $\lambda = 1$ and $\mu = 1.5$.</p>
-</div>
+![(\#fig:optim-op-point-plot7c)The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-1 is the FROC plot for $\lambda = 1$ and $\mu = 1$. The plot labeled 10-1.5 is the FROC plot for $\lambda = 1$ and $\mu = 1.5$.](13-optim-op-point_files/figure-latex/optim-op-point-plot7c-1.pdf) 
 
 Fig. \@ref(fig:optim-op-point-plot7c): Plot labeled 1-1: The vertical red line is at NLF = 0.3445783. Plot labeled 1-1.5: The vertical red line is at NLF = 0.4245538.
 
 
-<div class="figure">
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot7d-1.png" alt="The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-2 is the FROC plot for $\lambda = 1$ and $\mu = 2$. The plot labeled 1-2.5 is the FROC plot for $\lambda = 1$ and $\mu = 2.5$." width="672" />
-<p class="caption">(\#fig:optim-op-point-plot7d)The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-2 is the FROC plot for $\lambda = 1$ and $\mu = 2$. The plot labeled 1-2.5 is the FROC plot for $\lambda = 1$ and $\mu = 2.5$.</p>
-</div>
+![(\#fig:optim-op-point-plot7d)The vertical red lines show the locations of the optimal NLFs. The plot labeled 1-2 is the FROC plot for $\lambda = 1$ and $\mu = 2$. The plot labeled 1-2.5 is the FROC plot for $\lambda = 1$ and $\mu = 2.5$.](13-optim-op-point_files/figure-latex/optim-op-point-plot7d-1.pdf) 
 
 Fig. \@ref(fig:optim-op-point-plot7d): Plot labeled 1-2: The vertical red line is at NLF = 0.2896299. Plot labeled 1-2.5: The vertical red line is at NLF = 0.1840689.
 
