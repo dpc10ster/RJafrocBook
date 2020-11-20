@@ -63,9 +63,15 @@ do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, K1, K2, Lk2, seed) {
 ```
 
 ## Methods {#optim-op-point-methods}
-The aim is determine the optimal operating point on an FROC. Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of latent NL marks as an expert radiologist. The $\nu$ parameter is kept at the same, namely $\nu = 1$. Four values of the $\mu$ parameter are considered: `r c(1, 1.5, 2, 2.5)`. All else being equal, performance is expected to improve with increasing $\mu$. For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC and other computations for each value of $\zeta_1$. One determines that value of $\zeta_1$ that maximizes AUC; this is denoted $\zeta_{\text{max}}$. Finally, using the optimal $\zeta_1$ one calculates the corresponding (NLF,LLF) values, i.e., *the optimal operating point on the FROC* and the wAFROC AUC. A large number of cases is used, namely the number of non-diseased cases is $K_1 = 5000$ and the number of diseased cases is $K_2 = 7000$. This minimizes sampling variability while not requiring excessive computation times.
+* The aim is determine the optimal operating point on an FROC. Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of latent NL marks as an expert radiologist. The $\nu$ parameter is kept at the same, namely $\nu = 1$. Four values of the $\mu$ parameter are considered: `r c(1, 1.5, 2, 2.5)`. All else being equal, performance is expected to improve with increasing $\mu$. 
 
-### Simulations for $\lambda = 10$
+* For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computations for each value of $\zeta_1$. One determines the value of $\zeta_1$ that maximizes AUC; this is denoted $\zeta_{\text{max}}$. Finally, using $\zeta_{\text{max}}$ one calculates the corresponding (NLF,LLF) values, i.e., *the optimal operating point on the FROC* and the wAFROC AUC. 
+
+* A large number of cases is used, namely the number of non-diseased cases is $K_1 = 5000$ and the number of diseased cases is $K_2 = 7000$. This minimizes sampling variability while not requiring excessive computation times.
+
+### $\zeta_1$ optimization for $\lambda = 10$
+
+Shown next is the variation of wAFROC AUC vs. $\zeta_1$ for $\lambda = 10$ and the four values of the $\mu$ parameter.
 
 ```{r maxFomArr_10, cache = TRUE, echo=FALSE}
 # determine plotArr[[1,]], zetaMaxArr[1,] and maxFomArr[1,]
@@ -104,15 +110,18 @@ for (i in 1:length(mu_arr)) {
 ```
 
 
-```{r optim-op-point-AUC-zeta1-10, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 10$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (i.e., $\\zeta_{\\text{max}}$, the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
+```{r optim-op-point-AUC-vs-zeta1-10, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 10$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (i.e., $\\zeta_{\\text{max}}$, the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
 grid.arrange(plotArr[[1,1]],plotArr[[1,2]],plotArr[[1,3]],plotArr[[1,4]], nrow = 2, ncol = 2)
 ```
 
 
-Fig. \@ref(fig:optim-op-point-AUC-zeta1-10) corresponding to $\lambda = 10$ has four panels showing the variation of wAFROC AUC with $\zeta_1$. Each panel is labeled by the values of $\mu$ and  $\zeta_{\text{max}}$. For example, the panel labeled `mu = 1.5, zetaMax = 1.9` shows that AUC has a maximum at $\zeta_1 = 1.9$. For $\mu = 1$ the maximum is at the top of a broad plateau, but for higher values the maximum is better defined.
+Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-10) corresponding to $\lambda = 10$ has four panels showing the variation of wAFROC AUC with $\zeta_1$. Each panel is labeled by the values of $\mu$ and  $\zeta_{\text{max}}$. For example, the panel labeled `mu = 1.5, zetaMax = 1.9` shows that AUC has a maximum at $\zeta_1 = 1.9$. For $\mu = 1$ the maximum is at the top of a broad plateau, but for higher values the maximum is better defined.
 
 
-### Simulations for $\lambda = 1$
+### $\zeta_1$ optimization for $\lambda = 1$
+
+Shown next is the variation of wAFROC AUC vs. $\zeta_1$ for $\lambda = 1$ and the four values of the $\mu$ parameter.
+
 
 ```{r maxFomArr_01, cache = TRUE, echo=FALSE}
 # determine plotArr[[2,]], zetaMaxArr[2,] and maxFomArr[2,]
@@ -148,11 +157,11 @@ for (i in 1:length(mu_arr)) {
 
 
 
-```{r optim-op-point-AUC-zeta1-01, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 1$.", fig.show='hold', echo=FALSE}
+```{r optim-op-point-AUC-vs-zeta1-01, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 1$.", fig.show='hold', echo=FALSE}
 grid.arrange(plotArr[[2,1]],plotArr[[2,2]],plotArr[[2,3]],plotArr[[2,4]], nrow = 2, ncol = 2)
 ```
 
-Fig. \@ref(fig:optim-op-point-AUC-zeta1-01) corresponds to $\lambda = 1$ and employs a similar labeling scheme as Fig. \@ref(fig:optim-op-point-AUC-zeta1-10). For example, the panel labeled `mu = 1, zetaMax = 0.4` shows that AUC has a maximum at $\zeta_1 = 0.4$. For each maximum the optimal operating point on the FROC is determined as well as the wAFROC AUCs.
+Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-01) corresponds to $\lambda = 1$ and employs a similar labeling scheme as Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-10). For example, the panel labeled `mu = 1, zetaMax = 0.4` shows that AUC has a maximum at $\zeta_1 = 0.4$. For each maximum the optimal operating point on the FROC is determined as well as the wAFROC AUCs.
 
 
 
@@ -349,7 +358,7 @@ grid.arrange(plotArr[[2,3]], plotArr[[2,4]], nrow = 1, ncol = 2)
 
 ## How to use the method {#optim-op-point-how-to-use-method}
 Assume that one has designed an algorithmic observer that has been optimized with respect to all other parameters except the reporting threshold. At this point the algorithm reports every suspicious region no matter how low the malignancy index. The mark-rating pairs are entered into a `RJafroc` format Excel input file. The next step is to read the data file -- 
-`DfReadDataFile()` -- convert it to an ROC dataset -- `DfFroc2Roc()` -- and then perform a radiological search model (RSM) fit to the dataset using function `FitRsmRoc()`. This yields the necessary $\lambda, \mu, \nu$ parameters. These values are used to perform the simulations described in the embedded code in this chapter, i.e., that leading to, for example, one of the panels in Fig. \@ref(fig:optim-op-point-AUC-zeta1-01). This determines the optimal reporting threshold: essentially, one scans $\zeta_1$ values looking for maximum in wAFROC AUC -- calculated using `UtilFigureOfMerit()`. This determines the optimal value of $\zeta_1$, namely $\zeta_{\text{max}}$. The RSM parameter values and $\zeta_{\text{max}}$ determine NLF, the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence level exceeding $\zeta_{\text{max}}$.  
+`DfReadDataFile()` -- convert it to an ROC dataset -- `DfFroc2Roc()` -- and then perform a radiological search model (RSM) fit to the dataset using function `FitRsmRoc()`. This yields the necessary $\lambda, \mu, \nu$ parameters. These values are used to perform the simulations described in the embedded code in this chapter, i.e., that leading to, for example, one of the panels in Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-01). This determines the optimal reporting threshold: essentially, one scans $\zeta_1$ values looking for maximum in wAFROC AUC -- calculated using `UtilFigureOfMerit()`. This determines the optimal value of $\zeta_1$, namely $\zeta_{\text{max}}$. The RSM parameter values and $\zeta_{\text{max}}$ determine NLF, the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence level exceeding $\zeta_{\text{max}}$.  
 
 
 ## Discussion {#optim-op-point-Discussion}
