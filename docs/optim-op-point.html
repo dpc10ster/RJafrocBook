@@ -573,7 +573,7 @@
 <li class="chapter" data-level="20" data-path="optim-op-point.html"><a href="optim-op-point.html"><i class="fa fa-check"></i><b>20</b> Optimal operating point on FROC</a>
 <ul>
 <li class="chapter" data-level="20.1" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-intro"><i class="fa fa-check"></i><b>20.1</b> Introduction</a></li>
-<li class="chapter" data-level="20.2" data-path="optim-op-point.html"><a href="optim-op-point.html#the-optimal-operating-point-on-the-froc"><i class="fa fa-check"></i><b>20.2</b> The optimal operating point on the FROC</a>
+<li class="chapter" data-level="20.2" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-methods"><i class="fa fa-check"></i><b>20.2</b> Methods</a>
 <ul>
 <li class="chapter" data-level="20.2.1" data-path="optim-op-point.html"><a href="optim-op-point.html#simulations-for-lambda-10"><i class="fa fa-check"></i><b>20.2.1</b> Simulations for <span class="math inline">\(\lambda = 10\)</span></a></li>
 <li class="chapter" data-level="20.2.2" data-path="optim-op-point.html"><a href="optim-op-point.html#simulations-for-lambda-1"><i class="fa fa-check"></i><b>20.2.2</b> Simulations for <span class="math inline">\(\lambda = 1\)</span></a></li>
@@ -693,52 +693,43 @@
             <section class="normal" id="section-">
 <div id="optim-op-point" class="section level1" number="20">
 <h1><span class="header-section-number">Chapter 20</span> Optimal operating point on FROC</h1>
-<pre><code>output:
-  rmarkdown::pdf_document:
-    fig_caption: yes        
-    includes:  
-      in_header: R/learn/my_header.tex
-header-includes:
-   - \usepackage[justification=raggedright,labelfont=bf,singlelinecheck=false]{caption}
-  md_document:
-    preserve_yaml: false</code></pre>
 <div id="optim-op-point-intro" class="section level2" number="20.1">
 <h2><span class="header-section-number">20.1</span> Introduction</h2>
 <p>Algorithm developers are familiar with this problem: given a CAD system that yields mark-rating data, where the ratings are on a continuous scale (often termed <em>malignancy index</em> and the continuous ratings are available to the CAD algorithm designer), how does one select an optimal reporting threshold? Only mark-rating data with ratings exceeding the optimal threshold are to be displayed to the radiologist.</p>
 <ul>
 <li><p>From the previous chapter it is evident that performance depends of <span class="math inline">\(\zeta_1\)</span>, see <a href="froc-vs-afroc.html#froc-vs-wafroc-peformance-depends-on-zeta1">19.5</a>.</p></li>
-<li><p>It is taken as an axiomatic truth that <em>the optimal reporting threshold <span class="math inline">\(\zeta_1\)</span> is that value that maximizes the AUC under the wAFROC</em>.</p></li>
+<li><p>It is taken as an axiomatic truth that <em>the optimal reporting threshold <span class="math inline">\(\zeta_{1\text{max}}\)</span> is that value of <span class="math inline">\(\zeta_1\)</span> that maximizes the AUC under the wAFROC</em>.</p></li>
 <li><p>This chapter examines the effect of changing the reporting threshold <span class="math inline">\(\zeta_1\)</span> on the wAFROC AUC, with the object of determining the value that maximizes the AUC.</p></li>
 </ul>
 </div>
-<div id="the-optimal-operating-point-on-the-froc" class="section level2" number="20.2">
-<h2><span class="header-section-number">20.2</span> The optimal operating point on the FROC</h2>
-<p>Two values of the <span class="math inline">\(\lambda\)</span> parameter are considered: <span class="math inline">\(\lambda = 10\)</span> and <span class="math inline">\(\lambda = 1\)</span>. The first value would characterize a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of latent NL marks as an expert radiologist. The <span class="math inline">\(\nu\)</span> parameter is kept at the same, namely <span class="math inline">\(\nu = 1\)</span>. Four values of the <span class="math inline">\(\mu\)</span> parameter are considered: 1, 1.5, 2, 2.5. All else being equal, performance is expected to improve with increasing <span class="math inline">\(\mu\)</span>. For each <span class="math inline">\(\mu\)</span> one scans <span class="math inline">\(\zeta_1\)</span>, repeating the simulations and AUC computations for each value of <span class="math inline">\(\zeta_1\)</span>. One determines that value of <span class="math inline">\(\zeta_1\)</span> that maximizes AUC; this is denoted <span class="math inline">\(\zeta_{\text{max}}\)</span>. Finally, using the optimal <span class="math inline">\(\zeta_1\)</span> one calculates the corresponding (NLF,LLF) values, i.e., <em>the optimal operating point on the FROC</em>. To minimize sampling variability, a large number of cases is used, namely the number of non-diseased cases is <span class="math inline">\(K_1 = 5000\)</span> and the number of diseased cases is <span class="math inline">\(K_2 = 7000\)</span>.</p>
+<div id="optim-op-point-methods" class="section level2" number="20.2">
+<h2><span class="header-section-number">20.2</span> Methods</h2>
+<p>The aim is determine the optimal operating point on an FROC. Two values of the <span class="math inline">\(\lambda\)</span> parameter are considered: <span class="math inline">\(\lambda = 10\)</span> and <span class="math inline">\(\lambda = 1\)</span>. The first value would characterize a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of latent NL marks as an expert radiologist. The <span class="math inline">\(\nu\)</span> parameter is kept at the same, namely <span class="math inline">\(\nu = 1\)</span>. Four values of the <span class="math inline">\(\mu\)</span> parameter are considered: 1, 1.5, 2, 2.5. All else being equal, performance is expected to improve with increasing <span class="math inline">\(\mu\)</span>. For each <span class="math inline">\(\mu\)</span> one scans <span class="math inline">\(\zeta_1\)</span>, repeating the simulations and AUC and other computations for each value of <span class="math inline">\(\zeta_1\)</span>. One determines that value of <span class="math inline">\(\zeta_1\)</span> that maximizes AUC; this is denoted <span class="math inline">\(\zeta_{1\text{max}}\)</span>. Finally, using the optimal <span class="math inline">\(\zeta_1\)</span> one calculates the corresponding (NLF,LLF) values, i.e., <em>the optimal operating point on the FROC</em> and the wAFROC AUC. A large number of cases is used, namely the number of non-diseased cases is <span class="math inline">\(K_1 = 5000\)</span> and the number of diseased cases is <span class="math inline">\(K_2 = 7000\)</span>. This minimizes sampling variability while not requiring excessive computation times.</p>
 <div id="simulations-for-lambda-10" class="section level3" number="20.2.1">
 <h3><span class="header-section-number">20.2.1</span> Simulations for <span class="math inline">\(\lambda = 10\)</span></h3>
 <div class="figure"><span id="fig:optim-op-point-plot5"></span>
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot5-1.png" alt="Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
+<img src="13-optim-op-point_files/figure-html/optim-op-point-plot5-1.png" alt="Variation of AUC vs. $\zeta_1$ for $\lambda = 10$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
 <p class="caption">
-FIGURE 20.1: Variation of AUC vs. <span class="math inline">\(\zeta_1\)</span>; AUC is the wAFROC AUC. The plots are labeled by the value of <span class="math inline">\(\mu\)</span> and zetaMax (the value of <span class="math inline">\(\zeta_1\)</span> that maximizes AUC).
+FIGURE 20.1: Variation of AUC vs. <span class="math inline">\(\zeta_1\)</span> for <span class="math inline">\(\lambda = 10\)</span>; AUC is the wAFROC AUC. The plots are labeled by the value of <span class="math inline">\(\mu\)</span> and zetaMax (the value of <span class="math inline">\(\zeta_1\)</span> that maximizes AUC).
 </p>
 </div>
-<p>Fig. <a href="optim-op-point.html#fig:optim-op-point-plot5">20.1</a> corresponding to <span class="math inline">\(\lambda = 10\)</span> has four panels showing the variation of wAFROC AUC with <span class="math inline">\(\zeta_1\)</span>. Each panel is labeled by the values of <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\zeta_{\text{max}}\)</span>. For example, the panel labeled <code>mu = 1.5, zetaMax = 1.9</code> shows that AUC has a maximum at <span class="math inline">\(\zeta_1 = 1.9\)</span>. For <span class="math inline">\(\mu = 1\)</span> the maximum is at the top of a broad plateau, but for higher values the maximum is better defined.</p>
+<p>Fig. <a href="optim-op-point.html#fig:optim-op-point-plot5">20.1</a> corresponding to <span class="math inline">\(\lambda = 10\)</span> has four panels showing the variation of wAFROC AUC with <span class="math inline">\(\zeta_1\)</span>. Each panel is labeled by the values of <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\zeta_{1\text{max}}\)</span>. For example, the panel labeled <code>mu = 1.5, zetaMax = 1.9</code> shows that AUC has a maximum at <span class="math inline">\(\zeta_1 = 1.9\)</span>. For <span class="math inline">\(\mu = 1\)</span> the maximum is at the top of a broad plateau, but for higher values the maximum is better defined.</p>
 </div>
 <div id="simulations-for-lambda-1" class="section level3" number="20.2.2">
 <h3><span class="header-section-number">20.2.2</span> Simulations for <span class="math inline">\(\lambda = 1\)</span></h3>
 <div class="figure"><span id="fig:optim-op-point-plot6"></span>
-<img src="13-optim-op-point_files/figure-html/optim-op-point-plot6-1.png" alt="Variation of AUC vs. $\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
+<img src="13-optim-op-point_files/figure-html/optim-op-point-plot6-1.png" alt="Variation of AUC vs. $\zeta_1$ for $\lambda = 1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (the value of $\zeta_1$ that maximizes AUC)." width="672" />
 <p class="caption">
-FIGURE 20.2: Variation of AUC vs. <span class="math inline">\(\zeta_1\)</span>; AUC is the wAFROC AUC. The plots are labeled by the value of <span class="math inline">\(\mu\)</span> and zetaMax (the value of <span class="math inline">\(\zeta_1\)</span> that maximizes AUC).
+FIGURE 20.2: Variation of AUC vs. <span class="math inline">\(\zeta_1\)</span> for <span class="math inline">\(\lambda = 1\)</span>; AUC is the wAFROC AUC. The plots are labeled by the value of <span class="math inline">\(\mu\)</span> and zetaMax (the value of <span class="math inline">\(\zeta_1\)</span> that maximizes AUC).
 </p>
 </div>
-<p>Fig. <a href="optim-op-point.html#fig:optim-op-point-plot6">20.2</a> corresponding to <span class="math inline">\(\lambda = 1\)</span> and employs a similar labeling scheme. For example, the panel labeled <code>mu = 1, zetaMax = 0.4</code> shows that AUC has a maximum at <span class="math inline">\(\zeta_1 = 0.4\)</span>.</p>
+<p>Fig. <a href="optim-op-point.html#fig:optim-op-point-plot6">20.2</a> corresponds to <span class="math inline">\(\lambda = 1\)</span> and employs a similar labeling scheme as Fig. <a href="optim-op-point.html#fig:optim-op-point-plot5">20.1</a>. For example, the panel labeled <code>mu = 1, zetaMax = 0.4</code> shows that AUC has a maximum at <span class="math inline">\(\zeta_1 = 0.4\)</span>. For each maximum the optimal operating point on the FROC is determined as well as the wAFROC AUCs.</p>
 </div>
 <div id="optim-op-point-comments-threshold-optimization" class="section level3" number="20.2.3">
 <h3><span class="header-section-number">20.2.3</span> Comments</h3>
 <table>
 <caption>
-<span id="tab:optim-op-point-cad-optim-table">TABLE 20.1: </span>Summary of CAD optimal threshold simulations: “measure” refers to a performance measure: AUC, NLF or LLF; the labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for lambda = 01, NLF10 is NLF for lambda = 1, …, LLF01 is LLF for lambda = 1.
+<span id="tab:optim-op-point-cad-optim-table">TABLE 20.1: </span>Summary of CAD optimal threshold simulations: “measure” refers to a performance measure, “mu1” refers to <span class="math inline">\(\mu = 1\)</span>, etc. The row labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for <span class="math inline">\(\lambda = 01\)</span>, NLF10 is NLF for <span class="math inline">\(\lambda = 1\)</span>, …, LLF01 is LLF for <span class="math inline">\(\lambda = 1\)</span>.
 </caption>
 <thead>
 <tr>
@@ -746,16 +737,16 @@ FIGURE 20.2: Variation of AUC vs. <span class="math inline">\(\zeta_1\)</span>;
 measure
 </th>
 <th style="text-align:right;">
-muVal1
+mu1
 </th>
 <th style="text-align:right;">
-muVal1.5
+mu1.5
 </th>
 <th style="text-align:right;">
-muVal2
+mu2
 </th>
 <th style="text-align:right;">
-muVal2.5
+mu2.5
 </th>
 </tr>
 </thead>

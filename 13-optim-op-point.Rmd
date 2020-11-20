@@ -29,7 +29,7 @@ Algorithm developers are familiar with this problem: given a CAD system that yie
 
 * From the previous chapter it is evident that performance depends of $\zeta_1$, see \@ref(froc-vs-wafroc-peformance-depends-on-zeta1).
 
-* It is taken as an axiomatic truth that *the optimal reporting threshold $\zeta_1$ is that value that maximizes the AUC under the wAFROC*. 
+* It is taken as an axiomatic truth that *the optimal reporting threshold $\zeta_{1\text{max}}$ is that value of $\zeta_1$ that maximizes the AUC under the wAFROC*.  
 
 * This chapter examines the effect of changing the reporting threshold $\zeta_1$ on the wAFROC AUC, with the object of determining the value that maximizes the AUC. 
 
@@ -62,19 +62,19 @@ do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, K1, K2, Lk2, seed) {
 }
 ```
 
-## The optimal operating point on the FROC
-Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of latent NL marks as an expert radiologist. The $\nu$ parameter is kept at the same, namely $\nu = 1$. Four values of the $\mu$ parameter are considered: `r c(1, 1.5, 2, 2.5)`. All else being equal, performance is expected to improve with increasing $\mu$. For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computations for each value of $\zeta_1$. One determines that value of $\zeta_1$ that maximizes AUC; this is denoted $\zeta_{\text{max}}$. Finally, using the optimal $\zeta_1$ one calculates the corresponding (NLF,LLF) values, i.e., *the optimal operating point on the FROC*. To minimize sampling variability, a large number of cases is used, namely the number of non-diseased cases is $K_1 = 5000$ and the number of diseased cases is $K_2 = 7000$. 
+## Methods {#optim-op-point-methods}
+The aim is determine the optimal operating point on an FROC. Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of latent NL marks as an expert radiologist. The $\nu$ parameter is kept at the same, namely $\nu = 1$. Four values of the $\mu$ parameter are considered: `r c(1, 1.5, 2, 2.5)`. All else being equal, performance is expected to improve with increasing $\mu$. For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC and other computations for each value of $\zeta_1$. One determines that value of $\zeta_1$ that maximizes AUC; this is denoted $\zeta_{1\text{max}}$. Finally, using the optimal $\zeta_1$ one calculates the corresponding (NLF,LLF) values, i.e., *the optimal operating point on the FROC* and the wAFROC AUC. A large number of cases is used, namely the number of non-diseased cases is $K_1 = 5000$ and the number of diseased cases is $K_2 = 7000$. This minimizes sampling variability while not requiring excessive computation times. 
 
 ### Simulations for $\lambda = 10$
 
 ```{r maxFomArr_10, cache = TRUE, echo=FALSE}
-# determine zetaMaxArr[1,i] and maxFomArr_10
+# determine plotArr[[1,]], zetaMaxArr[1,] and maxFomArr[1,]
 lambda <- 10 
 nu <- 1
 mu_arr <- c(1, 1.5, 2, 2.5)
-maxFomArr_10 <- array(dim = length(mu_arr))
+maxFomArr <- array(dim = c(2,length(mu_arr)))
 zetaMaxArr <- array(dim = c(2, length(mu_arr)))
-plotArr <- array(list(), length(mu_arr))
+plotArr <- array(list(), dim = c(2, length(mu_arr)))
 K1 <- 5000
 K2 <- 7000
 Lmax <- 2
@@ -86,7 +86,7 @@ for (i in 1:length(mu_arr)) {
   if (i == 1) zeta1Arr <- seq(1.5,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
   fomArray <- array(dim = length(zeta1Arr))
   x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
-  plotArr[[i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
+  plotArr[[1,i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
   zetaMaxArr[1,i] <- x$zetaMax
   froc1 <- SimulateFrocDataset (
     mu = mu_arr[i],
@@ -99,29 +99,25 @@ for (i in 1:length(mu_arr)) {
     K2 = K2,
     perCase = Lk2,
     seed = seed)
-  maxFomArr_10[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
+  maxFomArr[1,i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
 }
 ```
 
 
-```{r optim-op-point-plot5, fig.cap="Variation of AUC vs. $\\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
-grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
+```{r optim-op-point-plot5, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 10$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[1,1]],plotArr[[1,2]],plotArr[[1,3]],plotArr[[1,4]], nrow = 2, ncol = 2)
 ```
 
 
-Fig. \@ref(fig:optim-op-point-plot5) corresponding to $\lambda = 10$ has four panels showing the variation of wAFROC AUC with $\zeta_1$. Each panel is labeled by the values of $\mu$ and  $\zeta_{\text{max}}$. For example, the panel labeled `mu = 1.5, zetaMax = 1.9` shows that AUC has a maximum at $\zeta_1 = 1.9$. For $\mu = 1$ the maximum is at the top of a broad plateau, but for higher values the maximum is better defined. 
+Fig. \@ref(fig:optim-op-point-plot5) corresponding to $\lambda = 10$ has four panels showing the variation of wAFROC AUC with $\zeta_1$. Each panel is labeled by the values of $\mu$ and  $\zeta_{1\text{max}}$. For example, the panel labeled `mu = 1.5, zetaMax = 1.9` shows that AUC has a maximum at $\zeta_1 = 1.9$. For $\mu = 1$ the maximum is at the top of a broad plateau, but for higher values the maximum is better defined. 
 
 
 ### Simulations for $\lambda = 1$
 
 ```{r maxFomArr_01, cache = TRUE, echo=FALSE}
-# determine zetaMaxArr[2,i] and maxFomArr_01
-
+# determine plotArr[[2,]], zetaMaxArr[2,] and maxFomArr[2,]
 lambda <- 1
 nu <- 1
-mu_arr <- c(1, 1.5, 2, 2.5)
-maxFomArr_01 <- array(dim = length(mu_arr))
-plotArr <- array(list(), length(mu_arr))
 K1 <- 5000
 K2 <- 7000
 Lmax <- 2
@@ -133,7 +129,7 @@ for (i in 1:length(mu_arr)) {
   zeta1Arr <- seq(-1,1,0.05)
   fomArray <- array(dim = length(zeta1Arr))
   x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
-  plotArr[[i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
+  plotArr[[2,i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
   zetaMaxArr[2,i] <- x$zetaMax
   froc1 <- SimulateFrocDataset (
     mu = mu_arr[i],
@@ -146,17 +142,17 @@ for (i in 1:length(mu_arr)) {
     K2 = K2,
     perCase = Lk2,
     seed = seed)
-  maxFomArr_01[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
+  maxFomArr[2,i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
 }
 ```
 
 
 
-```{r optim-op-point-plot6, fig.cap="Variation of AUC vs. $\\zeta_1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
-grid.arrange(plotArr[[1]],plotArr[[2]],plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
+```{r optim-op-point-plot6, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 1$; AUC is the wAFROC AUC. The plots are labeled by the value of $\\mu$ and zetaMax (the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[2,1]],plotArr[[2,2]],plotArr[[2,3]],plotArr[[2,4]], nrow = 2, ncol = 2)
 ```
 
-Fig. \@ref(fig:optim-op-point-plot6) corresponding to $\lambda = 1$ and employs a similar labeling scheme. For example, the panel labeled `mu = 1, zetaMax = 0.4` shows that AUC has a maximum at $\zeta_1 = 0.4$. 
+Fig. \@ref(fig:optim-op-point-plot6) corresponds to $\lambda = 1$ and employs a similar labeling scheme as Fig. \@ref(fig:optim-op-point-plot5). For example, the panel labeled `mu = 1, zetaMax = 0.4` shows that AUC has a maximum at $\zeta_1 = 0.4$. For each maximum the optimal operating point on the FROC is determined as well as the wAFROC AUCs.
 
 
 
@@ -275,8 +271,8 @@ for (j in 1:2) {
 
 
 ```{r optim-op-point-cad-optim-zeta1, echo=FALSE}
-x1 <- as.data.frame(rbind(t(maxFomArr_10), t(optOpPt[1,1,]), t(optOpPt[1,2,])))
-x2 <- as.data.frame(rbind(t(maxFomArr_01), t(optOpPt[2,1,]), t(optOpPt[2,2,])))
+x1 <- as.data.frame(rbind(t(maxFomArr[1,]), t(optOpPt[1,1,]), t(optOpPt[1,2,])))
+x2 <- as.data.frame(rbind(t(maxFomArr[2,]), t(optOpPt[2,1,]), t(optOpPt[2,2,])))
 x12 <- rbind(x1, x2)
 x12 <- cbind(c("AUC10", "NLF10", "LLF10", "AUC01", "NLF01", "LLF01"), x12)
 colnames(x12) <- c("measure", paste0("mu", as.character(mu_arr)))
@@ -305,7 +301,7 @@ grid.arrange(plotArr[[1,1]], plotArr[[1,2]], nrow = 1, ncol = 2)
 ```             
 
 
-* In Fig. \@ref(fig:optim-op-point-plot7a) the plot labeled 10-1 is a FROC plot for $\lambda = 10$ and $\mu = 1$; AUC performance is quite low, AUC = `r maxFomArr_10[1]` and the optimal operating point of the algorithm is near the origin, specifically, NLF = `r optOpPt[1,1,1]` and LLF = `r optOpPt[1,2,1]`. If the algorithm is this poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, high confidence level for being right (note that an operating point near the origin corresponds to a high value of $\zeta_1$). For higher values of $\mu$ AUC performance increases and it makes sense to then show marks with a somewhat lower confidence level, corresponding to moving up the curve. While it is true that one is possibly showing more NLs, the fraction of LLs increases even more. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \@ref(tab:optim-op-point-cad-optim-table). Performance of the algorithm is very poor and it makes sense to set a high threshold corresponding to a low value of NLF = `r optOpPt[1,1,1]`. The observer is only shown very high confidence level marks. 
+* In Fig. \@ref(fig:optim-op-point-plot7a) the plot labeled 10-1 is a FROC plot for $\lambda = 10$ and $\mu = 1$; AUC performance is quite low, AUC = `r maxFomArr[1,1]` and the optimal operating point of the algorithm is near the origin, specifically, NLF = `r optOpPt[1,1,1]` and LLF = `r optOpPt[1,2,1]`. If the algorithm is this poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, high confidence level for being right (note that an operating point near the origin corresponds to a high value of $\zeta_1$). For higher values of $\mu$ AUC performance increases and it makes sense to then show marks with a somewhat lower confidence level, corresponding to moving up the curve. While it is true that one is possibly showing more NLs, the fraction of LLs increases even more. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \@ref(tab:optim-op-point-cad-optim-table). Performance of the algorithm is very poor and it makes sense to set a high threshold corresponding to a low value of NLF = `r optOpPt[1,1,1]`. The observer is only shown very high confidence level marks. 
 * In the plot labeled 10-1.5 the FROC plot is for $\lambda = 10$ and $\mu = 1.5$. Performance is better and it makes sense to set the threshold at a lower value, corresponding to a higher NLF = `r optOpPt[1,1,2]`, and because of the increased algorithm performance it makes sense to show him lower confidence level marks. 
 
 STOP
