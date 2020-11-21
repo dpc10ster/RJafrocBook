@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 21 Optimal operating point on FROC | The RJafroc Book</title>
+  <title>Chapter 5 Empirical AUC | The RJafroc Book</title>
   <meta name="description" content="Updated observer-performance book based on RJafroc." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 21 Optimal operating point on FROC | The RJafroc Book" />
+  <meta property="og:title" content="Chapter 5 Empirical AUC | The RJafroc Book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 21 Optimal operating point on FROC | The RJafroc Book" />
+  <meta name="twitter:title" content="Chapter 5 Empirical AUC | The RJafroc Book" />
   
   <meta name="twitter:description" content="Updated observer-performance book based on RJafroc." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="froc-vs-afroc.html"/>
-<link rel="next" href="froc-meanings.html"/>
+<link rel="prev" href="ratingsParadigm.html"/>
+<link rel="next" href="BinormalModel.html"/>
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -759,245 +759,481 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="optim-op-point" class="section level1" number="21">
-<h1><span class="header-section-number">Chapter 21</span> Optimal operating point on FROC</h1>
-<div id="optim-op-point-intro" class="section level2" number="21.1">
-<h2><span class="header-section-number">21.1</span> Introduction</h2>
-<p>Algorithm developers are familiar with this problem: given a CAD system that yields mark-rating data, where the ratings are on a continuous scale (often termed <em>malignancy index</em> and the continuous ratings are available to the CAD algorithm designer), how does one select an optimal reporting threshold? Only mark-rating data with ratings exceeding the optimal threshold are to be displayed to the radiologist.</p>
-<ul>
-<li><p>From the previous chapter it is evident that performance depends of <span class="math inline">\(\zeta_1\)</span>, see <a href="froc-vs-afroc.html#froc-vs-wafroc-peformance-depends-on-zeta1">20.5</a>.</p></li>
-<li><p>It is taken as an axiomatic truth that <em>the optimal reporting threshold <span class="math inline">\(\zeta_{\text{max}}\)</span> is that value of <span class="math inline">\(\zeta_1\)</span> that maximizes the AUC under the wAFROC</em>.</p></li>
-<li><p>This chapter examines the effect of changing the reporting threshold <span class="math inline">\(\zeta_1\)</span> on the wAFROC AUC, with the object of determining the value that maximizes the AUC.</p></li>
-</ul>
+<div id="empirical-auc" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Empirical AUC</h1>
+<div id="empirical-auc-intro" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Introduction</h2>
+<p>The ROC plot, introduced in Chapter 03, is defined as the plot of sensitivity (y-axis) vs. 1-specificity (x-axis). Equivalently, it is the plot of TPF (y-axis) vs. FPF (x-axis). An equal variance binormal model was introduced which allows an ROC plot to be fitted to a single observed operating point. In Chapter 04, the more commonly used ratings paradigm was introduced.</p>
+<p>One of the reasons for fitting observed counts data, such as in Table 4.1 in Chapter 04, to a parametric model, is to derive analytical expressions for the separation parameter <span class="math inline">\(\mu\)</span> of the model or the area AUC under the curve. Other figures of merit, such as the TPF at a specified FPF, or the partial area to the left of a specified FPF, can also be calculated from this model. Each figure of merit can serve as the basis for comparing two readers to determine which one is better. They have the advantage of being single values, as opposed to a pair of sensitivity-specificity values, thereby making it easier to unambiguously compare performances. Additionally, they often yield physical insight into the task, e.g., the separation parameter is the perceptual signal to noise corresponding to the diagnostic task.</p>
+<p>It was shown, TBA Fig. 4.1 (A - B), that the equal variance binormal model did not describe a clinical dataset and that an unequal variance binormal model yielded a better visual fit. This turns out to be an almost universal finding. Before getting into the complexity of the unequal variance binormal model curve fitting, it is appropriate to introduce a simpler empirical approach, which is very popular with some researchers. The New Oxford American Dictionary definition of “empirical” is: “based on, concerned with, or verifiable by observation or experience rather than theory or pure logic.” The method is also termed “non-parametric” as it does not involve any parametric assumptions (specifically normality assumptions). Notation is introduced for labeling individual cases that is used in subsequent chapters. An important theorem relating the empirical area under the ROC to a formal statistic, known as the Wilcoxon, is described. The importance of the theorem derives from its applications to non-parametric analysis of ROC data.</p>
 </div>
-<div id="optim-op-point-methods" class="section level2" number="21.2">
-<h2><span class="header-section-number">21.2</span> Methods</h2>
-<ul>
-<li><p>The aim is determine the optimal operating point on an FROC. Two values of the <span class="math inline">\(\lambda\)</span> parameter are considered: <span class="math inline">\(\lambda = 10\)</span> and <span class="math inline">\(\lambda = 1\)</span>. The first value would characterize a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of latent NL marks as an expert radiologist. The <span class="math inline">\(\nu\)</span> parameter is kept at the same, namely <span class="math inline">\(\nu = 1\)</span>. Four values of the <span class="math inline">\(\mu\)</span> parameter are considered: 1, 1.5, 2, 2.5. All else being equal, performance is expected to improve with increasing <span class="math inline">\(\mu\)</span>.</p></li>
-<li><p>For each <span class="math inline">\(\mu\)</span> one scans <span class="math inline">\(\zeta_1\)</span>, repeating the simulations and AUC computations for each value of <span class="math inline">\(\zeta_1\)</span>. One determines the value of <span class="math inline">\(\zeta_1\)</span> that maximizes AUC; this is denoted <span class="math inline">\(\zeta_{\text{max}}\)</span>. Finally, using <span class="math inline">\(\zeta_{\text{max}}\)</span> one calculates the corresponding (NLF,LLF) values, i.e., <em>the optimal operating point on the FROC</em> and the wAFROC AUC.</p></li>
-<li><p>A large number of cases is used, namely the number of non-diseased cases is <span class="math inline">\(K_1 = 5000\)</span> and the number of diseased cases is <span class="math inline">\(K_2 = 7000\)</span>. This minimizes sampling variability while not requiring excessive computation times.</p></li>
-</ul>
-<div id="zeta_1-optimization-for-lambda-10" class="section level3" number="21.2.1">
-<h3><span class="header-section-number">21.2.1</span> <span class="math inline">\(\zeta_1\)</span> optimization for <span class="math inline">\(\lambda = 10\)</span></h3>
-<p>Shown next is the variation of wAFROC AUC vs. <span class="math inline">\(\zeta_1\)</span> for <span class="math inline">\(\lambda = 10\)</span> and the four values of the <span class="math inline">\(\mu\)</span> parameter.</p>
-<div class="figure"><span id="fig:optim-op-point-AUC-vs-zeta1-10"></span>
-<img src="13-optim-op-point_files/figure-html/optim-op-point-AUC-vs-zeta1-10-1.png" alt="Variation of AUC vs. $\zeta_1$ for $\lambda = 10$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (i.e., $\zeta_{\text{max}}$, the value of $\zeta_1$ that maximizes AUC)." width="672" />
-<p class="caption">
-FIGURE 21.1: Variation of AUC vs. <span class="math inline">\(\zeta_1\)</span> for <span class="math inline">\(\lambda = 10\)</span>; AUC is the wAFROC AUC. The plots are labeled by the value of <span class="math inline">\(\mu\)</span> and zetaMax (i.e., <span class="math inline">\(\zeta_{\text{max}}\)</span>, the value of <span class="math inline">\(\zeta_1\)</span> that maximizes AUC).
-</p>
-</div>
-<p>Fig. <a href="optim-op-point.html#fig:optim-op-point-AUC-vs-zeta1-10">21.1</a> corresponding to <span class="math inline">\(\lambda = 10\)</span> has four panels showing the variation of wAFROC AUC with <span class="math inline">\(\zeta_1\)</span>. Each panel is labeled by the values of <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\zeta_{\text{max}}\)</span>. For example, the panel labeled <code>mu = 1.5, zetaMax = 1.9</code> shows that AUC has a maximum at <span class="math inline">\(\zeta_1 = 1.9\)</span>. For <span class="math inline">\(\mu = 1\)</span> the maximum is at the top of a broad plateau, but for higher values the maximum is better defined.</p>
-</div>
-<div id="zeta_1-optimization-for-lambda-1" class="section level3" number="21.2.2">
-<h3><span class="header-section-number">21.2.2</span> <span class="math inline">\(\zeta_1\)</span> optimization for <span class="math inline">\(\lambda = 1\)</span></h3>
-<p>Shown next is the variation of wAFROC AUC vs. <span class="math inline">\(\zeta_1\)</span> for <span class="math inline">\(\lambda = 1\)</span> and the four values of the <span class="math inline">\(\mu\)</span> parameter.</p>
-<div class="figure"><span id="fig:optim-op-point-AUC-vs-zeta1-01"></span>
-<img src="13-optim-op-point_files/figure-html/optim-op-point-AUC-vs-zeta1-01-1.png" alt="Variation of AUC vs. $\zeta_1$ for $\lambda = 1$." width="672" />
-<p class="caption">
-FIGURE 21.2: Variation of AUC vs. <span class="math inline">\(\zeta_1\)</span> for <span class="math inline">\(\lambda = 1\)</span>.
-</p>
-</div>
-<p>Fig. <a href="optim-op-point.html#fig:optim-op-point-AUC-vs-zeta1-01">21.2</a> corresponds to <span class="math inline">\(\lambda = 1\)</span> and employs a similar labeling scheme as Fig. <a href="optim-op-point.html#fig:optim-op-point-AUC-vs-zeta1-10">21.1</a>. For example, the panel labeled <code>mu = 1, zetaMax = 0.4</code> shows that AUC has a maximum at <span class="math inline">\(\zeta_1 = 0.4\)</span>. For each maximum the optimal operating point on the FROC is determined as well as the wAFROC AUCs.</p>
-</div>
-<div id="optim-op-point-comments-threshold-optimization" class="section level3" number="21.2.3">
-<h3><span class="header-section-number">21.2.3</span> Summary of simulations and comments</h3>
+<div id="empirical-roc-plot" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> The empirical ROC plot</h2>
+<p>The empirical ROC plot is constructed by connecting adjacent observed operating points, including the trivial ones at (0,0) and (1,1), with straight lines. The trapezoidal area under this plot is a non-parametric figure of merit that is threshold independent. Since no parametric assumptions are involved, some prefer it to parametric methods, such as the one to be described in the next chapter. [In the context of AUC, the terms empirical, trapezoidal, or non-parametric all mean the same thing.]</p>
+<div id="notation-for-cases" class="section level3" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Notation for cases</h3>
+<p>As in §3.5, cases are indexed by <span class="math inline">\(k_tt\)</span> where <span class="math inline">\(t\)</span> indicates the truth-status at the case (i.e., patient) level, with <span class="math inline">\(t=1\)</span> for non diseased cases and <span class="math inline">\(t=2\)</span> for diseased cases. Index <span class="math inline">\(k_1\)</span> ranges from one to <span class="math inline">\(K_1\)</span> for non-diseased cases and <span class="math inline">\(k_2\)</span> ranges from one to <span class="math inline">\(K_2\)</span> for diseased cases, where <span class="math inline">\(K_1\)</span> and <span class="math inline">\(K_2\)</span> are the total number of non-diseased and diseased cases, respectively. In Table 5.1, each case is represented as a shaded box, lighter shading for non-diseased cases and darker shading for diseased cases. There are 11 non-diseased cases, labeled N1 – N11, in the upper row of boxes and there are seven diseased cases, labeled D1 – D7, in the lower row of boxes.</p>
 <table>
 <caption>
-<span id="tab:optim-op-point-cad-optim-table">TABLE 21.1: </span>Summary of optimal threshold values: “measure” refers to a performance measure, “mu1” refers to <span class="math inline">\(\mu = 1\)</span>, etc. The row labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for <span class="math inline">\(\lambda = 1\)</span>, NLF10 is NLF for <span class="math inline">\(\lambda = 10\)</span>, …, LLF01 is LLF for <span class="math inline">\(\lambda = 1\)</span>.
+<span id="tab:empirical-ROC-2index-notation">TABLE 5.1: </span>On the need for two indices to label cases in an ROC study.
 </caption>
 <thead>
 <tr>
 <th style="text-align:left;">
-measure
 </th>
-<th style="text-align:right;">
-mu1
+<th style="text-align:left;">
 </th>
-<th style="text-align:right;">
-mu1.5
+<th style="text-align:left;">
 </th>
-<th style="text-align:right;">
-mu2
+<th style="text-align:left;">
 </th>
-<th style="text-align:right;">
-mu2.5
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-AUC10
+N1
 </td>
-<td style="text-align:right;">
-0.50224
+<td style="text-align:left;">
+N2
 </td>
-<td style="text-align:right;">
-0.55628
+<td style="text-align:left;">
+N3
 </td>
-<td style="text-align:right;">
-0.69876
+<td style="text-align:left;">
+N4
 </td>
-<td style="text-align:right;">
-0.83833
+<td style="text-align:left;">
+N5
+</td>
+<td style="text-align:left;">
+N6
+</td>
+<td style="text-align:left;">
+N7
+</td>
+<td style="text-align:left;">
+N8
+</td>
+<td style="text-align:left;">
+N9
+</td>
+<td style="text-align:left;">
+N10
+</td>
+<td style="text-align:left;">
+N11
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-AUC01
+D1
 </td>
-<td style="text-align:right;">
-0.60507
-</td>
-<td style="text-align:right;">
-0.78199
-</td>
-<td style="text-align:right;">
-0.88091
-</td>
-<td style="text-align:right;">
-0.93461
-</td>
-</tr>
-<tr>
 <td style="text-align:left;">
-NLF10
+D2
 </td>
-<td style="text-align:right;">
-0.00687
-</td>
-<td style="text-align:right;">
-0.19144
-</td>
-<td style="text-align:right;">
-0.40378
-</td>
-<td style="text-align:right;">
-0.63462
-</td>
-</tr>
-<tr>
 <td style="text-align:left;">
-LLF10
+D3
 </td>
-<td style="text-align:right;">
-0.00879
-</td>
-<td style="text-align:right;">
-0.26769
-</td>
-<td style="text-align:right;">
-0.62753
-</td>
-<td style="text-align:right;">
-0.85659
-</td>
-</tr>
-<tr>
 <td style="text-align:left;">
-NLF01
+D4
 </td>
-<td style="text-align:right;">
-0.34458
-</td>
-<td style="text-align:right;">
-0.42455
-</td>
-<td style="text-align:right;">
-0.28963
-</td>
-<td style="text-align:right;">
-0.18407
-</td>
-</tr>
-<tr>
 <td style="text-align:left;">
-LLF01
+D5
 </td>
-<td style="text-align:right;">
-0.45876
+<td style="text-align:left;">
+D6
 </td>
-<td style="text-align:right;">
-0.75189
+<td style="text-align:left;">
+D7
 </td>
-<td style="text-align:right;">
-0.85264
+<td style="text-align:left;">
 </td>
-<td style="text-align:right;">
-0.91039
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
 </td>
 </tr>
 </tbody>
 </table>
-<p>Table <a href="optim-op-point.html#tab:optim-op-point-cad-optim-table">21.1</a> summarizes the results of the simulations. In this table the first two rows compare the AUCs for <span class="math inline">\(\lambda=10\)</span> and <span class="math inline">\(\lambda=1\)</span> for the four values of <span class="math inline">\(\mu\)</span>. The next two rows show the operating point (NLF, LLF) for <span class="math inline">\(\lambda = 10\)</span> for the four values of <span class="math inline">\(\mu\)</span> and the final two rows are the operating point for <span class="math inline">\(\lambda = 1\)</span> for the four values of <span class="math inline">\(\mu\)</span>. The following trends are evident.</p>
-<ul>
-<li>All else being equal, AUC increases with increasing <span class="math inline">\(\mu\)</span>. Increasing the separation of the two unit variance normal distributions that determine the ratings of NLs and LLs leads to higher performance</li>
-<li>All else being equal, AUC increases with decreasing <span class="math inline">\(\lambda\)</span>. Decreasing the propensity of the observer to generate NLs leads to increasing performance.</li>
-<li>For each value of <span class="math inline">\(\lambda\)</span> optimal LLF increases with increasing <span class="math inline">\(\mu\)</span>.</li>
-<li>For <span class="math inline">\(\lambda = 10\)</span> optimal NLF increases with increasing <span class="math inline">\(\mu\)</span>.</li>
-<li>For <span class="math inline">\(\lambda = 1\)</span> optimal NLF <em>peaks</em> around <span class="math inline">\(\mu = 1.5\)</span>.</li>
-</ul>
-<p>All of these observations make intuitive sense except, perhaps, that for NLF01. To understand the peaking behavior it is necessary to examine the FROC curves corresponding to the eight – two <span class="math inline">\(\lambda\)</span> values times four <span class="math inline">\(\mu\)</span> values – combinations of parameters. In the following eight plots, each labeled by the appropriate <span class="math inline">\(\lambda-\mu\)</span> combination, the optimal value of NLF, corresponding to <span class="math inline">\(\zeta_1 = \zeta_{\text{max}}\)</span>, is shown as a red vertical line.</p>
-<div class="figure"><span id="fig:optim-op-point-froc-10-first-two-plots"></span>
-<img src="13-optim-op-point_files/figure-html/optim-op-point-froc-10-first-two-plots-1.png" alt="Extended FROC plots: the plot labeled 10-1 is for $\lambda = 10$ and $\mu = 1$, and that labeled 10-1.5 is for $\lambda = 10$ and $\mu = 1.5$." width="672" />
+<p>TBA In <a href="empirical-auc.html#tab:empirical-ROC-2index-notation">5.1</a> the upper row shows 11 non-diseased cases, labeled N1 – N11, while the lower row shows seven diseased cases, labeled D1 – D7. To address any case one needs two indices: the row number <span class="math inline">\(t\)</span> and the column number <span class="math inline">\(k_tt\)</span>. Since in general the column number depends on the value of <span class="math inline">\(t\)</span>, one needs two indices to specify the column index. To address a case one needs two indices; the first index is the row number <span class="math inline">\(t\)</span> and the second index is the column number <span class="math inline">\(k_tt\)</span>. Since the total number of columns depends on the row number, the column index has to be t-dependent, i.e., <span class="math inline">\(k_tt\)</span>, denoting the column index <span class="math inline">\(k_t\)</span> of a case with truth index <span class="math inline">\(t\)</span>. Alternative notation in more commonly usage uses a single index <span class="math inline">\(k\)</span> to label the cases. It reserves the first <span class="math inline">\(K_1\)</span> positions for non-diseased cases and the rest for diseased cases: e.g., <span class="math inline">\(k = 3\)</span> corresponds to the third non-diseased case, <span class="math inline">\(k = K_1+5\)</span> corresponds to the fifth diseased case, etc. Because it extends more easily to more complex data structures, e.g., FROC, I prefer the two-index notation.</p>
+</div>
+<div id="an-empirical-operating-point" class="section level3" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> An empirical operating point</h3>
+<p>Let <span class="math inline">\(z_{k_tt}\)</span> represent the z-sample of case <span class="math inline">\(k_tt\)</span>. For a given reporting threshold <span class="math inline">\(\zeta\)</span>, and assuming a positive-directed rating scale (i.e., higher values correspond to greater confidence in presence of disease), empirical false positive fraction <span class="math inline">\(FPF(\zeta)\)</span> and empirical true positive fraction <span class="math inline">\(TPF(\zeta)\)</span> are defined by:</p>
+<p><span class="math display" id="eq:empirical-auc-FPF-TPF">\[\begin{equation}
+\left.
+\begin{aligned}
+FPF\left ( \zeta \right ) &amp;= \frac{1}{K_1}\sum_{k_1=1}^{K_1}I\left ( z_{k_11} \geq \zeta \right ) \\
+TPF\left ( \zeta \right ) &amp;= \frac{1}{K_2}\sum_{k_2=1}^{K_2}I\left ( z_{k_22} \geq \zeta \right )
+\end{aligned}
+\right \}
+\tag{5.1}
+\end{equation}\]</span></p>
+<p>Here <span class="math inline">\(I(x)\)</span> is the indicator function that equals one if <span class="math inline">\(x\)</span> is true and is zero otherwise.</p>
+<p>In Eqn. <a href="empirical-auc.html#eq:empirical-auc-FPF-TPF">(5.1)</a> the indicator functions act as counters, effectively counting instances where the z-sample of a case equals or exceeds <span class="math inline">\(\zeta\)</span>, and division by the appropriate denominator yields the desired left hand sides of these equations. The operating point <span class="math inline">\(O(\zeta)\)</span> corresponding to threshold <span class="math inline">\(\zeta\)</span> is defined by:</p>
+<p><span class="math display" id="eq:empirical-OperatingPoint">\[\begin{equation}
+O\left ( \zeta \right ) = \left ( FPF\left ( \zeta \right ), TPF\left ( \zeta \right ) \right )
+\tag{5.2}
+\end{equation}\]</span></p>
+<p>The essential difference between Eqn. <a href="empirical-auc.html#eq:empirical-auc-FPF-TPF">(5.1)</a> and Eqn. <a href="binary-task.html#eq:binary-task-FPF-TPF">(3.18)</a> is that the former is non-parametric while the latter is parametric. In TBA Chapter 03 analytical (or parametric, i.e., model parameter dependent) operating points were obtained. In contrast, here one uses the observed ratings to calculate the empirical operating point.</p>
+</div>
+</div>
+<div id="empirical-auc-operating-points" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Empirical operating points from ratings data</h2>
+<p>Consider a ratings ROC study with <span class="math inline">\(R\)</span> bins. Describing an R-rating empirical ROC plot requires <span class="math inline">\(R-1\)</span> ordered empirical thresholds, see Eqn. <a href="ratingsParadigm.html#eq:ratingsParadigm-EmpZeta">(4.5)</a>.</p>
+<p>The operating point <span class="math inline">\(O(\zeta_r)\)</span> is given by:</p>
+<p><span class="math display" id="eq:empirical-OperatingPointZetar">\[\begin{equation}
+O\left ( \zeta_r \right ) = \left ( FPF\left ( \zeta_r \right ), TPF\left ( \zeta_r \right ) \right )
+\tag{5.3}
+\end{equation}\]</span></p>
+<p>Its coordinates are defined by:</p>
+<p><span class="math display" id="eq:empirical-OperatingPointFPF-TPF-r">\[\begin{equation} 
+\left.
+\begin{aligned}
+FPF_r \equiv FPF\left ( \zeta_r \right )=\frac {1} {K_1} \sum_{k_1=1}^{K_1}I \left ( z_{k_11} \geq  \zeta_r\right ) \\
+\\
+TPF_r \equiv TPF\left ( \zeta_r \right )=\frac {1} {K_2} \sum_{k_2=1}^{K_2} I\left ( z_{k_22} \geq  \zeta_r\right )
+\end{aligned}
+\right \}
+\tag{5.4}
+\end{equation}\]</span></p>
+<p>For example,</p>
+<p><span class="math display" id="eq:empirical-OperatingPointFPF-TPF-4">\[\begin{equation} 
+\left.
+\begin{aligned}
+FPF_4 \equiv FPF\left ( \zeta_4 \right )=\frac {1} {K_1} \sum_{k_1=1}^{K_1}I \left ( z_{k_11} \geq  \zeta_4\right ) \\
+\\
+TPF_4 \equiv TPF\left ( \zeta_4 \right )=\frac {1} {K_2} \sum_{k_2=1}^{K_2} I\left ( z_{k_22} \geq  \zeta_4\right )
+\\
+O_4 \equiv \left ( FPF_4, TPF_4 \right ) = \left ( 0.017, 0.44 \right )\\
+\\
+\end{aligned}
+\right \}
+\tag{5.5}
+\end{equation}\]</span></p>
+<p>In Table <a href="ratingsParadigm.html#tab:ratingsParadigmExampleTable">4.1</a> a sample clinical ratings data set was introduced. Shown below is a partial code listing of mainEmpRocPlot.R showing implementation of Eqn. (5.7). Except for the last statement, the plotting part of the code is suppressed.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="empirical-auc.html#cb22-1" aria-hidden="true" tabindex="-1"></a>K1 <span class="ot">&lt;-</span> <span class="dv">60</span></span>
+<span id="cb22-2"><a href="empirical-auc.html#cb22-2" aria-hidden="true" tabindex="-1"></a>K2 <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb22-3"><a href="empirical-auc.html#cb22-3" aria-hidden="true" tabindex="-1"></a>FPF <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(<span class="fu">rev</span>(<span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">19</span>, <span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">1</span>))) <span class="sc">/</span> K1)</span>
+<span id="cb22-4"><a href="empirical-auc.html#cb22-4" aria-hidden="true" tabindex="-1"></a>TPF <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cumsum</span>(<span class="fu">rev</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">12</span>, <span class="dv">22</span>))) <span class="sc">/</span> K2)</span>
+<span id="cb22-5"><a href="empirical-auc.html#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="empirical-auc.html#cb22-6" aria-hidden="true" tabindex="-1"></a>ROCOp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">FPF =</span> FPF, <span class="at">TPF =</span> TPF)</span>
+<span id="cb22-7"><a href="empirical-auc.html#cb22-7" aria-hidden="true" tabindex="-1"></a>ROCPlot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb22-8"><a href="empirical-auc.html#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ROCOp, </span>
+<span id="cb22-9"><a href="empirical-auc.html#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> FPF, <span class="at">y =</span> TPF)) <span class="sc">+</span> </span>
+<span id="cb22-10"><a href="empirical-auc.html#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb22-11"><a href="empirical-auc.html#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span> </span>
+<span id="cb22-12"><a href="empirical-auc.html#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb22-13"><a href="empirical-auc.html#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb22-14"><a href="empirical-auc.html#cb22-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb22-15"><a href="empirical-auc.html#cb22-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>), </span>
+<span id="cb22-16"><a href="empirical-auc.html#cb22-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>), </span>
+<span id="cb22-17"><a href="empirical-auc.html#cb22-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>)) <span class="sc">+</span></span>
+<span id="cb22-18"><a href="empirical-auc.html#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb22-19"><a href="empirical-auc.html#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), </span>
+<span id="cb22-20"><a href="empirical-auc.html#cb22-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb22-21"><a href="empirical-auc.html#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb22-22"><a href="empirical-auc.html#cb22-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb22-23"><a href="empirical-auc.html#cb22-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb22-24"><a href="empirical-auc.html#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_custom</span>(</span>
+<span id="cb22-25"><a href="empirical-auc.html#cb22-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">grob =</span> <span class="fu">textGrob</span>(<span class="fu">bquote</span>(<span class="fu">italic</span>(<span class="st">&quot;O&quot;</span>)),</span>
+<span id="cb22-26"><a href="empirical-auc.html#cb22-26" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">22</span>)), </span>
+<span id="cb22-27"><a href="empirical-auc.html#cb22-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="sc">-</span><span class="fl">0.03</span>, <span class="at">xmax =</span> <span class="sc">-</span><span class="fl">0.03</span>, </span>
+<span id="cb22-28"><a href="empirical-auc.html#cb22-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin =</span> <span class="sc">-</span><span class="fl">0.03</span>, <span class="at">ymax =</span> <span class="sc">-</span><span class="fl">0.03</span>) <span class="sc">+</span> </span>
+<span id="cb22-29"><a href="empirical-auc.html#cb22-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_custom</span>(</span>
+<span id="cb22-30"><a href="empirical-auc.html#cb22-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">grob =</span> <span class="fu">textGrob</span>(<span class="fu">bquote</span>(<span class="fu">italic</span>(O[<span class="dv">4</span>])),</span>
+<span id="cb22-31"><a href="empirical-auc.html#cb22-31" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">22</span>)), </span>
+<span id="cb22-32"><a href="empirical-auc.html#cb22-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="fl">0.06</span>, <span class="at">xmax =</span> <span class="fl">0.06</span>, </span>
+<span id="cb22-33"><a href="empirical-auc.html#cb22-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin =</span> <span class="fl">0.40</span>, <span class="at">ymax =</span> <span class="fl">0.40</span>) <span class="sc">+</span></span>
+<span id="cb22-34"><a href="empirical-auc.html#cb22-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_custom</span>(</span>
+<span id="cb22-35"><a href="empirical-auc.html#cb22-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">grob =</span> <span class="fu">textGrob</span>(<span class="fu">bquote</span>(<span class="fu">italic</span>(O[<span class="dv">3</span>])),</span>
+<span id="cb22-36"><a href="empirical-auc.html#cb22-36" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">22</span>)), </span>
+<span id="cb22-37"><a href="empirical-auc.html#cb22-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="fl">0.10</span>, <span class="at">xmax =</span> <span class="fl">0.10</span>, </span>
+<span id="cb22-38"><a href="empirical-auc.html#cb22-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin =</span> <span class="fl">0.64</span>, <span class="at">ymax =</span> <span class="fl">0.64</span>) <span class="sc">+</span></span>
+<span id="cb22-39"><a href="empirical-auc.html#cb22-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_custom</span>(</span>
+<span id="cb22-40"><a href="empirical-auc.html#cb22-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">grob =</span> <span class="fu">textGrob</span>(<span class="fu">bquote</span>(<span class="fu">italic</span>(O[<span class="dv">2</span>])),</span>
+<span id="cb22-41"><a href="empirical-auc.html#cb22-41" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">22</span>)), </span>
+<span id="cb22-42"><a href="empirical-auc.html#cb22-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="fl">0.16</span>, <span class="at">xmax =</span> <span class="fl">0.16</span>, </span>
+<span id="cb22-43"><a href="empirical-auc.html#cb22-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin =</span> <span class="fl">0.83</span>, <span class="at">ymax =</span> <span class="fl">0.83</span>) <span class="sc">+</span></span>
+<span id="cb22-44"><a href="empirical-auc.html#cb22-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_custom</span>(</span>
+<span id="cb22-45"><a href="empirical-auc.html#cb22-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">grob =</span> <span class="fu">textGrob</span>(<span class="fu">bquote</span>(<span class="fu">italic</span>(O[<span class="dv">1</span>])),</span>
+<span id="cb22-46"><a href="empirical-auc.html#cb22-46" aria-hidden="true" tabindex="-1"></a>                    <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">22</span>)), </span>
+<span id="cb22-47"><a href="empirical-auc.html#cb22-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmin =</span> <span class="fl">0.49</span>, <span class="at">xmax =</span> <span class="fl">0.49</span>, </span>
+<span id="cb22-48"><a href="empirical-auc.html#cb22-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymin =</span> <span class="fl">0.94</span>, <span class="at">ymax =</span> <span class="fl">0.94</span>)  </span>
+<span id="cb22-49"><a href="empirical-auc.html#cb22-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-50"><a href="empirical-auc.html#cb22-50" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplotGrob</span>(ROCPlot)</span>
+<span id="cb22-51"><a href="empirical-auc.html#cb22-51" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>layout<span class="sc">$</span>clip[p<span class="sc">$</span>layout<span class="sc">$</span>name<span class="sc">==</span><span class="st">&quot;panel&quot;</span>] <span class="ot">&lt;-</span> <span class="st">&quot;off&quot;</span></span>
+<span id="cb22-52"><a href="empirical-auc.html#cb22-52" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.draw</span>(p)</span></code></pre></div>
+<div class="figure"><span id="fig:empirical-auc-EmpiricalPlot"></span>
+<img src="05-empirical-auc_files/figure-html/empirical-auc-EmpiricalPlot-1.png" alt="Empirical ROC plot for the data in Table 4.1. By convention the operating points are numbered starting with the uppermost non-trivial one and working down the plot and the trivial operating points (0,0) and (1,1) are not shown." width="672" />
 <p class="caption">
-FIGURE 21.3: Extended FROC plots: the plot labeled 10-1 is for <span class="math inline">\(\lambda = 10\)</span> and <span class="math inline">\(\mu = 1\)</span>, and that labeled 10-1.5 is for <span class="math inline">\(\lambda = 10\)</span> and <span class="math inline">\(\mu = 1.5\)</span>.
+FIGURE 5.1: Empirical ROC plot for the data in Table 4.1. By convention the operating points are numbered starting with the uppermost non-trivial one and working down the plot and the trivial operating points (0,0) and (1,1) are not shown.
 </p>
 </div>
-<div id="optim-op-point-threshold-explanations" class="section level4" number="21.2.3.1">
-<h4><span class="header-section-number">21.2.3.1</span> Explanations</h4>
-<ul>
-<li><p>In Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-10-next-two-plots">21.4</a> and the plot labeled <strong>10-1</strong>: the vertical red line is at NLF = 0.0068714. The predicted end-point for the curve is (NLF = 0.0068714, LLF = 0.0087887) while the empirical end-point is (NLF = 0.0056667, LLF = 0.0096337) and the extended curve (defined below) ends at (NLF = 0.0364167, LLF = 0.0274704). In the plot labeled <strong>10-1.5</strong>: The vertical red line is at NLF = 0.1914437. The predicted end-point for the curve is (NLF = 0.1914437, LLF = 0.2676925) while the empirical end-point is (NLF = 0.1958333, LLF = 0.2757535) and the extended curve ends at (NLF = 0.53475, LLF = 0.4302747).</p></li>
-<li><p>In Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-10-first-two-plots">21.3</a> the plot labeled <strong>10-1</strong> is the <em>extended</em> FROC curve for <span class="math inline">\(\lambda = 10\)</span> and <span class="math inline">\(\mu = 1\)</span>.</p></li>
-<li><p>Meaning of <em>extended</em>: due to sampling effects the predicted end-point will not, in general, coincide with the <em>empirical</em> end-point, but will be near it. In order to show a fuller extent of the FROC curve it is necessary to <em>extend</em> the observed curve beyond the predicted end-point. This was done by setting <span class="math inline">\(\zeta_1\)</span> = <span class="math inline">\(\zeta_{\text{max}} - 0.5\)</span>, which has the effect of letting the curve run a little bit further to the right. As a concrete example the predicted end-point for the curve in question is (NLF = 0.0068714, LLF = 0.0087887) while the empirical end-point is (NLF = 0.0056667, LLF = 0.0096337) and the extended curve ends at (NLF = 0.0364167, LLF = 0.0274704).</p></li>
-<li><p>The vertical red line is drawn at the <em>predicted</em> optimal NLF corresponding to <span class="math inline">\(\zeta_{\text{max}}\)</span> for this parameter combination, not the <em>empirical</em> NLF.<br />
-</p></li>
-<li><p>In Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-10-first-two-plots">21.3</a> panel labeled 10-1, AUC performance is quite low. In fact AUC = 0.5022367. The optimal operating point of the algorithm is actually rather close to the origin, specifically NLF = 0.0068714 and LLF = 0.0087887.</p></li>
-<li><p>Since algorithm performance is so poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, very high confidence level for being right (note that an operating point near the origin corresponds to a high value of <span class="math inline">\(\zeta\)</span>).</p></li>
-<li><p>For higher values of <span class="math inline">\(\mu\)</span> shown in Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-10-first-two-plots">21.3</a> – e.g., the plots labeled 10-1.5, 10-2 and 10-2.5 – AUC performance progressively increases. It now makes sense to show marks with lower confidence levels corresponding to moving up the FROC curve. While it is true that one is also showing more NLs, the increase in the number of LLs shown is enough to compensate. This trend is seen to be true for all operating points listed in the third and fourth rows of Table <a href="optim-op-point.html#tab:optim-op-point-cad-optim-table">21.1</a>.</p></li>
-<li><p>It remains to explain the seemingly anomalous behavior seen in the fifth row of Table <a href="optim-op-point.html#tab:optim-op-point-cad-optim-table">21.1</a> - NLF shows a peak at <span class="math inline">\(\mu = 1.5\)</span> as a function of <span class="math inline">\(\mu\)</span> and thereafter NLF decreases. The relevant FROC curve is shown in Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-01-first-two-plots">21.5</a>, panel labeled 1-1.5. The basic reason is that as <span class="math inline">\(\mu\)</span> increases, the end-point of the FROC keeps moving upwards and to the left (approaching NLF = 0 and LLF = 1 in the limit of infinite <span class="math inline">\(\mu\)</span>). Because of this effect the expected increase in NLF seen in the third row of the table is terminated - one literally runs out of FROC curve to move up on. Another way of explaining this is that in In Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-10-first-two-plots">21.3</a> the true end-point, i.e., that corresponding to <span class="math inline">\(\zeta_1 = -\infty\)</span>, is much further to the right, than in Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-10-next-two-plots">21.4</a>. This allows NLF to keep increasing in Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-10-first-two-plots">21.3</a> but not in Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-10-next-two-plots">21.4</a>.</p></li>
-</ul>
-<div class="figure"><span id="fig:optim-op-point-froc-10-next-two-plots"></span>
-<img src="13-optim-op-point_files/figure-html/optim-op-point-froc-10-next-two-plots-1.png" alt="Extended FROC plots: the plot labeled 10-2 is for $\lambda = 10$ and $\mu = 2$ and that labeled 10-2.5 is for $\lambda = 10$ and $\mu = 2.5$." width="672" />
+<p>The function <code>cumsum()</code> is used to calculate the cumulative sum. The <code>rev()</code> function reverses the order of the array supplied as its argument. The reader should use the debugging techniques (basically copy and paste parts of the code to the Console window and hit enter) to understand how this code implements Eqn. <a href="empirical-auc.html#eq:empirical-OperatingPointFPF-TPF-r">(5.4)</a>.</p>
+<p>Fig. <a href="empirical-auc.html#fig:empirical-auc-EmpiricalPlot">5.1</a> is the empirical ROC plot. It illustrates the convention used to label the operating points introduced in TBA §4.3 is, i.e., <span class="math inline">\(O_1\)</span> is the uppermost non-trivial point, and the subscripts increment by unity as one moves down the plot. By convention, not shown are the trivial operating points <span class="math inline">\(O_0 \equiv (FPF_0, TPF_0) = (1,1)\)</span> and <span class="math inline">\(O_R \equiv (FPF_R, TPF_R) = (0,0)\)</span>, where <span class="math inline">\(R = 5\)</span>.</p>
+</div>
+<div id="empirical-auc-area-under" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> AUC under the empirical ROC plot</h2>
+<p>Fig. <a href="empirical-auc.html#fig:empirical-auc-EmpiricalAUC">5.2</a> shows the empirical plot for the data in Table 4.1. The area under the curve (AUC) is the shaded area. By dropping imaginary vertical lines from the non-trivial operating points onto the x-axis, the shaded area is seen to be the sum of one triangular shaped area and four trapezoids. One may be tempted to write equations to calculate the total area using elementary algebra, but that would be unproductive. There is a theorem (see below) that the empirical area is exactly equal to a particular statistic known as the Mann-Whitney-Wilcoxon statistic <span class="citation">(<a href="SplitPlotChapter.html#ref-RN2191" role="doc-biblioref">Wilcoxon 1945</a>; <a href="SplitPlotChapter.html#ref-RN2197" role="doc-biblioref">Mann and Whitney 1947</a>)</span>, which, in this book, is abbreviated to the Wilcoxon statistic. Calculating this statistic is much simpler than calculating and summing the areas of the triangle and trapezoids, or doing planimetry.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="empirical-auc.html#cb23-1" aria-hidden="true" tabindex="-1"></a>RocDataTable <span class="ot">=</span> <span class="fu">array</span>(<span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))</span>
+<span id="cb23-2"><a href="empirical-auc.html#cb23-2" aria-hidden="true" tabindex="-1"></a>RocDataTable[<span class="dv">1</span>,]  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">30</span>,<span class="dv">19</span>,<span class="dv">8</span>,<span class="dv">3</span>)</span>
+<span id="cb23-3"><a href="empirical-auc.html#cb23-3" aria-hidden="true" tabindex="-1"></a>RocDataTable[<span class="dv">2</span>,]  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">22</span>)</span>
+<span id="cb23-4"><a href="empirical-auc.html#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="empirical-auc.html#cb23-5" aria-hidden="true" tabindex="-1"></a>ret  <span class="ot">&lt;-</span> <span class="fu">RocOperatingPointsFromRatingsTable</span>( </span>
+<span id="cb23-6"><a href="empirical-auc.html#cb23-6" aria-hidden="true" tabindex="-1"></a>  RocDataTable[<span class="dv">1</span>,], </span>
+<span id="cb23-7"><a href="empirical-auc.html#cb23-7" aria-hidden="true" tabindex="-1"></a>  RocDataTable[<span class="dv">2</span>,] )</span>
+<span id="cb23-8"><a href="empirical-auc.html#cb23-8" aria-hidden="true" tabindex="-1"></a>FPF <span class="ot">&lt;-</span> ret<span class="sc">$</span>FPF</span>
+<span id="cb23-9"><a href="empirical-auc.html#cb23-9" aria-hidden="true" tabindex="-1"></a>TPF <span class="ot">&lt;-</span> ret<span class="sc">$</span>TPF</span>
+<span id="cb23-10"><a href="empirical-auc.html#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="empirical-auc.html#cb23-11" aria-hidden="true" tabindex="-1"></a>ROC_Points <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">FPF =</span> FPF, <span class="at">TPF =</span> TPF)</span>
+<span id="cb23-12"><a href="empirical-auc.html#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="co"># add the trivial points</span></span>
+<span id="cb23-13"><a href="empirical-auc.html#cb23-13" aria-hidden="true" tabindex="-1"></a>ROC_Points <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb23-14"><a href="empirical-auc.html#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), </span>
+<span id="cb23-15"><a href="empirical-auc.html#cb23-15" aria-hidden="true" tabindex="-1"></a>  ROC_Points, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb23-16"><a href="empirical-auc.html#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="empirical-auc.html#cb23-17" aria-hidden="true" tabindex="-1"></a>shade <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb23-18"><a href="empirical-auc.html#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">FPF =</span> <span class="fu">c</span>(ROC_Points<span class="sc">$</span>FPF, <span class="dv">1</span>), </span>
+<span id="cb23-19"><a href="empirical-auc.html#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">TPF =</span> <span class="fu">c</span>(ROC_Points<span class="sc">$</span>TPF, <span class="dv">0</span>))</span>
+<span id="cb23-20"><a href="empirical-auc.html#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-21"><a href="empirical-auc.html#cb23-21" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ROC_Points, </span>
+<span id="cb23-22"><a href="empirical-auc.html#cb23-22" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> FPF, <span class="at">y =</span> TPF) ) <span class="sc">+</span> </span>
+<span id="cb23-23"><a href="empirical-auc.html#cb23-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">data =</span> shade, <span class="at">fill =</span> <span class="st">&#39;grey&#39;</span>) <span class="sc">+</span> </span>
+<span id="cb23-24"><a href="empirical-auc.html#cb23-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb23-25"><a href="empirical-auc.html#cb23-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span> </span>
+<span id="cb23-26"><a href="empirical-auc.html#cb23-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb23-27"><a href="empirical-auc.html#cb23-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb23-28"><a href="empirical-auc.html#cb23-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb23-29"><a href="empirical-auc.html#cb23-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb23-30"><a href="empirical-auc.html#cb23-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(FPF)) <span class="sc">+</span> </span>
+<span id="cb23-31"><a href="empirical-auc.html#cb23-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="fu">expression</span>(TPF)) <span class="sc">+</span> </span>
+<span id="cb23-32"><a href="empirical-auc.html#cb23-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb23-33"><a href="empirical-auc.html#cb23-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span> </span>
+<span id="cb23-34"><a href="empirical-auc.html#cb23-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb23-35"><a href="empirical-auc.html#cb23-35" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code></pre></div>
+<div class="figure"><span id="fig:empirical-auc-EmpiricalAUC"></span>
+<img src="05-empirical-auc_files/figure-html/empirical-auc-EmpiricalAUC-1.png" alt="The empirical ROC plot corresponding to Table 4.1; the shaded area is the area AUC under this plot, a widely used figure of merit in non-parametric ROC analysis." width="672" />
 <p class="caption">
-FIGURE 21.4: Extended FROC plots: the plot labeled 10-2 is for <span class="math inline">\(\lambda = 10\)</span> and <span class="math inline">\(\mu = 2\)</span> and that labeled 10-2.5 is for <span class="math inline">\(\lambda = 10\)</span> and <span class="math inline">\(\mu = 2.5\)</span>.
+FIGURE 5.2: The empirical ROC plot corresponding to Table 4.1; the shaded area is the area AUC under this plot, a widely used figure of merit in non-parametric ROC analysis.
 </p>
 </div>
-<ul>
-<li>In Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-10-next-two-plots">21.4</a> and the plot labeled <strong>10-2</strong>: The vertical red line is at NLF = 0.4037833. The predicted end-point for the curve is (NLF = 0.4037833, LLF = 0.6275277) while the empirical end-point is (NLF = 0.3984167, LLF = 0.631343) and the extended curve ends at (NLF = 0.9109167, LLF = 0.7486646). In the plot labeled <strong>10-2.5</strong>: The vertical red line is at NLF = 0.634621. The predicted end-point for the curve is (NLF = 0.634621, LLF = 0.8565917) while the empirical end-point is (NLF = 0.6330833, LLF = 0.8606448) and the extended curve ends at (NLF = 1.2324167, LLF = 0.9008966).</li>
-</ul>
-<div class="figure"><span id="fig:optim-op-point-froc-01-first-two-plots"></span>
-<img src="13-optim-op-point_files/figure-html/optim-op-point-froc-01-first-two-plots-1.png" alt="Extended FROC plots: the plot labeled 1-1 is for $\lambda = 1$ and $\mu = 1$ and that labeled 10-1.5 is for $\lambda = 1$ and $\mu = 1.5$." width="672" />
+</div>
+<div id="empirical-auc-wilcoxon" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> The Wilcoxon statistic</h2>
+<p>A statistic is any value calculated from observed data. The Wilcoxon statistic is defined in terms of the ratings, by:</p>
+<p><span class="math display" id="eq:empirical-auc-Wilcoxon">\[\begin{equation}
+W=\frac{1}{K_1K_2} \sum_{k_1=1}^{K_1} \sum_{k_2=1}^{K_2} \psi\left ( z_{k_11} ,  z_{k_22} \right )
+\tag{5.6}
+\end{equation}\]</span></p>
+<p>The function <span class="math inline">\(\psi\left ( x, y \right )\)</span> is defined by:</p>
+<p><span class="math display" id="eq:empirical-auc-PsiFunction">\[\begin{equation}
+\left.
+\begin{aligned}
+\psi(x,y)&amp;=1  \qquad &amp; x&lt;y \\
+\psi(x,y)&amp;=0.5  &amp; x=y \\
+\psi(x,y)&amp;=0  &amp; x&gt;y
+\end{aligned}
+\right \}
+\tag{5.7}
+\end{equation}\]</span></p>
+<p>The function <span class="math inline">\(\psi\left ( x, y \right )\)</span> is sometimes called the kernel function. It is unity if the diseased case is rated higher, 0.5 if the two are rated the same and zero otherwise. Each evaluation of the kernel function results from a comparison of a case from the non-diseased set with one from the diseased set. In Eqn. <a href="empirical-auc.html#eq:empirical-auc-Wilcoxon">(5.6)</a> the two summations and division by the total number of comparisons yields the observed, i.e., empirical, probability that diseased cases are rated higher than non-diseased ones. Since it is a probability, it can range from zero to one. However, if the observer has any discrimination ability at all, one expects diseased cases to be rated equal or greater than non-diseased ones, so in practice one expects <span class="math inline">\(0.5 \leq W \leq 1\)</span>. The limit 0.5 corresponds to a guessing observer, whose operating point lies on the chance diagonal of the ROC plot.</p>
+</div>
+<div id="empirical-auc-wilcoxon-bamber-theorem" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> Bamber’s Equivalence theorem</h2>
+<p>The Wilcoxon statistic <span class="math inline">\(W\)</span> equals the area <span class="math inline">\(AUC\)</span> under the empirical ROC plot:</p>
+<p><span class="math display" id="eq:empirical-auc-BambersTheorem">\[\begin{equation}
+W = AUC
+\tag{5.8}
+\end{equation}\]</span></p>
+<p>Numerical illustration: While hardly a proof, as an illustration of the theorem it is helpful to calculate the sum on the right hand side of Eqn. <a href="empirical-auc.html#eq:empirical-auc-Wilcoxon">(5.6)</a> and compare it to direct integration of the area under the empirical ROC curve (i.e., adding the area of a triangle and several trapezoids). The function is called <code>trapz(x,y)</code>, see below. It takes two array arguments, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, where in the current case <span class="math inline">\(x\)</span> is <span class="math inline">\(FPF\)</span> and <span class="math inline">\(y\)</span> is <span class="math inline">\(TPF\)</span>. One has to be careful to include the end-points as otherwise the area will be underestimated. The Wilcoxon <span class="math inline">\(W\)</span> and the numerical estimate of the empirical area AUC are implemented in the following code.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="empirical-auc.html#cb24-1" aria-hidden="true" tabindex="-1"></a>trapz <span class="ot">=</span> <span class="cf">function</span>(x, y)</span>
+<span id="cb24-2"><a href="empirical-auc.html#cb24-2" aria-hidden="true" tabindex="-1"></a>{ <span class="do">### computes the integral of y with respect to x using trapezoidal integration.</span></span>
+<span id="cb24-3"><a href="empirical-auc.html#cb24-3" aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">=</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">length</span>(x)</span>
+<span id="cb24-4"><a href="empirical-auc.html#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span> (<span class="fu">as.double</span>( (x[idx] <span class="sc">-</span> x[idx<span class="dv">-1</span>]) <span class="sc">%*%</span> (y[idx] <span class="sc">+</span> y[idx<span class="dv">-1</span>])) <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb24-5"><a href="empirical-auc.html#cb24-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="empirical-auc.html#cb25-1" aria-hidden="true" tabindex="-1"></a>Wilcoxon <span class="ot">&lt;-</span> <span class="cf">function</span> (zk1, zk2)</span>
+<span id="cb25-2"><a href="empirical-auc.html#cb25-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb25-3"><a href="empirical-auc.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  K1 <span class="ot">=</span> <span class="fu">length</span>(zk1)</span>
+<span id="cb25-4"><a href="empirical-auc.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  K2 <span class="ot">=</span> <span class="fu">length</span>(zk2)</span>
+<span id="cb25-5"><a href="empirical-auc.html#cb25-5" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb25-6"><a href="empirical-auc.html#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (k1 <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>K1) {</span>
+<span id="cb25-7"><a href="empirical-auc.html#cb25-7" aria-hidden="true" tabindex="-1"></a>    W <span class="ot">&lt;-</span> W <span class="sc">+</span> <span class="fu">sum</span>(zk1[k1] <span class="sc">&lt;</span> zk2)</span>
+<span id="cb25-8"><a href="empirical-auc.html#cb25-8" aria-hidden="true" tabindex="-1"></a>    W <span class="ot">&lt;-</span> W <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">sum</span>(zk1[k1] <span class="sc">==</span> zk2)</span>
+<span id="cb25-9"><a href="empirical-auc.html#cb25-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-10"><a href="empirical-auc.html#cb25-10" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> W<span class="sc">/</span>K1<span class="sc">/</span>K2</span>
+<span id="cb25-11"><a href="empirical-auc.html#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span> (W)</span>
+<span id="cb25-12"><a href="empirical-auc.html#cb25-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-13"><a href="empirical-auc.html#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="empirical-auc.html#cb25-14" aria-hidden="true" tabindex="-1"></a>RocOperatingPoints <span class="ot">&lt;-</span> <span class="cf">function</span>( K1, K2 ) {</span>
+<span id="cb25-15"><a href="empirical-auc.html#cb25-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-16"><a href="empirical-auc.html#cb25-16" aria-hidden="true" tabindex="-1"></a>  nOpPts <span class="ot">&lt;-</span> <span class="fu">length</span>(K1) <span class="sc">-</span> <span class="dv">1</span> <span class="co"># number of op points</span></span>
+<span id="cb25-17"><a href="empirical-auc.html#cb25-17" aria-hidden="true" tabindex="-1"></a>  FPF <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">0</span>,<span class="at">dim =</span> nOpPts)</span>
+<span id="cb25-18"><a href="empirical-auc.html#cb25-18" aria-hidden="true" tabindex="-1"></a>  TPF <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">0</span>,<span class="at">dim =</span> nOpPts)</span>
+<span id="cb25-19"><a href="empirical-auc.html#cb25-19" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb25-20"><a href="empirical-auc.html#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (r <span class="cf">in</span> (nOpPts<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="dv">2</span>) {</span>
+<span id="cb25-21"><a href="empirical-auc.html#cb25-21" aria-hidden="true" tabindex="-1"></a>    FPF[r<span class="dv">-1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(K1[r<span class="sc">:</span>(nOpPts<span class="sc">+</span><span class="dv">1</span>)])<span class="sc">/</span><span class="fu">sum</span>(K1)</span>
+<span id="cb25-22"><a href="empirical-auc.html#cb25-22" aria-hidden="true" tabindex="-1"></a>    TPF[r<span class="dv">-1</span>] <span class="ot">&lt;-</span> <span class="fu">sum</span>(K2[r<span class="sc">:</span>(nOpPts<span class="sc">+</span><span class="dv">1</span>)])<span class="sc">/</span><span class="fu">sum</span>(K2)    </span>
+<span id="cb25-23"><a href="empirical-auc.html#cb25-23" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-24"><a href="empirical-auc.html#cb25-24" aria-hidden="true" tabindex="-1"></a>  FPF <span class="ot">&lt;-</span> <span class="fu">rev</span>(FPF)</span>
+<span id="cb25-25"><a href="empirical-auc.html#cb25-25" aria-hidden="true" tabindex="-1"></a>  TPF <span class="ot">&lt;-</span> <span class="fu">rev</span>(TPF)</span>
+<span id="cb25-26"><a href="empirical-auc.html#cb25-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-27"><a href="empirical-auc.html#cb25-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>( <span class="fu">list</span>(</span>
+<span id="cb25-28"><a href="empirical-auc.html#cb25-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">FPF =</span> FPF,</span>
+<span id="cb25-29"><a href="empirical-auc.html#cb25-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">TPF =</span> TPF</span>
+<span id="cb25-30"><a href="empirical-auc.html#cb25-30" aria-hidden="true" tabindex="-1"></a>  ) )</span>
+<span id="cb25-31"><a href="empirical-auc.html#cb25-31" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="empirical-auc.html#cb26-1" aria-hidden="true" tabindex="-1"></a>RocCountsTable <span class="ot">=</span> <span class="fu">array</span>(<span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">5</span>))</span>
+<span id="cb26-2"><a href="empirical-auc.html#cb26-2" aria-hidden="true" tabindex="-1"></a>RocCountsTable[<span class="dv">1</span>,]  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">30</span>,<span class="dv">19</span>,<span class="dv">8</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb26-3"><a href="empirical-auc.html#cb26-3" aria-hidden="true" tabindex="-1"></a>RocCountsTable[<span class="dv">2</span>,]  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">12</span>,<span class="dv">22</span>)</span>
+<span id="cb26-4"><a href="empirical-auc.html#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="empirical-auc.html#cb26-5" aria-hidden="true" tabindex="-1"></a>zk1  <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(RocCountsTable[<span class="dv">1</span>,]),RocCountsTable[<span class="dv">1</span>,])<span class="co">#convert frequency table to array</span></span>
+<span id="cb26-6"><a href="empirical-auc.html#cb26-6" aria-hidden="true" tabindex="-1"></a>zk2  <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(RocCountsTable[<span class="dv">2</span>,]),RocCountsTable[<span class="dv">2</span>,])<span class="co">#do:</span></span>
+<span id="cb26-7"><a href="empirical-auc.html#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="empirical-auc.html#cb26-8" aria-hidden="true" tabindex="-1"></a>w  <span class="ot">&lt;-</span> <span class="fu">Wilcoxon</span> (zk1, zk2)</span>
+<span id="cb26-9"><a href="empirical-auc.html#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;The wilcoxon statistic is = &quot;</span>, w, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb26-10"><a href="empirical-auc.html#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The wilcoxon statistic is =  0.8606667</span></span>
+<span id="cb26-11"><a href="empirical-auc.html#cb26-11" aria-hidden="true" tabindex="-1"></a>ret <span class="ot">&lt;-</span> <span class="fu">RocOperatingPoints</span>(RocCountsTable[<span class="dv">1</span>,], RocCountsTable[<span class="dv">2</span>,])</span>
+<span id="cb26-12"><a href="empirical-auc.html#cb26-12" aria-hidden="true" tabindex="-1"></a>FPF <span class="ot">&lt;-</span> ret<span class="sc">$</span>FPF;FPF <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,FPF,<span class="dv">1</span>)</span>
+<span id="cb26-13"><a href="empirical-auc.html#cb26-13" aria-hidden="true" tabindex="-1"></a>TPF <span class="ot">&lt;-</span> ret<span class="sc">$</span>TPF;TPF <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,TPF,<span class="dv">1</span>)</span>
+<span id="cb26-14"><a href="empirical-auc.html#cb26-14" aria-hidden="true" tabindex="-1"></a>AUC <span class="ot">&lt;-</span> <span class="fu">trapz</span>(FPF,TPF) <span class="co"># trapezoidal integration</span></span>
+<span id="cb26-15"><a href="empirical-auc.html#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;direct integration yields AUC = &quot;</span>, AUC, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb26-16"><a href="empirical-auc.html#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; direct integration yields AUC =  0.8606667</span></span></code></pre></div>
+<p>Note the equality of the two estimates.</p>
+<p>The following proof is adapted from <span class="citation">(<a href="SplitPlotChapter.html#ref-RN2174" role="doc-biblioref">Bamber 1975</a>)</span> and while it may appear to be restricted to discrete ratings, the result is in fact quite general, i.e., it is applicable even if the ratings are acquired on a continuous scale. The reason is that in an R-rating ROC study the observed z-samples or ratings take on integer values, 1 through R. If R is large enough, ordering information present in the continuous data is not lost upon binning. In the following it is helpful to keep in mind that one is dealing with discrete distributions of the ratings, described by probability mass functions as opposed to probability density functions, e.g., <span class="math inline">\(P(Z_2 = \zeta_i)\)</span> is not zero, as would be the case for continuous ratings. The proof is illustrated with Fig. <a href="empirical-auc.html#fig:empirical-auc-BambersTheorem">5.3</a>.</p>
+<div class="figure"><span id="fig:empirical-auc-BambersTheorem"></span>
+<img src="05-empirical-auc_files/figure-html/empirical-auc-BambersTheorem-1.png" alt=":Illustration of the derivation of Bamber's equivalence theorem. Shows an empirical ROC plot for R = 5; the shaded area is due to points labeled i and i + 1." width="672" />
 <p class="caption">
-FIGURE 21.5: Extended FROC plots: the plot labeled 1-1 is for <span class="math inline">\(\lambda = 1\)</span> and <span class="math inline">\(\mu = 1\)</span> and that labeled 10-1.5 is for <span class="math inline">\(\lambda = 1\)</span> and <span class="math inline">\(\mu = 1.5\)</span>.
+FIGURE 5.3: :Illustration of the derivation of Bamber’s equivalence theorem. Shows an empirical ROC plot for R = 5; the shaded area is due to points labeled i and i + 1.
 </p>
 </div>
-<ul>
-<li>In Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-01-first-two-plots">21.5</a>, the panel labeled <strong>1-1</strong>: The vertical red line is at NLF = 0.3445783. The predicted end-point for the curve is (NLF = 0.3445783, LLF = 0.4587595) while the empirical end-point is (NLF = 0.33925, LLF = 0.4581267) and the extended curve ends at (NLF = 0.5379167, LLF = 0.5411103). In the plot labeled <strong>10-1.5</strong>: The vertical red line is at NLF = 0.4245538. The predicted end-point for the curve is (NLF = 0.4245538, LLF = 0.7518882) while the empirical end-point is (NLF = 0.4209167, LLF = 0.7555322) and the extended curve ends at (NLF = 0.5386667, LLF = 0.7740366).</li>
-</ul>
-<div class="figure"><span id="fig:optim-op-point-froc-01-next-two-plots"></span>
-<img src="13-optim-op-point_files/figure-html/optim-op-point-froc-01-next-two-plots-1.png" alt="Extended FROC plots: the plot labeled 1-2 is for $\lambda = 1$ and $\mu = 2$ and that labeled 1-2.5 is for $\lambda = 1$ and $\mu = 2.5$." width="672" />
-<p class="caption">
-FIGURE 21.6: Extended FROC plots: the plot labeled 1-2 is for <span class="math inline">\(\lambda = 1\)</span> and <span class="math inline">\(\mu = 2\)</span> and that labeled 1-2.5 is for <span class="math inline">\(\lambda = 1\)</span> and <span class="math inline">\(\mu = 2.5\)</span>.
-</p>
+<p>The abscissa of the operating point <span class="math inline">\(i\)</span> is <span class="math inline">\(P(Z_1 \geq \zeta_i)\)</span> and the corresponding ordinate is <span class="math inline">\(P(Z_2 \geq \zeta_i)\)</span>. Here <span class="math inline">\(Z_1\)</span> is a random sample from a non-diseased case and <span class="math inline">\(Z_2\)</span> is a random sample from a diseased case. The shaded trapezoid defined by drawing horizontal lines from operating points <span class="math inline">\(i\)</span> (upper) and <span class="math inline">\(i+1\)</span> (lower) to the right edge of the ROC plot, Fig. <a href="empirical-auc.html#fig:empirical-auc-BambersTheorem">5.3</a>, has height:</p>
+<p><span class="math display" id="eq:empirical-auc-BambersTheoremProof1">\[\begin{equation}
+P\left ( Z_2 \geq \zeta_i \right ) - P\left ( Z_2 \geq \zeta_{i+1} \right ) = P\left ( Z_2 = \zeta_i \right )
+\tag{5.9}
+\end{equation}\]</span></p>
+<p>The validity of this equation can perhaps be more easily seen when the first term is written in the form:</p>
+<p><span class="math display" id="eq:empirical-auc-BambersTheoremProof2">\[\begin{equation}
+P\left ( Z_2 \geq \zeta_i \right ) = P\left ( Z_2 = \zeta_i \right )  + P\left ( Z_2 \geq \zeta_{i+1} \right )
+\tag{5.10}
+\end{equation}\]</span></p>
+<p>The lengths of the top and bottom edges of the trapezoid are, respectively:</p>
+<p><span class="math display" id="eq:empirical-auc-BambersTheoremProof3">\[\begin{equation}
+1-P\left ( Z_1 \geq \zeta_i \right )=P\left ( Z_1 &lt; \zeta_i \right )
+\tag{5.11}
+\end{equation}\]</span></p>
+<p>and</p>
+<p><span class="math display" id="eq:empirical-auc-BambersTheoremProof4">\[\begin{equation}
+1-P\left ( Z_1 \geq \zeta_{i+1} \right )=P\left ( Z_1 &lt; \zeta_{i+1} \right )
+\tag{5.12}
+\end{equation}\]</span></p>
+<p>The area <span class="math inline">\(A_i\)</span> of the shaded trapezoid in Fig. <a href="empirical-auc.html#fig:empirical-auc-BambersTheorem">5.3</a> is (the steps are shown explicitly):</p>
+<p><span class="math display" id="eq:empirical-auc-BambersTheoremProof5">\[\begin{equation}
+\left.
+\begin{aligned}
+A_i &amp;=\frac{1}{2}P\left ( Z_2 = \zeta_i \right )\left [ P\left ( Z_1 &lt; \zeta_i \right ) +  P\left ( Z_1 &lt; \zeta_{i+1} \right ) \right ] \\
+A_i &amp;=P\left ( Z_2 = \zeta_i \right )\left [ \frac{1}{2}P\left ( Z_1 &lt; \zeta_i \right ) +  \frac{1}{2} \left (P\left ( Z_1 = \zeta_i \right ) + P\left ( Z_1 &lt; \zeta_i \right ) \right ) \right ]\\
+A_i &amp;=P\left ( Z_2 = \zeta_i \right )\left [ \frac{1}{2} P\left ( Z_1 = \zeta_i \right ) +  P\left ( Z_1 &lt; \zeta_i \right ) \right ] \\
+\end{aligned}
+\right \}
+\tag{5.13}
+\end{equation}\]</span></p>
+<p>Summing over all values of <span class="math inline">\(i\)</span>, one gets for the total area under the empirical ROC plot:</p>
+<p><span class="math display" id="eq:empirical-auc-BambersTheoremProof6">\[\begin{equation}
+\left.
+\begin{aligned}
+AUC &amp; = \sum_{i=0}^{R-1}A_i\\
+ &amp; = \frac{1}{2}\sum_{i=0}^{R-1}P\left ( Z_2=\zeta_i \right )P\left ( Z_1=\zeta_i \right )+\sum_{i=0}^{R-1}P\left ( Z_2=\zeta_i \right )P\left ( Z_1&lt;\zeta_i \right )
+\end{aligned}
+\right \}
+\tag{5.14}
+\end{equation}\]</span></p>
+<p>It is shown in the Appendix that the term <span class="math inline">\(A_0\)</span> corresponds to the triangle at the upper right corner of Fig. <a href="empirical-auc.html#fig:empirical-auc-BambersTheorem">5.3</a>, and the term <span class="math inline">\(A_4\)</span> corresponds to the horizontal trapezoid defined by the lowest non-trivial operating point.</p>
+<p>Eqn. <a href="empirical-auc.html#eq:empirical-auc-BambersTheoremProof6">(5.14)</a> can be restated as:</p>
+<p><span class="math display" id="eq:empirical-auc-BambersTheoremProof7">\[\begin{equation}
+AUC=\frac{1}{2}P\left ( Z_1 = Z_2 \right ) + P\left ( Z_1 &lt; Z_2 \right )
+\tag{5.15}
+\end{equation}\]</span></p>
+<p>The Wilcoxon statistic was defined in Eqn. <a href="empirical-auc.html#eq:empirical-auc-Wilcoxon">(5.6)</a>. It can be seen that the comparisons implied by the summations and the weighting implied by the kernel function are estimating the two probabilities in the expression for in Eqn. <a href="empirical-auc.html#eq:empirical-auc-BambersTheoremProof7">(5.15)</a>. Therefore, <span class="math inline">\(AUC = W\)</span>.</p>
 </div>
-<ul>
-<li>In Fig. <a href="optim-op-point.html#fig:optim-op-point-froc-01-next-two-plots">21.6</a>, the panel labeled <strong>1-2</strong>: The vertical red line is at NLF = 0.2896299. The predicted end-point for the curve is (NLF = 0.2896299, LLF = 0.8526429) while the empirical end-point is (NLF = 0.2874167, LLF = 0.853491) and the extended curve ends at (NLF = 0.3786667, LLF = 0.8620755). In the plot labeled <strong>10-2.5</strong>: The vertical red line is at NLF = 0.1840689. The predicted end-point for the curve is (NLF = 0.1840689, LLF = 0.9103904) while the empirical end-point is (NLF = 0.18475, LLF = 0.909958) and the extended curve ends at (NLF = 0.2659167, LLF = 0.9144411).</li>
-</ul>
+<div id="empirical-auc-wilcoxon-bamber-theorem-importance" class="section level2" number="5.7">
+<h2><span class="header-section-number">5.7</span> Importance of Bamber’s theorem</h2>
+<p>The equivalence theorem is the starting point for all non-parametric methods of analyzing ROC plots, e.g., <span class="citation">(<a href="SplitPlotChapter.html#ref-RN2268" role="doc-biblioref">James A. Hanley and Hajian-Tilaki 1997</a>; <a href="SplitPlotChapter.html#ref-RN112" role="doc-biblioref">DeLong, DeLong, and Clarke-Pearson 1988</a>)</span>. Prior to Bamber’s work one knew how to plot an empirical operating characteristic and how to calculate the Wilcoxon statistic, but their equality had not been analytically proven. This was Bamber’s essential contribution. In the absence of this theorem, the Wilcoxon statistic would be “just another statistic” in the context of ROC analysis. The theorem is so important that a major paper appeared in Radiology <span class="citation">(<a href="SplitPlotChapter.html#ref-RN1970" role="doc-biblioref">J. A. Hanley and McNeil 1982</a>)</span> devoted to the equivalence. The title of this paper was “The meaning and use of the area under a receiver operating characteristic (ROC) curve.” The equivalence theorem literally gives meaning to the empirical area under the ROC.</p>
+</div>
+<div id="empirical-auc-discussion-summary" class="section level2" number="5.8">
+<h2><span class="header-section-number">5.8</span> Discussion / Summary</h2>
+<p>In this chapter, a simple method for estimating the area under the ROC plot has been described. The empirical AUC is a non-parametric measure of performance. Its simplicity and clear physical interpretation as the AUC under the empirical ROC (not fitted, not true) has spurred much theoretical development. These include the De Long et al method for estimating the variance of AUC of a single ROC empirical curve, and comparing pairs of ROC empirical curves5. Bamber’s theorem, namely the equivalence between the empirical AUC and the Wilcoxon statistic has been derived and demonstrated.</p>
+<p>Since the empirical AUC always yields a number, the researcher could be unaware about unusual behavior of the empirical ROC curve, so it is always a good idea to plot the data and look for evidence of large extrapolations. An example would be data points clustered at low FPF values, which imply a large AUC contribution, unsupported by intermediate operating points, from the line connecting the uppermost non-trivial operating point to (1,1).</p>
+</div>
+<div id="empirical-auc-appendix-details-bamber-theorem" class="section level2" number="5.9">
+<h2><span class="header-section-number">5.9</span> Appendix 5.A: Details of Wilcoxon theorem</h2>
+<div id="upper-triangle" class="section level3" number="5.9.1">
+<h3><span class="header-section-number">5.9.1</span> Upper triangle</h3>
+<p>For <span class="math inline">\(i = 0\)</span>, Eqn. <a href="empirical-auc.html#eq:empirical-auc-BambersTheoremProof5">(5.13)</a> implies (since the lowest empirical threshold is unity, the lowest allowed rating, and there are no cases rated less than one):</p>
+<p><span class="math display">\[\begin{equation}
+\left. 
+\begin{aligned}
+A_0 =&amp; P\left ( Z_2 = 1 \right )\left [ \frac{1}{2} P\left ( Z_1=1 \right ) + P\left ( Z_1&lt;1 \right )\right ] \\
+A_0 =&amp; \frac{1}{2} P\left ( Z_1=1 \right ) P\left ( Z_2=1 \right )\\
+\end{aligned}
+\right \}
+\end{equation}\]</span></p>
+<p>The base of the triangle is:</p>
+<p><span class="math display">\[\begin{equation}
+1 - P\left ( Z_1 \geq 2 \right )=P\left ( Z_1 &lt; 2 \right )=P\left ( Z_1 = 1 \right )
+\end{equation}\]</span></p>
+<p>The height of the triangle is:</p>
+<p><span class="math display">\[\begin{equation}
+1 - P\left ( Z_2 \geq 2 \right )=P\left ( Z_2 &lt; 2 \right )=P\left ( Z_2 = 1 \right )
+\end{equation}\]</span></p>
+<p>Q.E.D.</p>
+</div>
+<div id="lowest-trapezoid" class="section level3" number="5.9.2">
+<h3><span class="header-section-number">5.9.2</span> Lowest trapezoid</h3>
+<p>For <span class="math inline">\(i = 4\)</span>, Eqn. <a href="empirical-auc.html#eq:empirical-auc-BambersTheoremProof5">(5.13)</a> implies:</p>
+<p><span class="math display">\[\begin{equation}
+\left.
+\begin{aligned}
+A_4 =&amp; P\left ( Z_2=5 \right )\left [ \frac{1}{2}P\left ( Z_1=5 \right ) + P\left ( Z_1&lt;5 \right )\right ] \\
+A_4 =&amp; \frac{1}{2}P\left ( Z_2=5 \right )\left [ P\left ( Z_1=5 \right ) + 2P\left ( Z_1&lt;5 \right )\right ] \\
+A_4 =&amp; \frac{1}{2}P\left ( Z_2=5 \right )\left [ P\left ( Z_1=5 \right ) +P\left ( Z_1&lt;5 \right ) + P\left ( Z_1&lt;5 \right )\right ] \\
+A_4 =&amp; \frac{1}{2}P\left ( Z_2=5 \right )\left [ 1 + P\left ( Z_1&lt;5 \right )\right ] \\
+\end{aligned}
+\right \}
+\end{equation}\]</span></p>
+<p>The upper side of the trapezoid is</p>
+<p><span class="math display">\[\begin{equation}
+1-P\left ( Z_1 \geq 5 \right )= P\left ( Z_1 &lt; 5 \right )
+\end{equation}\]</span></p>
+<p>The lower side is unity. The average of the two sides is:</p>
+<p><span class="math display">\[\begin{equation}
+\frac{1 + P\left ( Z_1 &lt; 5 \right )}{2}
+\end{equation}\]</span></p>
+<p>The height is:</p>
+<p><span class="math display">\[\begin{equation}
+P\left ( Z_2 \geq 5 \right ) = P\left ( Z_2 = 5 \right )
+\end{equation}\]</span></p>
+<p>Multiplication of the last two expressions yields <span class="math inline">\(A_4\)</span>.</p>
 </div>
 </div>
-</div>
-<div id="optim-op-point-how-to-use-method" class="section level2" number="21.3">
-<h2><span class="header-section-number">21.3</span> How to use the method</h2>
-<p>Assume that one has designed an algorithmic observer that has been optimized with respect to all other parameters except the reporting threshold. At this point the algorithm reports every suspicious region no matter how low the malignancy index. The mark-rating pairs are entered into a <code>RJafroc</code> format Excel input file. The next step is to read the data file –
-<code>DfReadDataFile()</code> – convert it to an ROC dataset – <code>DfFroc2Roc()</code> – and then perform a radiological search model (RSM) fit to the dataset using function <code>FitRsmRoc()</code>. This yields the necessary <span class="math inline">\(\lambda, \mu, \nu\)</span> parameters. These values are used to perform the simulations described in the embedded code in this chapter, i.e., that leading to, for example, one of the panels in Fig. <a href="optim-op-point.html#fig:optim-op-point-AUC-vs-zeta1-01">21.2</a>. This determines the optimal reporting threshold: essentially, one scans <span class="math inline">\(\zeta_1\)</span> values looking for maximum in wAFROC AUC – calculated using <code>UtilFigureOfMerit()</code>. This determines the optimal value of <span class="math inline">\(\zeta_1\)</span>, namely <span class="math inline">\(\zeta_{\text{max}}\)</span>. The RSM parameter values and <span class="math inline">\(\zeta_{\text{max}}\)</span> determine NLF, the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence level exceeding <span class="math inline">\(\zeta_{\text{max}}\)</span>.</p>
-</div>
-<div id="optim-op-point-Discussion" class="section level2" number="21.4">
-<h2><span class="header-section-number">21.4</span> Discussion</h2>
-<p>TBA</p>
-</div>
-<div id="optim-op-point-references" class="section level2" number="21.5">
-<h2><span class="header-section-number">21.5</span> References</h2>
+<div id="empirical-auc-references" class="section level2" number="5.10">
+<h2><span class="header-section-number">5.10</span> References</h2>
 
 </div>
 </div>
@@ -1006,8 +1242,8 @@ FIGURE 21.6: Extended FROC plots: the plot labeled 1-2 is for <span class="math 
           </div>
         </div>
       </div>
-<a href="froc-vs-afroc.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="froc-meanings.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="ratingsParadigm.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="BinormalModel.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -136,11 +136,11 @@ frocDataRaw$ratings$NL[1,1,,]
 
 -   Note that all listed ratings are greater than $\zeta_1 = -1$. Unmarked locations are assigned the $-\infty$ rating.
 
--   Case 1, the first non-diseased case, has a single `NL` mark rated \ensuremath{-\infty{}} and the remaining 3 locations are filled with $-\infty$s.
+-   Case 1, the first non-diseased case, has a single `NL` mark rated -\infty{} and the remaining 3 locations are filled with $-\infty$s.
 
 -   Case 6, the first diseased case, has zero `NL` marks and all 4 locations for it are filled with $-\infty$s. [As seen below, this case actually generated a rating in the first location, but it fell below $\zeta_1 = -1$.]
 
--   Case 11, the sixth diseased case, has three `NL` marks rated \ensuremath{-\infty{}}, \ensuremath{-\infty{}}, \ensuremath{-\infty{}} and the remaining location for it is $-\infty$. As noted below, this case generated a fourth rating that fell below $\zeta_1 = -1$.
+-   Case 11, the sixth diseased case, has three `NL` marks rated -\infty{}, -\infty{}, -\infty{} and the remaining location for it is $-\infty$. As noted below, this case generated a fourth rating that fell below $\zeta_1 = -1$.
 
 -   The first dimension corresponds to the number of modalities, one in this example, the second dimension corresponds to the number of readers, also one in this example.
 
@@ -195,7 +195,7 @@ frocDataRaw$ratings$LL[1,1,,]
 
 -   Case 1, the first diseased case, has zero `LL` marks and both locations are filled with $-\infty$s.
 
--   Case 2, the second diseased case, has one `LL` mark rated \ensuremath{-\infty{}} and the remaining location is $-\infty$.
+-   Case 2, the second diseased case, has one `LL` mark rated -\infty{} and the remaining location is $-\infty$.
 
 -   Case 7, the seventh diseased case, has two `LL` marks rated 1.503608, 0.9428932 and zero locations with $-\infty$.
 
@@ -224,7 +224,10 @@ In summary, the code generates FROC, AFROC and ROC plots shown in the top row of
 
 
 
-![(\#fig:froc-afroc-roc-raw-seed1)Raw FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases.](13-froc-empirical2_files/figure-latex/froc-afroc-roc-raw-seed1-1.pdf) 
+<div class="figure">
+<img src="13-froc-empirical2_files/figure-html/froc-afroc-roc-raw-seed1-1.png" alt="Raw FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases." width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-raw-seed1)Raw FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases.</p>
+</div>
 
 Fig. \@ref(fig:froc-afroc-roc-raw-seed1) Raw FROC, AFROC and ROC plots with `seed` = 1: Plots A, B and C are for $K_1 = 5$ and $K_2 = 7$ cases while D, E and F are for $K_1 = 50$ and $K_2 = 70$ cases. Model parameters are $\mu$ = 1, $\lambda$ = 1, $\nu$ = 1 and $\zeta_1$ = -1. The discreteness (jumps) in A, B and C is due to the small number of cases. The decreased discreteness in D, E and F is due to the larger numbers of cases. If the number of cases is increased further, the plots will approach continuous plots, like those shown in Chapter \@ref(froc-paradigm). Note that the AFROC (B and E) and ROC plots (C and F), are each contained within unit squares, unlike the semi-constrained FROC plots A and D.
 
@@ -236,7 +239,10 @@ Shown next are similar plots but this time `seed` = 2.
 
 
 
-![(\#fig:froc-afroc-roc-raw-seed2)Raw FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases.](13-froc-empirical2_files/figure-latex/froc-afroc-roc-raw-seed2-1.pdf) 
+<div class="figure">
+<img src="13-froc-empirical2_files/figure-html/froc-afroc-roc-raw-seed2-1.png" alt="Raw FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases." width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-raw-seed2)Raw FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases.</p>
+</div>
 
 Fig. \@ref(fig:froc-afroc-roc-raw-seed2) Raw FROC, AFROC and ROC plots with `seed` = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases. Model parameters are $\mu$ = 1, $\lambda$ = 1, $\nu$ = 1 and $\zeta_1$ = -1. Note the large variability in the upper row plots as compared to those in Fig. \@ref(fig:froc-afroc-roc-raw-seed1).
 
@@ -262,7 +268,10 @@ The chance level FROC was addressed in the previous chapter; it is a "flat-liner
 
 
 
-![(\#fig:froc-afroc-chance-level)Plot A is the near guessing observer's FROC and plot B is the corresponding AFROC for $\mu=0.01$.](13-froc-empirical2_files/figure-latex/froc-afroc-chance-level-1.pdf) 
+<div class="figure">
+<img src="13-froc-empirical2_files/figure-html/froc-afroc-chance-level-1.png" alt="Plot A is the near guessing observer's FROC and plot B is the corresponding AFROC for $\mu=0.01$." width="672" />
+<p class="caption">(\#fig:froc-afroc-chance-level)Plot A is the near guessing observer's FROC and plot B is the corresponding AFROC for $\mu=0.01$.</p>
+</div>
 
 Fig. \@ref(fig:froc-afroc-chance-level) shows "near guessing" FROC (plot A) and AFROC (plot B) plots for $\mu = 0.1$. These plots were generated by the code with $\mu$ = 0.1, $\lambda$ = 1, $\nu$ = 0.1, $\zeta_1$ = -1, $K_1$ = 50, $K_2$ = 70.
 
@@ -272,7 +281,7 @@ The AFROC of a guessing observer is not the line connecting (0,0) to (1,1). A gu
 
 ## Location-level "true-negatives"
 
-The quotes are intended to draw attention to confusion that can result when one inappropriately applies ROC terminology to the FROC paradigm. For the 5 / 7 dataset, seed = 1, and reporting threshold set to -1, the first non-diseased case has one `NL` rated \ensuremath{-\infty{}}. The remaining three entries for this case are filled with $-\infty$.
+The quotes are intended to draw attention to confusion that can result when one inappropriately applies ROC terminology to the FROC paradigm. For the 5 / 7 dataset, seed = 1, and reporting threshold set to -1, the first non-diseased case has one `NL` rated -\infty{}. The remaining three entries for this case are filled with $-\infty$.
 
 What really happened is only known if one has access to the internals of the simulator. To the data analyst the following possibilities are indistinguishable:
 
@@ -345,7 +354,10 @@ This is similar to the code for the raw plots except that at lines 21-24 we have
 
 
 
-![(\#fig:froc-afroc-roc-binned-seed1)Binned FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases](13-froc-empirical2_files/figure-latex/froc-afroc-roc-binned-seed1-1.pdf) 
+<div class="figure">
+<img src="13-froc-empirical2_files/figure-html/froc-afroc-roc-binned-seed1-1.png" alt="Binned FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-binned-seed1)Binned FROC, AFROC and ROC plots with seed = 1: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases</p>
+</div>
 
 ### Effect of `seed` on binned plots
 
@@ -355,7 +367,10 @@ Shown next are corresponding plots with `seed` = 2.
 
 
 
-![(\#fig:froc-afroc-roc-binned-seed2)Binned FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases](13-froc-empirical2_files/figure-latex/froc-afroc-roc-binned-seed2-1.pdf) 
+<div class="figure">
+<img src="13-froc-empirical2_files/figure-html/froc-afroc-roc-binned-seed2-1.png" alt="Binned FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases" width="672" />
+<p class="caption">(\#fig:froc-afroc-roc-binned-seed2)Binned FROC, AFROC and ROC plots with seed = 2: Plots A, B, C are for $K_1 = 5$ and $K_2 = 7$ cases while plots D, E, F are for $K_1 = 50$ and $K_2 = 70$ cases</p>
+</div>
 
 ## Structure of the binned data {#froc-empirical-examples-str-binned-data}
 
