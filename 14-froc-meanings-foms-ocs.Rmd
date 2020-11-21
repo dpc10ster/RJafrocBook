@@ -314,20 +314,20 @@ The wAFROC and AFROC concepts are perhaps best illustrated with a numerical simu
 Parameters of the simulation are $\mu = 2$, $\lambda = 1$, $\nu = 1$, $\zeta_1 = -1$ and $L_{max} = 2$. One simulates a dataset consisting of $K_1 = 4$ non-diseased cases and $K_2 = 4$ diseased cases. The first two diseased cases have one lesion each, and the remaining two have two lesions each.
 
 
-```{r froc-meanings-numerical-illustrations, echo = FALSE, cache=TRUE}
+```{r froc-meanings-numerical, echo = FALSE, cache=TRUE}
 K1 <- 4;K2 <- 4
 seed <- 1;set.seed(seed)
-L_max <- 2;Lk2 <- ceiling(runif(K2) * L_max) 
+L_max <- 2;Lk2 <- ceiling(runif(K2) * L_max)
 mu <- 2;lambda <- 1;nu <- 1 ;zeta1 <- -1
 frocData <- SimulateFrocDataset(
-  mu = mu, 
-  lambda = lambda, 
+  mu = mu,
+  lambda = lambda,
   nu = nu,
   zeta1 = zeta1,
-  I = 1, 
-  J = 1, 
-  K1 = K1, 
-  K2 = K2, 
+  I = 1,
+  J = 1,
+  K1 = K1,
+  K2 = K2,
   perCase = Lk2)
 
 FP <- apply(frocData$ratings$NL, 3, max)
@@ -354,7 +354,7 @@ cat("AFROC AUC = ", as.numeric(UtilFigureOfMerit(frocData, FOM = "AFROC")),"\n")
 cat("wAFROC AUC = ", as.numeric(UtilFigureOfMerit(frocData, FOM = "wAFROC")),"\n")
 ```
 
-Shown in Fig. \@ref(fig:froc-meanings-numerical-illustrations) are the AFROC and wFROC plots with the operating points.
+Shown in Fig. \@ref(fig:plots-p1-p2) are the AFROC and wAFROC plots with operating points.
 
 ```{r plots-p1-p2, fig.cap="Left: AFROC plot; Right: corresponding wAFROC plot.", fig.show='hold', echo=FALSE}
 grid.arrange(p1, p2, ncol = 2)
@@ -405,24 +405,24 @@ Table \@ref(tab:froc-meanings-table-diseased) corresponds to diseased cases, whe
 
 The last column of Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased) show the correspondences, using labels **A** - **H**, of the z-samples to the operating points shown in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc) and Fig. \@ref(fig:froc-meanings-afroc-wafroc). Unrealized z-samples, if any, are indicated by an asterisk.
 
-Table \@ref(tab:froc-meanings-table-non-diseased): Layout of mark-rating pairs on **non-diseased** cases, illustrating calculation of NL and FP ratings and corresponding to green circles in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The first column is the case number. The second column has the location of NLs and the third column the corresponding ratings. The fourth column has the FP ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). \* = unmarked location.
+Table \@ref(tab:froc-meanings-table-non-diseased): Layout of mark-rating pairs on **non-diseased** cases, illustrating calculation of NL and FP ratings and corresponding to green circles in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The first column is the case number. The second column has the location of NLs and the third column the corresponding ratings. The fourth column has the FP ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). UM = unmarked location.
 
 ```{r froc-meanings-table-non-diseased, echo=FALSE}
 ndTable = array(dim = c(8,5))
-ndTable[1,]  <- c("", "1111", "",     "", "")
-ndTable[2,]  <- c("1", "1121", "",     "$-\\infty$", "\\*")
-ndTable[3,]  <- c("", "2111", "0.487",  "",      "")
-ndTable[4,]  <- c("2", "2121", "",     "0.487",      "F")
-ndTable[5,]  <- c("", "3111", "0.738",  "",      "")
-ndTable[6,]  <- c("3", "3121", "0.576",  "0.738",      "E")
-ndTable[7,]  <- c("", "4111", "-0.305", "",     "")
-ndTable[8,]  <- c("4", "4121", "",     "-0.305",     "H")
+ndTable[1,]  <- c("", "1111", "", "", "")
+ndTable[2,]  <- c("1", "1121", "", "$-\\infty$", "UM")
+ndTable[3,]  <- c("", "2111", "0.487",  "", "")
+ndTable[4,]  <- c("2", "2121", "",  "0.487", "F")
+ndTable[5,]  <- c("", "3111", "0.738",  "", "")
+ndTable[6,]  <- c("3", "3121", "0.576",  "0.738", "E")
+ndTable[7,]  <- c("", "4111", "-0.305", "", "")
+ndTable[8,]  <- c("4", "4121", "",  "-0.305", "H")
 df <- as.data.frame(ndTable)
 colnames(df) <- c("", "$k_t t l_s s$", "$z_{k_t t l_s s}$", "$FP_{k_t t}$", "$\\text{Label}$")
-knitr::kable(df, caption = "Layout of mark-rating  pairs on non-diseased cases; the asterisk denotes an unmarked non-diseased case.", escape = FALSE)
+knitr::kable(df, caption = "Layout of mark-rating  pairs on non-diseased cases; UM denotes an unmarked non-diseased case.", escape = FALSE)
 ```
 
-Table \@ref(tab:froc-meanings-table-diseased): Layout of mark-rating pairs on **diseased** cases, illustrating the locations of NL and LL ratings, corresponding to green and red circles, respectively, in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The first column is the case number. The second column has the number of lesions in the case. The third column has the location of NLs and the fourth column the corresponding ratings. The fifth column has the location of LLs and the sixth column the corresponding ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). \* = unmarked lesion.
+Table \@ref(tab:froc-meanings-table-diseased): Layout of mark-rating pairs on **diseased** cases, illustrating the locations of NL and LL ratings, corresponding to green and red circles, respectively, in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The first column is the case number. The second column has the number of lesions in the case. The third column has the location of NLs and the fourth column the corresponding ratings. The fifth column has the location of LLs and the sixth column the corresponding ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). UM = unmarked lesion.
 
 ```{r froc-meanings-table-diseased, echo=FALSE}
 disTable = array(dim = c(8,9))
@@ -432,7 +432,7 @@ disTable[3,]  <- c("", "", "2211", "",    "2212", "-0.215", "", "", "")
 disTable[4,]  <- c("2", "1", "2221", "",  "2222", "", "-0.215", "1",  "G")
 
 disTable[5,]  <- c("", "", "3211", "",    "3212", "1.588", "1.588", "0.6", "C")
-disTable[6,]  <- c("3", "2", "3221", "",  "3222", "",   "", "0.4", "\\*")
+disTable[6,]  <- c("3", "2", "3221", "",  "3222", "",   "", "0.4", "UM")
 disTable[7,]  <- c("", "", "4211", "",    "4212", "2.944", "2.944", "0.4", "A")
 disTable[8,]  <- c("4", "2", "4221", "",  "4222", "1.984", "1.984", "0.6", "B")
 df <- as.data.frame(disTable)
@@ -445,7 +445,7 @@ colnames(df) <- c("",
                   "$TP_{k_2 2}$",
                   "$\\text{weights}$",
                   "$\\text{Label}$")
-knitr::kable(df, caption = "Layout of mark-rating pairs on diseased cases; the asterisk denotes an unmarked lesion.", escape = FALSE)
+knitr::kable(df, caption = "Layout of mark-rating pairs on diseased cases; UM denotes an unmarked lesion.", escape = FALSE)
 ```
 
 ### The AFROC plot {#froc-meanings-AFROC-plot}
@@ -461,17 +461,17 @@ In Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc), plot A, FPs and LLs, 
 ```{r linearPlotAFROC, echo = FALSE, cache=TRUE}
 K1 <- 4;K2 <- 4
 seed <- 1;set.seed(seed)
-maxLL <- 2;Lk2 <- ceiling(runif(K2) * maxLL) 
+maxLL <- 2;Lk2 <- ceiling(runif(K2) * maxLL)
 mu <- 2;lambda <- 1;nu <- 1 ;zeta1 <- -1
 frocDataRaw <- SimulateFrocDataset(
-  mu = mu, 
-  lambda = lambda, 
-  nu = nu, 
+  mu = mu,
+  lambda = lambda,
+  nu = nu,
   zeta1 = zeta1,
   I = 1,
   J = 1,
-  K1 = K1, 
-  K2 = K2, 
+  K1 = K1,
+  K2 = K2,
   perCase = Lk2)
 
 maxNL <- dim(frocDataRaw$ratings$NL)[4]
@@ -564,20 +564,20 @@ linearPlotAFROC$layout$clip[linearPlotAFROC$layout$name=="panel"] <- "off"
 
 
 ```{r linearPlotwAFROC, echo=FALSE, cache=TRUE}
-K1 <- 4;K2 <- 4
-seed <- 1;set.seed(seed)
-maxLL <- 2;Lk2 <- ceiling(runif(K2) * maxLL) 
-mu <- 2;lambda <- 1;nu <- 1 ;zeta1 <- -1
-frocDataRaw <- SimulateFrocDataset(
-  mu = mu, 
-  lambda = lambda, 
-  nu = nu, 
-  zeta1 = zeta1,
-  I = 1,
-  J = 1,
-  K1 = K1, 
-  K2 = K2, 
-  perCase = Lk2)
+# K1 <- 4;K2 <- 4
+# seed <- 1;set.seed(seed)
+# maxLL <- 2;Lk2 <- ceiling(runif(K2) * maxLL) 
+# mu <- 2;lambda <- 1;nu <- 1 ;zeta1 <- -1
+# frocDataRaw <- SimulateFrocDataset(
+#   mu = mu, 
+#   lambda = lambda, 
+#   nu = nu, 
+#   zeta1 = zeta1,
+#   I = 1,
+#   J = 1,
+#   K1 = K1, 
+#   K2 = K2, 
+#   perCase = Lk2)
 
 maxNL <- dim(frocDataRaw$ratings$NL)[4]
 FP <- apply(frocDataRaw$ratings$NL, 3, max)
@@ -713,20 +713,20 @@ Since it has one lesion, crossing the z-sample for the first case would result i
 
 
 ```{r afrocPlot, echo=FALSE, cache=TRUE}
-K1 <- 4;K2 <- 4
-seed <- 1;set.seed(seed)
-maxLL <- 2;Lk2 <- ceiling(runif(K2) * maxLL) 
-mu <- 2;lambda <- 1;nu <- 1 ;zeta1 <- -1
-frocDataRaw <- SimulateFrocDataset(
-  mu = mu, 
-  lambda = lambda, 
-  nu = nu, 
-  zeta1 = zeta1,
-  I = 1,
-  J = 1,
-  K1 = K1, 
-  K2 = K2, 
-  perCase = Lk2)
+# K1 <- 4;K2 <- 4
+# seed <- 1;set.seed(seed)
+# maxLL <- 2;Lk2 <- ceiling(runif(K2) * maxLL) 
+# mu <- 2;lambda <- 1;nu <- 1 ;zeta1 <- -1
+# frocDataRaw <- SimulateFrocDataset(
+#   mu = mu, 
+#   lambda = lambda, 
+#   nu = nu, 
+#   zeta1 = zeta1,
+#   I = 1,
+#   J = 1,
+#   K1 = K1, 
+#   K2 = K2, 
+#   perCase = Lk2)
 
 maxNL <- dim(frocDataRaw$ratings$NL)[4]
 FP <- apply(frocDataRaw$ratings$NL, 3, max)
@@ -832,20 +832,20 @@ afrocPlot$layout$clip[afrocPlot$layout$name=="panel"] <- "off"
 
 
 ```{r wafrocPlot, echo = FALSE, cache=TRUE}
-K1 <- 4;K2 <- 4
-seed <- 1;set.seed(seed)
-maxLL <- 2;Lk2 <- ceiling(runif(K2) * maxLL) 
-mu <- 2;lambda <- 1;nu <- 1 ;zeta1 <- -1
-frocDataRaw <- SimulateFrocDataset(
-  mu = mu, 
-  lambda = lambda, 
-  nu = nu, 
-  zeta1 = zeta1,
-  I = 1,
-  J = 1,
-  K1 = K1, 
-  K2 = K2, 
-  perCase = Lk2)
+# K1 <- 4;K2 <- 4
+# seed <- 1;set.seed(seed)
+# maxLL <- 2;Lk2 <- ceiling(runif(K2) * maxLL) 
+# mu <- 2;lambda <- 1;nu <- 1 ;zeta1 <- -1
+# frocDataRaw <- SimulateFrocDataset(
+#   mu = mu, 
+#   lambda = lambda, 
+#   nu = nu, 
+#   zeta1 = zeta1,
+#   I = 1,
+#   J = 1,
+#   K1 = K1, 
+#   K2 = K2, 
+#   perCase = Lk2)
 
 maxNL <- dim(frocDataRaw$ratings$NL)[4]
 FP <- apply(frocDataRaw$ratings$NL, 3, max)

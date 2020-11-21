@@ -210,7 +210,7 @@ Parameters of the simulation are $\mu = 2$, $\lambda = 1$, $\nu = 1$, $\zeta_1 =
 #> wAFROC AUC =  0.7875
 ```
 
-Shown in Fig. \@ref(fig:froc-meanings-numerical-illustrations) are the AFROC and wFROC plots with the operating points.
+Shown in Fig. \@ref(fig:plots-p1-p2) are the AFROC and wAFROC plots with operating points.
 
 <div class="figure">
 <img src="14-froc-meanings-foms-ocs_files/figure-html/plots-p1-p2-1.png" alt="Left: AFROC plot; Right: corresponding wAFROC plot." width="672" />
@@ -279,10 +279,10 @@ Table \@ref(tab:froc-meanings-table-diseased) corresponds to diseased cases, whe
 
 The last column of Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased) show the correspondences, using labels **A** - **H**, of the z-samples to the operating points shown in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc) and Fig. \@ref(fig:froc-meanings-afroc-wafroc). Unrealized z-samples, if any, are indicated by an asterisk.
 
-Table \@ref(tab:froc-meanings-table-non-diseased): Layout of mark-rating pairs on **non-diseased** cases, illustrating calculation of NL and FP ratings and corresponding to green circles in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The first column is the case number. The second column has the location of NLs and the third column the corresponding ratings. The fourth column has the FP ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). \* = unmarked location.
+Table \@ref(tab:froc-meanings-table-non-diseased): Layout of mark-rating pairs on **non-diseased** cases, illustrating calculation of NL and FP ratings and corresponding to green circles in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The first column is the case number. The second column has the location of NLs and the third column the corresponding ratings. The fourth column has the FP ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). UM = unmarked location.
 
 <table>
-<caption>(\#tab:froc-meanings-table-non-diseased)Layout of mark-rating  pairs on non-diseased cases; the asterisk denotes an unmarked non-diseased case.</caption>
+<caption>(\#tab:froc-meanings-table-non-diseased)Layout of mark-rating  pairs on non-diseased cases; UM denotes an unmarked non-diseased case.</caption>
  <thead>
   <tr>
    <th style="text-align:left;">  </th>
@@ -305,7 +305,7 @@ Table \@ref(tab:froc-meanings-table-non-diseased): Layout of mark-rating pairs o
    <td style="text-align:left;"> 1121 </td>
    <td style="text-align:left;">  </td>
    <td style="text-align:left;"> $-\infty$ </td>
-   <td style="text-align:left;"> \* </td>
+   <td style="text-align:left;"> UM </td>
   </tr>
   <tr>
    <td style="text-align:left;">  </td>
@@ -352,10 +352,10 @@ Table \@ref(tab:froc-meanings-table-non-diseased): Layout of mark-rating pairs o
 </tbody>
 </table>
 
-Table \@ref(tab:froc-meanings-table-diseased): Layout of mark-rating pairs on **diseased** cases, illustrating the locations of NL and LL ratings, corresponding to green and red circles, respectively, in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The first column is the case number. The second column has the number of lesions in the case. The third column has the location of NLs and the fourth column the corresponding ratings. The fifth column has the location of LLs and the sixth column the corresponding ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). \* = unmarked lesion.
+Table \@ref(tab:froc-meanings-table-diseased): Layout of mark-rating pairs on **diseased** cases, illustrating the locations of NL and LL ratings, corresponding to green and red circles, respectively, in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The first column is the case number. The second column has the number of lesions in the case. The third column has the location of NLs and the fourth column the corresponding ratings. The fifth column has the location of LLs and the sixth column the corresponding ratings. The last column labels correspond to those shown in Fig. \@ref(fig:froc-meanings-afroc-wafroc). UM = unmarked lesion.
 
 <table>
-<caption>(\#tab:froc-meanings-table-diseased)Layout of mark-rating pairs on diseased cases; the asterisk denotes an unmarked lesion.</caption>
+<caption>(\#tab:froc-meanings-table-diseased)Layout of mark-rating pairs on diseased cases; UM denotes an unmarked lesion.</caption>
  <thead>
   <tr>
    <th style="text-align:left;">  </th>
@@ -434,7 +434,7 @@ Table \@ref(tab:froc-meanings-table-diseased): Layout of mark-rating pairs on **
    <td style="text-align:left;">  </td>
    <td style="text-align:left;">  </td>
    <td style="text-align:left;"> 0.4 </td>
-   <td style="text-align:left;"> \* </td>
+   <td style="text-align:left;"> UM </td>
   </tr>
   <tr>
    <td style="text-align:left;">  </td>
