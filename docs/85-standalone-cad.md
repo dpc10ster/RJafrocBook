@@ -31,25 +31,44 @@ The second study [@kooi2016comparison] used 199 diseased and 199 non-diseased RO
 Table 1: This table explains the differences between the data structures in standard DBM-MRMC analysis and the unorthodox application of the software used in Study - 2. There are four radiologists, labeled R1, R2, R3 and R4 interpreting 398 cases (actually ROIs), labeled 1, 2, …, 398, in two modalities, labeled 1 and 2. Sample ratings are shown only for the first and last radiologist and the first and last case. In the left half of the table, labeled Standard DBM-MRMC, each radiologist interprets each case twice. In the right half of the table, labeled Unorthodox DBM-MRMC, the radiologists interpret each case once. CAD ratings are replicated four times to effectively create the second "treatment" or modality. The quotations are used to emphasize that there is, in fact, only one treatment. The replicated CAD observers are labeled C1, C2, C3 and C4.
 
 
+\begin{table}
 
-Table: (\#tab:standalone-cad-table-standard)This table explains the differences between the data structures in standard DBM-MRMC analysis and the unorthodox application of the software used in Study - 2. There are four radiologists, labeled R1, R2, R3 and R4 interpreting 398 cases (actually ROIs), labeled 1, 2, …, 398, in two modalities, labeled 1 and 2. Sample ratings are shown only for the first and last radiologist and the first and last case. In the left half of the table, labeled Standard DBM-MRMC, each radiologist interprets each case twice. In the right half of the table, labeled Unorthodox DBM-MRMC, the radiologists interpret each case once. CAD ratings are replicated four times to effectively create the second "treatment" or modality. The quotations are used to emphasize that there is, in fact, only one treatment. The replicated CAD observers are labeled C1, C2, C3 and C4.
-
-|Reader |Treatment |Case |Rating |Reader |Treatment |Case |Rating |
-|:------|:---------|:----|:------|:------|:---------|:----|:------|
-|R1     |1         |1    |75     |R1     |1         |1    |75     |
-|...    |...       |...  |...    |...    |...       |...  |...    |
-|R1     |1         |398  |0      |R1     |1         |398  |0      |
-|...    |...       |...  |...    |...    |...       |...  |...    |
-|R4     |1         |1    |50     |R4     |1         |1    |50     |
-|...    |...       |...  |...    |...    |...       |...  |...    |
-|R4     |1         |398  |25     |R4     |1         |398  |25     |
-|R1     |2         |1    |45     |C1     |2         |1    |55     |
-|...    |...       |...  |...    |...    |...       |...  |...    |
-|R1     |2         |398  |25     |C1     |2         |398  |5      |
-|...    |...       |...  |...    |...    |...       |...  |...    |
-|R4     |2         |1    |95     |C4     |2         |1    |55     |
-|...    |...       |...  |...    |...    |...       |...  |...    |
-|R4     |2         |398  |20     |C4     |2         |398  |5      |
+\caption{(\#tab:standalone-cad-table-standard)This table explains the differences between the data structures in standard DBM-MRMC analysis and the unorthodox application of the software used in Study - 2. There are four radiologists, labeled R1, R2, R3 and R4 interpreting 398 cases (actually ROIs), labeled 1, 2, …, 398, in two modalities, labeled 1 and 2. Sample ratings are shown only for the first and last radiologist and the first and last case. In the left half of the table, labeled Standard DBM-MRMC, each radiologist interprets each case twice. In the right half of the table, labeled Unorthodox DBM-MRMC, the radiologists interpret each case once. CAD ratings are replicated four times to effectively create the second "treatment" or modality. The quotations are used to emphasize that there is, in fact, only one treatment. The replicated CAD observers are labeled C1, C2, C3 and C4.}
+\centering
+\begin{tabular}[t]{l|l|l|l|l|l|l|l}
+\hline
+Reader & Treatment & Case & Rating & Reader & Treatment & Case & Rating\\
+\hline
+R1 & 1 & 1 & 75 & R1 & 1 & 1 & 75\\
+\hline
+... & ... & ... & ... & ... & ... & ... & ...\\
+\hline
+R1 & 1 & 398 & 0 & R1 & 1 & 398 & 0\\
+\hline
+... & ... & ... & ... & ... & ... & ... & ...\\
+\hline
+R4 & 1 & 1 & 50 & R4 & 1 & 1 & 50\\
+\hline
+... & ... & ... & ... & ... & ... & ... & ...\\
+\hline
+R4 & 1 & 398 & 25 & R4 & 1 & 398 & 25\\
+\hline
+R1 & 2 & 1 & 45 & C1 & 2 & 1 & 55\\
+\hline
+... & ... & ... & ... & ... & ... & ... & ...\\
+\hline
+R1 & 2 & 398 & 25 & C1 & 2 & 398 & 5\\
+\hline
+... & ... & ... & ... & ... & ... & ... & ...\\
+\hline
+R4 & 2 & 1 & 95 & C4 & 2 & 1 & 55\\
+\hline
+... & ... & ... & ... & ... & ... & ... & ...\\
+\hline
+R4 & 2 & 398 & 20 & C4 & 2 & 398 & 5\\
+\hline
+\end{tabular}
+\end{table}
 
 
 
