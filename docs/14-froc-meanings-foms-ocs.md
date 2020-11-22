@@ -331,7 +331,7 @@ Table \@ref(tab:froc-meanings-table-diseased) shows the layout of mark-rating pa
 \end{tabular}
 \end{table}
 
-### The AFROC plot {#froc-meanings-AFROC-plot}
+## AFROC plot from first principles {#froc-meanings-AFROC-plot-first-principles}
 
 The following example is based on the same data involving 8 cases that were used to generate Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). It involves use of a linear or "one-dimensional" depiction of the ratings described next.
 
@@ -367,7 +367,7 @@ Since it has one lesion, crossing the z-sample for the first case would result i
 
 ![(\#fig:froc-meanings-afroc-wafroc)Plot A: The empirical AFROC plot for the data shown in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). The labels correspond to the last columns of the tables. The corresponding one-dimensional depiction is plot A in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The area under the empirical plot is 0.7708. Plot B: The empirical weighted-AFROC (wAFROC) plot for the data shown in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased). The corresponding one-dimensional plot is plot B in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc). The area under the wAFROC is 0.7875. ](14-froc-meanings-foms-ocs_files/figure-latex/froc-meanings-afroc-wafroc-1.pdf) 
 
-### The weighted-AFROC (wAFROC) plot {#froc-meanings-wAFROC-plot}
+## wAFROC plot from first principles {#froc-meanings-wAFROC-plot-first-principles}
 
 Plot B in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc), which is the wAFROC analog of plot A in the same figure, is a one-dimensional depiction of the data in Table \@ref(tab:froc-meanings-table-non-diseased) and Table \@ref(tab:froc-meanings-table-diseased), but this time the lesion weights, shown in Table \@ref(tab:froc-meanings-table-diseased), are incorporated, as indicated by varying the *size* of each red circle (in Fig. \@ref(fig:froc-meanings-linear-plot-afroc-wafroc) plot A, all red circles were of the same size). In addition, each lesion is labeled with its rating and weight. 
 
@@ -378,7 +378,7 @@ $$\frac{W_{k_2 l_2}}{K_2} = \frac{W_{k_2 l_2}}{4}$$
 Since the first two diseased cases have one lesion each (i.e., unit weights), crossing the corresponding z-samples results in upward jumps of 0.25, Fig. \@ref(fig:froc-meanings-afroc-wafroc) plot B -- compare the jumps C to D and from F to G. According to the weights in Fig. 14.4, crossing the z-sample of the first lesion in the third diseased case, results in an upward jump of 0.6/4. That from the second lesion in the same case results in an upward jump of 0.4/4, for a net upward jump of the third case of 0.25, the same as for each of the first two diseased cases. Likewise crossing the z-samples of the two lesions in the 4th disease case results in upward jump of 0.4/4 = 0.1 (compare the jump from O to A), for the 1st lesion and 0.6/4 = 0.15 (compare the jump from B to C), for the 2nd lesion, for a net upward jump of 1/4, which is the same as for each of the first three diseased cases. *This shows explicitly that the weighting method gives each diseased case the same importance, regardless of the number of lesions in it, a property not shared by the area under the AFROC.*
 
 
-## Physical interpretation of AFROC-based FOMs {#froc-meanings-physical-interpretion-afroc}
+## Physical interpretations {#froc-meanings-physical-interpretions}
 
 From the preceding sections, it is seen that the AFROC-based trapezoidal plots consist of upward and rightward jumps, starting from the origin (0,0) and ending at (1,1). This is true regardless of whether the z-samples are binned or not: i.e., at the "microscopic" level the jumps always exist. Each upward jump is associated with a LL rating exceeding a virtual threshold. Each rightward jump is associated with a FP rating exceeding the threshold. Upward jumps tend to increase the area under the AFROC-based plots and rightward jumps tend to decrease it. This makes physical sense in terms of correct decisions being rewarded and incorrect ones being penalized, and can be seen from two extreme-case examples. If there are only upward jumps, then the trapezoidal plot rises from the origin to (0,1), where all lesions are correctly localized without any generating FPs and performance is perfect -- the straight-line extension to (1,1) ensures that the net area is unity. If there are only horizontal jumps, that takes the operating point from the origin to (1,0), where none of the lesions are localized and every non-diseased image has at least one NL mark, representing worst possible performance. Here, despite the straight line extension to (1,1), the net area is zero.
 
@@ -395,6 +395,9 @@ The area under the wAFROC has the following physical interpretation: it is the l
 *The area under the weighted-AFROC is the lesion-weight adjusted probability that a lesion is rated higher than any mark on a non-diseased case.*
 
 ## Discussion {#froc-meanings-Discussion}
+
+TBA
+TODOLAST
 
 The primary aim of this chapter was to develop expressions for FOMs (i.e., functions of ratings) and show their equivalences to the empirical AUCs under corresponding operating characteristics. Unlike the ROC, the AFROC and wAFROC figures of merit are represented by quasi-Wilcoxon like constructs, not the well-known Wilcoxon statistic5.
 

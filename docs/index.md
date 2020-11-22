@@ -47,7 +47,7 @@ description: "Updated observer-performance book based on RJafroc."
 
 ## ToDos {-}
 * Check Bamber theorem derivation.
-* Parts labeled TBA need to be updated on final revision.
+* Parts labeled TBA and TODOLAST need to be updated on final revision.
 * Change third person to first person in references to myself.
 
 ## Chapters needing heavy edits {-}
