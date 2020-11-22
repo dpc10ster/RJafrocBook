@@ -83,41 +83,72 @@ Cov(\epsilon_{ij\{c\}},\epsilon_{i'j'\{c\}}) =
 (\#eq:standalone-cad-or-cov)
 \end{equation}
 
-STOP
+Software {U of Iowa and `RJafroc`} yields estimates of all terms appearing on the right hand side of Eqn. \@ref(eq:standalone-cad-or-cov). Excluding fixed effects, the model represented by Eqn. \@ref(eq:standalone-cad-model) contains six parameters: 
 
-Available software {Iowa and RJafroc} yields estimates of all terms appearing on the right hand side of Eqn. (1). Excluding fixed effects, the model represented by Eqn. (1) contains six parameters: 
+\begin{equation}
+\sigma_R^2, \sigma_{\tau R}^2, Var, Cov_1, Cov_2, Cov_3
+(\#eq:standalone-var-comp)
+\end{equation}
 
-Insert Eqn. 5 here:
+The meanings the last four terms are described in [@hillis2007comparison; @obuchowski1995hypothesis; @hillis2005comparison; @chakraborty2017observer]. Briefly, $Var$ is the variance of a reader's FOMs, in a given treatment, over interpretations of different case-samples, averaged over readers and treatments; $Cov_1/Var$ is the correlation of a reader's FOMs, over interpretations of different case-samples in different treatments, averaged over all different treatment same reader pairings; $Cov_2/Var$ is the correlation of different reader's FOMs, over interpretations of different case-samples in the same treatment, averaged over all same treatment different reader pairings and finally, $Cov_3/Var$ is the correlation of different reader's FOMs, over interpretations of different case-samples in different treatments, averaged over all different treatment different reader pairings. One expects the following inequalities to hold:
 
-The meanings the last four terms are described in various publications16,18,19 and a recently published book11. Briefly,  is the variance of a reader's FOMs, in a given treatment, over interpretations of different case-samples, averaged over readers and treatments;  is the correlation of a reader's FOMs, over interpretations of different case-samples in different treatments, averaged over all different treatment same reader pairings;  is the correlation of different reader's FOMs, over interpretations of different case-samples in the same treatment, averaged over all same treatment different reader pairings and finally,  is the correlation of different reader's FOMs, over interpretations of different case-samples in different treatments, averaged over all different treatment different reader pairings. One expects18 the following inequalities to hold:
+\begin{equation}
+Var \geq Cov_1 \geq Cov_2 \geq Cov_3
+(\#eq:standalone-var-comp-ordering)
+\end{equation}
 
-Insert Eqn. 6 here:
 
-In practice, since one is usually limited to one case-sample, i.e.,  , resampling techniques27 (e.g., the jackknife) are used to estimate these terms.
+In practice, since one is usually limited to one case-sample, i.e., $\{1\}$, resampling techniques [@efron1994introduction] -- e.g., the jackknife -- are used to estimate these terms.
 
 ### Random-reader random-case (1T-RRRC) analysis {#standalone-cad-radiologists-1TRRRC-anlaysis}
 
-Standalone CAD is an algorithmic reader, not a different treatment. Therefore, needed is a single treatment method for analyzing readers and CAD, where the latter is regarded as an additional treatment25. Moreover, the method should account for both reader variability and case variability. The proposed method is termed single-treatment RRRC (1T-RRRC) analysis. The cited reference uses as the starting point the Obuchowski and Rockette18 model, which for the radiologists (excluding CAD) interpreting in a single-treatment reduces to the following Eqn.:
+In this work standalone CAD is regarded as an algorithmic reader, not a different treatment. Therefore, needed is a single treatment method for analyzing readers and CAD, where the latter is regarded as an additional treatment TBA 25. The method should account for both reader variability and case variability. The proposed method is termed single-treatment RRRC (1T-RRRC) analysis. The cited reference uses as the starting point the [@obuchowski1995hypothesis] model, which for the radiologists (i.e., *excluding* CAD) interpreting in a single-treatment reduces to the following Eqn.:
 
-Insert Eqn. 7 here:
+\begin{equation}
+\theta_{j\{c\}}=\mu+R_j+\epsilon_{j\{c\}}
+(\#eq:standalone-or-model-single-treatment)
+\end{equation}
 
-  is the figure of merit for radiologist j (j = 1, 2, ..., J) interpreting case-sample  ;   is the random effect of radiologist j and  is the error term11,16. For single-treatment multiple-reader interpretations the error term is distributed as:
+$\theta_{j\{c\}}$ is the figure of merit for radiologist $j$ ($j = 1, 2, ..., J$) interpreting case-sample $\{c\}$; $R_j$ is the random effect of radiologist $j$ and $\epsilon_{j\{c\}}$ is the error term. For single-treatment multiple-reader interpretations the error term is distributed as:
   
-Insert Eqn. 8 here:
+\begin{equation}
+\epsilon_{j\{c\}}\sim N_{J}\left ( \vec{0} , \Sigma \right )
+(\#eq:standalone-cad-eps-sampling-single-treatment)
+\end{equation}
 
-The J x J covariance matrix   is defined by two parameters,  and  , as follows:  
+The $J \times J$ covariance matrix $\Sigma$ is defined by two parameters, $Var$ and $Cov_2$, as follows:  
 
-Insert Eqn. 9 here:
+\begin{equation}
+\Sigma_{jj'} = \text{Cov}\left ( \epsilon_{j\{c\}}, \epsilon_{j'\{c\}} \right )
+=
+\left\{\begin{matrix}
+Var & j = j'\\ 
+Cov_2 & j \neq j'
+\end{matrix}\right.
+(\#eq:standalone-cad-var-cov2-single-treatment)
+\end{equation}
 
-The terms   and   are estimated using resampling methods20. Using the jackknife, and denoting the difference FOM with case k removed by   (the index in parenthesis denotes deleted case k, and since one is dealing with a single case-sample, the case-sample index   is superfluous). The covariance matrix is estimated using (the dot symbol represents an average over the replaced index): 
+The terms $Var$ and $Cov_2$ are estimated using resampling methods. Using the jackknife, and denoting the difference FOM with case k removed by $\psi_{j(k)}$  (the index in parenthesis denotes deleted case $k$, and since one is dealing with a single case-sample, the case-sample index $c\{c\}$ is superfluous). The covariance matrix is estimated using (the dot symbol represents an average over the replaced index): 
+
+\begin{equation}
+\Sigma_{jj'}|_\text{jack} = \frac{K-1}{K} \sum_{k=1}^{K} \left ( \psi_{j(k)}  - \psi_{j(\bullet)} \right ) \left ( \psi_{j'(k)}  - \psi_{j'(\bullet)} \right )
+(\#eq:standalone-cad-single-treatment-sigma-jackknife)
+\end{equation}
 
 
-Insert Eqn. 10 here:
-
-The final estimates of  and   are averaged (indicated in the following equation by the angular brackets) over all pairings of radiologists satisfying the relevant equalities/inequalities shown just below the closing angular bracket:
+The final estimates of $Var$ and $Cov_2$ are averaged (indicated in the following equation by the angular brackets) over all pairings of radiologists satisfying the relevant equalities/inequalities shown just below the closing angular bracket:
 
 
-Insert Eqn. 11 here:
+\begin{equation}
+\left.
+\begin{aligned}  
+Var = \left \langle \Sigma_{jj'}|_{\text{jack}} \right \rangle_{j=j'}\\
+Cov_2 = \left \langle \Sigma_{jj'}|_{\text{jack}} \right \rangle_{j \neq j'}
+\end{aligned}
+\right \}
+(\#eq:standalone-cad-final-estimates-var-cov2)
+\end{equation}
+
 
 Hillis' formulae16,19 permit one to test the NH:  , where   is a pre-specified constant. One could set   equal to the performance of CAD, but that would not be accounting for the fact that the performance of CAD is itself a random variable, whose case-sampling variability needs to be accounted for.
 
