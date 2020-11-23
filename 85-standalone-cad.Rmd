@@ -67,15 +67,15 @@ In what follows, the analysis in Study – 1 is referred to as random-reader fix
 
 ### The 2T-RRRC analysis model {#standalone-cad-radiologists-2TRRRC-anlaysis}
 
-The following approach uses the Obuchowski and Rockette (OR) figure of merit model18 for analyzing MRMC ROC studies, instead of  the pseudovalue model used in the original DBM paper15. Hillis has shown the two to be equivalent19. For fully paired multiple-reader multiple-treatment interpretations (i.e., assuming the data structure in the left half of Table 1) the OR model is:
+The following approach uses the Obuchowski and Rockette (OR) figure of merit model [@obuchowski1995hypothesis] for analyzing MRMC ROC studies, instead of  the pseudovalue model used in the original DBM paper [@dorfman1992receiver]. Hillis has shown the two to be equivalent [@hillis2005comparison]. For fully paired multiple-reader multiple-treatment interpretations (i.e., assuming the data structure in the left half of Table 1) the OR model is:
 
 \begin{equation}
 \theta_{ij\{c\}}=\mu+\tau_i+\left ( \tau \text{R} \right )_{ij}+\epsilon_{ij\{c\}}
-(\#eq:standalone-cad-model)
+(\#eq:standalone-cad-model-theta-ij)
 \end{equation}
 
 
-Assuming two treatments, i (i = 1, 2) is the treatment index, j (j = 1, ..., J) is the radiologist index, and k (k = 1, ..., K) is the case index, and   is a figure of merit for reader j in treatment i and case-sample  . A case-sample is a set or ensemble of cases, diseased and non-diseased, and different integer values of c correspond to different case-samples. The first two terms on the right hand side of Eqn. (1) are fixed effects (average performance and treatment effect, respectively). The next two terms are random effect variables that, by assumption, are sampled as follows:
+Assuming two treatments, $i$ ($i = 1, 2$) is the treatment index, $j$ ($j = 1, ..., J$) is the radiologist index, and $k$ ($k = 1, ..., K$) is the case index, and $\theta_{ij\{c\}}$ is a figure of merit for reader $j$ in treatment $i$ and case-sample $\{c\}$. A case-sample is a set or ensemble of cases, diseased and non-diseased, and different integer values of $c$ correspond to different case-samples. The first two terms on the right hand side of Eqn. \@ref(eq:standalone-cad-model-theta-ij) are fixed effects (average performance and treatment effect, respectively). The next two terms are random effect variables that, by assumption, are sampled as follows:
 
 \begin{equation}
 \left.
@@ -84,11 +84,11 @@ R_j \sim  N\left ( 0,\sigma_R^2 \right )\\
 \left ( \tau R \right )_{ij} \sim N\left ( 0,\sigma_{\tau R}^2 \right )\\
 \end{aligned}
 \right \}
-(\#eq:standalone-cad-model-sampling)
+(\#eq:standalone-cad-model-rj-taur-sampling)
 \end{equation}
 
 
-The terms   represents the random treatment-independent contribution of reader j, modeled as a sample from a zero-mean normal distribution with variance  ,  represents the random treatment-dependent contribution of reader j in treatment i, modeled as a sample from a zero-mean normal distribution with variance  . The sampling of the last (error) term is described by:
+The terms $R_j$ represents the random treatment-independent contribution of reader $j$, modeled as a sample from a zero-mean normal distribution with variance $\sigma_R^2$, $\left ( \tau R \right )_{ij}$ represents the random treatment-dependent contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance $\sigma_{\tau R}^2$. The sampling of the last (error) term is described by:
 
 \begin{equation}
 \epsilon_{ij\{c\}}\sim N_{I \times J}\left ( \vec{0} , \Sigma \right )
@@ -109,7 +109,7 @@ Cov(\epsilon_{ij\{c\}},\epsilon_{i'j'\{c\}}) =
 (\#eq:standalone-cad-or-cov)
 \end{equation}
 
-Software {U of Iowa and `RJafroc`} yields estimates of all terms appearing on the right hand side of Eqn. \@ref(eq:standalone-cad-or-cov). Excluding fixed effects, the model represented by Eqn. \@ref(eq:standalone-cad-model) contains six parameters: 
+Software {U of Iowa and `RJafroc`} yields estimates of all terms appearing on the right hand side of Eqn. \@ref(eq:standalone-cad-or-cov). Excluding fixed effects, the model represented by Eqn. \@ref(eq:standalone-cad-model-theta-ij) contains six parameters: 
 
 \begin{equation}
 \sigma_R^2, \sigma_{\tau R}^2, Var, Cov_1, Cov_2, Cov_3
@@ -176,30 +176,46 @@ Cov_2 = \left \langle \Sigma_{jj'}|_{\text{jack}} \right \rangle_{j \neq j'}
 \end{equation}
 
 
-Hillis' formulae16,19 permit one to test the NH:  , where   is a pre-specified constant. One could set   equal to the performance of CAD, but that would not be accounting for the fact that the performance of CAD is itself a random variable, whose case-sampling variability needs to be accounted for.
+Hillis' formulae [@hillis2005comparison; @hillis2007comparison] permit one to test the NH: $\mu = \mu_0$, where $\mu_0$ is a pre-specified constant. One could set $\mu_0$ equal to the performance of CAD, but that would not be accounting for the fact that the performance of CAD is itself a random variable, whose case-sampling variability needs to be accounted for.
 
 Instead, the following model was used for the figure of merit of the radiologists and CAD (j = 0 is used to denote the CAD algorithmic reader): 
 
-Insert Eqn. 12 here:
+\begin{equation}
+\theta_{j\{c\}} = \theta_{0\{c\}} + \Delta \theta + R_j + \epsilon_{j\{c\}}\\
+j=1,2,...J
+(\#eq:standalone-cad-model-theta-j)
+\end{equation}
 
-  is the CAD figure of merit for case-sample  ;   is the average figure of merit increment of the radiologists over CAD. To reduce this model to one to which existing formulae16,19 are directly applicable, one subtracts the CAD figure of merit from each radiologist's figure of merit (for the same case-sample), and defines this as the difference figure of merit  , i.e., 
+
+$\theta_{0\{c\}}$ is the CAD figure of merit for case-sample $\{c\}$; $\Delta \theta$ is the average figure of merit increment of the radiologists over CAD. To reduce this model to one to which existing formulae [@hillis2005comparison; @hillis2007comparison] are directly applicable, one subtracts the CAD figure of merit from each radiologist's figure of merit (for the same case-sample), and defines this as the difference figure of merit $\psi_{j\{c\}}$ , i.e., 
   
-Insert Eqn. 13 here:
+\begin{equation}
+\psi_{j\{c\}} = \theta_{j\{c\}} - \theta_{0\{c\}}
+(\#eq:standalone-cad-diff-reader-def)
+\end{equation}
 
 Then Eqn. (12) reduces to: 
 
-Insert Eqn. 14 here:
+\begin{equation}
+\psi_{j\{c\}} = \Delta \theta + R_j + \epsilon_{j\{c\}}\\
+j=1,2,...J
+(\#eq:standalone-cad-model-psi-j)
+\end{equation}
 
-Eqn. (14) is identical in form to Eqn. (7) with the subtle difference that the figure of merit on the left hand side of Eqn. (14) is a difference FOM, that between the radiologist's and CAD. Eqn. (14) describes a model for J difference radiologists interpreting a common case set, each of whose performances is a difference from that of CAD; the difference is positive if the radiologist is better. Under the NH the expected difference is zero:  . The method16,19 for single-treatment multiple-reader analysis is now directly applicable to the model described by Eqn. (14) . Detailed computational formulae are presented in the cited references and reference 11. 
+
+Eqn. \@ref(eq:standalone-cad-model-psi-j) is identical in form to Eqn. \@ref(eq:standalone-or-model-single-treatment) with the difference that the figure of merit on the left hand side of Eqn. \@ref(eq:standalone-cad-model-psi-j) is a difference FOM, that between the radiologist's and CAD. Eqn. \@ref(eq:standalone-cad-model-psi-j) describes a model for $J$ difference radiologists interpreting a common case set, each of whose performances is a difference from that of CAD; the difference is positive if the radiologist is better. Under the NH the expected difference is zero: $\text{NH:} \Delta \theta = 0$. The method [@hillis2005comparison; @hillis2007comparison] for single-treatment multiple-reader analysis is now directly applicable to the model described by Eqn. \@ref(eq:standalone-cad-model-psi-j). 
 
 Apart from fixed effects, the model in Eqn. (14) contains three parameters:
 
-Insert Eqn. 15 here:
+\begin{equation}
+\sigma_R^2, Var, Cov_2
+(\#eq:standalone-cad-parameter-simplified-model)
+\end{equation}
 
-Setting   yields the RRFC model, which contains only one random parameter, namely  . In other words, a valid analysis should yield identical estimates of this parameter from either RRFC or RRRC analysis.
+Setting $Var = 0, Cov_2 = 0$ yields the RRFC model, which contains only one random parameter, namely $\sigma_R^2$. A valid analysis should yield identical estimates of this parameter from either RRFC or RRRC analysis.
 
 ### Computational details {#standalone-cad-radiologists-computational-details}
-The three analyses, namely random-reader fixed-case (RRFC), dual-treatment random-reader random-case (2T-RRRC) and single-treatment random-reader random-case (1T-RRRC), are implemented in RJafroc, an R-package21. The function calls necessary to reproduce the results that follow are in the Appendix. [The PT-Mono font is used to distinguish software specific terms from normal text.]
+The three analyses, namely random-reader fixed-case (RRFC), dual-treatment random-reader random-case (2T-RRRC) and single-treatment random-reader random-case (1T-RRRC), are implemented in `RJafroc`, an R-package [@packageRJafroc]. The function calls necessary to reproduce the results that follow are in the Appendix. [The PT-Mono font is used to distinguish software specific terms from normal text.]
 
 ## Results {#standalone-cad-radiologists-results}
 The three methods, in historical order RRFC, 2T-RRRC and 1T-RRRC, were applied to an LROC dataset similar to that used in Study – 1 (DPC thanks Prof. Karssemeijer for making this dataset available, which enabled this study). 
@@ -224,7 +240,7 @@ Commented on next are other aspects of the results evident in Table 2.
 
 The following characteristics are evident from Table 2.
 1.	For 2T-RRRC analyses  . Actually, the analysis yielded very small values, of the order of 10-18 to 10-19, which, being smaller than double precision accuracy, were replaced by zeroes in Table 2. [All current implementations of R use IEC 60559 floating-point (i.e., double precision) arithmetic, for which the precision is 2.22 x 10-16.]   is clearly an unphysical result as the radiologists do not have identical performance. In contrast, 1T-RRRC analyses yielded more realistic values, identical to those obtained by RRFC analyses, and consistent with expectation – see comment following Eqn. (15). 
-2.	Because 2T analysis found zero reader variability, it follows from the definitions of the covariances18, that  , as evident in the table.
+2.	Because 2T analysis found zero reader variability, it follows from the definitions of the covariances [@obuchowski1995hypothesis], that  , as evident in the table.
 3.	When they can be compared (i.e.,  ,   and  ), all variance and covariance estimates were smaller for the 2T method than for the 1T method.
 4.	For the 2T method the expected inequalities, Eqn. (6), are not obeyed (specifically,  , is not obeyed).
 
