@@ -26,7 +26,7 @@ All observer performance methods involve detecting the presence of true lesions;
 
 -   the free-response ROC (FROC) [@bunch1977free; @chakraborty1989maximum];
 -   the location ROC (LROC) [@RN1311; @RN209];
--   the region of interest (ROI) [@RN55].
+-   the region of interest (ROI) [@obuchowski2010data].
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{images/4Paradigms} \caption{Upper Left: ROC, Upper Right: FROC, Lower Left: LROC, Lower Right: ROI}(\#fig:froc-paradigm-4Paradigms)

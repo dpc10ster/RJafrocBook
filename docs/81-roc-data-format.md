@@ -8,8 +8,8 @@
 
 
 ## Introduction {#rocdataformatIntro}
-* The purpose of this chapter is to explain the data format of the input Excel file and to introduce the capabilities of the function `DfReadDataFile()`. Background on observer performance methods are in my book  [@RN2680].
-* I will start with Receiver Operating Characteristic (ROC) data [@RN1766],  as this is by far the simplest paradigm.
+* The purpose of this chapter is to explain the data format of the input Excel file and to introduce the capabilities of the function `DfReadDataFile()`. Background on observer performance methods are in my book  [@chakraborty2017observer].
+* I will start with Receiver Operating Characteristic (ROC) data [@metz1978rocmethodology],  as this is by far the simplest paradigm.
 * In the ROC paradigm the observer assigns a rating to each image. A rating is an ordered numeric label, and, in our convention, higher values represent greater certainty or **confidence level** for presence of disease. With human observers, a 5 (or 6) point rating scale is typically used, with 1 representing highest confidence for *absence* of disease and 5 (or 6) representing highest confidence for *presence* of disease. Intermediate values represent intermediate confidence levels for presence or absence of disease. 
 * Note that location information associated with the disease, if applicable, is not collected. 
 * There is no restriction to 5 or 6 ratings. With algorithmic observers, e.g., computer aided detection (CAD) algorithms, the rating could be a floating point number and have infinite precision. All that is required is that higher values correspond to greater confidence in presence of disease.

@@ -1,7 +1,7 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2020-11-23"
+date: "2020-11-24"
 site: bookdown::bookdown_site
 output: 
    bookdown::pdf_document: default
@@ -19,11 +19,11 @@ description: "Updated observer-performance book based on RJafroc."
 
 # Preface {-}
 * This book is currently (as of November 2020) in preparation. 
-* It is intended as an online update to my "physical" book [@RN2680]. Since its publication in 2017 the `RJafroc` package, on which the `R` code examples in the book depend, has evolved considerably, causing many of the examples to "break". This also gives me the opportunity to improve on the book and include additional material.
+* It is intended as an online update to my "physical" book [@chakraborty2017observer]. Since its publication in 2017 the `RJafroc` package, on which the `R` code examples in the book depend, has evolved considerably, causing many of the examples to "break". This also gives me the opportunity to improve on the book and include additional material.
 * The physical book chapters are labeled (book), to distinguish them from the chapters in this online book.
 
 ## A note on the online distribution mechanism of the book {-}
-* In the hard-copy version of my book [@RN2680] the online distribution mechanism was `BitBucket`. 
+* In the hard-copy version of my book [@chakraborty2017observer] the online distribution mechanism was `BitBucket`. 
 * `BitBucket` allows code sharing within a _closed_ group of a few users (e.g., myself and a grad student). 
 * Since the purpose of open-source code is to encourage collaborations, this was, in hindsight, an unfortunate choice. Moreover, as my experience with R-packages grew, it became apparent that the vast majority of R-packages are shared on `GitHub`, not `BitBucket`. 
 * For these reasons I have switched to `GitHub`. All previous instructions pertaining to `BitBucket` are obsolete.

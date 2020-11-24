@@ -10,7 +10,7 @@
 * Details on the FROC paradigm are in my book.
 
 ## Introduction {#frocdataformatIntro}
-* See my book @RN2680 for full details.
+* See [@chakraborty2017observer] for full details.
 * In the Free-response Receiver Operating Characteristic (FROC) paradigm [chakraborty1989maximum] the observer searches each case for signs of **localized disease** and marks and rates localized regions that are sufficiently suspicious for disease presence. 
 * FROC data consists of **mark-rating pairs**, where each mark is a localized-region that was considered sufficiently suspicious for presence of a localized lesion and the rating is the corresponding confidence level. 
 * By adopting a proximity criterion, each mark is classified by the investigator as a lesion localization (`LL`) - if it is close to a real lesion - or a non-lesion localization (`NL`) otherwise. 
