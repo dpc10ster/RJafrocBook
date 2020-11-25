@@ -286,7 +286,7 @@ Points to note:
 y <- frocRaw$Points$genOrdinate
 x <- frocRaw$Points$genAbscissa
 str(x)
-#>  num [1:2274] 0 0 0 0 0 0 0 0 0 0 ...
+#>  num [1:2264] 0 0 0 0 0 0 0 0 0 0 ...
 (y[2]-y[1])/(x[2]-x[1]) # slope at origin
 #> [1] Inf
 (y[2264]-y[2264-1])/(x[2264]-x[2264-1]) # slope at end-point
