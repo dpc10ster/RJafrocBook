@@ -1,9 +1,11 @@
 ---
-editor_options: 
-  markdown: 
-    wrap: sentence
+header-includes:
+  - \usepackage{float}
+  - \floatplacement{figure}{H}  #make every figure with caption = h, this was the fix
+output:
+  pdf_document: default
+fig_caption: yes
 ---
-
 
 
 
@@ -46,194 +48,36 @@ The first study [@hupse2013standalone] compared standalone performance of a CAD 
 
 The second study [@kooi2016comparison] used 199 diseased and 199 non-diseased ROIs extracted by an independent CAD algorithm. These were interpreted using the ROC paradigm (i.e., rating only, no localization required) by a different CAD algorithmic observer from that used to determine the ROIs, and 4 expert radiologists. Again, an integer 0 to 100 rating scale was used. The figure of merit was the area (AUC) under the respective ROC curves (one per radiologist and one for CAD). The p-value for the difference in AUCs between the average radiologist and CAD was determined using an unorthodox application of the Dorfman-Berbaum-Metz [@dorfman1992receiver] multiple-reader multiple-case (DBM-MRMC) software with recent modifications [@hillis2008recent], namely, in the input data file *radiologists and CAD were entered as two modalities*. In cells (or orthodox) DBM-MRMC, the data file consists, for example, of ratings of a set of cases by 4 readers in two modalities, i.e., each reader provides two ratings per case. To accommodate the paired data structure assumed by the software, the authors of Study - 2 *replicated the CAD ratings four times in the data file*, as explained in the caption to Table 1, in which sample ratings are only shown for the first and last radiologist and the first and last case. By this artifice they converted a single-treatment 5-reader (4 radiologists plus CAD) data file to a two-treatment 4-reader data file, in which the four readers in treatment 1 were the radiologists, and the four readers in treatment 2 were CAD. Note that the four readers in the second treatment yield identical ratings, since each is a replica of CAD. In the right half of Table 1 the replicated CAD observers are labeled C1, C2, C3 and C4.
 
-<table class="table" style="margin-left: auto; margin-right: auto;">
-<caption>(\#tab:standalone-cad-table-cells)This table explains the differences between the data structures in cells DBM-MRMC analysis and the unorthodox application of the software used in Study - 2. There are four radiologists, labeled R1, R2, R3 and R4 interpreting 398 cases labeled 1, 2, …, 398, in two treatments, labeled 1 and 2. Sample ratings are shown only for the first and last radiologist and the first and last case. In the first four columns, labeled "Standard DBM-MRMC", each radiologist interprets each case twice. In the next four columns, labeled "Unorthodox DBM-MRMC", the radiologists interpret each case once. CAD ratings are replicated four times to effectively create the second "treatment". The quotations emphasize that there is, in fact, only one treatment. The replicated CAD observers are labeled C1, C2, C3 and C4.</caption>
- <thead>
-<tr>
-<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Standard DBM-MRMC</div></th>
-<th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
-<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Unorthodox DBM-MRMC</div></th>
-</tr>
-  <tr>
-   <th style="text-align:left;"> Reader </th>
-   <th style="text-align:left;"> Treatment </th>
-   <th style="text-align:left;"> Case </th>
-   <th style="text-align:left;"> Rating </th>
-   <th style="text-align:left;">  </th>
-   <th style="text-align:left;"> Reader </th>
-   <th style="text-align:left;"> Treatment </th>
-   <th style="text-align:left;"> Case </th>
-   <th style="text-align:left;"> Rating </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> R1 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 75 </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> R1 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 75 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> R1 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 398 </td>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> R1 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 398 </td>
-   <td style="text-align:left;"> 0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> R4 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 50 </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> R4 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 50 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> R4 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 398 </td>
-   <td style="text-align:left;"> 25 </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> R4 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 398 </td>
-   <td style="text-align:left;"> 25 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> R1 </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 45 </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> C1 </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 55 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> R1 </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> 398 </td>
-   <td style="text-align:left;"> 25 </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> C1 </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> 398 </td>
-   <td style="text-align:left;"> 5 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> R4 </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 95 </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> C4 </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;"> 55 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-   <td style="text-align:left;"> ... </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> R4 </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> 398 </td>
-   <td style="text-align:left;"> 20 </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> C4 </td>
-   <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;"> 398 </td>
-   <td style="text-align:left;"> 5 </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:standalone-cad-table-cells)This table explains the differences between the data structures in cells DBM-MRMC analysis and the unorthodox application of the software used in Study - 2. There are four radiologists, labeled R1, R2, R3 and R4 interpreting 398 cases labeled 1, 2, …, 398, in two treatments, labeled 1 and 2. Sample ratings are shown only for the first and last radiologist and the first and last case. In the first four columns, labeled "Standard DBM-MRMC", each radiologist interprets each case twice. In the next four columns, labeled "Unorthodox DBM-MRMC", the radiologists interpret each case once. CAD ratings are replicated four times to effectively create the second "treatment". The quotations emphasize that there is, in fact, only one treatment. The replicated CAD observers are labeled C1, C2, C3 and C4.}
+\centering
+\begin{tabular}[t]{lllllllll}
+\toprule
+\multicolumn{4}{c}{Standard DBM-MRMC} & \multicolumn{1}{c}{} & \multicolumn{4}{c}{Unorthodox DBM-MRMC} \\
+\cmidrule(l{3pt}r{3pt}){1-4} \cmidrule(l{3pt}r{3pt}){6-9}
+Reader & Treatment & Case & Rating &  & Reader & Treatment & Case & Rating\\
+\midrule
+R1 & 1 & 1 & 75 &  & R1 & 1 & 1 & 75\\
+... & ... & ... & ... &  & ... & ... & ... & ...\\
+R1 & 1 & 398 & 0 &  & R1 & 1 & 398 & 0\\
+... & ... & ... & ... &  & ... & ... & ... & ...\\
+R4 & 1 & 1 & 50 &  & R4 & 1 & 1 & 50\\
+\addlinespace
+... & ... & ... & ... &  & ... & ... & ... & ...\\
+R4 & 1 & 398 & 25 &  & R4 & 1 & 398 & 25\\
+ &  &  &  &  &  &  &  & \\
+R1 & 2 & 1 & 45 &  & C1 & 2 & 1 & 55\\
+... & ... & ... & ... &  & ... & ... & ... & ...\\
+\addlinespace
+R1 & 2 & 398 & 25 &  & C1 & 2 & 398 & 5\\
+... & ... & ... & ... &  & ... & ... & ... & ...\\
+R4 & 2 & 1 & 95 &  & C4 & 2 & 1 & 55\\
+... & ... & ... & ... &  & ... & ... & ... & ...\\
+R4 & 2 & 398 & 20 &  & C4 & 2 & 398 & 5\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 Study -- 2 reported a not significant difference between CAD and the radiologists (p = 0.253).
 
@@ -422,188 +266,67 @@ The three analyses, namely random-reader fixed-case ($\text{RRFC}$), dual-treatm
 
 ## Results {#standalone-cad-radiologists-results}
 
-The three methods, in historical order $\text{RRFC}$, $\text{2T-RRRC}$ and $\text{1T-RRRC}$, were applied to an LROC dataset similar to that used in Study -- 1 (DPC thanks Prof. Karssemeijer for making this dataset available, which enabled this study).
+The three methods, in historical order $\text{RRFC}$, $\text{2T-RRRC}$ and $\text{1T-RRRC}$, were applied to an LROC dataset similar to that used in Study -- 1 (I thank Prof. Karssemeijer for making this dataset available).
 
 
-<table class="table" style="margin-left: auto; margin-right: auto;">
-<caption>(\#tab:standalone-cad-table-cells2)TBA</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> FOM </th>
-   <th style="text-align:left;"> Method </th>
-   <th style="text-align:left;"> theta0 </th>
-   <th style="text-align:left;"> CItheta0 </th>
-   <th style="text-align:left;"> thetabullet </th>
-   <th style="text-align:left;"> CIthetabullet </th>
-   <th style="text-align:left;"> psi0 </th>
-   <th style="text-align:left;"> CIpsi0 </th>
-   <th style="text-align:left;"> F </th>
-   <th style="text-align:left;"> ddf </th>
-   <th style="text-align:left;"> p </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL-0.05 </td>
-   <td style="text-align:left;"> RRFC </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.463 </td>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.506 </td>
-   <td style="text-align:left;"> (0.437, 0.576) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.0439 </td>
-   <td style="text-align:left;"> (-0.026, 0.113) </td>
-   <td style="text-align:left;"> 2.115 </td>
-   <td style="text-align:left;"> 8 </td>
-   <td style="text-align:left;"> 0.184 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 2T-RRRC </td>
-   
-   <td style="text-align:left;"> (0.339, 0.586) </td>
-   
-   <td style="text-align:left;"> (0.392, 0.621) </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> (0.100, 0.188) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 0.361 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 274 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 0.548 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 1T-RRRC </td>
-   
-   <td style="text-align:left;"> NA </td>
-   
-   <td style="text-align:left;"> (0.363, 0.650) </td>
-   
-   
-   
-   
-   
-  </tr>
-  <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL-0.2 </td>
-   <td style="text-align:left;"> RRFC </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.592 </td>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.711 </td>
-   <td style="text-align:left;"> (0.670, 0.752) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.119 </td>
-   <td style="text-align:left;"> (0.079, 0.160) </td>
-   <td style="text-align:left;"> 45.45 </td>
-   <td style="text-align:left;"> 8 </td>
-   <td style="text-align:left;"> 0.0001 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 2T-RRRC </td>
-   
-   <td style="text-align:left;"> (0.478, 0.705) </td>
-   
-   <td style="text-align:left;"> (0.633, 0.789) </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> (0.004, 0.235) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 4.147 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 961 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 0.0420 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 1T-RRRC </td>
-   
-   <td style="text-align:left;"> NA </td>
-   
-   <td style="text-align:left;"> (0.600, 0.826) </td>
-   
-   
-   
-   
-   
-  </tr>
-  <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL-1 </td>
-   <td style="text-align:left;"> RRFC </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.675 </td>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.783 </td>
-   <td style="text-align:left;"> (0.740, 0.827) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.108 </td>
-   <td style="text-align:left;"> (0.065, 0.152) </td>
-   <td style="text-align:left;"> 32.98 </td>
-   <td style="text-align:left;"> 8 </td>
-   <td style="text-align:left;"> 0.0004 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 2T-RRRC </td>
-   
-   <td style="text-align:left;"> (0.571, 0.779) </td>
-   
-   <td style="text-align:left;"> (0.712, 0.854) </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> (0.005, 0.212) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 4.20 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 493 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 0.0409 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 1T-RRRC </td>
-   
-   <td style="text-align:left;"> NA </td>
-   
-   <td style="text-align:left;"> (0.680, 0.887) </td>
-   
-   
-   
-   
-   
-  </tr>
-  <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> AUC </td>
-   <td style="text-align:left;"> RRFC </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.817 </td>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.849 </td>
-   <td style="text-align:left;"> (0.826, 0.871) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 0.032 </td>
-   <td style="text-align:left;"> (0.009, 0.055) </td>
-   <td style="text-align:left;"> 10.3 </td>
-   <td style="text-align:left;"> 8 </td>
-   <td style="text-align:left;"> 0.0124 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 2T-RRRC </td>
-   
-   <td style="text-align:left;"> (0.752, 0.882) </td>
-   
-   <td style="text-align:left;"> (0.807, 0.890) </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> (0.031, -0.094) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 0.986 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 878 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 0.3210 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 1T-RRRC </td>
-   
-   <td style="text-align:left;"> NA </td>
-   
-   <td style="text-align:left;"> (0.786, 0.911) </td>
-   
-   
-   
-   
-   
-  </tr>
-</tbody>
-</table>
+\begin{table}[!h]
+
+\caption{(\#tab:standalone-cad-table-cells2)Primary results of the analyses for an LROC dataset. Three sets of results, namely RRRC, 2T-RRRC and 1T-RRRC, are shown for each figure of merit (FOM). Because it is accounting for an additional source of variability, each of the rows labeled RRRC yields a larger p-value and wider confidence intervals than the corresponding row labeled RRFC. [$\theta_0$ = FOM CAD; $\theta_{\bullet}$ = average FOM of radiologists; $\psi_{\bullet}$ = average FOM of radiologists minus CAD; CI= 95 percent confidence interval of quantity indicated by the subscript, F = F-statistic; ddf = denominator degrees of freedom; p = p-value for rejecting the null hypothesis: $\psi_{\bullet} = 0$.]}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{lllllllllll}
+\toprule
+FOM & Method & $\theta_0$ & $CI_{\theta_0}$ & $\theta_{\bullet}$ & $CI_{\theta_{\bullet}}$ & $\psi_{\bullet}$ & $CI_{\psi_{\bullet}}$ & F & ddf & p\\
+\midrule
+ & RRFC &  & 0 &  & (0.437, 0.576) &  & (-0.026, 0.113) & 2.115 & 8 & 0.184\\
+\cmidrule{2-2}
+\cmidrule{4-4}
+\cmidrule{6-6}
+\cmidrule{8-11}
+ & 2T-RRRC &  & (0.339, 0.586) &  & (0.392, 0.621) &  &  &  &  & \\
+\cmidrule{2-2}
+\cmidrule{4-4}
+\cmidrule{6-6}
+\multirow{-3}{*}{\raggedright\arraybackslash PCL-0.05} & 1T-RRRC & \multirow{-3}{*}{\raggedright\arraybackslash 0.463} & NA & \multirow{-3}{*}{\raggedright\arraybackslash 0.506} & (0.363, 0.650) & \multirow{-3}{*}{\raggedright\arraybackslash 0.0439} & \multirow{-2}{*}{\raggedright\arraybackslash (0.100, 0.188)} & \multirow{-2}{*}{\raggedright\arraybackslash 0.361} & \multirow{-2}{*}{\raggedright\arraybackslash 274} & \multirow{-2}{*}{\raggedright\arraybackslash 0.548}\\
+\cmidrule{1-11}
+ & RRFC &  & 0 &  & (0.670, 0.752) &  & (0.079, 0.160) & 45.45 & 8 & 0.0001\\
+\cmidrule{2-2}
+\cmidrule{4-4}
+\cmidrule{6-6}
+\cmidrule{8-11}
+ & 2T-RRRC &  & (0.478, 0.705) &  & (0.633, 0.789) &  &  &  &  & \\
+\cmidrule{2-2}
+\cmidrule{4-4}
+\cmidrule{6-6}
+\multirow{-3}{*}{\raggedright\arraybackslash PCL-0.2} & 1T-RRRC & \multirow{-3}{*}{\raggedright\arraybackslash 0.592} & NA & \multirow{-3}{*}{\raggedright\arraybackslash 0.711} & (0.600, 0.826) & \multirow{-3}{*}{\raggedright\arraybackslash 0.119} & \multirow{-2}{*}{\raggedright\arraybackslash (0.004, 0.235)} & \multirow{-2}{*}{\raggedright\arraybackslash 4.147} & \multirow{-2}{*}{\raggedright\arraybackslash 961} & \multirow{-2}{*}{\raggedright\arraybackslash 0.0420}\\
+\cmidrule{1-11}
+ & RRFC &  & 0 &  & (0.740, 0.827) &  & (0.065, 0.152) & 32.98 & 8 & 0.0004\\
+\cmidrule{2-2}
+\cmidrule{4-4}
+\cmidrule{6-6}
+\cmidrule{8-11}
+ & 2T-RRRC &  & (0.571, 0.779) &  & (0.712, 0.854) &  &  &  &  & \\
+\cmidrule{2-2}
+\cmidrule{4-4}
+\cmidrule{6-6}
+\multirow{-3}{*}{\raggedright\arraybackslash PCL-1} & 1T-RRRC & \multirow{-3}{*}{\raggedright\arraybackslash 0.675} & NA & \multirow{-3}{*}{\raggedright\arraybackslash 0.783} & (0.680, 0.887) & \multirow{-3}{*}{\raggedright\arraybackslash 0.108} & \multirow{-2}{*}{\raggedright\arraybackslash (0.005, 0.212)} & \multirow{-2}{*}{\raggedright\arraybackslash 4.20} & \multirow{-2}{*}{\raggedright\arraybackslash 493} & \multirow{-2}{*}{\raggedright\arraybackslash 0.0409}\\
+\cmidrule{1-11}
+ & RRFC &  & 0 &  & (0.826, 0.871) &  & (0.009, 0.055) & 10.3 & 8 & 0.0124\\
+\cmidrule{2-2}
+\cmidrule{4-4}
+\cmidrule{6-6}
+\cmidrule{8-11}
+ & 2T-RRRC &  & (0.752, 0.882) &  & (0.807, 0.890) &  &  &  &  & \\
+\cmidrule{2-2}
+\cmidrule{4-4}
+\cmidrule{6-6}
+\multirow{-3}{*}{\raggedright\arraybackslash AUC} & 1T-RRRC & \multirow{-3}{*}{\raggedright\arraybackslash 0.817} & NA & \multirow{-3}{*}{\raggedright\arraybackslash 0.849} & (0.786, 0.911) & \multirow{-3}{*}{\raggedright\arraybackslash 0.032} & \multirow{-2}{*}{\raggedright\arraybackslash (0.031, -0.094)} & \multirow{-2}{*}{\raggedright\arraybackslash 0.986} & \multirow{-2}{*}{\raggedright\arraybackslash 878} & \multirow{-2}{*}{\raggedright\arraybackslash 0.3210}\\
+\bottomrule
+\end{tabular}}
+\end{table}
 
 
-The primary results (as distinct from model parameters) are listed in Table \@ref(tab:standalone-cad-table-cells2) for four FOMs, namely $\text{PCL}_{0.05}$, $\text{PCL}_{0.2}$, $\text{PCL}_{1}$ and the empirical area (AUC) under the ROC curve. The first two FOMs are identical to those used in Study -- 1. Columns 3 and 4 list the CAD FOM $\theta_0$, and its 95% confidence interval $CI_{\theta_0}$, columns 5 and 6 list the average radiologist FOM $\theta_{\bullet}$ (the dot symbol represents an average over the radiologist index) and its 95% confidence interval $CI_{\theta_{\bullet}}$, columns 7 and 8 list the average difference FOM $\psi_{\bullet}$, i.e., radiologist minus CAD, and its 95% confidence interval $CI_{\psi_{\bullet}}$, and the last three columns list the F-statistic, the denominator degrees of freedom (ddf) and the p-value for rejecting the null hypothesis. The numerator degree of freedom of the F-statistic, not listed, is unity.
+The primary significance-testing results (as opposed to model parameters) are listed in Table \@ref(tab:standalone-cad-table-cells2). Results are shown for the following FOMs: $\text{PCL}_{0.05}$, $\text{PCL}_{0.2}$, $\text{PCL}_{1}$ and the empirical area (AUC) under the ROC curve. The first two FOMs are identical to those used in Study -- 1. Columns 3 and 4 list the CAD FOM $\theta_0$, and its 95% confidence interval $CI_{\theta_0}$, columns 5 and 6 list the average radiologist FOM $\theta_{\bullet}$ (the dot symbol represents an average over the radiologist index) and its 95% confidence interval $CI_{\theta_{\bullet}}$, columns 7 and 8 list the average difference FOM $\psi_{\bullet}$, i.e., radiologist minus CAD, and its 95% confidence interval $CI_{\psi_{\bullet}}$, and the last three columns list the F-statistic, the denominator degrees of freedom (ddf) and the p-value for rejecting the null hypothesis. The numerator degree of freedom of the F-statistic, not listed, is unity.
 
 The most relevant results, in the last three columns, are that $\text{2T-RRRC}$ and $\text{1T-RRRC}$ yield identical F-statistics, ddf and p-values. So the intuition of the authors of Study -- 2, that the unorthodox method of using DBM -- MRMC software to account for both reader and case-sampling variability, turns out to be correct. Therefore, if interest is solely in these statistics, one is justified in using the unorthodox method.
 
@@ -620,159 +343,54 @@ This should be obvious, as PCL increases as FPF increases, a general feature of 
 8. Ignoring localization information (i.e., using the AUC FOM) led to a not-significant difference between CAD and the radiologists ($p$ = 0.3210), while the corresponding FOM yielded a significant difference ($p$ = 0.0409). Accounting for localization leads to a less "noisy" measurement. This has been demonstrated for the LROC paradigm [@swensson1996unified] and I have demonstrated this for the FROC paradigm [@chakraborty2008validation].
 9. For $\text{1T-RRRC}$ analysis, is listed as NA, for not applicable, since is not a model parameter, see Eqn. \@ref(eq:standalone-cad-model-psi-j).
 
-The following characteristics are evident from Table \@ref(tab:standalone-cad-table-cells2).
+The following characteristics are evident from Table \@ref(tab:standalone-cad-table-cells3).
 
 1. For $\text{2T-RRRC}$ analyses $\sigma_R^2 = 0$. Actually, the analysis yielded very small values, of the order of $10^{-18}$ to $10^{-19}$, which, being smaller than double precision accuracy, were replaced by zeroes in Table \@ref(tab:standalone-cad-table-cells2). $\sigma_R^2 = 0$ is clearly an incorrect result as the radiologists do not have identical performance. In contrast, $\text{1T-RRRC}$ analyses yielded more realistic values, identical to those obtained by $\text{RRFC}$ analyses, and consistent with expectation -- see comment following Eqn. (15).
 2. Because 2T analysis found zero reader variability, it follows from the definitions of the covariances [@obuchowski1995hypothesis], that $Cov_1 = Cov_3 = 0$, as evident in the table.
 3. When they can be compared (i.e., $\sigma_R^2$, $Cov_2$ and $Var$), all variance and covariance estimates were smaller for the 2T method than for the 1T method.
-4. For the 2T method the expected inequalities, Eqn.(6), are not obeyed (specifically, $Cov_1 \geq Cov_2 \geq Cov_3$ is not obeyed).
-
-Table \@ref(tab:standalone-cad-table-cells3): Parameter estimates for the analyses. NA = not applicable; the variances and covariances are defined in Eqn. \@ref(eq:standalone-cad-model-rj-taur-sampling) and Eqn. \@ref(eq:standalone-cad-or-cov).
-
-
-<table class="table" style="margin-left: auto; margin-right: auto;">
-<caption>(\#tab:standalone-cad-table-cells3)TBA</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> FOM </th>
-   <th style="text-align:left;"> Method </th>
-   <th style="text-align:left;"> $\sigma_R^2$ </th>
-   <th style="text-align:left;"> varTR </th>
-   <th style="text-align:left;"> Cov1 </th>
-   <th style="text-align:left;"> Cov2 </th>
-   <th style="text-align:left;"> Cov3 </th>
-   <th style="text-align:left;"> Var </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL-0.05 </td>
-   <td style="text-align:left;"> RRFC </td>
-   <td style="text-align:left;"> 0.00819 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 2T-RRRC </td>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;"> -0.00248 </td>
-   <td style="text-align:left;"> 0.001 </td>
-   <td style="text-align:left;"> 0.00321 </td>
-   <td style="text-align:left;"> 0.001 </td>
-   <td style="text-align:left;"> 0.00978 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 1T-RRRC </td>
-   <td style="text-align:left;"> 0.00819 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 0.00442 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 0.01757 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL-0.2 </td>
-   <td style="text-align:left;"> RRFC </td>
-   <td style="text-align:left;"> 0.00282 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 2T-RRRC </td>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;"> 0.00017 </td>
-   <td style="text-align:left;"> 0.00075 </td>
-   <td style="text-align:left;"> 0.00231 </td>
-   <td style="text-align:left;"> 0.00075 </td>
-   <td style="text-align:left;"> 0.00356 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 1T-RRRC </td>
-   <td style="text-align:left;"> 0.00282 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 0.00313 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 0.00562 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL-1 </td>
-   <td style="text-align:left;"> RRFC </td>
-   <td style="text-align:left;"> 0.00320 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 2T-RRRC </td>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;"> 0.001 </td>
-   <td style="text-align:left;"> 0.00064 </td>
-   <td style="text-align:left;"> 0.00186 </td>
-   <td style="text-align:left;"> 0.00064 </td>
-   <td style="text-align:left;"> 0.00246 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 1T-RRRC </td>
-   <td style="text-align:left;"> 0.00320 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 0.00244 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 0.00364 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> AUC </td>
-   <td style="text-align:left;"> RRFC </td>
-   <td style="text-align:left;"> 0.00088 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 2T-RRRC </td>
-   <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;"> 0.0002 </td>
-   <td style="text-align:left;"> 0.0003 </td>
-   <td style="text-align:left;"> 0.0007 </td>
-   <td style="text-align:left;"> 0.0003 </td>
-   <td style="text-align:left;"> 0.001 </td>
-  </tr>
-  <tr>
-   
-   <td style="text-align:left;"> 1T-RRRC </td>
-   <td style="text-align:left;"> 0.00088 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 0.0009 </td>
-   <td style="text-align:left;"> NA </td>
-   <td style="text-align:left;"> 0.0014 </td>
-  </tr>
-</tbody>
-</table>
+4. For the 2T method the expected inequalities, Eqn. \@ref(eq:standalone-var-comp-ordering), are not obeyed (specifically, $Cov_1 \geq Cov_2 \geq Cov_3$ is not obeyed).
 
 
 
-For an analysis method to be considered statistically valid it needs to be tested with simulations to determine if it has the proper null hypothesis behavior.
-The design of a ratings simulator to statistically match a given dataset is addressed in Chapter 23 of reference [@chakraborty2017observer].
-Using this simulator, the $\text{1T-RRRC}$ method had the expected null hypothesis behavior (Table 23.5, ibid).
+\begin{table}[!h]
+
+\caption{(\#tab:standalone-cad-table-cells3)Parameter estimates, NA = not applicable.}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{llllllll}
+\toprule
+FOM & Method & $\sigma_R^2$ & $\sigma_{\tau R}^2$ & Cov1 & Cov2 & Cov3 & Var\\
+\midrule
+ & RRFC & 0.00819 & NA & NA & NA & NA & NA\\
+\cmidrule{2-8}
+ & 2T-RRRC & 0 & -0.00248 & 0.001 & 0.00321 & 0.001 & 0.00978\\
+\cmidrule{2-8}
+\multirow{-3}{*}{\raggedright\arraybackslash PCL-0.05} & 1T-RRRC & 0.00819 & NA & NA & 0.00442 & NA & 0.01757\\
+\cmidrule{1-8}
+ & RRFC & 0.00282 & NA & NA & NA & NA & NA\\
+\cmidrule{2-8}
+ & 2T-RRRC & 0 & 0.00017 & 0.00075 & 0.00231 & 0.00075 & 0.00356\\
+\cmidrule{2-8}
+\multirow{-3}{*}{\raggedright\arraybackslash PCL-0.2} & 1T-RRRC & 0.00282 & NA & NA & 0.00313 & NA & 0.00562\\
+\cmidrule{1-8}
+ & RRFC & 0.00320 & NA & NA & NA & NA & NA\\
+\cmidrule{2-8}
+ & 2T-RRRC & 0 & 0.001 & 0.00064 & 0.00186 & 0.00064 & 0.00246\\
+\cmidrule{2-8}
+\multirow{-3}{*}{\raggedright\arraybackslash PCL-1} & 1T-RRRC & 0.00320 & NA & NA & 0.00244 & NA & 0.00364\\
+\cmidrule{1-8}
+ & RRFC & 0.00088 & NA & NA & NA & NA & NA\\
+\cmidrule{2-8}
+ & 2T-RRRC & 0 & 0.0002 & 0.0003 & 0.0007 & 0.0003 & 0.001\\
+\cmidrule{2-8}
+\multirow{-3}{*}{\raggedright\arraybackslash AUC} & 1T-RRRC & 0.00088 & NA & NA & 0.0009 & NA & 0.0014\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+
+
+For an analysis method to be considered statistically valid it needs to be tested with simulations to determine if it has the proper null hypothesis behavior. The design of a ratings simulator to statistically match a given dataset is addressed in Chapter 23 of reference [@chakraborty2017observer]. Using this simulator, the $\text{1T-RRRC}$ method had the expected null hypothesis behavior (Table 23.5, ibid).
 
 ## Discussion {#standalone-cad-radiologists-discussion}
 

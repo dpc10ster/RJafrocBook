@@ -1,9 +1,11 @@
 ---
-editor_options: 
-  markdown: 
-    wrap: sentence
+header-includes:
+  - \usepackage{float}
+  - \floatplacement{figure}{H}  #make every figure with caption = h, this was the fix
+output:
+  pdf_document: default
+fig_caption: yes
 ---
-
 
 ```{r setup, include = FALSE}
   knitr::opts_chunk$set(
@@ -266,7 +268,7 @@ The three analyses, namely random-reader fixed-case ($\text{RRFC}$), dual-treatm
 
 ## Results {#standalone-cad-radiologists-results}
 
-The three methods, in historical order $\text{RRFC}$, $\text{2T-RRRC}$ and $\text{1T-RRRC}$, were applied to an LROC dataset similar to that used in Study -- 1 (DPC thanks Prof. Karssemeijer for making this dataset available, which enabled this study).
+The three methods, in historical order $\text{RRFC}$, $\text{2T-RRRC}$ and $\text{1T-RRRC}$, were applied to an LROC dataset similar to that used in Study -- 1 (I thank Prof. Karssemeijer for making this dataset available).
 
 
 ```{r standalone-cad-table-cells2, echo=FALSE}
@@ -288,12 +290,13 @@ cells[11,]  <- c("AUC", "2T-RRRC",     "0.817", "(0.752, 0.882)", "0.849", "(0.8
 cells[12,]  <- c("AUC", "1T-RRRC",     "0.817",             "NA", "0.849", "(0.786, 0.911)", "0.032",  "(0.031, -0.094)",  "0.986", "878", "0.3210")
 
 df <- as.data.frame(cells, stringsAsFactors = FALSE)
-colnames(df) <- c("FOM", "Method", "theta0", "CItheta0", "thetabullet", "CIthetabullet", "psi0", "CIpsi0",  "F", "ddf", "p")
-kable(df, caption = "TBA", booktabs = TRUE) %>% collapse_rows(columns = c(1, 3, 5, 7, 8, 9, 10, 11), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "hold_position"), row_label_position = "c") 
+colnames(df) <- c("FOM", "Method", "$\\theta_0$", "$CI_{\\theta_0}$", "$\\theta_{\\bullet}$", "$CI_{\\theta_{\\bullet}}$", "$\\psi_{\\bullet}$", "$CI_{\\psi_{\\bullet}}$",  "F", "ddf", "p")
+# escape = FALSE is critical in getting Math right
+kbl(df, caption = "Primary results of the analyses for an LROC dataset. Three sets of results, namely RRRC, 2T-RRRC and 1T-RRRC, are shown for each figure of merit (FOM). Because it is accounting for an additional source of variability, each of the rows labeled RRRC yields a larger p-value and wider confidence intervals than the corresponding row labeled RRFC. [$\\theta_0$ = FOM CAD; $\\theta_{\\bullet}$ = average FOM of radiologists; $\\psi_{\\bullet}$ = average FOM of radiologists minus CAD; CI= 95 percent confidence interval of quantity indicated by the subscript, F = F-statistic; ddf = denominator degrees of freedom; p = p-value for rejecting the null hypothesis: $\\psi_{\\bullet} = 0$.]", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3, 5, 7, 8, 9, 10, 11), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "hold_position"), row_label_position = "c") 
 ```
 
 
-The primary results (as distinct from model parameters) are listed in Table \@ref(tab:standalone-cad-table-cells2) for four FOMs, namely $\text{PCL}_{0.05}$, $\text{PCL}_{0.2}$, $\text{PCL}_{1}$ and the empirical area (AUC) under the ROC curve. The first two FOMs are identical to those used in Study -- 1. Columns 3 and 4 list the CAD FOM $\theta_0$, and its 95% confidence interval $CI_{\theta_0}$, columns 5 and 6 list the average radiologist FOM $\theta_{\bullet}$ (the dot symbol represents an average over the radiologist index) and its 95% confidence interval $CI_{\theta_{\bullet}}$, columns 7 and 8 list the average difference FOM $\psi_{\bullet}$, i.e., radiologist minus CAD, and its 95% confidence interval $CI_{\psi_{\bullet}}$, and the last three columns list the F-statistic, the denominator degrees of freedom (ddf) and the p-value for rejecting the null hypothesis. The numerator degree of freedom of the F-statistic, not listed, is unity.
+The primary significance-testing results (as opposed to model parameters) are listed in Table \@ref(tab:standalone-cad-table-cells2). Results are shown for the following FOMs: $\text{PCL}_{0.05}$, $\text{PCL}_{0.2}$, $\text{PCL}_{1}$ and the empirical area (AUC) under the ROC curve. The first two FOMs are identical to those used in Study -- 1. Columns 3 and 4 list the CAD FOM $\theta_0$, and its 95% confidence interval $CI_{\theta_0}$, columns 5 and 6 list the average radiologist FOM $\theta_{\bullet}$ (the dot symbol represents an average over the radiologist index) and its 95% confidence interval $CI_{\theta_{\bullet}}$, columns 7 and 8 list the average difference FOM $\psi_{\bullet}$, i.e., radiologist minus CAD, and its 95% confidence interval $CI_{\psi_{\bullet}}$, and the last three columns list the F-statistic, the denominator degrees of freedom (ddf) and the p-value for rejecting the null hypothesis. The numerator degree of freedom of the F-statistic, not listed, is unity.
 
 The most relevant results, in the last three columns, are that $\text{2T-RRRC}$ and $\text{1T-RRRC}$ yield identical F-statistics, ddf and p-values. So the intuition of the authors of Study -- 2, that the unorthodox method of using DBM -- MRMC software to account for both reader and case-sampling variability, turns out to be correct. Therefore, if interest is solely in these statistics, one is justified in using the unorthodox method.
 
@@ -310,14 +313,13 @@ This should be obvious, as PCL increases as FPF increases, a general feature of 
 8. Ignoring localization information (i.e., using the AUC FOM) led to a not-significant difference between CAD and the radiologists ($p$ = 0.3210), while the corresponding FOM yielded a significant difference ($p$ = 0.0409). Accounting for localization leads to a less "noisy" measurement. This has been demonstrated for the LROC paradigm [@swensson1996unified] and I have demonstrated this for the FROC paradigm [@chakraborty2008validation].
 9. For $\text{1T-RRRC}$ analysis, is listed as NA, for not applicable, since is not a model parameter, see Eqn. \@ref(eq:standalone-cad-model-psi-j).
 
-The following characteristics are evident from Table \@ref(tab:standalone-cad-table-cells2).
+The following characteristics are evident from Table \@ref(tab:standalone-cad-table-cells3).
 
 1. For $\text{2T-RRRC}$ analyses $\sigma_R^2 = 0$. Actually, the analysis yielded very small values, of the order of $10^{-18}$ to $10^{-19}$, which, being smaller than double precision accuracy, were replaced by zeroes in Table \@ref(tab:standalone-cad-table-cells2). $\sigma_R^2 = 0$ is clearly an incorrect result as the radiologists do not have identical performance. In contrast, $\text{1T-RRRC}$ analyses yielded more realistic values, identical to those obtained by $\text{RRFC}$ analyses, and consistent with expectation -- see comment following Eqn. (15).
 2. Because 2T analysis found zero reader variability, it follows from the definitions of the covariances [@obuchowski1995hypothesis], that $Cov_1 = Cov_3 = 0$, as evident in the table.
 3. When they can be compared (i.e., $\sigma_R^2$, $Cov_2$ and $Var$), all variance and covariance estimates were smaller for the 2T method than for the 1T method.
-4. For the 2T method the expected inequalities, Eqn.(6), are not obeyed (specifically, $Cov_1 \geq Cov_2 \geq Cov_3$ is not obeyed).
+4. For the 2T method the expected inequalities, Eqn. \@ref(eq:standalone-var-comp-ordering), are not obeyed (specifically, $Cov_1 \geq Cov_2 \geq Cov_3$ is not obeyed).
 
-Table \@ref(tab:standalone-cad-table-cells3): Parameter estimates for the analyses. NA = not applicable; the variances and covariances are defined in Eqn. \@ref(eq:standalone-cad-model-rj-taur-sampling) and Eqn. \@ref(eq:standalone-cad-or-cov).
 
 
 ```{r standalone-cad-table-cells3, echo=FALSE}
@@ -339,15 +341,13 @@ cells[11,]  <- c(    "AUC", "2T-RRRC",           "0",   "0.0002",  "0.0003",  "0
 cells[12,]  <- c(    "AUC", "1T-RRRC",     "0.00088", "NA", "NA",  "0.0009",      "NA",  "0.0014")
 
 df <- as.data.frame(cells, stringsAsFactors = FALSE)
-colnames(df) <- c("FOM", "Method", "$\\sigma_R^2$", "varTR", "Cov1", "Cov2", "Cov3", "Var")
-kable(df, caption = "TBA", booktabs = TRUE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "hold_position"), row_label_position = "c") 
+colnames(df) <- c("FOM", "Method", "$\\sigma_R^2$", "$\\sigma_{\\tau R}^2$", "Cov1", "Cov2", "Cov3", "Var")
+kbl(df, caption = "Parameter estimates, NA = not applicable.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "hold_position"), row_label_position = "c") 
 ```
 
 
 
-For an analysis method to be considered statistically valid it needs to be tested with simulations to determine if it has the proper null hypothesis behavior.
-The design of a ratings simulator to statistically match a given dataset is addressed in Chapter 23 of reference [@chakraborty2017observer].
-Using this simulator, the $\text{1T-RRRC}$ method had the expected null hypothesis behavior (Table 23.5, ibid).
+For an analysis method to be considered statistically valid it needs to be tested with simulations to determine if it has the proper null hypothesis behavior. The design of a ratings simulator to statistically match a given dataset is addressed in Chapter 23 of reference [@chakraborty2017observer]. Using this simulator, the $\text{1T-RRRC}$ method had the expected null hypothesis behavior (Table 23.5, ibid).
 
 ## Discussion {#standalone-cad-radiologists-discussion}
 
