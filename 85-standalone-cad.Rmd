@@ -1,12 +1,3 @@
----
-header-includes:
-  - \usepackage{float}
-  - \floatplacement{figure}{H}  #make every figure with caption = h, this was the fix
-output:
-  pdf_document: default
-fig_caption: yes
----
-
 ```{r setup, include = FALSE}
   knitr::opts_chunk$set(
   collapse = TRUE,
@@ -22,7 +13,7 @@ fig_caption: yes
 
 ## Abstract {#standalone-cad-radiologists-abstract}
 
-Computer aided detection (CAD) research for screening mammography has so far focused on measuring performance of radiologists with and without CAD. Standalone performance of CAD algorithms is rarely measured. One reason is the lack of clear methodology for comparing CAD to radiologists interpreting the same cases. This work extends the method used in a recent study of standalone performance. The method is termed random-reader fixed case ($\text{RRFC}$), since it only accounts for reader variability. The extension includes the effect of case-sampling variability. Since CAD is treated as an additional reader, the method is termed one-treatment random-reader random-case ($\text{1T-RRRC}$) analysis. The new method is based on existing methodology that allows comparing the average performance of readers in a single treatment to a constant value. The key modification is to regard the difference in performance between radiologists and CAD as a figure of merit, to which the existing work is directly applicable. The $\text{1T-RRRC}$ method was compared to $\text{RRFC}$ and to an unorthodox usage of cells ROC analysis software, termed $\text{2T-RRRC}$ analysis, which involves replicating the CAD ratings as many times as there are radiologists, to simulate a second treatment, i.e., CAD is regarded as the second treatment. $\text{1T-RRRC}$ analysis has 3 random parameters as compared to 6 parameters in $\text{2T-RRRC}$ and one parameter in $\text{RRFC}$. As expected, since one is including an additional source of variability, both RRRC analyses (1T and 2T) yielded larger p-values and wider confidence intervals as compared to $\text{RRFC}$. For the F-statistic, degrees of freedom and p-value, both $\text{1T-RRRC}$ and $\text{2T-RRRC}$ analyses yielded exactly the same results. However, $\text{2T-RRRC}$ model parameter estimates were unrealistic; for example, it yielded zero for between-reader variance, whereas $\text{1T-RRRC}$ yielded the expected non-zero value, identical to that yielded by $\text{RRFC}$. The method is implemented in an open-source `R` package `RJafroc.`
+Computer aided detection (CAD) research for screening mammography has so far focused on measuring performance of radiologists with and without CAD. Standalone performance of CAD algorithms is rarely measured. One reason is the lack of clear methodology for comparing CAD to radiologists interpreting the same cases. This work extends the method used in a recent study of standalone performance. The method is termed random-reader fixed case ($\text{1T-RRFC}$), since it only accounts for reader variability. The extension includes the effect of case-sampling variability. Since CAD is treated as an additional reader, the method is termed one-treatment random-reader random-case ($\text{1T-RRRC}$) analysis. The new method is based on existing methodology that allows comparing the average performance of readers in a single treatment to a constant value. The key modification is to regard the difference in performance between radiologists and CAD as a figure of merit, to which the existing work is directly applicable. The $\text{1T-RRRC}$ method was compared to $\text{1T-RRFC}$ and to an unorthodox usage of cells ROC analysis software, termed $\text{2T-RRRC}$ analysis, which involves replicating the CAD ratings as many times as there are radiologists, to simulate a second treatment, i.e., CAD is regarded as the second treatment. $\text{1T-RRRC}$ analysis has 3 random parameters as compared to 6 parameters in $\text{2T-RRRC}$ and one parameter in $\text{1T-RRFC}$. As expected, since one is including an additional source of variability, both RRRC analyses (1T and 2T) yielded larger p-values and wider confidence intervals as compared to $\text{1T-RRFC}$. For the F-statistic, degrees of freedom and p-value, both $\text{1T-RRRC}$ and $\text{2T-RRRC}$ analyses yielded exactly the same results. However, $\text{2T-RRRC}$ model parameter estimates were unrealistic; for example, it yielded zero for between-reader variance, whereas $\text{1T-RRRC}$ yielded the expected non-zero value, identical to that yielded by $\text{1T-RRFC}$. The method is implemented in an open-source `R` package `RJafroc.`
 
 ## Keywords {#standalone-cad-radiologists-ker-words}
 
@@ -39,10 +30,8 @@ It describes a method for comparing standalone performance of designer-level CAD
 
 ## Methods {#standalone-cad-radiologists-methods}
 
-Summarized are two recent studies of CAD vs. radiologists in mammography.
-This is followed by comments on the methodologies used in the two studies.
-The second study used cells ROC software in an unorthodox (or unconventional) way.
-A statistical model and analysis method is described that avoids unorthodox, and perhaps unjustified, use of ROC software and has fewer model parameters.
+Summarized are two recent studies of CAD vs. radiologists in mammography. This is followed by comments on the methodologies used in the two studies.
+The second study used cells ROC software in an unorthodox (or unconventional) way. A statistical model and analysis method is described that avoids unorthodox, and perhaps unjustified, use of ROC software and has fewer model parameters.
 
 ### Studies assessing performance of CAD vs. radiologists {#standalone-cad-radiologists-two-previous-studies}
 
@@ -51,6 +40,7 @@ The first study [@hupse2013standalone] measured performance in finding and local
 #### Study - 1 {#standalone-cad-radiologists-study1}
 
 The first study [@hupse2013standalone] compared standalone performance of a CAD device to that of 9 radiologists interpreting the same cases (120 non-diseased and 80 with a single malignant mass per case). It used the LROC paradigm [@starr1975visual; @metz1976observer; @swensson1996unified], in which the observer gives an overall rating for presence of disease (an integer 0 to 100 scale was used) and indicates the location of the most suspicious region. On non-diseased cases the rating is classified as a false positive (FP), but on a diseased case the rating is classified as a *correct localization* (CL) if the location is sufficiently close to the lesion, and otherwise it is classified as an *incorrect localization*. For a given reporting threshold, the number of correct localizations divided by the number of diseased cases estimates the probability of correct localization (PCL) at that threshold. On non-diseased cases, the number of false positives (FPs) divided by the number of non-diseased cases estimates the probability of a false positive, or false positive fraction (FPF) at that threshold. The plot of PCL (ordinate) vs. FPF defines the LROC curve. Study - 1 used as figures of merit (FOMs) the interpolated PCL at two values of FPF, specifically FPF = 0.05 and FPF = 0.2, denoted $\text{PCL}_{0.05}$ and $\text{PCL}_{0.2}$, respectively. The t-test between the radiologist $\text{PCL}_{\text{FPF}}$ values and that of CAD was used to compute the two-sided p-value for rejecting the NH of equal performance. Study - 1 reported p-value = 0.17 for $\text{PCL}_{0.05}$ and p-value \< 0.001, with CAD being inferior, for $\text{PCL}_{0.2}$.
+
 
 #### Study - 2 {#standalone-cad-radiologists-study2}
 
@@ -89,7 +79,7 @@ For the purpose of this work, which focuses on the respective analysis methods, 
 
 [^standalone-cad-1]: Prof. Karssemeijer (private communication, 10/27/2017) had consulted with a few ROC experts to determine if the procedure used in Study -- 2 was valid, and while the experts thought it was probably valid they were not sure.
 
-In what follows, the analysis in Study -- 1 is referred to as random-reader fixed-case ($\text{RRFC}$) while that in Study -- 2 is referred to as dual-treatment random-reader random-case ($\text{2T-RRRC}$).
+In what follows, the analysis in Study -- 1 is referred to as random-reader fixed-case ($\text{1T-RRFC}$) while that in Study -- 2 is referred to as dual-treatment random-reader random-case ($\text{2T-RRRC}$).
 
 ### The $\text{2T-RRRC}$ analysis model {#standalone-cad-radiologists-2TRRRC-anlaysis}
 
@@ -260,66 +250,196 @@ Apart from fixed effects, the model in Eqn. \@ref(eq:standalone-cad-model-psi-j)
 \end{equation}
 ```
 
-Setting $Var = 0, Cov_2 = 0$ yields the $\text{RRFC}$ model, which contains only one random parameter, namely $\sigma_R^2$. A valid analysis should yield identical estimates of this parameter from either $\text{RRFC}$ or $\text{RRRC}$ analysis.
+Setting $Var = 0, Cov_2 = 0$ yields the $\text{1T-RRFC}$ model, which contains only one random parameter, namely $\sigma_R^2$. A valid analysis should yield identical estimates of this parameter from either $\text{1T-RRFC}$ or $\text{RRRC}$ analysis.
 
 ### Computational details {#standalone-cad-radiologists-computational-details}
 
-The three analyses, namely random-reader fixed-case ($\text{RRFC}$), dual-treatment random-reader random-case ($\text{2T-RRRC}$) and single-treatment random-reader random-case ($\text{1T-RRRC}$), are implemented in `RJafroc`, an R-package [@packageRJafroc]. The function calls necessary to reproduce the results that follow are in the Appendix. [The PT-Mono font is used to distinguish software specific terms from normal text.]
+The three analyses, namely random-reader fixed-case ($\text{1T-RRFC}$), dual-treatment random-reader random-case ($\text{2T-RRRC}$) and single-treatment random-reader random-case ($\text{1T-RRRC}$), are implemented in `RJafroc`, an R-package [@packageRJafroc]. The function calls necessary to reproduce the results that follow are in the Appendix. [The PT-Mono font is used to distinguish software specific terms from normal text.]
+
+
+```{r rrfc-1t-auc, cache=TRUE, echo=TRUE}
+
+ret_1T_RRFC_PCL_0_05 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+FOM = "PCL", FPFValue = 0.05, method = "1T-RRFC")
+ret_2T_RRRC_PCL_0_05 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+FOM = "PCL", FPFValue = 0.05, method = "2T-RRRC")
+ret_1T_RRRC_PCL_0_05 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+FOM = "PCL", FPFValue = 0.05, method = "1T-RRRC")
+
+ret_1T_RRFC_PCL_0_2 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+FOM = "PCL", FPFValue = 0.2, method = "1T-RRFC")
+ret_2T_RRRC_PCL_0_2 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+FOM = "PCL", FPFValue = 0.2, method = "2T-RRRC")
+ret_1T_RRRC_PCL_0_2 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+FOM = "PCL", FPFValue = 0.2, method = "1T-RRRC")
+
+ret_1T_RRFC_PCL_1 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+FOM = "PCL", FPFValue = 1, method = "1T-RRFC")
+ret_2T_RRRC_PCL_1 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+FOM = "PCL", FPFValue = 1, method = "2T-RRRC")
+ret_1T_RRRC_PCL_1 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+FOM = "PCL", FPFValue = 1, method = "1T-RRRC")
+
+ret_1T_RRFC_AUC <- StSignificanceTestingCadVsRadiologists (dataset09, 
+FOM = "Wilcoxon", method = "1T-RRFC")
+#ret_2T_RRRC_AUC <- StSignificanceTestingCadVsRadiologists (dataset09, 
+#FOM = "Wilcoxon", method = "2T-RRRC")
+ret_1T_RRRC_AUC <- StSignificanceTestingCadVsRadiologists (dataset09, 
+FOM = "Wilcoxon", method = "1T-RRRC")
+```
+
+
+
+```{r do_one_RRFC_1T}
+do_one_RRFC_1T <- function(x,fom,method){
+
+dig <- 4
+ciRad <- paste0("(", as.character(format(x$CIAvgRadFom[1], digits = 3)),
+                ",",
+                as.character(format(x$CIAvgRadFom[2], digits = 3)),")")
+ciDif <- paste0("(", as.character(format(x$CIAvgDiffFom[1], digits = 3)),
+                ",",
+                as.character(format(x$CIAvgDiffFom[2], digits = 3)),")")
+
+ret <- c(
+  fom, 
+  method,
+  as.character(format(x$fomCAD, digits = dig)),
+  "0", # ci CAD
+  as.character(format(x$avgRadFom, digits = dig)),
+  ciRad, # ci RAD
+  as.character(format(x$avgDiffFom, digits = dig)),
+  ciDif, # ci DIFF
+  as.character(format(as.numeric(x$Tstat)^2, digits = dig)),  
+  as.character(format(as.numeric(x$df), digits = dig)),  
+  as.character(format(as.numeric(x$pval), digits = dig)))  
+
+return(ret)
+}
+```
+
+
+```{r do_one_RRRC_1T}
+do_one_RRRC_1T <- function(x,fom,method){
+
+dig <- 4
+ciRad <- paste0("(", as.character(format(x$CIAvgRad[1], digits = 3)),
+                ",",
+                as.character(format(x$CIAvgRad[2], digits = 3)),")")
+ciDif <- paste0("(", as.character(format(x$CIAvgDiffFom[1], digits = 3)),
+                ",",
+                as.character(format(x$CIAvgDiffFom[2], digits = 3)),")")
+
+ret <- c(
+  fom, 
+  method,
+  as.character(format(x$fomCAD, digits = dig)),
+  "0", # ci CAD
+  as.character(format(x$avgRadFom, digits = dig)),
+  ciRad, # ci RAD
+  as.character(format(x$avgDiffFom, digits = dig)),
+  ciDif, # ci DIFF
+  as.character(format(as.numeric(x$Tstat)^2, digits = dig)),  
+  as.character(format(x$df, digits = dig)),  
+  as.character(format(x$pval, digits = dig)))  
+
+return(ret)
+}
+```
+
+
+
+
+```{r do_one_RRRC_2T}
+do_one_RRRC_2T <- function(x,fom,method){
+ret_2T_RRRC_PCL_0_05$ciAvgRdrEachTrt$CILower
+dig <- 4
+ciRad <- paste0("(", as.character(format(x$ciAvgRdrEachTrt$CILower[1], digits = 3)),
+                ",",
+                as.character(format(x$CIAvgRad[2], digits = 3)),")")
+ciDif <- paste0("(", as.character(format(x$CIAvgDiffFom[1], digits = 3)),
+                ",",
+                as.character(format(x$CIAvgDiffFom[2], digits = 3)),")")
+
+ret <- c(
+  fom, 
+  method,
+  as.character(format(x$fomCAD, digits = dig)),
+  "0", # ci CAD
+  as.character(format(x$avgRadFom, digits = dig)),
+  ciRad, # ci RAD
+  as.character(format(x$avgDiffFom, digits = dig)),
+  ciDif, # ci DIFF
+  as.character(format(x$Fstat, digits = dig)),  
+  as.character(format(x$ddf, digits = dig)),  
+  as.character(format(x$pval, digits = dig)))  
+
+return(ret)
+}
+```
+
+
+
+```{r echo=FALSE}
+allCells <- array("", dim = c(2,12,11))
+
+# ret_1T_RRFC_PCL_0_05
+
+allCells[1,1,] <- do_one_RRFC_1T (ret_1T_RRFC_PCL_0_05,"PCL_0_05","1T-RRFC")  
+allCells[1,4,] <- do_one_RRFC_1T (ret_1T_RRFC_PCL_0_2,"PCL_0_2","1T-RRFC")  
+allCells[1,7,] <- do_one_RRFC_1T (ret_1T_RRFC_PCL_1,"PCL_1","1T-RRFC")  
+allCells[1,10,] <- do_one_RRFC_1T (ret_1T_RRFC_AUC,"AUC","1T-RRFC")  
+
+allCells[1,2,] <- do_one_RRRC_2T (ret_2T_RRRC_PCL_0_05,"PCL_0_05","2T-RRRC")  
+allCells[1,5,] <- do_one_RRRC_2T (ret_2T_RRRC_PCL_0_2,"PCL_0_2","2T-RRRC")  
+allCells[1,8,] <- do_one_RRRC_2T (ret_2T_RRRC_PCL_1,"PCL_1","2T-RRRC")  
+allCells[1,11,] <- do_one_RRRC_2T (ret_2T_RRRC_AUC,"AUC","2T-RRRC")  
+
+allCells[1,3,] <- do_one_RRRC_1T (ret_1T_RRRC_PCL_0_05,"PCL_0_05","1T-RRRC")  
+allCells[1,6,] <- do_one_RRRC_1T (ret_1T_RRRC_PCL_0_2,"PCL_0_2","1T-RRRC")  
+allCells[1,9,] <- do_one_RRRC_1T (ret_1T_RRRC_PCL_1,"PCL_1","1T-RRRC")  
+allCells[1,12,] <- do_one_RRRC_1T (ret_1T_RRRC_AUC,"AUC","1T-RRRC")  
+
+```
+
 
 ## Results {#standalone-cad-radiologists-results}
 
-The three methods, in historical order $\text{RRFC}$, $\text{2T-RRRC}$ and $\text{1T-RRRC}$, were applied to an LROC dataset similar to that used in Study -- 1 (I thank Prof. Karssemeijer for making this dataset available).
+The three methods, in historical order $\text{1T-RRFC}$, $\text{2T-RRRC}$ and $\text{1T-RRRC}$, were applied to an LROC dataset similar to that used in Study -- 1 (I thank Prof. Karssemeijer for making this dataset available).
+
+Shown next, Table \@ref(tab:standalone-cad-table-cells2), are the significance testing results corresponding to the three analyses.
 
 
 ```{r standalone-cad-table-cells2, echo=FALSE}
 cells = array(dim = c(12,11))
-cells[1,]  <- c("PCL-0.05", "RRFC",    "0.463",              "0", "0.506", "(0.437, 0.576)", "0.0439", "(-0.026, 0.113)",  "2.115",   "8",  "0.184")
-cells[2,]  <- c("PCL-0.05", "2T-RRRC", "0.463", "(0.339, 0.586)", "0.506", "(0.392, 0.621)", "0.0439",  "(0.100, 0.188)",  "0.361", "274",  "0.548")
-cells[3,]  <- c("PCL-0.05", "1T-RRRC", "0.463",             "NA", "0.506", "(0.363, 0.650)", "0.0439",  "(0.100, 0.188)",  "0.361", "274",  "0.548")
 
-cells[4,]  <- c("PCL-0.2", "RRFC",     "0.592",              "0", "0.711", "(0.670, 0.752)", "0.119",   "(0.079, 0.160)",  "45.45",   "8", "0.0001")
-cells[5,]  <- c("PCL-0.2", "2T-RRRC",  "0.592", "(0.478, 0.705)", "0.711", "(0.633, 0.789)", "0.119",   "(0.004, 0.235)",  "4.147", "961", "0.0420")
-cells[6,]  <- c("PCL-0.2", "1T-RRRC",  "0.592",             "NA", "0.711", "(0.600, 0.826)", "0.119",   "(0.004, 0.235)",  "4.147", "961", "0.0420")
-
-cells[7,]  <- c("PCL-1", "RRFC",       "0.675",              "0", "0.783", "(0.740, 0.827)", "0.108",   "(0.065, 0.152)",  "32.98", "8",   "0.0004")
-cells[8,]  <- c("PCL-1", "2T-RRRC",    "0.675", "(0.571, 0.779)", "0.783", "(0.712, 0.854)", "0.108",   "(0.005, 0.212)",   "4.20", "493", "0.0409")
-cells[9,]  <- c("PCL-1", "1T-RRRC",    "0.675",             "NA", "0.783", "(0.680, 0.887)", "0.108",   "(0.005, 0.212)",   "4.20", "493", "0.0409")
-
-cells[10,]  <- c("AUC", "RRFC",        "0.817",              "0", "0.849", "(0.826, 0.871)", "0.032",   "(0.009, 0.055)",   "10.3", "8",   "0.0124")
-cells[11,]  <- c("AUC", "2T-RRRC",     "0.817", "(0.752, 0.882)", "0.849", "(0.807, 0.890)", "0.032",  "(0.031, -0.094)",  "0.986", "878", "0.3210")
-cells[12,]  <- c("AUC", "1T-RRRC",     "0.817",             "NA", "0.849", "(0.786, 0.911)", "0.032",  "(0.031, -0.094)",  "0.986", "878", "0.3210")
+for (j in 1:12) cells[j,]  <- allCells[1,j,]
 
 df <- as.data.frame(cells, stringsAsFactors = FALSE)
 colnames(df) <- c("FOM", "Method", "$\\theta_0$", "$CI_{\\theta_0}$", "$\\theta_{\\bullet}$", "$CI_{\\theta_{\\bullet}}$", "$\\psi_{\\bullet}$", "$CI_{\\psi_{\\bullet}}$",  "F", "ddf", "p")
 # escape = FALSE is critical in getting Math right
-kbl(df, caption = "Primary results of the analyses for an LROC dataset. Three sets of results, namely RRRC, 2T-RRRC and 1T-RRRC, are shown for each figure of merit (FOM). Because it is accounting for an additional source of variability, each of the rows labeled RRRC yields a larger p-value and wider confidence intervals than the corresponding row labeled RRFC. [$\\theta_0$ = FOM CAD; $\\theta_{\\bullet}$ = average FOM of radiologists; $\\psi_{\\bullet}$ = average FOM of radiologists minus CAD; CI= 95 percent confidence interval of quantity indicated by the subscript, F = F-statistic; ddf = denominator degrees of freedom; p = p-value for rejecting the null hypothesis: $\\psi_{\\bullet} = 0$.]", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3, 5, 7, 8, 9, 10, 11), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "hold_position"), row_label_position = "c") 
+kbl(df, caption = "Primary results of the analyses for an LROC dataset. Three sets of results, namely RRRC, 2T-RRRC and 1T-RRRC, are shown for each figure of merit (FOM). Because it is accounting for an additional source of variability, each of the rows labeled RRRC yields a larger p-value and wider confidence intervals than the corresponding row labeled 1T-RRFC. [$\\theta_0$ = FOM CAD; $\\theta_{\\bullet}$ = average FOM of radiologists; $\\psi_{\\bullet}$ = average FOM of radiologists minus CAD; CI= 95 percent confidence interval of quantity indicated by the subscript, F = F-statistic; ddf = denominator degrees of freedom; p = p-value for rejecting the null hypothesis: $\\psi_{\\bullet} = 0$.]", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3, 5, 7, 8, 9, 10, 11), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
 The primary significance-testing results (as opposed to model parameters) are listed in Table \@ref(tab:standalone-cad-table-cells2). Results are shown for the following FOMs: $\text{PCL}_{0.05}$, $\text{PCL}_{0.2}$, $\text{PCL}_{1}$ and the empirical area (AUC) under the ROC curve. The first two FOMs are identical to those used in Study -- 1. Columns 3 and 4 list the CAD FOM $\theta_0$, and its 95% confidence interval $CI_{\theta_0}$, columns 5 and 6 list the average radiologist FOM $\theta_{\bullet}$ (the dot symbol represents an average over the radiologist index) and its 95% confidence interval $CI_{\theta_{\bullet}}$, columns 7 and 8 list the average difference FOM $\psi_{\bullet}$, i.e., radiologist minus CAD, and its 95% confidence interval $CI_{\psi_{\bullet}}$, and the last three columns list the F-statistic, the denominator degrees of freedom (ddf) and the p-value for rejecting the null hypothesis. The numerator degree of freedom of the F-statistic, not listed, is unity.
 
-The most relevant results, in the last three columns, are that $\text{2T-RRRC}$ and $\text{1T-RRRC}$ yield identical F-statistics, ddf and p-values. So the intuition of the authors of Study -- 2, that the unorthodox method of using DBM -- MRMC software to account for both reader and case-sampling variability, turns out to be correct. Therefore, if interest is solely in these statistics, one is justified in using the unorthodox method.
+The last three columns of Table \@ref(tab:standalone-cad-table-cells2) show that $\text{2T-RRRC}$ and $\text{1T-RRRC}$ analyses yield *identical F-statistics, ddf and p-values*. So the intuition of the authors of Study -- 2, that the unorthodox method of using DBM -- MRMC software to account for both reader and case-sampling variability, turns out to be correct. If interest is solely in these statistics one is justified in using the unorthodox method.
 
 Commented on next are other aspects of the results evident in Table \@ref(tab:standalone-cad-table-cells2).
 
-1. Where a direct comparison is possible, namely $\text{RRFC}$ analysis using and as FOMs, the p-values in Table \@ref(tab:standalone-cad-table-cells2) are similar to those reported in Study -- 1.
+1. Where a direct comparison is possible, namely $\text{1T-RRFC}$ analysis using and as FOMs, the p-values in Table \@ref(tab:standalone-cad-table-cells2) are similar to those reported in Study -- 1.
 2. All FOMs (i.e., $\theta_0$, $\theta_{\bullet}$ and $\psi_{\bullet}$) in Table \@ref(tab:standalone-cad-table-cells2) are independent of the method of analysis. However, the corresponding confidence intervals (i.e., $CI_{\theta_0}$, $CI_{\theta_{\bullet}}$ and $CI_{\psi_{\bullet}}$) depend on the analyses.
-3. Since $\text{RRFC}$ analysis ignores case sampling variability, the CAD figure of merit is a constant, with zero-width confidence interval. For compactness the CI is listed as 0, rather than two identical values in parentheses. The confidence interval listed for $\text{2T-RRRC}$ analyses is centered on the corresponding CAD value, as are all confidence intervals in Table \@ref(tab:standalone-cad-table-cells2).
+3. Since $\text{1T-RRFC}$ analysis ignores case sampling variability, the CAD figure of merit is a constant, with zero-width confidence interval. For compactness the CI is listed as 0, rather than two identical values in parentheses. The confidence interval listed for $\text{2T-RRRC}$ analyses is centered on the corresponding CAD value, as are all confidence intervals in Table \@ref(tab:standalone-cad-table-cells2).
 4. The LROC FOMs increase as the value of FPF (the subscript) increases.
 This should be obvious, as PCL increases as FPF increases, a general feature of any partial curve based figure of merit.
 5. The area (AUC) under the ROC is larger than the largest PCL value, i.e., $AUC \geq \text{PCL}_1$. This too should be obvious from the general features of the LROC [@swensson1996unified].
-6. The p-value for either RRRC analyses (2T or 1T) is larger than the corresponding $\text{RRFC}$ value. Accounting for case-sampling variability increases the p-value, leading to less possibility of finding a significant difference.
+6. The p-value for either RRRC analyses (2T or 1T) is larger than the corresponding $\text{1T-RRFC}$ value. Accounting for case-sampling variability increases the p-value, leading to less possibility of finding a significant difference.
 7. Partial curve-based FOMs, such as $\text{PCL}_{FPF}$, lead, depending on the choice of $FPF$, to different conclusions. The p-values generally decrease as FPF increases. Measuring performance on the steep part of the LROC curve (i.e., small FPF) needs to account for greater reader variability and risks lower statistical power.
 8. Ignoring localization information (i.e., using the AUC FOM) led to a not-significant difference between CAD and the radiologists ($p$ = 0.3210), while the corresponding FOM yielded a significant difference ($p$ = 0.0409). Accounting for localization leads to a less "noisy" measurement. This has been demonstrated for the LROC paradigm [@swensson1996unified] and I have demonstrated this for the FROC paradigm [@chakraborty2008validation].
 9. For $\text{1T-RRRC}$ analysis, is listed as NA, for not applicable, since is not a model parameter, see Eqn. \@ref(eq:standalone-cad-model-psi-j).
 
-The following characteristics are evident from Table \@ref(tab:standalone-cad-table-cells3).
-
-1. For $\text{2T-RRRC}$ analyses $\sigma_R^2 = 0$. Actually, the analysis yielded very small values, of the order of $10^{-18}$ to $10^{-19}$, which, being smaller than double precision accuracy, were replaced by zeroes in Table \@ref(tab:standalone-cad-table-cells2). $\sigma_R^2 = 0$ is clearly an incorrect result as the radiologists do not have identical performance. In contrast, $\text{1T-RRRC}$ analyses yielded more realistic values, identical to those obtained by $\text{RRFC}$ analyses, and consistent with expectation -- see comment following Eqn. (15).
-2. Because 2T analysis found zero reader variability, it follows from the definitions of the covariances [@obuchowski1995hypothesis], that $Cov_1 = Cov_3 = 0$, as evident in the table.
-3. When they can be compared (i.e., $\sigma_R^2$, $Cov_2$ and $Var$), all variance and covariance estimates were smaller for the 2T method than for the 1T method.
-4. For the 2T method the expected inequalities, Eqn. \@ref(eq:standalone-var-comp-ordering), are not obeyed (specifically, $Cov_1 \geq Cov_2 \geq Cov_3$ is not obeyed).
-
+Shown next, Table \@ref(tab:standalone-cad-table-cells3), are the model-parameters corresponding to the three analyses.
 
 
 ```{r standalone-cad-table-cells3, echo=FALSE}
@@ -342,10 +462,15 @@ cells[12,]  <- c(    "AUC", "1T-RRRC",     "0.00088", "NA", "NA",  "0.0009",    
 
 df <- as.data.frame(cells, stringsAsFactors = FALSE)
 colnames(df) <- c("FOM", "Method", "$\\sigma_R^2$", "$\\sigma_{\\tau R}^2$", "Cov1", "Cov2", "Cov3", "Var")
-kbl(df, caption = "Parameter estimates, NA = not applicable.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "hold_position"), row_label_position = "c") 
+kbl(df, caption = "Parameter estimates, NA = not applicable.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
+The following characteristics are evident from Table \@ref(tab:standalone-cad-table-cells3).
 
+1. For $\text{2T-RRRC}$ analyses $\sigma_R^2 = 0$. Actually, the analysis yielded very small values, of the order of $10^{-18}$ to $10^{-19}$, which, being smaller than double precision accuracy, were replaced by zeroes in Table \@ref(tab:standalone-cad-table-cells2). $\sigma_R^2 = 0$ is clearly an incorrect result as the radiologists do not have identical performance. In contrast, $\text{1T-RRRC}$ analyses yielded more realistic values, identical to those obtained by $\text{1T-RRFC}$ analyses, and consistent with expectation -- see comment following Eqn. (15).
+2. Because 2T analysis found zero reader variability, it follows from the definitions of the covariances [@obuchowski1995hypothesis], that $Cov_1 = Cov_3 = 0$, as evident in the table.
+3. When they can be compared (i.e., $\sigma_R^2$, $Cov_2$ and $Var$), all variance and covariance estimates were smaller for the 2T method than for the 1T method.
+4. For the 2T method the expected inequalities, Eqn. \@ref(eq:standalone-var-comp-ordering), are not obeyed (specifically, $Cov_1 \geq Cov_2 \geq Cov_3$ is not obeyed).
 
 For an analysis method to be considered statistically valid it needs to be tested with simulations to determine if it has the proper null hypothesis behavior. The design of a ratings simulator to statistically match a given dataset is addressed in Chapter 23 of reference [@chakraborty2017observer]. Using this simulator, the $\text{1T-RRRC}$ method had the expected null hypothesis behavior (Table 23.5, ibid).
 
