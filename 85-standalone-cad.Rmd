@@ -1,3 +1,13 @@
+---
+output:
+  rmarkdown::pdf_document:
+    fig_caption: yes        
+    includes:  
+      in_header: R/learn/my_header.tex
+---
+
+
+
 ```{r setup, include = FALSE}
   knitr::opts_chunk$set(
   collapse = TRUE,
@@ -6,6 +16,7 @@
   library(RJafroc)
   library(ggplot2)
   library(kableExtra)
+  library(seqinr)
 ```
 
 
@@ -256,149 +267,168 @@ Setting $Var = 0, Cov_2 = 0$ yields the $\text{1T-RRFC}$ model, which contains o
 
 The three analyses, namely random-reader fixed-case ($\text{1T-RRFC}$), dual-treatment random-reader random-case ($\text{2T-RRRC}$) and single-treatment random-reader random-case ($\text{1T-RRRC}$), are implemented in `RJafroc`, an R-package [@packageRJafroc]. The function calls necessary to reproduce the results that follow are in the Appendix. [The PT-Mono font is used to distinguish software specific terms from normal text.]
 
+TBA opening comments on output
 
 ```{r rrfc-1t-auc, cache=TRUE, echo=TRUE}
 
-ret_1T_RRFC_PCL_0_05 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+ret_1T_RRFC_PCL_0_05 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.05, method = "1T-RRFC")
-ret_2T_RRRC_PCL_0_05 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+ret_2T_RRRC_PCL_0_05 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.05, method = "2T-RRRC")
-ret_1T_RRRC_PCL_0_05 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+ret_1T_RRRC_PCL_0_05 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.05, method = "1T-RRRC")
 
-ret_1T_RRFC_PCL_0_2 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+ret_1T_RRFC_PCL_0_2 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.2, method = "1T-RRFC")
-ret_2T_RRRC_PCL_0_2 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+ret_2T_RRRC_PCL_0_2 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.2, method = "2T-RRRC")
-ret_1T_RRRC_PCL_0_2 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+ret_1T_RRRC_PCL_0_2 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.2, method = "1T-RRRC")
 
-ret_1T_RRFC_PCL_1 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+ret_1T_RRFC_PCL_1 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 1, method = "1T-RRFC")
-ret_2T_RRRC_PCL_1 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+ret_2T_RRRC_PCL_1 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 1, method = "2T-RRRC")
-ret_1T_RRRC_PCL_1 <- StSignificanceTestingCadVsRadiologists (datasetCadLroc, 
+ret_1T_RRRC_PCL_1 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 1, method = "1T-RRRC")
 
-ret_1T_RRFC_AUC <- StSignificanceTestingCadVsRadiologists (dataset09, 
+ret_1T_RRFC_AUC <- StSignificanceTestingCadVsRad (dataset09, 
 FOM = "Wilcoxon", method = "1T-RRFC")
-#ret_2T_RRRC_AUC <- StSignificanceTestingCadVsRadiologists (dataset09, 
-#FOM = "Wilcoxon", method = "2T-RRRC")
-ret_1T_RRRC_AUC <- StSignificanceTestingCadVsRadiologists (dataset09, 
+ret_2T_RRRC_AUC <- StSignificanceTestingCadVsRad (dataset09, 
+FOM = "Wilcoxon", method = "2T-RRRC")
+ret_1T_RRRC_AUC <- StSignificanceTestingCadVsRad (dataset09, 
 FOM = "Wilcoxon", method = "1T-RRRC")
 ```
 
 
+TBA closing comments on output
 
-```{r do_one_RRFC_1T}
-do_one_RRFC_1T <- function(x,fom,method){
 
-dig <- 4
-ciRad <- paste0("(", as.character(format(x$CIAvgRadFom[1], digits = 3)),
+```{r do_one_ST_RRFC_1T, echo=FALSE}
+do_one_ST_RRFC_1T <- function(x,fom,method){
+
+dig <- 3
+ciRad <- paste0("(", 
+                format(x$CIAvgRadFom[1], scientific = TRUE, digits = dig),
                 ",",
-                as.character(format(x$CIAvgRadFom[2], digits = 3)),")")
-ciDif <- paste0("(", as.character(format(x$CIAvgDiffFom[1], digits = 3)),
+                format(x$CIAvgRadFom[2], scientific = TRUE, digits = dig),
+                ")")
+
+ciDif <- paste0("(", 
+                format(x$CIAvgDiffFom[1], scientific = TRUE, digits = dig),
                 ",",
-                as.character(format(x$CIAvgDiffFom[2], digits = 3)),")")
+                format(x$CIAvgDiffFom[2], scientific = TRUE, digits = dig)
+                ,")")
 
 ret <- c(
   fom, 
   method,
-  as.character(format(x$fomCAD, digits = dig)),
+  format(x$fomCAD, scientific = TRUE, digits = dig),
   "0", # ci CAD
-  as.character(format(x$avgRadFom, digits = dig)),
+  format(x$avgRadFom, scientific = TRUE, digits = dig),
   ciRad, # ci RAD
-  as.character(format(x$avgDiffFom, digits = dig)),
+  format(x$avgDiffFom, scientific = TRUE, digits = dig),
   ciDif, # ci DIFF
-  as.character(format(as.numeric(x$Tstat)^2, digits = dig)),  
-  as.character(format(as.numeric(x$df), digits = dig)),  
-  as.character(format(as.numeric(x$pval), digits = dig)))  
+  format(as.numeric(x$Tstat)^2, scientific = TRUE, digits = dig),  
+  format(as.numeric(x$df), scientific = TRUE, digits = dig),  
+  format(as.numeric(x$pval), scientific = TRUE, digits = dig))  
 
-return(ret)
-}
-```
-
-
-```{r do_one_RRRC_1T}
-do_one_RRRC_1T <- function(x,fom,method){
-
-dig <- 4
-ciRad <- paste0("(", as.character(format(x$CIAvgRad[1], digits = 3)),
-                ",",
-                as.character(format(x$CIAvgRad[2], digits = 3)),")")
-ciDif <- paste0("(", as.character(format(x$CIAvgDiffFom[1], digits = 3)),
-                ",",
-                as.character(format(x$CIAvgDiffFom[2], digits = 3)),")")
-
-ret <- c(
-  fom, 
-  method,
-  as.character(format(x$fomCAD, digits = dig)),
-  "0", # ci CAD
-  as.character(format(x$avgRadFom, digits = dig)),
-  ciRad, # ci RAD
-  as.character(format(x$avgDiffFom, digits = dig)),
-  ciDif, # ci DIFF
-  as.character(format(as.numeric(x$Tstat)^2, digits = dig)),  
-  as.character(format(x$df, digits = dig)),  
-  as.character(format(x$pval, digits = dig)))  
-
-return(ret)
+return(stresc(ret))
 }
 ```
 
 
 
-
-```{r do_one_RRRC_2T}
-do_one_RRRC_2T <- function(x,fom,method){
+```{r do_one_ST_RRRC_2T, echo=FALSE}
+do_one_ST_RRRC_2T <- function(x,fom,method){
 ret_2T_RRRC_PCL_0_05$ciAvgRdrEachTrt$CILower
-dig <- 4
-ciRad <- paste0("(", as.character(format(x$ciAvgRdrEachTrt$CILower[1], digits = 3)),
+dig <- 3
+ciCad <- paste0("(", 
+                format(x$ciAvgRdrEachTrt$CILower[1], scientific = TRUE, digits = dig),
                 ",",
-                as.character(format(x$CIAvgRad[2], digits = 3)),")")
-ciDif <- paste0("(", as.character(format(x$CIAvgDiffFom[1], digits = 3)),
+                format(x$ciAvgRdrEachTrt$CIUpper[1], scientific = TRUE, digits = dig),
+                ")")
+ciRad <- paste0("(", 
+                format(x$ciAvgRdrEachTrt$CILower[2], scientific = TRUE, digits = dig),
                 ",",
-                as.character(format(x$CIAvgDiffFom[2], digits = 3)),")")
+                format(x$ciAvgRdrEachTrt$CIUpper[2], scientific = TRUE, digits = dig),
+                ")")
+ciDif <- paste0("(", 
+                format(x$ciDiffFom$CILower, scientific = TRUE, digits = dig), 
+                ",",
+                format(x$ciDiffFom$CIUpper, scientific = TRUE, digits = dig),
+                ")")
 
 ret <- c(
   fom, 
   method,
-  as.character(format(x$fomCAD, digits = dig)),
-  "0", # ci CAD
-  as.character(format(x$avgRadFom, digits = dig)),
+  format(x$fomCAD, scientific = TRUE, digits = dig),
+  ciCad, # ci CAD
+  format(x$avgRadFom, scientific = TRUE, digits = dig),
   ciRad, # ci RAD
-  as.character(format(x$avgDiffFom, digits = dig)),
+  format(x$avgDiffFom, scientific = TRUE, digits = dig),
   ciDif, # ci DIFF
-  as.character(format(x$Fstat, digits = dig)),  
-  as.character(format(x$ddf, digits = dig)),  
-  as.character(format(x$pval, digits = dig)))  
+  format(x$FStat, scientific = TRUE, digits = dig),  
+  format(x$df, scientific = TRUE, digits = dig),  
+  format(x$pval, scientific = TRUE, digits = 2))  
 
-return(ret)
+return(stresc(ret))
 }
 ```
 
 
 
-```{r echo=FALSE}
+```{r do_one_ST_RRRC_1T, echo=FALSE}
+do_one_ST_RRRC_1T <- function(x,fom,method){
+
+dig <- 3
+ciRad <- paste0("(", format(x$CIAvgRad[1], scientific = TRUE, digits = dig),
+                ",",
+                format(x$CIAvgRad[2], scientific = TRUE, digits = dig),
+                ")")
+
+ciDif <- paste0("(", format(x$CIAvgDiffFom[1], scientific = TRUE, digits = dig),
+                ",",
+                format(x$CIAvgDiffFom[2], scientific = TRUE, digits = dig),
+                ")")
+
+ret <- c(
+  fom, 
+  method,
+  format(x$fomCAD, scientific = TRUE, digits = dig),
+  "NA", # ci CAD
+  format(x$avgRadFom, scientific = TRUE, digits = dig),
+  ciRad, # ci RAD
+  format(x$avgDiffFom, scientific = TRUE, digits = dig),
+  ciDif, # ci DIFF
+  format(as.numeric(x$Tstat)^2, scientific = TRUE, digits = dig),  
+  format(x$df, scientific = TRUE, digits = dig),  
+  format(x$pval, scientific = TRUE, digits = 2))  
+
+return(stresc(ret))
+}
+```
+
+
+
+```{r allCellsSigTest, echo=FALSE}
 allCells <- array("", dim = c(2,12,11))
 
-# ret_1T_RRFC_PCL_0_05
+allCells[1,1,] <- do_one_ST_RRFC_1T (ret_1T_RRFC_PCL_0_05,"PCL_0_05","1T-RRFC")  
+allCells[1,2,] <- do_one_ST_RRRC_2T (ret_2T_RRRC_PCL_0_05,"PCL_0_05","2T-RRRC")  
+allCells[1,3,] <- do_one_ST_RRRC_1T (ret_1T_RRRC_PCL_0_05,"PCL_0_05","1T-RRRC")  
 
-allCells[1,1,] <- do_one_RRFC_1T (ret_1T_RRFC_PCL_0_05,"PCL_0_05","1T-RRFC")  
-allCells[1,4,] <- do_one_RRFC_1T (ret_1T_RRFC_PCL_0_2,"PCL_0_2","1T-RRFC")  
-allCells[1,7,] <- do_one_RRFC_1T (ret_1T_RRFC_PCL_1,"PCL_1","1T-RRFC")  
-allCells[1,10,] <- do_one_RRFC_1T (ret_1T_RRFC_AUC,"AUC","1T-RRFC")  
+allCells[1,4,] <- do_one_ST_RRFC_1T (ret_1T_RRFC_PCL_0_2,"PCL_0_2","1T-RRFC")  
+allCells[1,5,] <- do_one_ST_RRRC_2T (ret_2T_RRRC_PCL_0_2,"PCL_0_2","2T-RRRC")  
+allCells[1,6,] <- do_one_ST_RRRC_1T (ret_1T_RRRC_PCL_0_2,"PCL_0_2","1T-RRRC")  
 
-allCells[1,2,] <- do_one_RRRC_2T (ret_2T_RRRC_PCL_0_05,"PCL_0_05","2T-RRRC")  
-allCells[1,5,] <- do_one_RRRC_2T (ret_2T_RRRC_PCL_0_2,"PCL_0_2","2T-RRRC")  
-allCells[1,8,] <- do_one_RRRC_2T (ret_2T_RRRC_PCL_1,"PCL_1","2T-RRRC")  
-allCells[1,11,] <- do_one_RRRC_2T (ret_2T_RRRC_AUC,"AUC","2T-RRRC")  
+allCells[1,7,] <- do_one_ST_RRFC_1T (ret_1T_RRFC_PCL_1,"PCL_1","1T-RRFC")  
+allCells[1,8,] <- do_one_ST_RRRC_2T (ret_2T_RRRC_PCL_1,"PCL_1","2T-RRRC")  
+allCells[1,9,] <- do_one_ST_RRRC_1T (ret_1T_RRRC_PCL_1,"PCL_1","1T-RRRC")  
 
-allCells[1,3,] <- do_one_RRRC_1T (ret_1T_RRRC_PCL_0_05,"PCL_0_05","1T-RRRC")  
-allCells[1,6,] <- do_one_RRRC_1T (ret_1T_RRRC_PCL_0_2,"PCL_0_2","1T-RRRC")  
-allCells[1,9,] <- do_one_RRRC_1T (ret_1T_RRRC_PCL_1,"PCL_1","1T-RRRC")  
-allCells[1,12,] <- do_one_RRRC_1T (ret_1T_RRRC_AUC,"AUC","1T-RRRC")  
+allCells[1,10,] <- do_one_ST_RRFC_1T (ret_1T_RRFC_AUC,"Wilcoxon","1T-RRFC")  
+allCells[1,11,] <- do_one_ST_RRRC_2T (ret_2T_RRRC_AUC,"Wilcoxon","2T-RRRC")  
+allCells[1,12,] <- do_one_ST_RRRC_1T (ret_1T_RRRC_AUC,"Wilcoxon","1T-RRRC")  
 
 ```
 
@@ -407,30 +437,30 @@ allCells[1,12,] <- do_one_RRRC_1T (ret_1T_RRRC_AUC,"AUC","1T-RRRC")
 
 The three methods, in historical order $\text{1T-RRFC}$, $\text{2T-RRRC}$ and $\text{1T-RRRC}$, were applied to an LROC dataset similar to that used in Study -- 1 (I thank Prof. Karssemeijer for making this dataset available).
 
-Shown next, Table \@ref(tab:standalone-cad-table-cells2), are the significance testing results corresponding to the three analyses.
+Shown next, Table \@ref(tab:standalone-cad-table2), are the significance testing results corresponding to the three analyses.
 
 
-```{r standalone-cad-table-cells2, echo=FALSE}
+```{r standalone-cad-table2, echo=FALSE}
 cells = array(dim = c(12,11))
 
 for (j in 1:12) cells[j,]  <- allCells[1,j,]
 
 df <- as.data.frame(cells, stringsAsFactors = FALSE)
-colnames(df) <- c("FOM", "Method", "$\\theta_0$", "$CI_{\\theta_0}$", "$\\theta_{\\bullet}$", "$CI_{\\theta_{\\bullet}}$", "$\\psi_{\\bullet}$", "$CI_{\\psi_{\\bullet}}$",  "F", "ddf", "p")
+colnames(df) <-c("FOM", "Analysis", "$\\theta_0$", "$CI_{\\theta_0}$", "$\\theta_{\\bullet}$", "$CI_{\\theta_{\\bullet}}$", "$\\psi_{\\bullet}$", "$CI_{\\psi_{\\bullet}}$",  "F", "ddf", "p")
 # escape = FALSE is critical in getting Math right
-kbl(df, caption = "Primary results of the analyses for an LROC dataset. Three sets of results, namely RRRC, 2T-RRRC and 1T-RRRC, are shown for each figure of merit (FOM). Because it is accounting for an additional source of variability, each of the rows labeled RRRC yields a larger p-value and wider confidence intervals than the corresponding row labeled 1T-RRFC. [$\\theta_0$ = FOM CAD; $\\theta_{\\bullet}$ = average FOM of radiologists; $\\psi_{\\bullet}$ = average FOM of radiologists minus CAD; CI= 95 percent confidence interval of quantity indicated by the subscript, F = F-statistic; ddf = denominator degrees of freedom; p = p-value for rejecting the null hypothesis: $\\psi_{\\bullet} = 0$.]", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3, 5, 7, 8, 9, 10, 11), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(df, caption = "Significance testing results of the analyses for an LROC dataset. Three sets of results, namely RRRC, 2T-RRRC and 1T-RRRC, are shown for each figure of merit (FOM). Because it is accounting for an additional source of variability, each of the rows labeled RRRC yields a larger p-value and wider confidence intervals than the corresponding row labeled 1T-RRFC. [$\\theta_0$ = FOM CAD; $\\theta_{\\bullet}$ = average FOM of radiologists; $\\psi_{\\bullet}$ = average FOM of radiologists minus CAD; CI= 95 percent confidence interval of quantity indicated by the subscript, F = F-statistic; ddf = denominator degrees of freedom; p = p-value for rejecting the null hypothesis: $\\psi_{\\bullet} = 0$.]", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3, 5, 7, 8, 9, 10, 11), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
-The primary significance-testing results (as opposed to model parameters) are listed in Table \@ref(tab:standalone-cad-table-cells2). Results are shown for the following FOMs: $\text{PCL}_{0.05}$, $\text{PCL}_{0.2}$, $\text{PCL}_{1}$ and the empirical area (AUC) under the ROC curve. The first two FOMs are identical to those used in Study -- 1. Columns 3 and 4 list the CAD FOM $\theta_0$, and its 95% confidence interval $CI_{\theta_0}$, columns 5 and 6 list the average radiologist FOM $\theta_{\bullet}$ (the dot symbol represents an average over the radiologist index) and its 95% confidence interval $CI_{\theta_{\bullet}}$, columns 7 and 8 list the average difference FOM $\psi_{\bullet}$, i.e., radiologist minus CAD, and its 95% confidence interval $CI_{\psi_{\bullet}}$, and the last three columns list the F-statistic, the denominator degrees of freedom (ddf) and the p-value for rejecting the null hypothesis. The numerator degree of freedom of the F-statistic, not listed, is unity.
+Results are shown for the following FOMs: $\text{PCL}_{0.05}$, $\text{PCL}_{0.2}$, $\text{PCL}_{1}$, and the empirical area (AUC) under the ROC curve estimated by the Wilcoxon statistic. The first two FOMs are identical to those used in Study -- 1. Columns 3 and 4 list the CAD FOM $\theta_0$, and its 95% confidence interval $CI_{\theta_0}$, columns 5 and 6 list the average radiologist FOM $\theta_{\bullet}$ (the dot symbol represents an average over the radiologist index) and its 95% confidence interval $CI_{\theta_{\bullet}}$, columns 7 and 8 list the average difference FOM $\psi_{\bullet}$, i.e., radiologist minus CAD, and its 95% confidence interval $CI_{\psi_{\bullet}}$, and the last three columns list the F-statistic, the denominator degrees of freedom (ddf) and the p-value for rejecting the null hypothesis. The numerator degree of freedom of the F-statistic, not listed, is unity.
 
-The last three columns of Table \@ref(tab:standalone-cad-table-cells2) show that $\text{2T-RRRC}$ and $\text{1T-RRRC}$ analyses yield *identical F-statistics, ddf and p-values*. So the intuition of the authors of Study -- 2, that the unorthodox method of using DBM -- MRMC software to account for both reader and case-sampling variability, turns out to be correct. If interest is solely in these statistics one is justified in using the unorthodox method.
+In Table \@ref(tab:standalone-cad-table2) identical values in adjacent cells in vertical columns have been replaced by the common values. The last three columns show that $\text{2T-RRRC}$ and $\text{1T-RRRC}$ analyses yield *identical F-statistics, ddf and p-values*. So the intuition of the authors of Study -- 2, that the unorthodox method of using DBM -- MRMC software to account for both reader and case-sampling variability, turns out to be correct. If interest is solely in these statistics one is justified in using the unorthodox method.
 
-Commented on next are other aspects of the results evident in Table \@ref(tab:standalone-cad-table-cells2).
+Commented on next are other aspects of the results evident in Table \@ref(tab:standalone-cad-table2).
 
-1. Where a direct comparison is possible, namely $\text{1T-RRFC}$ analysis using and as FOMs, the p-values in Table \@ref(tab:standalone-cad-table-cells2) are similar to those reported in Study -- 1.
-2. All FOMs (i.e., $\theta_0$, $\theta_{\bullet}$ and $\psi_{\bullet}$) in Table \@ref(tab:standalone-cad-table-cells2) are independent of the method of analysis. However, the corresponding confidence intervals (i.e., $CI_{\theta_0}$, $CI_{\theta_{\bullet}}$ and $CI_{\psi_{\bullet}}$) depend on the analyses.
-3. Since $\text{1T-RRFC}$ analysis ignores case sampling variability, the CAD figure of merit is a constant, with zero-width confidence interval. For compactness the CI is listed as 0, rather than two identical values in parentheses. The confidence interval listed for $\text{2T-RRRC}$ analyses is centered on the corresponding CAD value, as are all confidence intervals in Table \@ref(tab:standalone-cad-table-cells2).
+1. Where a direct comparison is possible, namely $\text{1T-RRFC}$ analysis using and as FOMs, the p-values in Table \@ref(tab:standalone-cad-table2) are similar to those reported in Study -- 1.
+2. All FOMs (i.e., $\theta_0$, $\theta_{\bullet}$ and $\psi_{\bullet}$) in Table \@ref(tab:standalone-cad-table2) are independent of the method of analysis. However, the corresponding confidence intervals (i.e., $CI_{\theta_0}$, $CI_{\theta_{\bullet}}$ and $CI_{\psi_{\bullet}}$) depend on the analyses.
+3. Since $\text{1T-RRFC}$ analysis ignores case sampling variability, the CAD figure of merit is a constant, with zero-width confidence interval. For compactness the CI is listed as 0, rather than two identical values in parentheses. The confidence interval listed for $\text{2T-RRRC}$ analyses is centered on the corresponding CAD value, as are all confidence intervals in Table \@ref(tab:standalone-cad-table2).
 4. The LROC FOMs increase as the value of FPF (the subscript) increases.
 This should be obvious, as PCL increases as FPF increases, a general feature of any partial curve based figure of merit.
 5. The area (AUC) under the ROC is larger than the largest PCL value, i.e., $AUC \geq \text{PCL}_1$. This too should be obvious from the general features of the LROC [@swensson1996unified].
@@ -439,35 +469,102 @@ This should be obvious, as PCL increases as FPF increases, a general feature of 
 8. Ignoring localization information (i.e., using the AUC FOM) led to a not-significant difference between CAD and the radiologists ($p$ = 0.3210), while the corresponding FOM yielded a significant difference ($p$ = 0.0409). Accounting for localization leads to a less "noisy" measurement. This has been demonstrated for the LROC paradigm [@swensson1996unified] and I have demonstrated this for the FROC paradigm [@chakraborty2008validation].
 9. For $\text{1T-RRRC}$ analysis, is listed as NA, for not applicable, since is not a model parameter, see Eqn. \@ref(eq:standalone-cad-model-psi-j).
 
-Shown next, Table \@ref(tab:standalone-cad-table-cells3), are the model-parameters corresponding to the three analyses.
+Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters corresponding to the three analyses.
 
 
-```{r standalone-cad-table-cells3, echo=FALSE}
-cells = array(dim = c(12,8))
-cells[1,]  <- c("PCL-0.05",    "RRFC",     "0.00819", rep(NA, 5))
-cells[2,]  <- c("PCL-0.05", "2T-RRRC",           "0", "-0.00248",   "0.001", "0.00321",   "0.001",  "0.00978")
-cells[3,]  <- c("PCL-0.05", "1T-RRRC",     "0.00819", "NA", "NA", "0.00442",      "NA", "0.01757")
+```{r do_one_parms_RRFC_1T, echo=FALSE}
+do_one_parms_RRFC_1T <- function(x,fom,method){
 
-cells[4,]  <- c( "PCL-0.2",    "RRFC",     "0.00282", rep(NA, 5))
-cells[5,]  <- c( "PCL-0.2", "2T-RRRC",           "0",  "0.00017", "0.00075", "0.00231", "0.00075",  "0.00356")
-cells[6,]  <- c( "PCL-0.2", "1T-RRRC",     "0.00282", "NA", "NA", "0.00313",      "NA", "0.00562")
+dig <- 3
 
-cells[7,]  <- c(   "PCL-1",    "RRFC",     "0.00320", rep(NA, 5))
-cells[8,]  <- c(   "PCL-1", "2T-RRRC",           "0",    "0.001", "0.00064", "0.00186", "0.00064",  "0.00246")
-cells[9,]  <- c(   "PCL-1", "1T-RRRC",     "0.00320", "NA", "NA", "0.00244",      "NA", "0.00364")
+ret <- c(
+  fom, 
+  method,
+  format(x$varR, scientific = TRUE, digits = dig),
+  rep(as.character(NA),5))
 
-cells[10,]  <- c(    "AUC",    "RRFC",     "0.00088", rep(NA, 5))
-cells[11,]  <- c(    "AUC", "2T-RRRC",           "0",   "0.0002",  "0.0003",  "0.0007",  "0.0003",    "0.001")
-cells[12,]  <- c(    "AUC", "1T-RRRC",     "0.00088", "NA", "NA",  "0.0009",      "NA",  "0.0014")
-
-df <- as.data.frame(cells, stringsAsFactors = FALSE)
-colnames(df) <- c("FOM", "Method", "$\\sigma_R^2$", "$\\sigma_{\\tau R}^2$", "Cov1", "Cov2", "Cov3", "Var")
-kbl(df, caption = "Parameter estimates, NA = not applicable.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+return(stresc(ret))
+}
 ```
 
-The following characteristics are evident from Table \@ref(tab:standalone-cad-table-cells3).
 
-1. For $\text{2T-RRRC}$ analyses $\sigma_R^2 = 0$. Actually, the analysis yielded very small values, of the order of $10^{-18}$ to $10^{-19}$, which, being smaller than double precision accuracy, were replaced by zeroes in Table \@ref(tab:standalone-cad-table-cells2). $\sigma_R^2 = 0$ is clearly an incorrect result as the radiologists do not have identical performance. In contrast, $\text{1T-RRRC}$ analyses yielded more realistic values, identical to those obtained by $\text{1T-RRFC}$ analyses, and consistent with expectation -- see comment following Eqn. (15).
+
+```{r do_one_parms_RRRC_2T, echo=FALSE}
+do_one_parms_RRRC_2T <- function(x,fom,method){
+ret_2T_RRRC_PCL_0_05$ciAvgRdrEachTrt$CILower
+dig <- 3
+
+ret <- c(
+  fom, 
+  method,
+  format(x$varR, scientific = TRUE, digits = dig),
+  format(x$varTR, scientific = TRUE, digits = dig),
+  format(x$cov1, scientific = TRUE, digits = dig),
+  format(x$cov2, scientific = TRUE, digits = dig),
+  format(x$cov3, scientific = TRUE, digits = dig),
+  format(x$varError, scientific = TRUE, digits = dig))  
+
+return(stresc(ret))
+}
+```
+
+
+
+```{r do_one_parms_RRRC_1T, echo=FALSE}
+do_one_parms_RRRC_1T <- function(x,fom,method){
+
+dig <- 3
+
+ret <- c(
+  fom, 
+  method,
+  format(x$varR, scientific = TRUE, digits = dig),
+  "NA",
+  "NA",
+  format(x$cov2, scientific = TRUE, digits = dig),
+  "NA",
+  format(x$varError, scientific = TRUE, digits = dig))  
+
+return(stresc(ret))
+}
+```
+
+
+
+```{r allCellsParameters, echo=FALSE}
+
+allCells[2,1,1:8] <- do_one_parms_RRFC_1T (ret_1T_RRFC_PCL_0_05,"PCL_0_05","1T-RRFC")  
+allCells[2,2,1:8] <- do_one_parms_RRRC_2T (ret_2T_RRRC_PCL_0_05,"PCL_0_05","2T-RRRC")  
+allCells[2,3,1:8] <- do_one_parms_RRRC_1T (ret_1T_RRRC_PCL_0_05,"PCL_0_05","1T-RRRC")  
+
+allCells[2,4,1:8] <- do_one_parms_RRFC_1T (ret_1T_RRFC_PCL_0_2,"PCL_0_2","1T-RRFC")  
+allCells[2,5,1:8] <- do_one_parms_RRRC_2T (ret_2T_RRRC_PCL_0_2,"PCL_0_2","2T-RRRC")  
+allCells[2,6,1:8] <- do_one_parms_RRRC_1T (ret_1T_RRRC_PCL_0_2,"PCL_0_2","1T-RRRC")  
+
+allCells[2,7,1:8] <- do_one_parms_RRFC_1T (ret_1T_RRFC_PCL_1,"PCL_1","1T-RRFC")  
+allCells[2,8,1:8] <- do_one_parms_RRRC_2T (ret_2T_RRRC_PCL_1,"PCL_1","2T-RRRC")  
+allCells[2,9,1:8] <- do_one_parms_RRRC_1T (ret_1T_RRRC_PCL_1,"PCL_1","1T-RRRC")  
+
+allCells[2,10,1:8] <- do_one_parms_RRFC_1T (ret_1T_RRFC_AUC,"Wilcoxon","1T-RRFC")  
+allCells[2,11,1:8] <- do_one_parms_RRRC_2T (ret_2T_RRRC_AUC,"Wilcoxon","2T-RRRC")  
+allCells[2,12,1:8] <- do_one_parms_RRRC_1T (ret_1T_RRRC_AUC,"Wilcoxon","1T-RRRC")  
+
+```
+
+
+```{r standalone-cad-table3, echo=FALSE}
+cells = array(dim = c(12,8))
+
+for (j in 1:12) cells[j,]  <- allCells[2,j,1:8]
+
+df <- as.data.frame(cells, stringsAsFactors = FALSE)
+colnames(df) <- c("FOM", "Analysis", "$\\sigma_R^2$", "$\\sigma_{\\tau R}^2$", "Cov1", "Cov2", "Cov3", "Var")
+kbl(df, caption = "Parameter estimates for the analyses; NA = not applicable.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```
+
+The following characteristics are evident from Table \@ref(tab:standalone-cad-table3).
+
+1. For $\text{2T-RRRC}$ analyses $\sigma_R^2 = 0$. Actually, the analysis yielded very small values, of the order of $10^{-18}$ to $10^{-19}$, which, being smaller than double precision accuracy, were replaced by zeroes in Table \@ref(tab:standalone-cad-table2). $\sigma_R^2 = 0$ is clearly an incorrect result as the radiologists do not have identical performance. In contrast, $\text{1T-RRRC}$ analyses yielded more realistic values, identical to those obtained by $\text{1T-RRFC}$ analyses, and consistent with expectation -- see comment following Eqn. (15).
 2. Because 2T analysis found zero reader variability, it follows from the definitions of the covariances [@obuchowski1995hypothesis], that $Cov_1 = Cov_3 = 0$, as evident in the table.
 3. When they can be compared (i.e., $\sigma_R^2$, $Cov_2$ and $Var$), all variance and covariance estimates were smaller for the 2T method than for the 1T method.
 4. For the 2T method the expected inequalities, Eqn. \@ref(eq:standalone-var-comp-ordering), are not obeyed (specifically, $Cov_1 \geq Cov_2 \geq Cov_3$ is not obeyed).
