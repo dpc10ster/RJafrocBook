@@ -418,46 +418,279 @@ Apart from fixed effects, the model in Eqn. \@ref(eq:standalone-cad-model-psi-j)
 
 Setting $Var = 0, Cov_2 = 0$ yields the $\text{1T-RRFC}$ model, which contains only one random parameter, namely $\sigma_R^2$. A valid analysis should yield identical estimates of this parameter from either $\text{1T-RRFC}$ or $\text{RRRC}$ analysis.
 
-### Computational details {#standalone-cad-radiologists-computational-details}
+## Computational details {#standalone-cad-radiologists-computational-details}
 
-The three analyses, namely random-reader fixed-case ($\text{1T-RRFC}$), dual-treatment random-reader random-case ($\text{2T-RRRC}$) and single-treatment random-reader random-case ($\text{1T-RRRC}$), are implemented in `RJafroc`, an R-package [@packageRJafroc]. The function calls necessary to reproduce the results that follow are in the Appendix. [The PT-Mono font is used to distinguish software specific terms from normal text.]
+The three analyses, namely random-reader fixed-case ($\text{1T-RRFC}$), dual-treatment random-reader random-case ($\text{2T-RRRC}$) and single-treatment random-reader random-case ($\text{1T-RRRC}$), are implemented in `RJafroc`, an R-package [@packageRJafroc]. 
 
-TBA opening comments on output
+The following code shows usage of the three analyses as implemented in `RJafroc`. Note that `datasetCadLroc` is the LROC dataset and `dataset09` is the corresponding ROC dataset. 
+
 
 
 ```r
 
-ret_1T_RRFC_PCL_0_05 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
+RRFC_1T_PCL_0_05 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.05, method = "1T-RRFC")
-ret_2T_RRRC_PCL_0_05 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
+RRRC_2T_PCL_0_05 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.05, method = "2T-RRRC")
-ret_1T_RRRC_PCL_0_05 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
+RRRC_1T_PCL_0_05 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.05, method = "1T-RRRC")
 
-ret_1T_RRFC_PCL_0_2 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
+RRFC_1T_PCL_0_2 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.2, method = "1T-RRFC")
-ret_2T_RRRC_PCL_0_2 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
+RRRC_2T_PCL_0_2 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.2, method = "2T-RRRC")
-ret_1T_RRRC_PCL_0_2 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
+RRRC_1T_PCL_0_2 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 0.2, method = "1T-RRRC")
 
-ret_1T_RRFC_PCL_1 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
+RRFC_1T_PCL_1 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 1, method = "1T-RRFC")
-ret_2T_RRRC_PCL_1 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
+RRRC_2T_PCL_1 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 1, method = "2T-RRRC")
-ret_1T_RRRC_PCL_1 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
+RRRC_1T_PCL_1 <- StSignificanceTestingCadVsRad (datasetCadLroc, 
 FOM = "PCL", FPFValue = 1, method = "1T-RRRC")
 
-ret_1T_RRFC_AUC <- StSignificanceTestingCadVsRad (dataset09, 
+RRFC_1T_AUC <- StSignificanceTestingCadVsRad (dataset09, 
 FOM = "Wilcoxon", method = "1T-RRFC")
-ret_2T_RRRC_AUC <- StSignificanceTestingCadVsRad (dataset09, 
+RRRC_2T_AUC <- StSignificanceTestingCadVsRad (dataset09, 
 FOM = "Wilcoxon", method = "2T-RRRC")
-ret_1T_RRRC_AUC <- StSignificanceTestingCadVsRad (dataset09, 
+RRRC_1T_AUC <- StSignificanceTestingCadVsRad (dataset09, 
 FOM = "Wilcoxon", method = "1T-RRRC")
 ```
 
+The results are organized as follows:
 
-TBA closing comments on output
+
+* `RRFC_1T_PCL_0_05` is a list containing the results of 1T-RRFC analysis for figure of merit = $PCL_{0.05}$. 
+* `RRRC_2T_PCL_0_05` is a list containing the results of 2T-RRFC analysis for figure of merit = $PCL_{0.05}$.
+* `RRRC_1T_PCL_0_05` is a list containing the results of 1T-RRFC analysis for figure of merit = $PCL_{0.05}$.
+
+* `RRFC_1T_PCL_0_2` is a list containing the results of 1T-RRFC analysis for figure of merit = $PCL_{0.2}$.
+* `RRRC_2T_PCL_0_2` is a list containing the results of 2T-RRRC analysis for figure of merit = $PCL_{0.2}$.
+* `RRRC_1T_PCL_0_2` is a list containing the results of 1T-RRRC analysis for figure of merit = $PCL_{0.2}$.
+
+* `RRFC_1T_AUC` is a list containing the results of 1T-RRFC  analysis for the Wilcoxon figure of merit.
+* `RRRC_2T_AUC` is a list containing the results of 2T-RRRC  analysis for the Wilcoxon figure of merit.
+* `RRRC_1T_AUC` is a list containing the results of 1T-RRRC analysis for the Wilcoxon figure of merit.
+
+The structures of the saved objects are illustrated next with three examples. 
+
+The first example shows the structure of `RRFC_1T_PCL_0_2`. 
+
+
+
+```r
+RRFC_1T_PCL_0_2
+#> $fomCAD
+#> [1] 0.5916667
+#> 
+#> $fomRAD
+#> [1] 0.6945313 0.6500000 0.8062500 0.7250000 0.6598214 0.7684524 0.7375000
+#> [8] 0.6750000 0.6750000
+#> 
+#> $avgRadFom
+#> [1] 0.7101728
+#> 
+#> $CIAvgRadFom
+#> [1] 0.6694362 0.7509094
+#> 
+#> $avgDiffFom
+#> [1] 0.1185061
+#> 
+#> $CIAvgDiffFom
+#> [1] 0.07776953 0.15924271
+#> 
+#> $varR
+#> [1] 0.002808612
+#> 
+#> $Tstat
+#> [1] 6.708357
+#> 
+#> $df
+#> [1] 8
+#> 
+#> $pval
+#> [1] 0.0001513966
+```
+
+
+* `fomCAD` is the figure of merit for CAD.
+* `fomRAD` contains the figures of merit for the nine radiologists in the study.
+* `avgRadFom` is the average figure of merit of the nine radiologists in the study.
+* `CIAvgRadFom` is the 95 percent confidence interval for `avgRadFom`.
+* `avgDiffFom` is the average difference figure of merit, RAD - CAD.
+* `CIAvgDiffFom` is the 95 percent confidence interval for `avgDiffFom`. If this confidence interval excludes zero, the difference is statistically significant.
+* `varR` is the variance of the figures of merit for the nine radiologists in the study.
+* `Tstat` is the t-statistic for testing the NH that the average difference FOM `avgDiffFom` is zero.
+* `df` is the degrees of freedom of the t-statistic, whose square is the F-statistic.
+* `pval` is the p-value for rejecting the NH. In the example shown below the value is highly signficant.
+
+
+The next example shows the structure of `RRRC_2T_PCL_0_2`. 
+
+
+
+```r
+RRRC_2T_PCL_0_2
+#> $fomCAD
+#> [1] 0.5916667
+#> 
+#> $fomRAD
+#>      rdr1      rdr2      rdr3      rdr4      rdr5      rdr6      rdr7      rdr8 
+#> 0.6945313 0.6500000 0.8062500 0.7250000 0.6598214 0.7684524 0.7375000 0.6750000 
+#>      rdr9 
+#> 0.6750000 
+#> 
+#> $avgRadFom
+#> [1] 0.7101728
+#> 
+#> $avgDiffFom
+#> [1] 0.1185061
+#> 
+#> $varDiffFom
+#> [1] 0.002808612
+#> 
+#> $ciDiffFom
+#>            Estimate     StdErr       DF        t      PrGTt     CILower
+#> trt1-trt2 0.1185061 0.05811861 937.2437 2.039039 0.04172626 0.004448434
+#>             CIUpper
+#> trt1-trt2 0.2325638
+#> 
+#> $ciAvgRdrEachTrt
+#>       Estimate     StdErr       DF   CILower   CIUpper        Cov2
+#> trt1 0.5916667 0.05802835      Inf 0.4779332 0.7054001 0.003367289
+#> trt2 0.7101728 0.03915636 193.1083 0.6329437 0.7874018 0.001221153
+#> 
+#> $varR
+#> [1] -7.589415e-19
+#> 
+#> $varTR
+#> [1] 0.0002648898
+#> 
+#> $cov1
+#> [1] 0.0007613684
+#> 
+#> $cov2
+#> [1] 0.002294221
+#> 
+#> $cov3
+#> [1] 0.0007613684
+#> 
+#> $varError
+#> [1] 0.003433637
+#> 
+#> $FStat
+#> [1] 4.15768
+#> 
+#> $ndf
+#> [1] 1
+#> 
+#> $df
+#> [1] 937.2437
+#> 
+#> $pval
+#> [1] 0.04172626
+```
+
+
+It consists of three data frames. In addition to the quantities just defined above, the output contains the covariance matrix for the Obuchowski-Rockette model.
+
+* `cov1` is $Cov_1$.
+* `cov2` is $Cov_2$.
+* `cov3` is $Cov_3$.
+* `varError` is $Var_{error}$.
+* `FStat` is the F-statistic for testing the NH.
+* `ndf` is the numerator degrees of freedom, equal to unity.
+* `df` is denominator degrees of freedom of the F-statistic for testing the NH.
+* `Tstat` is the t-statistic for testing the NH that the average difference FOM `avgDiffFom` is zero.
+* `pval` is the p-value for rejecting the NH. In the example shown below the value is signficant.
+
+Notice that including the variability of cases results in a higher p-value as compared to RRFC.
+
+
+* `Estimate` contains the difference FOM estimate.
+* `StdErr` contains the standard estimate of the difference FOM estimate.
+* `DF` contains the degrees of freedom of the t-statistic.
+* `t` contains the value of the t-statistic.
+* `PrGtt` contains the probability of exceeding the magnitude of the t-statistic.
+* `CILower` is the lower confidence interval for the difference FOM.
+* `CIUpper` is the upper confidence interval for the difference FOM.
+
+
+The difference figure of merit is contained in a dataframe with elements:
+
+* `Estimate` contains the difference FOM estimate.
+* `StdErr` contains the standard estimate of the difference FOM estimate.
+* `DF` contains the degrees of freedom of the t-statistic.
+* `t` contains the value of the t-statistic.
+* `PrGtt` contains the probability of exceeding the magnitude of the t-statistic.
+* `CILower` is the lower confidence interval for the difference FOM.
+* `CIUpper` is the upper confidence interval for the difference FOM.
+
+
+The figures of merit statistic for the two treatments, 1 is CAD and 2 is RAD.
+
+* `trt1`: statistics for CAD. 
+* `trt2`: statistics for RAD.
+* `Cov2`: $Cov_2$ calculated over individual treatments.
+
+
+The next example shows the structure of `RRRC_1T_PCL_0_2`. 
+
+
+
+
+```r
+RRRC_1T_PCL_0_2
+#> $fomCAD
+#> [1] 0.5916667
+#> 
+#> $fomRAD
+#> [1] 0.6945313 0.6500000 0.8062500 0.7250000 0.6598214 0.7684524 0.7375000
+#> [8] 0.6750000 0.6750000
+#> 
+#> $avgRadFom
+#> [1] 0.7101728
+#> 
+#> $CIAvgRad
+#> [1] 0.5961151 0.8242305
+#> 
+#> $avgDiffFom
+#> [1] 0.1185061
+#> 
+#> $CIAvgDiffFom
+#> [1] 0.004448434 0.232563801
+#> 
+#> $varR
+#> [1] 0.002808612
+#> 
+#> $varError
+#> [1] 0.005344538
+#> 
+#> $cov2
+#> [1] 0.003065705
+#> 
+#> $Tstat
+#>     rdr2 
+#> 2.039039 
+#> 
+#> $df
+#>     rdr2 
+#> 937.2437 
+#> 
+#> $pval
+#>       rdr2 
+#> 0.04172626
+```
+
+
+
+The differences from `RRFC_1T_PCL_0_2` are listed next:
+
+* `cov2` is $Cov_2$ of the single treatment model for comparing CAD to RAD. 
+* `varError` is $Var_{error}$ of the single treatment model for comparing CAD to RAD. 
+
+Notice that the `RRRC_1T_PCL_0_2` p value, i.e., 0.0417263,  is identical to that of `RRRC_2T_PCL_0_2`, i.e., 0.0417263.  
+
 
 
 
@@ -860,10 +1093,5 @@ While there is consensus that CAD works for microcalcifications, for masses its 
 
 In my opinion standalone performance is the most direct measure of CAD performance. Lack of clear-cut methodology to assess standalone CAD performance may have limited past CAD research. The current work hopoefully removes that impediment. Going forward, assessment of standalone performance of CAD vs. expert radiologists is strongly encouraged.
 
-## Appendix {#standalone-cad-radiologists-appendix}
-
-Assuming `RJafroc` has been installed, the following commands yield the results in Tables 2 and 3. Note that `R` is case sensitive.
-
-{Table 4 goes here}
 
 ## References {#standalone-cad-radiologists-references}

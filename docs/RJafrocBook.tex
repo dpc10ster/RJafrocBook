@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-11-27}
+\date{2020-11-28}
 
 \begin{document}
 \maketitle
@@ -6385,7 +6385,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P{-}val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{\#\textgreater{}   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{\#\textgreater{} 1    1.3256916          1   0.24957313}
+\CommentTok{\#\textgreater{} 1    1.0789177          1   0.29893979}
 \end{Highlighting}
 \end{Shaded}
 
@@ -13105,44 +13105,322 @@ Setting \(Var = 0, Cov_2 = 0\) yields the \(\text{1T-RRFC}\) model, which contai
 \hypertarget{standalone-cad-radiologists-computational-details}{%
 \subsection{Computational details}\label{standalone-cad-radiologists-computational-details}}
 
-The three analyses, namely random-reader fixed-case (\(\text{1T-RRFC}\)), dual-treatment random-reader random-case (\(\text{2T-RRRC}\)) and single-treatment random-reader random-case (\(\text{1T-RRRC}\)), are implemented in \texttt{RJafroc}, an R-package \citep{packageRJafroc}. The function calls necessary to reproduce the results that follow are in the Appendix. {[}The PT-Mono font is used to distinguish software specific terms from normal text.{]}
+The three analyses, namely random-reader fixed-case (\(\text{1T-RRFC}\)), dual-treatment random-reader random-case (\(\text{2T-RRRC}\)) and single-treatment random-reader random-case (\(\text{1T-RRRC}\)), are implemented in \texttt{RJafroc}, an R-package \citep{packageRJafroc}. The function calls necessary to reproduce the results that follow are in the Appendix.
 
-TBA opening comments on output
+The following code shows usage of the three analyses as implemented in \texttt{RJafroc}. Note that \texttt{datasetCadLroc} is the LROC dataset and \texttt{dataset09} is the corresponding ROC dataset. The results are organized as follows:
+
+\begin{itemize}
+\item
+  \texttt{RRFC\_1T\_PCL\_0\_05} is a list containing the results of 1T-RRFC analysis for figure of merit = \(PCL_{0.05}\).
+\item
+  \texttt{RRRC\_2T\_PCL\_0\_05} is a list containing the results of 2T-RRFC analysis for figure of merit = \(PCL_{0.05}\).
+\item
+  \texttt{RRRC\_1T\_PCL\_0\_05} is a list containing the results of 1T-RRFC analysis for figure of merit = \(PCL_{0.05}\).
+\item
+  \texttt{RRFC\_1T\_PCL\_0\_2} is a list containing the results of 1T-RRFC analysis for figure of merit = \(PCL_{0.2}\).
+\item
+  \texttt{RRRC\_2T\_PCL\_0\_2} is a list containing the results of 2T-RRRC analysis for figure of merit = \(PCL_{0.2}\).
+\item
+  \texttt{RRRC\_1T\_PCL\_0\_2} is a list containing the results of 1T-RRRC analysis for figure of merit = \(PCL_{0.2}\).
+\item
+  \texttt{RRFC\_1T\_AUC} is a list containing the results of 1T-RRFC analysis for the Wilcoxon figure of merit.
+\item
+  \texttt{RRRC\_2T\_AUC} is a list containing the results of 2T-RRRC analysis for the Wilcoxon figure of merit.
+\item
+  \texttt{RRRC\_1T\_AUC} is a list containing the results of 1T-RRRC analysis for the Wilcoxon figure of merit.
+\end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 
-\NormalTok{ret\_1T\_RRFC\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{05}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
+\NormalTok{RRFC\_1T\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{05}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
 \DataTypeTok{FOM =} \StringTok{"PCL"}\NormalTok{, }\DataTypeTok{FPFValue =} \FloatTok{0.05}\NormalTok{, }\DataTypeTok{method =} \StringTok{"1T{-}RRFC"}\NormalTok{)}
-\NormalTok{ret\_2T\_RRRC\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{05}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
+\NormalTok{RRRC\_2T\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{05}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
 \DataTypeTok{FOM =} \StringTok{"PCL"}\NormalTok{, }\DataTypeTok{FPFValue =} \FloatTok{0.05}\NormalTok{, }\DataTypeTok{method =} \StringTok{"2T{-}RRRC"}\NormalTok{)}
-\NormalTok{ret\_1T\_RRRC\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{05}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
+\NormalTok{RRRC\_1T\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{05}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
 \DataTypeTok{FOM =} \StringTok{"PCL"}\NormalTok{, }\DataTypeTok{FPFValue =} \FloatTok{0.05}\NormalTok{, }\DataTypeTok{method =} \StringTok{"1T{-}RRRC"}\NormalTok{)}
 
-\NormalTok{ret\_1T\_RRFC\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{2}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
+\NormalTok{RRFC\_1T\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{2}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
 \DataTypeTok{FOM =} \StringTok{"PCL"}\NormalTok{, }\DataTypeTok{FPFValue =} \FloatTok{0.2}\NormalTok{, }\DataTypeTok{method =} \StringTok{"1T{-}RRFC"}\NormalTok{)}
-\NormalTok{ret\_2T\_RRRC\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{2}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
+\NormalTok{RRRC\_2T\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{2}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
 \DataTypeTok{FOM =} \StringTok{"PCL"}\NormalTok{, }\DataTypeTok{FPFValue =} \FloatTok{0.2}\NormalTok{, }\DataTypeTok{method =} \StringTok{"2T{-}RRRC"}\NormalTok{)}
-\NormalTok{ret\_1T\_RRRC\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{2}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
+\NormalTok{RRRC\_1T\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{2}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
 \DataTypeTok{FOM =} \StringTok{"PCL"}\NormalTok{, }\DataTypeTok{FPFValue =} \FloatTok{0.2}\NormalTok{, }\DataTypeTok{method =} \StringTok{"1T{-}RRRC"}\NormalTok{)}
 
-\NormalTok{ret\_1T\_RRFC\_PCL\_}\DecValTok{1}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
+\NormalTok{RRFC\_1T\_PCL\_}\DecValTok{1}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
 \DataTypeTok{FOM =} \StringTok{"PCL"}\NormalTok{, }\DataTypeTok{FPFValue =} \DecValTok{1}\NormalTok{, }\DataTypeTok{method =} \StringTok{"1T{-}RRFC"}\NormalTok{)}
-\NormalTok{ret\_2T\_RRRC\_PCL\_}\DecValTok{1}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
+\NormalTok{RRRC\_2T\_PCL\_}\DecValTok{1}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
 \DataTypeTok{FOM =} \StringTok{"PCL"}\NormalTok{, }\DataTypeTok{FPFValue =} \DecValTok{1}\NormalTok{, }\DataTypeTok{method =} \StringTok{"2T{-}RRRC"}\NormalTok{)}
-\NormalTok{ret\_1T\_RRRC\_PCL\_}\DecValTok{1}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
+\NormalTok{RRRC\_1T\_PCL\_}\DecValTok{1}\NormalTok{ \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (datasetCadLroc, }
 \DataTypeTok{FOM =} \StringTok{"PCL"}\NormalTok{, }\DataTypeTok{FPFValue =} \DecValTok{1}\NormalTok{, }\DataTypeTok{method =} \StringTok{"1T{-}RRRC"}\NormalTok{)}
 
-\NormalTok{ret\_1T\_RRFC\_AUC \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (dataset09, }
+\NormalTok{RRFC\_1T\_AUC \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (dataset09, }
 \DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"1T{-}RRFC"}\NormalTok{)}
-\NormalTok{ret\_2T\_RRRC\_AUC \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (dataset09, }
+\NormalTok{RRRC\_2T\_AUC \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (dataset09, }
 \DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"2T{-}RRRC"}\NormalTok{)}
-\NormalTok{ret\_1T\_RRRC\_AUC \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (dataset09, }
+\NormalTok{RRRC\_1T\_AUC \textless{}{-}}\StringTok{ }\KeywordTok{StSignificanceTestingCadVsRad}\NormalTok{ (dataset09, }
 \DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"1T{-}RRRC"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-TBA closing comments on output
+The structures of the saved objects are illustrated next with three examples. The first example shows the structure of \texttt{RRFC\_1T\_PCL\_0\_2}.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{fomCAD} is the figure of merit for CAD.
+\item
+  \texttt{fomRAD} contains the figures of merit for the nine radiologists in the study.
+\item
+  \texttt{avgRadFom} is the average figure of merit of the nine radiologists in the study.
+\item
+  \texttt{CIAvgRadFom} is the 95 percent confidence interval for \texttt{avgRadFom}.
+\item
+  \texttt{avgDiffFom} is the average difference figure of merit, RAD - CAD.
+\item
+  \texttt{CIAvgDiffFom} is the 95 percent confidence interval for \texttt{avgDiffFom}. If this confidence interval excludes zero, the difference is statistically significant.
+\item
+  \texttt{varR} is the variance of the figures of merit for the nine radiologists in the study.
+\item
+  \texttt{Tstat} is the t-statistic for testing the NH that the average difference FOM \texttt{avgDiffFom} is zero.
+\item
+  \texttt{df} is the degrees of freedom of the t-statistic, whose square is the F-statistic.
+\item
+  \texttt{pval} is the p-value for rejecting the NH. In the example shown below the value is highly signficant.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RRFC\_1T\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{2}
+\CommentTok{\#\textgreater{} $fomCAD}
+\CommentTok{\#\textgreater{} [1] 0.59166667}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $fomRAD}
+\CommentTok{\#\textgreater{} [1] 0.69453125 0.65000000 0.80625000 0.72500000 0.65982143 0.76845238 0.73750000}
+\CommentTok{\#\textgreater{} [8] 0.67500000 0.67500000}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $avgRadFom}
+\CommentTok{\#\textgreater{} [1] 0.71017278}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $CIAvgRadFom}
+\CommentTok{\#\textgreater{} [1] 0.66943619 0.75090938}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $avgDiffFom}
+\CommentTok{\#\textgreater{} [1] 0.11850612}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $CIAvgDiffFom}
+\CommentTok{\#\textgreater{} [1] 0.077769525 0.159242710}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $varR}
+\CommentTok{\#\textgreater{} [1] 0.002808612}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $Tstat}
+\CommentTok{\#\textgreater{} [1] 6.7083568}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $df}
+\CommentTok{\#\textgreater{} [1] 8}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $pval}
+\CommentTok{\#\textgreater{} [1] 0.00015139664}
+\end{Highlighting}
+\end{Shaded}
+
+The next example shows the structure of \texttt{RRRC\_2T\_PCL\_0\_2}. It consists of three data frames. In addition to the quantities just defined above, the output contains the covariance matrix for the Obuchowski-Rockette model.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{cov1} is \(Cov_1\).
+\item
+  \texttt{cov2} is \(Cov_2\).
+\item
+  \texttt{cov3} is \(Cov_3\).
+\item
+  \texttt{varError} is \(Var_{error}\).
+\item
+  \texttt{FStat} is the F-statistic for testing the NH.
+\item
+  \texttt{ndf} is the numerator degrees of freedom, equal to unity.
+\item
+  \texttt{df} is denominator degrees of freedom of the F-statistic for testing the NH.
+\item
+  \texttt{Tstat} is the t-statistic for testing the NH that the average difference FOM \texttt{avgDiffFom} is zero.
+\item
+  \texttt{pval} is the p-value for rejecting the NH. In the example shown below the value is signficant.
+\end{itemize}
+
+Notice that including the variability of cases results in a higher p-value as compared to RRFC.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{Estimate} contains the difference FOM estimate.
+\item
+  \texttt{StdErr} contains the standard estimate of the difference FOM estimate.
+\item
+  \texttt{DF} contains the degrees of freedom of the t-statistic.
+\item
+  \texttt{t} contains the value of the t-statistic.
+\item
+  \texttt{PrGtt} contains the probability of exceeding the magnitude of the t-statistic.
+\item
+  \texttt{CILower} is the lower confidence interval for the difference FOM.
+\item
+  \texttt{CIUpper} is the upper confidence interval for the difference FOM.
+\end{itemize}
+
+The difference figure of merit is contained in a dataframe with elements:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{Estimate} contains the difference FOM estimate.
+\item
+  \texttt{StdErr} contains the standard estimate of the difference FOM estimate.
+\item
+  \texttt{DF} contains the degrees of freedom of the t-statistic.
+\item
+  \texttt{t} contains the value of the t-statistic.
+\item
+  \texttt{PrGtt} contains the probability of exceeding the magnitude of the t-statistic.
+\item
+  \texttt{CILower} is the lower confidence interval for the difference FOM.
+\item
+  \texttt{CIUpper} is the upper confidence interval for the difference FOM.
+\end{itemize}
+
+The figures of merit statistic for the two treatments, 1 is CAD and 2 is RAD.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{trt1}: statistics for CAD.
+\item
+  \texttt{trt2}: statistics for RAD.
+\item
+  \texttt{Cov2}: \(Cov_2\) calculated over individual treatments.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RRRC\_2T\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{2}
+\CommentTok{\#\textgreater{} $fomCAD}
+\CommentTok{\#\textgreater{} [1] 0.59166667}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $fomRAD}
+\CommentTok{\#\textgreater{}       rdr1       rdr2       rdr3       rdr4       rdr5       rdr6       rdr7 }
+\CommentTok{\#\textgreater{} 0.69453125 0.65000000 0.80625000 0.72500000 0.65982143 0.76845238 0.73750000 }
+\CommentTok{\#\textgreater{}       rdr8       rdr9 }
+\CommentTok{\#\textgreater{} 0.67500000 0.67500000 }
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $avgRadFom}
+\CommentTok{\#\textgreater{} [1] 0.71017278}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $avgDiffFom}
+\CommentTok{\#\textgreater{} [1] 0.11850612}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $varDiffFom}
+\CommentTok{\#\textgreater{} [1] 0.002808612}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $ciDiffFom}
+\CommentTok{\#\textgreater{}             Estimate      StdErr        DF         t       PrGTt     CILower}
+\CommentTok{\#\textgreater{} trt1{-}trt2 0.11850612 0.058118615 937.24371 2.0390389 0.041726262 0.004448434}
+\CommentTok{\#\textgreater{}             CIUpper}
+\CommentTok{\#\textgreater{} trt1{-}trt2 0.2325638}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $ciAvgRdrEachTrt}
+\CommentTok{\#\textgreater{}        Estimate      StdErr        DF    CILower    CIUpper         Cov2}
+\CommentTok{\#\textgreater{} trt1 0.59166667 0.058028349       Inf 0.47793319 0.70540014 0.0033672893}
+\CommentTok{\#\textgreater{} trt2 0.71017278 0.039156365 193.10832 0.63294372 0.78740185 0.0012211529}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $varR}
+\CommentTok{\#\textgreater{} [1] {-}7.5894152e{-}19}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $varTR}
+\CommentTok{\#\textgreater{} [1] 0.00026488983}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $cov1}
+\CommentTok{\#\textgreater{} [1] 0.00076136841}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $cov2}
+\CommentTok{\#\textgreater{} [1] 0.0022942211}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $cov3}
+\CommentTok{\#\textgreater{} [1] 0.00076136841}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $varError}
+\CommentTok{\#\textgreater{} [1] 0.0034336373}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $FStat}
+\CommentTok{\#\textgreater{} [1] 4.1576797}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $ndf}
+\CommentTok{\#\textgreater{} [1] 1}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $df}
+\CommentTok{\#\textgreater{} [1] 937.24371}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $pval}
+\CommentTok{\#\textgreater{} [1] 0.041726262}
+\end{Highlighting}
+\end{Shaded}
+
+The next example shows the structure of \texttt{RRRC\_1T\_PCL\_0\_2}. The differences from \texttt{RRFC\_1T\_PCL\_0\_2} are listed next:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{cov2} is \(Cov_2\) of the single treatment model for comparing CAD to RAD.
+\item
+  \texttt{varError} is \(Var_{error}\) of the single treatment model for comparing CAD to RAD.
+\end{itemize}
+
+Notice that the \texttt{RRRC\_1T\_PCL\_0\_2} p value, i.e., 0.04172626, is identical to that of \texttt{RRRC\_2T\_PCL\_0\_2}, i.e., 0.04172626.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RRRC\_1T\_PCL\_}\DecValTok{0}\NormalTok{\_}\DecValTok{2}
+\CommentTok{\#\textgreater{} $fomCAD}
+\CommentTok{\#\textgreater{} [1] 0.59166667}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $fomRAD}
+\CommentTok{\#\textgreater{} [1] 0.69453125 0.65000000 0.80625000 0.72500000 0.65982143 0.76845238 0.73750000}
+\CommentTok{\#\textgreater{} [8] 0.67500000 0.67500000}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $avgRadFom}
+\CommentTok{\#\textgreater{} [1] 0.71017278}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $CIAvgRad}
+\CommentTok{\#\textgreater{} [1] 0.59611510 0.82423047}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $avgDiffFom}
+\CommentTok{\#\textgreater{} [1] 0.11850612}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $CIAvgDiffFom}
+\CommentTok{\#\textgreater{} [1] 0.004448434 0.232563801}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $varR}
+\CommentTok{\#\textgreater{} [1] 0.002808612}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $varError}
+\CommentTok{\#\textgreater{} [1] 0.0053445377}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $cov2}
+\CommentTok{\#\textgreater{} [1] 0.0030657054}
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $Tstat}
+\CommentTok{\#\textgreater{}      rdr2 }
+\CommentTok{\#\textgreater{} 2.0390389 }
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $df}
+\CommentTok{\#\textgreater{}      rdr2 }
+\CommentTok{\#\textgreater{} 937.24371 }
+\CommentTok{\#\textgreater{} }
+\CommentTok{\#\textgreater{} $pval}
+\CommentTok{\#\textgreater{}        rdr2 }
+\CommentTok{\#\textgreater{} 0.041726262}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{standalone-cad-radiologists-results}{%
 \section{Results}\label{standalone-cad-radiologists-results}}
