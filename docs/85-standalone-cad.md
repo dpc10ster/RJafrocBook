@@ -32,8 +32,7 @@ It describes a method for comparing standalone performance of designer-level CAD
 
 ## Methods {#standalone-cad-radiologists-methods}
 
-Summarized are two recent studies of CAD vs. radiologists in mammography. This is followed by comments on the methodologies used in the two studies.
-The second study used cells ROC software in an unorthodox (or unconventional) way. A statistical model and analysis method is described that avoids unorthodox, and perhaps unjustified, use of ROC software and has fewer model parameters.
+Summarized are two recent studies of CAD vs. radiologists in mammography. This is followed by comments on the methodologies used in the two studies. The second study used cells ROC software in an unorthodox (or unconventional) way. A statistical model and analysis method is described that avoids unorthodox, and perhaps unjustified, use of ROC software and has fewer model parameters.
 
 ### Studies assessing performance of CAD vs. radiologists {#standalone-cad-radiologists-two-previous-studies}
 
@@ -249,16 +248,16 @@ In what follows, the analysis in Study -- 1 is referred to as random-reader fixe
 
 ### The $\text{2T-RRRC}$ analysis model {#standalone-cad-radiologists-2TRRRC-anlaysis}
 
-The following approach uses the Obuchowski and Rockette (OR) figure of merit model [@obuchowski1995hypothesis] for analyzing MRMC ROC studies, instead of the pseudovalue model used in the original DBM paper [@dorfman1992receiver]. Hillis has shown the two to be equivalent [@hillis2005comparison]. For fully paired multiple-reader multiple-treatment interpretations (i.e., assuming the data structure in the left half of Table 1) the OR model is:
+This could be termed the conventional or the orthodox method. There are two treatments and the study design is fully crossed: each reader interprets each case in each treatment. The following approach uses the Obuchowski and Rockette (OR) figure of merit model [@obuchowski1995hypothesis] for analyzing such studies, instead of the pseudovalue model used in the original DBM paper [@dorfman1992receiver]. Hillis has shown the two to be equivalent [@hillis2005comparison]. For fully crossed multiple-reader multiple-treatment interpretations (i.e., assuming the data structure in the left half of Table 1) the OR model is:
 
 ```{=tex}
 \begin{equation}
 \theta_{ij\{c\}}=\mu+\tau_i+\left ( \tau \text{R} \right )_{ij}+\epsilon_{ij\{c\}}
-(\#eq:standalone-cad-model-theta-ij)
+(\#eq:standalone-cad-model-2t-rrrc)
 \end{equation}
 ```
 
-Assuming two treatments, $i$ ($i = 1, 2$) is the treatment index, $j$ ($j = 1, ..., J$) is the radiologist index, and $k$ ($k = 1, ..., K$) is the case index, and $\theta_{ij\{c\}}$ is a figure of merit for reader $j$ in treatment $i$ and case-sample $\{c\}$. A case-sample is a set or ensemble of cases, diseased and non-diseased, and different integer values of $c$ correspond to different case-samples. The first two terms on the right hand side of Eqn. \@ref(eq:standalone-cad-model-theta-ij) are fixed effects (average performance and treatment effect, respectively). The next two terms are random effect variables that, by assumption, are sampled as follows:
+Assuming two treatments, $i$ ($i = 1, 2$) is the treatment index, $j$ ($j = 1, ..., J$) is the radiologist index, and $k$ ($k = 1, ..., K$) is the case index, and $\theta_{ij\{c\}}$ is a figure of merit for reader $j$ in treatment $i$ and case-sample $\{c\}$. A case-sample is a set or ensemble of cases, diseased and non-diseased, and different integer values of $c$ correspond to different case-samples. The first two terms on the right hand side of Eqn. \@ref(eq:standalone-cad-model-2t-rrrc) are fixed effects (average performance and treatment effect, respectively). The next two terms are random effect variables that, by assumption, are sampled as follows:
 
 ```{=tex}
 \begin{equation}
@@ -268,7 +267,7 @@ R_j \sim  N\left ( 0,\sigma_R^2 \right )\\
 \left ( \tau R \right )_{ij} \sim N\left ( 0,\sigma_{\tau R}^2 \right )\\
 \end{aligned}
 \right \}
-(\#eq:standalone-cad-model-rj-taur-sampling)
+(\#eq:standalone-cad-2t-r-taur-sampling)
 \end{equation}
 ```
 
@@ -277,40 +276,40 @@ The terms $R_j$ represents the random treatment-independent contribution of read
 ```{=tex}
 \begin{equation}
 \epsilon_{ij\{c\}}\sim N_{I \times J}\left ( \vec{0} , \Sigma \right )
-(\#eq:standalone-cad-eps-sampling)
+(\#eq:standalone-cad-2t-eps-sampling)
 \end{equation}
 ```
 
-Here $N_{I \times J}$ is the $I \times J$ variate normal distribution and $\vec{0}$ denotes the $I \times J$ length zero-vector. The covariance matrix $\Sigma$ is defined by 4 parameters, $Var$, $Cov_1$, $Cov_2$, $Cov_3$, defined as follows:
+Here $N_{I \times J}$ is the $I \times J$ variate normal distribution and $\vec{0}$ denotes the $I \times J$ length zero-vector. The covariance matrix $\Sigma$ is defined by 4 parameters, $\text{Var}$, $\text{Cov}_1$, $\text{Cov}_2$, $\text{Cov}_3$, defined as follows:
 
 ```{=tex}
 \begin{equation}
-Cov(\epsilon_{ij\{c\}},\epsilon_{i'j'\{c\}}) =
+\text{Cov} \left (\epsilon_{ij\{c\}},\epsilon_{i'j'\{c\}} \right ) =
 \left\{\begin{matrix}
 \text{Var} \; (i=i',j=j') \\
 \text{Cov1} \; (i\ne i',j=j')\\ 
 \text{Cov2} \; (i = i',j \ne j')\\ 
 \text{Cov3} \; (i\ne i',j \ne j')
 \end{matrix}\right\}
-(\#eq:standalone-cad-or-cov)
+(\#eq:standalone-cad-2t-rrrc-cov)
 \end{equation}
 ```
 
-Software {U of Iowa and `RJafroc`} yields estimates of all terms appearing on the right hand side of Eqn. \@ref(eq:standalone-cad-or-cov). Excluding fixed effects, the model represented by Eqn. \@ref(eq:standalone-cad-model-theta-ij) contains six parameters:
+Software {U of Iowa and `RJafroc`} yields estimates of all terms appearing on the right hand side of Eqn. \@ref(eq:standalone-cad-2t-rrrc-cov). Excluding fixed effects, the model represented by Eqn. \@ref(eq:standalone-cad-model-2t-rrrc) contains six parameters:
 
 ```{=tex}
 \begin{equation}
-\sigma_R^2, \sigma_{\tau R}^2, Var, Cov_1, Cov_2, Cov_3
-(\#eq:standalone-var-comp)
+\sigma_R^2, \sigma_{\tau R}^2, \text{Var}, \text{Cov}_1, \text{Cov}_2, \text{Cov}_3
+(\#eq:standalone-cad-2t-rrrc-varcom)
 \end{equation}
 ```
 
-The meanings the last four terms are described in [@hillis2007comparison; @obuchowski1995hypothesis; @hillis2005comparison; @chakraborty2017observer]. Briefly, $Var$ is the variance of a reader's FOMs, in a given treatment, over interpretations of different case-samples, averaged over readers and treatments; $Cov_1/Var$ is the correlation of a reader's FOMs, over interpretations of different case-samples in different treatments, averaged over all different treatment same reader pairings; $Cov_2/Var$ is the correlation of different reader's FOMs, over interpretations of different case-samples in the same treatment, averaged over all same treatment different reader pairings and finally, $Cov_3/Var$ is the correlation of different reader's FOMs, over interpretations of different case-samples in different treatments, averaged over all different treatment different reader pairings. One expects the following inequalities to hold:
+The meanings the last four terms are described in [@hillis2007comparison; @obuchowski1995hypothesis; @hillis2005comparison; @chakraborty2017observer]. Briefly, $\text{Var}$ is the variance of a reader's FOMs, in a given treatment, over interpretations of different case-samples, averaged over readers and treatments; $\text{Cov}_1/\text{Var}$ is the correlation of a reader's FOMs, over interpretations of different case-samples in different treatments, averaged over all different treatment same reader pairings; $\text{Cov}_2/\text{Var}$ is the correlation of different reader's FOMs, over interpretations of different case-samples in the same treatment, averaged over all same treatment different reader pairings and finally, $\text{Cov}_3/\text{Var}$ is the correlation of different reader's FOMs, over interpretations of different case-samples in different treatments, averaged over all different treatment different reader pairings. One expects the following inequalities to hold:
 
 ```{=tex}
 \begin{equation}
-Var \geq Cov_1 \geq Cov_2 \geq Cov_3
-(\#eq:standalone-var-comp-ordering)
+\text{Var} \geq \text{Cov}_1 \geq \text{Cov}_2 \geq \text{Cov}_3
+(\#eq:standalone-cad-2t-rrrc-varcom-ordering)
 \end{equation}
 ```
 
@@ -333,44 +332,44 @@ $\theta_{j\{c\}}$ is the figure of merit for radiologist $j$ ($j = 1, 2, ..., J$
 ```{=tex}
 \begin{equation}
 \epsilon_{j\{c\}}\sim N_{J}\left ( \vec{0} , \Sigma \right )
-(\#eq:standalone-cad-eps-sampling-single-treatment)
+(\#eq:standalone-cad-1t-eps-sampling)
 \end{equation}
 ```
 
-The $J \times J$ covariance matrix $\Sigma$ is defined by two parameters, $Var$ and $Cov_2$, as follows:
+The $J \times J$ covariance matrix $\Sigma$ is defined by two parameters, $\text{Var}$ and $\text{Cov}_2$, as follows:
 
 ```{=tex}
 \begin{equation}
 \Sigma_{jj'} = \text{Cov}\left ( \epsilon_{j\{c\}}, \epsilon_{j'\{c\}} \right )
 =
 \left\{\begin{matrix}
-Var & j = j'\\ 
-Cov_2 & j \neq j'
+\text{Var} & j = j'\\ 
+\text{Cov}_2 & j \neq j'
 \end{matrix}\right.
-(\#eq:standalone-cad-var-cov2-single-treatment)
+(\#eq:standalone-cad-1t-var-cov2-sampling)
 \end{equation}
 ```
 
-The terms $Var$ and $Cov_2$ are estimated using resampling methods. Using the jackknife, and denoting the difference FOM with case k removed by $\psi_{j(k)}$ (the index in parenthesis denotes deleted case $k$, and since one is dealing with a single case-sample, the case-sample index $c\{c\}$ is superfluous). The covariance matrix is estimated using (the dot symbol represents an average over the replaced index):
+The terms $\text{Var}$ and $\text{Cov}_2$ are estimated using resampling methods. Using the jackknife, and denoting the difference FOM with case k removed by $\psi_{j(k)}$ (the index in parenthesis denotes deleted case $k$, and since one is dealing with a single case-sample, the case-sample index $c\{c\}$ is superfluous). The covariance matrix is estimated using (the dot symbol represents an average over the replaced index):
 
 ```{=tex}
 \begin{equation}
 \Sigma_{jj'}|_\text{jack} = \frac{K-1}{K} \sum_{k=1}^{K} \left ( \psi_{j(k)}  - \psi_{j(\bullet)} \right ) \left ( \psi_{j'(k)}  - \psi_{j'(\bullet)} \right )
-(\#eq:standalone-cad-single-treatment-sigma-jackknife)
+(\#eq:standalone-cad-1t-sigma-jackknife)
 \end{equation}
 ```
 
-The final estimates of $Var$ and $Cov_2$ are averaged (indicated in the following equation by the angular brackets) over all pairings of radiologists satisfying the relevant equalities/inequalities shown just below the closing angular bracket:
+The final estimates of $\text{Var}$ and $\text{Cov}_2$ are averaged (indicated in the following equation by the angular brackets) over all pairings of radiologists satisfying the relevant equalities/inequalities shown just below the closing angular bracket:
 
 ```{=tex}
 \begin{equation}
 \left.
 \begin{aligned}  
-Var = \left \langle \Sigma_{jj'}|_{\text{jack}} \right \rangle_{j=j'}\\
-Cov_2 = \left \langle \Sigma_{jj'}|_{\text{jack}} \right \rangle_{j \neq j'}
+\text{Var} = \left \langle \Sigma_{jj'}|_{\text{jack}} \right \rangle_{j=j'}\\
+\text{Cov}_2 = \left \langle \Sigma_{jj'}|_{\text{jack}} \right \rangle_{j \neq j'}
 \end{aligned}
 \right \}
-(\#eq:standalone-cad-final-estimates-var-cov2)
+(\#eq:standalone-cad-1t-rrrc-var-cov2)
 \end{equation}
 ```
 
@@ -382,7 +381,7 @@ Instead, the following model was used for the figure of merit of the radiologist
 \begin{equation}
 \theta_{j\{c\}} = \theta_{0\{c\}} + \Delta \theta + R_j + \epsilon_{j\{c\}}\\
 j=1,2,...J
-(\#eq:standalone-cad-model-theta-j)
+(\#eq:standalone-cad-1t-thetaj)
 \end{equation}
 ```
 
@@ -395,28 +394,28 @@ $\theta_{0\{c\}}$ is the CAD figure of merit for case-sample $\{c\}$; $\Delta \t
 \end{equation}
 ```
 
-Then Eqn. \@ref(eq:standalone-cad-model-theta-j) reduces to:
+Then Eqn. \@ref(eq:standalone-cad-1t-thetaj) reduces to:
 
 ```{=tex}
 \begin{equation}
 \psi_{j\{c\}} = \Delta \theta + R_j + \epsilon_{j\{c\}}\\
 j=1,2,...J
-(\#eq:standalone-cad-model-psi-j)
+(\#eq:standalone-cad-1t-psij)
 \end{equation}
 ```
 
-Eqn. \@ref(eq:standalone-cad-model-psi-j) is identical in form to Eqn. \@ref(eq:standalone-or-model-single-treatment) with the difference that the figure of merit on the left hand side of Eqn. \@ref(eq:standalone-cad-model-psi-j) is a difference FOM, that between the radiologist's and CAD. Eqn. \@ref(eq:standalone-cad-model-psi-j) describes a model for $J$ difference radiologists interpreting a common case set, each of whose performances is a difference from that of CAD; the difference is positive if the radiologist is better. Under the NH the expected difference is zero: $\text{NH:} \Delta \theta = 0$. The method [@hillis2005comparison; @hillis2007comparison] for single-treatment multiple-reader analysis is now directly applicable to the model described by Eqn. \@ref(eq:standalone-cad-model-psi-j).
+Eqn. \@ref(eq:standalone-cad-1t-psij) is identical in form to Eqn. \@ref(eq:standalone-or-model-single-treatment) with the difference that the figure of merit on the left hand side of Eqn. \@ref(eq:standalone-cad-1t-psij) is a difference FOM, that between the radiologist's and CAD. Eqn. \@ref(eq:standalone-cad-1t-psij) describes a model for $J$ difference radiologists interpreting a common case set, each of whose performances is a difference from that of CAD; the difference is positive if the radiologist is better. Under the NH the expected difference is zero: $\text{NH:} \Delta \theta = 0$. The method [@hillis2005comparison; @hillis2007comparison] for single-treatment multiple-reader analysis is now directly applicable to the model described by Eqn. \@ref(eq:standalone-cad-1t-psij).
 
-Apart from fixed effects, the model in Eqn. \@ref(eq:standalone-cad-model-psi-j) contains three parameters:
+Apart from fixed effects, the model in Eqn. \@ref(eq:standalone-cad-1t-psij) contains three parameters:
 
 ```{=tex}
 \begin{equation}
-\sigma_R^2, Var, Cov_2
-(\#eq:standalone-cad-parameter-simplified-model)
+\sigma_R^2, \text{Var}, \text{Cov}_2
+(\#eq:standalone-cad-1t-parms)
 \end{equation}
 ```
 
-Setting $Var = 0, Cov_2 = 0$ yields the $\text{1T-RRFC}$ model, which contains only one random parameter, namely $\sigma_R^2$. A valid analysis should yield identical estimates of this parameter from either $\text{1T-RRFC}$ or $\text{RRRC}$ analysis.
+Setting $\text{Var} = 0, \text{Cov}_2 = 0$ yields the $\text{1T-RRFC}$ model, which contains only one random parameter, namely $\sigma_R^2$. A valid analysis should yield identical estimates of this parameter from either $\text{1T-RRFC}$ or $\text{RRRC}$ analysis.
 
 ## Computational details {#standalone-cad-radiologists-computational-details}
 
@@ -474,137 +473,99 @@ The results are organized as follows:
 
 The structures of the saved objects are illustrated next with three examples. 
 
-The first example shows the structure of `RRFC_1T_PCL_0_2`. 
+### The first example shows the structure of `RRFC_1T_PCL_0_2`. 
+
+
+
 
 
 
 ```r
-RRFC_1T_PCL_0_2
-#> $fomCAD
-#> [1] 0.5916667
-#> 
-#> $fomRAD
-#> [1] 0.6945313 0.6500000 0.8062500 0.7250000 0.6598214 0.7684524 0.7375000
-#> [8] 0.6750000 0.6750000
-#> 
-#> $avgRadFom
-#> [1] 0.7101728
-#> 
-#> $CIAvgRadFom
-#> [1] 0.6694362 0.7509094
-#> 
-#> $avgDiffFom
-#> [1] 0.1185061
-#> 
-#> $CIAvgDiffFom
-#> [1] 0.07776953 0.15924271
-#> 
-#> $varR
-#> [1] 0.002808612
-#> 
-#> $Tstat
-#> [1] 6.708357
-#> 
-#> $df
-#> [1] 8
-#> 
-#> $pval
-#> [1] 0.0001513966
+print(fom_individual_rad)
+#>        rdr1 rdr2    rdr3  rdr4      rdr5      rdr6   rdr7  rdr8  rdr9
+#> 1 0.6945313 0.65 0.80625 0.725 0.6598214 0.7684524 0.7375 0.675 0.675
+print(stats)
+#>      fomCAD avgRadFom avgDiffFom        varR    Tstat df         pval
+#> 1 0.5916667 0.7101728  0.1185061 0.002808612 6.708357  8 0.0001513966
+print(ConfidenceIntervals)
+#>       CIAvgRadFom CIAvgDiffFom
+#> Lower   0.6694362   0.07776953
+#> Upper   0.7509094   0.15924271
 ```
 
+The results are displayed as three data frames. 
+
+The first data frame :
+
+* `fom_individual_rad` shows the figures of merit for the nine radiologists in the study.
+
+The next data frame summarizes the statistics.
 
 * `fomCAD` is the figure of merit for CAD.
-* `fomRAD` contains the figures of merit for the nine radiologists in the study.
 * `avgRadFom` is the average figure of merit of the nine radiologists in the study.
-* `CIAvgRadFom` is the 95 percent confidence interval for `avgRadFom`.
 * `avgDiffFom` is the average difference figure of merit, RAD - CAD.
-* `CIAvgDiffFom` is the 95 percent confidence interval for `avgDiffFom`. If this confidence interval excludes zero, the difference is statistically significant.
 * `varR` is the variance of the figures of merit for the nine radiologists in the study.
 * `Tstat` is the t-statistic for testing the NH that the average difference FOM `avgDiffFom` is zero.
 * `df` is the degrees of freedom of the t-statistic, whose square is the F-statistic.
 * `pval` is the p-value for rejecting the NH. In the example shown below the value is highly signficant.
 
+The last data frame summarizes the 95 percent confidence intervals.
 
-The next example shows the structure of `RRRC_2T_PCL_0_2`. 
+* `CIAvgRadFom` is the 95 percent confidence interval, listed as pairs `Lower`, `Upper`, for `avgRadFom`.
+* `CIAvgDiffFom` is the 95 percent confidence interval for `avgDiffFom`. 
+* If the pair `CIAvgDiffFom` excludes zero, the difference is statistically significant. 
+* In the example the interval excludes zero showing that the FOM difference is significant.
+
+
+### The next example shows the structure of `RRRC_2T_PCL_0_2`. 
+
+
+
 
 
 
 ```r
-RRRC_2T_PCL_0_2
-#> $fomCAD
-#> [1] 0.5916667
-#> 
-#> $fomRAD
-#>      rdr1      rdr2      rdr3      rdr4      rdr5      rdr6      rdr7      rdr8 
-#> 0.6945313 0.6500000 0.8062500 0.7250000 0.6598214 0.7684524 0.7375000 0.6750000 
-#>      rdr9 
-#> 0.6750000 
-#> 
-#> $avgRadFom
-#> [1] 0.7101728
-#> 
-#> $avgDiffFom
-#> [1] 0.1185061
-#> 
-#> $varDiffFom
-#> [1] 0.002808612
-#> 
-#> $ciDiffFom
-#>            Estimate     StdErr       DF        t      PrGTt     CILower
-#> trt1-trt2 0.1185061 0.05811861 937.2437 2.039039 0.04172626 0.004448434
-#>             CIUpper
-#> trt1-trt2 0.2325638
-#> 
-#> $ciAvgRdrEachTrt
-#>       Estimate     StdErr       DF   CILower   CIUpper        Cov2
-#> trt1 0.5916667 0.05802835      Inf 0.4779332 0.7054001 0.003367289
-#> trt2 0.7101728 0.03915636 193.1083 0.6329437 0.7874018 0.001221153
-#> 
-#> $varR
-#> [1] -7.589415e-19
-#> 
-#> $varTR
-#> [1] 0.0002648898
-#> 
-#> $cov1
-#> [1] 0.0007613684
-#> 
-#> $cov2
-#> [1] 0.002294221
-#> 
-#> $cov3
-#> [1] 0.0007613684
-#> 
-#> $varError
-#> [1] 0.003433637
-#> 
-#> $FStat
-#> [1] 4.15768
-#> 
-#> $ndf
-#> [1] 1
-#> 
-#> $df
-#> [1] 937.2437
-#> 
-#> $pval
-#> [1] 0.04172626
+
+print(fom_individual_rad)
+#>        rdr1 rdr2    rdr3  rdr4      rdr5      rdr6   rdr7  rdr8  rdr9
+#> 1 0.6945313 0.65 0.80625 0.725 0.6598214 0.7684524 0.7375 0.675 0.675
+print(stats1)
+#>      fomCAD avgRadFom avgDiffFom
+#> 1 0.5916667 0.7101728  0.1185061
+print(stats2)
+#>            varR        varTR         cov1        cov2         cov3         Var
+#> 1 -7.589415e-19 0.0002648898 0.0007613684 0.002294221 0.0007613684 0.003433637
+#>     FStat       df       pval
+#> 1 4.15768 937.2437 0.04172626
 ```
 
 
-It consists of three data frames. In addition to the quantities just defined above, the output contains the covariance matrix for the Obuchowski-Rockette model.
 
-* `cov1` is $Cov_1$.
-* `cov2` is $Cov_2$.
-* `cov3` is $Cov_3$.
-* `varError` is $Var_{error}$.
+In addition to the quantities defined previously, the output contains the covariance matrix for the Obuchowski-Rockette model, summarized in Eqn. \@ref(eq:standalone-cad-model-2t-rrrc) -- Eqn. \@ref(eq:standalone-cad-2t-rrrc-cov).
+
+* `varTR` is $\text{Var}_{\tau R}$.
+* `cov1` is $\text{Cov}_1$.
+* `cov2` is $\text{Cov}_2$.
+* `cov3` is $\text{Cov}_3$.
+* `Var` is $\text{Var}$.
 * `FStat` is the F-statistic for testing the NH.
 * `ndf` is the numerator degrees of freedom, equal to unity.
 * `df` is denominator degrees of freedom of the F-statistic for testing the NH.
 * `Tstat` is the t-statistic for testing the NH that the average difference FOM `avgDiffFom` is zero.
 * `pval` is the p-value for rejecting the NH. In the example shown below the value is signficant.
 
-Notice that including the variability of cases results in a higher p-value as compared to RRFC.
+Notice that including the variability of cases results in a higher p-value as compared to RRFC. 
+
+Shown next are the confidence interval statistics `x$ciAvgRdrEachTrt` for the two treatments (1 = CAD, 2 = RAD):
+
+
+```r
+
+print(x$ciAvgRdrEachTrt)
+#>       Estimate     StdErr       DF   CILower   CIUpper        Cov2
+#> trt1 0.5916667 0.05802835      Inf 0.4779332 0.7054001 0.003367289
+#> trt2 0.7101728 0.03915636 193.1083 0.6329437 0.7874018 0.001221153
+```
 
 
 * `Estimate` contains the difference FOM estimate.
@@ -616,7 +577,18 @@ Notice that including the variability of cases results in a higher p-value as co
 * `CIUpper` is the upper confidence interval for the difference FOM.
 
 
-The difference figure of merit is contained in a dataframe with elements:
+```r
+
+print(x$ciDiffFom)
+#>            Estimate     StdErr       DF        t      PrGTt     CILower
+#> trt1-trt2 0.1185061 0.05811861 937.2437 2.039039 0.04172626 0.004448434
+#>             CIUpper
+#> trt1-trt2 0.2325638
+```
+
+
+
+The difference figure of merit statistics are contained in a dataframe `x$ciDiffFom` with elements:
 
 * `Estimate` contains the difference FOM estimate.
 * `StdErr` contains the standard estimate of the difference FOM estimate.
@@ -631,10 +603,10 @@ The figures of merit statistic for the two treatments, 1 is CAD and 2 is RAD.
 
 * `trt1`: statistics for CAD. 
 * `trt2`: statistics for RAD.
-* `Cov2`: $Cov_2$ calculated over individual treatments.
+* `Cov2`: $\text{Cov}_2$ calculated over individual treatments.
 
 
-The next example shows the structure of `RRRC_1T_PCL_0_2`. 
+### The last example shows the structure of `RRRC_1T_PCL_0_2`. 
 
 
 
@@ -686,8 +658,9 @@ RRRC_1T_PCL_0_2
 
 The differences from `RRFC_1T_PCL_0_2` are listed next:
 
-* `cov2` is $Cov_2$ of the single treatment model for comparing CAD to RAD. 
-* `varError` is $Var_{error}$ of the single treatment model for comparing CAD to RAD. 
+* `varR` is $\sigma_R^2$ of the single treatment model for comparing CAD to RAD, Eqn. \@ref(eq:standalone-cad-1t-parms). 
+* `cov2` is $\text{Cov}_2$ of the single treatment model for comparing CAD to RAD. 
+* `varError` is $\text{Var}$ of the single treatment model for comparing CAD to RAD. 
 
 Notice that the `RRRC_1T_PCL_0_2` p value, i.e., 0.0417263,  is identical to that of `RRRC_2T_PCL_0_2`, i.e., 0.0417263.  
 
@@ -908,7 +881,7 @@ This should be obvious, as PCL increases as FPF increases, a general feature of 
 6. The p-value for either RRRC analyses (2T or 1T) is larger than the corresponding $\text{1T-RRFC}$ value. Accounting for case-sampling variability increases the p-value, leading to less possibility of finding a significant difference.
 7. Partial curve-based FOMs, such as $\text{PCL}_{FPF}$, lead, depending on the choice of $FPF$, to different conclusions. The p-values generally decrease as FPF increases. Measuring performance on the steep part of the LROC curve (i.e., small FPF) needs to account for greater reader variability and risks lower statistical power.
 8. Ignoring localization information (i.e., using the AUC FOM) led to a not-significant difference between CAD and the radiologists ($p$ = 0.3210), while the corresponding FOM yielded a significant difference ($p$ = 0.0409). Accounting for localization leads to a less "noisy" measurement. This has been demonstrated for the LROC paradigm [@swensson1996unified] and I have demonstrated this for the FROC paradigm [@chakraborty2008validation].
-9. For $\text{1T-RRRC}$ analysis, is listed as NA, for not applicable, since is not a model parameter, see Eqn. \@ref(eq:standalone-cad-model-psi-j).
+9. For $\text{1T-RRRC}$ analysis, is listed as NA, for not applicable, since is not a model parameter, see Eqn. \@ref(eq:standalone-cad-1t-psij).
 
 Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters corresponding to the three analyses.
 
@@ -1070,8 +1043,8 @@ The following characteristics are evident from Table \@ref(tab:standalone-cad-ta
 
 1. For $\text{2T-RRRC}$ analyses $\sigma_R^2 = 0$. Actually, the analysis yielded very small values, of the order of $10^{-18}$ to $10^{-19}$, which, being smaller than double precision accuracy, were replaced by zeroes in Table \@ref(tab:standalone-cad-table2). $\sigma_R^2 = 0$ is clearly an incorrect result as the radiologists do not have identical performance. In contrast, $\text{1T-RRRC}$ analyses yielded more realistic values, identical to those obtained by $\text{1T-RRFC}$ analyses, and consistent with expectation -- see comment following Eqn. (15).
 2. Because 2T analysis found zero reader variability, it follows from the definitions of the covariances [@obuchowski1995hypothesis], that $Cov_1 = Cov_3 = 0$, as evident in the table.
-3. When they can be compared (i.e., $\sigma_R^2$, $Cov_2$ and $Var$), all variance and covariance estimates were smaller for the 2T method than for the 1T method.
-4. For the 2T method the expected inequalities, Eqn. \@ref(eq:standalone-var-comp-ordering), are not obeyed (specifically, $Cov_1 \geq Cov_2 \geq Cov_3$ is not obeyed).
+3. When they can be compared (i.e., $\sigma_R^2$, $\text{Cov}_2$ and $\text{Var}$), all variance and covariance estimates were smaller for the 2T method than for the 1T method.
+4. For the 2T method the expected inequalities, Eqn. \@ref(eq:standalone-cad-2t-rrrc-varcom-ordering), are not obeyed (specifically, $Cov_1 \geq Cov_2 \geq Cov_3$ is not obeyed).
 
 For an analysis method to be considered statistically valid it needs to be tested with simulations to determine if it has the proper null hypothesis behavior. The design of a ratings simulator to statistically match a given dataset is addressed in Chapter 23 of reference [@chakraborty2017observer]. Using this simulator, the $\text{1T-RRRC}$ method had the expected null hypothesis behavior (Table 23.5, ibid).
 
