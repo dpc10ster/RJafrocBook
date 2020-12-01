@@ -34,23 +34,10 @@ Algorithm developers are familiar with this problem: given a CAD system that yie
 * This chapter examines the effect of changing the reporting threshold $\zeta_1$ on the wAFROC AUC, with the object of determining the value that maximizes the AUC.
 
 ```{r do_one_mu, echo=FALSE}
-do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, K1, K2, Lk2, seed) {
-
+do_one_mu <- function(zeta1Arr, fomArray, mu, lambda, nu, lesDistr, relWeights) {
 
   for (i in 1:length(zeta1Arr)) {
-    froc1 <- SimulateFrocDataset (
-      mu = mu,
-      lambda = lambda,
-      nu = nu,
-      zeta1 = zeta1Arr[i],
-      I = 1,
-      J = 1,
-      K1 = K1,
-      K2 = K2,
-      perCase = Lk2,
-      seed = seed)
-
-    fomArray[i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
+    fomArray[i] <- UtilAnalyticalAucsRSM(mu, lambda, nu, zeta1 = zeta1Arr[i], lesDistr, relWeights)$wAFROC
   }
   myData <- data.frame(zeta1 = zeta1Arr, AUC = fomArray)
   p <- ggplot2::ggplot(myData, aes(x = zeta1, y = AUC)) + geom_line()
@@ -81,31 +68,16 @@ mu_arr <- c(1, 1.5, 2, 2.5)
 maxFomArr <- array(dim = c(2,length(mu_arr)))
 zetaMaxArr <- array(dim = c(2, length(mu_arr)))
 plotArr <- array(list(), dim = c(2, length(mu_arr)))
-K1 <- 5000
-K2 <- 7000
-Lmax <- 2
-seed <- 1
-set.seed(seed)
-Lk2 <- floor(runif(K2, 1, Lmax + 1))
-
+lesDistr <- Convert2lesDistr(c(0.5, 0.5))
+relWeights <- c(0.5, 0.5)
 for (i in 1:length(mu_arr)) {
   if (i == 1) zeta1Arr <- seq(1.5,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
   fomArray <- array(dim = length(zeta1Arr))
-  x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, K1, K2, Lk2, seed)
+  x <- do_one_mu (zeta1Arr, fomArray, mu_arr[i], lambda, nu, lesDistr, relWeights)$wAFROC
+  STOP
   plotArr[[1,i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  as.character(x$zetaMax)))
   zetaMaxArr[1,i] <- x$zetaMax
-  froc1 <- SimulateFrocDataset (
-    mu = mu_arr[i],
-    lambda = lambda,
-    nu = nu,
-    zeta1 = x$zetaMax,
-    I = 1,
-    J = 1,
-    K1 = K1,
-    K2 = K2,
-    perCase = Lk2,
-    seed = seed)
-  maxFomArr[1,i] <- as.numeric(UtilFigureOfMerit(froc1, FOM = "wAFROC"))
+  maxFomArr[1,i] <- UtilAnalyticalAucsRSM(mu_arr[i], lambda, nu, zeta1 = x$zetaMax, lesDistr, relWeights)
 }
 ```
 
