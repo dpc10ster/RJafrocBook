@@ -26,7 +26,6 @@ Algorithm developers are familiar with this problem: given a CAD system that yie
 
 * For each $\mu$ one scans $\zeta_1$, repeating the simulations and AUC computations for each value of $\zeta_1$. One determines the value of $\zeta_1$ that maximizes AUC; this is denoted $\zeta_{\text{max}}$. Finally, using $\zeta_{\text{max}}$ one calculates the corresponding (NLF,LLF) values, i.e., *the optimal operating point on the FROC* and the wAFROC AUC. 
 
-* A large number of cases is used, namely the number of non-diseased cases is $K_1 = 5000$ and the number of diseased cases is $K_2 = 7000$. This minimizes sampling variability while not requiring excessive computation times.
 
 ### $\zeta_1$ optimization for $\lambda = 10$
 
@@ -35,7 +34,7 @@ Shown next is the variation of wAFROC AUC vs. $\zeta_1$ for $\lambda = 10$ and t
 
 
 
-![(\#fig:optim-op-point-AUC-vs-zeta1-10)Variation of AUC vs. $\zeta_1$ for $\lambda = 10$; AUC is the wAFROC AUC. The plots are labeled by the value of $\mu$ and zetaMax (i.e., $\zeta_{\text{max}}$, the value of $\zeta_1$ that maximizes AUC).](21-optim-op-point_files/figure-latex/optim-op-point-AUC-vs-zeta1-10-1.pdf) 
+![(\#fig:optim-op-point-AUC-vs-zeta1-10)Variation of AUC vs. $\zeta_1$ for $\lambda = 10$; AUC is the wAFROC AUC. panels are labeled by the value of $\mu$ and zetaMax (i.e., $\zeta_{\text{max}}$, the value of $\zeta_1$ that maximizes AUC).](21-optim-op-point_files/figure-latex/optim-op-point-AUC-vs-zeta1-10-1.pdf) 
 
 
 Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-10) corresponding to $\lambda = 10$ has four panels showing the variation of wAFROC AUC with $\zeta_1$. Each panel is labeled by the values of $\mu$ and  $\zeta_{\text{max}}$. For example, the panel labeled `mu = 1.5, zetaMax = 1.9` shows that AUC has a maximum at $\zeta_1 = 1.9$. For $\mu = 1$ the maximum is at the top of a broad plateau, but for higher values the maximum is better defined.
@@ -44,7 +43,6 @@ Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-10) corresponding to $\lambda = 10$ h
 ### $\zeta_1$ optimization for $\lambda = 1$
 
 Shown next is the variation of wAFROC AUC vs. $\zeta_1$ for $\lambda = 1$ and the four values of the $\mu$ parameter.
-
 
 
 
@@ -82,68 +80,81 @@ Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-01) corresponds to $\lambda = 1$ and 
 \hline
 measure & mu1 & mu1.5 & mu2 & mu2.5\\
 \hline
-AUC10 & 0.50224 & 0.55628 & 0.69876 & 0.83833\\
+AUC10 & 0.50099 & 0.55459 & 0.69929 & 0.83484\\
 \hline
-AUC01 & 0.60507 & 0.78199 & 0.88091 & 0.93461\\
+AUC01 & 0.60278 & 0.77662 & 0.87965 & 0.93586\\
 \hline
-NLF10 & 0.00687 & 0.19144 & 0.40378 & 0.63462\\
+NLF10 & 0.00577 & 0.15167 & 0.40378 & 0.54266\\
 \hline
-LLF10 & 0.00879 & 0.26769 & 0.62753 & 0.85659\\
+LLF10 & 0.00773 & 0.23969 & 0.62753 & 0.84379\\
 \hline
-NLF01 & 0.34458 & 0.42455 & 0.28963 & 0.18407\\
+NLF01 & 0.38209 & 0.39914 & 0.29935 & 0.20798\\
 \hline
-LLF01 & 0.45876 & 0.75189 & 0.85264 & 0.91039\\
+LLF01 & 0.47917 & 0.74575 & 0.85409 & 0.91297\\
 \hline
 \end{tabular}
 \end{table}
 
 Table \@ref(tab:optim-op-point-cad-optim-table) summarizes the results of the simulations. In this table the first two rows compare the AUCs for $\lambda=10$ and $\lambda=1$ for the four values of $\mu$. The next two rows show the operating point (NLF, LLF) for $\lambda = 10$ for the four values of $\mu$ and the final two rows are the operating point for $\lambda = 1$ for the four values of $\mu$. The following trends are evident.
 
-* All else being equal, AUC increases with increasing $\mu$. Increasing the separation of the two unit variance normal distributions that determine the ratings of NLs and LLs leads to higher performance
-* All else being equal, AUC increases with decreasing $\lambda$. Decreasing the propensity of the observer to generate NLs leads to increasing performance.
+* All else being equal, AUC increases with increasing $\mu$. Increasing the separation of the two unit variance normal distributions that determine the ratings of NLs and LLs leads to higher performance.
+* All else being equal, AUC increases with *decreasing* $\lambda$. Decreasing the tendency of the observer to generate NLs leads to increasing performance.
 * For each value of $\lambda$ optimal LLF increases with increasing $\mu$.
 * For $\lambda = 10$ optimal NLF increases with increasing $\mu$.
 * For $\lambda = 1$ optimal NLF *peaks* around $\mu = 1.5$.
 
-All of these observations make intuitive sense except, perhaps, that for NLF01. To understand the peaking behavior it is necessary to examine the FROC curves corresponding to the eight -- two $\lambda$ values times four $\mu$ values -- combinations of parameters. In the following eight plots, each labeled by the appropriate $\lambda-\mu$ combination, the optimal value of NLF, corresponding to $\zeta_1 = \zeta_{\text{max}}$, is shown as a red vertical line.
+All of these observations make intuitive sense except, perhaps, that for NLF01. To understand the peaking behavior it is necessary to examine the FROC curves corresponding to the eight -- two $\lambda$ values times four $\mu$ values -- combinations of parameters. In the following eight plots, each labeled by the appropriate $\lambda-\mu$ combination, the optimal value of NLF, corresponding to $\zeta_1 = \zeta_{\text{max}}$, is shown as a blue vertical line.
 
-![(\#fig:optim-op-point-froc-10-first-two-plots)Extended FROC plots: the plot labeled 10-1 is for $\lambda = 10$ and $\mu = 1$, and that labeled 10-1.5 is for $\lambda = 10$ and $\mu = 1.5$.](21-optim-op-point_files/figure-latex/optim-op-point-froc-10-first-two-plots-1.pdf) 
+![(\#fig:optim-op-point-froc-10-first-two-plots)Extended FROC plots: panel labeled 10-1 is for $\lambda = 10$ and $\mu = 1$, and that labeled 10-1.5 is for $\lambda = 10$ and $\mu = 1.5$. The blue line indicates the optimal operating point.](21-optim-op-point_files/figure-latex/optim-op-point-froc-10-first-two-plots-1.pdf) 
+
+
+![(\#fig:optim-op-point-froc-10-next-two-plots)Extended FROC plots: panel labeled 10-2 is for $\lambda = 10$ and $\mu = 2$ and that labeled 10-2.5 is for $\lambda = 10$ and $\mu = 2.5$. The blue line indicates the optimal operating point.](21-optim-op-point_files/figure-latex/optim-op-point-froc-10-next-two-plots-1.pdf) 
+
 
 #### Explanations {#optim-op-point-threshold-explanations}
 
-* In Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots) and the plot labeled **10-1**: the vertical red line is at NLF = 0.0068714. The predicted end-point for the curve is (NLF = 0.0068714, LLF = 0.0087887) while the empirical end-point is (NLF = 0.0056667, LLF = 0.0096337) and the extended curve (defined below) ends at (NLF = 0.0364167, LLF = 0.0274704). In the plot labeled **10-1.5**: The vertical red line is at NLF = 0.1914437. The predicted end-point for the curve is (NLF = 0.1914437, LLF = 0.2676925) while the empirical end-point is (NLF = 0.1958333, LLF = 0.2757535) and the extended curve ends at (NLF = 0.53475, LLF = 0.4302747).
+* In Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) panel labeled **10-1** is the *extended* FROC curve for $\lambda = 10$ and $\mu = 1$. The vertical blue line is drawn at the optimal NLF corresponding to $\zeta_{\text{max}}$ for this parameter combination.  
 
-* In Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) the plot labeled **10-1** is the *extended* FROC curve for $\lambda = 10$ and $\mu = 1$.
-* Meaning of *extended*: due to sampling effects the predicted end-point will not, in general, coincide with the *empirical* end-point, but will be near it. In order to show a fuller extent of the FROC curve it is necessary to *extend* the observed curve beyond the predicted end-point. This was done by setting $\zeta_1$ = $\zeta_{\text{max}} - 0.5$, which has the effect of letting the curve run a little bit further to the right. As a concrete example the predicted end-point for the curve in question is (NLF = 0.0068714, LLF = 0.0087887) while the empirical end-point is (NLF = 0.0056667, LLF = 0.0096337) and the extended curve ends at (NLF = 0.0364167, LLF = 0.0274704).
-* The vertical red line is drawn at the *predicted* optimal NLF corresponding to $\zeta_{\text{max}}$ for this parameter combination, not the *empirical* NLF.  
-* In Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) panel labeled 10-1, AUC performance is quite low. In fact AUC = 0.5022367. The optimal operating point of the algorithm is actually rather close to the origin, specifically NLF = 0.0068714 and LLF = 0.0087887.
-* Since algorithm performance is so poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, very high confidence level for being right (note that an operating point near the origin corresponds to a high value of $\zeta$).
-* For higher values of $\mu$ shown in Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) -- e.g., the plots labeled 10-1.5, 10-2 and 10-2.5 -- AUC performance progressively increases. It now makes sense to show marks with lower confidence levels corresponding to moving up the FROC curve. While it is true that one is also showing more NLs, the increase in the number of LLs shown is enough to compensate. This trend is seen to be true for all operating points listed in the third and fourth rows of Table \@ref(tab:optim-op-point-cad-optim-table).
-* It remains to explain the seemingly anomalous behavior seen in the fifth row of Table \@ref(tab:optim-op-point-cad-optim-table) - NLF shows a peak at $\mu = 1.5$ as a function of $\mu$ and thereafter NLF decreases. The relevant FROC curve is shown in Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots), panel labeled 1-1.5. The basic reason is that as $\mu$ increases, the end-point of the FROC keeps moving upwards and to the left (approaching NLF = 0 and LLF = 1 in the limit of infinite $\mu$). Because of this effect the expected increase in NLF seen in the third row of the table is terminated - one literally runs out of FROC curve to move up on. Another way of explaining this is that in In Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) the true end-point, i.e., that corresponding to $\zeta_1 = -\infty$, is much further to the right, than in Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots). This allows NLF to keep increasing in Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) but not in Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots).
+* Note the "magnified view" scale factors chosen for Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) panel labeled **10-1**. The x-axis runs from 0 to 0.03 while the y-axis runs from 0 to 0.1. Otherwise this curve would be almost indistinguishable from the x-axis. 
 
+* In order to show a fuller extent of the FROC curve it is necessary to *extend* the curves beyond the *optimal* end-points. This was done by setting $\zeta_1$ = $\zeta_{\text{max}} - 0.5$, which has the effect of letting the curve run a little bit further to the right. As an example the *optimal* end-point for the curve in Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) labeled **10-1** is (NLF = 0.00577, LLF = 0.00773) while the *extended* end-point is (NLF = 0.0297976, LLF = 0.0253222). The *highest* operating point, that reached when all marks are reported, is at (NLF = 10, LLF = 0.632). This point lies about a factor 300 to the right of the displayed curve and about a factor of six higher along the y-axis. It vividly illustrates a low-performing FROC curve.
 
+* In Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) panel labeled **10-1.5**: the vertical blue line is at NLF = 0.152 and the corresponding LLF is 0.24. The end-point of the extended curve is (NLF = 0.445, LLF = 0.388). The highest operating point, that reached when all marks are reported, is at (NLF = 6.67, LLF = 0.777). 
 
-![(\#fig:optim-op-point-froc-10-next-two-plots)Extended FROC plots: the plot labeled 10-2 is for $\lambda = 10$ and $\mu = 2$ and that labeled 10-2.5 is for $\lambda = 10$ and $\mu = 2.5$.](21-optim-op-point_files/figure-latex/optim-op-point-froc-10-next-two-plots-1.pdf) 
+* In Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) panel labeled **10-1**, AUC performance is quite low. In fact AUC = 0.5009901 (note that we are using the wAFROC FOM, whose minimum value is 0, not 0.5). The optimal operating point of the algorithm is close to the origin, specifically NLF = 0.00577 and LLF = 0.00773. Since algorithm performance is so poor, the sensible choice for the algorithm designer is to only show those marks that have, according to the algorithm, very high confidence level for being right (an operating point near the origin corresponds to a high value of $\zeta$).
 
-* In Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots) and the plot labeled **10-2**: The vertical red line is at NLF = 0.4037833. The predicted end-point for the curve is (NLF = 0.4037833, LLF = 0.6275277) while the empirical end-point is (NLF = 0.3984167, LLF = 0.631343) and the extended curve ends at (NLF = 0.9109167, LLF = 0.7486646). In the plot labeled **10-2.5**: The vertical red line is at NLF = 0.634621. The predicted end-point for the curve is (NLF = 0.634621, LLF = 0.8565917) while the empirical end-point is (NLF = 0.6330833, LLF = 0.8606448) and the extended curve ends at (NLF = 1.2324167, LLF = 0.9008966).
+* For higher values of $\mu$ shown in Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) and Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots) -- e.g., panels labeled **10-1.5, 10-2 and 10-2.5** -- AUC performance progressively increases. It now makes sense for the algorithm designer to show marks with lower confidence levels, corresponding to moving up the FROC curve. While it is true that one is also showing more NLs, the increase in the number of LLs compensates -- upto a point -- showing marks beyond the optimal point would result in decreased performance, see for example the plots in Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-10).
 
+* It remains to explain the seemingly anomalous behavior seen in the fifth row of Table \@ref(tab:optim-op-point-cad-optim-table) - NLF shows a peak at $\mu = 1.5$ as a function of $\mu$ and thereafter NLF decreases. The relevant FROC curve is shown in Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots), panel labeled **1-1.5**. The reason is that as $\mu$ increases, the end-point of the FROC keeps moving upwards and to the left (approaching NLF = 0 and LLF = 1 in the limit of infinite $\mu$). Because of this effect the expected increase in NLF seen in the third row of the table is terminated - one literally runs out of FROC curve to move up on. Another way of explaining this is that in Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) the true end-point, i.e., that corresponding to $\zeta_1 = -\infty$, is much further to the right than in Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots). This allows NLF to keep increasing in Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) but not in Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots).
 
+* In Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots) panel labeled **10-2**: The vertical blue line is at NLF = 0.404 corresponding to LLF = 0.628. The end-point of the extended curve is (NLF = 0.92, LLF = 0.747). The highest operating point, that reached when all marks are reported, is at (NLF = 5, LLF = 0.865). 
 
-![(\#fig:optim-op-point-froc-01-first-two-plots)Extended FROC plots: the plot labeled 1-1 is for $\lambda = 1$ and $\mu = 1$ and that labeled 10-1.5 is for $\lambda = 1$ and $\mu = 1.5$.](21-optim-op-point_files/figure-latex/optim-op-point-froc-01-first-two-plots-1.pdf) 
-
-* In Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots), the panel labeled **1-1**: The vertical red line is at NLF = 0.3445783. The predicted end-point for the curve is (NLF = 0.3445783, LLF = 0.4587595) while the empirical end-point is (NLF = 0.33925, LLF = 0.4581267) and the extended curve ends at (NLF = 0.5379167, LLF = 0.5411103). In the plot labeled **10-1.5**: The vertical red line is at NLF = 0.4245538. The predicted end-point for the curve is (NLF = 0.4245538, LLF = 0.7518882) while the empirical end-point is (NLF = 0.4209167, LLF = 0.7555322) and the extended curve ends at (NLF = 0.5386667, LLF = 0.7740366).
+* In Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots) panel labeled **10-2.5**: The vertical blue line is at NLF = 0.543 corresponding to LLF = 0.844. The end-point of the extended curve is (NLF = 1.1, LLF = 0.892). The highest operating point, that reached when all marks are reported, is at (NLF = 4, LLF = 0.918). 
 
 
 
+![(\#fig:optim-op-point-froc-01-first-two-plots)Extended FROC plots: panel labeled 1-1 is for $\lambda = 1$ and $\mu = 1$ and that labeled 10-1.5 is for $\lambda = 1$ and $\mu = 1.5$. The blue line indicates the optimal operating point.](21-optim-op-point_files/figure-latex/optim-op-point-froc-01-first-two-plots-1.pdf) 
 
-![(\#fig:optim-op-point-froc-01-next-two-plots)Extended FROC plots: the plot labeled 1-2 is for $\lambda = 1$ and $\mu = 2$ and that labeled 1-2.5 is for $\lambda = 1$ and $\mu = 2.5$.](21-optim-op-point_files/figure-latex/optim-op-point-froc-01-next-two-plots-1.pdf) 
 
-* In Fig. \@ref(fig:optim-op-point-froc-01-next-two-plots), the panel labeled **1-2**: The vertical red line is at NLF = 0.2896299. The predicted end-point for the curve is (NLF = 0.2896299, LLF = 0.8526429) while the empirical end-point is (NLF = 0.2874167, LLF = 0.853491) and the extended curve ends at (NLF = 0.3786667, LLF = 0.8620755). In the plot labeled **10-2.5**: The vertical red line is at NLF = 0.1840689. The predicted end-point for the curve is (NLF = 0.1840689, LLF = 0.9103904) while the empirical end-point is (NLF = 0.18475, LLF = 0.909958) and the extended curve ends at (NLF = 0.2659167, LLF = 0.9144411).
+![(\#fig:optim-op-point-froc-01-next-two-plots)Extended FROC plots: panel labeled 1-2 is for $\lambda = 1$ and $\mu = 2$ and that labeled 1-2.5 is for $\lambda = 1$ and $\mu = 2.5$. The blue line indicates the optimal operating point.](21-optim-op-point_files/figure-latex/optim-op-point-froc-01-next-two-plots-1.pdf) 
+
+
+
+* In Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots) panel labeled **1-1**: The vertical blue line is at NLF = 0.382 corresponding to LLF = 0.479. The end-point of the extended curve is (NLF = 0.579, LLF = 0.559). The highest operating point is at (NLF = 1, LLF = 0.632). 
+
+* In Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots) panel labeled **1-1.5**: The vertical blue line is at NLF = 0.399 corresponding to LLF = 0.746. The end-point of the extended curve is (NLF = 0.516, LLF = 0.767). The highest operating point is at (NLF = 0.667, LLF = 0.777). 
+
+
+* In Fig. \@ref(fig:optim-op-point-froc-01-next-two-plots) panel labeled **1-2**: The vertical blue line is at NLF = 0.299 corresponding to LLF = 0.854. The end-point of the extended curve is (NLF = 0.387, LLF = 0.862). The highest operating point is at (NLF = 0.5, LLF = 0.865). 
+
+
+* In Fig. \@ref(fig:optim-op-point-froc-01-next-two-plots) panel labeled **1-2.5**: The vertical blue line is at NLF = 0.208 corresponding to LLF = 0.913. The end-point of the extended curve is (NLF = 0.284, LLF = 0.917). The highest operating point is at (NLF = 0.4, LLF = 0.918). 
+
 
 
 ## How to use the method {#optim-op-point-how-to-use-method}
 Assume that one has designed an algorithmic observer that has been optimized with respect to all other parameters except the reporting threshold. At this point the algorithm reports every suspicious region no matter how low the malignancy index. The mark-rating pairs are entered into a `RJafroc` format Excel input file. The next step is to read the data file -- 
-`DfReadDataFile()` -- convert it to an ROC dataset -- `DfFroc2Roc()` -- and then perform a radiological search model (RSM) fit to the dataset using function `FitRsmRoc()`. This yields the necessary $\lambda, \mu, \nu$ parameters. These values are used to perform the simulations described in the embedded code in this chapter, i.e., that leading to, for example, one of the panels in Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-01). This determines the optimal reporting threshold: essentially, one scans $\zeta_1$ values looking for maximum in wAFROC AUC -- calculated using `UtilFigureOfMerit()`. This determines the optimal value of $\zeta_1$, namely $\zeta_{\text{max}}$. The RSM parameter values and $\zeta_{\text{max}}$ determine NLF, the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence level exceeding $\zeta_{\text{max}}$.  
+`DfReadDataFile()` -- convert it to an ROC dataset -- `DfFroc2Roc()` -- and then perform a radiological search model (RSM) fit to the dataset using function `FitRsmRoc()`. This yields the necessary $\lambda, \mu, \nu$ parameters. These values are used to perform the simulations described in the embedded code in this chapter, i.e., that leading to, for example, one of the panels in Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-01). This determines the optimal reporting threshold: essentially, one scans $\zeta_1$ values looking for maximum in wAFROC AUC -- calculated using `UtilFigureOfMerit()`. This determines the optimal value of $\zeta_1$, namely $\zeta_{\text{max}}$. The RSM parameter values and $\zeta_{\text{max}}$ determine NLF, the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence levels exceeding $\zeta_{\text{max}}$.  
 
 
 ## Discussion {#optim-op-point-Discussion}

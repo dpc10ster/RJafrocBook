@@ -93,9 +93,9 @@ Inferred zero rating for latent LLs
 
 
 ## Physical interpretation of RSM parameters {#rsm-parameter-interpretations}
-The parameters  , and   have the following meanings.
+The parameters $\mu$, $\lambda$ and $\nu$ have the following meanings:
 
-### The   parameter {#rsm-mu-parameter}
+### The $\mu$ parameter {#rsm-mu-parameter}
 The parameter   is the perceptual signal to noise ratio, pSNR, introduced in Chapter 12, between latent NLs and latent LLs. It is not the perceptual signal-to-noise ratio of the latent LL relative to its immediate surround; the immediate surround provides background context and is what makes the lesion conspicuous, i.e., it is part of pSNR; the competition for latent marks is other regions that could be mistaken for lesions, i.e., latent NLs. The immediate surround has no chance of being mistaken for a lesion; calculating pSNR the conventional way using the immediate surround, as in computer analysis of mammography phantom images1,2 (CAMPI), will yield an infinite value (because the contrast is measured relative to the surround, i.e., the latter has zero noise).
 
 The   parameter is similar to detectability index  , which is the separation parameter of two unit normal distributions required to achieve the observed probability of correct choice (PC) in a two alternative forced choice (2AFC) task between cued (i.e., pointed to by toggle-able arrows ) NLs and cued LLs. One measures the locations of the latent marks using eye-tracking apparatus3 and clusters the data as described in Chapter 15, then runs a 2AFC study as follows. Pairs of images are shown, each with a cued location, one a latent NL (a big-cluster, as defined in Chapter 15) and the other a latent LL, where all locations were recorded in prior eye-tracking sessions for the specific radiologist. The radiologist's task is to pick the image with the latent LL. The probability correct (PC) in this task is related to the   parameter by:
@@ -104,7 +104,7 @@ The   parameter is similar to detectability index  , which is the separation par
 
 It is essential that the radiologist on whom the eye-tracking measurements were performed and the one who performs the two alternative forced choice tasks be the same. Two radiologists will not agree on latent marks. This will be more evident for the latent NL marks, since greater disagreement is expected on what truly does not exist, and was "conjured" in the radiologist's mind (which varies between radiologists). Disagreement is also expected, but to a lesser degree, on the latent LLs; one expects less disagreement on what truly exists (as this is independent of the radiologist). However, the set of latent LLs for the two observers are expected to be different. Specifically, a region perceived as a latent LL by one might be missed by the other. A complication in conducting such a study is that because of memory effects, a lesion can only be shown once; this could result in a limited number of comparisons and a consequential imprecise estimate of  .
 
-### The   parameter {#rsm-summary-lambda-parameter}
+### The $\lambda$ parameter {#rsm-summary-lambda-parameter}
 
 The   parameter determines the tendency of the observer to generate latent NLs. The mean number of latent NLs per case estimates  ; this is a property of the Poisson distribution. It can also be measured via eye-tracking apparatus. This time it is only necessary to cluster the marks and classify each mark as a latent NL or latent LL according to the adopted acceptance radius. An eye-tracking based estimate would be the total number of latent NLs (the big-clusters in the previous chapter) in the dataset divided by the total number of cases.
 
@@ -153,7 +153,7 @@ This time for reader 1, the estimate of the Poisson parameter is 1.01 with 95% c
 
 Since the number of cases was increased by a factor of 100, the width decreased by a factor of 10.
 
-### The   parameter {#rsm-summary-nu-parameter}
+### The $\nu$ parameter {#rsm-summary-nu-parameter}
 The  parameter determines the ability of the observer to find lesions. Assuming the same number of lesions per diseased case, the mean fraction of latent LLs per diseased case is an estimate of  . It too can be measured via eye-tracking apparatus performed on a radiologist. An eye-tracking based estimate would be the total number of latent LLs (big clusters each of which localizes a lesion) in the dataset divided by the total number of lesions. Consider two observers, one with  = 0.5 and the other with  = 0.9. Again, while one cannot predict the precise number of latent LLs on any specific diseased case, or which specific lesions will be correctly localized, one can predict the average number of latent LLs. The code is in file mainBinomialExample1.R in Online Appendix 16.B.1. Source it to get the following output.
 
 16.3.3.1: Code output
