@@ -41,7 +41,7 @@ In an R-rating ROC study the observed ratings r take on integer values, 1 throug
 \end{equation}
 
 
-![](06-binormal-model_files/figure-latex/unnamed-chunk-2-1.pdf)<!-- --> 
+<img src="06-binormal-model_files/figure-html/unnamed-chunk-2-1.png" width="672" />
 
 In the unequal-variance binormal model, the variance $\sigma^2$ of the z-samples for diseased cases is allowed to be different from unity. Most ROC datasets are consistent with  $\sigma > 1$. The above figure, generated with  $\mu = 1.5, \sigma = 1.5, \zeta_1 = -2, \zeta_2 = -0.5, \zeta_3 = 1, \zeta_4 = 2.5$, illustrates how realized z-samples are converted to ratings, i.e., application of the binning rule \@ref(eq:BinormalModelZBinning). For example, a case with  z-sample equal to -2.5 would be rated "1", and one with  z-sample equal to -1 would be rated "2", cases with z-samples greater than 2.5 would be rated "5", etc.
 
@@ -133,8 +133,7 @@ options(digits = 9)
 #> AUC of latent Gaussians = 0.995041111
 ```
 
-
-\includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-1} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-2} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-3} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-4} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-5} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-6} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-7} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-8} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-9} 
+<img src="06-binormal-model_files/figure-html/unnamed-chunk-4-1.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-2.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-3.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-4.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-5.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-6.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-7.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-8.png" width="33%" /><img src="06-binormal-model_files/figure-html/unnamed-chunk-4-9.png" width="33%" />
 
 **Figure captions (A1 - C3):** Illustrating the invariance of ROC analysis to arbitrary monotone transformations of the ratings. Each row contains 3 plots: labeled 1, 2 and 3. Each column contains 3 plots labeled A, B and C. So, for example, plot C2 refers to the second row and third column. The for-loop generates the plot one row at a time. Each of the latent Gaussian plots C1, C2 and C3 appears not binormal. However, using the inverse of the monotone transformations shown B1, B2 and B3, they can be transformed to the binormal model histograms A1, A2 and A3. Plot A1 shows the histogram of simulated ratings from a binormal model. Two peaks, one at 30 and the other at 55 are evident (by design, all ratings in this figure are in the range 0 to 100). Plot B1 shows the monotone transformation for $f = 0.1$. Plot C1 shows the histogram of the transformed rating. The choice of $f$ leads to a transformed rating histogram that is peaked near the high end of the rating scale. For A1 and C1 the corresponding AUCs are identical (0.993080000). Plot A2 is for a different seed value, plot B2 is the transformation for $f = 0.5$ and now the transformed histogram is almost flat, plot C2. For plots A2 and C2 the corresponding AUCs are identical (0.993668889). Plot A3 is for a different seed value, B3 is the transformation for $f = 0.9$ and the transformed histogram C3 is peaked near the low end of the transformed rating scale. For plots A3 and (C3) the corresponding AUCs are identical (0.995041111).
 
@@ -248,7 +247,10 @@ Eqns. \@ref(eq:BinormalModelabParameters) and \@ref(eq:BinormalModelabParameters
 grid.arrange(p1,p2,ncol=2)
 ```
 
-![(\#fig:BinormalModel-ab2-mu-sigma)The left plot shows the definitions of the (a,b) parameters of the binormal model. In the right plot the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\mu,\sigma$) parameters.](06-binormal-model_files/figure-latex/BinormalModel-ab2-mu-sigma-1.pdf) 
+<div class="figure">
+<img src="06-binormal-model_files/figure-html/BinormalModel-ab2-mu-sigma-1.png" alt="The left plot shows the definitions of the (a,b) parameters of the binormal model. In the right plot the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\mu,\sigma$) parameters." width="672" />
+<p class="caption">(\#fig:BinormalModel-ab2-mu-sigma)The left plot shows the definitions of the (a,b) parameters of the binormal model. In the right plot the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\mu,\sigma$) parameters.</p>
+</div>
 
 
 ### Properties of the binormal model ROC curve
@@ -352,7 +354,10 @@ print(fit)
 ```
 
 
-![(\#fig:BinormalModelStraightLineFit)The straight line fit method of estimating parameters of the fitting model.](06-binormal-model_files/figure-latex/BinormalModelStraightLineFit-1.pdf) 
+<div class="figure">
+<img src="06-binormal-model_files/figure-html/BinormalModelStraightLineFit-1.png" alt="The straight line fit method of estimating parameters of the fitting model." width="672" />
+<p class="caption">(\#fig:BinormalModelStraightLineFit)The straight line fit method of estimating parameters of the fitting model.</p>
+</div>
 
 Fig. \@ref(fig:BinormalModelStraightLineFit) shows operating points from Table \@ref(tab:ratingsParadigmExampleTable), transformed by the $\Phi^{-1}$ function; the slope of the line is the least-squares estimate of the $b$ parameter and the intercept is the corresponding $a$ parameter of the binormal model.
 
@@ -476,7 +481,7 @@ retFit[1:5]
 print(retFit$fittedPlot)
 ```
 
-![](06-binormal-model_files/figure-latex/unnamed-chunk-7-1.pdf)<!-- --> 
+<img src="06-binormal-model_files/figure-html/unnamed-chunk-7-1.png" width="672" />
 
 Note the usage of the `RJafroc` package [@R-RJafroc]. Specifically, the function `FitBinormalRoc`. The ratings table is converted to an `RJafroc` dataset object, followed by application of the fitting function. The results, contained in `retFit` should be compared to those obtained from the [website implementation of ROCFIT](http://www.rad.jhmi.edu/jeng/javarad/roc/JROCFITi.html).
 

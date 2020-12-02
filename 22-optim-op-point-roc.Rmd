@@ -1,4 +1,4 @@
-# Optimal operating point using ROC methodology {#optim-op-point-temp}
+# Optimal operating point using ROC methodology {#optim-op-point-roc}
 
 ---
 output:
@@ -24,11 +24,11 @@ library(here)
 library(dplyr)
 ```
 
-## Introduction {#optim-op-point-temp-intro}
+## Introduction {#optim-op-point-roc-intro}
 Similar to previous chapter except it uses ROC AUC figure of merit.
 
-```{r do_one_mu, echo=FALSE}
-do_one_mu <- function(mu, lambda, nu, zeta1Arr, lesDistr, relWeights) {
+```{r do_one_mu_roc, echo=FALSE}
+do_one_mu_roc <- function(mu, lambda, nu, zeta1Arr, lesDistr, relWeights) {
 
   fomArray <- array(dim = length(zeta1Arr))
   for (i1 in 1:length(zeta1Arr)) {
@@ -47,7 +47,7 @@ do_one_mu <- function(mu, lambda, nu, zeta1Arr, lesDistr, relWeights) {
 }
 ```
 
-## Methods {#optim-op-point-temp-methods}
+## Methods {#optim-op-point-roc-methods}
 
 Similar to previous chapter except it uses ROC AUC figure of merit.
 
@@ -58,7 +58,7 @@ Similar to previous chapter except it uses ROC AUC figure of merit.
 Shown next is the variation of ROC AUC vs. $\zeta_1$ for $\lambda = 10$ and the four values of the $\mu$ parameter.
 
 
-```{r maxFomArr_10, cache = FALSE, echo=FALSE}
+```{r max-fom-arr-10-roc, cache = FALSE, echo=FALSE}
 # determine plotArr[[1,]], zetaMaxArr[1,] and maxFomArr[1,]
 lambda <- 10
 nu <- 1
@@ -71,7 +71,7 @@ relWeights <- c(0.5, 0.5)
 for (i in 1:length(mu_arr)) {
   # if (i == 1) zeta1Arr <- seq(1.5,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
   if (i == 1) zeta1Arr <- seq(-3,-1,0.05) else zeta1Arr <- seq(-3,-1,0.1)
-  x <- do_one_mu (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights)
+  x <- do_one_mu_roc (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights)
   plotArr[[1,i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  format(x$zetaMax, digits = 3)))
   zetaMaxArr[1,i] <- x$zetaMax
   maxFomArr[1,i] <- x$maxFom
@@ -83,26 +83,26 @@ for (i in 1:length(mu_arr)) {
 TBA
 
 
-```{r optim-op-point-temp-AUC-vs-zeta1-10, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 10$; AUC is the wAFROC AUC. panels are labeled by the value of $\\mu$ and zetaMax (i.e., $\\zeta_{\\text{max}}$, the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
+```{r optim-op-point-roc-AUC-vs-zeta1-10, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 10$; AUC is the wAFROC AUC. panels are labeled by the value of $\\mu$ and zetaMax (i.e., $\\zeta_{\\text{max}}$, the value of $\\zeta_1$ that maximizes AUC).", fig.show='hold', echo=FALSE}
 grid.arrange(plotArr[[1,1]],plotArr[[1,2]],plotArr[[1,3]],plotArr[[1,4]], nrow = 2, ncol = 2)
 ```
 
 
-Fig. \@ref(fig:optim-op-point-temp-AUC-vs-zeta1-10) corresponding to $\lambda = 10$ has four panels showing the variation of wAFROC AUC with $\zeta_1$. Each panel is labeled by the values of $\mu$ and  $\zeta_{\text{max}}$. For example, the panel labeled `mu = 1.5, zetaMax = 1.9` shows that AUC has a maximum at $\zeta_1 = 1.9$. For $\mu = 1$ the maximum is at the top of a broad plateau, but for higher values the maximum is better defined.
+Fig. \@ref(fig:optim-op-point-roc-AUC-vs-zeta1-10) corresponding to $\lambda = 10$ has four panels showing the variation of wAFROC AUC with $\zeta_1$. Each panel is labeled by the values of $\mu$ and  $\zeta_{\text{max}}$. For example, the panel labeled `mu = 1.5, zetaMax = 1.9` shows that AUC has a maximum at $\zeta_1 = 1.9$. For $\mu = 1$ the maximum is at the top of a broad plateau, but for higher values the maximum is better defined.
 
 
 ### $\zeta_1$ optimization for $\lambda = 1$
 
 Shown next is the variation of wAFROC AUC vs. $\zeta_1$ for $\lambda = 1$ and the four values of the $\mu$ parameter.
 
-```{r maxFomArr_01, cache = FALSE, echo=FALSE}
+```{r max-fom-arr-01-roc, cache = FALSE, echo=FALSE}
 # determine plotArr[[2,]], zetaMaxArr[2,] and maxFomArr[2,]
 lambda <- 1
 
 for (i in 1:length(mu_arr)) {
   zeta1Arr <- seq(-1,1,0.05)
   fomArray <- array(dim = length(zeta1Arr))
-  x <- do_one_mu (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights)
+  x <- do_one_mu_roc (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights)
   plotArr[[2,i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  format(x$zetaMax, digits = 3)))
   zetaMaxArr[2,i] <- x$zetaMax
   maxFomArr[2,i] <- x$maxFom
@@ -111,16 +111,16 @@ for (i in 1:length(mu_arr)) {
 
 
 
-```{r optim-op-point-temp-AUC-vs-zeta1-01, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 1$.", fig.show='hold', echo=FALSE}
+```{r optim-op-point-roc-AUC-vs-zeta1-01, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 1$.", fig.show='hold', echo=FALSE}
 grid.arrange(plotArr[[2,1]],plotArr[[2,2]],plotArr[[2,3]],plotArr[[2,4]], nrow = 2, ncol = 2)
 ```
 
-Fig. \@ref(fig:optim-op-point-temp-AUC-vs-zeta1-01) corresponds to $\lambda = 1$ and employs a similar labeling scheme as Fig. \@ref(fig:optim-op-point-temp-AUC-vs-zeta1-10). For example, the panel labeled `mu = 1, zetaMax = 0.3` shows that AUC has a maximum at $\zeta_1 = 0.3$. 
+Fig. \@ref(fig:optim-op-point-roc-AUC-vs-zeta1-01) corresponds to $\lambda = 1$ and employs a similar labeling scheme as Fig. \@ref(fig:optim-op-point-roc-AUC-vs-zeta1-10). For example, the panel labeled `mu = 1, zetaMax = 0.3` shows that AUC has a maximum at $\zeta_1 = 0.3$. 
 
 
 
-```{r do_one_froc, echo=FALSE}
-do_one_froc <- function(mu, lambda, nu, zeta1, llfRange) {
+```{r do_one_roc, echo=FALSE}
+do_one_roc <- function(mu, lambda, nu, zeta1, llfRange) {
   
   
   froc <- PlotRsmOperatingCharacteristics(
@@ -140,7 +140,7 @@ do_one_froc <- function(mu, lambda, nu, zeta1, llfRange) {
 
 
 
-```{r detOptOpPt, cache = FALSE, echo=FALSE}
+```{r detOptOpPt-roc, cache = FALSE, echo=FALSE}
 # determine optOpPt here
 
 lambdaArr <- c(10,1)
@@ -155,7 +155,7 @@ OpPtMax <- optOpPt <- array(dim = c(2, 2, 4))
 for (j in 1:2) {
   for (i in 1:length(mu_arr)) {
     if ((j ==1) && (i ==1)) llfRange <- c(0, 1) else llfRange <- c(0,1) 
-    x <- do_one_froc (mu_arr[i],
+    x <- do_one_roc (mu_arr[i],
                       lambdaArr[j],
                       nu,
                       zeta1 = zetaMaxArr[j,i],
@@ -176,7 +176,7 @@ for (j in 1:2) {
 
 
 
-```{r useOptOpPt, cache = FALSE, echo=FALSE}
+```{r useOptOpPt-roc, cache = FALSE, echo=FALSE}
 
 # use optOpPt here
 # generate plotArr
@@ -195,7 +195,7 @@ correction <- array(0.5, dim = c(2, 4))
 for (j in 1:2) {
   for (i in 1:length(mu_arr)) {
     if ((j ==1) && (i ==1)) llfRange <- c(0, 1) else llfRange <- c(0,1) 
-    x <- do_one_froc (
+    x <- do_one_roc (
       mu_arr[i],
       lambdaArr[j],
       nu,
@@ -221,7 +221,7 @@ for (j in 1:2) {
 
 
 
-```{r optim-op-point-temp-cad-optim-zeta1, echo=FALSE}
+```{r optim-op-point-roc-cad-optim-zeta1, echo=FALSE}
 x1 <- as.data.frame(rbind(t(maxFomArr[1,]), t(optOpPt[1,1,]), t(optOpPt[1,2,])))
 x2 <- as.data.frame(rbind(t(maxFomArr[2,]), t(optOpPt[2,1,]), t(optOpPt[2,2,])))
 x12 <- rbind(x1, x2)
@@ -232,18 +232,18 @@ x12 %>% slice(match(y, measure)) -> xFinal
 ```
 
 
-### Summary of simulations and comments {#optim-op-point-temp-comments-threshold-optimization}
+### Summary of simulations and comments {#optim-op-point-roc-comments-threshold-optimization}
 
 
-```{r optim-op-point-temp-cad-optim-table, echo=FALSE}
+```{r optim-op-point-roc-cad-optim-table-roc, echo=FALSE}
 knitr::kable(xFinal, digits = 5, caption = "Summary of optimal threshold values: \"measure\" refers to a performance measure, \"mu1\" refers to $\\mu = 1$, etc. The row labels are as follows: AUC10 is the wAFROC AUC for lambda = 10, AUC01 is the wAFROC AUC for $\\lambda = 1$, NLF10 is NLF for $\\lambda = 10$, ..., LLF01 is LLF for $\\lambda = 1$.", escape = FALSE)
 ```
 
 TBA
 
-#### Explanations {#optim-op-point-temp-threshold-explanations}
+#### Explanations {#optim-op-point-roc-threshold-explanations}
 
-```{r optim-op-point-temp-froc-10-first-two-plots, fig.cap="Extended FROC plots: panel labeled 10-1 is for $\\lambda = 10$ and $\\mu = 1$, and that labeled 10-1.5 is for $\\lambda = 10$ and $\\mu = 1.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
+```{r optim-op-point-roc-roc-10-first-two-plots, fig.cap="Extended FROC plots: panel labeled 10-1 is for $\\lambda = 10$ and $\\mu = 1$, and that labeled 10-1.5 is for $\\lambda = 10$ and $\\mu = 1.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
 grid.arrange(plotArr[[1,1]], plotArr[[1,2]], nrow = 1, ncol = 2)
 ```             
 
@@ -252,7 +252,7 @@ TBA
 
 
 
-```{r optim-op-point-temp-froc-10-next-two-plots, fig.cap="Extended FROC plots: panel labeled 10-2 is for $\\lambda = 10$ and $\\mu = 2$ and that labeled 10-2.5 is for $\\lambda = 10$ and $\\mu = 2.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
+```{r optim-op-point-roc-roc-10-next-two-plots, fig.cap="Extended FROC plots: panel labeled 10-2 is for $\\lambda = 10$ and $\\mu = 2$ and that labeled 10-2.5 is for $\\lambda = 10$ and $\\mu = 2.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
 grid.arrange(plotArr[[1,3]], plotArr[[1,4]], nrow = 1, ncol = 2)
 ```
 
@@ -260,32 +260,32 @@ grid.arrange(plotArr[[1,3]], plotArr[[1,4]], nrow = 1, ncol = 2)
 TBA
 
 
-```{r optim-op-point-temp-froc-01-first-two-plots, fig.cap="Extended FROC plots: panel labeled 1-1 is for $\\lambda = 1$ and $\\mu = 1$ and that labeled 10-1.5 is for $\\lambda = 1$ and $\\mu = 1.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
+```{r optim-op-point-roc-roc-01-first-two-plots, fig.cap="Extended FROC plots: panel labeled 1-1 is for $\\lambda = 1$ and $\\mu = 1$ and that labeled 10-1.5 is for $\\lambda = 1$ and $\\mu = 1.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
 grid.arrange(plotArr[[2,1]], plotArr[[2,2]], nrow = 1, ncol = 2)
 ```             
 
 
 TBA
 
-```{r optim-op-point-temp-froc-01-next-two-plots, fig.cap="Extended FROC plots: panel labeled 1-2 is for $\\lambda = 1$ and $\\mu = 2$ and that labeled 1-2.5 is for $\\lambda = 1$ and $\\mu = 2.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
+```{r optim-op-point-roc-roc-01-next-two-plots, fig.cap="Extended FROC plots: panel labeled 1-2 is for $\\lambda = 1$ and $\\mu = 2$ and that labeled 1-2.5 is for $\\lambda = 1$ and $\\mu = 2.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
 grid.arrange(plotArr[[2,3]], plotArr[[2,4]], nrow = 1, ncol = 2)
 ```
 
 
 
-* In Fig. \@ref(fig:optim-op-point-temp-froc-01-next-two-plots) panel labeled **1-2**: The vertical blue line is at NLF = `r format(optOpPt[2,1,3], digits = 3)` corresponding to LLF = `r format(optOpPt[2,2,3], digits = 3)`. The end-point of the extended curve is (NLF = `r format(OpPtExtended[2,1,3], digits = 3)`, LLF = `r format(OpPtExtended[2,2,3], digits = 3)`). The highest operating point is at (NLF = `r format(OpPtMax[2,1,3], digits = 3)`, LLF = `r format(OpPtMax[2,2,3], digits = 3)`). 
+* In Fig. \@ref(fig:optim-op-point-roc-roc-01-next-two-plots) panel labeled **1-2**: The vertical blue line is at NLF = `r format(optOpPt[2,1,3], digits = 3)` corresponding to LLF = `r format(optOpPt[2,2,3], digits = 3)`. The end-point of the extended curve is (NLF = `r format(OpPtExtended[2,1,3], digits = 3)`, LLF = `r format(OpPtExtended[2,2,3], digits = 3)`). The highest operating point is at (NLF = `r format(OpPtMax[2,1,3], digits = 3)`, LLF = `r format(OpPtMax[2,2,3], digits = 3)`). 
 
 
-* In Fig. \@ref(fig:optim-op-point-temp-froc-01-next-two-plots) panel labeled **1-2.5**: The vertical blue line is at NLF = `r format(optOpPt[2,1,4], digits = 3)` corresponding to LLF = `r format(optOpPt[2,2,4], digits = 3)`. The end-point of the extended curve is (NLF = `r format(OpPtExtended[2,1,4], digits = 3)`, LLF = `r format(OpPtExtended[2,2,4], digits = 3)`). The highest operating point is at (NLF = `r format(OpPtMax[2,1,4], digits = 3)`, LLF = `r format(OpPtMax[2,2,4], digits = 3)`). 
+* In Fig. \@ref(fig:optim-op-point-roc-roc-01-next-two-plots) panel labeled **1-2.5**: The vertical blue line is at NLF = `r format(optOpPt[2,1,4], digits = 3)` corresponding to LLF = `r format(optOpPt[2,2,4], digits = 3)`. The end-point of the extended curve is (NLF = `r format(OpPtExtended[2,1,4], digits = 3)`, LLF = `r format(OpPtExtended[2,2,4], digits = 3)`). The highest operating point is at (NLF = `r format(OpPtMax[2,1,4], digits = 3)`, LLF = `r format(OpPtMax[2,2,4], digits = 3)`). 
 
 
 
-## How to use the method {#optim-op-point-temp-how-to-use-method}
+## How to use the method {#optim-op-point-roc-how-to-use-method}
 TBA  
 
 
 
-## Discussion {#optim-op-point-temp-Discussion}
+## Discussion {#optim-op-point-roc-Discussion}
 TBA 
 
-## References {#optim-op-point-temp-references}
+## References {#optim-op-point-roc-references}

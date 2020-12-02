@@ -22,20 +22,37 @@ At the conclusion of the ROC study an ROC counts table is constructed. This is t
 
 Table \@ref(tab:ratingsParadigmExampleTable) is a representative counts table for a 5-rating study that summarizes the collected data. It is the starting point for analysis. It lists the number of counts in each ratings bin, listed separately for non-diseased and diseased cases, respectively. The data is from an actual clinical study [@RN4343]. 
 
-\begin{table}
-
-\caption{(\#tab:ratingsParadigmExampleTable)Representative counts table.}
-\centering
-\begin{tabular}[t]{l|r|r|r|r|r}
-\hline
-  & $r = 5$ & $r = 4$ & $r = 3$ & $r = 2$ & $r = 1$\\
-\hline
-non-diseased & 1 & 2 & 8 & 19 & 30\\
-\hline
-diseased & 22 & 12 & 5 & 6 & 5\\
-\hline
-\end{tabular}
-\end{table}
+<table>
+<caption>(\#tab:ratingsParadigmExampleTable)Representative counts table.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> $r = 5$ </th>
+   <th style="text-align:right;"> $r = 4$ </th>
+   <th style="text-align:right;"> $r = 3$ </th>
+   <th style="text-align:right;"> $r = 2$ </th>
+   <th style="text-align:right;"> $r = 1$ </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> non-diseased </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 19 </td>
+   <td style="text-align:right;"> 30 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> diseased </td>
+   <td style="text-align:right;"> 22 </td>
+   <td style="text-align:right;"> 12 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 5 </td>
+  </tr>
+</tbody>
+</table>
 
 In this table:
 
@@ -70,20 +87,37 @@ Table \@ref(tab:ratingsParadigmTable2) illustrates how ROC operating points are 
 * $r\geq 4$ means "counting ratings greater than or equal to 4" 
 * Etc.
 
-\begin{table}
-
-\caption{(\#tab:ratingsParadigmTable2)Computation of operating points from cell counts.}
-\centering
-\begin{tabular}[t]{l|r|r|r|r|r}
-\hline
-  & $r\geq 5$ & $r\geq 4$ & $r\geq 3$ & $r\geq 2$ & $r\geq 1$\\
-\hline
-FPF & 0.0167 & 0.05 & 0.1833 & 0.5 & 1\\
-\hline
-TPF & 0.4400 & 0.68 & 0.7800 & 0.9 & 1\\
-\hline
-\end{tabular}
-\end{table}
+<table>
+<caption>(\#tab:ratingsParadigmTable2)Computation of operating points from cell counts.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> $r\geq 5$ </th>
+   <th style="text-align:right;"> $r\geq 4$ </th>
+   <th style="text-align:right;"> $r\geq 3$ </th>
+   <th style="text-align:right;"> $r\geq 2$ </th>
+   <th style="text-align:right;"> $r\geq 1$ </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> FPF </td>
+   <td style="text-align:right;"> 0.0167 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.1833 </td>
+   <td style="text-align:right;"> 0.5 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> TPF </td>
+   <td style="text-align:right;"> 0.4400 </td>
+   <td style="text-align:right;"> 0.68 </td>
+   <td style="text-align:right;"> 0.7800 </td>
+   <td style="text-align:right;"> 0.9 </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+</tbody>
+</table>
 
 One starts with non-diseased cases that were rated five or more (in this example, since 5 is the highest allowed rating, the “or more” clause is inconsequential) and divides by the total number of non-diseased cases, $K_1 = 60$. This yields the abscissa of the lowest non-trivial operating point, namely  $FPF_{\ge5}$ = 1/60 = 0.017. The subscript on FPF is intended to make explicit which ratings are being cumulated. The corresponding ordinate is obtained by dividing the number of diseased cases rated "5" or more and dividing by the total number of diseased cases, $K_2 = 50$, yielding $TPF_{\ge5}$ = 22/50 = 0.440. Therefore, the coordinates of the lowest operating point are (0.017, 0.44). The abscissa of the next higher operating point is obtained by dividing the number of non-diseased cases that were rated "4" or more and dividing by the total number of non-diseased cases, i.e., $TPF_{\ge4}$ = 3/60 = 0.05. Similarly the ordinate of this operating point is obtained by dividing the number of diseased cases that were rated "4" or more and dividing by the total number of diseased cases, i.e., $FPF_{\ge4}$ = 34/50 = 0.680. The procedure, which at each stage cumulates the number of cases equal to or greater (in the sense of increased confidence level for disease presence) than a specified ordered label, is repeated to yield the rest of the operating points listed in Table \@ref(tab:ratingsParadigmTable2). Since they are computed directly from the data, without any assumption, they are called empirical or observed operating points. 
 
@@ -227,7 +261,10 @@ p2 <- plotROC (mu, sigma, FPF, TPF)
 grid.arrange(p1,p2,ncol=2)
 ```
 
-![(\#fig:ratingsParadigmEqVarFitA)(A): The left figure is the predicted ROC curve for $\mu=1.282$ superposed on the operating points. (B): The right figure is the same data fitted with a two-parameter model described later.](04-ratings-task_files/figure-latex/ratingsParadigmEqVarFitA-1.pdf) 
+<div class="figure">
+<img src="04-ratings-task_files/figure-html/ratingsParadigmEqVarFitA-1.png" alt="(A): The left figure is the predicted ROC curve for $\mu=1.282$ superposed on the operating points. (B): The right figure is the same data fitted with a two-parameter model described later." width="672" />
+<p class="caption">(\#fig:ratingsParadigmEqVarFitA)(A): The left figure is the predicted ROC curve for $\mu=1.282$ superposed on the operating points. (B): The right figure is the same data fitted with a two-parameter model described later.</p>
+</div>
 
 It should come as no surprise that the uppermost operating point is *exactly* on the predicted curve: after all, this point was used to calculate $\mu$ = 2.17. The corresponding value of $\zeta$ can be calculated from Eqn. (3.17), namely:
 
@@ -308,7 +345,10 @@ The reason for the quotes in the title to this section is that a single operatin
 
 If a single laboratory study based operating point is desired [@RN2660], the best strategy, in the author's opinion, is to obtain the rating via two questions. This method is also illustrated in Table 3.1 of a book on detection theory [@RN1318]. The first question is "is the case diseased?" The binary (Yes/No) response to this question allows unambiguous calculation of the operating point, as in Chapter \@ref(binary-task0). The second question is: "what is your confidence in your previous decision?" and allow three responses, namely Low, Medium and High. The dual-question approach is equivalent to a 6-point rating scale, Fig. \@ref(fig:SixPointScale). The answer to the first question, is the patient diseased, allows unambiguous construction of a single "clinical" operating point for disease presence. The answer to the second question, what is your confidence level in that decision, yields multiple operating points. 
 
-![(\#fig:SixPointScale)A method for acquiring ROC data on an effectively 6-point scale that also yields an unambiguous single operating point for declaring patients diseased. Note the reversal of the final ratings in the last "column" in the lower half of the figure.](images/AcquiringData6PointScale.png) 
+<div class="figure">
+<img src="images/AcquiringData6PointScale.png" alt="A method for acquiring ROC data on an effectively 6-point scale that also yields an unambiguous single operating point for declaring patients diseased. Note the reversal of the final ratings in the last &quot;column&quot; in the lower half of the figure."  />
+<p class="caption">(\#fig:SixPointScale)A method for acquiring ROC data on an effectively 6-point scale that also yields an unambiguous single operating point for declaring patients diseased. Note the reversal of the final ratings in the last "column" in the lower half of the figure.</p>
+</div>
 
 The ordering of the ratings can be understood as follows. The four, five and six ratings are as expected. If the radiologist states the patient is diseased and the confidence level is high that is clearly the highest end of the scale, i.e., six, and the lower confidence levels, five and four, follow, as shown. If, on the other hand, the radiologist states the patient is non-diseased, and the confidence level is high, then that must be the lowest end of the scale, i.e., "1". The lower confidence levels in a negative decision must be higher than "1", namely "2" and "3", as shown. As expected, the low confidence ratings, namely "3" (non-diseased, low confidence) and "4"  (diseased, low confidence) are adjacent to each other. With this method of data-collection, there is no confusion as to what rating defines the single desired operating point as this is determined by the binary response to the first question. The 6-point rating scale is also sufficiently fine to not smooth out the ability of the radiologist to maintain distinct different levels. In the author's experience, using this scale one expects rating noise of about $\pm\frac{1}{2}$ a rating bin, i.e., the same difficult case, shown on different occasions to the same radiologist (with sufficient time lapse or other intervening cases to minimize memory effects) is expected to elicit a "3" or "4", with roughly equal probability. 
 
@@ -317,7 +357,10 @@ In each of the four paradigms (ROC, FROC, LROC and ROI) described in TBA Chapter
 
 The 2AFC paradigm is popular, because its analysis is straightforward, and there exists a theorem4 that $P(C)$, the probability of a correct choice in the 2AFC task, equals, to within sampling variability, the *true* area under the true (not fitted, not empirical) ROC curve. Another reason for its popularity is possibly the speed at which data can be collected, sometimes only limited by the speed at which disk stored images can be displayed on the monitor. While useful for studies into human visual perception on relatively simple images, and the model observer community has performed many studies using this paradigm [@RN1067], the author cannot recommend it for clinical studies because *it does not resemble any clinical task*. In the clinic, radiologists never have to choose the diseased patient out of a pair consisting of one diseased and one non-diseased. Additionally, the forced-choice paradigm is wasteful of known-truth images, often a difficult/expensive resource to come by, because better statistics21 (tighter confidence intervals) are obtained by the ratings ROC method or by utilizing location specific extensions of the ROC paradigm. [The author is not aware of the 2AFC method being actually used to assess imaging systems using radiologists to perform real clinical tasks on real images.] 
 
-![(\#fig:2AFC)Example of image presentation in a 2AFC study.](images/2AFC.png) 
+<div class="figure">
+<img src="images/2AFC.png" alt="Example of image presentation in a 2AFC study."  />
+<p class="caption">(\#fig:2AFC)Example of image presentation in a 2AFC study.</p>
+</div>
 
 Fig. \@ref(fig:2AFC): Example of image presentation in a 2AFC study. The left image contains, at its center, a positive contrast Gaussian shape disk superposed on a non-diseased mammogram. The right image does not contain a lesion at its center and the background is from a different non-diseased patient. If the observer clicks on the left image it is recorded as a correct choice, otherwise it is recorded as an incorrect choice. The number of correct choices divided by the number of paired presentations is an estimate of the probability of a correct choice, which can be shown to be identical, apart from sampling variability, to the true area under the ROC curve. This is an example of a signal known exactly location known exactly (SKE-LKE) task widely used by the model observer community. 
 
@@ -374,40 +417,78 @@ Two large clinical studies have been reported in which BI-RADS category data wer
 
 The reported ROC analyses used the BIRADS assessments labels ordered as follows: $1 < 2 < 3 < 3+ < 0 < 4 < 5$. The last column of Table \@ref(tab:BIRADS-study) shows that with this ordering the numbers of cancer per 1000 patients increases monotonically. The CAD study is discussed later, for now the focus is on the adopted BIRADS scale ordering that is common to both studies and which has raised controversy (the controversy appears to be limited to observer performance study analysts).
 
-\begin{table}
-
-\caption{(\#tab:BIRADS-study)The Barlow et al study: the ordering of the BI-RADS ratings in the first column correlates with cancer-rate in the last column.}
-\centering
-\resizebox{\linewidth}{!}{
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{11em}|>{\raggedright\arraybackslash}p{8em}|>{\raggedright\arraybackslash}p{8em}|>{\raggedright\arraybackslash}p{8em}|>{\raggedright\arraybackslash}p{8em}}
-\hline
-  & Total number 
-of mammograms & Mammograms without 
-breast cancer (percent) & Mammograms with 
-breast cancer  (percent) & Cancers per 1000 
-screening mammograms\\
-\hline
-1: Normal & 356,030 & 355,734 (76.2) & 296 (12.3) & 0.83\\
-\hline
-2: Benign finding & 56,614 & 56,533 (12.1) & 81 (3.4) & 1.43\\
-\hline
-3: Probably benign, 
-recommend normal or short term follow up & 8,692 & 8,627 (1.8) & 65 (2.7) & 7.48\\
-\hline
-3+: Probably benign, 
-recommend immediate follow up & 3,094 & 3,049 (0.7) & 45 (1.9) & 14.54\\
-\hline
-0: Need additional 
-imaging evaluation & 42,823 & 41,442 (8.9) & 1,381 (57.5) & 32.25\\
-\hline
-4: Suspicious finding, 
-biopsy should be considered & 2,022 & 1,687 (0.4) & 335 (13.9) & 165.68\\
-\hline
-5: Highly suggestive 
-of malignancy & 237 & 38 (0.0) & 199 (8.3) & 839.66\\
-\hline
-\end{tabular}}
-\end{table}
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>(\#tab:BIRADS-study)The Barlow et al study: the ordering of the BI-RADS ratings in the first column correlates with cancer-rate in the last column.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:left;"> Total number 
+of mammograms </th>
+   <th style="text-align:left;"> Mammograms without 
+breast cancer (percent) </th>
+   <th style="text-align:left;"> Mammograms with 
+breast cancer  (percent) </th>
+   <th style="text-align:left;"> Cancers per 1000 
+screening mammograms </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;width: 11em; "> 1: Normal </td>
+   <td style="text-align:left;width: 8em; "> 356,030 </td>
+   <td style="text-align:left;width: 8em; "> 355,734 (76.2) </td>
+   <td style="text-align:left;width: 8em; "> 296 (12.3) </td>
+   <td style="text-align:left;width: 8em; "> 0.83 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;width: 11em; "> 2: Benign finding </td>
+   <td style="text-align:left;width: 8em; "> 56,614 </td>
+   <td style="text-align:left;width: 8em; "> 56,533 (12.1) </td>
+   <td style="text-align:left;width: 8em; "> 81 (3.4) </td>
+   <td style="text-align:left;width: 8em; "> 1.43 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;width: 11em; "> 3: Probably benign, 
+recommend normal or short term follow up </td>
+   <td style="text-align:left;width: 8em; "> 8,692 </td>
+   <td style="text-align:left;width: 8em; "> 8,627 (1.8) </td>
+   <td style="text-align:left;width: 8em; "> 65 (2.7) </td>
+   <td style="text-align:left;width: 8em; "> 7.48 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;width: 11em; "> 3+: Probably benign, 
+recommend immediate follow up </td>
+   <td style="text-align:left;width: 8em; "> 3,094 </td>
+   <td style="text-align:left;width: 8em; "> 3,049 (0.7) </td>
+   <td style="text-align:left;width: 8em; "> 45 (1.9) </td>
+   <td style="text-align:left;width: 8em; "> 14.54 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;width: 11em; "> 0: Need additional 
+imaging evaluation </td>
+   <td style="text-align:left;width: 8em; "> 42,823 </td>
+   <td style="text-align:left;width: 8em; "> 41,442 (8.9) </td>
+   <td style="text-align:left;width: 8em; "> 1,381 (57.5) </td>
+   <td style="text-align:left;width: 8em; "> 32.25 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;width: 11em; "> 4: Suspicious finding, 
+biopsy should be considered </td>
+   <td style="text-align:left;width: 8em; "> 2,022 </td>
+   <td style="text-align:left;width: 8em; "> 1,687 (0.4) </td>
+   <td style="text-align:left;width: 8em; "> 335 (13.9) </td>
+   <td style="text-align:left;width: 8em; "> 165.68 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;width: 11em; "> 5: Highly suggestive 
+of malignancy </td>
+   <td style="text-align:left;width: 8em; "> 237 </td>
+   <td style="text-align:left;width: 8em; "> 38 (0.0) </td>
+   <td style="text-align:left;width: 8em; "> 199 (8.3) </td>
+   <td style="text-align:left;width: 8em; "> 839.66 </td>
+  </tr>
+</tbody>
+</table>
 
 The use of the BI-RADS ratings shown in Table \@ref(tab:BIRADS-study) has been criticized [@RN2166] in an editorial titled: 
 

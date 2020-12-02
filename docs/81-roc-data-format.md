@@ -51,14 +51,10 @@
 * There are 5 readers in the dataset (each cell in the `ReaderID` column contains the string `0, 1, 2, 3, 4`).
 * There are 2 modalities in the dataset (each cell in the `ModalityID` column contains the string `0, 1`).
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocCrTruth} 
-
-}
-
-\caption{Truth worksheet for file rocCr.xlsx}(\#fig:showRocCrTruthSheet)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/rocCrTruth.png" alt="Truth worksheet for file rocCr.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:showRocCrTruthSheet)Truth worksheet for file rocCr.xlsx</p>
+</div>
 
 ## The structure of an ROC dataset
 In the following code chunk the first statement retrieves the name of the data file, located in a hidden directory that one need not be concerned with. The second statement reads the file using the function `DfReadDataFile()` and saves it to object `x`. The third statement shows the structure of the dataset object `x`.
@@ -110,14 +106,10 @@ str(x)
 ## The false positive (FP) ratings {#rocExcelFPdataformat}
 These are found in the `FP` or `NL` worksheet, see below.
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocCrFp} 
-
-}
-
-\caption{FP worksheet for file rocCr.xlsx}(\#fig:showRocCrFpSheet)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/rocCrFp.png" alt="FP worksheet for file rocCr.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:showRocCrFpSheet)FP worksheet for file rocCr.xlsx</p>
+</div>
 
 * It consists of 4 columns, each of length 30 (= # of modalities times number of readers times number of non-diseased cases). 
 * `ReaderID`: the reader labels: `0`, `1`, `2`, `3` and `4`. Each reader label occurs 6 times (= # of modalities times number of non-diseased cases). 
@@ -129,14 +121,10 @@ These are found in the `FP` or `NL` worksheet, see below.
 ## The true positive (TP) ratings {#rocExcelTPdataformat}
 These are found in the `TP` or `LL` worksheet, see below.
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{images/rocCrTp} 
-
-}
-
-\caption{TP worksheet for file rocCr.xlsx}(\#fig:showRocCrTpSheet)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="images/rocCrTp.png" alt="TP worksheet for file rocCr.xlsx" width="50%" height="20%" />
+<p class="caption">(\#fig:showRocCrTpSheet)TP worksheet for file rocCr.xlsx</p>
+</div>
 
 * It consists of 5 columns, each of length 50 (= # of modalities times number of readers times number of diseased cases). 
 * `ReaderID`: the reader labels: `0`, `1`, `2`, `3` and `4`. Each reader label occurs 10 times (= # of modalities times number of diseased cases). 
