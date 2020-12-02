@@ -38,7 +38,8 @@ do_one_mu <- function(mu, lambda, nu, zeta1Arr, lesDistr, relWeights) {
 
   fomArray <- array(dim = length(zeta1Arr))
   for (i1 in 1:length(zeta1Arr)) {
-    fomArray[i1] <- UtilAnalyticalAucsRSM(mu, lambda, nu, zeta1 = zeta1Arr[i1], lesDistr, relWeights)$aucwAFROC
+    # fomArray[i1] <- UtilAnalyticalAucsRSM(mu, lambda, nu, zeta1 = zeta1Arr[i1], lesDistr, relWeights)$aucwAFROC
+    fomArray[i1] <- UtilAnalyticalAucsRSM(mu, lambda, nu, zeta1 = zeta1Arr[i1], lesDistr, relWeights)$aucROC
   }
   # generate plot of AUC vs. zeta1
   myData <- data.frame(zeta1 = zeta1Arr, AUC = fomArray)
@@ -74,7 +75,8 @@ plotArr <- array(list(), dim = c(2, length(mu_arr)))
 lesDistr <- Convert2lesDistr(c(0.5, 0.5))
 relWeights <- c(0.5, 0.5)
 for (i in 1:length(mu_arr)) {
-  if (i == 1) zeta1Arr <- seq(1.5,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
+  # if (i == 1) zeta1Arr <- seq(1.5,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
+  if (i == 1) zeta1Arr <- seq(0.0,2.0,0.05) else zeta1Arr <- seq(0.0,2.0,0.1)
   x <- do_one_mu (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights)
   plotArr[[1,i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  format(x$zetaMax, digits = 3)))
   zetaMaxArr[1,i] <- x$zetaMax
