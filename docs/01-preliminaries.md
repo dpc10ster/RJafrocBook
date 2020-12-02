@@ -50,10 +50,9 @@ Once the imaging device is sold to a radiology department, both routine quality 
 
 A good example of QC is the use of the American College of Radiology Mammography Quality Standards Act (ACR-MQSA) phantom to monitor image quality of mammography machines[27-29]. The phantom consists of a (removable) wax insert in an acrylic holder; the latter provides additional absorption and scattering material to more closely match the attenuation and beam hardening  of an average breast. Embedded in the wax insert are target objects consisting of 6 fibrils, five groups of microcalcifications, each containing six specks, and five spherical objects of different sizes, called masses. An image of the phantom, Fig. \@ref(fig:acrPhantomClinical) (A) is obtained daily, before the first patient is imaged, and is inspected by a technologist, who records the number of target objects of different types that are visible. There is a pass-fail criterion and if the image fails then patients cannot be imaged on that machine until the problem is corrected. At this point, the medical physicist is called in to investigate. 
 
-<div class="figure">
-<img src="images/AcrPhantom.png" alt="(A) Image of an ACR phantom, (B) Clinical image." width="50%" /><img src="images/Clinical.png" alt="(A) Image of an ACR phantom, (B) Clinical image." width="50%" />
-<p class="caption">(\#fig:acrPhantomClinical)(A) Image of an ACR phantom, (B) Clinical image.</p>
-</div>
+\begin{figure}
+\includegraphics[width=0.5\linewidth]{images/AcrPhantom} \includegraphics[width=0.5\linewidth]{images/Clinical} \caption{(A) Image of an ACR phantom, (B) Clinical image.}(\#fig:acrPhantomClinical)
+\end{figure}
 
 
 Fig. \@ref(fig:acrPhantomClinical) (A – B): (A) Image of an American College of Radiology mammography accreditation phantom. The phantom contains target objects consisting of six fibrils, five groups of microcalcifications, and five nodule-like objects. An image of the phantom is obtained daily, before the first patient is imaged, and is inspected by a technologist, who records the number of target objects of different types that are visible. On his 27" iMac monitor, the author sees four fibrils, three speck groups and four masses, which would be graded as a "pass". This is greatly simplified version of the test. The scoring accounts for irregular fibril or partially visible masses borders, etc., all of which is intended to get more objectivity out of the measurement. (B) A breast image showing an invasive cancer, located roughly in the middle of the image. Note the lack of similarity between the two images (A) and (B). The breast image is much more complex and there is more information, and therefore more to go wrong than with the phantom image. Moreover, there is variability between patients in contrast to the fixed image in (A). In the author's clinical experience, the phantom images interpreted visually are a poor predictor of clinical image quality.
@@ -113,41 +112,28 @@ Table \@ref(tab:FrybackThornbury): Fryback and Thornbury proposed hierarchy of a
 
 
 
-<table>
-<caption>(\#tab:FrybackThornbury)FrybackThornbury hierarchy of efficacies.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> Level Designation </th>
-   <th style="text-align:left;"> Essential Characteristic </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> 1. Technical efficacy </td>
-   <td style="text-align:left;"> Engineering measures: MTF, NPS, DQE </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 2. Diagnostic accuracy efficacy </td>
-   <td style="text-align:left;"> Sensitivity, specificity, ROC or FROC area </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 3. Diagnostic thinking efficacy </td>
-   <td style="text-align:left;"> Positive and negative predictive values </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 4. Therapeutic efficacy </td>
-   <td style="text-align:left;"> Treatment benefits from imaging test? </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 5. Patient outcome efficacy </td>
-   <td style="text-align:left;"> Patients benefit from imaging test? </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 6. Societal efficacy </td>
-   <td style="text-align:left;"> Society benefits from imaging test? </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:FrybackThornbury)FrybackThornbury hierarchy of efficacies.}
+\centering
+\begin{tabular}[t]{l|l}
+\hline
+Level Designation & Essential Characteristic\\
+\hline
+1. Technical efficacy & Engineering measures: MTF, NPS, DQE\\
+\hline
+2. Diagnostic accuracy efficacy & Sensitivity, specificity, ROC or FROC area\\
+\hline
+3. Diagnostic thinking efficacy & Positive and negative predictive values\\
+\hline
+4. Therapeutic efficacy & Treatment benefits from imaging test?\\
+\hline
+5. Patient outcome efficacy & Patients benefit from imaging test?\\
+\hline
+6. Societal efficacy & Society benefits from imaging test?\\
+\hline
+\end{tabular}
+\end{table}
 
 
 The term "clinical relevance" is used rather loosely in the literature. The author is not aware of an accepted definition of "clinical relevance" apart from its obvious English language meaning. As a working definition the author has proposed [63] that the clinical relevance of a measurement be defined as its hierarchy-level. A level-5 patient outcome measurement (do patients, on the average, benefit from the imaging study) is clinically more relevant than a technical measurement like noise on a uniform background phantom or an ROC study. This is because it relates directly to the benefit, or lack thereof, to a group of patients (it is impossible to define outcome efficacy at the individual patient level – at the patient level outcome is a binary random variable, e.g., 1 if the outcome was good or 0 if the outcome was bad). 

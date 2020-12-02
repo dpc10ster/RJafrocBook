@@ -15,28 +15,20 @@ Let $D$ represent the radiologist’s decision, with $D=1$  representing the dec
 
 
 
-<table>
-<caption>(\#tab:binary-task0truthTable)Truth Table.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:left;"> T=1 </th>
-   <th style="text-align:left;"> T=2 </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> D=1 </td>
-   <td style="text-align:left;"> TN </td>
-   <td style="text-align:left;"> FN </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> D=2 </td>
-   <td style="text-align:left;"> FP </td>
-   <td style="text-align:left;"> TP </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:binary-task0truthTable)Truth Table.}
+\centering
+\begin{tabular}[t]{l|l|l}
+\hline
+  & T=1 & T=2\\
+\hline
+D=1 & TN & FN\\
+\hline
+D=2 & FP & TP\\
+\hline
+\end{tabular}
+\end{table}
 
 Table \@ref(tab:binary-task0truthTable2) shows the numbers of decisions in each of the four categories defined in Table \@ref(tab:binary-task0truthTable). Specifically, $n(TN)$ is the number of true negative decisions, $n(FN)$ is the number of false negative decisions, etc. The last row is the sum of the corresponding columns. The sum of the number of true negative decisions $n(TN)$ and the number of false positive decisions $n(FP)$ must equal the total number of non-diseased cases, denoted $K_1$. Likewise, the sum of the number of false negative decisions $n(FN)$ and the number of true positive decisions $n(TP)$ must equal the total number of diseased cases, denoted $K_2$. The last column is the sum of the corresponding rows. The sum of the number of true negative $n(TN)$ and false negative $n(FN)$ decisions is the total number of negative decisions, denoted $n(N)$. Likewise, the sum of the number of false positive $n(FP)$ and true positive $n(TP)$ decisions is the total number of positive decisions, denoted $n(P)$. Since each case yields a decision, the bottom-right corner cell is $n(N) + n(P)$, which must also equal $K_1+K_2$, the total number of cases $K$. These statements are summarized in Eqn. \@ref(eq:binary-task0TruthTableEqns).
 
@@ -53,37 +45,22 @@ K=K_1+K_2&=n(N)+n(P)
 
 
 
-<table>
-<caption>(\#tab:binary-task0truthTable2)Cell counts.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:left;"> T=1 </th>
-   <th style="text-align:left;"> T=2 </th>
-   <th style="text-align:left;"> RowSums </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> D=1 </td>
-   <td style="text-align:left;"> n(TN) </td>
-   <td style="text-align:left;"> n(FN) </td>
-   <td style="text-align:left;"> n(N)=n(TN)+n(FN) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> D=2 </td>
-   <td style="text-align:left;"> n(FP) </td>
-   <td style="text-align:left;"> n(TP) </td>
-   <td style="text-align:left;"> n(P)=n(FP)+n(TP) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ColSums </td>
-   <td style="text-align:left;"> $K_1$=n(TN)+n(FP) </td>
-   <td style="text-align:left;"> $K_2$=n(FN)+n(TP) </td>
-   <td style="text-align:left;"> $K=K_1+K_2$=n(N)+n(P) </td>
-  </tr>
-</tbody>
-</table>
+\begin{table}
+
+\caption{(\#tab:binary-task0truthTable2)Cell counts.}
+\centering
+\begin{tabular}[t]{l|l|l|l}
+\hline
+  & T=1 & T=2 & RowSums\\
+\hline
+D=1 & n(TN) & n(FN) & n(N)=n(TN)+n(FN)\\
+\hline
+D=2 & n(FP) & n(TP) & n(P)=n(FP)+n(TP)\\
+\hline
+ColSums & $K_1$=n(TN)+n(FP) & $K_2$=n(FN)+n(TP) & $K=K_1+K_2$=n(N)+n(P)\\
+\hline
+\end{tabular}
+\end{table}
 
 ## Sensitivity and specificity
 The notation $P(D|T)$ indicates the probability of diagnosis D given truth state T (the vertical bar symbol is used to denote a conditional probability, i.e., what is to the left of the vertical bar depends on the condition appearing to the right of the vertical bar being true). 

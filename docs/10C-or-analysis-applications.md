@@ -104,9 +104,9 @@ print(vc, digits = 4)
 * The relevant equation is Eqn. \@ref(eq:F-ORH-RRRC). 
 * `vc` contains the values needed in this equation, as follows:
     + MS(T) is in `vc$TRanova["T", "MS"]`, whose value is 0.0047962. 
-    + MS(TR) is in `vc$TRanova["TR", "MS"]`, whose value is 5.5103062\times 10^{-4}. 
-    + `Cov2` is in `vc$VarCom["Cov2", "Estimates"]`, whose value is 3.4407483\times 10^{-4}. 
-    + `Cov3` is in `vc$VarCom["Cov3", "Estimates"]`, whose value is 2.3902837\times 10^{-4}. 
+    + MS(TR) is in `vc$TRanova["TR", "MS"]`, whose value is \ensuremath{5.5103062\times 10^{-4}}. 
+    + `Cov2` is in `vc$VarCom["Cov2", "Estimates"]`, whose value is \ensuremath{3.4407483\times 10^{-4}}. 
+    + `Cov3` is in `vc$VarCom["Cov3", "Estimates"]`, whose value is \ensuremath{2.3902837\times 10^{-4}}. 
 
 Applying Eqn. \@ref(eq:F-ORH-RRRC) one gets (`den` is the denominator on the right hand side of the referenced equation) and F_ORH_RRRC is the value of the F-statistic:
 
@@ -220,8 +220,8 @@ print(CI_RRRC_IndvlTrt, digits = 4)
 * The needed quantities are in `vc`. 
 * For example, MS(T) is in vc$TRanova["T", "MS"], see above. Likewise for `Cov2` and `Cov3`.
 * The remaining needed quantities are:
-+ `Var` is in `vc$VarCom["Var", "Estimates"]`, whose value is 8.0228827\times 10^{-4}. 
-+ `Cov1` is in `vc$VarCom["Cov1", "Estimates"]`, whose value is 3.4661371\times 10^{-4}. 
++ `Var` is in `vc$VarCom["Var", "Estimates"]`, whose value is \ensuremath{8.0228827\times 10^{-4}}. 
++ `Cov1` is in `vc$VarCom["Cov1", "Estimates"]`, whose value is \ensuremath{3.4661371\times 10^{-4}}. 
 * The degree of freedom is $I-1$.
 * The implementation follows:
 
@@ -630,7 +630,7 @@ print(st1$RRFC$FTests, digits = 4)
 ```
 
 * `st1$RRFC$FTests` contains results of the F-test: the degrees of freedom, the mean-squares, the observed value of the F-statistic and the p-value for rejecting the NH, listed separately, where applicable, for the treatment and treatment-reader terms. The latter is also termed the "error term". 
-* For example, the treatment-reader mean squares is `st1$RRFC$FTests["TR", "MS"]` whose value is 5.51030622\times 10^{-4}.
+* For example, the treatment-reader mean squares is `st1$RRFC$FTests["TR", "MS"]` whose value is \ensuremath{5.51030622\times 10^{-4}}.
 
 
 ```r
@@ -1116,7 +1116,7 @@ print(st3, digits = 3)
 ### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset04-FROC}
 
 * `st3$RRRC$FTests` contains the results of the F-tests.
-* The p-value is much smaller than that obtained after converting to an ROC dataset. Specifically, for FROC analysis, the p-value is 1.17105004\times 10^{-4} while that for ROC analysis is 0.03054456. The F-statistic and the `ddf` are both larger for FROC analysis, both of of which result in increased probability of rejecting the NH, i.e., FROC analysis has greater power than ROC analysis.
+* The p-value is much smaller than that obtained after converting to an ROC dataset. Specifically, for FROC analysis, the p-value is \ensuremath{1.17105004\times 10^{-4}} while that for ROC analysis is 0.03054456. The F-statistic and the `ddf` are both larger for FROC analysis, both of of which result in increased probability of rejecting the NH, i.e., FROC analysis has greater power than ROC analysis.
 * The increased power of FROC analysis has been confirmed in simulation studies [@RN1331].
 
 * `st3$RRRC$ciDiffTrt` contains the confidence intervals for the inter-treatment difference FOMs, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet} - \theta_{i' \bullet}}$.
