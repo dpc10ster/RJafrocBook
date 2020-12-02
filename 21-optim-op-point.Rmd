@@ -53,9 +53,10 @@ do_one_mu <- function(mu, lambda, nu, zeta1Arr, lesDistr, relWeights) {
 ```
 
 ## Methods {#optim-op-point-methods}
-* The aim is determine the optimal operating point on an FROC. Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of latent NL marks as an expert radiologist. The $\nu$ parameter is kept at the same, namely $\nu = 1$. Four values of the $\mu$ parameter are considered: `r c(1, 1.5, 2, 2.5)`. All else being equal, performance is expected to improve with increasing $\mu$. 
 
-* For each $\mu$ one scans a range of values of $\zeta_1$. For each $\zeta_1$ one calculates the area under the wAFROC curve - using function `UtilAnalyticalAucsRSM()`. This returns the wAFROC AUC for chosen values of parameters ($\mu$, $\lambda$, $\nu$, $\zeta_1$, and two other parameters specifying the distribution of numbers of lesions per diseased case and their weights). Repeating the procedure for different values of $\zeta_1$ one determines the value thathat maximizes AUCthat maximizes AUC\zeta_{\text{max}}$. this is denoted $\zeta_{\text{max}}$. Finally, using $\zeta_{\text{max}}$ one calculates the corresponding (NLF,LLF) valueson the FROC* and the corresponding optimal wAFROC AUC. 
+The aim is determine the optimal operating point on an FROC. Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of latent NL marks as an expert radiologist. The $\nu$ parameter is kept at the same, namely $\nu = 1$. Four values of the $\mu$ parameter are considered: `r c(1, 1.5, 2, 2.5)`. All else being equal, performance is expected to improve with increasing $\mu$. 
+
+For each $\mu$ one scans a range of values of $\zeta_1$. For each $\zeta_1$ one calculates the area under the wAFROC curve - using function `UtilAnalyticalAucsRSM()`. This returns the wAFROC AUC for chosen values of parameters ($\mu$, $\lambda$, $\nu$, $\zeta_1$, and two other parameters specifying the distribution of numbers of lesions per diseased case and their weights). Repeating the procedure for different values of $\zeta_1$ one determines the value $\zeta_{\text{max}}$ that maximizes AUC -- denoted $\zeta_{\text{max}}$. Finally, using $\zeta_{\text{max}}$ one calculates the corresponding (NLF,LLF) values on the FROC and the optimal wAFROC AUC. 
 
 
 ### $\zeta_1$ optimization for $\lambda = 10$
@@ -298,7 +299,7 @@ grid.arrange(plotArr[[2,1]], plotArr[[2,2]], nrow = 1, ncol = 2)
 * Fig. \@ref(fig:optim-op-point-froc-01-next-two-plots) panel labeled **1-2.5** might help one better understand the need for an optimal operating point. In moving from the optimal abscissa, namely `r format(optOpPt[2,1,4], digits = 3)` to the maximum abscissa `r format(OpPtMax[2,1,4], digits = 3)` one picks ups `r format((OpPtMax[2,2,4] - optOpPt[2,2,4]), digits = 3)` in LLF, a negligible amount compared to the increase in NLF, namely from `r format(optOpPt[2,1,4], digits = 3)` to `r format(OpPtMax[2,1,4], digits = 3)`.
 
 
-* The explanations in terms of operating points may seem tedious, and indeed they are, which is the reason for choosing a scalar figure of merit, such as the AUC under the wAFROC curve for the optimization.
+* The explanations in terms of operating points may seem tedious, and indeed they are, which is the reason for choosing a scalar figure of merit, such as the AUC under the wAFROC curve for the optimization. The latter approach obviates convoluted explanations in terms of how much additional or fewer LLs or NLs occur as a result of a change in operating point.
 
 
 ```{r optim-op-point-froc-01-next-two-plots, fig.cap="Extended FROC plots: panel labeled 1-2 is for $\\lambda = 1$ and $\\mu = 2$ and that labeled 1-2.5 is for $\\lambda = 1$ and $\\mu = 2.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}

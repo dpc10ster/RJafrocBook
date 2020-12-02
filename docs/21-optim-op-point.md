@@ -24,7 +24,7 @@ Algorithm developers are familiar with this problem: given a CAD system that yie
 ## Methods {#optim-op-point-methods}
 * The aim is determine the optimal operating point on an FROC. Two values of the $\lambda$ parameter are considered: $\lambda = 10$ and $\lambda = 1$. The first value would characterize a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while the second value would characterize a CAD system that generates about the same number of latent NL marks as an expert radiologist. The $\nu$ parameter is kept at the same, namely $\nu = 1$. Four values of the $\mu$ parameter are considered: 1, 1.5, 2, 2.5. All else being equal, performance is expected to improve with increasing $\mu$. 
 
-* For each $\mu$ one scans a range of values of $\zeta_1$. For each $\zeta_1$ one calculates the area under the wAFROC curve - using function `UtilAnalyticalAucsRSM()`. This returns the wAFROC AUC for chosen values of parameters ($\mu$, $\lambda$, $\nu$, $\zeta_1$, and two other parameters specifying the distribution of numbers of lesions per diseased case and their weights). Repeating the procedure for different values of $\zeta_1$ one determines the value thathat maximizes AUCthat maximizes AUC\zeta_{\text{max}}$. this is denoted $\zeta_{\text{max}}$. Finally, using $\zeta_{\text{max}}$ one calculates the corresponding (NLF,LLF) valueson the FROC* and the corresponding optimal wAFROC AUC. 
+* For each $\mu$ one scans a range of values of $\zeta_1$. For each $\zeta_1$ one calculates the area under the wAFROC curve - using function `UtilAnalyticalAucsRSM()`. This returns the wAFROC AUC for chosen values of parameters ($\mu$, $\lambda$, $\nu$, $\zeta_1$, and two other parameters specifying the distribution of numbers of lesions per diseased case and their weights). Repeating the procedure for different values of $\zeta_1$ one determines the value $\zeta_{\text{max}}$ that maximizes AUC -- denoted $\zeta_{\text{max}}$. Finally, using $\zeta_{\text{max}}$ one calculates the corresponding (NLF,LLF) valueson the FROC* and the corresponding optimal wAFROC AUC. 
 
 
 ### $\zeta_1$ optimization for $\lambda = 10$
@@ -216,6 +216,7 @@ All of these observations make intuitive sense except, perhaps, that for NLF01. 
 * Fig. \@ref(fig:optim-op-point-froc-01-next-two-plots) panel labeled **1-2.5** might help one better understand the need for an optimal operating point. In moving from the optimal abscissa, namely 0.208 to the maximum abscissa 0.4 one picks ups 0.00494 in LLF, a negligible amount compared to the increase in NLF, namely from 0.208 to 0.4.
 
 
+* The explanations in terms of operating points may seem tedious, and indeed they are, which is the reason for choosing a scalar figure of merit, such as the AUC under the wAFROC curve for the optimization. The latter approach obviates convoluted explanations in terms of how much additional or fewer LLs or NLs occur as a result of a change in operating point.
 
 
 <div class="figure">
@@ -236,7 +237,8 @@ All of these observations make intuitive sense except, perhaps, that for NLF01. 
 Assume that one has designed an algorithmic observer that has been optimized with respect to all other parameters except the reporting threshold. At this point the algorithm reports every suspicious region no matter how low the malignancy index. The mark-rating pairs are entered into a `RJafroc` format Excel input file. The next step is to read the data file -- `DfReadDataFile()` -- convert it to an ROC dataset -- `DfFroc2Roc()` -- and then perform a radiological search model (RSM) fit to the dataset using function `FitRsmRoc()`. This yields the necessary $\lambda, \mu, \nu$ parameters. These values are used to perform the simulations described in the embedded code in this chapter, i.e., that leading to, for example, one of the panels in Fig. \@ref(fig:optim-op-point-AUC-vs-zeta1-01). This determines the optimal reporting threshold: essentially, one scans $\zeta_1$ values looking for maximum in wAFROC AUC -- calculated using `UtilFigureOfMerit()`. This determines the optimal value of $\zeta_1$, namely $\zeta_{\text{max}}$. The RSM parameter values and $\zeta_{\text{max}}$ determine NLF, the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence levels exceeding $\zeta_{\text{max}}$.  
 
 
+
 ## Discussion {#optim-op-point-Discussion}
-TBA
+By selecting the area under the ROC curve one could have performed a similar optimization. One could use this method to select the optimal operating point on the ROC for a radiologist. 
 
 ## References {#optim-op-point-references}
