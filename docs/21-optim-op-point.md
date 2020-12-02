@@ -211,11 +211,6 @@ All of these observations make intuitive sense except, perhaps, that for NLF01. 
 
 * In Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots) panel labeled **1-1.5**: The vertical blue line is at NLF = 0.399 corresponding to LLF = 0.746. The end-point of the extended curve is (NLF = 0.516, LLF = 0.767). The highest operating point is at (NLF = 0.667, LLF = 0.777). 
 
-* It remains to explain the seemingly anomalous behavior seen in the fifth row of Table \@ref(tab:optim-op-point-cad-optim-table) - i.e., NLF peaks at $\mu = 1.5$ and thereafter NLF decreases. The relevant FROC curve is shown in Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots), panel labeled **1-1.5**. The reason is that as $\mu$ increases, the end-point of the FROC keeps moving upwards and to the left, approaching NLF = 0 and LLF = 1 in the limit of infinite $\mu$. Consequently, the expected increase in NLF is cut short or terminated - *one literally runs out of FROC curve to move up on*. Another way of explaining this is that in Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots) panel labeled **1-1** the abscissa of the highest operating point, which equals 1, is further to the right than in Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots) panel labeled **1-1.5**, where the corresponding abscissa equals 0.667. This allows NLF to "access" larger values in Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots) panel labeled **1-1** than in Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots) panel labeled **1-1.5**. Moving to higher values of $\mu$, as in \@ref(fig:optim-op-point-froc-01-next-two-plots) panels labeled **1-2** and **1-2.5**, further illustrates this effect. In the panel labeled **1-2** the maximum abscissa is at 0.5 while in the panel labeled **1-2.5** the abscissa is at 0.4.
-
-* Fig. \@ref(fig:optim-op-point-froc-01-next-two-plots) panel labeled **1-2.5** might help one better understand the need for an optimal operating point. In moving from the optimal abscissa, namely 0.208 to the maximum abscissa 0.4 one picks ups 0.00494 in LLF, a negligible amount compared to the increase in NLF, namely from 0.208 to 0.4.
-
-
 
 
 <div class="figure">
@@ -229,6 +224,9 @@ All of these observations make intuitive sense except, perhaps, that for NLF01. 
 
 
 * In Fig. \@ref(fig:optim-op-point-froc-01-next-two-plots) panel labeled **1-2.5**: The vertical blue line is at NLF = 0.208 corresponding to LLF = 0.913. The end-point of the extended curve is (NLF = 0.284, LLF = 0.917). The highest operating point is at (NLF = 0.4, LLF = 0.918). 
+
+* It remains to explain the seemingly anomalous behavior seen in the fifth row of Table \@ref(tab:optim-op-point-cad-optim-table) - NLF shows a peak at $\mu = 1.5$ as a function of $\mu$ and thereafter NLF decreases. The relevant FROC curve is shown in Fig. \@ref(fig:optim-op-point-froc-01-first-two-plots), panel labeled **1-1.5**. The reason is that as $\mu$ increases, the end-point of the FROC keeps moving upwards and to the left (approaching NLF = 0 and LLF = 1 in the limit of infinite $\mu$). Because of this effect the expected increase in NLF seen in the third row of the table is terminated - one literally runs out of FROC curve to move up on. Another way of explaining this is that in Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) the true end-point, i.e., that corresponding to $\zeta_1 = -\infty$, is much further to the right than in Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots). This allows NLF to "access" larger values in Fig. \@ref(fig:optim-op-point-froc-10-first-two-plots) but not in Fig. \@ref(fig:optim-op-point-froc-10-next-two-plots).
+
 
 
 
