@@ -71,7 +71,7 @@ mu_arr <- c(1, 1.5, 2, 2.5)
 maxFomArr <- array(dim = c(2,length(mu_arr)))
 zetaMaxArr <- array(dim = c(2, length(mu_arr)))
 plotArr <- array(list(), dim = c(2, length(mu_arr)))
-lesDistr <- Convert2lesDistr(c(0.5, 0.5))
+lesDistr <- c(0.5, 0.5)
 relWeights <- c(0.5, 0.5)
 for (i in 1:length(mu_arr)) {
   if (i == 1) zeta1Arr <- seq(1.5,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
@@ -124,7 +124,7 @@ Fig. \@ref(fig:optim-op-point-froc-AUC-vs-zeta1-01) corresponds to $\lambda = 1$
 
 
 ```{r do_one_froc, echo=FALSE}
-do_one_froc <- function(mu, lambda, nu, zeta1, llfRange) {
+do_one_froc <- function(mu, lambda, nu, zeta1, lesDistr, relWeights, llfRange) {
   
   
   froc <- PlotRsmOperatingCharacteristics(
@@ -133,7 +133,7 @@ do_one_froc <- function(mu, lambda, nu, zeta1, llfRange) {
     nu, 
     zeta1, 
     lesDistr = lesDistr, 
-    lesWghtDistr = UtilSpecifyLesionWeightsDistr(relWeights, relWeights), 
+    relWeights = relWeights, 
     OpChType = "FROC",
     llfRange = llfRange,
     legendPosition = "none")$FROCPlot
@@ -163,6 +163,8 @@ for (j in 1:2) {
                       lambdaArr[j],
                       nu,
                       zeta1 = zetaMaxArr[j,i],
+                      lesDistr, 
+                      relWeights, 
                       llfRange)
     # optimal operating point
     optOpPt[j,1,i] <- max(x$data$NLF)
@@ -205,6 +207,8 @@ for (j in 1:2) {
       nu,
       # to show a fuller extent of the plot
       zeta1 = zetaMaxArr[j,i] - correction[j,i],
+      lesDistr,
+      relWeights, 
       llfRange)
 
     plotArr[[j,i]] <- x +
@@ -286,9 +290,9 @@ grid.arrange(plotArr[[1,3]], plotArr[[1,4]], nrow = 1, ncol = 2)
 
 ```{r, echo=FALSE}
 
-x1 <- PlotRsmOperatingCharacteristics(mu = 1, lambda = 10, nu = 1, zeta1 = 3.25, lesDistr = lesDistr, lesWghtDistr = UtilSpecifyLesionWeightsDistr(relWeights, relWeights), legendPosition = "none")$wAFROC
+x1 <- PlotRsmOperatingCharacteristics(mu = 1, lambda = 10, nu = 1, zeta1 = 3.25, lesDistr = lesDistr, relWeights = relWeights, legendPosition = "none")$wAFROC
 
-x2 <- PlotRsmOperatingCharacteristics(mu = 1, lambda = 10, nu = 1, zeta1 = 1.5, lesDistr = lesDistr, lesWghtDistr = UtilSpecifyLesionWeightsDistr(relWeights, relWeights), legendPosition = "none")$wAFROC
+x2 <- PlotRsmOperatingCharacteristics(mu = 1, lambda = 10, nu = 1, zeta1 = 1.5, lesDistr = lesDistr, relWeights = relWeights, legendPosition = "none")$wAFROC
 
 ```
 

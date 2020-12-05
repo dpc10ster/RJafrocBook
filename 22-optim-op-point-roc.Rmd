@@ -66,7 +66,7 @@ mu_arr <- c(1, 1.5, 2, 2.5)
 maxFomArr <- array(dim = c(2,length(mu_arr)))
 zetaMaxArr <- array(dim = c(2, length(mu_arr)))
 plotArr <- array(list(), dim = c(2, length(mu_arr)))
-lesDistr <- Convert2lesDistr(c(0.5, 0.5))
+lesDistr <- c(0.5, 0.5)
 relWeights <- c(0.5, 0.5)
 for (i in 1:length(mu_arr)) {
   # if (i == 1) zeta1Arr <- seq(1.5,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
@@ -120,7 +120,7 @@ Fig. \@ref(fig:optim-op-point-roc-AUC-vs-zeta1-01) corresponds to $\lambda = 1$ 
 
 
 ```{r do_one_roc, echo=FALSE}
-do_one_roc <- function(mu, lambda, nu, zeta1, llfRange) {
+do_one_roc <- function(mu, lambda, nu, zeta1, lesDistr, relWeight, llfRange) {
   
   
   froc <- PlotRsmOperatingCharacteristics(
@@ -129,7 +129,7 @@ do_one_roc <- function(mu, lambda, nu, zeta1, llfRange) {
     nu, 
     zeta1, 
     lesDistr = lesDistr, 
-    lesWghtDistr = UtilSpecifyLesionWeightsDistr(relWeights, relWeights), 
+    relWeight = relWeights, 
     OpChType = "FROC",
     llfRange = llfRange,
     legendPosition = "none")$FROCPlot
@@ -159,6 +159,8 @@ for (j in 1:2) {
                       lambdaArr[j],
                       nu,
                       zeta1 = zetaMaxArr[j,i],
+                      lesDistr, 
+                      relWeight, 
                       llfRange = NULL)
     # optimal operating point
     optOpPt[j,1,i] <- max(x$data$NLF)
@@ -201,6 +203,8 @@ for (j in 1:2) {
       nu,
       # to show a fuller extent of the plot
       zeta1 = zetaMaxArr[j,i] - correction[j,i],
+      lesDistr, 
+      relWeight, 
       llfRange)
 
     plotArr[[j,i]] <- x +
