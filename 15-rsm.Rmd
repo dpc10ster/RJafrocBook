@@ -7,92 +7,88 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction {#rsm-intro}
 
-Brief summaries of the radiological search model (RSM) were presented earlier in connection with the simulator used to generate FROC data. This chapter describes the statistical model in more detail. It embodies the essential ideas of the Nodine-Kundel model of visual search described in the previous chapter. It turns out that all that is needed to model seemingly as complex a process as visual search, at least to first order, is one additional parameter. All models of ROC data involve two parameters (not counting thresholds). For example, the unequal variance binormal model Chapter 06 requires the (a,b) parameters. Alternative ROC models described in Chapter 20 also require two parameters. The model described below contains three parameters,  ,  , and  . The   parameter is the simplest to understand: it is the perceptual signal-to-noise ratio (pSNR) of latent LLs relative to latent NLs. The parameters  , and   describe the search process, i.e., the first stage of the Nodine-Kundel model (glancing or global impression). Essentially, they describe the ability of the observer to find latent LLs while not finding latent NLs. It turns out that it is easier to understand the search process via intermediate primed parameters,   and  ; however, unlike  ,  , the primed parameters depend on  , i.e., they are not intrinsic. So the following will introduce, in order,  ,  and  , and explain their meaning via software examples. Physical meanings for these parameters will be given as well as how one might measure them via eye-tracking measurements. Finally, a model re-parameterization is proposed, which takes into account that   and   must depend on , and this is where the parameters   and   are introduced, which are expected to be intrinsic, i.e., independent of .
+Brief accounts of the radiological search model (RSM) were presented earlier in connection with the simulator used to generate FROC data. This chapter describes the statistical model in more detail. It embodies the essential ideas of the Nodine-Kundel model of visual search described in the previous chapter. *It turns out that all that is needed to model seemingly as complex a process as visual search, at least to first order, is one additional parameter*. All models of ROC data involve two parameters (not counting thresholds). For example, the unequal variance binormal model in Chapter \@ref(BinormalModel) requires the (a,b) parameters. Alternative ROC models described in Chapter 20 also require two parameters. The model described below contains three parameters: $\mu$, $\lambda$ and $\nu$. The $\mu$ parameter is the simplest to understand: it is the perceptual signal-to-noise ratio *pSNR* of latent LL ratings relative to latent NL ratings. The parameters $\lambda$ and $\nu$ describe the search process, i.e., the first stage of the Nodine-Kundel model (glancing or global impression). They describe the ability of the observer to find latent LLs while not finding latent NLs. It turns out that it is easier to understand the search process via intermediate primed parameters, $\lambda'$ and  $\nu'$; however, unlike $\lambda$ and $\nu$ the primed parameters depend on  $\mu$, i.e., *they are not intrinsic*. So in what follows I will introduce, in order, $\mu$, $\lambda'$ and $\nu'$ and explain their meanings via software examples, as well as how one might measure them via eye-tracking measurements. Finally, a model re-parameterization is proposed, which takes into account that $\lambda'$ and  $\nu'$ must depend on $\mu$, and this is where the un-primed parameters $\lambda$ and $\nu$ are introduced, *which are expected to be intrinsic*, i.e., independent of $\mu$.
 
-The online appendices explain Poisson and binomial sampling at a simple level. It is the author's experience that users of the author's software are generally not trained in statistics.
+TBA [The online appendices explain Poisson and binomial sampling at a simple level. It is the author's experience that users of the author's software are generally not trained in statistics.]
 
 
-
-Brief summaries of the radiological search model (RSM) were presented earlier in connection with the simulator used to generate FROC data. This chapter describes the statistical model in more detail. It embodies the essential ideas of the Nodine-Kundel model of visual search described in the previous chapter. It turns out that all that is needed to model seemingly as complex a process as visual search, at least to first order, is one additional parameter. All models of ROC data involve two parameters (not counting thresholds). For example, the unequal variance binormal model Chapter 06 requires the (a,b) parameters. Alternative ROC models described in Chapter 20 also require two parameters. The model described below contains three parameters,  ,  , and  . The   parameter is the simplest to understand: it is the perceptual signal-to-noise ratio (pSNR) of latent LLs relative to latent NLs. The parameters  , and   describe the search process, i.e., the first stage of the Nodine-Kundel model (glancing or global impression). Essentially, they describe the ability of the observer to find latent LLs while not finding latent NLs. It turns out that it is easier to understand the search process via intermediate primed parameters,   and  ; however, unlike  ,  , the primed parameters depend on  , i.e., they are not intrinsic. So the following will introduce, in order,  ,  and  , and explain their meaning via software examples. Physical meanings for these parameters will be given as well as how one might measure them via eye-tracking measurements. Finally, a model re-parameterization is proposed, which takes into account that   and   must depend on , and this is where the parameters   and   are introduced, which are expected to be intrinsic, i.e., independent of .
-
-The online appendices explain Poisson and binomial sampling at a simple level. It is the author's experience that users of the author's software are generally not trained in statistics.
-16.2: The radiological search model (RSM)
+## The radiological search model (RSM)
 The Radiological Search Model (RSM) for the free-response paradigm is a statistical parameterization of the Nodine-Kundel model. It consists of:
 
-A search stage corresponding to the initial glance in the Nodine-Kundel sense, in which suspicious regions, i.e., the latent marks, are flagged for subsequent scanning. The total number of latent marks on a case is  , so some cases may have zero latent marks, a fact that will turn out to have important consequences for the shapes of all RSM predicted operating characteristics.
-A decision stage during which each latent mark is scanned, features are extracted and analyzed and the observer obtains a decision variable (i.e., a z-sample) at each latent mark. Typically radiologists spend >1 s per site and high-resolution foveal examination is necessary to extract relevant details of the region being examined and make a decision whether to mark it. The number of z-samples equals the number of latent marks on the case.
+* A *search stage* corresponding to the initial glance in the Nodine-Kundel sense, in which suspicious regions, i.e., the latent marks, are flagged for subsequent scanning. The total number of latent marks on a case is $\geq 0$, so some cases may have zero latent marks, a fact that will turn out to have important consequences for the shapes of all RSM predicted operating characteristics.
 
-Latent marks can be either latent NLs (corresponding to non-diseased regions) or latent LLs (corresponding to diseased regions). The number of latent NLs on a case is denoted  . The number of latent LLs on a diseased case is denoted  . Latent NLs can occur on non-diseased and diseased cases, but latent LLs can only occur on diseased cases. Assume that every diseased case has L actual lesions. Later this is extended to arbitrary number of lesions per diseased case. Since the number of latent LLs cannot exceed the number of lesions,  . (The symbol   is for location and the subscript is the site-level truth state s; case-level subscripts are temporarily suppressed for brevity.)
+* A *decision stage* during which each latent mark is scanned, features are extracted and analyzed and the observer obtains a decision variable (i.e., a z-sample) at each latent mark. Typically radiologists spend ~ 1 s per site and high-resolution foveal inspection is necessary to extract relevant details of the region being examined and make a decision whether or not to mark it. The number of realized z-samples equals the number of latent marks on the case.
 
-Distributional assumptions are made for the numbers of latent NLs and latent LLs and on the associated z-samples. Since in this chapter one is dealing with a parametric model of search, one does not need to show explicitly case and location dependence as in Chapter 13. This allows for a simpler notation unencumbered by a plethora of subscripts.
+* Latent marks can be either latent NLs (corresponding to non-diseased regions) or latent LLs (corresponding to diseased regions). The number of latent NLs on a case is denoted $l_1$. The number of latent LLs on a diseased case is denoted $l_2$. Latent NLs can occur on non-diseased and diseased cases, but latent LLs can only occur on diseased cases. Assume for now that every diseased case has $L$ actual lesions. Later this is extended to arbitrary number of lesions per diseased case. Since the number of latent LLs cannot exceed the number of lesions, $0 \leq l_2 \leq L$ . The symbol $l_s$  denotes a location with site-level truth state $s$, where $s = 1$ for a NL and $s = 2$ for a LL^[In this chapter distributional assumptions are made for the numbers of latent NLs and LLs and for the associated z-samples. Since one is dealing with a parametric model one does not need to show explicitly case and location dependence as in the empirical description in Chapter \@ref(#froc-empirical). This allows for a simpler notation, as the reader may have noticed, unencumbered by the plethora of subscripts in Table \#ref(#froc-empirical-notation).].
 
 ## RSM assumptions {#rsm-assumptions}
 
-The number of latent NLs,  , is an integer random variable sampled from the Poisson distribution with mean  :
+The number of latent NLs, $l_1 \geq 0$, is an integer random variable sampled from the Poisson distribution with mean $\lambda'$:
 
- 	.	(16.1)
-
-The reason for the prime will become clear in 16.4. The probability mass function (pmf) of the Poisson distribution is defined by:
-
- 	.	(16.2)
-
-The number of latent LLs,  ,  , is an integer random variable sampled from the binomial distribution with success probability   and trial size  : 
+\begin{equation} 
+l_1 \sim \text{Poi}\left ( \lambda' \right ) 
+(\#eq:rsm-poisson-sampling)
+\end{equation}
 
 
- 	.	(16.3)
+The probability mass function *pmf* of the Poisson distribution is defined by:
+
+\begin{equation} 
+\text{pmf}_{Poi}\left ( l_1, \lambda' \right ) = exp\left ( -\lambda' \right ) \frac{{(\lambda')^{l_1}}}{(l_1')!}
+(\#eq:rsm-poisson-pmf)
+\end{equation}
+
+The number of latent LLs, $l_2$, where $0 \leq l_2 \leq L$, is an integer random variable sampled from the binomial distribution $B$ with success probability $\nu'$ and trial size $L$: 
 
 
-The pmf of the binomial distribution is defined by:
+\begin{equation} 
+l_2 \sim \text{B}\left ( L, \nu' \right ) 
+(\#eq:rsm-binomial-sampling)
+\end{equation}
 
- 	.	(16.4)
+The *pmf* of the binomial distribution is defined by:
 
-Each latent mark is associated with a z-sample. That for a latent NL is denoted   while that for a latent LL is denoted  . Latent NLs can occur on non-diseased and diseased cases while latent LLs can only occur on diseased cases.
+\begin{equation} 
+\text{pmf}_{B}\left ( l_2, \nu' \right ) = \binom{L}{l_2} \left (\nu'  \right )^{l_2} \left (1-\nu'  \right )^{L-l_2}
+(\#eq:rsm-binomial-pmf)
+\end{equation}
 
-1.	For latent NLs, the z-samples are obtained by sampling  :
 
- 	.	(16.5)
+Each latent mark is associated with a z-sample. That for a latent NL is denoted $z_{l_1}$ while that for a latent LL is denoted $z_{l_2}$. Latent NLs can occur on non-diseased and diseased cases while latent LLs can only occur on diseased cases.
 
+1. For latent NLs, the z-samples are obtained by sampling $N \left ( 0, 1 \right )$:
 
-2.	For latent LLs, the z-samples are obtained by sampling  :
+\begin{equation} 
+z_{l_1} \sim N \left ( 0, 1 \right )
+(\#eq:rsm-sampling-l1)
+\end{equation}
 
- 	.	(16.6)
+2. For latent LLs, the z-samples are obtained by sampling $N \left ( \mu, 1 \right )$:
 
-3.	In an FROC study with R ratings, the observer adopts R ordered cutoffs  (r = 1, 2, ..., R). Defining   and  , if   the corresponding latent site is marked and rated in bin r, and if   the site is not marked. 
+\begin{equation} 
+z_{l_2} \sim N \left ( \mu, 1 \right )
+(\#eq:rsm-sampling-l2)
+\end{equation}
 
-4.	The location of the mark is at the center of the latent site that exceeded a cutoff and an infinitely precise proximity criterion is adopted. Consequently, there is no confusing a mark made because of a latent LL z-sample exceeding the cutoff as one made because of a latent NL z-sample exceeding the cutoff, and vice-versa. Therefore, any mark made because of a latent NL z-sample that satisfies  will be scored as non-lesion localization (NL) and rated r. Any mark made because of a latent LL z-sample that satisfies   will be scored as a lesion-localization (LL) and rated r. Notice that unmarked LLs (latent or not) are assigned the zero rating. By "latent or not" the author means that even lesions that were not flagged by the search stage, and therefore do not qualify as latent LLs, are assigned the zero rating.
+3. In an FROC study with R ratings, the observer adopts $R$ ordered cutoffs $\zeta_r$, where $\left ( r = 1, 2, ..., R \right )$. Defining  $\zeta_0 = -\infty$ and $\zeta_{R+1} = \infty$, then if $\zeta_r \leq z_{l_s} < \zeta_{r+1}$ the corresponding latent site is marked and rated in bin $r$, and if $z_{l_s} \leq \zeta_1$ the site is not marked. 
 
-5.	By choosing R large enough, the above discrete rating model becomes applicable to continuous z-samples; see Chapter 05, 5.6.
+4. The location of the mark is at the center of the latent site that exceeded a cutoff and an infinitely precise proximity criterion is adopted. Consequently, there is no confusing a mark made because of a latent LL z-sample exceeding the cutoff with one made because of a latent NL z-sample exceeding the cutoff, and vice-versa. Therefore, any mark made because of a latent NL z-sample that satisfies $\zeta_r \leq z_{l_1} < \zeta_{r+1}$ will be scored as a non-lesion localization (NL) and rated $r$. Likewise, any mark made because of a latent LL z-sample that satisfies $\zeta_r \leq z_{l_2} < \zeta_{r+1}$ will be scored as a lesion-localization (LL) and rated $r$. 
 
+5. In addition unmarked LLs (latent or not) are assigned the zero rating. By "latent or not" I mean that even lesions that were not flagged by the search stage, and therefore do not qualify as latent LLs, are assigned the zero rating. This is because they represent observable events.
+
+6. By choosing $R$ large enough, the above discrete rating model is applicable to continuous z-samples.
+
+## Summary of RSM {#rsm-summary}
+* First stage: initial glance, observer identifies latent NLs and latent LLs:
+    + Number of NLs ~ Poisson with mean $\lambda'$,  
+    + Number of LLs ~ binomial with success probability $\nu'$ and trial size $L$.
+*	Second stage: detailed scrutiny, observer calculates z-sample at each latent mark: 
+    + z-sample for latent NL $\sim N(0,1)$,  
+    + z-sample for latent LL $\sim N(\mu,1)$.
+*	Latent mark is actually marked if $z \geq \zeta_1$.   
+*	The rating assigned to a mark is the index of the nearest threshold that was just equaled or exceeded by the z-sample. 
+* Unmarked latent NLs are unobservable events, but unmarked LLs, latent or not, are assigned the zero rating.
  
-
-## Summary of RSM defining equations {#rsm-summary-rsm-equations}
-
-The RSM is summarized in Table 16.1.
-
-Table 16.1: Summary of RSM defining equations
-Latent NL site sampling	 
- 
- ; 
-
-Latent LL site sampling	 
- 
- ; 
-
-z-sampling for latent NLs on case with truth state t	 
-Applies to NL z-samples on non-diseased and diseased cases
-z-sampling for latent LLs	 
- 
-
-Marking and binning rule for NLs	 
- 
-
-Marking and binning rule for LLs	 
-
-Unmarked latent NL sites	 
-Unobservable events
-Unmarked lesions, latent or not	 
-Inferred zero rating for latent LLs
-
 
 ## Physical interpretation of RSM parameters {#rsm-parameter-interpretations}
 The parameters $\mu$, $\lambda$ and $\nu$ have the following meanings:
