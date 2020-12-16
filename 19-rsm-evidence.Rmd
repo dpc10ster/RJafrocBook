@@ -1,0 +1,267 @@
+# Evidence for the radiological search model {#rsm-evidence}
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+library(seqinr)
+library(RJafroc)
+library(ggplot2)
+library(gridExtra)
+library(binom)
+library(here)
+```
+
+## Introduction {#rsm-evidence-intro}
+
+This chapter details the evidence for the validity of the radiological search model. 
+
+## Evidence for the validity of the RSM {#rsm-evidence-validity}
+Listed below are reasons arguing for the validity of the RSM. 
+
+1.	Its correspondence to the empirical Kundel-Nodine model of radiological search. 
+2.	In special cases, it reduces to being indistinguishable from the binormal model.
+3.	It explains: 
+a.	The empirical observation31 that most ROC datasets are characterized by b-parameter < 1. 
+b.	The empirical observation32 that the b-parameter tends to decrease as contrast increases and 
+c.	The empirical observation32, that the difference in means of the two pdfs divided by the difference in standard deviations is roughly constant for a fixes set of experimental conditions.
+4.	It explains data degeneracy, i.e., no interior data points, which tend to be observed with expert observers. 
+5.	It predicts FROC/AFROC and LROC curves that fit real datasets.
+
+As described in Chapter 20, the CBM model explains #3(a) and #4 while the bigamma model5 explains #3(c).
+
+### Correspondence to the Kundel-Nodine model {#rsm-predictions-corresponence-kundel-nodine}
+Perhaps the strongest evidence for the validity of the RSM is its correspondence to the Kundel-Nodine model of radiological search [@RN1533; @RN1388; @RN438; @RN1663], which in turn is derived from eye-tracking measurements made on radiologists while they perform diagnostic tasks. These show that radiologists identify suspicious regions in a short time and this ability corresponds to the $\lambda', \nu'$ parameters of the RSM. Having found suspicious regions, the next activity uncovered by eye-tracking measurements is the detailed examination of each suspicious region in order to determine if it is a significant finding. This is where the z-sample is calculated, and this process is modeled by two unit normal distributions separated by the $\mu$ parameter of the RSM. 
+
+Other ROC models do not share this close correspondence. The CBM model comes closest – it models the possibility that lesions are found, which is part of search performance, but the other part of search performance, namely the ability to avoid finding NLs, is not modeled. Like other ROC models, it predicts that the point (1,1) is continuously accessible to observer, which implies zero search performance, Fig. 17.6.
+
+### The binormal model is a special case of the RSM {#rsm-predictions-binormal-model}
+ROC models assume that every case provides a finite decision variable sample. This is what permits the observer to continuously move the operating point to (1,1). While in general the RSM allows cases with no decision samples, one way to ensure a decision sample on every case is to use a large $\lambda'$, as in that limit every case has at least one latent NL. Under these conditions one expects the pdfs to integrate to unity and to be quasi-normal.  
+
+The point of the following exercise is to demonstrate that in certain limits RSM-generated ROC data are well fitted by the binormal model. Consider the code in mainRsmVsEng.R, Online Appendix 17.F.2, which simulates FROC data using the RSM, converts it to highest rating ROC data, bins the data into 5 bins and prints out two sets of 5 integers, the bin counts for non-diseased and diseased cases respectively, the analog of the ROC counts data in Table 4.1 in Chapter 04. The counts data are analyzed by the Eng Java program39, which implements Metz's ROCFIT program, TBA Chapter 06, yielding the binormal parameter values a, b and the goodness of fit $\chi^2$ statistic and a p-value. 
+
+```{r echo=FALSE}
+source(here("R/rsm-evidence/PlotBMErrBar.R"))
+```
+
+STOP
+
+```{r}
+
+K1 <- 500;K2 <- 700;desiredNumBins <- 5;
+plotArr <- array(list(), dim = 9)
+for (Row in 1:9) {
+    switch(Row,
+           "1" = {seed <- 1;Lmax <- 1;mu <- 2.0;lambda <- 10;nu <- 1;zeta1 <- -1}, # Row 1
+           "2" = {seed <- 1;Lmax <- 1;mu <- 2.5;lambda <- 10;nu <- 1;zeta1 <- -1}, # Row 2
+           "3" = {seed <- 1;Lmax <- 1;mu <- 3.0;lambda <- 10;nu <- 1;zeta1 <- -1}, # Row 3
+           "4" = {seed <- 2;Lmax <- 1;mu <- 2.5;lambda <- 10;nu <- 1;zeta1 <- -1}, # Row 4
+           "5" = {seed <- 2;Lmax <- 2;mu <- 2.0;lambda <- 10;nu <- 1;zeta1 <- -1},# Row 5
+           "6" = {seed <- 2;Lmax <- 2;mu <- 2.5;lambda <- 10;nu <- 1;zeta1 <- -1},# Row 6
+           "7" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <- 10;nu <- 1;zeta1 <- -1},# Row 7
+           "8" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <-  1;nu <- 1;zeta1 <- -1},# Row 8
+           "9" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <- 0.1;nu <- 1;zeta1 <- -1}# Row 9
+    )
+    cat("K1 = ", K1, ", K2 = ", K2, ", zeta1 = ", zeta1, ", seed = ", seed, 
+        ", Lmax = ", Lmax, ", mu = ", mu, ", lambda = ", lambda, ", nu = ", nu, "\n")
+    
+    Lk2 <- floor(runif(K2, 1, Lmax + 1))
+    nLesPerCase <- unique(Lk2);lesDistr <- array(dim = c(length(nLesPerCase), 2))
+    for (i in nLesPerCase) lesDistr[i, ] <- c(i, sum(Lk2 == i)/K2);lesDistr <- lesDistr[,2]
+    
+    frocDataRaw  <- SimulateFrocDataset(mu, lambda, nu, zeta1, I = 1, J = 1, K1, K2, perCase = Lk2, seed = seed)
+    rocDataRaw <- DfFroc2Roc(frocDataRaw)
+    
+    rocDataBinned <- DfBinDataset(rocDataRaw, desiredNumBins = desiredNumBins, opChType = "ROC")
+    if (length(unique(rocDataBinned$ratings$LL[1,1,,1])) < 4) stop("too few bins")
+    
+    rocDataTable <- array(dim = c(2,desiredNumBins))
+    x1 <- table(rocDataBinned$ratings$NL[1:K1])
+    if (length(x1) == 1) {
+        rocDataTable[1,] <- c(0,x1,0,0,0)
+    } else if (length(x1) == 3) {
+        rocDataTable[1,] <- c(0, x1,0)
+    } else if (length(x1) == 4) {
+        rocDataTable[1,] <- c(x1,0)
+    } else if (length(x1) == 5) {
+        rocDataTable[1,] <- x1
+    } else stop("incorrect table length 1")
+    
+    x2 <- table(rocDataBinned$ratings$LL[1:K2])
+    if (length(x2) == 4) {
+        rocDataTable[2,] <- c(0,x2)
+    } else if (length(x2) == 5) {
+        rocDataTable[2,] <- x2
+    } else stop("incorrect table length 2")
+    
+    aucs <- UtilAnalyticalAucsRSM(mu = mu, lambda = lambda, nu = nu, zeta1 = zeta1, lesDistr = lesDistr)
+    cat("RSM-ROC-AUC = ", aucs$aucROC, "\n")
+    print(rocDataTable)
+    # copy the last two rows of output to Eng program; delete bracket stuff leaving numbers only with spaces; select format 3
+    # Run Program
+    # compare to table in book
+    
+    switch(Row, 
+           # the following values were transferred from the Eng program output after analyzing data generated 
+           # by mainRsmVsEng.R using the appropriate value of Row
+           "1" = {a <- 1.002;b <- 0.861}, # Row 1
+           "2" = {a <- 1.497;b <- 0.752}, # Row 2
+           "3" = {a <- 1.928;b <- 0.736}, # Row 3
+           "4" = {a <- 1.221;b <- 0.682}, # Row 4
+           "5" = {a <- 1.250;b <- 0.786},# Row 5
+           "6" = {a <- 1.554;b <- 0.646},# Row 6
+           "7" = {a <- 2.057;b <- 0.676},# Row 7
+           "8" = {a <- 2.391;b <- 0.405},# Row 8
+           "9" = {a <- 2.015;b <- 0.068}# Row 9
+    )
+    
+    print(PlotBMErrBar(a, b, rocDataTable, Row))
+}
+
+
+```
+
+Ensure that Row is set to 1 at line 10 in mainRsmVsEng.R (this selects RSM parameters in 5 columns corresponding to the same value of Row in Table 17.2). Insert a break point at line 40 and click Source yielding the following output:
+
+
+The shown two lines contain the ROC counts table. Copy the numbers (not the square brackets) and paste them into the input window of the Eng program, and run the program with format option three selected. It yields the Row-1 values listed in the last six columns of Table 17.2. The other rows in Table 17.2 were generated by setting Row to values 2, 3,..., 9 and each time clicking source and copying the output to the Eng Java program, etc. 
+
+The (a, b) binormal parameters were transferred to the appropriate location, between lines 50 – 58 in mainRsmVsEng.R. Once all values are populated, the plots shown in Fig. 17.8 were obtained by exiting debug mode, clearing any breakpoints and sourcing the program with different values for variable Row, in the integer range 1 to 9. All this could have been automated using RocfitR.R, Chapter 06, but the author wanted a direct comparison of RSM prediction vs. binormal fits using Metz's code.
+
+These plots show that ROC data generated by the RSM are well fitted by the binormal model. The p-values of the goodness of fit statistic are all in the range of what is considered acceptable fits to a model.
+
+Table 17.2: This table shows the results of simulating ROC ratings tables using the RSM for parameter values specified in columns 2 – 6 and fitting each ratings table using the binormal model. The corresponding binormal model fitted ROC curves are shown in Fig. 17.9. For each row the number of non-diseased cases was 500, the number of diseased cases was 700, and the reporting threshold was set to -1. The resulting ratings table, e.g.,  §17.11.2.1, was analyzed by Eng Java software to obtain the values listed in the remaining columns. Note the close correspondence between the RSM-AUC and the binormal fitted AUC, with the former being slightly larger; this has to do with the proper vs. improper nature of RSM and binormal model fits; proper fits are expected to have a larger AUC. The last column lists the p-value for the chi-square goodness of fit statistic. Values greater than 0.001 are generally considered good fits. [NA: the chi-square goodness of fit statistics could not be calculated because some of the cell counts were less than five.]
+
+
+Table 2 here
+
+Of interest in Table 17.2 is the observation that b <1, and the qualities of the fits are quite good (p > 0.001 is generally considered acceptable, Numerical Recipes9, 3rd edition, page 779). There is one exception: Row-9 shows what happens when  ; this makes the data almost degenerate; ROCFIT-JAVA is still able to fit it - note the very small value (0.068) of the b-parameter but it cannot calculate a goodness of fit statistic. 
+
+One expects   to exceed the binormal fitted value  . This has to do with the "proper" property of the RSM-ROC curve, which implies an ideal observer, while the binormal model predicts "improper" ROC curves, Chapter 20. For rows 2 and 3, the expected orderings are reversed, although the magnitudes of the discrepancies are small (about 1%). This is because RSM-predicted values are not subject to sampling variability as they are derived by numerical integration, Eqn. (17.25) and the numerical estimation error is very small compared to sampling error. In contrast, the estimates of   are subject to sampling variability, even though large numbers of cases were used (i.e., 500+700=1200, line 9). Row-4 repeats Row-2 with a different value of seed: this time the expected ordering is observed (RSM-AUC > binormal-AUC). 
+
+Fig. 17.9 show binormal model fitted curves for RSM-generated data. The plots are labeled by the value of Row used to generate them. The hooks in the binormal ROC curves are not easily visible (the exception is "9") but they are nevertheless present as each of the b-parameters in Table 17.2 is less than unity. The error bars are exact 95% binomial confidence intervals on the operating points. Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled "2" and "4" differ only in seed values.
+
+
+*Over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data could have arisen from two normal distributions (apart from the arbitrary monotonic transformation uncertainty that applies to all such fitting). Since the binormal model has been used successfully for almost six decades, the ability to the RSM to mimic it is an important justification for validity of the RSM.*
+
+Fig. 17.9: These plots show RSM-generated ROC operating points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. The integer label at the top of each plot corresponds to a matching row in Table 17.2. The (a, b) parameters were obtained by running lines 1 - 42 in mainRsmVsEng.R, transferring the ROC counts table data to the Eng Java program, running the Eng program and transferring the parameter values to the appropriate location, between lines 50 - 58. Once all values are populated, the plots were obtained by sourcing the file with different values for variable Row, in the integer range 1 to 9, specified at line 10. Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled "2" and "4" differ only in seed values. These plots show that over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data arose from two normal distributions. Since the binormal model has been used successfully for over three decades, the ability to the RSM to mimic it is an important justification for the validity of the RSM. 
+
+
+### Explanations of empirical observations regarding binormal parameters
+As summarized previously, there are three empirical observations: (i) b <1, (ii) b decreases as   increases and (iii)   is approximately constant for fixed experimental conditions. To not confuse with the RSM   parameter, the difference in means is denoted  , not  . 
+
+
+### Explanation for empirical observation b < 1
+The RSM-predicted ROC curves are consistent with empirical observations31, going back almost 6 decades, that observed ROC data, when fitted by the unequal variance binormal model, yield b-parameters < 1,  implying the diseased case pdf is wider than the non-diseased case pdf. The RSM provides a natural explanation for this, rather than by imposing it arbitrarily40. The reason the diseased distribution has a wider pdf is that diseased cases yield two types of z-samples, variable numbers of NL z-samples from a zero-centered unit variance normal distribution and variable numbers of LL z-samples from a  -centered unit variance normal distribution. The resulting mixture distribution is expected, when one attempts to fit it with a normal distribution, to yield standard deviation greater than 1, or, equivalently, b-parameter < 1. 
+
+Examples of RSM-generated datasets consistent with b < 1 binormal model fits were presented in Table 17.2 and Fig. 17.9. The code in mainRsmPlots.R, Online Appendix 17.D.2, displays pdfs, shown in Fig. 17.10 (A - D), for the following parameter values: (A)  ; (B)  ; (C)  and (D)  . In all cases   and  . In plots (A) and (B) the dotted curves, corresponding to diseased cases, are wider than the solid ones, corresponding to non-diseased cases, and there is a hint of mixture behavior for the dotted curve in plot (D), and bimodality is prominent for the largest   and smallest   in plot (C). The mixture distribution is expected to lead to a larger estimate of standard deviation of the assumed normal distribution. The fit would not be ideal, but it is known that for relatively small numbers of cases, as is true with clinical data, it is difficult to detect deviations from good fits; the binormal model is quite robust with respect to deviations from strict normality31. Several examples of this are evident in the goodness of fit p-values in Table 17.2, which show good binormal fits to RSM generated data even with 1200 cases. 
+
+
+Fig. 17.10: This figure provides an explanation for empirical observation that binormal model b-parameter <1. Shown are probability density functions (pdf) plots against the highest z-sample for displayed values of RSM parameters  and  ; the other parameters are   and  . The dotted curve corresponds to diseased cases and the solid one to non-diseased cases. In (A) and (B) the dotted curve is noticeably broader. In (D) there is a hint of a peak at zero, which is quite prominent in (C). The broadening and/or mixture behavior is due to the two types of z-samples occurring on diseased cases, those from NLs, which give the peak just above zero and those from LLs, which give the peak at  . When fitted by a normal distribution, the dotted curve will appear to have larger standard deviation, relative to the non-diseased cases, or equivalently, binormal model b-parameter < 1. See Online Appendix 17.G for further discussion of this and another observation made by Swets et al32. These plots were generated by mainRsmPlots.R.
+
+
+### Explanation of Swets et al' observations 
+
+More than 55 years ago, Swets et al32 noticed in non-medical imaging contexts:
+ 
+(i)	The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. 
+(ii)	The ratio  is approximately constant for a fixed set of experimental conditions.
+
+In the RSM   is the perceptual signal to noise, pSNR, of found lesions. Swets' first empirical observation implies that the b parameter should decrease with increasing  . Testing this proposition over a wide range of   using the preceding methods (i.e., based on binormal model maximum likelihood fitting, either using the Eng Java code or RocfitR) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each and convergence of the binormal model algorithm, which is problematical for larger values of   which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If   is a unit-normalized pdf its mean   and variance  are defined by:
+
+ 	.	Eqn. (17.41)
+
+The needed quantities are defined as:
+
+ 	.	Eqn. (17.42)
+
+
+The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying the two of the three parameters of the RSM under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g.,  , would allow AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. The underlying assumption is that observers, characterized by different RSM parameters, nevertheless tend to have about the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large  ) with increased performance in other areas (e.g., finding more lesions, i.e., larger  , and/or extracting greater pSNR from found lesions, i.e., larger  ).
+
+The code for this is in file mainRsmSwetsObservations.R in Online Appendix 17.G, which was used to populate Table 17.3. The table is organized into three parts, A, B and C. Part A varies   for constant RSM-AUC for  . Part B varies   for constant RSM-AUC for  . Part C varies   for constant RSM-AUC for  . The 1st column lists the constrained  , set to either 0.7 or 0.8, the 2nd and 3rd columns list the parameters that were varied, subject to the AUC constraint, followed by the empirical b-parameter and  . A similar organization applies to part B, where only   are varied and to part C where only   are varied. The number of lesions per diseased case was set to one. The function FindParamFixAuc() finds the missing RSM parameter, indicated by initializing it with NA, prior to the function call, given the two other RSM parameters. The function rsmPdfMeansAndStddevs() calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas. 
+
+Examination of Table 17.3 reveals, for both values of AUC, an inverse relation between   and b, Parts A and B, and an inverse relation between   and b, Part C.  In (C), for fixed  , the only way to improve performance is by increasing  , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of   especially in Parts A and B. 
+
+The biggest deviation from approximate constancy is observed in Part C: this could be due to unreasonably low values of  , e.g., 0.1, necessary in order to satisfy the AUC constraint. It should be noted that the Swets et al observations are based on only two datasets and they state that   = 4, their observed value, is probably not generally applicable. 
+
+	
+The empirical observation that b decreases with increasing lesion detectability is likely more generally true and the results, Table 17.3, support it. It makes physical sense if one assumes that sometimes a sample from the non-diseased distribution exceeds that from the diseased distribution. This implies the existence of two types of z-samples in diseased cases. Another explanation is the existence of heterogeneity in the distribution for diseased cases, e.g., a mix of easy and hard lesions, which too would tend to broaden the diseased distribution and make b < 1 and b decreasing with increasing lesion detectability. Putting all this together, the author makes the following prediction: if the possible location of the lesion is pre-specified (i.e., there is no location uncertainty and therefore latent NLs are eliminated) and all lesions have the same detectability, then one expects b = 1 and no dependence of b on lesion detectability. This is a fairly simple experiment to conduct using simulated Gaussian noise backgrounds and superposed Gaussian disk lesions41-43 with fixed contrast (using simulated clinical backgrounds is not recommended for this study as it could cause differences in lesion detectability depending on variations in the background in the immediate vicinity of the lesion).
+
+
+
+
+
+
+
+ 
+Table 17.3: This table is organized into 3 parts, A, B and C. The remaining parameter of the RSM, the one held constant, is shown in the second header. Part A: This show that b decreases as   increases: the last two columns in part A list the b-parameter and the    to   ratio, non-diseased to diseased. This confirms that the model has the expected behavior noted by Swets, namely b decreases as   increases and the    to   ratio is approximately constant. A similar organization applies to the other parts of the table. Part B: this shows the dependence of the b-parameter and the   to   ratio on  . Part C: this shows the dependence of the b-parameter and the   to   ratio on  . In all examples, the b-parameter decreases as   increases or   increases. [All parameters in this table represent intrinsic values.]
+
+
+### Explanation of data degeneracy
+An ROC dataset is said to be degenerate if the corresponding ROC plot does not have any interior data points. Data degeneracy is a significant problem faced by the binormal model1,6,44, e.g., ROCFIT or RSCORE-II software. Degenerate datasets cannot be analyzed by binormal model. The RSM provides a natural explanation for such datasets, and as shown in Chapter 19, such datasets are readily fitted by the RSM. The CBM model2-4 also provides an alternative explanation for the data degeneracy and a method for fitting such datasets.
+
+The reason for degenerate datasets is the existence of cases not providing any decision variable samples. Such cases are always binned in the lowest ROC:1 bin. The possibility of data degeneracy can be appreciated by examining Fig. 17.1 (in particular plots D through F, i.e., the higher values of  ). As   increases the accessible portion of the ROC curve shrinks and the curve increasingly approaches the top-left corner of the plot. The effect is particularly pronounced for observers characterized by large values of   and small values of  , i.e., the experts. For them the operating points will be clustered near the initial near-vertical section of the ROC curve. It will be difficult to get such observers to generate appreciable numbers of false positives. Instructions such as "spread your ratings"45 or the use "continuous" ratings46 may not always work; interference with the radiologist's readings style to make the data easier to analyze is undesirable. To the experimenter it will appear that the observer is not cooperating, when in fact they are being perfectly reasonable. A similar issue affected Dr. Swensson's LROC analysis method11 in which originally every case had to be assigned a "most-suspicious" region, even if the radiologist thought the case was perfectly normal: this met with resistance from radiologists. In later versions of his software, Dr. Swensson removed the forced localization requirement and instead did it in software by sampling a random number generator. Radiologists don't like to be told, "even if you believe the case is definitely normal, there must be some region that is least normal, or most suspicious". All of these sematic difficulties go away if one abandons the premise that every case must generate a z-sample.
+
+
+### Predictions of observed FROC/AFROC/LROC curves
+Besides predicting ROC, FROC and AFROC curves, as shown in this chapter, the RSM also predicts LROC curves15. Moreover, these are generally better fits to experimental data since they do not allow the AFROC and LROC curve to go continuously to FPF = 1, as do earlier models, two by the author22,23 and one by the late Dr. Swensson11. As a historical note, the FROCFIT and AFROC software developed22 by the author in 1989 was more successful at fitting microcalcification data than mass data (private communication, Prof. Heang-Ping Chan, ca. 1990). This is consistent with the premise that the microcalcification task is characterized by larger   than the mass task. Radiologists literally use a magnifying glass (a physical on or a software implementation) to search each image for the much smaller specks, and this increases the potential for finding NLs, hence the larger  . Mass detection is more a function of the global gestalt view described in the previous chapter. Larger  yields an FROC curve that traverses more to the right than the corresponding mass curve. The FROCFIT program allows the FROC curve to go far to the right and reach unit ordinate, which is not observed with mass data, but could approximate microcalcification data. 
+
+
+## Discussion / Summary {#rsm-evidence-discussion-summary}
+This chapter has detailed ROC, FROC and AFROC curves predicted by the radiological search model (RSM). All RSM-predicted curves share the constrained end-point property that is qualitatively different from previous ROC models. In the author's experience, it is a property that most researchers in this field have difficulty accepting. There is too much history going back to the early 1940s, of the ROC curve extending from (0,0) to (1,1) that one has to let go of, and this can be difficult. 
+
+The author is not aware of any direct evidence that radiologists can move the operating point continuously in the range (0,0) to (1,1) in search tasks, so the existence of such an ROC is tantamount to an assumption. Algorithmic observers that do not involve the element of search can extend continuously to (1,1). An example of an algorithmic observer not involving search is a diagnostic test that rates the results of a laboratory measurement, e.g., the A1C measure of blood glucose  for presence of a disease. If A1C ≥ 6.5% the patient is diagnosed as diabetic. By moving the threshold from infinity to –infinity, and assuming a large population of patients, one can trace out the entire ROC curve from the origin to (1,1). This is because every patient yields an A1C value. Now imagine that some finite fraction of the test results are "lost in the mail"; then the ROC curve, calculated over all patients, would have the constrained end-point property, albeit due to an unreasonable cause.
+
+The situation in medical imaging involving search tasks is qualitatively different. Not every case yields a decision variable. There is a reasonable cause for this – to render a decision variable sample the radiologist must find something suspicious to report, and if none is found, there is no decision variable to report. The ROC curve calculated over all patients would exhibit the constrained end-point property, even in the limit of an infinite number of patients. If calculated over only those patients that yielded at least one mark, the ROC curve would extend from (0,0) to (1,1) but then one would be ignoring the cases with no marks, which represent valuable information: unmarked non-diseased cases represent perfect decisions and unmarked diseased cases represent worst-case decisions.
+
+RSM-predicted ROC, FROC and AFROC curves were derived (wAFROC is implemented in the Rjafroc). These were used to demonstrate that the FROC is a poor descriptor of performance. Since almost all work to date, including some by the author47,48, has used FROC curves to measure performance, this is going to be difficulty for some to accept. The examples in Fig. 17.6 (A- F) and Fig. 17.7 (A-B) should convince one that the FROC curve is indeed a poor measure of performance. The only situation where one can safely use the FROC curve is if the two modalities produce curves extending over the same NLF range. This can happen with two variants of a CAD algorithm, but rarely with radiologist observers.
+
+A unique feature is that the RSM provides measures of search and lesion-classification performance. It bears repeating that search performance is the ability to find lesions while avoiding finding non-lesions. Search performance can be determined from the position of the ROC end-point (which in turn is determined by RSM-based fitting of ROC data, Chapter 19). The perpendicular distance between the end-point and the chance diagonal is, apart from a factor of 1.414, a measure of search performance. All ROC models that predict continuous curves extending to (1,1), imply zero search performance. 
+
+Lesion-classification performance is measured by the AUC value corresponding to the   parameter. Lesion-classification performance is the ability to discriminate between LLs and NLs, not between diseased and non-diseased cases: the latter is measured by RSM-AUC. There is a close analogy between the two ways of measuring lesion-classification performance and CAD used to find lesions in screening mammography vs. CAD used in the diagnostic context to determine if a lesion found at screening is actually malignant. The former is termed CADe, for CAD detection, which in the author's opinion, is slightly misleading as at screening lesions are found not detected ("detection" is "discover or identify the presence or existence of something ", correct localization is not necessarily implied; the more precise term is "localize"). In the diagnostic context one has CADx, for CAD diagnostic, i.e., given a specific region of the image, is the region malignant? 
+
+Search and lesion-classification performance can be used as "diagnostic aids" to optimize performance of a reader. For example, is search performance is low, then training using mainly non-diseased cases is called for, so the resident learns the different variants of non-diseased tissues that can appear to be true lesions. If lesion-classification performance is low then training with diseased cases only is called for, so the resident learns the distinguishing features characterizing true lesions from non-diseased tissues that fake true lesions.
+
+Finally, evidence for the RSM is summarized. Its correspondence to the empirical Kundel-Nodine model of visual search that is grounded in eye-tracking measurements. It reduces in the limit of large  , which guarantees that every case will yield a decision variable sample, to the binormal model; the predicted pdfs in this limit are not strictly normal, but deviations from normality would require very large sample size to demonstrate. Examples were given where even with 1200 cases the binormal model provides statistically good fits, as judged by the chi-square goodness of fit statistic, Table 17.2. Since the binormal model has proven quite successful in describing a large body of data, it satisfying that the RSM can mimic it in the limit of large  . The RSM explains most empirical results regarding binormal model fits: the common finding that b < 1; that b decreases with increasing lesion pSNR (large   and / or  ); and the finding that the difference in means divided by the difference in standard deviations is fairly constant for a fixed experimental situation, Table 17.3. The RSM explains data degeneracy, especially for radiologists with high expertise.
+
+The contaminated binormal model2-4 (CBM), Chapter 20, which models the diseased distribution as having two peaks, one at zero and the other at a constrained value, also explains the empirical observation that b-parameter < 1 and data degeneracy. Because it allows the ROC curve to go continuously to (1,1), CBM does not completely account for search performance – it accounts for search when it comes to finding lesions, but not for avoiding finding non-lesions.
+
+The author does not want to leave the impression that RSM is the ultimate model. The current model does not predict satisfaction of search (SOS) effects27-29. Attempts to incorporate SOS effects in the RSM are in the early research stage. As stated earlier, the RSM is a first-order model: a lot of interesting science remains to be uncovered.
+
+### The Wagner review
+
+The two RSM papers12,13 were honored by being included in a list of 25 papers the "Highlights of 2006" in Physics in Medicine and Biology. As stated by the publisher: "I am delighted to present a special collection of articles that highlight the very best research published in Physics in Medicine and Biology in 2006. Articles were selected for their presentation of outstanding new research, receipt of the highest praise from our international referees, and the highest number of downloads from the journal website.
+
+One of the reviewers was the late Dr. Robert ("Bob") Wagner – he had an open-minded approach to imaging science that is lacking these days, and a unique writing style. The author reproduces one of his comments with minor edits, as it pertains to the most interesting and misunderstood prediction of the RSM, namely its constrained end-point property.
+
+I'm thinking here about the straight-line piece of the ROC curve from the max to (1, 1). 
+1.	This can be thought of as resulting from two overlapping uniform distributions (thus guessing) far to the left in decision space (rather than delta functions). Please think some more about this point--because it might make better contact with the classical literature. 
+2.	BTW -- it just occurs to me (based on the classical early ROC work of Swets & co.) -- that there is a test that can resolve the issue that I struggled with in my earlier remarks. The experimenter can try to force the reader to provide further data that will fill in the space above the max point. If the results are a straight line, then the reader would just be guessing -- as implied by the present model. If the results are concave downward, then further information has been extracted from the data. This could require a great amount of data to sort out--but it's an interesting point (at least to me).
+
+
+Dr. Wagner made two interesting points. With his passing, the author has been deprived of the penetrating and incisive evaluation of his ongoing work, which the author deeply misses. Here is the author's response (ca. 2006):
+
+The need for delta functions at negative infinity can be seen from the following argument. Let us postulate two constrained width pdfs with the same shapes but different areas, centered at a common value far to the left in decision space, but not at negative infinity. These pdfs would also yield a straight-line portion to the ROC curve. However, they would be inconsistent with the search model assumption that some images yield no decision variable samples and therefore cannot be rated in bin ROC:2 or higher. Therefore, if the distributions are as postulated above then choice of a cutoff in the neighborhood of the overlap would result in some of these images being rated 2 or higher, contradicting the RSM assumption.  The delta function pdfs at negative infinity are seen to be a consequence of the search model. 
+
+One could argue that when the observer sees nothing to report then he starts guessing and indeed this would enable the observer to move along the dashed portion of the curve. This argument implies that the observer knows when the threshold is at negative infinity, at which point the observer turns on the guessing mechanism (the observer who always guesses would move along the chance diagonal). In the author's judgment, this is unreasonable. The existence of two thresholds, one for moving along the non-guessing portion and one for switching to the guessing mode would require abandoning the concept of a single decision rule. To preserve this concept one needs the delta functions at negative infinity.
+
+Regarding Dr. Wagner's second point, it would require a great amount of data to sort out whether forcing the observer to guess would fill in the dashed portion of the curve, but the author doubts it is worth the effort. Given the bad consequences of guessing (incorrect recalls) the author believes that in the clinical situation, the radiologist will never guess. If the radiologist sees nothing to report, nothing will be reported. In addition, the author believes that forcing the observer, to prove some research point, is not a good idea. 
+
+
+
+
+
+
+
+
+
+
+
+
+## References {#rsm-evidence-references}
+1.	Chakraborty DP. Computer analysis of mammography phantom images (CAMPI): An application to the measurement of microcalcification image quality of directly acquired digital images. Medical Physics. 1997;24(8):1269-1277.
+2.	Chakraborty DP, Eckert MP. Quantitative versus subjective evaluation of mammography accreditation phantom images. Medical Physics. 1995;22(2):133-143.
+3.	Chakraborty DP, Yoon H-J, Mello-Thoms C. Application of threshold-bias independent analysis to eye-tracking and FROC data. Academic Radiology. 2012;In press.
+4.	Chakraborty DP. ROC Curves predicted by a model of visual search. Phys Med Biol. 2006;51:3463–3482.
+5.	Chakraborty DP. A search model and figure of merit for observer data acquired according to the free-response paradigm. Phys Med Biol. 2006;51:3449–3462.
+
