@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-12-16}
+\date{2020-12-17}
 
 \begin{document}
 \maketitle
@@ -6385,7 +6385,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.2620587          1   0.26126177}
+\CommentTok{#> 1    1.3260812          1   0.24950358}
 \end{Highlighting}
 \end{Shaded}
 
@@ -13001,172 +13001,13 @@ ROC models assume that every case provides a finite decision variable sample. Th
 
 The point of the following exercise is to demonstrate that in certain limits RSM-generated ROC data are well fitted by the binormal model. Consider the code in mainRsmVsEng.R, Online Appendix 17.F.2, which simulates FROC data using the RSM, converts it to highest rating ROC data, bins the data into 5 bins and prints out two sets of 5 integers, the bin counts for non-diseased and diseased cases respectively, the analog of the ROC counts data in Table 4.1 in Chapter 04. The counts data are analyzed by the Eng Java program39, which implements Metz's ROCFIT program, TBA Chapter 06, yielding the binormal parameter values a, b and the goodness of fit \(\chi^2\) statistic and a p-value.
 
-STOP
+\begin{figure}
+\centering
+\includegraphics{19-rsm-evidence_files/figure-latex/rsm-evidence-binormal-plots1-1.pdf}
+\caption{\label{fig:rsm-evidence-binormal-plots1}RSM generated ROC points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. Plots 1, 2, 3.}
+\end{figure}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{K1 <-}\StringTok{ }\DecValTok{500}\NormalTok{;K2 <-}\StringTok{ }\DecValTok{700}\NormalTok{;desiredNumBins <-}\StringTok{ }\DecValTok{5}\NormalTok{;}
-\NormalTok{plotArr <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\KeywordTok{list}\NormalTok{(), }\DataTypeTok{dim =} \DecValTok{9}\NormalTok{)}
-\ControlFlowTok{for}\NormalTok{ (Row }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{) \{}
-    \ControlFlowTok{switch}\NormalTok{(Row,}
-           \StringTok{"1"}\NormalTok{ =}\StringTok{ }\NormalTok{\{seed <-}\StringTok{ }\DecValTok{1}\NormalTok{;Lmax <-}\StringTok{ }\DecValTok{1}\NormalTok{;mu <-}\StringTok{ }\FloatTok{2.0}\NormalTok{;lambda <-}\StringTok{ }\DecValTok{10}\NormalTok{;nu <-}\StringTok{ }\DecValTok{1}\NormalTok{;zeta1 <-}\StringTok{ }\DecValTok{-1}\NormalTok{\}, }\CommentTok{# Row 1}
-           \StringTok{"2"}\NormalTok{ =}\StringTok{ }\NormalTok{\{seed <-}\StringTok{ }\DecValTok{1}\NormalTok{;Lmax <-}\StringTok{ }\DecValTok{1}\NormalTok{;mu <-}\StringTok{ }\FloatTok{2.5}\NormalTok{;lambda <-}\StringTok{ }\DecValTok{10}\NormalTok{;nu <-}\StringTok{ }\DecValTok{1}\NormalTok{;zeta1 <-}\StringTok{ }\DecValTok{-1}\NormalTok{\}, }\CommentTok{# Row 2}
-           \StringTok{"3"}\NormalTok{ =}\StringTok{ }\NormalTok{\{seed <-}\StringTok{ }\DecValTok{1}\NormalTok{;Lmax <-}\StringTok{ }\DecValTok{1}\NormalTok{;mu <-}\StringTok{ }\FloatTok{3.0}\NormalTok{;lambda <-}\StringTok{ }\DecValTok{10}\NormalTok{;nu <-}\StringTok{ }\DecValTok{1}\NormalTok{;zeta1 <-}\StringTok{ }\DecValTok{-1}\NormalTok{\}, }\CommentTok{# Row 3}
-           \StringTok{"4"}\NormalTok{ =}\StringTok{ }\NormalTok{\{seed <-}\StringTok{ }\DecValTok{2}\NormalTok{;Lmax <-}\StringTok{ }\DecValTok{1}\NormalTok{;mu <-}\StringTok{ }\FloatTok{2.5}\NormalTok{;lambda <-}\StringTok{ }\DecValTok{10}\NormalTok{;nu <-}\StringTok{ }\DecValTok{1}\NormalTok{;zeta1 <-}\StringTok{ }\DecValTok{-1}\NormalTok{\}, }\CommentTok{# Row 4}
-           \StringTok{"5"}\NormalTok{ =}\StringTok{ }\NormalTok{\{seed <-}\StringTok{ }\DecValTok{2}\NormalTok{;Lmax <-}\StringTok{ }\DecValTok{2}\NormalTok{;mu <-}\StringTok{ }\FloatTok{2.0}\NormalTok{;lambda <-}\StringTok{ }\DecValTok{10}\NormalTok{;nu <-}\StringTok{ }\DecValTok{1}\NormalTok{;zeta1 <-}\StringTok{ }\DecValTok{-1}\NormalTok{\},}\CommentTok{# Row 5}
-           \StringTok{"6"}\NormalTok{ =}\StringTok{ }\NormalTok{\{seed <-}\StringTok{ }\DecValTok{2}\NormalTok{;Lmax <-}\StringTok{ }\DecValTok{2}\NormalTok{;mu <-}\StringTok{ }\FloatTok{2.5}\NormalTok{;lambda <-}\StringTok{ }\DecValTok{10}\NormalTok{;nu <-}\StringTok{ }\DecValTok{1}\NormalTok{;zeta1 <-}\StringTok{ }\DecValTok{-1}\NormalTok{\},}\CommentTok{# Row 6}
-           \StringTok{"7"}\NormalTok{ =}\StringTok{ }\NormalTok{\{seed <-}\StringTok{ }\DecValTok{2}\NormalTok{;Lmax <-}\StringTok{ }\DecValTok{2}\NormalTok{;mu <-}\StringTok{ }\FloatTok{3.0}\NormalTok{;lambda <-}\StringTok{ }\DecValTok{10}\NormalTok{;nu <-}\StringTok{ }\DecValTok{1}\NormalTok{;zeta1 <-}\StringTok{ }\DecValTok{-1}\NormalTok{\},}\CommentTok{# Row 7}
-           \StringTok{"8"}\NormalTok{ =}\StringTok{ }\NormalTok{\{seed <-}\StringTok{ }\DecValTok{2}\NormalTok{;Lmax <-}\StringTok{ }\DecValTok{2}\NormalTok{;mu <-}\StringTok{ }\FloatTok{3.0}\NormalTok{;lambda <-}\StringTok{  }\DecValTok{1}\NormalTok{;nu <-}\StringTok{ }\DecValTok{1}\NormalTok{;zeta1 <-}\StringTok{ }\DecValTok{-1}\NormalTok{\},}\CommentTok{# Row 8}
-           \StringTok{"9"}\NormalTok{ =}\StringTok{ }\NormalTok{\{seed <-}\StringTok{ }\DecValTok{2}\NormalTok{;Lmax <-}\StringTok{ }\DecValTok{2}\NormalTok{;mu <-}\StringTok{ }\FloatTok{3.0}\NormalTok{;lambda <-}\StringTok{ }\FloatTok{0.1}\NormalTok{;nu <-}\StringTok{ }\DecValTok{1}\NormalTok{;zeta1 <-}\StringTok{ }\DecValTok{-1}\NormalTok{\}}\CommentTok{# Row 9}
-\NormalTok{    )}
-    \KeywordTok{cat}\NormalTok{(}\StringTok{"K1 = "}\NormalTok{, K1, }\StringTok{", K2 = "}\NormalTok{, K2, }\StringTok{", zeta1 = "}\NormalTok{, zeta1, }\StringTok{", seed = "}\NormalTok{, seed, }
-        \StringTok{", Lmax = "}\NormalTok{, Lmax, }\StringTok{", mu = "}\NormalTok{, mu, }\StringTok{", lambda = "}\NormalTok{, lambda, }\StringTok{", nu = "}\NormalTok{, nu, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-    
-\NormalTok{    Lk2 <-}\StringTok{ }\KeywordTok{floor}\NormalTok{(}\KeywordTok{runif}\NormalTok{(K2, }\DecValTok{1}\NormalTok{, Lmax }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{))}
-\NormalTok{    nLesPerCase <-}\StringTok{ }\KeywordTok{unique}\NormalTok{(Lk2);lesDistr <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\KeywordTok{length}\NormalTok{(nLesPerCase), }\DecValTok{2}\NormalTok{))}
-    \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in}\NormalTok{ nLesPerCase) lesDistr[i, ] <-}\StringTok{ }\KeywordTok{c}\NormalTok{(i, }\KeywordTok{sum}\NormalTok{(Lk2 }\OperatorTok{==}\StringTok{ }\NormalTok{i)}\OperatorTok{/}\NormalTok{K2);lesDistr <-}\StringTok{ }\NormalTok{lesDistr[,}\DecValTok{2}\NormalTok{]}
-    
-\NormalTok{    frocDataRaw  <-}\StringTok{ }\KeywordTok{SimulateFrocDataset}\NormalTok{(mu, lambda, nu, zeta1, }\DataTypeTok{I =} \DecValTok{1}\NormalTok{, }\DataTypeTok{J =} \DecValTok{1}\NormalTok{, K1, K2, }\DataTypeTok{perCase =}\NormalTok{ Lk2, }\DataTypeTok{seed =}\NormalTok{ seed)}
-\NormalTok{    rocDataRaw <-}\StringTok{ }\KeywordTok{DfFroc2Roc}\NormalTok{(frocDataRaw)}
-    
-\NormalTok{    rocDataBinned <-}\StringTok{ }\KeywordTok{DfBinDataset}\NormalTok{(rocDataRaw, }\DataTypeTok{desiredNumBins =}\NormalTok{ desiredNumBins, }\DataTypeTok{opChType =} \StringTok{"ROC"}\NormalTok{)}
-    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(rocDataBinned}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{LL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{])) }\OperatorTok{<}\StringTok{ }\DecValTok{4}\NormalTok{) }\KeywordTok{stop}\NormalTok{(}\StringTok{"too few bins"}\NormalTok{)}
-    
-\NormalTok{    rocDataTable <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,desiredNumBins))}
-\NormalTok{    x1 <-}\StringTok{ }\KeywordTok{table}\NormalTok{(rocDataBinned}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\OperatorTok{:}\NormalTok{K1])}
-    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(x1) }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) \{}
-\NormalTok{        rocDataTable[}\DecValTok{1}\NormalTok{,] <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,x1,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{)}
-\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(x1) }\OperatorTok{==}\StringTok{ }\DecValTok{3}\NormalTok{) \{}
-\NormalTok{        rocDataTable[}\DecValTok{1}\NormalTok{,] <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, x1,}\DecValTok{0}\NormalTok{)}
-\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(x1) }\OperatorTok{==}\StringTok{ }\DecValTok{4}\NormalTok{) \{}
-\NormalTok{        rocDataTable[}\DecValTok{1}\NormalTok{,] <-}\StringTok{ }\KeywordTok{c}\NormalTok{(x1,}\DecValTok{0}\NormalTok{)}
-\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(x1) }\OperatorTok{==}\StringTok{ }\DecValTok{5}\NormalTok{) \{}
-\NormalTok{        rocDataTable[}\DecValTok{1}\NormalTok{,] <-}\StringTok{ }\NormalTok{x1}
-\NormalTok{    \} }\ControlFlowTok{else} \KeywordTok{stop}\NormalTok{(}\StringTok{"incorrect table length 1"}\NormalTok{)}
-    
-\NormalTok{    x2 <-}\StringTok{ }\KeywordTok{table}\NormalTok{(rocDataBinned}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{LL[}\DecValTok{1}\OperatorTok{:}\NormalTok{K2])}
-    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(x2) }\OperatorTok{==}\StringTok{ }\DecValTok{4}\NormalTok{) \{}
-\NormalTok{        rocDataTable[}\DecValTok{2}\NormalTok{,] <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,x2)}
-\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(x2) }\OperatorTok{==}\StringTok{ }\DecValTok{5}\NormalTok{) \{}
-\NormalTok{        rocDataTable[}\DecValTok{2}\NormalTok{,] <-}\StringTok{ }\NormalTok{x2}
-\NormalTok{    \} }\ControlFlowTok{else} \KeywordTok{stop}\NormalTok{(}\StringTok{"incorrect table length 2"}\NormalTok{)}
-    
-\NormalTok{    aucs <-}\StringTok{ }\KeywordTok{UtilAnalyticalAucsRSM}\NormalTok{(}\DataTypeTok{mu =}\NormalTok{ mu, }\DataTypeTok{lambda =}\NormalTok{ lambda, }\DataTypeTok{nu =}\NormalTok{ nu, }\DataTypeTok{zeta1 =}\NormalTok{ zeta1, }\DataTypeTok{lesDistr =}\NormalTok{ lesDistr)}
-    \KeywordTok{cat}\NormalTok{(}\StringTok{"RSM-ROC-AUC = "}\NormalTok{, aucs}\OperatorTok{$}\NormalTok{aucROC, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-    \KeywordTok{print}\NormalTok{(rocDataTable)}
-    \CommentTok{# copy the last two rows of output to Eng program; delete bracket stuff leaving numbers only with spaces; select format 3}
-    \CommentTok{# Run Program}
-    \CommentTok{# compare to table in book}
-    
-    \ControlFlowTok{switch}\NormalTok{(Row, }
-           \CommentTok{# the following values were transferred from the Eng program output after analyzing data generated }
-           \CommentTok{# by mainRsmVsEng.R using the appropriate value of Row}
-           \StringTok{"1"}\NormalTok{ =}\StringTok{ }\NormalTok{\{a <-}\StringTok{ }\FloatTok{1.002}\NormalTok{;b <-}\StringTok{ }\FloatTok{0.861}\NormalTok{\}, }\CommentTok{# Row 1}
-           \StringTok{"2"}\NormalTok{ =}\StringTok{ }\NormalTok{\{a <-}\StringTok{ }\FloatTok{1.497}\NormalTok{;b <-}\StringTok{ }\FloatTok{0.752}\NormalTok{\}, }\CommentTok{# Row 2}
-           \StringTok{"3"}\NormalTok{ =}\StringTok{ }\NormalTok{\{a <-}\StringTok{ }\FloatTok{1.928}\NormalTok{;b <-}\StringTok{ }\FloatTok{0.736}\NormalTok{\}, }\CommentTok{# Row 3}
-           \StringTok{"4"}\NormalTok{ =}\StringTok{ }\NormalTok{\{a <-}\StringTok{ }\FloatTok{1.221}\NormalTok{;b <-}\StringTok{ }\FloatTok{0.682}\NormalTok{\}, }\CommentTok{# Row 4}
-           \StringTok{"5"}\NormalTok{ =}\StringTok{ }\NormalTok{\{a <-}\StringTok{ }\FloatTok{1.250}\NormalTok{;b <-}\StringTok{ }\FloatTok{0.786}\NormalTok{\},}\CommentTok{# Row 5}
-           \StringTok{"6"}\NormalTok{ =}\StringTok{ }\NormalTok{\{a <-}\StringTok{ }\FloatTok{1.554}\NormalTok{;b <-}\StringTok{ }\FloatTok{0.646}\NormalTok{\},}\CommentTok{# Row 6}
-           \StringTok{"7"}\NormalTok{ =}\StringTok{ }\NormalTok{\{a <-}\StringTok{ }\FloatTok{2.057}\NormalTok{;b <-}\StringTok{ }\FloatTok{0.676}\NormalTok{\},}\CommentTok{# Row 7}
-           \StringTok{"8"}\NormalTok{ =}\StringTok{ }\NormalTok{\{a <-}\StringTok{ }\FloatTok{2.391}\NormalTok{;b <-}\StringTok{ }\FloatTok{0.405}\NormalTok{\},}\CommentTok{# Row 8}
-           \StringTok{"9"}\NormalTok{ =}\StringTok{ }\NormalTok{\{a <-}\StringTok{ }\FloatTok{2.015}\NormalTok{;b <-}\StringTok{ }\FloatTok{0.068}\NormalTok{\}}\CommentTok{# Row 9}
-\NormalTok{    )}
-    
-    \KeywordTok{print}\NormalTok{(}\KeywordTok{PlotBMErrBar}\NormalTok{(a, b, rocDataTable, Row))}
-\NormalTok{\}}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  1 , Lmax =  1 , mu =  2 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.7874695 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  122  179  131   41   27
-## [2,]   34  119  167  108  272
-\end{verbatim}
-
-\includegraphics{19-rsm-evidence_files/figure-latex/unnamed-chunk-2-1.pdf}
-
-\begin{verbatim}
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  1 , Lmax =  1 , mu =  2.5 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.8792042 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  257  170   45   20    8
-## [2,]   53  126  103  128  290
-\end{verbatim}
-
-\includegraphics{19-rsm-evidence_files/figure-latex/unnamed-chunk-2-2.pdf}
-
-\begin{verbatim}
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  1 , Lmax =  1 , mu =  3 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.938316 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  295  100   68   28    9
-## [2,]   25   46   78  118  433
-\end{verbatim}
-
-\includegraphics{19-rsm-evidence_files/figure-latex/unnamed-chunk-2-3.pdf}
-
-\begin{verbatim}
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  1 , mu =  2.5 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.8792042 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  151  200   74   62   13
-## [2,]   21   92   72  230  285
-\end{verbatim}
-
-\includegraphics{19-rsm-evidence_files/figure-latex/unnamed-chunk-2-4.pdf}
-
-\begin{verbatim}
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  2 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.842802 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  129  203   76   74   18
-## [2,]   24   95   73  224  284
-\end{verbatim}
-
-\includegraphics{19-rsm-evidence_files/figure-latex/unnamed-chunk-2-5.pdf}
-
-\begin{verbatim}
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  2.5 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.9175251 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  284   95   63   50    8
-## [2,]   33   52   84  244  287
-\end{verbatim}
-
-\includegraphics{19-rsm-evidence_files/figure-latex/unnamed-chunk-2-6.pdf}
-
-\begin{verbatim}
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  3 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.9634421 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  304  117   58   16    5
-## [2,]   20   28   87  129  436
-\end{verbatim}
-
-\includegraphics{19-rsm-evidence_files/figure-latex/unnamed-chunk-2-7.pdf}
-
-\begin{verbatim}
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  3 , lambda =  1 , nu =  1 
-## RSM-ROC-AUC =  0.9833318 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]    0  464   32    4    0
-## [2,]    0   16   70   98  516
-\end{verbatim}
-
-\includegraphics{19-rsm-evidence_files/figure-latex/unnamed-chunk-2-8.pdf}
-
-\begin{verbatim}
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  3 , lambda =  0.1 , nu =  1 
-## RSM-ROC-AUC =  0.9872794 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]    0  500    0    0    0
-## [2,]    0   83   88   88  441
-\end{verbatim}
-
-\includegraphics{19-rsm-evidence_files/figure-latex/unnamed-chunk-2-9.pdf}
-
+Fig. \ref{fig:rsm-evidence-binormal-plots1}:These plots show RSM-generated ROC operating points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. The integer label at the top of each plot corresponds to a matching row in Table 17.2. The (a, b) parameters were obtained by running lines 1 - 42 in mainRsmVsEng.R, transferring the ROC counts table data to the Eng Java program, running the Eng program and transferring the parameter values to the appropriate location, between lines 50 - 58. Once all values are populated, the plots were obtained by sourcing the file with different values for variable Row, in the integer range 1 to 9, specified at line 10. Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled ``2'' and ``4'' differ only in seed values. These plots show that over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data arose from two normal distributions. Since the binormal model has been used successfully for over three decades, the ability to the RSM to mimic it is an important justification for the validity of the RSM.
 Ensure that Row is set to 1 at line 10 in mainRsmVsEng.R (this selects RSM parameters in 5 columns corresponding to the same value of Row in Table 17.2). Insert a break point at line 40 and click Source yielding the following output:
 
 The shown two lines contain the ROC counts table. Copy the numbers (not the square brackets) and paste them into the input window of the Eng program, and run the program with format option three selected. It yields the Row-1 values listed in the last six columns of Table 17.2. The other rows in Table 17.2 were generated by setting Row to values 2, 3,\ldots, 9 and each time clicking source and copying the output to the Eng Java program, etc.

@@ -24,7 +24,7 @@
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2020-12-16" />
+<meta name="date" content="2020-12-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -841,131 +841,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">26.2.2</span> The binormal model is a special case of the RSM</h3>
 <p>ROC models assume that every case provides a finite decision variable sample. This is what permits the observer to continuously move the operating point to (1,1). While in general the RSM allows cases with no decision samples, one way to ensure a decision sample on every case is to use a large <span class="math inline">\(\lambda&#39;\)</span>, as in that limit every case has at least one latent NL. Under these conditions one expects the pdfs to integrate to unity and to be quasi-normal.</p>
 <p>The point of the following exercise is to demonstrate that in certain limits RSM-generated ROC data are well fitted by the binormal model. Consider the code in mainRsmVsEng.R, Online Appendix 17.F.2, which simulates FROC data using the RSM, converts it to highest rating ROC data, bins the data into 5 bins and prints out two sets of 5 integers, the bin counts for non-diseased and diseased cases respectively, the analog of the ROC counts data in Table 4.1 in Chapter 04. The counts data are analyzed by the Eng Java program39, which implements Metz’s ROCFIT program, TBA Chapter 06, yielding the binormal parameter values a, b and the goodness of fit <span class="math inline">\(\chi^2\)</span> statistic and a p-value.</p>
-<p>STOP</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="rsm-evidence.html#cb180-1"></a>K1 &lt;-<span class="st"> </span><span class="dv">500</span>;K2 &lt;-<span class="st"> </span><span class="dv">700</span>;desiredNumBins &lt;-<span class="st"> </span><span class="dv">5</span>;</span>
-<span id="cb180-2"><a href="rsm-evidence.html#cb180-2"></a>plotArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">list</span>(), <span class="dt">dim =</span> <span class="dv">9</span>)</span>
-<span id="cb180-3"><a href="rsm-evidence.html#cb180-3"></a><span class="cf">for</span> (Row <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">9</span>) {</span>
-<span id="cb180-4"><a href="rsm-evidence.html#cb180-4"></a>    <span class="cf">switch</span>(Row,</span>
-<span id="cb180-5"><a href="rsm-evidence.html#cb180-5"></a>           <span class="st">&quot;1&quot;</span> =<span class="st"> </span>{seed &lt;-<span class="st"> </span><span class="dv">1</span>;Lmax &lt;-<span class="st"> </span><span class="dv">1</span>;mu &lt;-<span class="st"> </span><span class="fl">2.0</span>;lambda &lt;-<span class="st"> </span><span class="dv">10</span>;nu &lt;-<span class="st"> </span><span class="dv">1</span>;zeta1 &lt;-<span class="st"> </span><span class="dv">-1</span>}, <span class="co"># Row 1</span></span>
-<span id="cb180-6"><a href="rsm-evidence.html#cb180-6"></a>           <span class="st">&quot;2&quot;</span> =<span class="st"> </span>{seed &lt;-<span class="st"> </span><span class="dv">1</span>;Lmax &lt;-<span class="st"> </span><span class="dv">1</span>;mu &lt;-<span class="st"> </span><span class="fl">2.5</span>;lambda &lt;-<span class="st"> </span><span class="dv">10</span>;nu &lt;-<span class="st"> </span><span class="dv">1</span>;zeta1 &lt;-<span class="st"> </span><span class="dv">-1</span>}, <span class="co"># Row 2</span></span>
-<span id="cb180-7"><a href="rsm-evidence.html#cb180-7"></a>           <span class="st">&quot;3&quot;</span> =<span class="st"> </span>{seed &lt;-<span class="st"> </span><span class="dv">1</span>;Lmax &lt;-<span class="st"> </span><span class="dv">1</span>;mu &lt;-<span class="st"> </span><span class="fl">3.0</span>;lambda &lt;-<span class="st"> </span><span class="dv">10</span>;nu &lt;-<span class="st"> </span><span class="dv">1</span>;zeta1 &lt;-<span class="st"> </span><span class="dv">-1</span>}, <span class="co"># Row 3</span></span>
-<span id="cb180-8"><a href="rsm-evidence.html#cb180-8"></a>           <span class="st">&quot;4&quot;</span> =<span class="st"> </span>{seed &lt;-<span class="st"> </span><span class="dv">2</span>;Lmax &lt;-<span class="st"> </span><span class="dv">1</span>;mu &lt;-<span class="st"> </span><span class="fl">2.5</span>;lambda &lt;-<span class="st"> </span><span class="dv">10</span>;nu &lt;-<span class="st"> </span><span class="dv">1</span>;zeta1 &lt;-<span class="st"> </span><span class="dv">-1</span>}, <span class="co"># Row 4</span></span>
-<span id="cb180-9"><a href="rsm-evidence.html#cb180-9"></a>           <span class="st">&quot;5&quot;</span> =<span class="st"> </span>{seed &lt;-<span class="st"> </span><span class="dv">2</span>;Lmax &lt;-<span class="st"> </span><span class="dv">2</span>;mu &lt;-<span class="st"> </span><span class="fl">2.0</span>;lambda &lt;-<span class="st"> </span><span class="dv">10</span>;nu &lt;-<span class="st"> </span><span class="dv">1</span>;zeta1 &lt;-<span class="st"> </span><span class="dv">-1</span>},<span class="co"># Row 5</span></span>
-<span id="cb180-10"><a href="rsm-evidence.html#cb180-10"></a>           <span class="st">&quot;6&quot;</span> =<span class="st"> </span>{seed &lt;-<span class="st"> </span><span class="dv">2</span>;Lmax &lt;-<span class="st"> </span><span class="dv">2</span>;mu &lt;-<span class="st"> </span><span class="fl">2.5</span>;lambda &lt;-<span class="st"> </span><span class="dv">10</span>;nu &lt;-<span class="st"> </span><span class="dv">1</span>;zeta1 &lt;-<span class="st"> </span><span class="dv">-1</span>},<span class="co"># Row 6</span></span>
-<span id="cb180-11"><a href="rsm-evidence.html#cb180-11"></a>           <span class="st">&quot;7&quot;</span> =<span class="st"> </span>{seed &lt;-<span class="st"> </span><span class="dv">2</span>;Lmax &lt;-<span class="st"> </span><span class="dv">2</span>;mu &lt;-<span class="st"> </span><span class="fl">3.0</span>;lambda &lt;-<span class="st"> </span><span class="dv">10</span>;nu &lt;-<span class="st"> </span><span class="dv">1</span>;zeta1 &lt;-<span class="st"> </span><span class="dv">-1</span>},<span class="co"># Row 7</span></span>
-<span id="cb180-12"><a href="rsm-evidence.html#cb180-12"></a>           <span class="st">&quot;8&quot;</span> =<span class="st"> </span>{seed &lt;-<span class="st"> </span><span class="dv">2</span>;Lmax &lt;-<span class="st"> </span><span class="dv">2</span>;mu &lt;-<span class="st"> </span><span class="fl">3.0</span>;lambda &lt;-<span class="st">  </span><span class="dv">1</span>;nu &lt;-<span class="st"> </span><span class="dv">1</span>;zeta1 &lt;-<span class="st"> </span><span class="dv">-1</span>},<span class="co"># Row 8</span></span>
-<span id="cb180-13"><a href="rsm-evidence.html#cb180-13"></a>           <span class="st">&quot;9&quot;</span> =<span class="st"> </span>{seed &lt;-<span class="st"> </span><span class="dv">2</span>;Lmax &lt;-<span class="st"> </span><span class="dv">2</span>;mu &lt;-<span class="st"> </span><span class="fl">3.0</span>;lambda &lt;-<span class="st"> </span><span class="fl">0.1</span>;nu &lt;-<span class="st"> </span><span class="dv">1</span>;zeta1 &lt;-<span class="st"> </span><span class="dv">-1</span>}<span class="co"># Row 9</span></span>
-<span id="cb180-14"><a href="rsm-evidence.html#cb180-14"></a>    )</span>
-<span id="cb180-15"><a href="rsm-evidence.html#cb180-15"></a>    <span class="kw">cat</span>(<span class="st">&quot;K1 = &quot;</span>, K1, <span class="st">&quot;, K2 = &quot;</span>, K2, <span class="st">&quot;, zeta1 = &quot;</span>, zeta1, <span class="st">&quot;, seed = &quot;</span>, seed, </span>
-<span id="cb180-16"><a href="rsm-evidence.html#cb180-16"></a>        <span class="st">&quot;, Lmax = &quot;</span>, Lmax, <span class="st">&quot;, mu = &quot;</span>, mu, <span class="st">&quot;, lambda = &quot;</span>, lambda, <span class="st">&quot;, nu = &quot;</span>, nu, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb180-17"><a href="rsm-evidence.html#cb180-17"></a>    </span>
-<span id="cb180-18"><a href="rsm-evidence.html#cb180-18"></a>    Lk2 &lt;-<span class="st"> </span><span class="kw">floor</span>(<span class="kw">runif</span>(K2, <span class="dv">1</span>, Lmax <span class="op">+</span><span class="st"> </span><span class="dv">1</span>))</span>
-<span id="cb180-19"><a href="rsm-evidence.html#cb180-19"></a>    nLesPerCase &lt;-<span class="st"> </span><span class="kw">unique</span>(Lk2);lesDistr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="kw">length</span>(nLesPerCase), <span class="dv">2</span>))</span>
-<span id="cb180-20"><a href="rsm-evidence.html#cb180-20"></a>    <span class="cf">for</span> (i <span class="cf">in</span> nLesPerCase) lesDistr[i, ] &lt;-<span class="st"> </span><span class="kw">c</span>(i, <span class="kw">sum</span>(Lk2 <span class="op">==</span><span class="st"> </span>i)<span class="op">/</span>K2);lesDistr &lt;-<span class="st"> </span>lesDistr[,<span class="dv">2</span>]</span>
-<span id="cb180-21"><a href="rsm-evidence.html#cb180-21"></a>    </span>
-<span id="cb180-22"><a href="rsm-evidence.html#cb180-22"></a>    frocDataRaw  &lt;-<span class="st"> </span><span class="kw">SimulateFrocDataset</span>(mu, lambda, nu, zeta1, <span class="dt">I =</span> <span class="dv">1</span>, <span class="dt">J =</span> <span class="dv">1</span>, K1, K2, <span class="dt">perCase =</span> Lk2, <span class="dt">seed =</span> seed)</span>
-<span id="cb180-23"><a href="rsm-evidence.html#cb180-23"></a>    rocDataRaw &lt;-<span class="st"> </span><span class="kw">DfFroc2Roc</span>(frocDataRaw)</span>
-<span id="cb180-24"><a href="rsm-evidence.html#cb180-24"></a>    </span>
-<span id="cb180-25"><a href="rsm-evidence.html#cb180-25"></a>    rocDataBinned &lt;-<span class="st"> </span><span class="kw">DfBinDataset</span>(rocDataRaw, <span class="dt">desiredNumBins =</span> desiredNumBins, <span class="dt">opChType =</span> <span class="st">&quot;ROC&quot;</span>)</span>
-<span id="cb180-26"><a href="rsm-evidence.html#cb180-26"></a>    <span class="cf">if</span> (<span class="kw">length</span>(<span class="kw">unique</span>(rocDataBinned<span class="op">$</span>ratings<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>])) <span class="op">&lt;</span><span class="st"> </span><span class="dv">4</span>) <span class="kw">stop</span>(<span class="st">&quot;too few bins&quot;</span>)</span>
-<span id="cb180-27"><a href="rsm-evidence.html#cb180-27"></a>    </span>
-<span id="cb180-28"><a href="rsm-evidence.html#cb180-28"></a>    rocDataTable &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,desiredNumBins))</span>
-<span id="cb180-29"><a href="rsm-evidence.html#cb180-29"></a>    x1 &lt;-<span class="st"> </span><span class="kw">table</span>(rocDataBinned<span class="op">$</span>ratings<span class="op">$</span>NL[<span class="dv">1</span><span class="op">:</span>K1])</span>
-<span id="cb180-30"><a href="rsm-evidence.html#cb180-30"></a>    <span class="cf">if</span> (<span class="kw">length</span>(x1) <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) {</span>
-<span id="cb180-31"><a href="rsm-evidence.html#cb180-31"></a>        rocDataTable[<span class="dv">1</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,x1,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</span>
-<span id="cb180-32"><a href="rsm-evidence.html#cb180-32"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="kw">length</span>(x1) <span class="op">==</span><span class="st"> </span><span class="dv">3</span>) {</span>
-<span id="cb180-33"><a href="rsm-evidence.html#cb180-33"></a>        rocDataTable[<span class="dv">1</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, x1,<span class="dv">0</span>)</span>
-<span id="cb180-34"><a href="rsm-evidence.html#cb180-34"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="kw">length</span>(x1) <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) {</span>
-<span id="cb180-35"><a href="rsm-evidence.html#cb180-35"></a>        rocDataTable[<span class="dv">1</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(x1,<span class="dv">0</span>)</span>
-<span id="cb180-36"><a href="rsm-evidence.html#cb180-36"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="kw">length</span>(x1) <span class="op">==</span><span class="st"> </span><span class="dv">5</span>) {</span>
-<span id="cb180-37"><a href="rsm-evidence.html#cb180-37"></a>        rocDataTable[<span class="dv">1</span>,] &lt;-<span class="st"> </span>x1</span>
-<span id="cb180-38"><a href="rsm-evidence.html#cb180-38"></a>    } <span class="cf">else</span> <span class="kw">stop</span>(<span class="st">&quot;incorrect table length 1&quot;</span>)</span>
-<span id="cb180-39"><a href="rsm-evidence.html#cb180-39"></a>    </span>
-<span id="cb180-40"><a href="rsm-evidence.html#cb180-40"></a>    x2 &lt;-<span class="st"> </span><span class="kw">table</span>(rocDataBinned<span class="op">$</span>ratings<span class="op">$</span>LL[<span class="dv">1</span><span class="op">:</span>K2])</span>
-<span id="cb180-41"><a href="rsm-evidence.html#cb180-41"></a>    <span class="cf">if</span> (<span class="kw">length</span>(x2) <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) {</span>
-<span id="cb180-42"><a href="rsm-evidence.html#cb180-42"></a>        rocDataTable[<span class="dv">2</span>,] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,x2)</span>
-<span id="cb180-43"><a href="rsm-evidence.html#cb180-43"></a>    } <span class="cf">else</span> <span class="cf">if</span> (<span class="kw">length</span>(x2) <span class="op">==</span><span class="st"> </span><span class="dv">5</span>) {</span>
-<span id="cb180-44"><a href="rsm-evidence.html#cb180-44"></a>        rocDataTable[<span class="dv">2</span>,] &lt;-<span class="st"> </span>x2</span>
-<span id="cb180-45"><a href="rsm-evidence.html#cb180-45"></a>    } <span class="cf">else</span> <span class="kw">stop</span>(<span class="st">&quot;incorrect table length 2&quot;</span>)</span>
-<span id="cb180-46"><a href="rsm-evidence.html#cb180-46"></a>    </span>
-<span id="cb180-47"><a href="rsm-evidence.html#cb180-47"></a>    aucs &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(<span class="dt">mu =</span> mu, <span class="dt">lambda =</span> lambda, <span class="dt">nu =</span> nu, <span class="dt">zeta1 =</span> zeta1, <span class="dt">lesDistr =</span> lesDistr)</span>
-<span id="cb180-48"><a href="rsm-evidence.html#cb180-48"></a>    <span class="kw">cat</span>(<span class="st">&quot;RSM-ROC-AUC = &quot;</span>, aucs<span class="op">$</span>aucROC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb180-49"><a href="rsm-evidence.html#cb180-49"></a>    <span class="kw">print</span>(rocDataTable)</span>
-<span id="cb180-50"><a href="rsm-evidence.html#cb180-50"></a>    <span class="co"># copy the last two rows of output to Eng program; delete bracket stuff leaving numbers only with spaces; select format 3</span></span>
-<span id="cb180-51"><a href="rsm-evidence.html#cb180-51"></a>    <span class="co"># Run Program</span></span>
-<span id="cb180-52"><a href="rsm-evidence.html#cb180-52"></a>    <span class="co"># compare to table in book</span></span>
-<span id="cb180-53"><a href="rsm-evidence.html#cb180-53"></a>    </span>
-<span id="cb180-54"><a href="rsm-evidence.html#cb180-54"></a>    <span class="cf">switch</span>(Row, </span>
-<span id="cb180-55"><a href="rsm-evidence.html#cb180-55"></a>           <span class="co"># the following values were transferred from the Eng program output after analyzing data generated </span></span>
-<span id="cb180-56"><a href="rsm-evidence.html#cb180-56"></a>           <span class="co"># by mainRsmVsEng.R using the appropriate value of Row</span></span>
-<span id="cb180-57"><a href="rsm-evidence.html#cb180-57"></a>           <span class="st">&quot;1&quot;</span> =<span class="st"> </span>{a &lt;-<span class="st"> </span><span class="fl">1.002</span>;b &lt;-<span class="st"> </span><span class="fl">0.861</span>}, <span class="co"># Row 1</span></span>
-<span id="cb180-58"><a href="rsm-evidence.html#cb180-58"></a>           <span class="st">&quot;2&quot;</span> =<span class="st"> </span>{a &lt;-<span class="st"> </span><span class="fl">1.497</span>;b &lt;-<span class="st"> </span><span class="fl">0.752</span>}, <span class="co"># Row 2</span></span>
-<span id="cb180-59"><a href="rsm-evidence.html#cb180-59"></a>           <span class="st">&quot;3&quot;</span> =<span class="st"> </span>{a &lt;-<span class="st"> </span><span class="fl">1.928</span>;b &lt;-<span class="st"> </span><span class="fl">0.736</span>}, <span class="co"># Row 3</span></span>
-<span id="cb180-60"><a href="rsm-evidence.html#cb180-60"></a>           <span class="st">&quot;4&quot;</span> =<span class="st"> </span>{a &lt;-<span class="st"> </span><span class="fl">1.221</span>;b &lt;-<span class="st"> </span><span class="fl">0.682</span>}, <span class="co"># Row 4</span></span>
-<span id="cb180-61"><a href="rsm-evidence.html#cb180-61"></a>           <span class="st">&quot;5&quot;</span> =<span class="st"> </span>{a &lt;-<span class="st"> </span><span class="fl">1.250</span>;b &lt;-<span class="st"> </span><span class="fl">0.786</span>},<span class="co"># Row 5</span></span>
-<span id="cb180-62"><a href="rsm-evidence.html#cb180-62"></a>           <span class="st">&quot;6&quot;</span> =<span class="st"> </span>{a &lt;-<span class="st"> </span><span class="fl">1.554</span>;b &lt;-<span class="st"> </span><span class="fl">0.646</span>},<span class="co"># Row 6</span></span>
-<span id="cb180-63"><a href="rsm-evidence.html#cb180-63"></a>           <span class="st">&quot;7&quot;</span> =<span class="st"> </span>{a &lt;-<span class="st"> </span><span class="fl">2.057</span>;b &lt;-<span class="st"> </span><span class="fl">0.676</span>},<span class="co"># Row 7</span></span>
-<span id="cb180-64"><a href="rsm-evidence.html#cb180-64"></a>           <span class="st">&quot;8&quot;</span> =<span class="st"> </span>{a &lt;-<span class="st"> </span><span class="fl">2.391</span>;b &lt;-<span class="st"> </span><span class="fl">0.405</span>},<span class="co"># Row 8</span></span>
-<span id="cb180-65"><a href="rsm-evidence.html#cb180-65"></a>           <span class="st">&quot;9&quot;</span> =<span class="st"> </span>{a &lt;-<span class="st"> </span><span class="fl">2.015</span>;b &lt;-<span class="st"> </span><span class="fl">0.068</span>}<span class="co"># Row 9</span></span>
-<span id="cb180-66"><a href="rsm-evidence.html#cb180-66"></a>    )</span>
-<span id="cb180-67"><a href="rsm-evidence.html#cb180-67"></a>    </span>
-<span id="cb180-68"><a href="rsm-evidence.html#cb180-68"></a>    <span class="kw">print</span>(<span class="kw">PlotBMErrBar</span>(a, b, rocDataTable, Row))</span>
-<span id="cb180-69"><a href="rsm-evidence.html#cb180-69"></a>}</span></code></pre></div>
-<pre><code>## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  1 , Lmax =  1 , mu =  2 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.7874695 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  122  179  131   41   27
-## [2,]   34  119  167  108  272</code></pre>
-<p><img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<pre><code>## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  1 , Lmax =  1 , mu =  2.5 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.8792042 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  257  170   45   20    8
-## [2,]   53  126  103  128  290</code></pre>
-<p><img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
-<pre><code>## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  1 , Lmax =  1 , mu =  3 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.938316 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  295  100   68   28    9
-## [2,]   25   46   78  118  433</code></pre>
-<p><img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-3.png" width="672" /></p>
-<pre><code>## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  1 , mu =  2.5 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.8792042 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  151  200   74   62   13
-## [2,]   21   92   72  230  285</code></pre>
-<p><img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-4.png" width="672" /></p>
-<pre><code>## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  2 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.842802 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  129  203   76   74   18
-## [2,]   24   95   73  224  284</code></pre>
-<p><img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-5.png" width="672" /></p>
-<pre><code>## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  2.5 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.9175251 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  284   95   63   50    8
-## [2,]   33   52   84  244  287</code></pre>
-<p><img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-6.png" width="672" /></p>
-<pre><code>## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  3 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.9634421 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  304  117   58   16    5
-## [2,]   20   28   87  129  436</code></pre>
-<p><img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-7.png" width="672" /></p>
-<pre><code>## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  3 , lambda =  1 , nu =  1 
-## RSM-ROC-AUC =  0.9833318 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]    0  464   32    4    0
-## [2,]    0   16   70   98  516</code></pre>
-<p><img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-8.png" width="672" /></p>
-<pre><code>## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  3 , lambda =  0.1 , nu =  1 
-## RSM-ROC-AUC =  0.9872794 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]    0  500    0    0    0
-## [2,]    0   83   88   88  441</code></pre>
-<p><img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-9.png" width="672" /></p>
-<p>Ensure that Row is set to 1 at line 10 in mainRsmVsEng.R (this selects RSM parameters in 5 columns corresponding to the same value of Row in Table 17.2). Insert a break point at line 40 and click Source yielding the following output:</p>
+<div class="figure"><span id="fig:rsm-evidence-binormal-plots1"></span>
+<img src="19-rsm-evidence_files/figure-html/rsm-evidence-binormal-plots1-1.png" alt="RSM generated ROC points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. Plots 1, 2, 3." width="672" />
+<p class="caption">
+FIGURE 26.1: RSM generated ROC points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. Plots 1, 2, 3.
+</p>
+</div>
+<p>Fig. <a href="rsm-evidence.html#fig:rsm-evidence-binormal-plots1">26.1</a>:These plots show RSM-generated ROC operating points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. The integer label at the top of each plot corresponds to a matching row in Table 17.2. The (a, b) parameters were obtained by running lines 1 - 42 in mainRsmVsEng.R, transferring the ROC counts table data to the Eng Java program, running the Eng program and transferring the parameter values to the appropriate location, between lines 50 - 58. Once all values are populated, the plots were obtained by sourcing the file with different values for variable Row, in the integer range 1 to 9, specified at line 10. Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled “2” and “4” differ only in seed values. These plots show that over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data arose from two normal distributions. Since the binormal model has been used successfully for over three decades, the ability to the RSM to mimic it is an important justification for the validity of the RSM.
+Ensure that Row is set to 1 at line 10 in mainRsmVsEng.R (this selects RSM parameters in 5 columns corresponding to the same value of Row in Table 17.2). Insert a break point at line 40 and click Source yielding the following output:</p>
 <p>The shown two lines contain the ROC counts table. Copy the numbers (not the square brackets) and paste them into the input window of the Eng program, and run the program with format option three selected. It yields the Row-1 values listed in the last six columns of Table 17.2. The other rows in Table 17.2 were generated by setting Row to values 2, 3,…, 9 and each time clicking source and copying the output to the Eng Java program, etc.</p>
 <p>The (a, b) binormal parameters were transferred to the appropriate location, between lines 50 – 58 in mainRsmVsEng.R. Once all values are populated, the plots shown in Fig. 17.8 were obtained by exiting debug mode, clearing any breakpoints and sourcing the program with different values for variable Row, in the integer range 1 to 9. All this could have been automated using RocfitR.R, Chapter 06, but the author wanted a direct comparison of RSM prediction vs. binormal fits using Metz’s code.</p>
 <p>These plots show that ROC data generated by the RSM are well fitted by the binormal model. The p-values of the goodness of fit statistic are all in the range of what is considered acceptable fits to a model.</p>

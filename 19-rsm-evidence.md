@@ -33,171 +33,18 @@ The point of the following exercise is to demonstrate that in certain limits RSM
 
 
 
-STOP
 
 
-```r
-K1 <- 500;K2 <- 700;desiredNumBins <- 5;
-plotArr <- array(list(), dim = 9)
-for (Row in 1:9) {
-    switch(Row,
-           "1" = {seed <- 1;Lmax <- 1;mu <- 2.0;lambda <- 10;nu <- 1;zeta1 <- -1}, # Row 1
-           "2" = {seed <- 1;Lmax <- 1;mu <- 2.5;lambda <- 10;nu <- 1;zeta1 <- -1}, # Row 2
-           "3" = {seed <- 1;Lmax <- 1;mu <- 3.0;lambda <- 10;nu <- 1;zeta1 <- -1}, # Row 3
-           "4" = {seed <- 2;Lmax <- 1;mu <- 2.5;lambda <- 10;nu <- 1;zeta1 <- -1}, # Row 4
-           "5" = {seed <- 2;Lmax <- 2;mu <- 2.0;lambda <- 10;nu <- 1;zeta1 <- -1},# Row 5
-           "6" = {seed <- 2;Lmax <- 2;mu <- 2.5;lambda <- 10;nu <- 1;zeta1 <- -1},# Row 6
-           "7" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <- 10;nu <- 1;zeta1 <- -1},# Row 7
-           "8" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <-  1;nu <- 1;zeta1 <- -1},# Row 8
-           "9" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <- 0.1;nu <- 1;zeta1 <- -1}# Row 9
-    )
-    cat("K1 = ", K1, ", K2 = ", K2, ", zeta1 = ", zeta1, ", seed = ", seed, 
-        ", Lmax = ", Lmax, ", mu = ", mu, ", lambda = ", lambda, ", nu = ", nu, "\n")
-    
-    Lk2 <- floor(runif(K2, 1, Lmax + 1))
-    nLesPerCase <- unique(Lk2);lesDistr <- array(dim = c(length(nLesPerCase), 2))
-    for (i in nLesPerCase) lesDistr[i, ] <- c(i, sum(Lk2 == i)/K2);lesDistr <- lesDistr[,2]
-    
-    frocDataRaw  <- SimulateFrocDataset(mu, lambda, nu, zeta1, I = 1, J = 1, K1, K2, perCase = Lk2, seed = seed)
-    rocDataRaw <- DfFroc2Roc(frocDataRaw)
-    
-    rocDataBinned <- DfBinDataset(rocDataRaw, desiredNumBins = desiredNumBins, opChType = "ROC")
-    if (length(unique(rocDataBinned$ratings$LL[1,1,,1])) < 4) stop("too few bins")
-    
-    rocDataTable <- array(dim = c(2,desiredNumBins))
-    x1 <- table(rocDataBinned$ratings$NL[1:K1])
-    if (length(x1) == 1) {
-        rocDataTable[1,] <- c(0,x1,0,0,0)
-    } else if (length(x1) == 3) {
-        rocDataTable[1,] <- c(0, x1,0)
-    } else if (length(x1) == 4) {
-        rocDataTable[1,] <- c(x1,0)
-    } else if (length(x1) == 5) {
-        rocDataTable[1,] <- x1
-    } else stop("incorrect table length 1")
-    
-    x2 <- table(rocDataBinned$ratings$LL[1:K2])
-    if (length(x2) == 4) {
-        rocDataTable[2,] <- c(0,x2)
-    } else if (length(x2) == 5) {
-        rocDataTable[2,] <- x2
-    } else stop("incorrect table length 2")
-    
-    aucs <- UtilAnalyticalAucsRSM(mu = mu, lambda = lambda, nu = nu, zeta1 = zeta1, lesDistr = lesDistr)
-    cat("RSM-ROC-AUC = ", aucs$aucROC, "\n")
-    print(rocDataTable)
-    # copy the last two rows of output to Eng program; delete bracket stuff leaving numbers only with spaces; select format 3
-    # Run Program
-    # compare to table in book
-    
-    switch(Row, 
-           # the following values were transferred from the Eng program output after analyzing data generated 
-           # by mainRsmVsEng.R using the appropriate value of Row
-           "1" = {a <- 1.002;b <- 0.861}, # Row 1
-           "2" = {a <- 1.497;b <- 0.752}, # Row 2
-           "3" = {a <- 1.928;b <- 0.736}, # Row 3
-           "4" = {a <- 1.221;b <- 0.682}, # Row 4
-           "5" = {a <- 1.250;b <- 0.786},# Row 5
-           "6" = {a <- 1.554;b <- 0.646},# Row 6
-           "7" = {a <- 2.057;b <- 0.676},# Row 7
-           "8" = {a <- 2.391;b <- 0.405},# Row 8
-           "9" = {a <- 2.015;b <- 0.068}# Row 9
-    )
-    
-    print(PlotBMErrBar(a, b, rocDataTable, Row))
-}
-```
 
-```
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  1 , Lmax =  1 , mu =  2 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.7874695 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  122  179  131   41   27
-## [2,]   34  119  167  108  272
-```
 
-<img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+<div class="figure">
+<img src="19-rsm-evidence_files/figure-html/rsm-evidence-binormal-plots1-1.png" alt="RSM generated ROC points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. Plots 1, 2, 3." width="672" />
+<p class="caption">(\#fig:rsm-evidence-binormal-plots1)RSM generated ROC points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. Plots 1, 2, 3.</p>
+</div>
 
-```
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  1 , Lmax =  1 , mu =  2.5 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.8792042 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  257  170   45   20    8
-## [2,]   53  126  103  128  290
-```
 
-<img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-2.png" width="672" />
 
-```
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  1 , Lmax =  1 , mu =  3 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.938316 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  295  100   68   28    9
-## [2,]   25   46   78  118  433
-```
-
-<img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-3.png" width="672" />
-
-```
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  1 , mu =  2.5 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.8792042 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  151  200   74   62   13
-## [2,]   21   92   72  230  285
-```
-
-<img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-4.png" width="672" />
-
-```
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  2 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.842802 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  129  203   76   74   18
-## [2,]   24   95   73  224  284
-```
-
-<img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-5.png" width="672" />
-
-```
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  2.5 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.9175251 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  284   95   63   50    8
-## [2,]   33   52   84  244  287
-```
-
-<img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-6.png" width="672" />
-
-```
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  3 , lambda =  10 , nu =  1 
-## RSM-ROC-AUC =  0.9634421 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]  304  117   58   16    5
-## [2,]   20   28   87  129  436
-```
-
-<img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-7.png" width="672" />
-
-```
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  3 , lambda =  1 , nu =  1 
-## RSM-ROC-AUC =  0.9833318 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]    0  464   32    4    0
-## [2,]    0   16   70   98  516
-```
-
-<img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-8.png" width="672" />
-
-```
-## K1 =  500 , K2 =  700 , zeta1 =  -1 , seed =  2 , Lmax =  2 , mu =  3 , lambda =  0.1 , nu =  1 
-## RSM-ROC-AUC =  0.9872794 
-##      [,1] [,2] [,3] [,4] [,5]
-## [1,]    0  500    0    0    0
-## [2,]    0   83   88   88  441
-```
-
-<img src="19-rsm-evidence_files/figure-html/unnamed-chunk-2-9.png" width="672" />
-
+Fig. \@ref(fig:rsm-evidence-binormal-plots1):These plots show RSM-generated ROC operating points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. The integer label at the top of each plot corresponds to a matching row in Table 17.2. The (a, b) parameters were obtained by running lines 1 - 42 in mainRsmVsEng.R, transferring the ROC counts table data to the Eng Java program, running the Eng program and transferring the parameter values to the appropriate location, between lines 50 - 58. Once all values are populated, the plots were obtained by sourcing the file with different values for variable Row, in the integer range 1 to 9, specified at line 10. Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled "2" and "4" differ only in seed values. These plots show that over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data arose from two normal distributions. Since the binormal model has been used successfully for over three decades, the ability to the RSM to mimic it is an important justification for the validity of the RSM.
 Ensure that Row is set to 1 at line 10 in mainRsmVsEng.R (this selects RSM parameters in 5 columns corresponding to the same value of Row in Table 17.2). Insert a break point at line 40 and click Source yielding the following output:
 
 
