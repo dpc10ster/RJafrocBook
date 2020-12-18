@@ -331,7 +331,7 @@ The right hand side of Eqn. \@ref(eq:rsm-predictions-auc) can be evaluated using
 
 <div class="figure" style="text-align: center">
 <img src="images/rsm-predictions/util-analytical-aucs-rsm.png" alt="Help file for function UtilAnalyticalAucsRSM."  />
-<p class="caption">(\#fig:frocCrTruth)Help file for function UtilAnalyticalAucsRSM.</p>
+<p class="caption">(\#fig:rsm-predictions-help)Help file for function UtilAnalyticalAucsRSM.</p>
 </div>
  
 The arguments to the function are the intrinsic RSM parameters $\mu$, $\lambda$ and $\nu$. The default value of $\zeta_1$ is used, namely $-\infty$. ^[The AUCs depend on the value of $\zeta_1$; this is used in `RJafrocBook` to optimize the performance of a CAD algorithm, i.e., determine the optimal reporting threshold.] The function also needs to know the lesion distribution `lesDistr`. In  the following it is supplied as the vector `c(0.5, 0.3, 0.2)`, meaning fraction 0.5 of diseased cases have one lesion, fraction 0.3 have two lesions and fraction 0.2 have three lesions. Finally, the function needs to know the lesion weights. In the following the default value, zero, is used, which gives equal weights to all lesions. The function returns a list containing the AUCs under the ROC, the AFROC and the weighted AFROC. TBA!! With equal weights the AFROC and the wAFROC AUCs are identical. 
