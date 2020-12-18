@@ -1,4 +1,4 @@
-# Evidence for the radiological search model {#rsm-evidence}
+# Validity of the RSM {#rsm-evidence}
 
 
 ```{r setup, include=FALSE}
@@ -14,9 +14,8 @@ library(here)
 
 ## Introduction {#rsm-evidence-intro}
 
-This chapter details the evidence for the validity of the radiological search model. 
+This chapter details the evidence for the validity of the radiological search model (RSM). 
 
-## Evidence for the validity of the RSM {#rsm-evidence-validity}
 Listed below are reasons arguing for the validity of the RSM. 
 
 1.	Its correspondence to the empirical Kundel-Nodine model of radiological search. 
@@ -30,23 +29,15 @@ c.	The empirical observation32, that the difference in means of the two pdfs div
 
 As described in Chapter 20, the CBM model explains #3(a) and #4 while the bigamma model5 explains #3(c).
 
-### Correspondence to the Kundel-Nodine model {#rsm-predictions-corresponence-kundel-nodine}
+## Correspondence to the Kundel-Nodine model {#rsm-predictions-corresponence-kundel-nodine}
 Perhaps the strongest evidence for the validity of the RSM is its correspondence to the Kundel-Nodine model of radiological search [@RN1533; @RN1388; @RN438; @RN1663], which in turn is derived from eye-tracking measurements made on radiologists while they perform diagnostic tasks. These show that radiologists identify suspicious regions in a short time and this ability corresponds to the $\lambda', \nu'$ parameters of the RSM. Having found suspicious regions, the next activity uncovered by eye-tracking measurements is the detailed examination of each suspicious region in order to determine if it is a significant finding. This is where the z-sample is calculated, and this process is modeled by two unit normal distributions separated by the $\mu$ parameter of the RSM. 
 
 Other ROC models do not share this close correspondence. The CBM model comes closest – it models the possibility that lesions are found, which is part of search performance, but the other part of search performance, namely the ability to avoid finding NLs, is not modeled. Like other ROC models, it predicts that the point (1,1) is continuously accessible to observer, which implies zero search performance, Fig. 17.6.
 
-### The binormal model is a special case of the RSM {#rsm-predictions-binormal-model}
-ROC models assume that every case provides a finite decision variable sample. This is what permits the observer to continuously move the operating point to (1,1). While in general the RSM allows cases with no decision samples, one way to ensure a decision sample on every case is to use a large $\lambda'$, as in that limit every case has at least one latent NL. Under these conditions one expects the pdfs to integrate to unity and to be quasi-normal.  
-
-The point of the following exercise is to demonstrate that in certain limits RSM-generated ROC data are well fitted by the binormal model. Consider the code in mainRsmVsEng.R, Online Appendix 17.F.2, which simulates FROC data using the RSM, converts it to highest rating ROC data, bins the data into 5 bins and prints out two sets of 5 integers, the bin counts for non-diseased and diseased cases respectively, the analog of the ROC counts data in Table 4.1 in Chapter 04. The counts data are analyzed by the Eng Java program39, which implements Metz's ROCFIT program, TBA Chapter 06, yielding the binormal parameter values a, b and the goodness of fit $\chi^2$ statistic and a p-value. 
-
-```{r echo=FALSE}
-source(here("R/rsm-evidence/PlotBMErrBar.R"))
-```
-
+## The binormal model is a special case of the RSM {#rsm-predictions-binormal-model}
 
 ```{r echo=FALSE, cache=TRUE}
-
+source(here("R/rsm-evidence/PlotBMErrBar.R"))
 K1 <- 500;K2 <- 700;desiredNumBins <- 5;
 plotArr <- array(list(), dim = 9)
 aucs <- array(list(), dim = c(9,3))
@@ -54,26 +45,27 @@ rocDataTable <- array(dim = c(9, 2,desiredNumBins))
 for (Row in 1:9) {
     switch(Row,
            "1" = {seed <- 1;Lmax <- 1;mu <- 2.0;lambda <- 10
-           nu <- 1;zeta1 <- -1}, # Row 1
+           nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 1
            "2" = {seed <- 1;Lmax <- 1;mu <- 2.5;lambda <- 10
-           nu <- 1;zeta1 <- -1}, # Row 2
+           nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 2
            "3" = {seed <- 1;Lmax <- 1;mu <- 3.0;lambda <- 10
-           nu <- 1;zeta1 <- -1}, # Row 3
+           nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 3
            "4" = {seed <- 2;Lmax <- 1;mu <- 2.5;lambda <- 10
-           nu <- 1;zeta1 <- -1}, # Row 4
+           nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 4
            "5" = {seed <- 2;Lmax <- 2;mu <- 2.0;lambda <- 10
-           nu <- 1;zeta1 <- -1},# Row 5
+           nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 5
            "6" = {seed <- 2;Lmax <- 2;mu <- 2.5;lambda <- 10
-           nu <- 1;zeta1 <- -1},# Row 6
+           nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 6
            "7" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <- 10
-           nu <- 1;zeta1 <- -1},# Row 7
+           nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 7
            "8" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <-  1
-           nu <- 1;zeta1 <- -1},# Row 8
+           nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 8
            "9" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <- 0.1
-           nu <- 1;zeta1 <- -1}# Row 9
+           nu <- 1;zeta1 <- -1;set.seed(seed)}# Row 9
     )
   
     perCase <- floor(runif(K2, 1, Lmax + 1))
+    
     if (Lmax == 2) {
       lesDistr <- c(0.4714286, 0.5285714)
     } else if (Lmax == 1) {
@@ -135,26 +127,25 @@ for (Row in 1:9) {
            "9" = {a <- 2.015;b <- 0.068}  # Row 9
     )
     
-    plotArr[[Row]] <- PlotBMErrBar(a, b, rocDataTable[Row,,], Row)
+    plotArr[[Row]] <- PlotBMErrBar(a, b, rocDataTable[Row,,]) + 
+      ggtitle(paste0("a = ",  a, ", b = ",  b))
 }
 
 
 ```
 
+ROC models assume that every case provides a finite decision variable sample. This is what permits the observer to *continuously* move the operating point to (1,1). According to the RSM a decision sample on every case is possible using a large $\lambda'$, since in that limit every case has at least one latent NL. It turns out, as shown next, that it is not necessary to go to this limit to produce RSM-generated ratings data that are indistinguishable from those generated by the binormal model.  
 
-```{r rsm-evidence-binormal-plots1, fig.cap="RSM generated ROC points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. Plots 1, 2, 3.", fig.show='hold', echo=FALSE, fig.pos='H'}
-grid.arrange(plotArr[[1]], plotArr[[2]], plotArr[[3]],plotArr[[4]], plotArr[[5]], plotArr[[6]], plotArr[[7]], plotArr[[8]], plotArr[[9]], nrow = 3, ncol = 3)
+The ROC ratings datasets used in the following examples were generated by the RSM, i.e., RSM generated FROC data (for 500 non-diseased and 700 diseased cases) was converted to (highest rating) ROC data, the data was binned into 5 bins and analyzed by an online Java program [@RN1975] which implements Metz's ROCFIT program, TBA Chapter 06, yielding the binormal parameters $a, b$. Shown next are binormal-model-fitted ROC curves to these datasets as well as the corresponding $a,b$ parameters. 
+
+```{r rsm-evidence-binormal-plots1, fig.cap="RSM generated ROC points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves.", fig.show='hold', echo=FALSE, fig.pos='H'}
+grid.arrange(plotArr[[1]], plotArr[[2]], plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
+grid.arrange(plotArr[[5]], plotArr[[6]], plotArr[[7]], plotArr[[8]], nrow = 2, ncol = 2)
 ```             
 
 
+Fig. \@ref(fig:rsm-evidence-binormal-plots1):These plots show ROC *operating points* using varying RSM parameters and corresponding binormal model *fitted curves*. The $a, b$ parameters are shown in the figure labels. The plots show that over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data arose from two normal distributions. Since the binormal model has been used successfully for over four decades, the ability to the RSM to mimic it is an important justification for the validity of the RSM.
 
-Fig. \@ref(fig:rsm-evidence-binormal-plots1):These plots show RSM-generated ROC operating points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. The integer label at the top of each plot corresponds to a matching row in Table 17.2. The (a, b) parameters were obtained by running lines 1 - 42 in mainRsmVsEng.R, transferring the ROC counts table data to the Eng Java program, running the Eng program and transferring the parameter values to the appropriate location, between lines 50 - 58. Once all values are populated, the plots were obtained by sourcing the file with different values for variable Row, in the integer range 1 to 9, specified at line 10. Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled "2" and "4" differ only in seed values. These plots show that over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data arose from two normal distributions. Since the binormal model has been used successfully for over three decades, the ability to the RSM to mimic it is an important justification for the validity of the RSM.
-Ensure that Row is set to 1 at line 10 in mainRsmVsEng.R (this selects RSM parameters in 5 columns corresponding to the same value of Row in Table 17.2). Insert a break point at line 40 and click Source yielding the following output:
-
-
-The shown two lines contain the ROC counts table. Copy the numbers (not the square brackets) and paste them into the input window of the Eng program, and run the program with format option three selected. It yields the Row-1 values listed in the last six columns of Table 17.2. The other rows in Table 17.2 were generated by setting Row to values 2, 3,..., 9 and each time clicking source and copying the output to the Eng Java program, etc. 
-
-The (a, b) binormal parameters were transferred to the appropriate location, between lines 50 – 58 in mainRsmVsEng.R. Once all values are populated, the plots shown in Fig. 17.8 were obtained by exiting debug mode, clearing any breakpoints and sourcing the program with different values for variable Row, in the integer range 1 to 9. All this could have been automated using RocfitR.R, Chapter 06, but the author wanted a direct comparison of RSM prediction vs. binormal fits using Metz's code.
 
 These plots show that ROC data generated by the RSM are well fitted by the binormal model. The p-values of the goodness of fit statistic are all in the range of what is considered acceptable fits to a model.
 
@@ -163,11 +154,11 @@ Table 17.2: This table shows the results of simulating ROC ratings tables using 
 
 Table 2 here
 
-Of interest in Table 17.2 is the observation that b <1, and the qualities of the fits are quite good (p > 0.001 is generally considered acceptable, Numerical Recipes9, 3rd edition, page 779). There is one exception: Row-9 shows what happens when  ; this makes the data almost degenerate; ROCFIT-JAVA is still able to fit it - note the very small value (0.068) of the b-parameter but it cannot calculate a goodness of fit statistic. 
+Of interest in Table 17.2 is the observation that b <1, and the qualities of the fits are quite good (p > 0.001 is generally considered acceptable, TBA Numerical Recipes 9, 3rd edition, page 779). There is one exception: Row-9 shows what happens when  ; this makes the data almost degenerate; ROCFIT-JAVA is still able to fit it - note the very small value (0.068) of the b-parameter but it cannot calculate a goodness of fit statistic. 
 
-One expects   to exceed the binormal fitted value  . This has to do with the "proper" property of the RSM-ROC curve, which implies an ideal observer, while the binormal model predicts "improper" ROC curves, Chapter 20. For rows 2 and 3, the expected orderings are reversed, although the magnitudes of the discrepancies are small (about 1%). This is because RSM-predicted values are not subject to sampling variability as they are derived by numerical integration, Eqn. (17.25) and the numerical estimation error is very small compared to sampling error. In contrast, the estimates of   are subject to sampling variability, even though large numbers of cases were used (i.e., 500+700=1200, line 9). Row-4 repeats Row-2 with a different value of seed: this time the expected ordering is observed (RSM-AUC > binormal-AUC). 
+One expects to exceed the binormal fitted value  . This has to do with the "proper" property of the RSM-ROC curve, which implies an ideal observer, while the binormal model predicts "improper" ROC curves, Chapter 20. For rows 2 and 3, the expected orderings are reversed, although the magnitudes of the discrepancies are small (about 1%). This is because RSM-predicted values are not subject to sampling variability as they are derived by numerical integration, Eqn. (17.25) and the numerical estimation error is very small compared to sampling error. In contrast, the estimates of   are subject to sampling variability, even though large numbers of cases were used (i.e., 500+700=1200, line 9). Row-4 repeats Row-2 with a different value of seed: this time the expected ordering is observed (RSM-AUC > binormal-AUC). 
 
-Fig. 17.9 show binormal model fitted curves for RSM-generated data. The plots are labeled by the value of Row used to generate them. The hooks in the binormal ROC curves are not easily visible (the exception is "9") but they are nevertheless present as each of the b-parameters in Table 17.2 is less than unity. The error bars are exact 95% binomial confidence intervals on the operating points. Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled "2" and "4" differ only in seed values.
+Fig. 17.9 show binormal model fitted curves for RSM-generated data. The plots are labeled by the value of Row used to generate them. The hooks in the binormal ROC curves are not easily visible but they are nevertheless present as each of the b-parameters in Table 17.2 is less than unity. The error bars are exact 95% binomial confidence intervals on the operating points. Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled "2" and "4" differ only in seed values.
 
 
 *Over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data could have arisen from two normal distributions (apart from the arbitrary monotonic transformation uncertainty that applies to all such fitting). Since the binormal model has been used successfully for almost six decades, the ability to the RSM to mimic it is an important justification for validity of the RSM.*

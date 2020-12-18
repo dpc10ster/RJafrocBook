@@ -1,4 +1,4 @@
-PlotBMErrBar <- function(a, b, rocDataTable, rowIndx){
+PlotBMErrBar <- function(a, b, rocDataTable){
   K1 <- sum(rocDataTable[1, ]); K2 <- sum(rocDataTable[2, ])
   FPF <- cumsum(rev(rocDataTable[1, ]))/K1; FPF <- FPF[-length(FPF)]
   TPF <- cumsum(rev(rocDataTable[2, ]))/K2; TPF <- TPF[-length(TPF)]
@@ -11,7 +11,7 @@ PlotBMErrBar <- function(a, b, rocDataTable, rowIndx){
   
   fitPlot <- ggplot() + geom_line(mapping = aes(x = FPF, y = TPF), data = plotBM, size = 1) + 
     geom_point(mapping = aes(x = FPF, y = TPF), data = plotOpPnts, size = 3) + 
-    labs(title = rowIndx) + theme(plot.title = element_text(hjust = 0.5)) +
+    # labs(title = rowIndx) + theme(plot.title = element_text(hjust = 0.5)) +
     scale_x_continuous(expand = c(0, 0)) + 
     scale_y_continuous(expand = c(0, 0))
   
