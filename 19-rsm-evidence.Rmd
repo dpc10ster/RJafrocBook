@@ -14,25 +14,23 @@ library(here)
 
 ## Introduction {#rsm-evidence-intro}
 
-This chapter details the evidence for the validity of the radiological search model (RSM). 
+This chapter details the evidence for the validity of the radiological search model (RSM). Listed next are the specific reasons. 
 
-Listed below are reasons arguing for the validity of the RSM. 
-
-1.	Its correspondence to the empirical Kundel-Nodine model of radiological search. 
+1.	Its correspondence to the empirical (i.e., measurement based) Kundel-Nodine model of radiological search. 
 2.	In special cases, it reduces to being indistinguishable from the binormal model.
 3.	It explains: 
-a.	The empirical observation31 that most ROC datasets are characterized by b-parameter < 1. 
-b.	The empirical observation32 that the b-parameter tends to decrease as contrast increases and 
-c.	The empirical observation32, that the difference in means of the two pdfs divided by the difference in standard deviations is roughly constant for a fixes set of experimental conditions.
-4.	It explains data degeneracy, i.e., no interior data points, which tend to be observed with expert observers. 
+    a. The empirical observation [@RN298] that most ROC datasets are characterized by b-parameter $b < 1$. 
+    b. The empirical observation [@RN2635] that the $b$ tends to decrease as contrast increases. 
+    c. The empirical observation [@RN2635], that the difference in means of the two pdfs divided by the difference in standard deviations is roughly constant.
+4.	It explains data degeneracy, i.e., no interior data points, sometimes observed especially with expert observers. 
 5.	It predicts FROC/AFROC and LROC curves that fit real datasets.
 
-As described in Chapter 20, the CBM model explains #3(a) and #4 while the bigamma model5 explains #3(c).
+As described in TBA Chapter 20, the CBM explains 3(a) and 4 while the bigamma model [@RN100] explains 3(c).
 
 ## Correspondence to the Kundel-Nodine model {#rsm-predictions-corresponence-kundel-nodine}
-Perhaps the strongest evidence for the validity of the RSM is its correspondence to the Kundel-Nodine model of radiological search [@RN1533; @RN1388; @RN438; @RN1663], which in turn is derived from eye-tracking measurements made on radiologists while they perform diagnostic tasks. These show that radiologists identify suspicious regions in a short time and this ability corresponds to the $\lambda', \nu'$ parameters of the RSM. Having found suspicious regions, the next activity uncovered by eye-tracking measurements is the detailed examination of each suspicious region in order to determine if it is a significant finding. This is where the z-sample is calculated, and this process is modeled by two unit normal distributions separated by the $\mu$ parameter of the RSM. 
+The strongest evidence for the validity of the RSM is its close correspondence to the Kundel-Nodine model of radiological search [@RN1533; @RN1388; @RN438; @RN1663], which in turn is derived from eye-tracking measurements made on radiologists while they perform diagnostic tasks. These show that radiologists identify suspicious regions in a short time and this ability corresponds to the $\lambda', \nu'$ parameters of the RSM. Having found suspicious regions, the next activity uncovered by eye-tracking measurements is the detailed examination of each suspicious region in order to determine if it is a significant finding. This is where the z-sample is calculated, and this process is modeled by two unit normal distributions separated by the $\mu$ parameter of the RSM. 
 
-Other ROC models do not share this close correspondence. The CBM model comes closest – it models the possibility that lesions are found, which is part of search performance, but the other part of search performance, namely the ability to avoid finding NLs, is not modeled. Like other ROC models, it predicts that the point (1,1) is continuously accessible to observer, which implies zero search performance, Fig. 17.6.
+Other ROC models do not share this close correspondence. The CBM model comes closest – it models the probability that lesions are *found*, which is part of search performance, but the ability to *avoid finding NLs* is not modeled. Like other ROC models, CBM predicts that the point (1,1) is continuously accessible to observer, which implies zero search performance, TBA Fig. 17.6.
 
 ## The binormal model is a special case of the RSM {#rsm-predictions-binormal-model}
 
@@ -40,162 +38,400 @@ Other ROC models do not share this close correspondence. The CBM model comes clo
 source(here("R/rsm-evidence/PlotBMErrBar.R"))
 K1 <- 500;K2 <- 700;desiredNumBins <- 5;
 plotArr <- array(list(), dim = 9)
-aucs <- array(list(), dim = c(9,3))
+seedArr <- aucArr <- array(dim = 9)
 rocDataTable <- array(dim = c(9, 2,desiredNumBins))
+LmaxArr <- nuArr <- lambdaArr <- muArr <- array(dim = 9)
+AzArr <- pValArr <- bArr <- aArr <- array(dim = 9)
+
 for (Row in 1:9) {
-    switch(Row,
-           "1" = {seed <- 1;Lmax <- 1;mu <- 2.0;lambda <- 10
-           nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 1
-           "2" = {seed <- 1;Lmax <- 1;mu <- 2.5;lambda <- 10
-           nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 2
-           "3" = {seed <- 1;Lmax <- 1;mu <- 3.0;lambda <- 10
-           nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 3
-           "4" = {seed <- 2;Lmax <- 1;mu <- 2.5;lambda <- 10
-           nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 4
-           "5" = {seed <- 2;Lmax <- 2;mu <- 2.0;lambda <- 10
-           nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 5
-           "6" = {seed <- 2;Lmax <- 2;mu <- 2.5;lambda <- 10
-           nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 6
-           "7" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <- 10
-           nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 7
-           "8" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <-  1
-           nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 8
-           "9" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <- 0.1
-           nu <- 1;zeta1 <- -1;set.seed(seed)}# Row 9
-    )
+  switch(Row,
+         "1" = {seed <- 1;Lmax <- 1;mu <- 2.0;lambda <- 10
+         nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 1
+         "2" = {seed <- 1;Lmax <- 1;mu <- 2.5;lambda <- 10
+         nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 2
+         "3" = {seed <- 1;Lmax <- 1;mu <- 3.0;lambda <- 10
+         nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 3
+         "4" = {seed <- 2;Lmax <- 1;mu <- 2.5;lambda <- 10
+         nu <- 1;zeta1 <- -1;set.seed(seed)}, # Row 4
+         "5" = {seed <- 2;Lmax <- 2;mu <- 2.0;lambda <- 10
+         nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 5
+         "6" = {seed <- 2;Lmax <- 2;mu <- 2.5;lambda <- 10
+         nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 6
+         "7" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <- 10
+         nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 7
+         "8" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <-  1
+         nu <- 1;zeta1 <- -1;set.seed(seed)},# Row 8
+         "9" = {seed <- 2;Lmax <- 2;mu <- 3.0;lambda <- 0.1
+         nu <- 1;zeta1 <- -1;set.seed(seed)}# Row 9
+  )
+  muArr[Row] <- mu
+  lambdaArr[Row] <- lambda
+  nuArr[Row] <- nu
+  LmaxArr[Row] <- Lmax
+  seedArr[Row] <- seed
+  perCase <- floor(runif(K2, 1, Lmax + 1))
   
-    perCase <- floor(runif(K2, 1, Lmax + 1))
-    
-    if (Lmax == 2) {
-      lesDistr <- c(0.4714286, 0.5285714)
-    } else if (Lmax == 1) {
-      lesDistr <- 1
-    } else stop("Need to run Eng program for other values of Lmax")
-
-    frocDataRaw  <- SimulateFrocDataset(mu, lambda, nu, 
-                                        zeta1, I = 1, 
-                                        J = 1, K1, K2, 
-                                        perCase = perCase, 
-                                        seed = seed)
-    rocDataRaw <- DfFroc2Roc(frocDataRaw)
-    
-    rocDataBinned <- DfBinDataset(rocDataRaw, 
-                                  desiredNumBins = desiredNumBins, 
-                                  opChType = "ROC")
-
-    x1 <- table(rocDataBinned$ratings$NL[1:K1])
-    if (length(x1) == 1) {
-        rocDataTable[Row,1,] <- c(0,x1,0,0,0)
-    } else if (length(x1) == 3) {
-        rocDataTable[Row,1,] <- c(0, x1,0)
-    } else if (length(x1) == 4) {
-        rocDataTable[Row,1,] <- c(x1,0)
-    } else if (length(x1) == 5) {
-        rocDataTable[Row,1,] <- x1
-    } else stop("incorrect table length 1")
-    
-    x2 <- table(rocDataBinned$ratings$LL[1:K2])
-    if (length(x2) == 4) {
-        rocDataTable[Row,2,] <- c(0,x2)
-    } else if (length(x2) == 5) {
-        rocDataTable[Row,2,] <- x2
-    } else stop("incorrect table length 2")
-    
-    aucs[Row,] <- UtilAnalyticalAucsRSM(
-      mu = mu, lambda = lambda,
-      nu = nu, zeta1 = zeta1, lesDistr = lesDistr)
-    # print(rocDataTable[Row,,])
-    # copy the last two rows of output to Eng program; 
-    # delete bracket stuff leaving numbers only with spaces 
-    # select format 3
-    # Run Program
-    # compare a, b to following values
-    
-    switch(Row, 
-           # the following values were transferred from the 
-           # Eng program output after analyzing rocDataTable 
-           # generated by previous lines, using 
-           # the appropriate value of Row
-           "1" = {a <- 1.002;b <- 0.861}, # Row 1
-           "2" = {a <- 1.497;b <- 0.752}, # Row 2
-           "3" = {a <- 1.928;b <- 0.736}, # Row 3
-           "4" = {a <- 1.221;b <- 0.682}, # Row 4
-           "5" = {a <- 1.250;b <- 0.786}, # Row 5
-           "6" = {a <- 1.554;b <- 0.646}, # Row 6
-           "7" = {a <- 2.057;b <- 0.676}, # Row 7
-           "8" = {a <- 2.391;b <- 0.405}, # Row 8
-           "9" = {a <- 2.015;b <- 0.068}  # Row 9
-    )
-    
-    plotArr[[Row]] <- PlotBMErrBar(a, b, rocDataTable[Row,,]) + 
-      ggtitle(paste0("a = ",  a, ", b = ",  b))
+  if (Lmax == 2) {
+    lesDistr <- c(0.4714286, 0.5285714)
+  } else if (Lmax == 1) {
+    lesDistr <- 1
+  } else stop("Need to run Eng program for other values of Lmax")
+  
+  frocDataRaw  <- SimulateFrocDataset(mu, lambda, nu, 
+                                      zeta1, I = 1, 
+                                      J = 1, K1, K2, 
+                                      perCase = perCase, 
+                                      seed = seed)
+  rocDataRaw <- DfFroc2Roc(frocDataRaw)
+  
+  rocDataBinned <- DfBinDataset(rocDataRaw, 
+                                desiredNumBins = desiredNumBins, 
+                                opChType = "ROC")
+  
+  x1 <- table(rocDataBinned$ratings$NL[1:K1])
+  if (length(x1) == 1) {
+    rocDataTable[Row,1,] <- c(0,x1,0,0,0)
+  } else if (length(x1) == 3) {
+    rocDataTable[Row,1,] <- c(0, x1,0)
+  } else if (length(x1) == 4) {
+    rocDataTable[Row,1,] <- c(x1,0)
+  } else if (length(x1) == 5) {
+    rocDataTable[Row,1,] <- x1
+  } else stop("incorrect table length 1")
+  
+  x2 <- table(rocDataBinned$ratings$LL[1:K2])
+  if (length(x2) == 4) {
+    rocDataTable[Row,2,] <- c(0,x2)
+  } else if (length(x2) == 5) {
+    rocDataTable[Row,2,] <- x2
+  } else stop("incorrect table length 2")
+  
+  aucArr[Row] <- UtilAnalyticalAucsRSM(
+    mu = mu, lambda = lambda,
+    nu = nu, zeta1 = zeta1, lesDistr = lesDistr)$aucROC
+  # print(rocDataTable[Row,,])
+  # copy the last two rows of output to Eng program; 
+  # delete bracket stuff leaving numbers only with spaces 
+  # select format 3
+  # Run Program
+  # compare a, b to following values
+  
+  switch(Row, 
+         # the following values were transferred from the 
+         # Eng program output after analyzing rocDataTable 
+         # generated by previous lines, using 
+         # the appropriate value of Row
+         "1" = {a <- 1.002;b <- 0.861; pVal <- 0.223}, # Row 1
+         "2" = {a <- 1.497;b <- 0.752; pVal <- 0.460}, # Row 2
+         "3" = {a <- 1.928;b <- 0.736; pVal <- 0.198}, # Row 3
+         "4" = {a <- 1.221;b <- 0.682; pVal <- 0.120}, # Row 4
+         "5" = {a <- 1.250;b <- 0.786; pVal <- 0.903}, # Row 5
+         "6" = {a <- 1.554;b <- 0.646; pVal <- 0.592}, # Row 6
+         "7" = {a <- 2.057;b <- 0.676; pVal <- 0.009}, # Row 7
+         "8" = {a <- 2.391;b <- 0.405; pVal <- 0.988}, # Row 8
+         "9" = {a <- 2.015;b <- 0.068; pVal <- NA}  # Row 9
+  )
+  aArr[Row] <- a
+  bArr[Row] <- b
+  AzArr[Row] <- pnorm(a/sqrt(1+b^2))
+  pValArr[Row] <- pVal
+  plotArr[[Row]] <- PlotBMErrBar(a, b, rocDataTable[Row,,]) + 
+    ggtitle(paste0("Row = ", Row, ", a = ",  a, ", b = ", b))
 }
-
-
 ```
 
-ROC models assume that every case provides a finite decision variable sample. This is what permits the observer to *continuously* move the operating point to (1,1). According to the RSM a decision sample on every case is possible using a large $\lambda'$, since in that limit every case has at least one latent NL. It turns out, as shown next, that it is not necessary to go to this limit to produce RSM-generated ratings data that are indistinguishable from those generated by the binormal model.  
+ROC models assume that every case provides a finite decision variable sample. This is what permits the observer to *continuously* move the operating point to (1,1). According to the RSM a decision sample on every case is possible if $\lambda$ is large, since in the limit $\lambda \rightarrow \infty$ every case has at least one latent NL. It turns out, as shown next, that it is not necessary to go to infinite values of $\lambda$ to produce RSM-generated ratings data that are indistinguishable from those generated by the binormal model. Values of $\lambda$ around 1 to 10 are sufficient to demonstrate this fact. A factor that helps showing the indistinguishability is that the binormal model is remarkably resilient to departures from normality, its *robustness property*, demonstrated in [@RN1216]. It literally takes huge datasets, numbering in the thousands of cases, to show departures from strict normality. 
 
-The ROC ratings datasets used in the following examples were generated by the RSM, i.e., RSM generated FROC data (for 500 non-diseased and 700 diseased cases) was converted to (highest rating) ROC data, the data was binned into 5 bins and analyzed by an online Java program [@RN1975] which implements Metz's ROCFIT program, TBA Chapter 06, yielding the binormal parameters $a, b$. Shown next are binormal-model-fitted ROC curves to these datasets as well as the corresponding $a,b$ parameters. 
+The ROC ratings datasets used in the following examples were generated by the RSM. The parameter values are listed in Table \@ref(tab:rsm-evidence-binormal-table2). RSM generated FROC datasets, in each case 500 non-diseased and 700 diseased cases were used, were converted to (highest rating) ROC datasets, each dataset was binned into 5 bins and then analyzed by an online Java program [@RN1975] which implements Metz's ROCFIT program, TBA Chapter 06, yielding the binormal parameters $a, b$ and the p-value of the chisquare goodness of fit statistic. Shown next are the binormal-model-fitted ROC curves to these datasets as well as the corresponding $a,b$ parameters. The value of Row corresponds to the row number in Table \@ref(tab:rsm-evidence-binormal-table2). 
 
-```{r rsm-evidence-binormal-plots1, fig.cap="RSM generated ROC points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves.", fig.show='hold', echo=FALSE, fig.pos='H'}
+```{r rsm-evidence-binormal-plots1-do-not-use, fig.show='hold', echo=FALSE, fig.pos='H'}
 grid.arrange(plotArr[[1]], plotArr[[2]], plotArr[[3]],plotArr[[4]], nrow = 2, ncol = 2)
-grid.arrange(plotArr[[5]], plotArr[[6]], plotArr[[7]], plotArr[[8]], nrow = 2, ncol = 2)
 ```             
 
 
-Fig. \@ref(fig:rsm-evidence-binormal-plots1):These plots show ROC *operating points* using varying RSM parameters and corresponding binormal model *fitted curves*. The $a, b$ parameters are shown in the figure labels. The plots show that over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data arose from two normal distributions. Since the binormal model has been used successfully for over four decades, the ability to the RSM to mimic it is an important justification for the validity of the RSM.
+```{r rsm-evidence-binormal-plots2, fig.cap="RSM generated ROC points and corresponding binormal model fitted curves.", fig.show='hold', echo=FALSE, fig.pos='H'}
+grid.arrange(plotArr[[5]], plotArr[[6]], plotArr[[7]], plotArr[[8]], nrow = 2, ncol = 2)
+```             
+
+Fig. \@ref(fig:rsm-evidence-binormal-plots2): ROC *operating points* obtained using RSM ratings-generator and corresponding binormal model *fitted curves*. The $a, b$ parameters are shown in the figure labels. The value of `Row` corresponds to the row number in Table \@ref(tab:rsm-evidence-binormal-table2). The plots show that over a wide range of parameters RSM generated ROC data is fitted reasonably by the binormal model. The p-values of the goodness of fit statistic, see Table \@ref(tab:rsm-evidence-binormal-table2), are all in the range of what is considered an acceptable fit to a model. As far as the binormal model-fitting software is concerned, the counts data arose from two *effectively normal distributions* (i.e., apart from the intrinsic uncertainty due to allowed arbitrary monotone transformations). Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled "2" and "4" differ only in seed values. The hooks near (1,1) in the binormal ROC fitted curves are not easily visible but are nevertheless present as each of the b-parameters in Table \@ref(tab:rsm-evidence-binormal-table2) is less than unity. The error bars are exact 95% binomial confidence intervals on the operating points.   
+
+**Since the binormal model has been used successfully for almost six decades, the ability to the RSM to mimic it is an important justification for the validity of the RSM.**
 
 
-These plots show that ROC data generated by the RSM are well fitted by the binormal model. The p-values of the goodness of fit statistic are all in the range of what is considered acceptable fits to a model.
+```{r  rsm-evidence-do-one-row, echo=FALSE}
+do_one_row <- function(Row,seed,Lmax,mu,lambda,auc,a,b,Az,pVal){
 
-Table 17.2: This table shows the results of simulating ROC ratings tables using the RSM for parameter values specified in columns 2 – 6 and fitting each ratings table using the binormal model. The corresponding binormal model fitted ROC curves are shown in Fig. 17.9. For each row the number of non-diseased cases was 500, the number of diseased cases was 700, and the reporting threshold was set to -1. The resulting ratings table, e.g.,  §17.11.2.1, was analyzed by Eng Java software to obtain the values listed in the remaining columns. Note the close correspondence between the RSM-AUC and the binormal fitted AUC, with the former being slightly larger; this has to do with the proper vs. improper nature of RSM and binormal model fits; proper fits are expected to have a larger AUC. The last column lists the p-value for the chi-square goodness of fit statistic. Values greater than 0.001 are generally considered good fits. [NA: the chi-square goodness of fit statistics could not be calculated because some of the cell counts were less than five.]
+ret <- c(
+  Row,
+  seed,
+  Lmax,
+  mu,
+  lambda,
+  format(auc, digits = 3),
+  a,
+  b,
+  format(Az, digits = 3),
+  pVal)
 
-
-Table 2 here
-
-Of interest in Table 17.2 is the observation that b <1, and the qualities of the fits are quite good (p > 0.001 is generally considered acceptable, TBA Numerical Recipes 9, 3rd edition, page 779). There is one exception: Row-9 shows what happens when  ; this makes the data almost degenerate; ROCFIT-JAVA is still able to fit it - note the very small value (0.068) of the b-parameter but it cannot calculate a goodness of fit statistic. 
-
-One expects to exceed the binormal fitted value  . This has to do with the "proper" property of the RSM-ROC curve, which implies an ideal observer, while the binormal model predicts "improper" ROC curves, Chapter 20. For rows 2 and 3, the expected orderings are reversed, although the magnitudes of the discrepancies are small (about 1%). This is because RSM-predicted values are not subject to sampling variability as they are derived by numerical integration, Eqn. (17.25) and the numerical estimation error is very small compared to sampling error. In contrast, the estimates of   are subject to sampling variability, even though large numbers of cases were used (i.e., 500+700=1200, line 9). Row-4 repeats Row-2 with a different value of seed: this time the expected ordering is observed (RSM-AUC > binormal-AUC). 
-
-Fig. 17.9 show binormal model fitted curves for RSM-generated data. The plots are labeled by the value of Row used to generate them. The hooks in the binormal ROC curves are not easily visible but they are nevertheless present as each of the b-parameters in Table 17.2 is less than unity. The error bars are exact 95% binomial confidence intervals on the operating points. Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled "2" and "4" differ only in seed values.
-
-
-*Over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data could have arisen from two normal distributions (apart from the arbitrary monotonic transformation uncertainty that applies to all such fitting). Since the binormal model has been used successfully for almost six decades, the ability to the RSM to mimic it is an important justification for validity of the RSM.*
-
-Fig. 17.9: These plots show RSM-generated ROC operating points using parameters and seeds specified in Table 17.2 and corresponding binormal model fitted curves. The integer label at the top of each plot corresponds to a matching row in Table 17.2. The (a, b) parameters were obtained by running lines 1 - 42 in mainRsmVsEng.R, transferring the ROC counts table data to the Eng Java program, running the Eng program and transferring the parameter values to the appropriate location, between lines 50 - 58. Once all values are populated, the plots were obtained by sourcing the file with different values for variable Row, in the integer range 1 to 9, specified at line 10. Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled "2" and "4" differ only in seed values. These plots show that over a wide range of parameters, RSM generated ROC data is fitted reasonably by the binormal model. As far as the binormal model-fitting software is concerned, the counts data arose from two normal distributions. Since the binormal model has been used successfully for over three decades, the ability to the RSM to mimic it is an important justification for the validity of the RSM. 
-
-
-### Explanations of empirical observations regarding binormal parameters
-As summarized previously, there are three empirical observations: (i) b <1, (ii) b decreases as   increases and (iii)   is approximately constant for fixed experimental conditions. To not confuse with the RSM   parameter, the difference in means is denoted  , not  . 
+return(stresc(ret))
+}
+```
 
 
-### Explanation for empirical observation b < 1
-The RSM-predicted ROC curves are consistent with empirical observations31, going back almost 6 decades, that observed ROC data, when fitted by the unequal variance binormal model, yield b-parameters < 1,  implying the diseased case pdf is wider than the non-diseased case pdf. The RSM provides a natural explanation for this, rather than by imposing it arbitrarily40. The reason the diseased distribution has a wider pdf is that diseased cases yield two types of z-samples, variable numbers of NL z-samples from a zero-centered unit variance normal distribution and variable numbers of LL z-samples from a  -centered unit variance normal distribution. The resulting mixture distribution is expected, when one attempts to fit it with a normal distribution, to yield standard deviation greater than 1, or, equivalently, b-parameter < 1. 
+```{r rsm-evidence-all-cells, echo=FALSE}
+allCells <- array("", dim = c(8,10))
 
-Examples of RSM-generated datasets consistent with b < 1 binormal model fits were presented in Table 17.2 and Fig. 17.9. The code in mainRsmPlots.R, Online Appendix 17.D.2, displays pdfs, shown in Fig. 17.10 (A - D), for the following parameter values: (A)  ; (B)  ; (C)  and (D)  . In all cases   and  . In plots (A) and (B) the dotted curves, corresponding to diseased cases, are wider than the solid ones, corresponding to non-diseased cases, and there is a hint of mixture behavior for the dotted curve in plot (D), and bimodality is prominent for the largest   and smallest   in plot (C). The mixture distribution is expected to lead to a larger estimate of standard deviation of the assumed normal distribution. The fit would not be ideal, but it is known that for relatively small numbers of cases, as is true with clinical data, it is difficult to detect deviations from good fits; the binormal model is quite robust with respect to deviations from strict normality31. Several examples of this are evident in the goodness of fit p-values in Table 17.2, which show good binormal fits to RSM generated data even with 1200 cases. 
+for (i in 1:8) {
+  allCells[i,] <- do_one_row (i,seedArr[i],LmaxArr[i],muArr[i],
+                              lambdaArr[i],
+                              aucArr[i], aArr[i], 
+                              bArr[i],AzArr[i], pValArr[i])  
+}
+```
 
 
-Fig. 17.10: This figure provides an explanation for empirical observation that binormal model b-parameter <1. Shown are probability density functions (pdf) plots against the highest z-sample for displayed values of RSM parameters  and  ; the other parameters are   and  . The dotted curve corresponds to diseased cases and the solid one to non-diseased cases. In (A) and (B) the dotted curve is noticeably broader. In (D) there is a hint of a peak at zero, which is quite prominent in (C). The broadening and/or mixture behavior is due to the two types of z-samples occurring on diseased cases, those from NLs, which give the peak just above zero and those from LLs, which give the peak at  . When fitted by a normal distribution, the dotted curve will appear to have larger standard deviation, relative to the non-diseased cases, or equivalently, binormal model b-parameter < 1. See Online Appendix 17.G for further discussion of this and another observation made by Swets et al32. These plots were generated by mainRsmPlots.R.
+
+```{r rsm-evidence-binormal-table2, echo=FALSE}
+cells = array(dim = c(8,10))
+
+for (j in 1:8) cells[j,]  <- allCells[j,]
+
+df <- as.data.frame(cells, stringsAsFactors = FALSE)
+colnames(df) <-c("Row", "s", "L", "$\\mu$", "$\\lambda$", "A", "a", "b",  "Az", "pVal")
+# escape = FALSE is critical in getting Math right
+kbl(df, caption = "Simulating ROC binned ratings data using the RSM and fitting the ratings using the binormal model; s is the seed, L is the maximum number of lesions per case, A is the RSM-predicted ROC-AUC, Az is the binormal model fitted AUC and $\\nu = 1$ for all datasets.", booktabs = TRUE, escape = FALSE) %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```
+
+
+Table \@ref(tab:rsm-evidence-binormal-table2): Results of simulating ROC ratings tables using seeds and RSM parameter values specified in columns 2 – 5 and fitting each ratings table using the binormal model. The corresponding binormal model fitted ROC curves are shown in Fig. \@ref(fig:rsm-evidence-binormal-plots2). The number of non-diseased cases was 500, the number of diseased cases was 700, and the reporting threshold $\zeta_1 = -1$. 
+
+Of interest in Table \@ref(tab:rsm-evidence-binormal-table2) is the observation that $b < 1$, and the qualities of the fits are quite good (p > 0.001 is generally considered acceptable, see [@RN300], 3rd edition, page 779). 
+
+One expects $A \equiv AUC_{ROC}^{RSM}$ to exceed the binormal fitted value $A_z$. This has to do with the "proper" property of the RSM-ROC curve, which implies an *ideal observer*, while the binormal model predicts "improper" ROC curves, TBA Chapter 20. For rows 2 and 3, the expected orderings are reversed but the magnitudes of the discrepancies are small. This is because RSM-predicted values are *not* subject to sampling variability as they are derived by numerical integration, whose estimation error is very small compared to sampling error. In contrast, the estimates of $A_z$ are subject to sampling variability, even though large numbers of cases were used. Row-4 repeats Row-2 with a different value of `seed`: this time the expected ordering is observed $A > Az$. 
+
+
+## Explanations of empirical observations regarding binormal parameters
+As summarized previously, there are three empirical observations: 
+
+* $b < 1$, 
+* $b$ decreases as $\mu$ increases, and 
+* $\Delta(mean) / \Delta(\sigma)$ is approximately constant for fixed experimental conditions. To not confuse with the RSM $\mu$ parameter, the difference in means is denoted $\Delta(mean)$, not $\Delta \mu$. 
+
+
+### Explanation for empirical observation $b < 1$
+The RSM-predicted ROC curves are consistent with empirical observations [@RN298] that observed ROC data, when fitted by the unequal variance binormal model, yield $b < 1$, implying that the diseased case pdf is wider than the non-diseased case pdf. The RSM provides an explanation for this: diseased cases yield two types of z-samples, namely NL z-samples from a zero-centered unit variance normal distribution and LL z-samples from a  $\mu$-centered unit variance normal distribution. The resulting *mixture distribution* is expected, when one attempts to fit it with a normal distribution, to yield standard deviation for diseased cases greater than 1, or, equivalently, $b < 1$. The fit is not expected to be ideal, but it is known that for relatively small numbers of cases, as is true with clinical data sets, it is difficult to detect deviations from strict normality; indeed, the binormal model is quite robust with respect to deviations from strict normality [@RN298]. Several examples of this were evident in the goodness of fit p-values in Table \@ref(tab:rsm-evidence-binormal-table2), which show good binormal fits to RSM generated data even with 1200 cases. 
+
+
+```{r rsm-evidence-pdfs, echo=FALSE}
+K2 <- 700
+Lmax <- 1
+Lk2 <- floor(runif(K2, 1, Lmax + 1))
+lesDistr <- 1
+plotArr <- array(list(), dim = c(2,2))
+labels <- LETTERS[1:4]; dim(labels) = c(2,2);labels <- t(labels)
+muArr <- c(2,3)
+lambda <- 1
+nuArr <- c(0.15,0.25)
+L <- 1  # to show wider pdfs of diseased cases
+for (i in 1:length(muArr)) {
+  mu <- muArr[i]
+  for (j in 1:length(nuArr)) {
+    nu <- nuArr[j]
+    ret1 <- PlotRsmOperatingCharacteristics(mu,
+                                            lambda,
+                                            nu,
+                                            lesDistr = lesDistr,
+                                            legendPosition  = "none")
+    plotArr[[i,j]] <- ret1$PDFPlot + 
+      ggtitle(paste0(labels[i,j], ", mu = ", muArr[i], ", nu = ", nuArr[j]))
+  }
+}
+
+```
+
+
+
+```{r rsm-evidence-pdf-plots, fig.cap="pdfs along with the parameter values. The dotted curves correspond to non-diseased cases while solid curves correspond to diseased cases.", fig.show='hold', echo=FALSE, fig.pos='H'}
+grid.arrange(plotArr[[1,1]], plotArr[[1,2]], plotArr[[2,1]], plotArr[[2,2]], nrow = 2, ncol = 2)
+```             
+
+
+Fig. \@ref(fig:rsm-evidence-pdf-plots): This figure provides an explanation for empirical observation $b < 1$. Displayed are pdfs along with the parameter values. For all plots $\lambda = 1$ and $L_{max} = 1$. The dotted curves correspond to non-diseased cases while the solid curves correspond to diseased cases. The solid curves are broader than the dotted ones. In (A) and (B) the solid curve is noticeably broader. In (D) there is a hint of a secondary peak at zero, which is quite prominent in (C), which corresponds to the largest $\mu$ and the smallest $\nu$. In each case the resulting mixture distribution is expected to lead to a larger estimate of standard deviation of the assumed normal distribution of diseased cases relative to non-diseased cases. 
 
 
 ### Explanation of Swets et al' observations 
 
-More than 55 years ago, Swets et al32 noticed in non-medical imaging contexts:
+More than 55 years ago, [@RN2635] noticed in non-medical imaging contexts:
  
-(i)	The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. 
-(ii)	The ratio  is approximately constant for a fixed set of experimental conditions.
+* The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. 
 
-In the RSM   is the perceptual signal to noise, pSNR, of found lesions. Swets' first empirical observation implies that the b parameter should decrease with increasing  . Testing this proposition over a wide range of   using the preceding methods (i.e., based on binormal model maximum likelihood fitting, either using the Eng Java code or RocfitR) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each and convergence of the binormal model algorithm, which is problematical for larger values of   which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If   is a unit-normalized pdf its mean   and variance  are defined by:
+* The ratio $\Delta(mean) / \Delta(\sigma)$ is approximately constant for a fixed set of experimental conditions.
 
- 	.	Eqn. (17.41)
+In the RSM  $\mu$ is the perceptual signal to noise *pSNR* of found lesions. Swets' first empirical observation implies that the $b$ parameter should decrease with increasing $\mu$. Testing this proposition over a wide range of $\mu$ using the preceding methods (i.e., binormal model maximum likelihood fitting) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each bin and convergence of the binormal model algorithm, which is problematical for larger values of $\mu$ which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If $f(x)$ is a unit-normalized pdf its mean $<x>$  and variance $\sigma_x^2$ are defined by:
+
+\begin{equation}
+\left. 
+\begin{aligned}
+\left \langle x \right \rangle = & \int_{-\infty}^{\infty} xf(x) dx \\
+\sigma_x^2 = & \int_{-\infty}^{\infty} \left (x - \left \langle x \right \rangle  \right )^2f(x) dx \\
+\end{aligned}
+\right \}
+(\#eq:rsm-evidence-x-sigmax2)
+\end{equation}
+
 
 The needed quantities are defined as:
 
- 	.	Eqn. (17.42)
+\begin{equation}
+\left. 
+\begin{aligned}
+\Delta(mean) = & \left \langle x \right \rangle_D - \left \langle x \right \rangle_N  \\
+\Delta(\sigma)= & \sigma_D - \sigma_N
+\end{aligned}
+\right \}
+(\#eq:rsm-evidence-delta-mean-sigma)
+\end{equation}
 
 
-The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying the two of the three parameters of the RSM under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g.,  , would allow AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. The underlying assumption is that observers, characterized by different RSM parameters, nevertheless tend to have about the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large  ) with increased performance in other areas (e.g., finding more lesions, i.e., larger  , and/or extracting greater pSNR from found lesions, i.e., larger  ).
+
+*The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying the two of the three parameters of the RSM under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g.,  $\mu$, would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. The underlying assumption is that observers, characterized by different RSM parameters, nevertheless converge on roughly the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large $\lambda$) with increased performance in other areas (e.g., finding more lesions, i.e., larger $\nu$, and/or extracting greater pSNR from found lesions, i.e., larger $\mu$).*
+
+```{r main-rsm-swets-observations0, echo=FALSE}
+source(here("R/rsm-evidence/PlotBMErrBar.R"))
+source(here("R/rsm-evidence/rsmPdfMeansAndStddevs.R"))
+source(here("R/rsm-evidence/FindParamFixAuc.R"))
+source(here("R/rsm-evidence/rsmSupportFns.R"))
+
+logseq <- function( d1, d2, n) {
+  logf <- log(d2/d1)/(n-1)
+  return (exp(seq(log(d1), log(d2), logf)))
+}
+
+# parameters are adjusted to attain this value; 0.7 or 0.8
+do_one_value <- function (RsmRocAuc) {
+  Lmax <- 1;K2 <- 700;Lk2 <- floor(runif(K2, 1, Lmax + 1)) 
+  nLesPerCase <- unique(Lk2);lesionDist <- array(dim = c(length(nLesPerCase), 2))
+  for (i in nLesPerCase) lesionDist[i, ] <- c(i, sum(Lk2 == i)/K2)
+  lesDistr <- 1
+  
+  # Part A
+  dfA <- data.frame()
+  lambda <- 2
+  muArr <- logseq(2,5,10)
+  for (i in 1:length(muArr)) {
+    mu <- muArr[i]
+    nu <- NA   # NA indicates this is to be varied
+    
+    retParms <- FindParamFixAuc(mu, lambda, nu, lesionDist, RsmRocAuc)
+    if (!is.na(retParms)) nu <- retParms else next
+    ret <- rsmPdfMeansAndStddevs(mu, lambda, nu, lesionDist)
+    meanN <- ret$meanN
+    meanD <- ret$meanD
+    stdDevN <- ret$stdErrN
+    stdDevD <- ret$stdErrD
+    
+    dfA <- rbind(dfA, data.frame(
+      AUC = RsmRocAuc,
+      mu = mu, 
+      lambda = lambda,
+      nu = nu,
+      effmu = meanD-meanN,
+      b = stdDevN/stdDevD, 
+      dmudsig = (meanD - meanN)/(stdDevD - stdDevN)))
+  }
+
+  # Part B
+  dfB <- data.frame()
+  nu <- 1
+  lambdaArr <- logseq(1, 5, 10)
+  for (i in 1:length(lambdaArr)) {
+    lambda <- lambdaArr[i] 
+    mu <- NA  # NA indicates this is to be varied
+    
+    retParms <- FindParamFixAuc(mu, lambda, nu, lesionDist, RsmRocAuc)
+    if (!is.na(retParms)) mu <- retParms else next
+    ret <- rsmPdfMeansAndStddevs(mu, lambda, nu, lesionDist)
+    meanN <- ret$meanN
+    meanD <- ret$meanD
+    stdDevN <- ret$stdErrN
+    stdDevD <- ret$stdErrD
+    
+    dfB <- rbind(dfB, data.frame(
+      AUC = RsmRocAuc,
+      mu = mu, 
+      lambda = lambda,
+      nu = nu, 
+      effmu = meanD-meanN,
+      b = stdDevN/stdDevD, 
+      dmudsig = (meanD - meanN)/(stdDevD - stdDevN)))
+  }
+
+  # Part C
+  dfC <- data.frame()
+  mu <- 2
+  lambdaArr <- logseq(0.1, 5, 10)
+  for (i in 1:length(lambdaArr)) {
+    lambda <- lambdaArr[i]
+    nu <- NA;  # NA indicates this is to be varied
+    
+    retParms <- FindParamFixAuc(mu, lambda, nu, lesionDist, RsmRocAuc)
+    if (!is.na(retParms)) nu <- retParms else next
+    ret <- rsmPdfMeansAndStddevs(mu, lambda, nu, lesionDist)
+    meanN <- ret$meanN
+    meanD <- ret$meanD
+    stdDevN <- ret$stdErrN
+    stdDevD <- ret$stdErrD
+    
+    dfC <- rbind(dfC, data.frame(
+      AUC = RsmRocAuc,
+      mu = mu, 
+      lambda = lambda,
+      nu = nu, 
+      effmu = meanD-meanN,
+      b = stdDevN/stdDevD, 
+      dmudsig = (meanD - meanN)/(stdDevD - stdDevN)))
+  }
+  return(list(
+    dfA = dfA,
+    dfB = dfB,
+    dfC = dfC
+  ))
+}
+```
+
+
+```{r main-rsm-swets-observations1, echo=FALSE}
+
+ret <- do_one_value (0.7) 
+dfA <- ret$dfA
+dfB <- ret$dfB
+dfC <- ret$dfC
+dfA
+dfA
+dfC
+
+```
+
+
+```{r rsm-evidence-table1A, echo=FALSE}
+#colnames(dfA) <-c("$\\mu$", "$\\lambda$", "$\\nu$", "$L_{max}$", "AUC-ROC", "AUC-AFROC")
+# escape = FALSE is critical in getting Math right
+kbl(dfA, caption = "The last two columns list the RSM-predicted AUCs under the ROC and AFROC, respectively. The corresponding RSM parameters are listed in the first four columns.", booktabs = TRUE, escape = FALSE) %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```
+
+
+```{r main-rsm-swets-observations2, echo=FALSE}
+
+ret <- do_one_value (0.8) 
+dfA <- ret$dfA
+dfB <- ret$dfB
+dfC <- ret$dfC
+dfA
+dfA
+dfC
+
+```
+
 
 The code for this is in file mainRsmSwetsObservations.R in Online Appendix 17.G, which was used to populate Table 17.3. The table is organized into three parts, A, B and C. Part A varies   for constant RSM-AUC for  . Part B varies   for constant RSM-AUC for  . Part C varies   for constant RSM-AUC for  . The 1st column lists the constrained  , set to either 0.7 or 0.8, the 2nd and 3rd columns list the parameters that were varied, subject to the AUC constraint, followed by the empirical b-parameter and  . A similar organization applies to part B, where only   are varied and to part C where only   are varied. The number of lesions per diseased case was set to one. The function FindParamFixAuc() finds the missing RSM parameter, indicated by initializing it with NA, prior to the function call, given the two other RSM parameters. The function rsmPdfMeansAndStddevs() calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas. 
 
