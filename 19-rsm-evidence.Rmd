@@ -213,9 +213,9 @@ One expects $A \equiv AUC_{ROC}^{RSM}$ to exceed the binormal fitted value $A_z$
 ## Empirical observations
 As summarized previously, there are three empirical observations regarding binormal parameters: 
 
-* $b < 1$, 
-* $b$ decreases as $\mu$ increases, and 
-* $\Delta(mean) / \Delta(\sigma)$ is approximately constant for fixed experimental conditions. To not confuse with the RSM $\mu$ parameter, the difference in means is denoted $\Delta(mean)$, not $\Delta \mu$. 
+* $b < 1$. 
+* $b$ decreases as $\mu$ increases. 
+* For fixed experimental conditions $R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)$ is approximately constant. To not confuse with the RSM $\mu$ parameter, the difference in means of the two normal distributions is denoted $\Delta(mean)$, not $\Delta \mu$. 
 
 
 ### Explanation for $b < 1$
@@ -263,11 +263,14 @@ Fig. \@ref(fig:rsm-evidence-pdf-plots): This figure provides an explanation for 
 
 More than 55 years ago, [@RN2635] noticed in non-medical imaging contexts:
  
-* The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. 
+* The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. In binormal parameter terms, $b$ decreases as $a$ increases.
 
-* The ratio $\Delta(mean) / \Delta(\sigma)$ is approximately constant for a fixed set of experimental conditions.
+* The ratio $R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)$ is approximately constant for a fixed set of experimental conditions. In binormal parameter terms, $\frac{a}{1-b}$ is approximately constant ^[The separation is $a$, the wider signal distribution has standard deviation unity while the narrower noise distribution has standard deviation $b$.].
 
-In the RSM  $\mu$ is the perceptual signal to noise *pSNR* of found lesions. Swets' first empirical observation implies that the $b$ parameter should decrease with increasing $\mu$. Testing this proposition over a wide range of $\mu$ using the preceding methods (i.e., binormal model maximum likelihood fitting) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each bin and convergence of the binormal model algorithm, which is problematical for larger values of $\mu$ which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If $f(x)$ is a unit-normalized pdf its mean $<x>$  and variance $\sigma_x^2$ are defined by:
+In the RSM $\mu$ is the perceptual signal to noise of found lesions. Swets' first empirical observation implies that the $b$ parameter should decrease with increasing $\mu$. The second observation
+
+
+Testing this proposition over a wide range of $\mu$ using the preceding methods (i.e., binormal model maximum likelihood fitting) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each bin and convergence of the binormal model algorithm, which is problematical for larger values of $\mu$ which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If $f(x)$ is a unit-normalized pdf its mean $<x>$  and variance $\sigma_x^2$ are defined by:
 
 \begin{equation}
 \left. 
@@ -305,7 +308,7 @@ Shown first are three tables corresponding to RSM-AUC = 0.7.
 
 ```{r main-rsm-swets-observations0, echo=FALSE}
 source(here("R/rsm-evidence/PlotBMErrBar.R"))
-source(here("R/rsm-evidence/rsmPdfMeansAndStddevs.R"))
+source(here("R/rsm-evidence/effectiveAB.R"))
 source(here("R/rsm-evidence/FindParamFixAuc.R"))
 source(here("R/rsm-evidence/rsmSupportFns.R"))
 
@@ -316,6 +319,7 @@ logseq <- function( d1, d2, n) {
 
 # parameters are adjusted to attain this value; 0.7 or 0.8
 do_one_value <- function (RsmRocAuc) {
+  
   Lmax <- 1;K2 <- 700;Lk2 <- floor(runif(K2, 1, Lmax + 1)) 
   nLesPerCase <- unique(Lk2);lesionDist <- array(dim = c(length(nLesPerCase), 2))
   for (i in nLesPerCase) lesionDist[i, ] <- c(i, sum(Lk2 == i)/K2)
@@ -331,22 +335,26 @@ do_one_value <- function (RsmRocAuc) {
     
     retParms <- FindParamFixAuc(mu, lambda, nu, lesionDist, RsmRocAuc)
     if (!is.na(retParms)) nu <- retParms else next
-    ret <- rsmPdfMeansAndStddevs(mu, lambda, nu, lesionDist)
-    meanN <- ret$meanN
-    meanD <- ret$meanD
-    stdDevN <- ret$stdErrN
-    stdDevD <- ret$stdErrD
+    ret <- effectiveAB(mu, lambda, nu, lesionDist)
+    a <- ret$a
+    b <- ret$b
+    R_Swets  <-  a/(1-b)
+    
+    ret <- UtilIntrinsic2PhysicalRSM(mu, lambda, nu)
+    lambdaP <- ret$lambdaP
+    nuP <- ret$nuP
     
     dfA <- rbind(dfA, data.frame(
       AUC = RsmRocAuc,
       mu = mu, 
-      lambda = lambda,
-      nu = nu,
-      effmu = meanD-meanN,
-      b = stdDevN/stdDevD, 
-      dmudsig = (meanD - meanN)/(stdDevD - stdDevN)))
+      lambda = lambdaP,
+      nu = nuP,
+      a = a,
+      b = b, 
+      R_Swets = R_Swets
+    ))
   }
-
+  
   # Part B
   dfB <- data.frame()
   nu <- 1
@@ -357,22 +365,26 @@ do_one_value <- function (RsmRocAuc) {
     
     retParms <- FindParamFixAuc(mu, lambda, nu, lesionDist, RsmRocAuc)
     if (!is.na(retParms)) mu <- retParms else next
-    ret <- rsmPdfMeansAndStddevs(mu, lambda, nu, lesionDist)
-    meanN <- ret$meanN
-    meanD <- ret$meanD
-    stdDevN <- ret$stdErrN
-    stdDevD <- ret$stdErrD
+    ret <- effectiveAB(mu, lambda, nu, lesionDist)
+    a <- ret$a
+    b <- ret$b
+    R_Swets  <-  a/(1-b)
+
+    ret <- UtilIntrinsic2PhysicalRSM(mu, lambda, nu)
+    lambdaP <- ret$lambdaP
+    nuP <- ret$nuP
     
     dfB <- rbind(dfB, data.frame(
       AUC = RsmRocAuc,
       mu = mu, 
-      lambda = lambda,
-      nu = nu, 
-      effmu = meanD-meanN,
-      b = stdDevN/stdDevD, 
-      dmudsig = (meanD - meanN)/(stdDevD - stdDevN)))
+      lambda = lambdaP,
+      nu = nuP, 
+      a = a,
+      b = b, 
+      R_Swets = R_Swets
+    ))
   }
-
+  
   # Part C
   dfC <- data.frame()
   mu <- 2
@@ -383,20 +395,24 @@ do_one_value <- function (RsmRocAuc) {
     
     retParms <- FindParamFixAuc(mu, lambda, nu, lesionDist, RsmRocAuc)
     if (!is.na(retParms)) nu <- retParms else next
-    ret <- rsmPdfMeansAndStddevs(mu, lambda, nu, lesionDist)
-    meanN <- ret$meanN
-    meanD <- ret$meanD
-    stdDevN <- ret$stdErrN
-    stdDevD <- ret$stdErrD
+    ret <- effectiveAB(mu, lambda, nu, lesionDist)
+    a <- ret$a
+    b <- ret$b
+    R_Swets  <-  a/(1-b)
+    
+    ret <- UtilIntrinsic2PhysicalRSM(mu, lambda, nu)
+    lambdaP <- ret$lambdaP
+    nuP <- ret$nuP
     
     dfC <- rbind(dfC, data.frame(
       AUC = RsmRocAuc,
       mu = mu, 
-      lambda = lambda,
-      nu = nu, 
-      effmu = meanD-meanN,
-      b = stdDevN/stdDevD, 
-      dmudsig = (meanD - meanN)/(stdDevD - stdDevN)))
+      lambda = lambdaP,
+      nu = nuP, 
+      a = a,
+      b = b, 
+      R_Swets = R_Swets
+    ))
   }
   return(list(
     dfA = dfA,
@@ -404,6 +420,7 @@ do_one_value <- function (RsmRocAuc) {
     dfC = dfC
   ))
 }
+
 ```
 
 
@@ -416,14 +433,14 @@ dfC <- ret$dfC
 
 
 ```{r rsm-evidence-table1A, echo=FALSE}
-colnames(dfA) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfA) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
 # escape = FALSE is critical in getting Math right
 kbl(dfA, caption = "Here $\\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
 ```{r rsm-evidence-table1B, echo=FALSE}
-colnames(dfB) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfB) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
 # escape = FALSE is critical in getting Math right
 kbl(dfB, caption = "Here $\\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.7.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
@@ -431,7 +448,7 @@ kbl(dfB, caption = "Here $\\nu = 1$ is held constant while the other two paramet
 
 
 ```{r rsm-evidence-table1C, echo=FALSE}
-colnames(dfC) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfC) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
 # escape = FALSE is critical in getting Math right
 kbl(dfC, caption = "Here $\\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
@@ -453,14 +470,14 @@ dfC <- ret$dfC
 
 
 ```{r rsm-evidence-table2A, echo=FALSE}
-colnames(dfA) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfA) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
 # escape = FALSE is critical in getting Math right
 kbl(dfA, caption = "Here $\\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
 ```{r rsm-evidence-table2B, echo=FALSE}
-colnames(dfB) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfB) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
 # escape = FALSE is critical in getting Math right
 kbl(dfB, caption = "Here $\\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.8.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 4), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
@@ -468,7 +485,7 @@ kbl(dfB, caption = "Here $\\nu = 1$ is held constant while the other two paramet
 
 
 ```{r rsm-evidence-table2C, echo=FALSE}
-colnames(dfC) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfC) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
 # escape = FALSE is critical in getting Math right
 kbl(dfC, caption = "Here $\\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
@@ -486,10 +503,10 @@ The six tables are organized into 2 x 3 groups.
 In each table the 1st column lists the constrained  AUC, set to either 0.7 or 0.8, the 2nd, 3rd and 4th columns list the RSM parameters, followed by the empirical a and b-parameters and the Swets ratio. 
 
 
-The number of lesions per diseased case was set to one. The function `FindParamFixAuc()` finds the missing RSM parameter, indicated by initializing it with `NA`. The function `rsmPdfMeansAndStddevs()` calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas. 
+The number of lesions per diseased case was set to one. The function `FindParamFixAuc()` finds the missing RSM parameter, indicated by initializing it with `NA`. The function `effectiveAB()` calculates the separation $a_{eff}$ and standard deviation ratio $b_{eff}$ (non-diseased to diseased) of the two distributions, after normalizing each to unit area. 
 
 STOP
-Examination of Tables \@ref(tab:rsm-evidence-table1A), \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table1C) reveals, for both values of AUC, an inverse relation between $\mu$ and $b$, Parts A and B, and an inverse relation between   and b, Part C.  In (C), for fixed  , the only way to improve performance is by increasing  , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of   especially in Parts A and B. 
+Examination of Tables \@ref(tab:rsm-evidence-table1A), \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table1C) reveals, for both values of AUC, an inverse relation between $\mu$ and $b$ and an inverse relation between $\nu$ and b.  In (C), for fixed  , the only way to improve performance is by increasing  , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of   especially in Parts A and B. 
 
 The biggest deviation from approximate constancy is observed in Part C: this could be due to unreasonably low values of  , e.g., 0.1, necessary in order to satisfy the AUC constraint. It should be noted that the Swets et al observations are based on only two datasets and they state that   = 4, their observed value, is probably not generally applicable. 
 
