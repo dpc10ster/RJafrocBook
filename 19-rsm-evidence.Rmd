@@ -210,15 +210,15 @@ Of interest in Table \@ref(tab:rsm-evidence-binormal-table2) is the observation 
 One expects $A \equiv AUC_{ROC}^{RSM}$ to exceed the binormal fitted value $A_z$. This has to do with the "proper" property of the RSM-ROC curve, which implies an *ideal observer*, while the binormal model predicts "improper" ROC curves, TBA Chapter 20. For rows 2 and 3, the expected orderings are reversed but the magnitudes of the discrepancies are small. This is because RSM-predicted values are *not* subject to sampling variability as they are derived by numerical integration, whose estimation error is very small compared to sampling error. In contrast, the estimates of $A_z$ are subject to sampling variability, even though large numbers of cases were used. Row-4 repeats Row-2 with a different value of `seed`: this time the expected ordering is observed $A > Az$. 
 
 
-## Explanations of empirical observations regarding binormal parameters
-As summarized previously, there are three empirical observations: 
+## Empirical observations
+As summarized previously, there are three empirical observations regarding binormal parameters: 
 
 * $b < 1$, 
 * $b$ decreases as $\mu$ increases, and 
 * $\Delta(mean) / \Delta(\sigma)$ is approximately constant for fixed experimental conditions. To not confuse with the RSM $\mu$ parameter, the difference in means is denoted $\Delta(mean)$, not $\Delta \mu$. 
 
 
-### Explanation for empirical observation $b < 1$
+### Explanation for $b < 1$
 The RSM-predicted ROC curves are consistent with empirical observations [@RN298] that observed ROC data, when fitted by the unequal variance binormal model, yield $b < 1$, implying that the diseased case pdf is wider than the non-diseased case pdf. The RSM provides an explanation for this: diseased cases yield two types of z-samples, namely NL z-samples from a zero-centered unit variance normal distribution and LL z-samples from a  $\mu$-centered unit variance normal distribution. The resulting *mixture distribution* is expected, when one attempts to fit it with a normal distribution, to yield standard deviation for diseased cases greater than 1, or, equivalently, $b < 1$. The fit is not expected to be ideal, but it is known that for relatively small numbers of cases, as is true with clinical data sets, it is difficult to detect deviations from strict normality; indeed, the binormal model is quite robust with respect to deviations from strict normality [@RN298]. Several examples of this were evident in the goodness of fit p-values in Table \@ref(tab:rsm-evidence-binormal-table2), which show good binormal fits to RSM generated data even with 1200 cases. 
 
 
@@ -259,7 +259,7 @@ grid.arrange(plotArr[[1,1]], plotArr[[1,2]], plotArr[[2,1]], plotArr[[2,2]], nro
 Fig. \@ref(fig:rsm-evidence-pdf-plots): This figure provides an explanation for empirical observation $b < 1$. Displayed are pdfs along with the parameter values. For all plots $\lambda = 1$ and $L_{max} = 1$. The dotted curves correspond to non-diseased cases while the solid curves correspond to diseased cases. The solid curves are broader than the dotted ones. In (A) and (B) the solid curve is noticeably broader. In (D) there is a hint of a secondary peak at zero, which is quite prominent in (C), which corresponds to the largest $\mu$ and the smallest $\nu$. In each case the resulting mixture distribution is expected to lead to a larger estimate of standard deviation of the assumed normal distribution of diseased cases relative to non-diseased cases. 
 
 
-### Explanation of Swets et al' observations 
+### Explanation of Swets et al observations 
 
 More than 55 years ago, [@RN2635] noticed in non-medical imaging contexts:
  
@@ -294,7 +294,14 @@ The needed quantities are defined as:
 
 
 
-*The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying the two of the three parameters of the RSM under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g.,  $\mu$, would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. The underlying assumption is that observers, characterized by different RSM parameters, nevertheless converge on roughly the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large $\lambda$) with increased performance in other areas (e.g., finding more lesions, i.e., larger $\nu$, and/or extracting greater pSNR from found lesions, i.e., larger $\mu$).*
+*The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying two of the three parameters of the RSM (excluding $\zeta_1 = -3$) under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g.,  $\mu$, would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. Rather, we assume that observers, characterized by different RSM parameters, nevertheless converge to roughly the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large $\lambda$) with increased performance in other areas (e.g., finding more lesions, i.e., larger $\nu$, and/or extracting greater pSNR from found lesions, i.e., larger $\mu$).*
+
+Shown first are three tables corresponding to RSM-AUC = 0.7. 
+
+* In Table \@ref(tab:rsm-evidence-table1A) $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7. 
+* In Table \@ref(tab:rsm-evidence-table1B) $\nu = 1$ is held constant. 
+* In Table \@ref(tab:rsm-evidence-table1C) $\mu = 2$ is held constant.
+
 
 ```{r main-rsm-swets-observations0, echo=FALSE}
 source(here("R/rsm-evidence/PlotBMErrBar.R"))
@@ -401,39 +408,85 @@ do_one_value <- function (RsmRocAuc) {
 
 
 ```{r main-rsm-swets-observations1, echo=FALSE}
-
 ret <- do_one_value (0.7) 
 dfA <- ret$dfA
 dfB <- ret$dfB
 dfC <- ret$dfC
-dfA
-dfA
-dfC
-
 ```
 
 
 ```{r rsm-evidence-table1A, echo=FALSE}
-#colnames(dfA) <-c("$\\mu$", "$\\lambda$", "$\\nu$", "$L_{max}$", "AUC-ROC", "AUC-AFROC")
+colnames(dfA) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
 # escape = FALSE is critical in getting Math right
-kbl(dfA, caption = "The last two columns list the RSM-predicted AUCs under the ROC and AFROC, respectively. The corresponding RSM parameters are listed in the first four columns.", booktabs = TRUE, escape = FALSE) %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(dfA, caption = "Here $\\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
-```{r main-rsm-swets-observations2, echo=FALSE}
+```{r rsm-evidence-table1B, echo=FALSE}
+colnames(dfB) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+# escape = FALSE is critical in getting Math right
+kbl(dfB, caption = "Here $\\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.7.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```
 
+
+
+```{r rsm-evidence-table1C, echo=FALSE}
+colnames(dfC) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+# escape = FALSE is critical in getting Math right
+kbl(dfC, caption = "Here $\\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```
+
+Shown next are three tables corresponding to RSM-AUC = 0.8.
+
+* In Table \@ref(tab:rsm-evidence-table2A) $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8. 
+* In Table \@ref(tab:rsm-evidence-table2B) $\nu = 1$ is held constant. 
+* In Table \@ref(tab:rsm-evidence-table2C) $\mu = 2$ is held constant.
+
+
+```{r main-rsm-swets-observations2, echo=FALSE}
 ret <- do_one_value (0.8) 
 dfA <- ret$dfA
 dfB <- ret$dfB
 dfC <- ret$dfC
-dfA
-dfA
-dfC
-
 ```
 
 
-The code for this is in file mainRsmSwetsObservations.R in Online Appendix 17.G, which was used to populate Table 17.3. The table is organized into three parts, A, B and C. Part A varies   for constant RSM-AUC for  . Part B varies   for constant RSM-AUC for  . Part C varies   for constant RSM-AUC for  . The 1st column lists the constrained  , set to either 0.7 or 0.8, the 2nd and 3rd columns list the parameters that were varied, subject to the AUC constraint, followed by the empirical b-parameter and  . A similar organization applies to part B, where only   are varied and to part C where only   are varied. The number of lesions per diseased case was set to one. The function FindParamFixAuc() finds the missing RSM parameter, indicated by initializing it with NA, prior to the function call, given the two other RSM parameters. The function rsmPdfMeansAndStddevs() calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas. 
+
+```{r rsm-evidence-table2A, echo=FALSE}
+colnames(dfA) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+# escape = FALSE is critical in getting Math right
+kbl(dfA, caption = "Here $\\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```
+
+
+```{r rsm-evidence-table2B, echo=FALSE}
+colnames(dfB) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+# escape = FALSE is critical in getting Math right
+kbl(dfB, caption = "Here $\\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.8.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 4), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```
+
+
+
+```{r rsm-evidence-table2C, echo=FALSE}
+colnames(dfC) <-c("$AUC$", "$\\mu$", "$\\lambda$", "$\\nu$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+# escape = FALSE is critical in getting Math right
+kbl(dfC, caption = "Here $\\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```
+
+
+
+The six tables are organized into 2 x 3 groups. 
+
+* Tables \@ref(tab:rsm-evidence-table1A), \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table1C) correspond to RSM-AUC = 0.7, while Tables \@ref(tab:rsm-evidence-table2A), \@ref(tab:rsm-evidence-table2B) and \@ref(tab:rsm-evidence-table2C) correspond to RSM-AUC = 0.8.
+* Tables \@ref(tab:rsm-evidence-table1A) and \@ref(tab:rsm-evidence-table2A) corresponds to fixed $\lambda$ and varying $\mu$ and $\nu$.
+* Tables \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table2B) corresponds to fixed $\nu$ and varying $\mu$ and $\lambda$.
+* Tables \@ref(tab:rsm-evidence-table1C) and \@ref(tab:rsm-evidence-table2C) corresponds to fixed $\mu$ and varying $\lambda$ and $\nu$.
+
+
+In each table the 1st column lists the constrained  AUC, set to either 0.7 or 0.8, the 2nd, 3rd and 4th columns list the RSM parameters, followed by the empirical a and b-parameters and the ratio. 
+
+
+A similar organization applies to part B, where only   are varied and to part C where only   are varied. The number of lesions per diseased case was set to one. The function FindParamFixAuc() finds the missing RSM parameter, indicated by initializing it with NA, prior to the function call, given the two other RSM parameters. The function rsmPdfMeansAndStddevs() calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas. 
 
 Examination of Table 17.3 reveals, for both values of AUC, an inverse relation between   and b, Parts A and B, and an inverse relation between   and b, Part C.  In (C), for fixed  , the only way to improve performance is by increasing  , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of   especially in Parts A and B. 
 
