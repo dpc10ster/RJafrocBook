@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-12-20}
+\date{2020-12-21}
 
 \begin{document}
 \maketitle
@@ -6385,7 +6385,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1     1.606013          1   0.20505316}
+\CommentTok{#> 1    1.2488401          1   0.26377413}
 \end{Highlighting}
 \end{Shaded}
 
@@ -13030,10 +13030,10 @@ Of interest in Table \ref{tab:rsm-evidence-binormal-table2} is the observation t
 
 One expects \(A \equiv AUC_{ROC}^{RSM}\) to exceed the binormal fitted value \(A_z\). This has to do with the ``proper'' property of the RSM-ROC curve, which implies an \emph{ideal observer}, while the binormal model predicts ``improper'' ROC curves, TBA Chapter 20. For rows 2 and 3, the expected orderings are reversed but the magnitudes of the discrepancies are small. This is because RSM-predicted values are \emph{not} subject to sampling variability as they are derived by numerical integration, whose estimation error is very small compared to sampling error. In contrast, the estimates of \(A_z\) are subject to sampling variability, even though large numbers of cases were used. Row-4 repeats Row-2 with a different value of \texttt{seed}: this time the expected ordering is observed \(A > Az\).
 
-\hypertarget{explanations-of-empirical-observations-regarding-binormal-parameters}{%
-\section{Explanations of empirical observations regarding binormal parameters}\label{explanations-of-empirical-observations-regarding-binormal-parameters}}
+\hypertarget{empirical-observations}{%
+\section{Empirical observations}\label{empirical-observations}}
 
-As summarized previously, there are three empirical observations:
+As summarized previously, there are three empirical observations regarding binormal parameters:
 
 \begin{itemize}
 \tightlist
@@ -13045,8 +13045,8 @@ As summarized previously, there are three empirical observations:
   \(\Delta(mean) / \Delta(\sigma)\) is approximately constant for fixed experimental conditions. To not confuse with the RSM \(\mu\) parameter, the difference in means is denoted \(\Delta(mean)\), not \(\Delta \mu\).
 \end{itemize}
 
-\hypertarget{explanation-for-empirical-observation-b-1}{%
-\subsection{\texorpdfstring{Explanation for empirical observation \(b < 1\)}{Explanation for empirical observation b \textless{} 1}}\label{explanation-for-empirical-observation-b-1}}
+\hypertarget{explanation-for-b-1}{%
+\subsection{\texorpdfstring{Explanation for \(b < 1\)}{Explanation for b \textless{} 1}}\label{explanation-for-b-1}}
 
 The RSM-predicted ROC curves are consistent with empirical observations \citep{RN298} that observed ROC data, when fitted by the unequal variance binormal model, yield \(b < 1\), implying that the diseased case pdf is wider than the non-diseased case pdf. The RSM provides an explanation for this: diseased cases yield two types of z-samples, namely NL z-samples from a zero-centered unit variance normal distribution and LL z-samples from a \(\mu\)-centered unit variance normal distribution. The resulting \emph{mixture distribution} is expected, when one attempts to fit it with a normal distribution, to yield standard deviation for diseased cases greater than 1, or, equivalently, \(b < 1\). The fit is not expected to be ideal, but it is known that for relatively small numbers of cases, as is true with clinical data sets, it is difficult to detect deviations from strict normality; indeed, the binormal model is quite robust with respect to deviations from strict normality \citep{RN298}. Several examples of this were evident in the goodness of fit p-values in Table \ref{tab:rsm-evidence-binormal-table2}, which show good binormal fits to RSM generated data even with 1200 cases.
 
@@ -13059,7 +13059,7 @@ The RSM-predicted ROC curves are consistent with empirical observations \citep{R
 Fig. \ref{fig:rsm-evidence-pdf-plots}: This figure provides an explanation for empirical observation \(b < 1\). Displayed are pdfs along with the parameter values. For all plots \(\lambda = 1\) and \(L_{max} = 1\). The dotted curves correspond to non-diseased cases while the solid curves correspond to diseased cases. The solid curves are broader than the dotted ones. In (A) and (B) the solid curve is noticeably broader. In (D) there is a hint of a secondary peak at zero, which is quite prominent in (C), which corresponds to the largest \(\mu\) and the smallest \(\nu\). In each case the resulting mixture distribution is expected to lead to a larger estimate of standard deviation of the assumed normal distribution of diseased cases relative to non-diseased cases.
 
 \hypertarget{explanation-of-swets-et-al-observations}{%
-\subsection{Explanation of Swets et al' observations}\label{explanation-of-swets-et-al-observations}}
+\subsection{Explanation of Swets et al observations}\label{explanation-of-swets-et-al-observations}}
 
 More than 55 years ago, \citep{RN2635} noticed in non-medical imaging contexts:
 
@@ -13094,117 +13094,268 @@ The needed quantities are defined as:
 \label{eq:rsm-evidence-delta-mean-sigma}
 \end{equation}
 
-\emph{The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying the two of the three parameters of the RSM under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g., \(\mu\), would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. The underlying assumption is that observers, characterized by different RSM parameters, nevertheless converge on roughly the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large \(\lambda\)) with increased performance in other areas (e.g., finding more lesions, i.e., larger \(\nu\), and/or extracting greater pSNR from found lesions, i.e., larger \(\mu\)).}
+\emph{The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying two of the three parameters of the RSM (excluding \(\zeta_1 = -3\)) under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g., \(\mu\), would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. Rather, we assume that observers, characterized by different RSM parameters, nevertheless converge to roughly the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large \(\lambda\)) with increased performance in other areas (e.g., finding more lesions, i.e., larger \(\nu\), and/or extracting greater pSNR from found lesions, i.e., larger \(\mu\)).}
 
-\begin{verbatim}
-##    AUC       mu lambda        nu    effmu         b  dmudsig
-## 1  0.7 2.000000      2 0.3040194 1.006825 0.7539348 3.136005
-## 2  0.7 2.214346      2 0.2600273 1.129415 0.7107209 2.812443
-## 3  0.7 2.451665      2 0.2252662 1.276371 0.6670500 2.585494
-## 4  0.7 2.714418      2 0.1973748 1.451139 0.6235964 2.425911
-## 5  0.7 3.005330      2 0.1746062 1.657169 0.5810496 2.315364
-## 6  0.7 3.327421      2 0.1556552 1.897802 0.5400178 2.241479
-## 7  0.7 3.684031      2 0.1395508 2.176243 0.5009616 2.195411
-## 8  0.7 4.078861      2 0.1255604 2.495426 0.4641586 2.170306
-## 9  0.7 4.516005      2 0.1132283 2.859036 0.4297620 2.161810
-## 10 0.7 5.000000      2 0.1021570 3.270140 0.3977542 2.165567
-\end{verbatim}
+Shown first are three tables corresponding to RSM-AUC = 0.7.
 
-\begin{verbatim}
-##    AUC       mu lambda        nu    effmu         b  dmudsig
-## 1  0.7 2.000000      2 0.3040194 1.006825 0.7539348 3.136005
-## 2  0.7 2.214346      2 0.2600273 1.129415 0.7107209 2.812443
-## 3  0.7 2.451665      2 0.2252662 1.276371 0.6670500 2.585494
-## 4  0.7 2.714418      2 0.1973748 1.451139 0.6235964 2.425911
-## 5  0.7 3.005330      2 0.1746062 1.657169 0.5810496 2.315364
-## 6  0.7 3.327421      2 0.1556552 1.897802 0.5400178 2.241479
-## 7  0.7 3.684031      2 0.1395508 2.176243 0.5009616 2.195411
-## 8  0.7 4.078861      2 0.1255604 2.495426 0.4641586 2.170306
-## 9  0.7 4.516005      2 0.1132283 2.859036 0.4297620 2.161810
-## 10 0.7 5.000000      2 0.1021570 3.270140 0.3977542 2.165567
-\end{verbatim}
-
-\begin{verbatim}
-##    AUC mu    lambda        nu     effmu         b   dmudsig
-## 1  0.7  2 0.1000000 0.2580240 1.8544816 0.8966579 16.091266
-## 2  0.7  2 0.1544452 0.2594364 1.7868249 0.8631606 11.272127
-## 3  0.7  2 0.2385332 0.2616054 1.6950567 0.8274848  8.132437
-## 4  0.7  2 0.3684031 0.2649264 1.5773402 0.7940112  6.083536
-## 5  0.7  2 0.5689810 0.2699885 1.4368181 0.7675247  4.750151
-## 6  0.7  2 0.8787639 0.2776535 1.2830448 0.7516999  3.896845
-## 7  0.7  2 1.3572088 0.2891525 1.1303902 0.7479598  3.380376
-## 8  0.7  2 2.0961440 0.3061914 0.9930460 0.7551508  3.118380
-## 9  0.7  2 3.2373940 0.3310898 0.8788939 0.7697799  3.063390
-## 10 0.7  2 5.0000000 0.3670313 0.7855144 0.7857195  3.156897
-\end{verbatim}
+\begin{itemize}
+\tightlist
+\item
+  In Table \ref{tab:rsm-evidence-table1A} \(\lambda = 2\) is held constant while the other two parameters are varied to keep AUC at 0.7.
+\item
+  In Table \ref{tab:rsm-evidence-table1B} \(\nu = 1\) is held constant.
+\item
+  In Table \ref{tab:rsm-evidence-table1C} \(\mu = 2\) is held constant.
+\end{itemize}
 
 \begin{table}[H]
 
-\caption{\label{tab:rsm-evidence-table1A}The last two columns list the RSM-predicted AUCs under the ROC and AFROC, respectively. The corresponding RSM parameters are listed in the first four columns.}
+\caption{\label{tab:rsm-evidence-table1A}Here $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7.}
 \centering
 \resizebox{\linewidth}{!}{
 \begin{tabular}[t]{rrrrrrr}
 \toprule
-AUC & mu & lambda & nu & effmu & b & dmudsig\\
+$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \midrule
-0.7 & 2.000000 & 2 & 0.3040194 & 1.006825 & 0.7539348 & 3.136005\\
-0.7 & 2.214346 & 2 & 0.2600273 & 1.129415 & 0.7107209 & 2.812442\\
-0.7 & 2.451665 & 2 & 0.2252662 & 1.276371 & 0.6670500 & 2.585494\\
-0.7 & 2.714418 & 2 & 0.1973748 & 1.451139 & 0.6235964 & 2.425911\\
-0.7 & 3.005330 & 2 & 0.1746062 & 1.657169 & 0.5810496 & 2.315364\\
-\addlinespace
-0.7 & 3.327421 & 2 & 0.1556552 & 1.897802 & 0.5400178 & 2.241479\\
-0.7 & 3.684032 & 2 & 0.1395508 & 2.176243 & 0.5009616 & 2.195411\\
-0.7 & 4.078861 & 2 & 0.1255604 & 2.495426 & 0.4641586 & 2.170307\\
-0.7 & 4.516005 & 2 & 0.1132283 & 2.859036 & 0.4297620 & 2.161810\\
-0.7 & 5.000000 & 2 & 0.1021570 & 3.270140 & 0.3977542 & 2.165567\\
+ & 2.000000 &  & 0.3040194 & 1.006825 & 0.7539348 & 3.136005\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 2.214346 &  & 0.2600273 & 1.129415 & 0.7107209 & 2.812442\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 2.451665 &  & 0.2252662 & 1.276371 & 0.6670500 & 2.585494\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 2.714418 &  & 0.1973748 & 1.451139 & 0.6235964 & 2.425911\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 3.005330 &  & 0.1746062 & 1.657169 & 0.5810496 & 2.315364\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 3.327421 &  & 0.1556552 & 1.897802 & 0.5400178 & 2.241479\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 3.684032 &  & 0.1395508 & 2.176243 & 0.5009616 & 2.195411\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 4.078861 &  & 0.1255604 & 2.495426 & 0.4641586 & 2.170307\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 4.516005 &  & 0.1132283 & 2.859036 & 0.4297620 & 2.161810\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.7} & 5.000000 & \multirow{-10}{*}{\raggedleft\arraybackslash 2} & 0.1021570 & 3.270140 & 0.3977542 & 2.165567\\
 \bottomrule
 \end{tabular}}
 \end{table}
 
-\begin{verbatim}
-##    AUC       mu lambda        nu    effmu         b  dmudsig
-## 1  0.8 2.000000      2 0.5750174 1.366996 0.8105541 5.945703
-## 2  0.8 2.214346      2 0.4826833 1.519525 0.7649096 5.011078
-## 3  0.8 2.451665      2 0.4128075 1.700445 0.7208098 4.438846
-## 4  0.8 2.714418      2 0.3585499 1.912912 0.6784979 4.073575
-## 5  0.8 3.005330      2 0.3154119 2.160031 0.6382351 3.838983
-## 6  0.8 3.327421      2 0.2801812 2.444396 0.6001421 3.690938
-## 7  0.8 3.684031      2 0.2506689 2.768579 0.5642539 3.602765
-## 8  0.8 4.078861      2 0.2253300 3.135116 0.5304907 3.556586
-## 9  0.8 4.516005      2 0.2030971 3.546769 0.4987007 3.539988
-## 10 0.8 5.000000      2 0.1833044 4.007088 0.4687580 3.545271
-\end{verbatim}
+\begin{table}[H]
 
-\begin{verbatim}
-##    AUC       mu lambda        nu    effmu         b  dmudsig
-## 1  0.8 2.000000      2 0.5750174 1.366996 0.8105541 5.945703
-## 2  0.8 2.214346      2 0.4826833 1.519525 0.7649096 5.011078
-## 3  0.8 2.451665      2 0.4128075 1.700445 0.7208098 4.438846
-## 4  0.8 2.714418      2 0.3585499 1.912912 0.6784979 4.073575
-## 5  0.8 3.005330      2 0.3154119 2.160031 0.6382351 3.838983
-## 6  0.8 3.327421      2 0.2801812 2.444396 0.6001421 3.690938
-## 7  0.8 3.684031      2 0.2506689 2.768579 0.5642539 3.602765
-## 8  0.8 4.078861      2 0.2253300 3.135116 0.5304907 3.556586
-## 9  0.8 4.516005      2 0.2030971 3.546769 0.4987007 3.539988
-## 10 0.8 5.000000      2 0.1833044 4.007088 0.4687580 3.545271
-\end{verbatim}
+\caption{\label{tab:rsm-evidence-table1B}Here $\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.7.}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{rrrrrrr}
+\toprule
+$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+\midrule
+ & 0.9453400 & 1.000000 & 1 & 0.5945099 & 0.9767467 & 25.43453\\
+\cmidrule{2-7}
+ & 0.9900899 & 1.195813 & 1 & 0.6063259 & 0.9763296 & 25.60972\\
+\cmidrule{2-7}
+ & 1.0368216 & 1.429969 & 1 & 0.6172462 & 0.9759534 & 25.83105\\
+\cmidrule{2-7}
+ & 1.0853032 & 1.709976 & 1 & 0.6267194 & 0.9755036 & 25.96241\\
+\cmidrule{2-7}
+ & 1.1353543 & 2.044812 & 1 & 0.6342292 & 0.9747737 & 25.78277\\
+\cmidrule{2-7}
+ & 1.1866104 & 2.445213 & 1 & 0.6390778 & 0.9734671 & 25.02159\\
+\cmidrule{2-7}
+ & 1.2388982 & 2.924018 & 1 & 0.6408089 & 0.9711321 & 23.42021\\
+\cmidrule{2-7}
+ & 1.2920006 & 3.496579 & 1 & 0.6390296 & 0.9671901 & 20.92522\\
+\cmidrule{2-7}
+ & 1.3456955 & 4.181255 & 1 & 0.6335312 & 0.9609738 & 17.80463\\
+\cmidrule{2-7}
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.7} & 1.3999013 & 5.000000 & 1 & 0.6245101 & 0.9518188 & 14.54334\\
+\bottomrule
+\end{tabular}}
+\end{table}
 
-\begin{verbatim}
-##    AUC mu    lambda        nu    effmu         b   dmudsig
-## 1  0.8  2 0.1000000 0.4640280 1.926954 0.9476004 34.848720
-## 2  0.8  2 0.1544452 0.4672318 1.891150 0.9265439 23.856540
-## 3  0.8  2 0.2385332 0.4721744 1.840571 0.9009387 16.743548
-## 4  0.8  2 0.3684031 0.4797958 1.772047 0.8726752 12.152413
-## 5  0.8  2 0.5689810 0.4915404 1.684378 0.8452798  9.214737
-## 6  0.8  2 0.8787639 0.5096299 1.580243 0.8232878  7.386057
-## 7  0.8  2 1.3572088 0.5375296 1.467147 0.8110032  6.344095
-## 8  0.8  2 2.0961440 0.5806387 1.355241 0.8112136  5.929330
-## 9  0.8  2 3.2373940 0.6480658 1.251461 0.8241099  6.112281
-## 10 0.8  2 5.0000000 0.7572216 1.152663 0.8448119  6.877419
-\end{verbatim}
+\begin{table}[H]
 
-The code for this is in file mainRsmSwetsObservations.R in Online Appendix 17.G, which was used to populate Table 17.3. The table is organized into three parts, A, B and C. Part A varies for constant RSM-AUC for . Part B varies for constant RSM-AUC for . Part C varies for constant RSM-AUC for . The 1st column lists the constrained , set to either 0.7 or 0.8, the 2nd and 3rd columns list the parameters that were varied, subject to the AUC constraint, followed by the empirical b-parameter and . A similar organization applies to part B, where only are varied and to part C where only are varied. The number of lesions per diseased case was set to one. The function FindParamFixAuc() finds the missing RSM parameter, indicated by initializing it with NA, prior to the function call, given the two other RSM parameters. The function rsmPdfMeansAndStddevs() calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas.
+\caption{\label{tab:rsm-evidence-table1C}Here $\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7.}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{rrrrrrr}
+\toprule
+$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+\midrule
+ &  & 0.1000000 & 0.2580240 & 1.8544816 & 0.8966579 & 16.091266\\
+\cmidrule{3-7}
+ &  & 0.1544452 & 0.2594364 & 1.7868249 & 0.8631606 & 11.272127\\
+\cmidrule{3-7}
+ &  & 0.2385332 & 0.2616054 & 1.6950567 & 0.8274848 & 8.132437\\
+\cmidrule{3-7}
+ &  & 0.3684031 & 0.2649264 & 1.5773402 & 0.7940112 & 6.083536\\
+\cmidrule{3-7}
+ &  & 0.5689810 & 0.2699885 & 1.4368181 & 0.7675247 & 4.750151\\
+\cmidrule{3-7}
+ &  & 0.8787639 & 0.2776535 & 1.2830448 & 0.7516999 & 3.896845\\
+\cmidrule{3-7}
+ &  & 1.3572088 & 0.2891525 & 1.1303902 & 0.7479598 & 3.380376\\
+\cmidrule{3-7}
+ &  & 2.0961440 & 0.3061914 & 0.9930460 & 0.7551508 & 3.118380\\
+\cmidrule{3-7}
+ &  & 3.2373940 & 0.3310898 & 0.8788939 & 0.7697799 & 3.063390\\
+\cmidrule{3-7}
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.7} & \multirow{-10}{*}{\raggedleft\arraybackslash 2} & 5.0000000 & 0.3670313 & 0.7855144 & 0.7857195 & 3.156897\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+Shown next are three tables corresponding to RSM-AUC = 0.8.
+
+\begin{itemize}
+\tightlist
+\item
+  In Table \ref{tab:rsm-evidence-table2A} \(\lambda = 2\) is held constant while the other two parameters are varied to keep AUC at 0.8.
+\item
+  In Table \ref{tab:rsm-evidence-table2B} \(\nu = 1\) is held constant.
+\item
+  In Table \ref{tab:rsm-evidence-table2C} \(\mu = 2\) is held constant.
+\end{itemize}
+
+\begin{table}[H]
+
+\caption{\label{tab:rsm-evidence-table2A}Here $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8.}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{rrrrrrr}
+\toprule
+$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+\midrule
+ & 2.000000 &  & 0.5750174 & 1.366996 & 0.8105541 & 5.945703\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 2.214346 &  & 0.4826833 & 1.519525 & 0.7649096 & 5.011078\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 2.451665 &  & 0.4128075 & 1.700445 & 0.7208098 & 4.438846\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 2.714418 &  & 0.3585499 & 1.912912 & 0.6784979 & 4.073575\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 3.005330 &  & 0.3154119 & 2.160031 & 0.6382351 & 3.838983\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 3.327421 &  & 0.2801812 & 2.444396 & 0.6001421 & 3.690938\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 3.684032 &  & 0.2506689 & 2.768579 & 0.5642539 & 3.602765\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 4.078861 &  & 0.2253300 & 3.135116 & 0.5304907 & 3.556586\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+ & 4.516005 &  & 0.2030971 & 3.546769 & 0.4987007 & 3.539988\\
+\cmidrule{2-2}
+\cmidrule{4-7}
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.8} & 5.000000 & \multirow{-10}{*}{\raggedleft\arraybackslash 2} & 0.1833044 & 4.007089 & 0.4687580 & 3.545271\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{table}[H]
+
+\caption{\label{tab:rsm-evidence-table2B}Here $\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.8.}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{rrrrrrr}
+\toprule
+$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+\midrule
+ & 1.354458 & 1.000000 &  & 1.043227 & 0.9446086 & 17.95230\\
+\cmidrule{2-3}
+\cmidrule{5-7}
+ & 1.401586 & 1.195813 &  & 1.056339 & 0.9411753 & 17.10578\\
+\cmidrule{2-3}
+\cmidrule{5-7}
+ & 1.450946 & 1.429969 &  & 1.068697 & 0.9378352 & 16.38231\\
+\cmidrule{2-3}
+\cmidrule{5-7}
+ & 1.502253 & 1.709976 &  & 1.079700 & 0.9345551 & 15.74782\\
+\cmidrule{2-3}
+\cmidrule{5-7}
+ & 1.555229 & 2.044812 &  & 1.088715 & 0.9312388 & 15.16258\\
+\cmidrule{2-3}
+\cmidrule{5-7}
+ & 1.609608 & 2.445213 &  & 1.095090 & 0.9276992 & 14.57858\\
+\cmidrule{2-3}
+\cmidrule{5-7}
+ & 1.665097 & 2.924018 &  & 1.098126 & 0.9236312 & 13.93974\\
+\cmidrule{2-3}
+\cmidrule{5-7}
+ & 1.721499 & 3.496579 &  & 1.097257 & 0.9185750 & 13.18735\\
+\cmidrule{2-3}
+\cmidrule{5-7}
+ & 1.778510 & 4.181255 &  & 1.091891 & 0.9119257 & 12.27557\\
+\cmidrule{2-3}
+\cmidrule{5-7}
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.8} & 1.835951 & 5.000000 & \multirow{-10}{*}{\raggedleft\arraybackslash 1} & 1.081767 & 0.9029454 & 11.19209\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{table}[H]
+
+\caption{\label{tab:rsm-evidence-table2C}Here $\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8.}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{rrrrrrr}
+\toprule
+$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+\midrule
+ &  & 0.1000000 & 0.4640280 & 1.926954 & 0.9476004 & 34.848720\\
+\cmidrule{3-7}
+ &  & 0.1544452 & 0.4672318 & 1.891150 & 0.9265439 & 23.856540\\
+\cmidrule{3-7}
+ &  & 0.2385332 & 0.4721744 & 1.840571 & 0.9009387 & 16.743547\\
+\cmidrule{3-7}
+ &  & 0.3684031 & 0.4797958 & 1.772047 & 0.8726752 & 12.152413\\
+\cmidrule{3-7}
+ &  & 0.5689810 & 0.4915404 & 1.684378 & 0.8452798 & 9.214737\\
+\cmidrule{3-7}
+ &  & 0.8787639 & 0.5096299 & 1.580243 & 0.8232878 & 7.386057\\
+\cmidrule{3-7}
+ &  & 1.3572088 & 0.5375296 & 1.467147 & 0.8110032 & 6.344095\\
+\cmidrule{3-7}
+ &  & 2.0961440 & 0.5806387 & 1.355241 & 0.8112136 & 5.929330\\
+\cmidrule{3-7}
+ &  & 3.2373940 & 0.6480658 & 1.251461 & 0.8241099 & 6.112281\\
+\cmidrule{3-7}
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.8} & \multirow{-10}{*}{\raggedleft\arraybackslash 2} & 5.0000000 & 0.7572216 & 1.152663 & 0.8448119 & 6.877419\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+The six tables are organized into 2 x 3 groups.
+
+\begin{itemize}
+\tightlist
+\item
+  Tables \ref{tab:rsm-evidence-table1A}, \ref{tab:rsm-evidence-table1B} and \ref{tab:rsm-evidence-table1C} correspond to RSM-AUC = 0.7, while Tables \ref{tab:rsm-evidence-table2A}, \ref{tab:rsm-evidence-table2B} and \ref{tab:rsm-evidence-table2C} correspond to RSM-AUC = 0.8.
+\item
+  Tables \ref{tab:rsm-evidence-table1A} and \ref{tab:rsm-evidence-table2A} corresponds to fixed \(\lambda\) and varying \(\mu\) and \(\nu\).
+\item
+  Tables \ref{tab:rsm-evidence-table1B} and \ref{tab:rsm-evidence-table2B} corresponds to fixed \(\nu\) and varying \(\mu\) and \(\lambda\).
+\item
+  Tables \ref{tab:rsm-evidence-table1C} and \ref{tab:rsm-evidence-table2C} corresponds to fixed \(\mu\) and varying \(\lambda\) and \(\nu\).
+\end{itemize}
+
+In each table the 1st column lists the constrained AUC, set to either 0.7 or 0.8, the 2nd, 3rd and 4th columns list the RSM parameters, followed by the empirical a and b-parameters and the ratio.
+
+A similar organization applies to part B, where only are varied and to part C where only are varied. The number of lesions per diseased case was set to one. The function FindParamFixAuc() finds the missing RSM parameter, indicated by initializing it with NA, prior to the function call, given the two other RSM parameters. The function rsmPdfMeansAndStddevs() calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas.
 
 Examination of Table 17.3 reveals, for both values of AUC, an inverse relation between and b, Parts A and B, and an inverse relation between and b, Part C. In (C), for fixed , the only way to improve performance is by increasing , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of especially in Parts A and B.
 

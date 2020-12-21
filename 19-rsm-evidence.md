@@ -175,15 +175,15 @@ Of interest in Table \@ref(tab:rsm-evidence-binormal-table2) is the observation 
 One expects $A \equiv AUC_{ROC}^{RSM}$ to exceed the binormal fitted value $A_z$. This has to do with the "proper" property of the RSM-ROC curve, which implies an *ideal observer*, while the binormal model predicts "improper" ROC curves, TBA Chapter 20. For rows 2 and 3, the expected orderings are reversed but the magnitudes of the discrepancies are small. This is because RSM-predicted values are *not* subject to sampling variability as they are derived by numerical integration, whose estimation error is very small compared to sampling error. In contrast, the estimates of $A_z$ are subject to sampling variability, even though large numbers of cases were used. Row-4 repeats Row-2 with a different value of `seed`: this time the expected ordering is observed $A > Az$. 
 
 
-## Explanations of empirical observations regarding binormal parameters
-As summarized previously, there are three empirical observations: 
+## Empirical observations
+As summarized previously, there are three empirical observations regarding binormal parameters: 
 
 * $b < 1$, 
 * $b$ decreases as $\mu$ increases, and 
 * $\Delta(mean) / \Delta(\sigma)$ is approximately constant for fixed experimental conditions. To not confuse with the RSM $\mu$ parameter, the difference in means is denoted $\Delta(mean)$, not $\Delta \mu$. 
 
 
-### Explanation for empirical observation $b < 1$
+### Explanation for $b < 1$
 The RSM-predicted ROC curves are consistent with empirical observations [@RN298] that observed ROC data, when fitted by the unequal variance binormal model, yield $b < 1$, implying that the diseased case pdf is wider than the non-diseased case pdf. The RSM provides an explanation for this: diseased cases yield two types of z-samples, namely NL z-samples from a zero-centered unit variance normal distribution and LL z-samples from a  $\mu$-centered unit variance normal distribution. The resulting *mixture distribution* is expected, when one attempts to fit it with a normal distribution, to yield standard deviation for diseased cases greater than 1, or, equivalently, $b < 1$. The fit is not expected to be ideal, but it is known that for relatively small numbers of cases, as is true with clinical data sets, it is difficult to detect deviations from strict normality; indeed, the binormal model is quite robust with respect to deviations from strict normality [@RN298]. Several examples of this were evident in the goodness of fit p-values in Table \@ref(tab:rsm-evidence-binormal-table2), which show good binormal fits to RSM generated data even with 1200 cases. 
 
 
@@ -200,7 +200,7 @@ The RSM-predicted ROC curves are consistent with empirical observations [@RN298]
 Fig. \@ref(fig:rsm-evidence-pdf-plots): This figure provides an explanation for empirical observation $b < 1$. Displayed are pdfs along with the parameter values. For all plots $\lambda = 1$ and $L_{max} = 1$. The dotted curves correspond to non-diseased cases while the solid curves correspond to diseased cases. The solid curves are broader than the dotted ones. In (A) and (B) the solid curve is noticeably broader. In (D) there is a hint of a secondary peak at zero, which is quite prominent in (C), which corresponds to the largest $\mu$ and the smallest $\nu$. In each case the resulting mixture distribution is expected to lead to a larger estimate of standard deviation of the assumed normal distribution of diseased cases relative to non-diseased cases. 
 
 
-### Explanation of Swets et al' observations 
+### Explanation of Swets et al observations 
 
 More than 55 years ago, [@RN2635] noticed in non-medical imaging contexts:
  
@@ -235,154 +235,120 @@ The needed quantities are defined as:
 
 
 
-*The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying the two of the three parameters of the RSM under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g.,  $\mu$, would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. The underlying assumption is that observers, characterized by different RSM parameters, nevertheless converge on roughly the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large $\lambda$) with increased performance in other areas (e.g., finding more lesions, i.e., larger $\nu$, and/or extracting greater pSNR from found lesions, i.e., larger $\mu$).*
+*The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying two of the three parameters of the RSM (excluding $\zeta_1 = -3$) under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g.,  $\mu$, would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. Rather, we assume that observers, characterized by different RSM parameters, nevertheless converge to roughly the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large $\lambda$) with increased performance in other areas (e.g., finding more lesions, i.e., larger $\nu$, and/or extracting greater pSNR from found lesions, i.e., larger $\mu$).*
+
+Shown first are three tables corresponding to RSM-AUC = 0.7. 
+
+* In Table \@ref(tab:rsm-evidence-table1A) $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7. 
+* In Table \@ref(tab:rsm-evidence-table1B) $\nu = 1$ is held constant. 
+* In Table \@ref(tab:rsm-evidence-table1C) $\mu = 2$ is held constant.
 
 
 
 
 
-```
-##    AUC       mu lambda        nu    effmu         b  dmudsig
-## 1  0.7 2.000000      2 0.3040194 1.006825 0.7539348 3.136005
-## 2  0.7 2.214346      2 0.2600273 1.129415 0.7107209 2.812443
-## 3  0.7 2.451665      2 0.2252662 1.276371 0.6670500 2.585494
-## 4  0.7 2.714418      2 0.1973748 1.451139 0.6235964 2.425911
-## 5  0.7 3.005330      2 0.1746062 1.657169 0.5810496 2.315364
-## 6  0.7 3.327421      2 0.1556552 1.897802 0.5400178 2.241479
-## 7  0.7 3.684031      2 0.1395508 2.176243 0.5009616 2.195411
-## 8  0.7 4.078861      2 0.1255604 2.495426 0.4641586 2.170306
-## 9  0.7 4.516005      2 0.1132283 2.859036 0.4297620 2.161810
-## 10 0.7 5.000000      2 0.1021570 3.270140 0.3977542 2.165567
-```
 
-```
-##    AUC       mu lambda        nu    effmu         b  dmudsig
-## 1  0.7 2.000000      2 0.3040194 1.006825 0.7539348 3.136005
-## 2  0.7 2.214346      2 0.2600273 1.129415 0.7107209 2.812443
-## 3  0.7 2.451665      2 0.2252662 1.276371 0.6670500 2.585494
-## 4  0.7 2.714418      2 0.1973748 1.451139 0.6235964 2.425911
-## 5  0.7 3.005330      2 0.1746062 1.657169 0.5810496 2.315364
-## 6  0.7 3.327421      2 0.1556552 1.897802 0.5400178 2.241479
-## 7  0.7 3.684031      2 0.1395508 2.176243 0.5009616 2.195411
-## 8  0.7 4.078861      2 0.1255604 2.495426 0.4641586 2.170306
-## 9  0.7 4.516005      2 0.1132283 2.859036 0.4297620 2.161810
-## 10 0.7 5.000000      2 0.1021570 3.270140 0.3977542 2.165567
-```
-
-```
-##    AUC mu    lambda        nu     effmu         b   dmudsig
-## 1  0.7  2 0.1000000 0.2580240 1.8544816 0.8966579 16.091266
-## 2  0.7  2 0.1544452 0.2594364 1.7868249 0.8631606 11.272127
-## 3  0.7  2 0.2385332 0.2616054 1.6950567 0.8274848  8.132437
-## 4  0.7  2 0.3684031 0.2649264 1.5773402 0.7940112  6.083536
-## 5  0.7  2 0.5689810 0.2699885 1.4368181 0.7675247  4.750151
-## 6  0.7  2 0.8787639 0.2776535 1.2830448 0.7516999  3.896845
-## 7  0.7  2 1.3572088 0.2891525 1.1303902 0.7479598  3.380376
-## 8  0.7  2 2.0961440 0.3061914 0.9930460 0.7551508  3.118380
-## 9  0.7  2 3.2373940 0.3310898 0.8788939 0.7697799  3.063390
-## 10 0.7  2 5.0000000 0.3670313 0.7855144 0.7857195  3.156897
-```
 
 
 <table class="table" style="margin-left: auto; margin-right: auto;">
-<caption>(\#tab:rsm-evidence-table1A)The last two columns list the RSM-predicted AUCs under the ROC and AFROC, respectively. The corresponding RSM parameters are listed in the first four columns.</caption>
+<caption>(\#tab:rsm-evidence-table1A)Here $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7.</caption>
  <thead>
   <tr>
-   <th style="text-align:right;"> AUC </th>
-   <th style="text-align:right;"> mu </th>
-   <th style="text-align:right;"> lambda </th>
-   <th style="text-align:right;"> nu </th>
-   <th style="text-align:right;"> effmu </th>
-   <th style="text-align:right;"> b </th>
-   <th style="text-align:right;"> dmudsig </th>
+   <th style="text-align:right;"> $AUC$ </th>
+   <th style="text-align:right;"> $\mu$ </th>
+   <th style="text-align:right;"> $\lambda$ </th>
+   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $a_{eff}$ </th>
+   <th style="text-align:right;"> $b_{eff}$ </th>
+   <th style="text-align:right;"> $R_{Swets}$ </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;"> 0.7 </td>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
    <td style="text-align:right;"> 2.000000 </td>
-   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 2 </td>
    <td style="text-align:right;"> 0.3040194 </td>
    <td style="text-align:right;"> 1.006825 </td>
    <td style="text-align:right;"> 0.7539348 </td>
    <td style="text-align:right;"> 3.136005 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 0.7 </td>
+   
    <td style="text-align:right;"> 2.214346 </td>
-   <td style="text-align:right;"> 2 </td>
+   
    <td style="text-align:right;"> 0.2600273 </td>
    <td style="text-align:right;"> 1.129415 </td>
    <td style="text-align:right;"> 0.7107209 </td>
    <td style="text-align:right;"> 2.812442 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 0.7 </td>
+   
    <td style="text-align:right;"> 2.451665 </td>
-   <td style="text-align:right;"> 2 </td>
+   
    <td style="text-align:right;"> 0.2252662 </td>
    <td style="text-align:right;"> 1.276371 </td>
    <td style="text-align:right;"> 0.6670500 </td>
    <td style="text-align:right;"> 2.585494 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 0.7 </td>
+   
    <td style="text-align:right;"> 2.714418 </td>
-   <td style="text-align:right;"> 2 </td>
+   
    <td style="text-align:right;"> 0.1973748 </td>
    <td style="text-align:right;"> 1.451139 </td>
    <td style="text-align:right;"> 0.6235964 </td>
    <td style="text-align:right;"> 2.425911 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 0.7 </td>
+   
    <td style="text-align:right;"> 3.005330 </td>
-   <td style="text-align:right;"> 2 </td>
+   
    <td style="text-align:right;"> 0.1746062 </td>
    <td style="text-align:right;"> 1.657169 </td>
    <td style="text-align:right;"> 0.5810496 </td>
    <td style="text-align:right;"> 2.315364 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 0.7 </td>
+   
    <td style="text-align:right;"> 3.327421 </td>
-   <td style="text-align:right;"> 2 </td>
+   
    <td style="text-align:right;"> 0.1556552 </td>
    <td style="text-align:right;"> 1.897802 </td>
    <td style="text-align:right;"> 0.5400178 </td>
    <td style="text-align:right;"> 2.241479 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 0.7 </td>
+   
    <td style="text-align:right;"> 3.684032 </td>
-   <td style="text-align:right;"> 2 </td>
+   
    <td style="text-align:right;"> 0.1395508 </td>
    <td style="text-align:right;"> 2.176243 </td>
    <td style="text-align:right;"> 0.5009616 </td>
    <td style="text-align:right;"> 2.195411 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 0.7 </td>
+   
    <td style="text-align:right;"> 4.078861 </td>
-   <td style="text-align:right;"> 2 </td>
+   
    <td style="text-align:right;"> 0.1255604 </td>
    <td style="text-align:right;"> 2.495426 </td>
    <td style="text-align:right;"> 0.4641586 </td>
    <td style="text-align:right;"> 2.170307 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 0.7 </td>
+   
    <td style="text-align:right;"> 4.516005 </td>
-   <td style="text-align:right;"> 2 </td>
+   
    <td style="text-align:right;"> 0.1132283 </td>
    <td style="text-align:right;"> 2.859036 </td>
    <td style="text-align:right;"> 0.4297620 </td>
    <td style="text-align:right;"> 2.161810 </td>
   </tr>
   <tr>
-   <td style="text-align:right;"> 0.7 </td>
+   
    <td style="text-align:right;"> 5.000000 </td>
-   <td style="text-align:right;"> 2 </td>
+   
    <td style="text-align:right;"> 0.1021570 </td>
    <td style="text-align:right;"> 3.270140 </td>
    <td style="text-align:right;"> 0.3977542 </td>
@@ -392,51 +358,571 @@ The needed quantities are defined as:
 </table>
 
 
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>(\#tab:rsm-evidence-table1B)Here $\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.7.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> $AUC$ </th>
+   <th style="text-align:right;"> $\mu$ </th>
+   <th style="text-align:right;"> $\lambda$ </th>
+   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $a_{eff}$ </th>
+   <th style="text-align:right;"> $b_{eff}$ </th>
+   <th style="text-align:right;"> $R_{Swets}$ </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
+   <td style="text-align:right;"> 0.9453400 </td>
+   <td style="text-align:right;"> 1.000000 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.5945099 </td>
+   <td style="text-align:right;"> 0.9767467 </td>
+   <td style="text-align:right;"> 25.43453 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 0.9900899 </td>
+   <td style="text-align:right;"> 1.195813 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.6063259 </td>
+   <td style="text-align:right;"> 0.9763296 </td>
+   <td style="text-align:right;"> 25.60972 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.0368216 </td>
+   <td style="text-align:right;"> 1.429969 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.6172462 </td>
+   <td style="text-align:right;"> 0.9759534 </td>
+   <td style="text-align:right;"> 25.83105 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.0853032 </td>
+   <td style="text-align:right;"> 1.709976 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.6267194 </td>
+   <td style="text-align:right;"> 0.9755036 </td>
+   <td style="text-align:right;"> 25.96241 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.1353543 </td>
+   <td style="text-align:right;"> 2.044812 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.6342292 </td>
+   <td style="text-align:right;"> 0.9747737 </td>
+   <td style="text-align:right;"> 25.78277 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.1866104 </td>
+   <td style="text-align:right;"> 2.445213 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.6390778 </td>
+   <td style="text-align:right;"> 0.9734671 </td>
+   <td style="text-align:right;"> 25.02159 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.2388982 </td>
+   <td style="text-align:right;"> 2.924018 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.6408089 </td>
+   <td style="text-align:right;"> 0.9711321 </td>
+   <td style="text-align:right;"> 23.42021 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.2920006 </td>
+   <td style="text-align:right;"> 3.496579 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.6390296 </td>
+   <td style="text-align:right;"> 0.9671901 </td>
+   <td style="text-align:right;"> 20.92522 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.3456955 </td>
+   <td style="text-align:right;"> 4.181255 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.6335312 </td>
+   <td style="text-align:right;"> 0.9609738 </td>
+   <td style="text-align:right;"> 17.80463 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.3999013 </td>
+   <td style="text-align:right;"> 5.000000 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0.6245101 </td>
+   <td style="text-align:right;"> 0.9518188 </td>
+   <td style="text-align:right;"> 14.54334 </td>
+  </tr>
+</tbody>
+</table>
 
-```
-##    AUC       mu lambda        nu    effmu         b  dmudsig
-## 1  0.8 2.000000      2 0.5750174 1.366996 0.8105541 5.945703
-## 2  0.8 2.214346      2 0.4826833 1.519525 0.7649096 5.011078
-## 3  0.8 2.451665      2 0.4128075 1.700445 0.7208098 4.438846
-## 4  0.8 2.714418      2 0.3585499 1.912912 0.6784979 4.073575
-## 5  0.8 3.005330      2 0.3154119 2.160031 0.6382351 3.838983
-## 6  0.8 3.327421      2 0.2801812 2.444396 0.6001421 3.690938
-## 7  0.8 3.684031      2 0.2506689 2.768579 0.5642539 3.602765
-## 8  0.8 4.078861      2 0.2253300 3.135116 0.5304907 3.556586
-## 9  0.8 4.516005      2 0.2030971 3.546769 0.4987007 3.539988
-## 10 0.8 5.000000      2 0.1833044 4.007088 0.4687580 3.545271
-```
-
-```
-##    AUC       mu lambda        nu    effmu         b  dmudsig
-## 1  0.8 2.000000      2 0.5750174 1.366996 0.8105541 5.945703
-## 2  0.8 2.214346      2 0.4826833 1.519525 0.7649096 5.011078
-## 3  0.8 2.451665      2 0.4128075 1.700445 0.7208098 4.438846
-## 4  0.8 2.714418      2 0.3585499 1.912912 0.6784979 4.073575
-## 5  0.8 3.005330      2 0.3154119 2.160031 0.6382351 3.838983
-## 6  0.8 3.327421      2 0.2801812 2.444396 0.6001421 3.690938
-## 7  0.8 3.684031      2 0.2506689 2.768579 0.5642539 3.602765
-## 8  0.8 4.078861      2 0.2253300 3.135116 0.5304907 3.556586
-## 9  0.8 4.516005      2 0.2030971 3.546769 0.4987007 3.539988
-## 10 0.8 5.000000      2 0.1833044 4.007088 0.4687580 3.545271
-```
-
-```
-##    AUC mu    lambda        nu    effmu         b   dmudsig
-## 1  0.8  2 0.1000000 0.4640280 1.926954 0.9476004 34.848720
-## 2  0.8  2 0.1544452 0.4672318 1.891150 0.9265439 23.856540
-## 3  0.8  2 0.2385332 0.4721744 1.840571 0.9009387 16.743548
-## 4  0.8  2 0.3684031 0.4797958 1.772047 0.8726752 12.152413
-## 5  0.8  2 0.5689810 0.4915404 1.684378 0.8452798  9.214737
-## 6  0.8  2 0.8787639 0.5096299 1.580243 0.8232878  7.386057
-## 7  0.8  2 1.3572088 0.5375296 1.467147 0.8110032  6.344095
-## 8  0.8  2 2.0961440 0.5806387 1.355241 0.8112136  5.929330
-## 9  0.8  2 3.2373940 0.6480658 1.251461 0.8241099  6.112281
-## 10 0.8  2 5.0000000 0.7572216 1.152663 0.8448119  6.877419
-```
 
 
-The code for this is in file mainRsmSwetsObservations.R in Online Appendix 17.G, which was used to populate Table 17.3. The table is organized into three parts, A, B and C. Part A varies   for constant RSM-AUC for  . Part B varies   for constant RSM-AUC for  . Part C varies   for constant RSM-AUC for  . The 1st column lists the constrained  , set to either 0.7 or 0.8, the 2nd and 3rd columns list the parameters that were varied, subject to the AUC constraint, followed by the empirical b-parameter and  . A similar organization applies to part B, where only   are varied and to part C where only   are varied. The number of lesions per diseased case was set to one. The function FindParamFixAuc() finds the missing RSM parameter, indicated by initializing it with NA, prior to the function call, given the two other RSM parameters. The function rsmPdfMeansAndStddevs() calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas. 
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>(\#tab:rsm-evidence-table1C)Here $\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> $AUC$ </th>
+   <th style="text-align:right;"> $\mu$ </th>
+   <th style="text-align:right;"> $\lambda$ </th>
+   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $a_{eff}$ </th>
+   <th style="text-align:right;"> $b_{eff}$ </th>
+   <th style="text-align:right;"> $R_{Swets}$ </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 2 </td>
+   <td style="text-align:right;"> 0.1000000 </td>
+   <td style="text-align:right;"> 0.2580240 </td>
+   <td style="text-align:right;"> 1.8544816 </td>
+   <td style="text-align:right;"> 0.8966579 </td>
+   <td style="text-align:right;"> 16.091266 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 0.1544452 </td>
+   <td style="text-align:right;"> 0.2594364 </td>
+   <td style="text-align:right;"> 1.7868249 </td>
+   <td style="text-align:right;"> 0.8631606 </td>
+   <td style="text-align:right;"> 11.272127 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 0.2385332 </td>
+   <td style="text-align:right;"> 0.2616054 </td>
+   <td style="text-align:right;"> 1.6950567 </td>
+   <td style="text-align:right;"> 0.8274848 </td>
+   <td style="text-align:right;"> 8.132437 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 0.3684031 </td>
+   <td style="text-align:right;"> 0.2649264 </td>
+   <td style="text-align:right;"> 1.5773402 </td>
+   <td style="text-align:right;"> 0.7940112 </td>
+   <td style="text-align:right;"> 6.083536 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 0.5689810 </td>
+   <td style="text-align:right;"> 0.2699885 </td>
+   <td style="text-align:right;"> 1.4368181 </td>
+   <td style="text-align:right;"> 0.7675247 </td>
+   <td style="text-align:right;"> 4.750151 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 0.8787639 </td>
+   <td style="text-align:right;"> 0.2776535 </td>
+   <td style="text-align:right;"> 1.2830448 </td>
+   <td style="text-align:right;"> 0.7516999 </td>
+   <td style="text-align:right;"> 3.896845 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 1.3572088 </td>
+   <td style="text-align:right;"> 0.2891525 </td>
+   <td style="text-align:right;"> 1.1303902 </td>
+   <td style="text-align:right;"> 0.7479598 </td>
+   <td style="text-align:right;"> 3.380376 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 2.0961440 </td>
+   <td style="text-align:right;"> 0.3061914 </td>
+   <td style="text-align:right;"> 0.9930460 </td>
+   <td style="text-align:right;"> 0.7551508 </td>
+   <td style="text-align:right;"> 3.118380 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 3.2373940 </td>
+   <td style="text-align:right;"> 0.3310898 </td>
+   <td style="text-align:right;"> 0.8788939 </td>
+   <td style="text-align:right;"> 0.7697799 </td>
+   <td style="text-align:right;"> 3.063390 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 5.0000000 </td>
+   <td style="text-align:right;"> 0.3670313 </td>
+   <td style="text-align:right;"> 0.7855144 </td>
+   <td style="text-align:right;"> 0.7857195 </td>
+   <td style="text-align:right;"> 3.156897 </td>
+  </tr>
+</tbody>
+</table>
+
+Shown next are three tables corresponding to RSM-AUC = 0.8.
+
+* In Table \@ref(tab:rsm-evidence-table2A) $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8. 
+* In Table \@ref(tab:rsm-evidence-table2B) $\nu = 1$ is held constant. 
+* In Table \@ref(tab:rsm-evidence-table2C) $\mu = 2$ is held constant.
+
+
+
+
+
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>(\#tab:rsm-evidence-table2A)Here $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> $AUC$ </th>
+   <th style="text-align:right;"> $\mu$ </th>
+   <th style="text-align:right;"> $\lambda$ </th>
+   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $a_{eff}$ </th>
+   <th style="text-align:right;"> $b_{eff}$ </th>
+   <th style="text-align:right;"> $R_{Swets}$ </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
+   <td style="text-align:right;"> 2.000000 </td>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 2 </td>
+   <td style="text-align:right;"> 0.5750174 </td>
+   <td style="text-align:right;"> 1.366996 </td>
+   <td style="text-align:right;"> 0.8105541 </td>
+   <td style="text-align:right;"> 5.945703 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 2.214346 </td>
+   
+   <td style="text-align:right;"> 0.4826833 </td>
+   <td style="text-align:right;"> 1.519525 </td>
+   <td style="text-align:right;"> 0.7649096 </td>
+   <td style="text-align:right;"> 5.011078 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 2.451665 </td>
+   
+   <td style="text-align:right;"> 0.4128075 </td>
+   <td style="text-align:right;"> 1.700445 </td>
+   <td style="text-align:right;"> 0.7208098 </td>
+   <td style="text-align:right;"> 4.438846 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 2.714418 </td>
+   
+   <td style="text-align:right;"> 0.3585499 </td>
+   <td style="text-align:right;"> 1.912912 </td>
+   <td style="text-align:right;"> 0.6784979 </td>
+   <td style="text-align:right;"> 4.073575 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 3.005330 </td>
+   
+   <td style="text-align:right;"> 0.3154119 </td>
+   <td style="text-align:right;"> 2.160031 </td>
+   <td style="text-align:right;"> 0.6382351 </td>
+   <td style="text-align:right;"> 3.838983 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 3.327421 </td>
+   
+   <td style="text-align:right;"> 0.2801812 </td>
+   <td style="text-align:right;"> 2.444396 </td>
+   <td style="text-align:right;"> 0.6001421 </td>
+   <td style="text-align:right;"> 3.690938 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 3.684032 </td>
+   
+   <td style="text-align:right;"> 0.2506689 </td>
+   <td style="text-align:right;"> 2.768579 </td>
+   <td style="text-align:right;"> 0.5642539 </td>
+   <td style="text-align:right;"> 3.602765 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 4.078861 </td>
+   
+   <td style="text-align:right;"> 0.2253300 </td>
+   <td style="text-align:right;"> 3.135116 </td>
+   <td style="text-align:right;"> 0.5304907 </td>
+   <td style="text-align:right;"> 3.556586 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 4.516005 </td>
+   
+   <td style="text-align:right;"> 0.2030971 </td>
+   <td style="text-align:right;"> 3.546769 </td>
+   <td style="text-align:right;"> 0.4987007 </td>
+   <td style="text-align:right;"> 3.539988 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 5.000000 </td>
+   
+   <td style="text-align:right;"> 0.1833044 </td>
+   <td style="text-align:right;"> 4.007089 </td>
+   <td style="text-align:right;"> 0.4687580 </td>
+   <td style="text-align:right;"> 3.545271 </td>
+  </tr>
+</tbody>
+</table>
+
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>(\#tab:rsm-evidence-table2B)Here $\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.8.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> $AUC$ </th>
+   <th style="text-align:right;"> $\mu$ </th>
+   <th style="text-align:right;"> $\lambda$ </th>
+   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $a_{eff}$ </th>
+   <th style="text-align:right;"> $b_{eff}$ </th>
+   <th style="text-align:right;"> $R_{Swets}$ </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
+   <td style="text-align:right;"> 1.354458 </td>
+   <td style="text-align:right;"> 1.000000 </td>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 1 </td>
+   <td style="text-align:right;"> 1.043227 </td>
+   <td style="text-align:right;"> 0.9446086 </td>
+   <td style="text-align:right;"> 17.95230 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.401586 </td>
+   <td style="text-align:right;"> 1.195813 </td>
+   
+   <td style="text-align:right;"> 1.056339 </td>
+   <td style="text-align:right;"> 0.9411753 </td>
+   <td style="text-align:right;"> 17.10578 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.450946 </td>
+   <td style="text-align:right;"> 1.429969 </td>
+   
+   <td style="text-align:right;"> 1.068697 </td>
+   <td style="text-align:right;"> 0.9378352 </td>
+   <td style="text-align:right;"> 16.38231 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.502253 </td>
+   <td style="text-align:right;"> 1.709976 </td>
+   
+   <td style="text-align:right;"> 1.079700 </td>
+   <td style="text-align:right;"> 0.9345551 </td>
+   <td style="text-align:right;"> 15.74782 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.555229 </td>
+   <td style="text-align:right;"> 2.044812 </td>
+   
+   <td style="text-align:right;"> 1.088715 </td>
+   <td style="text-align:right;"> 0.9312388 </td>
+   <td style="text-align:right;"> 15.16258 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.609608 </td>
+   <td style="text-align:right;"> 2.445213 </td>
+   
+   <td style="text-align:right;"> 1.095090 </td>
+   <td style="text-align:right;"> 0.9276992 </td>
+   <td style="text-align:right;"> 14.57858 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.665097 </td>
+   <td style="text-align:right;"> 2.924018 </td>
+   
+   <td style="text-align:right;"> 1.098126 </td>
+   <td style="text-align:right;"> 0.9236312 </td>
+   <td style="text-align:right;"> 13.93974 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.721499 </td>
+   <td style="text-align:right;"> 3.496579 </td>
+   
+   <td style="text-align:right;"> 1.097257 </td>
+   <td style="text-align:right;"> 0.9185750 </td>
+   <td style="text-align:right;"> 13.18735 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.778510 </td>
+   <td style="text-align:right;"> 4.181255 </td>
+   
+   <td style="text-align:right;"> 1.091891 </td>
+   <td style="text-align:right;"> 0.9119257 </td>
+   <td style="text-align:right;"> 12.27557 </td>
+  </tr>
+  <tr>
+   
+   <td style="text-align:right;"> 1.835951 </td>
+   <td style="text-align:right;"> 5.000000 </td>
+   
+   <td style="text-align:right;"> 1.081767 </td>
+   <td style="text-align:right;"> 0.9029454 </td>
+   <td style="text-align:right;"> 11.19209 </td>
+  </tr>
+</tbody>
+</table>
+
+
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>(\#tab:rsm-evidence-table2C)Here $\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> $AUC$ </th>
+   <th style="text-align:right;"> $\mu$ </th>
+   <th style="text-align:right;"> $\lambda$ </th>
+   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $a_{eff}$ </th>
+   <th style="text-align:right;"> $b_{eff}$ </th>
+   <th style="text-align:right;"> $R_{Swets}$ </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
+   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 2 </td>
+   <td style="text-align:right;"> 0.1000000 </td>
+   <td style="text-align:right;"> 0.4640280 </td>
+   <td style="text-align:right;"> 1.926954 </td>
+   <td style="text-align:right;"> 0.9476004 </td>
+   <td style="text-align:right;"> 34.848720 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 0.1544452 </td>
+   <td style="text-align:right;"> 0.4672318 </td>
+   <td style="text-align:right;"> 1.891150 </td>
+   <td style="text-align:right;"> 0.9265439 </td>
+   <td style="text-align:right;"> 23.856540 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 0.2385332 </td>
+   <td style="text-align:right;"> 0.4721744 </td>
+   <td style="text-align:right;"> 1.840571 </td>
+   <td style="text-align:right;"> 0.9009387 </td>
+   <td style="text-align:right;"> 16.743547 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 0.3684031 </td>
+   <td style="text-align:right;"> 0.4797958 </td>
+   <td style="text-align:right;"> 1.772047 </td>
+   <td style="text-align:right;"> 0.8726752 </td>
+   <td style="text-align:right;"> 12.152413 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 0.5689810 </td>
+   <td style="text-align:right;"> 0.4915404 </td>
+   <td style="text-align:right;"> 1.684378 </td>
+   <td style="text-align:right;"> 0.8452798 </td>
+   <td style="text-align:right;"> 9.214737 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 0.8787639 </td>
+   <td style="text-align:right;"> 0.5096299 </td>
+   <td style="text-align:right;"> 1.580243 </td>
+   <td style="text-align:right;"> 0.8232878 </td>
+   <td style="text-align:right;"> 7.386057 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 1.3572088 </td>
+   <td style="text-align:right;"> 0.5375296 </td>
+   <td style="text-align:right;"> 1.467147 </td>
+   <td style="text-align:right;"> 0.8110032 </td>
+   <td style="text-align:right;"> 6.344095 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 2.0961440 </td>
+   <td style="text-align:right;"> 0.5806387 </td>
+   <td style="text-align:right;"> 1.355241 </td>
+   <td style="text-align:right;"> 0.8112136 </td>
+   <td style="text-align:right;"> 5.929330 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 3.2373940 </td>
+   <td style="text-align:right;"> 0.6480658 </td>
+   <td style="text-align:right;"> 1.251461 </td>
+   <td style="text-align:right;"> 0.8241099 </td>
+   <td style="text-align:right;"> 6.112281 </td>
+  </tr>
+  <tr>
+   
+   
+   <td style="text-align:right;"> 5.0000000 </td>
+   <td style="text-align:right;"> 0.7572216 </td>
+   <td style="text-align:right;"> 1.152663 </td>
+   <td style="text-align:right;"> 0.8448119 </td>
+   <td style="text-align:right;"> 6.877419 </td>
+  </tr>
+</tbody>
+</table>
+
+
+
+The six tables are organized into 2 x 3 groups. 
+
+* Tables \@ref(tab:rsm-evidence-table1A), \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table1C) correspond to RSM-AUC = 0.7, while Tables \@ref(tab:rsm-evidence-table2A), \@ref(tab:rsm-evidence-table2B) and \@ref(tab:rsm-evidence-table2C) correspond to RSM-AUC = 0.8.
+* Tables \@ref(tab:rsm-evidence-table1A) and \@ref(tab:rsm-evidence-table2A) corresponds to fixed $\lambda$ and varying $\mu$ and $\nu$.
+* Tables \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table2B) corresponds to fixed $\nu$ and varying $\mu$ and $\lambda$.
+* Tables \@ref(tab:rsm-evidence-table1C) and \@ref(tab:rsm-evidence-table2C) corresponds to fixed $\mu$ and varying $\lambda$ and $\nu$.
+
+
+In each table the 1st column lists the constrained  AUC, set to either 0.7 or 0.8, the 2nd, 3rd and 4th columns list the RSM parameters, followed by the empirical a and b-parameters and the ratio. 
+
+
+A similar organization applies to part B, where only   are varied and to part C where only   are varied. The number of lesions per diseased case was set to one. The function FindParamFixAuc() finds the missing RSM parameter, indicated by initializing it with NA, prior to the function call, given the two other RSM parameters. The function rsmPdfMeansAndStddevs() calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas. 
 
 Examination of Table 17.3 reveals, for both values of AUC, an inverse relation between   and b, Parts A and B, and an inverse relation between   and b, Part C.  In (C), for fixed  , the only way to improve performance is by increasing  , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of   especially in Parts A and B. 
 
