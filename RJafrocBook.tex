@@ -6385,7 +6385,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.0819882          1    0.2982532}
+\CommentTok{#> 1    1.0580229          1   0.30366656}
 \end{Highlighting}
 \end{Shaded}
 
@@ -13038,11 +13038,11 @@ As summarized previously, there are three empirical observations regarding binor
 \begin{itemize}
 \tightlist
 \item
-  \(b < 1\),
+  \(b < 1\).
 \item
-  \(b\) decreases as \(\mu\) increases, and
+  \(b\) decreases as \(\mu\) increases.
 \item
-  \(\Delta(mean) / \Delta(\sigma)\) is approximately constant for fixed experimental conditions. To not confuse with the RSM \(\mu\) parameter, the difference in means is denoted \(\Delta(mean)\), not \(\Delta \mu\).
+  For fixed experimental conditions \(R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)\) is approximately constant. To not confuse with the RSM \(\mu\) parameter, the difference in means of the two normal distributions is denoted \(\Delta(mean)\), not \(\Delta \mu\).
 \end{itemize}
 
 \hypertarget{explanation-for-b-1}{%
@@ -13065,12 +13065,14 @@ More than 55 years ago, \citep{RN2635} noticed in non-medical imaging contexts:
 
 \begin{itemize}
 \item
-  The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased.
+  The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. In binormal parameter terms, \(b\) decreases as \(a\) increases.
 \item
-  The ratio \(\Delta(mean) / \Delta(\sigma)\) is approximately constant for a fixed set of experimental conditions.
+  The ratio \(R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)\) is approximately constant for a fixed set of experimental conditions. In binormal parameter terms, \(\frac{a}{1-b}\) is approximately constant \footnote{The separation is \(a\), the wider signal distribution has standard deviation unity while the narrower noise distribution has standard deviation \(b\).}.
 \end{itemize}
 
-In the RSM \(\mu\) is the perceptual signal to noise \emph{pSNR} of found lesions. Swets' first empirical observation implies that the \(b\) parameter should decrease with increasing \(\mu\). Testing this proposition over a wide range of \(\mu\) using the preceding methods (i.e., binormal model maximum likelihood fitting) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each bin and convergence of the binormal model algorithm, which is problematical for larger values of \(\mu\) which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If \(f(x)\) is a unit-normalized pdf its mean \(<x>\) and variance \(\sigma_x^2\) are defined by:
+In the RSM \(\mu\) is the perceptual signal to noise of found lesions. Swets' first empirical observation implies that the \(b\) parameter should decrease with increasing \(\mu\). The second observation
+
+Testing this proposition over a wide range of \(\mu\) using the preceding methods (i.e., binormal model maximum likelihood fitting) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each bin and convergence of the binormal model algorithm, which is problematical for larger values of \(\mu\) which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If \(f(x)\) is a unit-normalized pdf its mean \(<x>\) and variance \(\sigma_x^2\) are defined by:
 
 \begin{equation}
 \left. 
@@ -13115,36 +13117,27 @@ Shown first are three tables corresponding to RSM-AUC = 0.7.
 \resizebox{\linewidth}{!}{
 \begin{tabular}[t]{rrrrrrr}
 \toprule
-$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \midrule
- & 2.000000 &  & 0.3040194 & 1.006825 & 0.7539348 & 3.136005\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 2.214346 &  & 0.2600273 & 1.129415 & 0.7107209 & 2.812442\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 2.451665 &  & 0.2252662 & 1.276371 & 0.6670500 & 2.585494\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 2.714418 &  & 0.1973748 & 1.451139 & 0.6235964 & 2.425911\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 3.005330 &  & 0.1746062 & 1.657169 & 0.5810496 & 2.315364\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 3.327421 &  & 0.1556552 & 1.897802 & 0.5400178 & 2.241479\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 3.684032 &  & 0.1395508 & 2.176243 & 0.5009616 & 2.195411\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 4.078861 &  & 0.1255604 & 2.495426 & 0.4641586 & 2.170307\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 4.516005 &  & 0.1132283 & 2.859036 & 0.4297620 & 2.161810\\
-\cmidrule{2-2}
-\cmidrule{4-7}
-\multirow{-10}{*}{\raggedleft\arraybackslash 0.7} & 5.000000 & \multirow{-10}{*}{\raggedleft\arraybackslash 2} & 0.1021570 & 3.270140 & 0.3977542 & 2.165567\\
+ & 2.000000 & 1.0000000 & 0.4555825 & 0.7716616 & 0.7539348 & 3.136005\\
+\cmidrule{2-7}
+ & 2.214346 & 0.9032011 & 0.4377398 & 0.8135809 & 0.7107209 & 2.812442\\
+\cmidrule{2-7}
+ & 2.451665 & 0.8157722 & 0.4243625 & 0.8608401 & 0.6670500 & 2.585494\\
+\cmidrule{2-7}
+ & 2.714418 & 0.7368063 & 0.4147742 & 0.9131216 & 0.6235964 & 2.425911\\
+\cmidrule{2-7}
+ & 3.005330 & 0.6654842 & 0.4082964 & 0.9700227 & 0.5810496 & 2.315364\\
+\cmidrule{2-7}
+ & 3.327421 & 0.6010661 & 0.4042477 & 1.0310407 & 0.5400178 & 2.241479\\
+\cmidrule{2-7}
+ & 3.684032 & 0.5428835 & 0.4019671 & 1.0955943 & 0.5009616 & 2.195411\\
+\cmidrule{2-7}
+ & 4.078861 & 0.4903330 & 0.4007900 & 1.1629401 & 0.4641586 & 2.170307\\
+\cmidrule{2-7}
+ & 4.516005 & 0.4428693 & 0.4003083 & 1.2327462 & 0.4297620 & 2.161810\\
+\cmidrule{2-7}
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.7} & 5.000000 & 0.4000000 & 0.3999756 & 1.3042036 & 0.3977542 & 2.165567\\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -13156,27 +13149,27 @@ $AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \resizebox{\linewidth}{!}{
 \begin{tabular}[t]{rrrrrrr}
 \toprule
-$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \midrule
- & 0.9453400 & 1.000000 & 1 & 0.5945099 & 0.9767467 & 25.43453\\
+ & 0.9453400 & 1.057821 & 0.6114526 & 0.5914366 & 0.9767467 & 25.43453\\
 \cmidrule{2-7}
- & 0.9900899 & 1.195813 & 1 & 0.6063259 & 0.9763296 & 25.60972\\
+ & 0.9900899 & 1.207782 & 0.6284567 & 0.6061914 & 0.9763296 & 25.60972\\
 \cmidrule{2-7}
- & 1.0368216 & 1.429969 & 1 & 0.6172462 & 0.9759534 & 25.83105\\
+ & 1.0368216 & 1.379185 & 0.6454201 & 0.6211484 & 0.9759534 & 25.83105\\
 \cmidrule{2-7}
- & 1.0853032 & 1.709976 & 1 & 0.6267194 & 0.9755036 & 25.96241\\
+ & 1.0853032 & 1.575574 & 0.6622006 & 0.6359865 & 0.9755036 & 25.96241\\
 \cmidrule{2-7}
- & 1.1353543 & 2.044812 & 1 & 0.6342292 & 0.9747737 & 25.78277\\
+ & 1.1353543 & 1.801034 & 0.6786917 & 0.6504041 & 0.9747737 & 25.78277\\
 \cmidrule{2-7}
- & 1.1866104 & 2.445213 & 1 & 0.6390778 & 0.9734671 & 25.02159\\
+ & 1.1866104 & 2.060670 & 0.6947458 & 0.6638962 & 0.9734671 & 25.02159\\
 \cmidrule{2-7}
- & 1.2388982 & 2.924018 & 1 & 0.6408089 & 0.9711321 & 23.42021\\
+ & 1.2388982 & 2.360176 & 0.7102968 & 0.6760928 & 0.9711321 & 23.42021\\
 \cmidrule{2-7}
- & 1.2920006 & 3.496579 & 1 & 0.6390296 & 0.9671901 & 20.92522\\
+ & 1.2920006 & 2.706329 & 0.7252794 & 0.6865553 & 0.9671901 & 20.92522\\
 \cmidrule{2-7}
- & 1.3456955 & 4.181255 & 1 & 0.6335312 & 0.9609738 & 17.80463\\
+ & 1.3456955 & 3.107133 & 0.7396414 & 0.6948464 & 0.9609738 & 17.80463\\
 \cmidrule{2-7}
-\multirow{-10}{*}{\raggedleft\arraybackslash 0.7} & 1.3999013 & 5.000000 & 1 & 0.6245101 & 0.9518188 & 14.54334\\
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.7} & 1.3999013 & 3.571680 & 0.7533787 & 0.7007159 & 0.9518188 & 14.54334\\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -13188,27 +13181,27 @@ $AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \resizebox{\linewidth}{!}{
 \begin{tabular}[t]{rrrrrrr}
 \toprule
-$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \midrule
- &  & 0.1000000 & 0.2580240 & 1.8544816 & 0.8966579 & 16.091266\\
+ &  & 0.0500000 & 0.4031252 & 1.6629055 & 0.8966579 & 16.091266\\
 \cmidrule{3-7}
- &  & 0.1544452 & 0.2594364 & 1.7868249 & 0.8631606 & 11.272127\\
+ &  & 0.0772226 & 0.4048090 & 1.5424715 & 0.8631606 & 11.272127\\
 \cmidrule{3-7}
- &  & 0.2385332 & 0.2616054 & 1.6950567 & 0.8274848 & 8.132437\\
+ &  & 0.1192666 & 0.4073853 & 1.4029691 & 0.8274848 & 8.132437\\
 \cmidrule{3-7}
- &  & 0.3684031 & 0.2649264 & 1.5773402 & 0.7940112 & 6.083536\\
+ &  & 0.1842016 & 0.4113084 & 1.2531401 & 0.7940112 & 6.083536\\
 \cmidrule{3-7}
- &  & 0.5689810 & 0.2699885 & 1.4368181 & 0.7675247 & 4.750151\\
+ &  & 0.2844905 & 0.4172383 & 1.1042926 & 0.7675247 & 4.750151\\
 \cmidrule{3-7}
- &  & 0.8787639 & 0.2776535 & 1.2830448 & 0.7516999 & 3.896845\\
+ &  & 0.4393820 & 0.4261039 & 0.9675871 & 0.7516999 & 3.896845\\
 \cmidrule{3-7}
- &  & 1.3572088 & 0.2891525 & 1.1303902 & 0.7479598 & 3.380376\\
+ &  & 0.6786044 & 0.4391518 & 0.8519904 & 0.7479598 & 3.380376\\
 \cmidrule{3-7}
- &  & 2.0961440 & 0.3061914 & 0.9930460 & 0.7551508 & 3.118380\\
+ &  & 1.0480720 & 0.4579423 & 0.7635328 & 0.7551508 & 3.118380\\
 \cmidrule{3-7}
- &  & 3.2373940 & 0.3310898 & 0.8788939 & 0.7697799 & 3.063390\\
+ &  & 1.6186970 & 0.4842740 & 0.7052538 & 0.7697799 & 3.063390\\
 \cmidrule{3-7}
-\multirow{-10}{*}{\raggedleft\arraybackslash 0.7} & \multirow{-10}{*}{\raggedleft\arraybackslash 2} & 5.0000000 & 0.3670313 & 0.7855144 & 0.7857195 & 3.156897\\
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.7} & \multirow{-10}{*}{\raggedleft\arraybackslash 2} & 2.5000000 & 0.5200449 & 0.6764614 & 0.7857195 & 3.156897\\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -13232,36 +13225,27 @@ Shown next are three tables corresponding to RSM-AUC = 0.8.
 \resizebox{\linewidth}{!}{
 \begin{tabular}[t]{rrrrrrr}
 \toprule
-$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \midrule
- & 2.000000 &  & 0.5750174 & 1.366996 & 0.8105541 & 5.945703\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 2.214346 &  & 0.4826833 & 1.519525 & 0.7649096 & 5.011078\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 2.451665 &  & 0.4128075 & 1.700445 & 0.7208098 & 4.438846\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 2.714418 &  & 0.3585499 & 1.912912 & 0.6784979 & 4.073575\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 3.005330 &  & 0.3154119 & 2.160031 & 0.6382351 & 3.838983\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 3.327421 &  & 0.2801812 & 2.444396 & 0.6001421 & 3.690938\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 3.684032 &  & 0.2506689 & 2.768579 & 0.5642539 & 3.602765\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 4.078861 &  & 0.2253300 & 3.135116 & 0.5304907 & 3.556586\\
-\cmidrule{2-2}
-\cmidrule{4-7}
- & 4.516005 &  & 0.2030971 & 3.546769 & 0.4987007 & 3.539988\\
-\cmidrule{2-2}
-\cmidrule{4-7}
-\multirow{-10}{*}{\raggedleft\arraybackslash 0.8} & 5.000000 & \multirow{-10}{*}{\raggedleft\arraybackslash 2} & 0.1833044 & 4.007089 & 0.4687580 & 3.545271\\
+ & 2.000000 & 1.0000000 & 0.6833742 & 1.126389 & 0.8105541 & 5.945703\\
+\cmidrule{2-7}
+ & 2.214346 & 0.9032011 & 0.6565893 & 1.178057 & 0.7649096 & 5.011078\\
+\cmidrule{2-7}
+ & 2.451665 & 0.8157722 & 0.6365326 & 1.239282 & 0.7208098 & 4.438846\\
+\cmidrule{2-7}
+ & 2.714418 & 0.7368063 & 0.6221486 & 1.309663 & 0.6784979 & 4.073575\\
+\cmidrule{2-7}
+ & 3.005330 & 0.6654842 & 0.6124526 & 1.388809 & 0.6382351 & 3.838983\\
+\cmidrule{2-7}
+ & 3.327421 & 0.6010661 & 0.6063452 & 1.475851 & 0.6001421 & 3.690938\\
+\cmidrule{2-7}
+ & 3.684032 & 0.5428835 & 0.6028623 & 1.569891 & 0.5642539 & 3.602765\\
+\cmidrule{2-7}
+ & 4.078861 & 0.4903330 & 0.6011181 & 1.669850 & 0.5304907 & 3.556586\\
+\cmidrule{2-7}
+ & 4.516005 & 0.4428693 & 0.6003586 & 1.774593 & 0.4987007 & 3.539988\\
+\cmidrule{2-7}
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.8} & 5.000000 & 0.4000000 & 0.6000925 & 1.883397 & 0.4687580 & 3.545271\\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -13273,36 +13257,27 @@ $AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \resizebox{\linewidth}{!}{
 \begin{tabular}[t]{rrrrrrr}
 \toprule
-$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \midrule
- & 1.354458 & 1.000000 &  & 1.043227 & 0.9446086 & 17.95230\\
-\cmidrule{2-3}
-\cmidrule{5-7}
- & 1.401586 & 1.195813 &  & 1.056339 & 0.9411753 & 17.10578\\
-\cmidrule{2-3}
-\cmidrule{5-7}
- & 1.450946 & 1.429969 &  & 1.068697 & 0.9378352 & 16.38231\\
-\cmidrule{2-3}
-\cmidrule{5-7}
- & 1.502253 & 1.709976 &  & 1.079700 & 0.9345551 & 15.74782\\
-\cmidrule{2-3}
-\cmidrule{5-7}
- & 1.555229 & 2.044812 &  & 1.088715 & 0.9312388 & 15.16258\\
-\cmidrule{2-3}
-\cmidrule{5-7}
- & 1.609608 & 2.445213 &  & 1.095090 & 0.9276992 & 14.57858\\
-\cmidrule{2-3}
-\cmidrule{5-7}
- & 1.665097 & 2.924018 &  & 1.098126 & 0.9236312 & 13.93974\\
-\cmidrule{2-3}
-\cmidrule{5-7}
- & 1.721499 & 3.496579 &  & 1.097257 & 0.9185750 & 13.18735\\
-\cmidrule{2-3}
-\cmidrule{5-7}
- & 1.778510 & 4.181255 &  & 1.091891 & 0.9119257 & 12.27557\\
-\cmidrule{2-3}
-\cmidrule{5-7}
-\multirow{-10}{*}{\raggedleft\arraybackslash 0.8} & 1.835951 & 5.000000 & \multirow{-10}{*}{\raggedleft\arraybackslash 1} & 1.081767 & 0.9029454 & 11.19209\\
+ & 1.354458 & 0.7383027 & 0.7419128 & 0.9944031 & 0.9446086 & 17.95230\\
+\cmidrule{2-7}
+ & 1.401586 & 0.8531858 & 0.7537938 & 1.0062429 & 0.9411753 & 17.10578\\
+\cmidrule{2-7}
+ & 1.450946 & 0.9855424 & 0.7656516 & 1.0184034 & 0.9378352 & 16.38231\\
+\cmidrule{2-7}
+ & 1.502253 & 1.1382741 & 0.7773720 & 1.0306150 & 0.9345551 & 15.74782\\
+\cmidrule{2-7}
+ & 1.555229 & 1.3147978 & 0.7888590 & 1.0425971 & 0.9312388 & 15.16258\\
+\cmidrule{2-7}
+ & 1.609608 & 1.5191355 & 0.8000340 & 1.0540426 & 0.9276992 & 14.57858\\
+\cmidrule{2-7}
+ & 1.665097 & 1.7560641 & 0.8108278 & 1.0645612 & 0.9236312 & 13.93974\\
+\cmidrule{2-7}
+ & 1.721499 & 2.0311250 & 0.8212020 & 1.0737808 & 0.9185750 & 13.18735\\
+\cmidrule{2-7}
+ & 1.778510 & 2.3509881 & 0.8311103 & 1.0811630 & 0.9119257 & 12.27557\\
+\cmidrule{2-7}
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.8} & 1.835951 & 2.7233847 & 0.8405382 & 1.0862440 & 0.9029454 & 11.19209\\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -13314,27 +13289,27 @@ $AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \resizebox{\linewidth}{!}{
 \begin{tabular}[t]{rrrrrrr}
 \toprule
-$AUC$ & $\mu$ & $\lambda$ & $\nu$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
+$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $R_{Swets}$\\
 \midrule
- &  & 0.1000000 & 0.4640280 & 1.926954 & 0.9476004 & 34.848720\\
+ &  & 0.0500000 & 0.6046785 & 1.826059 & 0.9476004 & 34.848720\\
 \cmidrule{3-7}
- &  & 0.1544452 & 0.4672318 & 1.891150 & 0.9265439 & 23.856540\\
+ &  & 0.0772226 & 0.6072035 & 1.752409 & 0.9265439 & 23.856540\\
 \cmidrule{3-7}
- &  & 0.2385332 & 0.4721744 & 1.840571 & 0.9009387 & 16.743547\\
+ &  & 0.1192666 & 0.6110672 & 1.658638 & 0.9009387 & 16.743547\\
 \cmidrule{3-7}
- &  & 0.3684031 & 0.4797958 & 1.772047 & 0.8726752 & 12.152413\\
+ &  & 0.1842016 & 0.6169507 & 1.547304 & 0.8726752 & 12.152413\\
 \cmidrule{3-7}
- &  & 0.5689810 & 0.4915404 & 1.684378 & 0.8452798 & 9.214737\\
+ &  & 0.2844905 & 0.6258434 & 1.425706 & 0.8452798 & 9.214737\\
 \cmidrule{3-7}
- &  & 0.8787639 & 0.5096299 & 1.580243 & 0.8232878 & 7.386057\\
+ &  & 0.4393820 & 0.6391381 & 1.305207 & 0.8232878 & 7.386057\\
 \cmidrule{3-7}
- &  & 1.3572088 & 0.5375296 & 1.467147 & 0.8110032 & 6.344095\\
+ &  & 0.6786044 & 0.6587224 & 1.199014 & 0.8110032 & 6.344095\\
 \cmidrule{3-7}
- &  & 2.0961440 & 0.5806387 & 1.355241 & 0.8112136 & 5.929330\\
+ &  & 1.0480720 & 0.6869140 & 1.119377 & 0.8112136 & 5.929330\\
 \cmidrule{3-7}
- &  & 3.2373940 & 0.6480658 & 1.251461 & 0.8241099 & 6.112281\\
+ &  & 1.6186970 & 0.7264119 & 1.075090 & 0.8241099 & 6.112281\\
 \cmidrule{3-7}
-\multirow{-10}{*}{\raggedleft\arraybackslash 0.8} & \multirow{-10}{*}{\raggedleft\arraybackslash 2} & 5.0000000 & 0.7572216 & 1.152663 & 0.8448119 & 6.877419\\
+\multirow{-10}{*}{\raggedleft\arraybackslash 0.8} & \multirow{-10}{*}{\raggedleft\arraybackslash 2} & 2.5000000 & 0.7800694 & 1.067293 & 0.8448119 & 6.877419\\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -13355,10 +13330,10 @@ The six tables are organized into 2 x 3 groups.
 
 In each table the 1st column lists the constrained AUC, set to either 0.7 or 0.8, the 2nd, 3rd and 4th columns list the RSM parameters, followed by the empirical a and b-parameters and the Swets ratio.
 
-The number of lesions per diseased case was set to one. The function \texttt{FindParamFixAuc()} finds the missing RSM parameter, indicated by initializing it with \texttt{NA}. The function \texttt{rsmPdfMeansAndStddevs()} calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas.
+The number of lesions per diseased case was set to one. The function \texttt{FindParamFixAuc()} finds the missing RSM parameter, indicated by initializing it with \texttt{NA}. The function \texttt{effectiveAB()} calculates the separation \(a_{eff}\) and standard deviation ratio \(b_{eff}\) (non-diseased to diseased) of the two distributions, after normalizing each to unit area.
 
 STOP
-Examination of Tables \ref{tab:rsm-evidence-table1A}, \ref{tab:rsm-evidence-table1B} and \ref{tab:rsm-evidence-table1C} reveals, for both values of AUC, an inverse relation between \(\mu\) and \(b\), Parts A and B, and an inverse relation between and b, Part C. In (C), for fixed , the only way to improve performance is by increasing , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of especially in Parts A and B.
+Examination of Tables \ref{tab:rsm-evidence-table1A}, \ref{tab:rsm-evidence-table1B} and \ref{tab:rsm-evidence-table1C} reveals, for both values of AUC, an inverse relation between \(\mu\) and \(b\) and an inverse relation between \(\nu\) and b. In (C), for fixed , the only way to improve performance is by increasing , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of especially in Parts A and B.
 
 The biggest deviation from approximate constancy is observed in Part C: this could be due to unreasonably low values of , e.g., 0.1, necessary in order to satisfy the AUC constraint. It should be noted that the Swets et al observations are based on only two datasets and they state that = 4, their observed value, is probably not generally applicable.
 

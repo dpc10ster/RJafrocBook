@@ -178,9 +178,9 @@ One expects $A \equiv AUC_{ROC}^{RSM}$ to exceed the binormal fitted value $A_z$
 ## Empirical observations
 As summarized previously, there are three empirical observations regarding binormal parameters: 
 
-* $b < 1$, 
-* $b$ decreases as $\mu$ increases, and 
-* $\Delta(mean) / \Delta(\sigma)$ is approximately constant for fixed experimental conditions. To not confuse with the RSM $\mu$ parameter, the difference in means is denoted $\Delta(mean)$, not $\Delta \mu$. 
+* $b < 1$. 
+* $b$ decreases as $\mu$ increases. 
+* For fixed experimental conditions $R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)$ is approximately constant. To not confuse with the RSM $\mu$ parameter, the difference in means of the two normal distributions is denoted $\Delta(mean)$, not $\Delta \mu$. 
 
 
 ### Explanation for $b < 1$
@@ -204,11 +204,14 @@ Fig. \@ref(fig:rsm-evidence-pdf-plots): This figure provides an explanation for 
 
 More than 55 years ago, [@RN2635] noticed in non-medical imaging contexts:
  
-* The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. 
+* The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. In binormal parameter terms, $b$ decreases as $a$ increases.
 
-* The ratio $\Delta(mean) / \Delta(\sigma)$ is approximately constant for a fixed set of experimental conditions.
+* The ratio $R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)$ is approximately constant for a fixed set of experimental conditions. In binormal parameter terms, $\frac{a}{1-b}$ is approximately constant ^[The separation is $a$, the wider signal distribution has standard deviation unity while the narrower noise distribution has standard deviation $b$.].
 
-In the RSM  $\mu$ is the perceptual signal to noise *pSNR* of found lesions. Swets' first empirical observation implies that the $b$ parameter should decrease with increasing $\mu$. Testing this proposition over a wide range of $\mu$ using the preceding methods (i.e., binormal model maximum likelihood fitting) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each bin and convergence of the binormal model algorithm, which is problematical for larger values of $\mu$ which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If $f(x)$ is a unit-normalized pdf its mean $<x>$  and variance $\sigma_x^2$ are defined by:
+In the RSM $\mu$ is the perceptual signal to noise of found lesions. Swets' first empirical observation implies that the $b$ parameter should decrease with increasing $\mu$. The second observation
+
+
+Testing this proposition over a wide range of $\mu$ using the preceding methods (i.e., binormal model maximum likelihood fitting) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each bin and convergence of the binormal model algorithm, which is problematical for larger values of $\mu$ which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If $f(x)$ is a unit-normalized pdf its mean $<x>$  and variance $\sigma_x^2$ are defined by:
 
 \begin{equation}
 \left. 
@@ -256,8 +259,8 @@ Shown first are three tables corresponding to RSM-AUC = 0.7.
   <tr>
    <th style="text-align:right;"> $AUC$ </th>
    <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda$ </th>
-   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $\lambda'$ </th>
+   <th style="text-align:right;"> $\nu'$ </th>
    <th style="text-align:right;"> $a_{eff}$ </th>
    <th style="text-align:right;"> $b_{eff}$ </th>
    <th style="text-align:right;"> $R_{Swets}$ </th>
@@ -267,90 +270,90 @@ Shown first are three tables corresponding to RSM-AUC = 0.7.
   <tr>
    <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
    <td style="text-align:right;"> 2.000000 </td>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 2 </td>
-   <td style="text-align:right;"> 0.3040194 </td>
-   <td style="text-align:right;"> 1.006825 </td>
+   <td style="text-align:right;"> 1.0000000 </td>
+   <td style="text-align:right;"> 0.4555825 </td>
+   <td style="text-align:right;"> 0.7716616 </td>
    <td style="text-align:right;"> 0.7539348 </td>
    <td style="text-align:right;"> 3.136005 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 2.214346 </td>
-   
-   <td style="text-align:right;"> 0.2600273 </td>
-   <td style="text-align:right;"> 1.129415 </td>
+   <td style="text-align:right;"> 0.9032011 </td>
+   <td style="text-align:right;"> 0.4377398 </td>
+   <td style="text-align:right;"> 0.8135809 </td>
    <td style="text-align:right;"> 0.7107209 </td>
    <td style="text-align:right;"> 2.812442 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 2.451665 </td>
-   
-   <td style="text-align:right;"> 0.2252662 </td>
-   <td style="text-align:right;"> 1.276371 </td>
+   <td style="text-align:right;"> 0.8157722 </td>
+   <td style="text-align:right;"> 0.4243625 </td>
+   <td style="text-align:right;"> 0.8608401 </td>
    <td style="text-align:right;"> 0.6670500 </td>
    <td style="text-align:right;"> 2.585494 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 2.714418 </td>
-   
-   <td style="text-align:right;"> 0.1973748 </td>
-   <td style="text-align:right;"> 1.451139 </td>
+   <td style="text-align:right;"> 0.7368063 </td>
+   <td style="text-align:right;"> 0.4147742 </td>
+   <td style="text-align:right;"> 0.9131216 </td>
    <td style="text-align:right;"> 0.6235964 </td>
    <td style="text-align:right;"> 2.425911 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 3.005330 </td>
-   
-   <td style="text-align:right;"> 0.1746062 </td>
-   <td style="text-align:right;"> 1.657169 </td>
+   <td style="text-align:right;"> 0.6654842 </td>
+   <td style="text-align:right;"> 0.4082964 </td>
+   <td style="text-align:right;"> 0.9700227 </td>
    <td style="text-align:right;"> 0.5810496 </td>
    <td style="text-align:right;"> 2.315364 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 3.327421 </td>
-   
-   <td style="text-align:right;"> 0.1556552 </td>
-   <td style="text-align:right;"> 1.897802 </td>
+   <td style="text-align:right;"> 0.6010661 </td>
+   <td style="text-align:right;"> 0.4042477 </td>
+   <td style="text-align:right;"> 1.0310407 </td>
    <td style="text-align:right;"> 0.5400178 </td>
    <td style="text-align:right;"> 2.241479 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 3.684032 </td>
-   
-   <td style="text-align:right;"> 0.1395508 </td>
-   <td style="text-align:right;"> 2.176243 </td>
+   <td style="text-align:right;"> 0.5428835 </td>
+   <td style="text-align:right;"> 0.4019671 </td>
+   <td style="text-align:right;"> 1.0955943 </td>
    <td style="text-align:right;"> 0.5009616 </td>
    <td style="text-align:right;"> 2.195411 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 4.078861 </td>
-   
-   <td style="text-align:right;"> 0.1255604 </td>
-   <td style="text-align:right;"> 2.495426 </td>
+   <td style="text-align:right;"> 0.4903330 </td>
+   <td style="text-align:right;"> 0.4007900 </td>
+   <td style="text-align:right;"> 1.1629401 </td>
    <td style="text-align:right;"> 0.4641586 </td>
    <td style="text-align:right;"> 2.170307 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 4.516005 </td>
-   
-   <td style="text-align:right;"> 0.1132283 </td>
-   <td style="text-align:right;"> 2.859036 </td>
+   <td style="text-align:right;"> 0.4428693 </td>
+   <td style="text-align:right;"> 0.4003083 </td>
+   <td style="text-align:right;"> 1.2327462 </td>
    <td style="text-align:right;"> 0.4297620 </td>
    <td style="text-align:right;"> 2.161810 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 5.000000 </td>
-   
-   <td style="text-align:right;"> 0.1021570 </td>
-   <td style="text-align:right;"> 3.270140 </td>
+   <td style="text-align:right;"> 0.4000000 </td>
+   <td style="text-align:right;"> 0.3999756 </td>
+   <td style="text-align:right;"> 1.3042036 </td>
    <td style="text-align:right;"> 0.3977542 </td>
    <td style="text-align:right;"> 2.165567 </td>
   </tr>
@@ -364,8 +367,8 @@ Shown first are three tables corresponding to RSM-AUC = 0.7.
   <tr>
    <th style="text-align:right;"> $AUC$ </th>
    <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda$ </th>
-   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $\lambda'$ </th>
+   <th style="text-align:right;"> $\nu'$ </th>
    <th style="text-align:right;"> $a_{eff}$ </th>
    <th style="text-align:right;"> $b_{eff}$ </th>
    <th style="text-align:right;"> $R_{Swets}$ </th>
@@ -375,90 +378,90 @@ Shown first are three tables corresponding to RSM-AUC = 0.7.
   <tr>
    <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
    <td style="text-align:right;"> 0.9453400 </td>
-   <td style="text-align:right;"> 1.000000 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.5945099 </td>
+   <td style="text-align:right;"> 1.057821 </td>
+   <td style="text-align:right;"> 0.6114526 </td>
+   <td style="text-align:right;"> 0.5914366 </td>
    <td style="text-align:right;"> 0.9767467 </td>
    <td style="text-align:right;"> 25.43453 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 0.9900899 </td>
-   <td style="text-align:right;"> 1.195813 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.6063259 </td>
+   <td style="text-align:right;"> 1.207782 </td>
+   <td style="text-align:right;"> 0.6284567 </td>
+   <td style="text-align:right;"> 0.6061914 </td>
    <td style="text-align:right;"> 0.9763296 </td>
    <td style="text-align:right;"> 25.60972 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.0368216 </td>
-   <td style="text-align:right;"> 1.429969 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.6172462 </td>
+   <td style="text-align:right;"> 1.379185 </td>
+   <td style="text-align:right;"> 0.6454201 </td>
+   <td style="text-align:right;"> 0.6211484 </td>
    <td style="text-align:right;"> 0.9759534 </td>
    <td style="text-align:right;"> 25.83105 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.0853032 </td>
-   <td style="text-align:right;"> 1.709976 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.6267194 </td>
+   <td style="text-align:right;"> 1.575574 </td>
+   <td style="text-align:right;"> 0.6622006 </td>
+   <td style="text-align:right;"> 0.6359865 </td>
    <td style="text-align:right;"> 0.9755036 </td>
    <td style="text-align:right;"> 25.96241 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.1353543 </td>
-   <td style="text-align:right;"> 2.044812 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.6342292 </td>
+   <td style="text-align:right;"> 1.801034 </td>
+   <td style="text-align:right;"> 0.6786917 </td>
+   <td style="text-align:right;"> 0.6504041 </td>
    <td style="text-align:right;"> 0.9747737 </td>
    <td style="text-align:right;"> 25.78277 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.1866104 </td>
-   <td style="text-align:right;"> 2.445213 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.6390778 </td>
+   <td style="text-align:right;"> 2.060670 </td>
+   <td style="text-align:right;"> 0.6947458 </td>
+   <td style="text-align:right;"> 0.6638962 </td>
    <td style="text-align:right;"> 0.9734671 </td>
    <td style="text-align:right;"> 25.02159 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.2388982 </td>
-   <td style="text-align:right;"> 2.924018 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.6408089 </td>
+   <td style="text-align:right;"> 2.360176 </td>
+   <td style="text-align:right;"> 0.7102968 </td>
+   <td style="text-align:right;"> 0.6760928 </td>
    <td style="text-align:right;"> 0.9711321 </td>
    <td style="text-align:right;"> 23.42021 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.2920006 </td>
-   <td style="text-align:right;"> 3.496579 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.6390296 </td>
+   <td style="text-align:right;"> 2.706329 </td>
+   <td style="text-align:right;"> 0.7252794 </td>
+   <td style="text-align:right;"> 0.6865553 </td>
    <td style="text-align:right;"> 0.9671901 </td>
    <td style="text-align:right;"> 20.92522 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.3456955 </td>
-   <td style="text-align:right;"> 4.181255 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.6335312 </td>
+   <td style="text-align:right;"> 3.107133 </td>
+   <td style="text-align:right;"> 0.7396414 </td>
+   <td style="text-align:right;"> 0.6948464 </td>
    <td style="text-align:right;"> 0.9609738 </td>
    <td style="text-align:right;"> 17.80463 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.3999013 </td>
-   <td style="text-align:right;"> 5.000000 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.6245101 </td>
+   <td style="text-align:right;"> 3.571680 </td>
+   <td style="text-align:right;"> 0.7533787 </td>
+   <td style="text-align:right;"> 0.7007159 </td>
    <td style="text-align:right;"> 0.9518188 </td>
    <td style="text-align:right;"> 14.54334 </td>
   </tr>
@@ -473,8 +476,8 @@ Shown first are three tables corresponding to RSM-AUC = 0.7.
   <tr>
    <th style="text-align:right;"> $AUC$ </th>
    <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda$ </th>
-   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $\lambda'$ </th>
+   <th style="text-align:right;"> $\nu'$ </th>
    <th style="text-align:right;"> $a_{eff}$ </th>
    <th style="text-align:right;"> $b_{eff}$ </th>
    <th style="text-align:right;"> $R_{Swets}$ </th>
@@ -484,90 +487,90 @@ Shown first are three tables corresponding to RSM-AUC = 0.7.
   <tr>
    <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
    <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 2 </td>
-   <td style="text-align:right;"> 0.1000000 </td>
-   <td style="text-align:right;"> 0.2580240 </td>
-   <td style="text-align:right;"> 1.8544816 </td>
+   <td style="text-align:right;"> 0.0500000 </td>
+   <td style="text-align:right;"> 0.4031252 </td>
+   <td style="text-align:right;"> 1.6629055 </td>
    <td style="text-align:right;"> 0.8966579 </td>
    <td style="text-align:right;"> 16.091266 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.1544452 </td>
-   <td style="text-align:right;"> 0.2594364 </td>
-   <td style="text-align:right;"> 1.7868249 </td>
+   <td style="text-align:right;"> 0.0772226 </td>
+   <td style="text-align:right;"> 0.4048090 </td>
+   <td style="text-align:right;"> 1.5424715 </td>
    <td style="text-align:right;"> 0.8631606 </td>
    <td style="text-align:right;"> 11.272127 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.2385332 </td>
-   <td style="text-align:right;"> 0.2616054 </td>
-   <td style="text-align:right;"> 1.6950567 </td>
+   <td style="text-align:right;"> 0.1192666 </td>
+   <td style="text-align:right;"> 0.4073853 </td>
+   <td style="text-align:right;"> 1.4029691 </td>
    <td style="text-align:right;"> 0.8274848 </td>
    <td style="text-align:right;"> 8.132437 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.3684031 </td>
-   <td style="text-align:right;"> 0.2649264 </td>
-   <td style="text-align:right;"> 1.5773402 </td>
+   <td style="text-align:right;"> 0.1842016 </td>
+   <td style="text-align:right;"> 0.4113084 </td>
+   <td style="text-align:right;"> 1.2531401 </td>
    <td style="text-align:right;"> 0.7940112 </td>
    <td style="text-align:right;"> 6.083536 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.5689810 </td>
-   <td style="text-align:right;"> 0.2699885 </td>
-   <td style="text-align:right;"> 1.4368181 </td>
+   <td style="text-align:right;"> 0.2844905 </td>
+   <td style="text-align:right;"> 0.4172383 </td>
+   <td style="text-align:right;"> 1.1042926 </td>
    <td style="text-align:right;"> 0.7675247 </td>
    <td style="text-align:right;"> 4.750151 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.8787639 </td>
-   <td style="text-align:right;"> 0.2776535 </td>
-   <td style="text-align:right;"> 1.2830448 </td>
+   <td style="text-align:right;"> 0.4393820 </td>
+   <td style="text-align:right;"> 0.4261039 </td>
+   <td style="text-align:right;"> 0.9675871 </td>
    <td style="text-align:right;"> 0.7516999 </td>
    <td style="text-align:right;"> 3.896845 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 1.3572088 </td>
-   <td style="text-align:right;"> 0.2891525 </td>
-   <td style="text-align:right;"> 1.1303902 </td>
+   <td style="text-align:right;"> 0.6786044 </td>
+   <td style="text-align:right;"> 0.4391518 </td>
+   <td style="text-align:right;"> 0.8519904 </td>
    <td style="text-align:right;"> 0.7479598 </td>
    <td style="text-align:right;"> 3.380376 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 2.0961440 </td>
-   <td style="text-align:right;"> 0.3061914 </td>
-   <td style="text-align:right;"> 0.9930460 </td>
+   <td style="text-align:right;"> 1.0480720 </td>
+   <td style="text-align:right;"> 0.4579423 </td>
+   <td style="text-align:right;"> 0.7635328 </td>
    <td style="text-align:right;"> 0.7551508 </td>
    <td style="text-align:right;"> 3.118380 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 3.2373940 </td>
-   <td style="text-align:right;"> 0.3310898 </td>
-   <td style="text-align:right;"> 0.8788939 </td>
+   <td style="text-align:right;"> 1.6186970 </td>
+   <td style="text-align:right;"> 0.4842740 </td>
+   <td style="text-align:right;"> 0.7052538 </td>
    <td style="text-align:right;"> 0.7697799 </td>
    <td style="text-align:right;"> 3.063390 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 5.0000000 </td>
-   <td style="text-align:right;"> 0.3670313 </td>
-   <td style="text-align:right;"> 0.7855144 </td>
+   <td style="text-align:right;"> 2.5000000 </td>
+   <td style="text-align:right;"> 0.5200449 </td>
+   <td style="text-align:right;"> 0.6764614 </td>
    <td style="text-align:right;"> 0.7857195 </td>
    <td style="text-align:right;"> 3.156897 </td>
   </tr>
@@ -591,8 +594,8 @@ Shown next are three tables corresponding to RSM-AUC = 0.8.
   <tr>
    <th style="text-align:right;"> $AUC$ </th>
    <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda$ </th>
-   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $\lambda'$ </th>
+   <th style="text-align:right;"> $\nu'$ </th>
    <th style="text-align:right;"> $a_{eff}$ </th>
    <th style="text-align:right;"> $b_{eff}$ </th>
    <th style="text-align:right;"> $R_{Swets}$ </th>
@@ -602,90 +605,90 @@ Shown next are three tables corresponding to RSM-AUC = 0.8.
   <tr>
    <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
    <td style="text-align:right;"> 2.000000 </td>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 2 </td>
-   <td style="text-align:right;"> 0.5750174 </td>
-   <td style="text-align:right;"> 1.366996 </td>
+   <td style="text-align:right;"> 1.0000000 </td>
+   <td style="text-align:right;"> 0.6833742 </td>
+   <td style="text-align:right;"> 1.126389 </td>
    <td style="text-align:right;"> 0.8105541 </td>
    <td style="text-align:right;"> 5.945703 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 2.214346 </td>
-   
-   <td style="text-align:right;"> 0.4826833 </td>
-   <td style="text-align:right;"> 1.519525 </td>
+   <td style="text-align:right;"> 0.9032011 </td>
+   <td style="text-align:right;"> 0.6565893 </td>
+   <td style="text-align:right;"> 1.178057 </td>
    <td style="text-align:right;"> 0.7649096 </td>
    <td style="text-align:right;"> 5.011078 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 2.451665 </td>
-   
-   <td style="text-align:right;"> 0.4128075 </td>
-   <td style="text-align:right;"> 1.700445 </td>
+   <td style="text-align:right;"> 0.8157722 </td>
+   <td style="text-align:right;"> 0.6365326 </td>
+   <td style="text-align:right;"> 1.239282 </td>
    <td style="text-align:right;"> 0.7208098 </td>
    <td style="text-align:right;"> 4.438846 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 2.714418 </td>
-   
-   <td style="text-align:right;"> 0.3585499 </td>
-   <td style="text-align:right;"> 1.912912 </td>
+   <td style="text-align:right;"> 0.7368063 </td>
+   <td style="text-align:right;"> 0.6221486 </td>
+   <td style="text-align:right;"> 1.309663 </td>
    <td style="text-align:right;"> 0.6784979 </td>
    <td style="text-align:right;"> 4.073575 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 3.005330 </td>
-   
-   <td style="text-align:right;"> 0.3154119 </td>
-   <td style="text-align:right;"> 2.160031 </td>
+   <td style="text-align:right;"> 0.6654842 </td>
+   <td style="text-align:right;"> 0.6124526 </td>
+   <td style="text-align:right;"> 1.388809 </td>
    <td style="text-align:right;"> 0.6382351 </td>
    <td style="text-align:right;"> 3.838983 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 3.327421 </td>
-   
-   <td style="text-align:right;"> 0.2801812 </td>
-   <td style="text-align:right;"> 2.444396 </td>
+   <td style="text-align:right;"> 0.6010661 </td>
+   <td style="text-align:right;"> 0.6063452 </td>
+   <td style="text-align:right;"> 1.475851 </td>
    <td style="text-align:right;"> 0.6001421 </td>
    <td style="text-align:right;"> 3.690938 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 3.684032 </td>
-   
-   <td style="text-align:right;"> 0.2506689 </td>
-   <td style="text-align:right;"> 2.768579 </td>
+   <td style="text-align:right;"> 0.5428835 </td>
+   <td style="text-align:right;"> 0.6028623 </td>
+   <td style="text-align:right;"> 1.569891 </td>
    <td style="text-align:right;"> 0.5642539 </td>
    <td style="text-align:right;"> 3.602765 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 4.078861 </td>
-   
-   <td style="text-align:right;"> 0.2253300 </td>
-   <td style="text-align:right;"> 3.135116 </td>
+   <td style="text-align:right;"> 0.4903330 </td>
+   <td style="text-align:right;"> 0.6011181 </td>
+   <td style="text-align:right;"> 1.669850 </td>
    <td style="text-align:right;"> 0.5304907 </td>
    <td style="text-align:right;"> 3.556586 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 4.516005 </td>
-   
-   <td style="text-align:right;"> 0.2030971 </td>
-   <td style="text-align:right;"> 3.546769 </td>
+   <td style="text-align:right;"> 0.4428693 </td>
+   <td style="text-align:right;"> 0.6003586 </td>
+   <td style="text-align:right;"> 1.774593 </td>
    <td style="text-align:right;"> 0.4987007 </td>
    <td style="text-align:right;"> 3.539988 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 5.000000 </td>
-   
-   <td style="text-align:right;"> 0.1833044 </td>
-   <td style="text-align:right;"> 4.007089 </td>
+   <td style="text-align:right;"> 0.4000000 </td>
+   <td style="text-align:right;"> 0.6000925 </td>
+   <td style="text-align:right;"> 1.883397 </td>
    <td style="text-align:right;"> 0.4687580 </td>
    <td style="text-align:right;"> 3.545271 </td>
   </tr>
@@ -699,8 +702,8 @@ Shown next are three tables corresponding to RSM-AUC = 0.8.
   <tr>
    <th style="text-align:right;"> $AUC$ </th>
    <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda$ </th>
-   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $\lambda'$ </th>
+   <th style="text-align:right;"> $\nu'$ </th>
    <th style="text-align:right;"> $a_{eff}$ </th>
    <th style="text-align:right;"> $b_{eff}$ </th>
    <th style="text-align:right;"> $R_{Swets}$ </th>
@@ -710,90 +713,90 @@ Shown next are three tables corresponding to RSM-AUC = 0.8.
   <tr>
    <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
    <td style="text-align:right;"> 1.354458 </td>
-   <td style="text-align:right;"> 1.000000 </td>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 1 </td>
-   <td style="text-align:right;"> 1.043227 </td>
+   <td style="text-align:right;"> 0.7383027 </td>
+   <td style="text-align:right;"> 0.7419128 </td>
+   <td style="text-align:right;"> 0.9944031 </td>
    <td style="text-align:right;"> 0.9446086 </td>
    <td style="text-align:right;"> 17.95230 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.401586 </td>
-   <td style="text-align:right;"> 1.195813 </td>
-   
-   <td style="text-align:right;"> 1.056339 </td>
+   <td style="text-align:right;"> 0.8531858 </td>
+   <td style="text-align:right;"> 0.7537938 </td>
+   <td style="text-align:right;"> 1.0062429 </td>
    <td style="text-align:right;"> 0.9411753 </td>
    <td style="text-align:right;"> 17.10578 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.450946 </td>
-   <td style="text-align:right;"> 1.429969 </td>
-   
-   <td style="text-align:right;"> 1.068697 </td>
+   <td style="text-align:right;"> 0.9855424 </td>
+   <td style="text-align:right;"> 0.7656516 </td>
+   <td style="text-align:right;"> 1.0184034 </td>
    <td style="text-align:right;"> 0.9378352 </td>
    <td style="text-align:right;"> 16.38231 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.502253 </td>
-   <td style="text-align:right;"> 1.709976 </td>
-   
-   <td style="text-align:right;"> 1.079700 </td>
+   <td style="text-align:right;"> 1.1382741 </td>
+   <td style="text-align:right;"> 0.7773720 </td>
+   <td style="text-align:right;"> 1.0306150 </td>
    <td style="text-align:right;"> 0.9345551 </td>
    <td style="text-align:right;"> 15.74782 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.555229 </td>
-   <td style="text-align:right;"> 2.044812 </td>
-   
-   <td style="text-align:right;"> 1.088715 </td>
+   <td style="text-align:right;"> 1.3147978 </td>
+   <td style="text-align:right;"> 0.7888590 </td>
+   <td style="text-align:right;"> 1.0425971 </td>
    <td style="text-align:right;"> 0.9312388 </td>
    <td style="text-align:right;"> 15.16258 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.609608 </td>
-   <td style="text-align:right;"> 2.445213 </td>
-   
-   <td style="text-align:right;"> 1.095090 </td>
+   <td style="text-align:right;"> 1.5191355 </td>
+   <td style="text-align:right;"> 0.8000340 </td>
+   <td style="text-align:right;"> 1.0540426 </td>
    <td style="text-align:right;"> 0.9276992 </td>
    <td style="text-align:right;"> 14.57858 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.665097 </td>
-   <td style="text-align:right;"> 2.924018 </td>
-   
-   <td style="text-align:right;"> 1.098126 </td>
+   <td style="text-align:right;"> 1.7560641 </td>
+   <td style="text-align:right;"> 0.8108278 </td>
+   <td style="text-align:right;"> 1.0645612 </td>
    <td style="text-align:right;"> 0.9236312 </td>
    <td style="text-align:right;"> 13.93974 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.721499 </td>
-   <td style="text-align:right;"> 3.496579 </td>
-   
-   <td style="text-align:right;"> 1.097257 </td>
+   <td style="text-align:right;"> 2.0311250 </td>
+   <td style="text-align:right;"> 0.8212020 </td>
+   <td style="text-align:right;"> 1.0737808 </td>
    <td style="text-align:right;"> 0.9185750 </td>
    <td style="text-align:right;"> 13.18735 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.778510 </td>
-   <td style="text-align:right;"> 4.181255 </td>
-   
-   <td style="text-align:right;"> 1.091891 </td>
+   <td style="text-align:right;"> 2.3509881 </td>
+   <td style="text-align:right;"> 0.8311103 </td>
+   <td style="text-align:right;"> 1.0811630 </td>
    <td style="text-align:right;"> 0.9119257 </td>
    <td style="text-align:right;"> 12.27557 </td>
   </tr>
   <tr>
    
    <td style="text-align:right;"> 1.835951 </td>
-   <td style="text-align:right;"> 5.000000 </td>
-   
-   <td style="text-align:right;"> 1.081767 </td>
+   <td style="text-align:right;"> 2.7233847 </td>
+   <td style="text-align:right;"> 0.8405382 </td>
+   <td style="text-align:right;"> 1.0862440 </td>
    <td style="text-align:right;"> 0.9029454 </td>
    <td style="text-align:right;"> 11.19209 </td>
   </tr>
@@ -808,8 +811,8 @@ Shown next are three tables corresponding to RSM-AUC = 0.8.
   <tr>
    <th style="text-align:right;"> $AUC$ </th>
    <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda$ </th>
-   <th style="text-align:right;"> $\nu$ </th>
+   <th style="text-align:right;"> $\lambda'$ </th>
+   <th style="text-align:right;"> $\nu'$ </th>
    <th style="text-align:right;"> $a_{eff}$ </th>
    <th style="text-align:right;"> $b_{eff}$ </th>
    <th style="text-align:right;"> $R_{Swets}$ </th>
@@ -819,90 +822,90 @@ Shown next are three tables corresponding to RSM-AUC = 0.8.
   <tr>
    <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
    <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 2 </td>
-   <td style="text-align:right;"> 0.1000000 </td>
-   <td style="text-align:right;"> 0.4640280 </td>
-   <td style="text-align:right;"> 1.926954 </td>
+   <td style="text-align:right;"> 0.0500000 </td>
+   <td style="text-align:right;"> 0.6046785 </td>
+   <td style="text-align:right;"> 1.826059 </td>
    <td style="text-align:right;"> 0.9476004 </td>
    <td style="text-align:right;"> 34.848720 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.1544452 </td>
-   <td style="text-align:right;"> 0.4672318 </td>
-   <td style="text-align:right;"> 1.891150 </td>
+   <td style="text-align:right;"> 0.0772226 </td>
+   <td style="text-align:right;"> 0.6072035 </td>
+   <td style="text-align:right;"> 1.752409 </td>
    <td style="text-align:right;"> 0.9265439 </td>
    <td style="text-align:right;"> 23.856540 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.2385332 </td>
-   <td style="text-align:right;"> 0.4721744 </td>
-   <td style="text-align:right;"> 1.840571 </td>
+   <td style="text-align:right;"> 0.1192666 </td>
+   <td style="text-align:right;"> 0.6110672 </td>
+   <td style="text-align:right;"> 1.658638 </td>
    <td style="text-align:right;"> 0.9009387 </td>
    <td style="text-align:right;"> 16.743547 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.3684031 </td>
-   <td style="text-align:right;"> 0.4797958 </td>
-   <td style="text-align:right;"> 1.772047 </td>
+   <td style="text-align:right;"> 0.1842016 </td>
+   <td style="text-align:right;"> 0.6169507 </td>
+   <td style="text-align:right;"> 1.547304 </td>
    <td style="text-align:right;"> 0.8726752 </td>
    <td style="text-align:right;"> 12.152413 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.5689810 </td>
-   <td style="text-align:right;"> 0.4915404 </td>
-   <td style="text-align:right;"> 1.684378 </td>
+   <td style="text-align:right;"> 0.2844905 </td>
+   <td style="text-align:right;"> 0.6258434 </td>
+   <td style="text-align:right;"> 1.425706 </td>
    <td style="text-align:right;"> 0.8452798 </td>
    <td style="text-align:right;"> 9.214737 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.8787639 </td>
-   <td style="text-align:right;"> 0.5096299 </td>
-   <td style="text-align:right;"> 1.580243 </td>
+   <td style="text-align:right;"> 0.4393820 </td>
+   <td style="text-align:right;"> 0.6391381 </td>
+   <td style="text-align:right;"> 1.305207 </td>
    <td style="text-align:right;"> 0.8232878 </td>
    <td style="text-align:right;"> 7.386057 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 1.3572088 </td>
-   <td style="text-align:right;"> 0.5375296 </td>
-   <td style="text-align:right;"> 1.467147 </td>
+   <td style="text-align:right;"> 0.6786044 </td>
+   <td style="text-align:right;"> 0.6587224 </td>
+   <td style="text-align:right;"> 1.199014 </td>
    <td style="text-align:right;"> 0.8110032 </td>
    <td style="text-align:right;"> 6.344095 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 2.0961440 </td>
-   <td style="text-align:right;"> 0.5806387 </td>
-   <td style="text-align:right;"> 1.355241 </td>
+   <td style="text-align:right;"> 1.0480720 </td>
+   <td style="text-align:right;"> 0.6869140 </td>
+   <td style="text-align:right;"> 1.119377 </td>
    <td style="text-align:right;"> 0.8112136 </td>
    <td style="text-align:right;"> 5.929330 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 3.2373940 </td>
-   <td style="text-align:right;"> 0.6480658 </td>
-   <td style="text-align:right;"> 1.251461 </td>
+   <td style="text-align:right;"> 1.6186970 </td>
+   <td style="text-align:right;"> 0.7264119 </td>
+   <td style="text-align:right;"> 1.075090 </td>
    <td style="text-align:right;"> 0.8241099 </td>
    <td style="text-align:right;"> 6.112281 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 5.0000000 </td>
-   <td style="text-align:right;"> 0.7572216 </td>
-   <td style="text-align:right;"> 1.152663 </td>
+   <td style="text-align:right;"> 2.5000000 </td>
+   <td style="text-align:right;"> 0.7800694 </td>
+   <td style="text-align:right;"> 1.067293 </td>
    <td style="text-align:right;"> 0.8448119 </td>
    <td style="text-align:right;"> 6.877419 </td>
   </tr>
@@ -922,10 +925,10 @@ The six tables are organized into 2 x 3 groups.
 In each table the 1st column lists the constrained  AUC, set to either 0.7 or 0.8, the 2nd, 3rd and 4th columns list the RSM parameters, followed by the empirical a and b-parameters and the Swets ratio. 
 
 
-The number of lesions per diseased case was set to one. The function `FindParamFixAuc()` finds the missing RSM parameter, indicated by initializing it with `NA`. The function `rsmPdfMeansAndStddevs()` calculates the means and standard deviations of the two distributions, after appropriately normalizing them to unit areas. 
+The number of lesions per diseased case was set to one. The function `FindParamFixAuc()` finds the missing RSM parameter, indicated by initializing it with `NA`. The function `effectiveAB()` calculates the separation $a_{eff}$ and standard deviation ratio $b_{eff}$ (non-diseased to diseased) of the two distributions, after normalizing each to unit area. 
 
 STOP
-Examination of Tables \@ref(tab:rsm-evidence-table1A), \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table1C) reveals, for both values of AUC, an inverse relation between $\mu$ and $b$, Parts A and B, and an inverse relation between   and b, Part C.  In (C), for fixed  , the only way to improve performance is by increasing  , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of   especially in Parts A and B. 
+Examination of Tables \@ref(tab:rsm-evidence-table1A), \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table1C) reveals, for both values of AUC, an inverse relation between $\mu$ and $b$ and an inverse relation between $\nu$ and b.  In (C), for fixed  , the only way to improve performance is by increasing  , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of   especially in Parts A and B. 
 
 The biggest deviation from approximate constancy is observed in Part C: this could be due to unreasonably low values of  , e.g., 0.1, necessary in order to satisfy the AUC constraint. It should be noted that the Swets et al observations are based on only two datasets and they state that   = 4, their observed value, is probably not generally applicable. 
 
