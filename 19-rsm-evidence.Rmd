@@ -261,49 +261,51 @@ Fig. \@ref(fig:rsm-evidence-pdf-plots): This figure provides an explanation for 
 
 ### Explanation of Swets et al observations 
 
-More than 55 years ago, [@RN2635] noticed in non-medical imaging contexts:
+More than 55 years ago, [@RN2635] noticed in two non-medical imaging contexts:
  
 * The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. In binormal parameter terms, $b$ decreases as $a$ increases.
 
-* The ratio $R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)$ is approximately constant for a fixed set of experimental conditions. In binormal parameter terms, $\frac{a}{1-b}$ is approximately constant ^[The separation is $a$, the wider signal distribution has standard deviation unity while the narrower noise distribution has standard deviation $b$.].
+* The ratio $R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)$, henceforth referrd to as the Swets Ratio, is approximately constant for a fixed set of experimental conditions. In binormal parameter terms, $R_{Swets} \equiv \frac{a}{1-b}$ is approximately constant ^[The separation is $a$, the wider signal distribution has standard deviation unity while the narrower noise distribution has standard deviation $b$.].
 
-In the RSM $\mu$ is the perceptual signal to noise of found lesions. Swets' first empirical observation implies that the $b$ parameter should decrease with increasing $\mu$. The second observation
+The second observation implies a peculiar relation between the $a$ and $b$ parameters. Recall Figure \@ref(fig:BinormalModel-ab2-mu-sigma), Plot A, which shows the definitions of the binormal $a$ and $b$ parameters. The diseased pdf has unit standard deviation, while the non-diseased has standard deviation $b < 1$, and the separation of the two distributions is $a$. The constancy of Swets Ratio implies that as $a$ increases $b$ decreases (which implies that the first observation is actually contained in the second) so as to increase $1-b$ by the same factor. Since $b$ is a standard deviation, i.e., $b > 0$, it can only shrink so far, and eventually, for large enough $a$, the presumed constancy must fail. Nevertheless, it is interesting to use the RSM to test this hypothesis. Another reason for pursing this line of inquiry is that Don Dorfman took an interest in this issue, using it to justify the bigamma model [@RN100], and I am a great admirer of the late Professor Dorfman. 
 
+Testing over a range of $\mu$ using binormal model maximum likelihood fitting is direct but cumbersome and subject to failure as it depends on convergence of the binormal model algorithm, which is problematical for larger values of $\mu$, which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas over the continuous sections. Normalization was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. Since the binormal model is not used, the effective binormal parameters will henceforth be referred to as $a_{eff}$ and $b_{eff}$. In this notation, the Swets Ratio is $R_{Swets} \equiv \frac{a_{eff}}{1-b_{eff}}$.  
 
-Testing this proposition over a wide range of $\mu$ using the preceding methods (i.e., binormal model maximum likelihood fitting) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each bin and convergence of the binormal model algorithm, which is problematical for larger values of $\mu$ which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If $f(x)$ is a unit-normalized pdf its mean $<x>$  and variance $\sigma_x^2$ are defined by:
+The following equations describe the calculations involved, which are implemented in the code:
 
 \begin{equation}
 \left. 
 \begin{aligned}
-\left \langle x \right \rangle = & \int_{-\infty}^{\infty} xf(x) dx \\
-\sigma_x^2 = & \int_{-\infty}^{\infty} \left (x - \left \langle x \right \rangle  \right )^2f(x) dx \\
+\left \langle x \right \rangle_N = & \int_{-\infty}^{\infty} xf_N(x) dx \\
+\left \langle x \right \rangle_D = & \int_{-\infty}^{\infty} xf_D(x) dx \\
+\sigma_N^2 = & \int_{-\infty}^{\infty} \left (x - \left \langle x \right \rangle_N  \right )^2f_N(x) dx \\
+\sigma_D^2 = & \int_{-\infty}^{\infty} \left (x - \left \langle x \right \rangle_D  \right )^2f_D(x) dx \\
 \end{aligned}
 \right \}
 (\#eq:rsm-evidence-x-sigmax2)
 \end{equation}
 
 
-The needed quantities are defined as:
+Subscripts $N$ and $D$ refer to non-diseased and diseased cases, respectively, while $f(x)$ is the normalized $pdf$ function. The effective binormal parameters are defined as:
+
 
 \begin{equation}
 \left. 
 \begin{aligned}
-\Delta(mean) = & \left \langle x \right \rangle_D - \left \langle x \right \rangle_N  \\
-\Delta(\sigma)= & \sigma_D - \sigma_N
+a_{eff} = & \frac{\left \langle x \right \rangle_D - \left \langle x \right \rangle_N  } {\sigma_D}\\
+b_{eff} = & \frac{\sigma_N}{\sigma_D}\\
+R_{Swets} = & \frac{a_{eff}}{1 - b_{eff} }
 \end{aligned}
 \right \}
 (\#eq:rsm-evidence-delta-mean-sigma)
 \end{equation}
 
 
+Varying experimental conditions were simulated by individually varying two of the three parameters of the RSM under the constraint that the RSM predicted AUC (assuming $\zeta_1 = -\infty$) remains constant at a specified value. Without this constraint, variation of a single parameter, e.g., $\mu$, would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. Rather, we assume that observers characterized by different RSM parameters nevertheless converge to roughly the same RSM-AUCs. In other words, they trade deficiencies in one area (e.g., finding too many NLs, large $\lambda$) with increased performance in other areas (e.g., finding more lesions, i.e., larger $\nu$, and/or greater perceptual signal to noise ratio, i.e., larger $\mu$).
 
-*The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying two of the three parameters of the RSM (excluding $\zeta_1 = -3$) under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g.,  $\mu$, would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. Rather, we assume that observers, characterized by different RSM parameters, nevertheless converge to roughly the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large $\lambda$) with increased performance in other areas (e.g., finding more lesions, i.e., larger $\nu$, and/or extracting greater pSNR from found lesions, i.e., larger $\mu$).*
 
-Shown first are three tables corresponding to RSM-AUC = 0.7. 
+The number of lesions per diseased case was set to one. The function `FindParamFixAuc()` finds the missing RSM parameter, indicated by initializing it with `NA`. The function `effectiveAB()` calculates the separation $a_{eff}$ and standard deviation ratio $b_{eff}$ (non-diseased to diseased) of the two distributions, after normalizing each to unit area. 
 
-* In Table \@ref(tab:rsm-evidence-table1A) $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7. 
-* In Table \@ref(tab:rsm-evidence-table1B) $\nu = 1$ is held constant. 
-* In Table \@ref(tab:rsm-evidence-table1C) $\mu = 2$ is held constant.
 
 
 ```{r main-rsm-swets-observations0, echo=FALSE}
@@ -320,9 +322,6 @@ logseq <- function( d1, d2, n) {
 # parameters are adjusted to attain this value; 0.7 or 0.8
 do_one_value <- function (RsmRocAuc) {
   
-  Lmax <- 1;K2 <- 700;Lk2 <- floor(runif(K2, 1, Lmax + 1)) 
-  nLesPerCase <- unique(Lk2);lesionDist <- array(dim = c(length(nLesPerCase), 2))
-  for (i in nLesPerCase) lesionDist[i, ] <- c(i, sum(Lk2 == i)/K2)
   lesDistr <- 1
   
   # Part A
@@ -333,9 +332,9 @@ do_one_value <- function (RsmRocAuc) {
     mu <- muArr[i]
     nu <- NA   # NA indicates this is to be varied
     
-    retParms <- FindParamFixAuc(mu, lambda, nu, lesionDist, RsmRocAuc)
+    retParms <- FindParamFixAuc(mu, lambda, nu, lesDistr, RsmRocAuc)
     if (!is.na(retParms)) nu <- retParms else next
-    ret <- effectiveAB(mu, lambda, nu, lesionDist)
+    ret <- effectiveAB(mu, lambda, nu, lesDistr)
     a <- ret$a
     b <- ret$b
     R_Swets  <-  a/(1-b)
@@ -363,9 +362,9 @@ do_one_value <- function (RsmRocAuc) {
     lambda <- lambdaArr[i] 
     mu <- NA  # NA indicates this is to be varied
     
-    retParms <- FindParamFixAuc(mu, lambda, nu, lesionDist, RsmRocAuc)
+    retParms <- FindParamFixAuc(mu, lambda, nu, lesDistr, RsmRocAuc)
     if (!is.na(retParms)) mu <- retParms else next
-    ret <- effectiveAB(mu, lambda, nu, lesionDist)
+    ret <- effectiveAB(mu, lambda, nu, lesDistr)
     a <- ret$a
     b <- ret$b
     R_Swets  <-  a/(1-b)
@@ -393,9 +392,9 @@ do_one_value <- function (RsmRocAuc) {
     lambda <- lambdaArr[i]
     nu <- NA;  # NA indicates this is to be varied
     
-    retParms <- FindParamFixAuc(mu, lambda, nu, lesionDist, RsmRocAuc)
+    retParms <- FindParamFixAuc(mu, lambda, nu, lesDistr, RsmRocAuc)
     if (!is.na(retParms)) nu <- retParms else next
-    ret <- effectiveAB(mu, lambda, nu, lesionDist)
+    ret <- effectiveAB(mu, lambda, nu, lesDistr)
     a <- ret$a
     b <- ret$b
     R_Swets  <-  a/(1-b)
@@ -432,26 +431,39 @@ dfC <- ret$dfC
 ```
 
 
+Shown first are three tables corresponding to RSM-AUC = 0.7. 
+
+* In Table \@ref(tab:rsm-evidence-table1A) $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7. 
+* In Table \@ref(tab:rsm-evidence-table1B) $\nu = 1$ is held constant. 
+* In Table \@ref(tab:rsm-evidence-table1C) $\mu = 2$ is held constant.
+
+
+A direct way to influence the binormal $a$ parameter is via the the RSM $\mu$ parameter, which controls the separation of non-diseased and diseased pdfs. Swets' first empirical observation implies that the $b$ parameter should decrease with increasing $\mu$, irrespective of which other parameter $\lambda$ or $\nu$ is varied to keep AUC constant. This behavior is confirmed upon examination of the $a_{eff}$ and $b_{eff}$ columns of Table \@ref(tab:rsm-evidence-table1A) and Table \@ref(tab:rsm-evidence-table1B). 
+
+
 ```{r rsm-evidence-table1A, echo=FALSE}
-colnames(dfA) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfA) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$\\frac{a_{eff}}{1-b_{eff}}$")
 # escape = FALSE is critical in getting Math right
-kbl(dfA, caption = "Here $\\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(dfA, caption = "Here $\\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
 ```{r rsm-evidence-table1B, echo=FALSE}
-colnames(dfB) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfB) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$\\frac{a_{eff}}{1-b_{eff}}$")
 # escape = FALSE is critical in getting Math right
-kbl(dfB, caption = "Here $\\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.7.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(dfB, caption = "Here $\\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
+
+The question arises as to what happens when $\mu$ is held constant but the other two parameters $\lambda, \nu$ are varied to keep AUC constant, as in Table \@ref(tab:rsm-evidence-table1C). This time the inverse dependence between $a_{eff}$ and $b_{eff}$ is *not* observed. While $a_{eff}$ decreases monotonically as one moves down the column, $b_{eff}$ shows a minimum around the seventh row of this table.  
 
 
 ```{r rsm-evidence-table1C, echo=FALSE}
-colnames(dfC) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfC) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$\\frac{a_{eff}}{1-b_{eff}}$")
 # escape = FALSE is critical in getting Math right
-kbl(dfC, caption = "Here $\\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(dfC, caption = "Here $\\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the lack of an inverse relation between $a_{eff}$ and $b_{eff}$.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
+
 
 Shown next are three tables corresponding to RSM-AUC = 0.8.
 
@@ -470,58 +482,35 @@ dfC <- ret$dfC
 
 
 ```{r rsm-evidence-table2A, echo=FALSE}
-colnames(dfA) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfA) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$\\frac{a_{eff}}{1-b_{eff}}$")
 # escape = FALSE is critical in getting Math right
-kbl(dfA, caption = "Here $\\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(dfA, caption = "Here $\\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
 ```{r rsm-evidence-table2B, echo=FALSE}
-colnames(dfB) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfB) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$\\frac{a_{eff}}{1-b_{eff}}$")
 # escape = FALSE is critical in getting Math right
-kbl(dfB, caption = "Here $\\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.8.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 4), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(dfB, caption = "Here $\\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 4), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
 
 ```{r rsm-evidence-table2C, echo=FALSE}
-colnames(dfC) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$R_{Swets}$")
+colnames(dfC) <-c("$AUC$", "$\\mu$", "$\\lambda'$", "$\\nu'$", "$a_{eff}$", "$b_{eff}$", "$\\frac{a_{eff}}{1-b_{eff}}$")
 # escape = FALSE is critical in getting Math right
-kbl(dfC, caption = "Here $\\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(dfC, caption = "Here $\\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the lack of an inverse relation between $a_{eff}$ and $b_{eff}$.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
-
-The six tables are organized into 2 x 3 groups. 
-
-* Tables \@ref(tab:rsm-evidence-table1A), \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table1C) correspond to RSM-AUC = 0.7, while Tables \@ref(tab:rsm-evidence-table2A), \@ref(tab:rsm-evidence-table2B) and \@ref(tab:rsm-evidence-table2C) correspond to RSM-AUC = 0.8.
-* Tables \@ref(tab:rsm-evidence-table1A) and \@ref(tab:rsm-evidence-table2A) corresponds to fixed $\lambda$ and varying $\mu$ and $\nu$.
-* Tables \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table2B) corresponds to fixed $\nu$ and varying $\mu$ and $\lambda$.
-* Tables \@ref(tab:rsm-evidence-table1C) and \@ref(tab:rsm-evidence-table2C) corresponds to fixed $\mu$ and varying $\lambda$ and $\nu$.
+Similar comments apply. As long as $\mu$ is varied, as in Tables \@ref(tab:rsm-evidence-table2A) and Table \@ref(tab:rsm-evidence-table2B), there is an inverse dependence between $a_{eff}$ and  $b_{eff}$. But when $\mu$ is held constant, as in Table \@ref(tab:rsm-evidence-table2C), the inverse dependence is not present.
 
 
-In each table the 1st column lists the constrained  AUC, set to either 0.7 or 0.8, the 2nd, 3rd and 4th columns list the RSM parameters, followed by the empirical a and b-parameters and the Swets ratio. 
+When $\mu$ is *varied* the observed Swets Ratio is nearly constant. However, when $\mu$ is *constant*, the ratio shows departures from near constancy. 
 
-
-The number of lesions per diseased case was set to one. The function `FindParamFixAuc()` finds the missing RSM parameter, indicated by initializing it with `NA`. The function `effectiveAB()` calculates the separation $a_{eff}$ and standard deviation ratio $b_{eff}$ (non-diseased to diseased) of the two distributions, after normalizing each to unit area. 
-
-STOP
-Examination of Tables \@ref(tab:rsm-evidence-table1A), \@ref(tab:rsm-evidence-table1B) and \@ref(tab:rsm-evidence-table1C) reveals, for both values of AUC, an inverse relation between $\mu$ and $b$ and an inverse relation between $\nu$ and b.  In (C), for fixed  , the only way to improve performance is by increasing  , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of   especially in Parts A and B. 
-
-The biggest deviation from approximate constancy is observed in Part C: this could be due to unreasonably low values of  , e.g., 0.1, necessary in order to satisfy the AUC constraint. It should be noted that the Swets et al observations are based on only two datasets and they state that   = 4, their observed value, is probably not generally applicable. 
+Swets et al observations are based on only two datasets and their observed value $\frac{a}{1-b} = 4$ is probably not generally applicable. Nevertheless, it is interesting that the RSM predicts near constancy of the Swets Ratio as long as the $\mu$ parameter is varied and the other two parameters are varied to keep AUC constant.
 
 	
-The empirical observation that b decreases with increasing lesion detectability is likely more generally true and the results, Table 17.3, support it. It makes physical sense if one assumes that sometimes a sample from the non-diseased distribution exceeds that from the diseased distribution. This implies the existence of two types of z-samples in diseased cases. Another explanation is the existence of heterogeneity in the distribution for diseased cases, e.g., a mix of easy and hard lesions, which too would tend to broaden the diseased distribution and make b < 1 and b decreasing with increasing lesion detectability. Putting all this together, the author makes the following prediction: if the possible location of the lesion is pre-specified (i.e., there is no location uncertainty and therefore latent NLs are eliminated) and all lesions have the same detectability, then one expects b = 1 and no dependence of b on lesion detectability. This is a fairly simple experiment to conduct using simulated Gaussian noise backgrounds and superposed Gaussian disk lesions41-43 with fixed contrast (using simulated clinical backgrounds is not recommended for this study as it could cause differences in lesion detectability depending on variations in the background in the immediate vicinity of the lesion).
-
-
-
-
-
-
-
- 
-Table 17.3: This table is organized into 3 parts, A, B and C. The remaining parameter of the RSM, the one held constant, is shown in the second header. Part A: This show that b decreases as   increases: the last two columns in part A list the b-parameter and the    to   ratio, non-diseased to diseased. This confirms that the model has the expected behavior noted by Swets, namely b decreases as   increases and the    to   ratio is approximately constant. A similar organization applies to the other parts of the table. Part B: this shows the dependence of the b-parameter and the   to   ratio on  . Part C: this shows the dependence of the b-parameter and the   to   ratio on  . In all examples, the b-parameter decreases as   increases or   increases. [All parameters in this table represent intrinsic values.]
-
 
 ### Explanation of data degeneracy
 An ROC dataset is said to be degenerate if the corresponding ROC plot does not have any interior data points. Data degeneracy is a significant problem faced by the binormal model1,6,44, e.g., ROCFIT or RSCORE-II software. Degenerate datasets cannot be analyzed by binormal model. The RSM provides a natural explanation for such datasets, and as shown in Chapter 19, such datasets are readily fitted by the RSM. The CBM model2-4 also provides an alternative explanation for the data degeneracy and a method for fitting such datasets.
