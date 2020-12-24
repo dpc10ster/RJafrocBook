@@ -248,8 +248,8 @@ grid.arrange(p1,p2,ncol=2)
 ```
 
 <div class="figure">
-<img src="06-binormal-model_files/figure-html/BinormalModel-ab2-mu-sigma-1.png" alt="The left plot shows the definitions of the (a,b) parameters of the binormal model. In the right plot the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\mu,\sigma$) parameters." width="672" />
-<p class="caption">(\#fig:BinormalModel-ab2-mu-sigma)The left plot shows the definitions of the (a,b) parameters of the binormal model. In the right plot the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\mu,\sigma$) parameters.</p>
+<img src="06-binormal-model_files/figure-html/BinormalModel-ab2-mu-sigma-1.png" alt="Plot A shows the definitions of the (a,b) parameters of the binormal model. In plot B the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\mu,\sigma$) parameters." width="672" />
+<p class="caption">(\#fig:BinormalModel-ab2-mu-sigma)Plot A shows the definitions of the (a,b) parameters of the binormal model. In plot B the x-axis has been rescaled so that the noise distribution has unit variance, thereby illustrations between (a,b) and the ($\mu,\sigma$) parameters.</p>
 </div>
 
 

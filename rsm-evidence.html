@@ -24,7 +24,7 @@
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2020-12-21" />
+<meta name="date" content="2020-12-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1166,42 +1166,48 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 </div>
 <div id="explanation-of-swets-et-al-observations" class="section level3">
 <h3><span class="header-section-number">26.4.2</span> Explanation of Swets et al observations</h3>
-<p>More than 55 years ago, <span class="citation">(Swets, Tanner Jr, and Birdsall <a href="#ref-RN2635" role="doc-biblioref">1961</a>)</span> noticed in non-medical imaging contexts:</p>
+<p>More than 55 years ago, <span class="citation">(Swets, Tanner Jr, and Birdsall <a href="#ref-RN2635" role="doc-biblioref">1961</a>)</span> noticed in two non-medical imaging contexts:</p>
 <ul>
 <li><p>The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. In binormal parameter terms, <span class="math inline">\(b\)</span> decreases as <span class="math inline">\(a\)</span> increases.</p></li>
-<li><p>The ratio <span class="math inline">\(R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)\)</span> is approximately constant for a fixed set of experimental conditions. In binormal parameter terms, <span class="math inline">\(\frac{a}{1-b}\)</span> is approximately constant.<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a></p></li>
+<li><p>The ratio <span class="math inline">\(R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)\)</span>, henceforth referrd to as the Swets Ratio, is approximately constant for a fixed set of experimental conditions. In binormal parameter terms, <span class="math inline">\(R_{Swets} \equiv \frac{a}{1-b}\)</span> is approximately constant.<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a></p></li>
 </ul>
-<p>In the RSM <span class="math inline">\(\mu\)</span> is the perceptual signal to noise of found lesions. Swets’ first empirical observation implies that the <span class="math inline">\(b\)</span> parameter should decrease with increasing <span class="math inline">\(\mu\)</span>. The second observation</p>
-<p>Testing this proposition over a wide range of <span class="math inline">\(\mu\)</span> using the preceding methods (i.e., binormal model maximum likelihood fitting) is direct but cumbersome and subject to failure. This is because it depends on the ability to find five counts in each bin and convergence of the binormal model algorithm, which is problematical for larger values of <span class="math inline">\(\mu\)</span> which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas. This was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. If <span class="math inline">\(f(x)\)</span> is a unit-normalized pdf its mean <span class="math inline">\(&lt;x&gt;\)</span> and variance <span class="math inline">\(\sigma_x^2\)</span> are defined by:</p>
+<p>The second observation implies a peculiar relation between the <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> parameters. Recall Figure <a href="BinormalModel.html#fig:BinormalModel-ab2-mu-sigma">6.1</a>, Plot A, which shows the definitions of the binormal <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> parameters. The diseased pdf has unit standard deviation, while the non-diseased has standard deviation <span class="math inline">\(b &lt; 1\)</span>, and the separation of the two distributions is <span class="math inline">\(a\)</span>. The constancy of Swets Ratio implies that as <span class="math inline">\(a\)</span> increases <span class="math inline">\(b\)</span> decreases (which implies that the first observation is actually contained in the second) so as to increase <span class="math inline">\(1-b\)</span> by the same factor. Since <span class="math inline">\(b\)</span> is a standard deviation, i.e., <span class="math inline">\(b &gt; 0\)</span>, it can only shrink so far, and eventually, for large enough <span class="math inline">\(a\)</span>, the presumed constancy must fail. Nevertheless, it is interesting to use the RSM to test this hypothesis. Another reason for pursing this line of inquiry is that Don Dorfman took an interest in this issue, using it to justify the bigamma model <span class="citation">(Dorfman et al. <a href="#ref-RN100" role="doc-biblioref">1997</a>)</span>, and I am a great admirer of the late Professor Dorfman.</p>
+<p>Testing over a range of <span class="math inline">\(\mu\)</span> using binormal model maximum likelihood fitting is direct but cumbersome and subject to failure as it depends on convergence of the binormal model algorithm, which is problematical for larger values of <span class="math inline">\(\mu\)</span>, which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas over the continuous sections. Normalization was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. Since the binormal model is not used, the effective binormal parameters will henceforth be referred to as <span class="math inline">\(a_{eff}\)</span> and <span class="math inline">\(b_{eff}\)</span>. In this notation, the Swets Ratio is <span class="math inline">\(R_{Swets} \equiv \frac{a_{eff}}{1-b_{eff}}\)</span>.</p>
+<p>The following equations describe the calculations involved, which are implemented in the code:</p>
 <p><span class="math display" id="eq:rsm-evidence-x-sigmax2">\[\begin{equation}
 \left. 
 \begin{aligned}
-\left \langle x \right \rangle = &amp; \int_{-\infty}^{\infty} xf(x) dx \\
-\sigma_x^2 = &amp; \int_{-\infty}^{\infty} \left (x - \left \langle x \right \rangle  \right )^2f(x) dx \\
+\left \langle x \right \rangle_N = &amp; \int_{-\infty}^{\infty} xf_N(x) dx \\
+\left \langle x \right \rangle_D = &amp; \int_{-\infty}^{\infty} xf_D(x) dx \\
+\sigma_N^2 = &amp; \int_{-\infty}^{\infty} \left (x - \left \langle x \right \rangle_N  \right )^2f_N(x) dx \\
+\sigma_D^2 = &amp; \int_{-\infty}^{\infty} \left (x - \left \langle x \right \rangle_D  \right )^2f_D(x) dx \\
 \end{aligned}
 \right \}
 \tag{26.1}
 \end{equation}\]</span></p>
-<p>The needed quantities are defined as:</p>
+<p>Subscripts <span class="math inline">\(N\)</span> and <span class="math inline">\(D\)</span> refer to non-diseased and diseased cases, respectively, while <span class="math inline">\(f(x)\)</span> is the normalized <span class="math inline">\(pdf\)</span> function. The effective binormal parameters are defined as:</p>
 <p><span class="math display" id="eq:rsm-evidence-delta-mean-sigma">\[\begin{equation}
 \left. 
 \begin{aligned}
-\Delta(mean) = &amp; \left \langle x \right \rangle_D - \left \langle x \right \rangle_N  \\
-\Delta(\sigma)= &amp; \sigma_D - \sigma_N
+a_{eff} = &amp; \frac{\left \langle x \right \rangle_D - \left \langle x \right \rangle_N  } {\sigma_D}\\
+b_{eff} = &amp; \frac{\sigma_N}{\sigma_D}\\
+R_{Swets} = &amp; \frac{a_{eff}}{1 - b_{eff} }
 \end{aligned}
 \right \}
 \tag{26.2}
 \end{equation}\]</span></p>
-<p><em>The standard deviation is the square root of the variance. Varying experimental conditions were simulated by individually varying two of the three parameters of the RSM (excluding <span class="math inline">\(\zeta_1 = -3\)</span>) under the constraint that the RSM predicted AUC remained constant at a specified value. Without this constraint, variation of a single parameter, e.g., <span class="math inline">\(\mu\)</span>, would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. Rather, we assume that observers, characterized by different RSM parameters, nevertheless converge to roughly the same RSM-AUCs. In other words, they tend to compensate for deficiencies in some area (e.g., finding too many NLs, large <span class="math inline">\(\lambda\)</span>) with increased performance in other areas (e.g., finding more lesions, i.e., larger <span class="math inline">\(\nu\)</span>, and/or extracting greater pSNR from found lesions, i.e., larger <span class="math inline">\(\mu\)</span>).</em></p>
+<p>Varying experimental conditions were simulated by individually varying two of the three parameters of the RSM under the constraint that the RSM predicted AUC (assuming <span class="math inline">\(\zeta_1 = -\infty\)</span>) remains constant at a specified value. Without this constraint, variation of a single parameter, e.g., <span class="math inline">\(\mu\)</span>, would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. Rather, we assume that observers characterized by different RSM parameters nevertheless converge to roughly the same RSM-AUCs. In other words, they trade deficiencies in one area (e.g., finding too many NLs, large <span class="math inline">\(\lambda\)</span>) with increased performance in other areas (e.g., finding more lesions, i.e., larger <span class="math inline">\(\nu\)</span>, and/or greater perceptual signal to noise ratio, i.e., larger <span class="math inline">\(\mu\)</span>).</p>
+<p>The number of lesions per diseased case was set to one. The function <code>FindParamFixAuc()</code> finds the missing RSM parameter, indicated by initializing it with <code>NA</code>. The function <code>effectiveAB()</code> calculates the separation <span class="math inline">\(a_{eff}\)</span> and standard deviation ratio <span class="math inline">\(b_{eff}\)</span> (non-diseased to diseased) of the two distributions, after normalizing each to unit area.</p>
 <p>Shown first are three tables corresponding to RSM-AUC = 0.7.</p>
 <ul>
 <li>In Table <a href="rsm-evidence.html#tab:rsm-evidence-table1A">26.2</a> <span class="math inline">\(\lambda = 2\)</span> is held constant while the other two parameters are varied to keep AUC at 0.7.</li>
 <li>In Table <a href="rsm-evidence.html#tab:rsm-evidence-table1B">26.3</a> <span class="math inline">\(\nu = 1\)</span> is held constant.</li>
 <li>In Table <a href="rsm-evidence.html#tab:rsm-evidence-table1C">26.4</a> <span class="math inline">\(\mu = 2\)</span> is held constant.</li>
 </ul>
+<p>A direct way to influence the binormal <span class="math inline">\(a\)</span> parameter is via the the RSM <span class="math inline">\(\mu\)</span> parameter, which controls the separation of non-diseased and diseased pdfs. Swets’ first empirical observation implies that the <span class="math inline">\(b\)</span> parameter should decrease with increasing <span class="math inline">\(\mu\)</span>, irrespective of which other parameter <span class="math inline">\(\lambda\)</span> or <span class="math inline">\(\nu\)</span> is varied to keep AUC constant. This behavior is confirmed upon examination of the <span class="math inline">\(a_{eff}\)</span> and <span class="math inline">\(b_{eff}\)</span> columns of Table <a href="rsm-evidence.html#tab:rsm-evidence-table1A">26.2</a> and Table <a href="rsm-evidence.html#tab:rsm-evidence-table1B">26.3</a>.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rsm-evidence-table1A">TABLE 26.2: </span>Here <span class="math inline">\(\lambda = 2\)</span> is held constant while the other two parameters are varied to keep AUC at 0.7.
+<span id="tab:rsm-evidence-table1A">TABLE 26.2: </span>Here <span class="math inline">\(\lambda = 2\)</span> is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the inverse relation between <span class="math inline">\(a_{eff}\)</span> and <span class="math inline">\(b_{eff}\)</span>.
 </caption>
 <thead>
 <tr>
@@ -1224,7 +1230,7 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 <span class="math inline">\(b_{eff}\)</span>
 </th>
 <th style="text-align:right;">
-<span class="math inline">\(R_{Swets}\)</span>
+<span class="math inline">\(\frac{a_{eff}}{1-b_{eff}}\)</span>
 </th>
 </tr>
 </thead>
@@ -1436,7 +1442,7 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 </table>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rsm-evidence-table1B">TABLE 26.3: </span>Here <span class="math inline">\(\nu = 1\)</span> is held constant while the other two parameters are varied to keep AUC at 0.7.
+<span id="tab:rsm-evidence-table1B">TABLE 26.3: </span>Here <span class="math inline">\(\nu = 1\)</span> is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the inverse relation between <span class="math inline">\(a_{eff}\)</span> and <span class="math inline">\(b_{eff}\)</span>.
 </caption>
 <thead>
 <tr>
@@ -1459,7 +1465,7 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 <span class="math inline">\(b_{eff}\)</span>
 </th>
 <th style="text-align:right;">
-<span class="math inline">\(R_{Swets}\)</span>
+<span class="math inline">\(\frac{a_{eff}}{1-b_{eff}}\)</span>
 </th>
 </tr>
 </thead>
@@ -1669,9 +1675,10 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 </tr>
 </tbody>
 </table>
+<p>The question arises as to what happens when <span class="math inline">\(\mu\)</span> is held constant but the other two parameters <span class="math inline">\(\lambda, \nu\)</span> are varied to keep AUC constant, as in Table <a href="rsm-evidence.html#tab:rsm-evidence-table1C">26.4</a>. This time the inverse dependence between <span class="math inline">\(a_{eff}\)</span> and <span class="math inline">\(b_{eff}\)</span> is <em>not</em> observed. While <span class="math inline">\(a_{eff}\)</span> decreases monotonically as one moves down the column, <span class="math inline">\(b_{eff}\)</span> shows a minimum around the seventh row of this table.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rsm-evidence-table1C">TABLE 26.4: </span>Here <span class="math inline">\(\mu = 2\)</span> is held constant while the other two parameters are varied to keep AUC at 0.7.
+<span id="tab:rsm-evidence-table1C">TABLE 26.4: </span>Here <span class="math inline">\(\mu = 2\)</span> is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the lack of an inverse relation between <span class="math inline">\(a_{eff}\)</span> and <span class="math inline">\(b_{eff}\)</span>.
 </caption>
 <thead>
 <tr>
@@ -1694,7 +1701,7 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 <span class="math inline">\(b_{eff}\)</span>
 </th>
 <th style="text-align:right;">
-<span class="math inline">\(R_{Swets}\)</span>
+<span class="math inline">\(\frac{a_{eff}}{1-b_{eff}}\)</span>
 </th>
 </tr>
 </thead>
@@ -1885,7 +1892,7 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 </ul>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rsm-evidence-table2A">TABLE 26.5: </span>Here <span class="math inline">\(\lambda = 2\)</span> is held constant while the other two parameters are varied to keep AUC at 0.8.
+<span id="tab:rsm-evidence-table2A">TABLE 26.5: </span>Here <span class="math inline">\(\lambda = 2\)</span> is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the inverse relation between <span class="math inline">\(a_{eff}\)</span> and <span class="math inline">\(b_{eff}\)</span>.
 </caption>
 <thead>
 <tr>
@@ -1908,7 +1915,7 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 <span class="math inline">\(b_{eff}\)</span>
 </th>
 <th style="text-align:right;">
-<span class="math inline">\(R_{Swets}\)</span>
+<span class="math inline">\(\frac{a_{eff}}{1-b_{eff}}\)</span>
 </th>
 </tr>
 </thead>
@@ -2120,7 +2127,7 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 </table>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rsm-evidence-table2B">TABLE 26.6: </span>Here <span class="math inline">\(\nu = 1\)</span> is held constant while the other two parameters are varied to keep AUC at 0.8.
+<span id="tab:rsm-evidence-table2B">TABLE 26.6: </span>Here <span class="math inline">\(\nu = 1\)</span> is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the inverse relation between <span class="math inline">\(a_{eff}\)</span> and <span class="math inline">\(b_{eff}\)</span>.
 </caption>
 <thead>
 <tr>
@@ -2143,7 +2150,7 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 <span class="math inline">\(b_{eff}\)</span>
 </th>
 <th style="text-align:right;">
-<span class="math inline">\(R_{Swets}\)</span>
+<span class="math inline">\(\frac{a_{eff}}{1-b_{eff}}\)</span>
 </th>
 </tr>
 </thead>
@@ -2355,7 +2362,7 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 </table>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rsm-evidence-table2C">TABLE 26.7: </span>Here <span class="math inline">\(\mu = 2\)</span> is held constant while the other two parameters are varied to keep AUC at 0.8.
+<span id="tab:rsm-evidence-table2C">TABLE 26.7: </span>Here <span class="math inline">\(\mu = 2\)</span> is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the lack of an inverse relation between <span class="math inline">\(a_{eff}\)</span> and <span class="math inline">\(b_{eff}\)</span>.
 </caption>
 <thead>
 <tr>
@@ -2378,7 +2385,7 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 <span class="math inline">\(b_{eff}\)</span>
 </th>
 <th style="text-align:right;">
-<span class="math inline">\(R_{Swets}\)</span>
+<span class="math inline">\(\frac{a_{eff}}{1-b_{eff}}\)</span>
 </th>
 </tr>
 </thead>
@@ -2561,20 +2568,9 @@ FIGURE 26.2: pdfs along with the parameter values. The dotted curves correspond 
 </tr>
 </tbody>
 </table>
-<p>The six tables are organized into 2 x 3 groups.</p>
-<ul>
-<li>Tables <a href="rsm-evidence.html#tab:rsm-evidence-table1A">26.2</a>, <a href="rsm-evidence.html#tab:rsm-evidence-table1B">26.3</a> and <a href="rsm-evidence.html#tab:rsm-evidence-table1C">26.4</a> correspond to RSM-AUC = 0.7, while Tables <a href="rsm-evidence.html#tab:rsm-evidence-table2A">26.5</a>, <a href="rsm-evidence.html#tab:rsm-evidence-table2B">26.6</a> and <a href="rsm-evidence.html#tab:rsm-evidence-table2C">26.7</a> correspond to RSM-AUC = 0.8.</li>
-<li>Tables <a href="rsm-evidence.html#tab:rsm-evidence-table1A">26.2</a> and <a href="rsm-evidence.html#tab:rsm-evidence-table2A">26.5</a> corresponds to fixed <span class="math inline">\(\lambda\)</span> and varying <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\nu\)</span>.</li>
-<li>Tables <a href="rsm-evidence.html#tab:rsm-evidence-table1B">26.3</a> and <a href="rsm-evidence.html#tab:rsm-evidence-table2B">26.6</a> corresponds to fixed <span class="math inline">\(\nu\)</span> and varying <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\lambda\)</span>.</li>
-<li>Tables <a href="rsm-evidence.html#tab:rsm-evidence-table1C">26.4</a> and <a href="rsm-evidence.html#tab:rsm-evidence-table2C">26.7</a> corresponds to fixed <span class="math inline">\(\mu\)</span> and varying <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\nu\)</span>.</li>
-</ul>
-<p>In each table the 1st column lists the constrained AUC, set to either 0.7 or 0.8, the 2nd, 3rd and 4th columns list the RSM parameters, followed by the empirical a and b-parameters and the Swets ratio.</p>
-<p>The number of lesions per diseased case was set to one. The function <code>FindParamFixAuc()</code> finds the missing RSM parameter, indicated by initializing it with <code>NA</code>. The function <code>effectiveAB()</code> calculates the separation <span class="math inline">\(a_{eff}\)</span> and standard deviation ratio <span class="math inline">\(b_{eff}\)</span> (non-diseased to diseased) of the two distributions, after normalizing each to unit area.</p>
-<p>STOP
-Examination of Tables <a href="rsm-evidence.html#tab:rsm-evidence-table1A">26.2</a>, <a href="rsm-evidence.html#tab:rsm-evidence-table1B">26.3</a> and <a href="rsm-evidence.html#tab:rsm-evidence-table1C">26.4</a> reveals, for both values of AUC, an inverse relation between <span class="math inline">\(\mu\)</span> and <span class="math inline">\(b\)</span> and an inverse relation between <span class="math inline">\(\nu\)</span> and b. In (C), for fixed , the only way to improve performance is by increasing , i.e., by the observer getting better at finding lesions. Furthermore, Table 17.3 reveals an approximately constant value of especially in Parts A and B.</p>
-<p>The biggest deviation from approximate constancy is observed in Part C: this could be due to unreasonably low values of , e.g., 0.1, necessary in order to satisfy the AUC constraint. It should be noted that the Swets et al observations are based on only two datasets and they state that = 4, their observed value, is probably not generally applicable.</p>
-<p>The empirical observation that b decreases with increasing lesion detectability is likely more generally true and the results, Table 17.3, support it. It makes physical sense if one assumes that sometimes a sample from the non-diseased distribution exceeds that from the diseased distribution. This implies the existence of two types of z-samples in diseased cases. Another explanation is the existence of heterogeneity in the distribution for diseased cases, e.g., a mix of easy and hard lesions, which too would tend to broaden the diseased distribution and make b &lt; 1 and b decreasing with increasing lesion detectability. Putting all this together, the author makes the following prediction: if the possible location of the lesion is pre-specified (i.e., there is no location uncertainty and therefore latent NLs are eliminated) and all lesions have the same detectability, then one expects b = 1 and no dependence of b on lesion detectability. This is a fairly simple experiment to conduct using simulated Gaussian noise backgrounds and superposed Gaussian disk lesions41-43 with fixed contrast (using simulated clinical backgrounds is not recommended for this study as it could cause differences in lesion detectability depending on variations in the background in the immediate vicinity of the lesion).</p>
-<p>Table 17.3: This table is organized into 3 parts, A, B and C. The remaining parameter of the RSM, the one held constant, is shown in the second header. Part A: This show that b decreases as increases: the last two columns in part A list the b-parameter and the to ratio, non-diseased to diseased. This confirms that the model has the expected behavior noted by Swets, namely b decreases as increases and the to ratio is approximately constant. A similar organization applies to the other parts of the table. Part B: this shows the dependence of the b-parameter and the to ratio on . Part C: this shows the dependence of the b-parameter and the to ratio on . In all examples, the b-parameter decreases as increases or increases. [All parameters in this table represent intrinsic values.]</p>
+<p>Similar comments apply. As long as <span class="math inline">\(\mu\)</span> is varied, as in Tables <a href="rsm-evidence.html#tab:rsm-evidence-table2A">26.5</a> and Table <a href="rsm-evidence.html#tab:rsm-evidence-table2B">26.6</a>, there is an inverse dependence between <span class="math inline">\(a_{eff}\)</span> and <span class="math inline">\(b_{eff}\)</span>. But when <span class="math inline">\(\mu\)</span> is held constant, as in Table <a href="rsm-evidence.html#tab:rsm-evidence-table2C">26.7</a>, the inverse dependence is not present.</p>
+<p>When <span class="math inline">\(\mu\)</span> is <em>varied</em> the observed Swets Ratio is nearly constant. However, when <span class="math inline">\(\mu\)</span> is <em>constant</em>, the ratio shows departures from near constancy.</p>
+<p>Swets et al observations are based on only two datasets and their observed value <span class="math inline">\(\frac{a}{1-b} = 4\)</span> is probably not generally applicable. Nevertheless, it is interesting that the RSM predicts near constancy of the Swets Ratio as long as the <span class="math inline">\(\mu\)</span> parameter is varied and the other two parameters are varied to keep AUC constant.</p>
 </div>
 <div id="explanation-of-data-degeneracy" class="section level3">
 <h3><span class="header-section-number">26.4.3</span> Explanation of data degeneracy</h3>
