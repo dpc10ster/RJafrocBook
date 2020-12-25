@@ -23,7 +23,7 @@ The strongest evidence for the validity of the RSM is its close correspondence t
 
 Other ROC models do not share this close correspondence. The CBM model comes closest – it models the probability that lesions are *found*, which is part of search performance, but the ability to *avoid finding NLs* is not modeled. Like other ROC models, CBM predicts that the point (1,1) is continuously accessible to observer, which implies zero search performance, TBA Fig. 17.6.
 
-## The binormal model is a special case of the RSM {#rsm-predictions-binormal-model}
+## The RSM can mimic the binormal model {#rsm-predictions-binormal-model-mimic}
 
 
 
@@ -183,7 +183,7 @@ As summarized previously, there are three empirical observations regarding binor
 * For fixed experimental conditions $R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)$ is approximately constant. To not confuse with the RSM $\mu$ parameter, the difference in means of the two normal distributions is denoted $\Delta(mean)$, not $\Delta \mu$. 
 
 
-### Explanation for $b < 1$
+## Explanation for $b < 1$
 The RSM-predicted ROC curves are consistent with empirical observations [@RN298] that observed ROC data, when fitted by the unequal variance binormal model, yield $b < 1$, implying that the diseased case pdf is wider than the non-diseased case pdf. The RSM provides an explanation for this: diseased cases yield two types of z-samples, namely NL z-samples from a zero-centered unit variance normal distribution and LL z-samples from a  $\mu$-centered unit variance normal distribution. The resulting *mixture distribution* is expected, when one attempts to fit it with a normal distribution, to yield standard deviation for diseased cases greater than 1, or, equivalently, $b < 1$. The fit is not expected to be ideal, but it is known that for relatively small numbers of cases, as is true with clinical data sets, it is difficult to detect deviations from strict normality; indeed, the binormal model is quite robust with respect to deviations from strict normality [@RN298]. Several examples of this were evident in the goodness of fit p-values in Table \@ref(tab:rsm-evidence-binormal-table2), which show good binormal fits to RSM generated data even with 1200 cases. 
 
 
@@ -200,7 +200,7 @@ The RSM-predicted ROC curves are consistent with empirical observations [@RN298]
 Fig. \@ref(fig:rsm-evidence-pdf-plots): This figure provides an explanation for empirical observation $b < 1$. Displayed are pdfs along with the parameter values. For all plots $\lambda = 1$ and $L_{max} = 1$. The dotted curves correspond to non-diseased cases while the solid curves correspond to diseased cases. The solid curves are broader than the dotted ones. In (A) and (B) the solid curve is noticeably broader. In (D) there is a hint of a secondary peak at zero, which is quite prominent in (C), which corresponds to the largest $\mu$ and the smallest $\nu$. In each case the resulting mixture distribution is expected to lead to a larger estimate of standard deviation of the assumed normal distribution of diseased cases relative to non-diseased cases. 
 
 
-### Explanation of Swets et al observations 
+## Explanation of Swets et al observations 
 
 More than 55 years ago, [@RN2635] noticed in two non-medical imaging contexts:
  
@@ -269,105 +269,105 @@ A direct way to influence the binormal $a$ parameter is via the the RSM $\mu$ pa
 <caption>(\#tab:rsm-evidence-table1A)Here $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.</caption>
  <thead>
   <tr>
-   <th style="text-align:right;"> $AUC$ </th>
-   <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda'$ </th>
-   <th style="text-align:right;"> $\nu'$ </th>
-   <th style="text-align:right;"> $a_{eff}$ </th>
-   <th style="text-align:right;"> $b_{eff}$ </th>
-   <th style="text-align:right;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
+   <th style="text-align:left;"> $AUC$ </th>
+   <th style="text-align:left;"> $\mu$ </th>
+   <th style="text-align:left;"> $\lambda'$ </th>
+   <th style="text-align:left;"> $\nu'$ </th>
+   <th style="text-align:left;"> $a_{eff}$ </th>
+   <th style="text-align:left;"> $b_{eff}$ </th>
+   <th style="text-align:left;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
-   <td style="text-align:right;"> 2.000000 </td>
-   <td style="text-align:right;"> 1.0000000 </td>
-   <td style="text-align:right;"> 0.4555825 </td>
-   <td style="text-align:right;"> 0.7716616 </td>
-   <td style="text-align:right;"> 0.7539348 </td>
-   <td style="text-align:right;"> 3.136005 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
+   <td style="text-align:left;"> 2.000 </td>
+   <td style="text-align:left;"> 1.0000 </td>
+   <td style="text-align:left;"> 0.4556 </td>
+   <td style="text-align:left;"> 0.7717 </td>
+   <td style="text-align:left;"> 0.7539 </td>
+   <td style="text-align:left;"> 3.136 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 2.214346 </td>
-   <td style="text-align:right;"> 0.9032011 </td>
-   <td style="text-align:right;"> 0.4377398 </td>
-   <td style="text-align:right;"> 0.8135809 </td>
-   <td style="text-align:right;"> 0.7107209 </td>
-   <td style="text-align:right;"> 2.812442 </td>
+   <td style="text-align:left;"> 2.214 </td>
+   <td style="text-align:left;"> 0.9032 </td>
+   <td style="text-align:left;"> 0.4377 </td>
+   <td style="text-align:left;"> 0.8136 </td>
+   <td style="text-align:left;"> 0.7107 </td>
+   <td style="text-align:left;"> 2.812 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 2.451665 </td>
-   <td style="text-align:right;"> 0.8157722 </td>
-   <td style="text-align:right;"> 0.4243625 </td>
-   <td style="text-align:right;"> 0.8608401 </td>
-   <td style="text-align:right;"> 0.6670500 </td>
-   <td style="text-align:right;"> 2.585494 </td>
+   <td style="text-align:left;"> 2.452 </td>
+   <td style="text-align:left;"> 0.8158 </td>
+   <td style="text-align:left;"> 0.4244 </td>
+   <td style="text-align:left;"> 0.8608 </td>
+   <td style="text-align:left;"> 0.6671 </td>
+   <td style="text-align:left;"> 2.585 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 2.714418 </td>
-   <td style="text-align:right;"> 0.7368063 </td>
-   <td style="text-align:right;"> 0.4147742 </td>
-   <td style="text-align:right;"> 0.9131216 </td>
-   <td style="text-align:right;"> 0.6235964 </td>
-   <td style="text-align:right;"> 2.425911 </td>
+   <td style="text-align:left;"> 2.714 </td>
+   <td style="text-align:left;"> 0.7368 </td>
+   <td style="text-align:left;"> 0.4148 </td>
+   <td style="text-align:left;"> 0.9131 </td>
+   <td style="text-align:left;"> 0.6236 </td>
+   <td style="text-align:left;"> 2.426 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 3.005330 </td>
-   <td style="text-align:right;"> 0.6654842 </td>
-   <td style="text-align:right;"> 0.4082964 </td>
-   <td style="text-align:right;"> 0.9700227 </td>
-   <td style="text-align:right;"> 0.5810496 </td>
-   <td style="text-align:right;"> 2.315364 </td>
+   <td style="text-align:left;"> 3.005 </td>
+   <td style="text-align:left;"> 0.6655 </td>
+   <td style="text-align:left;"> 0.4083 </td>
+   <td style="text-align:left;"> 0.9700 </td>
+   <td style="text-align:left;"> 0.5810 </td>
+   <td style="text-align:left;"> 2.315 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 3.327421 </td>
-   <td style="text-align:right;"> 0.6010661 </td>
-   <td style="text-align:right;"> 0.4042477 </td>
-   <td style="text-align:right;"> 1.0310407 </td>
-   <td style="text-align:right;"> 0.5400178 </td>
-   <td style="text-align:right;"> 2.241479 </td>
+   <td style="text-align:left;"> 3.327 </td>
+   <td style="text-align:left;"> 0.6011 </td>
+   <td style="text-align:left;"> 0.4042 </td>
+   <td style="text-align:left;"> 1.0310 </td>
+   <td style="text-align:left;"> 0.5400 </td>
+   <td style="text-align:left;"> 2.241 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 3.684032 </td>
-   <td style="text-align:right;"> 0.5428835 </td>
-   <td style="text-align:right;"> 0.4019671 </td>
-   <td style="text-align:right;"> 1.0955943 </td>
-   <td style="text-align:right;"> 0.5009616 </td>
-   <td style="text-align:right;"> 2.195411 </td>
+   <td style="text-align:left;"> 3.684 </td>
+   <td style="text-align:left;"> 0.5429 </td>
+   <td style="text-align:left;"> 0.4020 </td>
+   <td style="text-align:left;"> 1.0956 </td>
+   <td style="text-align:left;"> 0.5010 </td>
+   <td style="text-align:left;"> 2.195 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 4.078861 </td>
-   <td style="text-align:right;"> 0.4903330 </td>
-   <td style="text-align:right;"> 0.4007900 </td>
-   <td style="text-align:right;"> 1.1629401 </td>
-   <td style="text-align:right;"> 0.4641586 </td>
-   <td style="text-align:right;"> 2.170307 </td>
+   <td style="text-align:left;"> 4.079 </td>
+   <td style="text-align:left;"> 0.4903 </td>
+   <td style="text-align:left;"> 0.4008 </td>
+   <td style="text-align:left;"> 1.1629 </td>
+   <td style="text-align:left;"> 0.4642 </td>
+   <td style="text-align:left;"> 2.170 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 4.516005 </td>
-   <td style="text-align:right;"> 0.4428693 </td>
-   <td style="text-align:right;"> 0.4003083 </td>
-   <td style="text-align:right;"> 1.2327462 </td>
-   <td style="text-align:right;"> 0.4297620 </td>
-   <td style="text-align:right;"> 2.161810 </td>
+   <td style="text-align:left;"> 4.516 </td>
+   <td style="text-align:left;"> 0.4429 </td>
+   <td style="text-align:left;"> 0.4003 </td>
+   <td style="text-align:left;"> 1.2327 </td>
+   <td style="text-align:left;"> 0.4298 </td>
+   <td style="text-align:left;"> 2.162 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 5.000000 </td>
-   <td style="text-align:right;"> 0.4000000 </td>
-   <td style="text-align:right;"> 0.3999756 </td>
-   <td style="text-align:right;"> 1.3042036 </td>
-   <td style="text-align:right;"> 0.3977542 </td>
-   <td style="text-align:right;"> 2.165567 </td>
+   <td style="text-align:left;"> 5.000 </td>
+   <td style="text-align:left;"> 0.4000 </td>
+   <td style="text-align:left;"> 0.4000 </td>
+   <td style="text-align:left;"> 1.3042 </td>
+   <td style="text-align:left;"> 0.3978 </td>
+   <td style="text-align:left;"> 2.166 </td>
   </tr>
 </tbody>
 </table>
@@ -377,105 +377,105 @@ A direct way to influence the binormal $a$ parameter is via the the RSM $\mu$ pa
 <caption>(\#tab:rsm-evidence-table1B)Here $\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.</caption>
  <thead>
   <tr>
-   <th style="text-align:right;"> $AUC$ </th>
-   <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda'$ </th>
-   <th style="text-align:right;"> $\nu'$ </th>
-   <th style="text-align:right;"> $a_{eff}$ </th>
-   <th style="text-align:right;"> $b_{eff}$ </th>
-   <th style="text-align:right;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
+   <th style="text-align:left;"> $AUC$ </th>
+   <th style="text-align:left;"> $\mu$ </th>
+   <th style="text-align:left;"> $\lambda'$ </th>
+   <th style="text-align:left;"> $\nu'$ </th>
+   <th style="text-align:left;"> $a_{eff}$ </th>
+   <th style="text-align:left;"> $b_{eff}$ </th>
+   <th style="text-align:left;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
-   <td style="text-align:right;"> 0.9453400 </td>
-   <td style="text-align:right;"> 1.057821 </td>
-   <td style="text-align:right;"> 0.6114526 </td>
-   <td style="text-align:right;"> 0.5914366 </td>
-   <td style="text-align:right;"> 0.9767467 </td>
-   <td style="text-align:right;"> 25.43453 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
+   <td style="text-align:left;"> 0.9453 </td>
+   <td style="text-align:left;"> 1.058 </td>
+   <td style="text-align:left;"> 0.6115 </td>
+   <td style="text-align:left;"> 0.5914 </td>
+   <td style="text-align:left;"> 0.9767 </td>
+   <td style="text-align:left;"> 25.43 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 0.9900899 </td>
-   <td style="text-align:right;"> 1.207782 </td>
-   <td style="text-align:right;"> 0.6284567 </td>
-   <td style="text-align:right;"> 0.6061914 </td>
-   <td style="text-align:right;"> 0.9763296 </td>
-   <td style="text-align:right;"> 25.60972 </td>
+   <td style="text-align:left;"> 0.9901 </td>
+   <td style="text-align:left;"> 1.208 </td>
+   <td style="text-align:left;"> 0.6285 </td>
+   <td style="text-align:left;"> 0.6062 </td>
+   <td style="text-align:left;"> 0.9763 </td>
+   <td style="text-align:left;"> 25.61 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.0368216 </td>
-   <td style="text-align:right;"> 1.379185 </td>
-   <td style="text-align:right;"> 0.6454201 </td>
-   <td style="text-align:right;"> 0.6211484 </td>
-   <td style="text-align:right;"> 0.9759534 </td>
-   <td style="text-align:right;"> 25.83105 </td>
+   <td style="text-align:left;"> 1.0368 </td>
+   <td style="text-align:left;"> 1.379 </td>
+   <td style="text-align:left;"> 0.6454 </td>
+   <td style="text-align:left;"> 0.6211 </td>
+   <td style="text-align:left;"> 0.9760 </td>
+   <td style="text-align:left;"> 25.83 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.0853032 </td>
-   <td style="text-align:right;"> 1.575574 </td>
-   <td style="text-align:right;"> 0.6622006 </td>
-   <td style="text-align:right;"> 0.6359865 </td>
-   <td style="text-align:right;"> 0.9755036 </td>
-   <td style="text-align:right;"> 25.96241 </td>
+   <td style="text-align:left;"> 1.0853 </td>
+   <td style="text-align:left;"> 1.576 </td>
+   <td style="text-align:left;"> 0.6622 </td>
+   <td style="text-align:left;"> 0.6360 </td>
+   <td style="text-align:left;"> 0.9755 </td>
+   <td style="text-align:left;"> 25.96 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.1353543 </td>
-   <td style="text-align:right;"> 1.801034 </td>
-   <td style="text-align:right;"> 0.6786917 </td>
-   <td style="text-align:right;"> 0.6504041 </td>
-   <td style="text-align:right;"> 0.9747737 </td>
-   <td style="text-align:right;"> 25.78277 </td>
+   <td style="text-align:left;"> 1.1354 </td>
+   <td style="text-align:left;"> 1.801 </td>
+   <td style="text-align:left;"> 0.6787 </td>
+   <td style="text-align:left;"> 0.6504 </td>
+   <td style="text-align:left;"> 0.9748 </td>
+   <td style="text-align:left;"> 25.78 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.1866104 </td>
-   <td style="text-align:right;"> 2.060670 </td>
-   <td style="text-align:right;"> 0.6947458 </td>
-   <td style="text-align:right;"> 0.6638962 </td>
-   <td style="text-align:right;"> 0.9734671 </td>
-   <td style="text-align:right;"> 25.02159 </td>
+   <td style="text-align:left;"> 1.1866 </td>
+   <td style="text-align:left;"> 2.061 </td>
+   <td style="text-align:left;"> 0.6947 </td>
+   <td style="text-align:left;"> 0.6639 </td>
+   <td style="text-align:left;"> 0.9735 </td>
+   <td style="text-align:left;"> 25.02 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.2388982 </td>
-   <td style="text-align:right;"> 2.360176 </td>
-   <td style="text-align:right;"> 0.7102968 </td>
-   <td style="text-align:right;"> 0.6760928 </td>
-   <td style="text-align:right;"> 0.9711321 </td>
-   <td style="text-align:right;"> 23.42021 </td>
+   <td style="text-align:left;"> 1.2389 </td>
+   <td style="text-align:left;"> 2.360 </td>
+   <td style="text-align:left;"> 0.7103 </td>
+   <td style="text-align:left;"> 0.6761 </td>
+   <td style="text-align:left;"> 0.9711 </td>
+   <td style="text-align:left;"> 23.42 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.2920006 </td>
-   <td style="text-align:right;"> 2.706329 </td>
-   <td style="text-align:right;"> 0.7252794 </td>
-   <td style="text-align:right;"> 0.6865553 </td>
-   <td style="text-align:right;"> 0.9671901 </td>
-   <td style="text-align:right;"> 20.92522 </td>
+   <td style="text-align:left;"> 1.2920 </td>
+   <td style="text-align:left;"> 2.706 </td>
+   <td style="text-align:left;"> 0.7253 </td>
+   <td style="text-align:left;"> 0.6866 </td>
+   <td style="text-align:left;"> 0.9672 </td>
+   <td style="text-align:left;"> 20.93 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.3456955 </td>
-   <td style="text-align:right;"> 3.107133 </td>
-   <td style="text-align:right;"> 0.7396414 </td>
-   <td style="text-align:right;"> 0.6948464 </td>
-   <td style="text-align:right;"> 0.9609738 </td>
-   <td style="text-align:right;"> 17.80463 </td>
+   <td style="text-align:left;"> 1.3457 </td>
+   <td style="text-align:left;"> 3.107 </td>
+   <td style="text-align:left;"> 0.7396 </td>
+   <td style="text-align:left;"> 0.6948 </td>
+   <td style="text-align:left;"> 0.9610 </td>
+   <td style="text-align:left;"> 17.80 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.3999013 </td>
-   <td style="text-align:right;"> 3.571680 </td>
-   <td style="text-align:right;"> 0.7533787 </td>
-   <td style="text-align:right;"> 0.7007159 </td>
-   <td style="text-align:right;"> 0.9518188 </td>
-   <td style="text-align:right;"> 14.54334 </td>
+   <td style="text-align:left;"> 1.3999 </td>
+   <td style="text-align:left;"> 3.572 </td>
+   <td style="text-align:left;"> 0.7534 </td>
+   <td style="text-align:left;"> 0.7007 </td>
+   <td style="text-align:left;"> 0.9518 </td>
+   <td style="text-align:left;"> 14.54 </td>
   </tr>
 </tbody>
 </table>
@@ -488,105 +488,105 @@ The question arises as to what happens when $\mu$ is held constant but the other
 <caption>(\#tab:rsm-evidence-table1C)Here $\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the lack of an inverse relation between $a_{eff}$ and $b_{eff}$.</caption>
  <thead>
   <tr>
-   <th style="text-align:right;"> $AUC$ </th>
-   <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda'$ </th>
-   <th style="text-align:right;"> $\nu'$ </th>
-   <th style="text-align:right;"> $a_{eff}$ </th>
-   <th style="text-align:right;"> $b_{eff}$ </th>
-   <th style="text-align:right;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
+   <th style="text-align:left;"> $AUC$ </th>
+   <th style="text-align:left;"> $\mu$ </th>
+   <th style="text-align:left;"> $\lambda'$ </th>
+   <th style="text-align:left;"> $\nu'$ </th>
+   <th style="text-align:left;"> $a_{eff}$ </th>
+   <th style="text-align:left;"> $b_{eff}$ </th>
+   <th style="text-align:left;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 2 </td>
-   <td style="text-align:right;"> 0.0500000 </td>
-   <td style="text-align:right;"> 0.4031252 </td>
-   <td style="text-align:right;"> 1.6629055 </td>
-   <td style="text-align:right;"> 0.8966579 </td>
-   <td style="text-align:right;"> 16.091266 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 2 </td>
+   <td style="text-align:left;"> 0.05000 </td>
+   <td style="text-align:left;"> 0.4031 </td>
+   <td style="text-align:left;"> 1.6629 </td>
+   <td style="text-align:left;"> 0.8967 </td>
+   <td style="text-align:left;"> 16.091 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.0772226 </td>
-   <td style="text-align:right;"> 0.4048090 </td>
-   <td style="text-align:right;"> 1.5424715 </td>
-   <td style="text-align:right;"> 0.8631606 </td>
-   <td style="text-align:right;"> 11.272127 </td>
+   <td style="text-align:left;"> 0.07722 </td>
+   <td style="text-align:left;"> 0.4048 </td>
+   <td style="text-align:left;"> 1.5425 </td>
+   <td style="text-align:left;"> 0.8632 </td>
+   <td style="text-align:left;"> 11.272 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.1192666 </td>
-   <td style="text-align:right;"> 0.4073853 </td>
-   <td style="text-align:right;"> 1.4029691 </td>
-   <td style="text-align:right;"> 0.8274848 </td>
-   <td style="text-align:right;"> 8.132437 </td>
+   <td style="text-align:left;"> 0.11927 </td>
+   <td style="text-align:left;"> 0.4074 </td>
+   <td style="text-align:left;"> 1.4030 </td>
+   <td style="text-align:left;"> 0.8275 </td>
+   <td style="text-align:left;"> 8.132 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.1842016 </td>
-   <td style="text-align:right;"> 0.4113084 </td>
-   <td style="text-align:right;"> 1.2531401 </td>
-   <td style="text-align:right;"> 0.7940112 </td>
-   <td style="text-align:right;"> 6.083536 </td>
+   <td style="text-align:left;"> 0.18420 </td>
+   <td style="text-align:left;"> 0.4113 </td>
+   <td style="text-align:left;"> 1.2531 </td>
+   <td style="text-align:left;"> 0.7940 </td>
+   <td style="text-align:left;"> 6.084 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.2844905 </td>
-   <td style="text-align:right;"> 0.4172383 </td>
-   <td style="text-align:right;"> 1.1042926 </td>
-   <td style="text-align:right;"> 0.7675247 </td>
-   <td style="text-align:right;"> 4.750151 </td>
+   <td style="text-align:left;"> 0.28449 </td>
+   <td style="text-align:left;"> 0.4172 </td>
+   <td style="text-align:left;"> 1.1043 </td>
+   <td style="text-align:left;"> 0.7675 </td>
+   <td style="text-align:left;"> 4.750 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.4393820 </td>
-   <td style="text-align:right;"> 0.4261039 </td>
-   <td style="text-align:right;"> 0.9675871 </td>
-   <td style="text-align:right;"> 0.7516999 </td>
-   <td style="text-align:right;"> 3.896845 </td>
+   <td style="text-align:left;"> 0.43938 </td>
+   <td style="text-align:left;"> 0.4261 </td>
+   <td style="text-align:left;"> 0.9676 </td>
+   <td style="text-align:left;"> 0.7517 </td>
+   <td style="text-align:left;"> 3.897 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.6786044 </td>
-   <td style="text-align:right;"> 0.4391518 </td>
-   <td style="text-align:right;"> 0.8519904 </td>
-   <td style="text-align:right;"> 0.7479598 </td>
-   <td style="text-align:right;"> 3.380376 </td>
+   <td style="text-align:left;"> 0.67860 </td>
+   <td style="text-align:left;"> 0.4392 </td>
+   <td style="text-align:left;"> 0.8520 </td>
+   <td style="text-align:left;"> 0.7480 </td>
+   <td style="text-align:left;"> 3.380 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 1.0480720 </td>
-   <td style="text-align:right;"> 0.4579423 </td>
-   <td style="text-align:right;"> 0.7635328 </td>
-   <td style="text-align:right;"> 0.7551508 </td>
-   <td style="text-align:right;"> 3.118380 </td>
+   <td style="text-align:left;"> 1.04807 </td>
+   <td style="text-align:left;"> 0.4579 </td>
+   <td style="text-align:left;"> 0.7635 </td>
+   <td style="text-align:left;"> 0.7552 </td>
+   <td style="text-align:left;"> 3.118 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 1.6186970 </td>
-   <td style="text-align:right;"> 0.4842740 </td>
-   <td style="text-align:right;"> 0.7052538 </td>
-   <td style="text-align:right;"> 0.7697799 </td>
-   <td style="text-align:right;"> 3.063390 </td>
+   <td style="text-align:left;"> 1.61870 </td>
+   <td style="text-align:left;"> 0.4843 </td>
+   <td style="text-align:left;"> 0.7053 </td>
+   <td style="text-align:left;"> 0.7698 </td>
+   <td style="text-align:left;"> 3.063 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 2.5000000 </td>
-   <td style="text-align:right;"> 0.5200449 </td>
-   <td style="text-align:right;"> 0.6764614 </td>
-   <td style="text-align:right;"> 0.7857195 </td>
-   <td style="text-align:right;"> 3.156897 </td>
+   <td style="text-align:left;"> 2.50000 </td>
+   <td style="text-align:left;"> 0.5200 </td>
+   <td style="text-align:left;"> 0.6765 </td>
+   <td style="text-align:left;"> 0.7857 </td>
+   <td style="text-align:left;"> 3.157 </td>
   </tr>
 </tbody>
 </table>
@@ -607,105 +607,105 @@ Shown next are three tables corresponding to RSM-AUC = 0.8.
 <caption>(\#tab:rsm-evidence-table2A)Here $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.</caption>
  <thead>
   <tr>
-   <th style="text-align:right;"> $AUC$ </th>
-   <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda'$ </th>
-   <th style="text-align:right;"> $\nu'$ </th>
-   <th style="text-align:right;"> $a_{eff}$ </th>
-   <th style="text-align:right;"> $b_{eff}$ </th>
-   <th style="text-align:right;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
+   <th style="text-align:left;"> $AUC$ </th>
+   <th style="text-align:left;"> $\mu$ </th>
+   <th style="text-align:left;"> $\lambda'$ </th>
+   <th style="text-align:left;"> $\nu'$ </th>
+   <th style="text-align:left;"> $a_{eff}$ </th>
+   <th style="text-align:left;"> $b_{eff}$ </th>
+   <th style="text-align:left;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
-   <td style="text-align:right;"> 2.000000 </td>
-   <td style="text-align:right;"> 1.0000000 </td>
-   <td style="text-align:right;"> 0.6833742 </td>
-   <td style="text-align:right;"> 1.126389 </td>
-   <td style="text-align:right;"> 0.8105541 </td>
-   <td style="text-align:right;"> 5.945703 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
+   <td style="text-align:left;"> 2.000 </td>
+   <td style="text-align:left;"> 1.0000 </td>
+   <td style="text-align:left;"> 0.6834 </td>
+   <td style="text-align:left;"> 1.126 </td>
+   <td style="text-align:left;"> 0.8106 </td>
+   <td style="text-align:left;"> 5.946 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 2.214346 </td>
-   <td style="text-align:right;"> 0.9032011 </td>
-   <td style="text-align:right;"> 0.6565893 </td>
-   <td style="text-align:right;"> 1.178057 </td>
-   <td style="text-align:right;"> 0.7649096 </td>
-   <td style="text-align:right;"> 5.011078 </td>
+   <td style="text-align:left;"> 2.214 </td>
+   <td style="text-align:left;"> 0.9032 </td>
+   <td style="text-align:left;"> 0.6566 </td>
+   <td style="text-align:left;"> 1.178 </td>
+   <td style="text-align:left;"> 0.7649 </td>
+   <td style="text-align:left;"> 5.011 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 2.451665 </td>
-   <td style="text-align:right;"> 0.8157722 </td>
-   <td style="text-align:right;"> 0.6365326 </td>
-   <td style="text-align:right;"> 1.239282 </td>
-   <td style="text-align:right;"> 0.7208098 </td>
-   <td style="text-align:right;"> 4.438846 </td>
+   <td style="text-align:left;"> 2.452 </td>
+   <td style="text-align:left;"> 0.8158 </td>
+   <td style="text-align:left;"> 0.6365 </td>
+   <td style="text-align:left;"> 1.239 </td>
+   <td style="text-align:left;"> 0.7208 </td>
+   <td style="text-align:left;"> 4.439 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 2.714418 </td>
-   <td style="text-align:right;"> 0.7368063 </td>
-   <td style="text-align:right;"> 0.6221486 </td>
-   <td style="text-align:right;"> 1.309663 </td>
-   <td style="text-align:right;"> 0.6784979 </td>
-   <td style="text-align:right;"> 4.073575 </td>
+   <td style="text-align:left;"> 2.714 </td>
+   <td style="text-align:left;"> 0.7368 </td>
+   <td style="text-align:left;"> 0.6221 </td>
+   <td style="text-align:left;"> 1.310 </td>
+   <td style="text-align:left;"> 0.6785 </td>
+   <td style="text-align:left;"> 4.074 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 3.005330 </td>
-   <td style="text-align:right;"> 0.6654842 </td>
-   <td style="text-align:right;"> 0.6124526 </td>
-   <td style="text-align:right;"> 1.388809 </td>
-   <td style="text-align:right;"> 0.6382351 </td>
-   <td style="text-align:right;"> 3.838983 </td>
+   <td style="text-align:left;"> 3.005 </td>
+   <td style="text-align:left;"> 0.6655 </td>
+   <td style="text-align:left;"> 0.6125 </td>
+   <td style="text-align:left;"> 1.389 </td>
+   <td style="text-align:left;"> 0.6382 </td>
+   <td style="text-align:left;"> 3.839 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 3.327421 </td>
-   <td style="text-align:right;"> 0.6010661 </td>
-   <td style="text-align:right;"> 0.6063452 </td>
-   <td style="text-align:right;"> 1.475851 </td>
-   <td style="text-align:right;"> 0.6001421 </td>
-   <td style="text-align:right;"> 3.690938 </td>
+   <td style="text-align:left;"> 3.327 </td>
+   <td style="text-align:left;"> 0.6011 </td>
+   <td style="text-align:left;"> 0.6063 </td>
+   <td style="text-align:left;"> 1.476 </td>
+   <td style="text-align:left;"> 0.6001 </td>
+   <td style="text-align:left;"> 3.691 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 3.684032 </td>
-   <td style="text-align:right;"> 0.5428835 </td>
-   <td style="text-align:right;"> 0.6028623 </td>
-   <td style="text-align:right;"> 1.569891 </td>
-   <td style="text-align:right;"> 0.5642539 </td>
-   <td style="text-align:right;"> 3.602765 </td>
+   <td style="text-align:left;"> 3.684 </td>
+   <td style="text-align:left;"> 0.5429 </td>
+   <td style="text-align:left;"> 0.6029 </td>
+   <td style="text-align:left;"> 1.570 </td>
+   <td style="text-align:left;"> 0.5643 </td>
+   <td style="text-align:left;"> 3.603 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 4.078861 </td>
-   <td style="text-align:right;"> 0.4903330 </td>
-   <td style="text-align:right;"> 0.6011181 </td>
-   <td style="text-align:right;"> 1.669850 </td>
-   <td style="text-align:right;"> 0.5304907 </td>
-   <td style="text-align:right;"> 3.556586 </td>
+   <td style="text-align:left;"> 4.079 </td>
+   <td style="text-align:left;"> 0.4903 </td>
+   <td style="text-align:left;"> 0.6011 </td>
+   <td style="text-align:left;"> 1.670 </td>
+   <td style="text-align:left;"> 0.5305 </td>
+   <td style="text-align:left;"> 3.557 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 4.516005 </td>
-   <td style="text-align:right;"> 0.4428693 </td>
-   <td style="text-align:right;"> 0.6003586 </td>
-   <td style="text-align:right;"> 1.774593 </td>
-   <td style="text-align:right;"> 0.4987007 </td>
-   <td style="text-align:right;"> 3.539988 </td>
+   <td style="text-align:left;"> 4.516 </td>
+   <td style="text-align:left;"> 0.4429 </td>
+   <td style="text-align:left;"> 0.6004 </td>
+   <td style="text-align:left;"> 1.775 </td>
+   <td style="text-align:left;"> 0.4987 </td>
+   <td style="text-align:left;"> 3.540 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 5.000000 </td>
-   <td style="text-align:right;"> 0.4000000 </td>
-   <td style="text-align:right;"> 0.6000925 </td>
-   <td style="text-align:right;"> 1.883397 </td>
-   <td style="text-align:right;"> 0.4687580 </td>
-   <td style="text-align:right;"> 3.545271 </td>
+   <td style="text-align:left;"> 5.000 </td>
+   <td style="text-align:left;"> 0.4000 </td>
+   <td style="text-align:left;"> 0.6001 </td>
+   <td style="text-align:left;"> 1.883 </td>
+   <td style="text-align:left;"> 0.4688 </td>
+   <td style="text-align:left;"> 3.545 </td>
   </tr>
 </tbody>
 </table>
@@ -715,105 +715,105 @@ Shown next are three tables corresponding to RSM-AUC = 0.8.
 <caption>(\#tab:rsm-evidence-table2B)Here $\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.</caption>
  <thead>
   <tr>
-   <th style="text-align:right;"> $AUC$ </th>
-   <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda'$ </th>
-   <th style="text-align:right;"> $\nu'$ </th>
-   <th style="text-align:right;"> $a_{eff}$ </th>
-   <th style="text-align:right;"> $b_{eff}$ </th>
-   <th style="text-align:right;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
+   <th style="text-align:left;"> $AUC$ </th>
+   <th style="text-align:left;"> $\mu$ </th>
+   <th style="text-align:left;"> $\lambda'$ </th>
+   <th style="text-align:left;"> $\nu'$ </th>
+   <th style="text-align:left;"> $a_{eff}$ </th>
+   <th style="text-align:left;"> $b_{eff}$ </th>
+   <th style="text-align:left;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
-   <td style="text-align:right;"> 1.354458 </td>
-   <td style="text-align:right;"> 0.7383027 </td>
-   <td style="text-align:right;"> 0.7419128 </td>
-   <td style="text-align:right;"> 0.9944031 </td>
-   <td style="text-align:right;"> 0.9446086 </td>
-   <td style="text-align:right;"> 17.95230 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
+   <td style="text-align:left;"> 1.354 </td>
+   <td style="text-align:left;"> 0.7383 </td>
+   <td style="text-align:left;"> 0.7419 </td>
+   <td style="text-align:left;"> 0.9944 </td>
+   <td style="text-align:left;"> 0.9446 </td>
+   <td style="text-align:left;"> 17.95 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.401586 </td>
-   <td style="text-align:right;"> 0.8531858 </td>
-   <td style="text-align:right;"> 0.7537938 </td>
-   <td style="text-align:right;"> 1.0062429 </td>
-   <td style="text-align:right;"> 0.9411753 </td>
-   <td style="text-align:right;"> 17.10578 </td>
+   <td style="text-align:left;"> 1.402 </td>
+   <td style="text-align:left;"> 0.8532 </td>
+   <td style="text-align:left;"> 0.7538 </td>
+   <td style="text-align:left;"> 1.0062 </td>
+   <td style="text-align:left;"> 0.9412 </td>
+   <td style="text-align:left;"> 17.11 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.450946 </td>
-   <td style="text-align:right;"> 0.9855424 </td>
-   <td style="text-align:right;"> 0.7656516 </td>
-   <td style="text-align:right;"> 1.0184034 </td>
-   <td style="text-align:right;"> 0.9378352 </td>
-   <td style="text-align:right;"> 16.38231 </td>
+   <td style="text-align:left;"> 1.451 </td>
+   <td style="text-align:left;"> 0.9855 </td>
+   <td style="text-align:left;"> 0.7657 </td>
+   <td style="text-align:left;"> 1.0184 </td>
+   <td style="text-align:left;"> 0.9378 </td>
+   <td style="text-align:left;"> 16.38 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.502253 </td>
-   <td style="text-align:right;"> 1.1382741 </td>
-   <td style="text-align:right;"> 0.7773720 </td>
-   <td style="text-align:right;"> 1.0306150 </td>
-   <td style="text-align:right;"> 0.9345551 </td>
-   <td style="text-align:right;"> 15.74782 </td>
+   <td style="text-align:left;"> 1.502 </td>
+   <td style="text-align:left;"> 1.1383 </td>
+   <td style="text-align:left;"> 0.7774 </td>
+   <td style="text-align:left;"> 1.0306 </td>
+   <td style="text-align:left;"> 0.9346 </td>
+   <td style="text-align:left;"> 15.75 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.555229 </td>
-   <td style="text-align:right;"> 1.3147978 </td>
-   <td style="text-align:right;"> 0.7888590 </td>
-   <td style="text-align:right;"> 1.0425971 </td>
-   <td style="text-align:right;"> 0.9312388 </td>
-   <td style="text-align:right;"> 15.16258 </td>
+   <td style="text-align:left;"> 1.555 </td>
+   <td style="text-align:left;"> 1.3148 </td>
+   <td style="text-align:left;"> 0.7889 </td>
+   <td style="text-align:left;"> 1.0426 </td>
+   <td style="text-align:left;"> 0.9312 </td>
+   <td style="text-align:left;"> 15.16 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.609608 </td>
-   <td style="text-align:right;"> 1.5191355 </td>
-   <td style="text-align:right;"> 0.8000340 </td>
-   <td style="text-align:right;"> 1.0540426 </td>
-   <td style="text-align:right;"> 0.9276992 </td>
-   <td style="text-align:right;"> 14.57858 </td>
+   <td style="text-align:left;"> 1.610 </td>
+   <td style="text-align:left;"> 1.5191 </td>
+   <td style="text-align:left;"> 0.8000 </td>
+   <td style="text-align:left;"> 1.0540 </td>
+   <td style="text-align:left;"> 0.9277 </td>
+   <td style="text-align:left;"> 14.58 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.665097 </td>
-   <td style="text-align:right;"> 1.7560641 </td>
-   <td style="text-align:right;"> 0.8108278 </td>
-   <td style="text-align:right;"> 1.0645612 </td>
-   <td style="text-align:right;"> 0.9236312 </td>
-   <td style="text-align:right;"> 13.93974 </td>
+   <td style="text-align:left;"> 1.665 </td>
+   <td style="text-align:left;"> 1.7561 </td>
+   <td style="text-align:left;"> 0.8108 </td>
+   <td style="text-align:left;"> 1.0646 </td>
+   <td style="text-align:left;"> 0.9236 </td>
+   <td style="text-align:left;"> 13.94 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.721499 </td>
-   <td style="text-align:right;"> 2.0311250 </td>
-   <td style="text-align:right;"> 0.8212020 </td>
-   <td style="text-align:right;"> 1.0737808 </td>
-   <td style="text-align:right;"> 0.9185750 </td>
-   <td style="text-align:right;"> 13.18735 </td>
+   <td style="text-align:left;"> 1.721 </td>
+   <td style="text-align:left;"> 2.0311 </td>
+   <td style="text-align:left;"> 0.8212 </td>
+   <td style="text-align:left;"> 1.0738 </td>
+   <td style="text-align:left;"> 0.9186 </td>
+   <td style="text-align:left;"> 13.19 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.778510 </td>
-   <td style="text-align:right;"> 2.3509881 </td>
-   <td style="text-align:right;"> 0.8311103 </td>
-   <td style="text-align:right;"> 1.0811630 </td>
-   <td style="text-align:right;"> 0.9119257 </td>
-   <td style="text-align:right;"> 12.27557 </td>
+   <td style="text-align:left;"> 1.779 </td>
+   <td style="text-align:left;"> 2.3510 </td>
+   <td style="text-align:left;"> 0.8311 </td>
+   <td style="text-align:left;"> 1.0812 </td>
+   <td style="text-align:left;"> 0.9119 </td>
+   <td style="text-align:left;"> 12.28 </td>
   </tr>
   <tr>
    
-   <td style="text-align:right;"> 1.835951 </td>
-   <td style="text-align:right;"> 2.7233847 </td>
-   <td style="text-align:right;"> 0.8405382 </td>
-   <td style="text-align:right;"> 1.0862440 </td>
-   <td style="text-align:right;"> 0.9029454 </td>
-   <td style="text-align:right;"> 11.19209 </td>
+   <td style="text-align:left;"> 1.836 </td>
+   <td style="text-align:left;"> 2.7234 </td>
+   <td style="text-align:left;"> 0.8405 </td>
+   <td style="text-align:left;"> 1.0862 </td>
+   <td style="text-align:left;"> 0.9029 </td>
+   <td style="text-align:left;"> 11.19 </td>
   </tr>
 </tbody>
 </table>
@@ -824,105 +824,105 @@ Shown next are three tables corresponding to RSM-AUC = 0.8.
 <caption>(\#tab:rsm-evidence-table2C)Here $\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the lack of an inverse relation between $a_{eff}$ and $b_{eff}$.</caption>
  <thead>
   <tr>
-   <th style="text-align:right;"> $AUC$ </th>
-   <th style="text-align:right;"> $\mu$ </th>
-   <th style="text-align:right;"> $\lambda'$ </th>
-   <th style="text-align:right;"> $\nu'$ </th>
-   <th style="text-align:right;"> $a_{eff}$ </th>
-   <th style="text-align:right;"> $b_{eff}$ </th>
-   <th style="text-align:right;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
+   <th style="text-align:left;"> $AUC$ </th>
+   <th style="text-align:left;"> $\mu$ </th>
+   <th style="text-align:left;"> $\lambda'$ </th>
+   <th style="text-align:left;"> $\nu'$ </th>
+   <th style="text-align:left;"> $a_{eff}$ </th>
+   <th style="text-align:left;"> $b_{eff}$ </th>
+   <th style="text-align:left;"> $\frac{a_{eff}}{1-b_{eff}}$ </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
-   <td style="text-align:right;vertical-align: middle !important;" rowspan="10"> 2 </td>
-   <td style="text-align:right;"> 0.0500000 </td>
-   <td style="text-align:right;"> 0.6046785 </td>
-   <td style="text-align:right;"> 1.826059 </td>
-   <td style="text-align:right;"> 0.9476004 </td>
-   <td style="text-align:right;"> 34.848720 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 0.8 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 2 </td>
+   <td style="text-align:left;"> 0.05000 </td>
+   <td style="text-align:left;"> 0.6047 </td>
+   <td style="text-align:left;"> 1.826 </td>
+   <td style="text-align:left;"> 0.9476 </td>
+   <td style="text-align:left;"> 34.849 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.0772226 </td>
-   <td style="text-align:right;"> 0.6072035 </td>
-   <td style="text-align:right;"> 1.752409 </td>
-   <td style="text-align:right;"> 0.9265439 </td>
-   <td style="text-align:right;"> 23.856540 </td>
+   <td style="text-align:left;"> 0.07722 </td>
+   <td style="text-align:left;"> 0.6072 </td>
+   <td style="text-align:left;"> 1.752 </td>
+   <td style="text-align:left;"> 0.9265 </td>
+   <td style="text-align:left;"> 23.857 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.1192666 </td>
-   <td style="text-align:right;"> 0.6110672 </td>
-   <td style="text-align:right;"> 1.658638 </td>
-   <td style="text-align:right;"> 0.9009387 </td>
-   <td style="text-align:right;"> 16.743547 </td>
+   <td style="text-align:left;"> 0.11927 </td>
+   <td style="text-align:left;"> 0.6111 </td>
+   <td style="text-align:left;"> 1.659 </td>
+   <td style="text-align:left;"> 0.9009 </td>
+   <td style="text-align:left;"> 16.744 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.1842016 </td>
-   <td style="text-align:right;"> 0.6169507 </td>
-   <td style="text-align:right;"> 1.547304 </td>
-   <td style="text-align:right;"> 0.8726752 </td>
-   <td style="text-align:right;"> 12.152413 </td>
+   <td style="text-align:left;"> 0.18420 </td>
+   <td style="text-align:left;"> 0.6170 </td>
+   <td style="text-align:left;"> 1.547 </td>
+   <td style="text-align:left;"> 0.8727 </td>
+   <td style="text-align:left;"> 12.152 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.2844905 </td>
-   <td style="text-align:right;"> 0.6258434 </td>
-   <td style="text-align:right;"> 1.425706 </td>
-   <td style="text-align:right;"> 0.8452798 </td>
-   <td style="text-align:right;"> 9.214737 </td>
+   <td style="text-align:left;"> 0.28449 </td>
+   <td style="text-align:left;"> 0.6258 </td>
+   <td style="text-align:left;"> 1.426 </td>
+   <td style="text-align:left;"> 0.8453 </td>
+   <td style="text-align:left;"> 9.215 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.4393820 </td>
-   <td style="text-align:right;"> 0.6391381 </td>
-   <td style="text-align:right;"> 1.305207 </td>
-   <td style="text-align:right;"> 0.8232878 </td>
-   <td style="text-align:right;"> 7.386057 </td>
+   <td style="text-align:left;"> 0.43938 </td>
+   <td style="text-align:left;"> 0.6391 </td>
+   <td style="text-align:left;"> 1.305 </td>
+   <td style="text-align:left;"> 0.8233 </td>
+   <td style="text-align:left;"> 7.386 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 0.6786044 </td>
-   <td style="text-align:right;"> 0.6587224 </td>
-   <td style="text-align:right;"> 1.199014 </td>
-   <td style="text-align:right;"> 0.8110032 </td>
-   <td style="text-align:right;"> 6.344095 </td>
+   <td style="text-align:left;"> 0.67860 </td>
+   <td style="text-align:left;"> 0.6587 </td>
+   <td style="text-align:left;"> 1.199 </td>
+   <td style="text-align:left;"> 0.8110 </td>
+   <td style="text-align:left;"> 6.344 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 1.0480720 </td>
-   <td style="text-align:right;"> 0.6869140 </td>
-   <td style="text-align:right;"> 1.119377 </td>
-   <td style="text-align:right;"> 0.8112136 </td>
-   <td style="text-align:right;"> 5.929330 </td>
+   <td style="text-align:left;"> 1.04807 </td>
+   <td style="text-align:left;"> 0.6869 </td>
+   <td style="text-align:left;"> 1.119 </td>
+   <td style="text-align:left;"> 0.8112 </td>
+   <td style="text-align:left;"> 5.929 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 1.6186970 </td>
-   <td style="text-align:right;"> 0.7264119 </td>
-   <td style="text-align:right;"> 1.075090 </td>
-   <td style="text-align:right;"> 0.8241099 </td>
-   <td style="text-align:right;"> 6.112281 </td>
+   <td style="text-align:left;"> 1.61870 </td>
+   <td style="text-align:left;"> 0.7264 </td>
+   <td style="text-align:left;"> 1.075 </td>
+   <td style="text-align:left;"> 0.8241 </td>
+   <td style="text-align:left;"> 6.112 </td>
   </tr>
   <tr>
    
    
-   <td style="text-align:right;"> 2.5000000 </td>
-   <td style="text-align:right;"> 0.7800694 </td>
-   <td style="text-align:right;"> 1.067293 </td>
-   <td style="text-align:right;"> 0.8448119 </td>
-   <td style="text-align:right;"> 6.877419 </td>
+   <td style="text-align:left;"> 2.50000 </td>
+   <td style="text-align:left;"> 0.7801 </td>
+   <td style="text-align:left;"> 1.067 </td>
+   <td style="text-align:left;"> 0.8448 </td>
+   <td style="text-align:left;"> 6.877 </td>
   </tr>
 </tbody>
 </table>
@@ -933,75 +933,48 @@ Similar comments apply. As long as $\mu$ is varied, as in Tables \@ref(tab:rsm-e
 
 When $\mu$ is *varied* the observed Swets Ratio is nearly constant. However, when $\mu$ is *constant*, the ratio shows departures from near constancy. 
 
-Swets et al observations are based on only two datasets and their observed value $\frac{a}{1-b} = 4$ is probably not generally applicable. Nevertheless, it is interesting that the RSM predicts near constancy of the Swets Ratio as long as the $\mu$ parameter is varied and the other two parameters are varied to keep AUC constant.
+Swets et al observations are based on only two datasets (as best as I can tell) and their observed value $\frac{a}{1-b} \approx 4$ is probably not generally applicable. Nevertheless, it is a validation that the RSM predicts the inverse dependence of the binormal $a$ and $b$ parameters and the near constancy of the Swets Ratio as long as the $\mu$ parameter is varied (and the other two parameters are varied to keep AUC constant).
 
 	
 
-### Explanation of data degeneracy
-An ROC dataset is said to be degenerate if the corresponding ROC plot does not have any interior data points. Data degeneracy is a significant problem faced by the binormal model1,6,44, e.g., ROCFIT or RSCORE-II software. Degenerate datasets cannot be analyzed by binormal model. The RSM provides a natural explanation for such datasets, and as shown in Chapter 19, such datasets are readily fitted by the RSM. The CBM model2-4 also provides an alternative explanation for the data degeneracy and a method for fitting such datasets.
+## Explanation of data degeneracy
+*An ROC dataset is said to be degenerate if the corresponding ROC plot does not have any interior data points.* Data degeneracy is a significant problem faced by the binormal model [@RN1081; @RN1499;@RN1083]. Degenerate datasets cannot be analyzed by the binormal model. The RSM provides a natural explanation for such datasets, and as shown in TBA Chapter 19, such datasets are readily fitted by the RSM. The CBM model [@RN1501] also provides an alternative explanation for the data degeneracy and a method for fitting such datasets.
 
-The reason for degenerate datasets is the existence of cases not providing any decision variable samples. Such cases are always binned in the lowest ROC:1 bin. The possibility of data degeneracy can be appreciated by examining Fig. 17.1 (in particular plots D through F, i.e., the higher values of  ). As   increases the accessible portion of the ROC curve shrinks and the curve increasingly approaches the top-left corner of the plot. The effect is particularly pronounced for observers characterized by large values of   and small values of  , i.e., the experts. For them the operating points will be clustered near the initial near-vertical section of the ROC curve. It will be difficult to get such observers to generate appreciable numbers of false positives. Instructions such as "spread your ratings"45 or the use "continuous" ratings46 may not always work; interference with the radiologist's readings style to make the data easier to analyze is undesirable. To the experimenter it will appear that the observer is not cooperating, when in fact they are being perfectly reasonable. A similar issue affected Dr. Swensson's LROC analysis method11 in which originally every case had to be assigned a "most-suspicious" region, even if the radiologist thought the case was perfectly normal: this met with resistance from radiologists. In later versions of his software, Dr. Swensson removed the forced localization requirement and instead did it in software by sampling a random number generator. Radiologists don't like to be told, "even if you believe the case is definitely normal, there must be some region that is least normal, or most suspicious". All of these sematic difficulties go away if one abandons the premise that every case must generate a z-sample.
+The reason for degenerate datasets is the existence of cases not providing any decision variable samples. Such cases are always binned in the lowest ROC:1 bin. The possibility of data degeneracy can be appreciated by examining Fig. \@ref(fig:rsm-evidence-binormal-plots2), in particular the plot labeled "Row = 8", i.e., the highest values of $\mu$. As $\mu$ increases the accessible portion of the ROC curve shrinks and the curve increasingly approaches the top-left corner of the plot. The effect is particularly pronounced for observers characterized by small values of $\lambda$, i.e., experts. For them the operating points will be clustered near the initial near-vertical section of the ROC curve. It will be difficult to get such observers to generate appreciable numbers of false positives. Instructions such as "spread your ratings" [@RN113] or the use "continuous" ratings [@RN1083] may not work. *In any case, interfering with the radiologist's readings style to make the data easier to analyze is undesirable experimental practice.* To the experimenter it will appear that the observer is not cooperating, when in fact they are being perfectly reasonable. A similar issue affected Dr. Swensson's LROC analysis method [@swensson1996unified] in which (originally) every case had to be assigned a "most-suspicious" region, even if the radiologist thought the case was perfectly normal. This met with resistance from radiologists. In later versions of his software, Dr. Swensson removed the forced localization requirement and instead did it in the software by sampling a random number generator. Radiologists don't like to be told, "even if you believe the case is definitely normal, there must be some region that is least normal, or most suspicious". All of these semantic difficulties go away if one abandons the premise that every case must generate a z-sample.
 
 
-### Predictions of observed FROC/AFROC/LROC curves
-Besides predicting ROC, FROC and AFROC curves, as shown in this chapter, the RSM also predicts LROC curves15. Moreover, these are generally better fits to experimental data since they do not allow the AFROC and LROC curve to go continuously to FPF = 1, as do earlier models, two by the author22,23 and one by the late Dr. Swensson11. As a historical note, the FROCFIT and AFROC software developed22 by the author in 1989 was more successful at fitting microcalcification data than mass data (private communication, Prof. Heang-Ping Chan, ca. 1990). This is consistent with the premise that the microcalcification task is characterized by larger   than the mass task. Radiologists literally use a magnifying glass (a physical on or a software implementation) to search each image for the much smaller specks, and this increases the potential for finding NLs, hence the larger  . Mass detection is more a function of the global gestalt view described in the previous chapter. Larger  yields an FROC curve that traverses more to the right than the corresponding mass curve. The FROCFIT program allows the FROC curve to go far to the right and reach unit ordinate, which is not observed with mass data, but could approximate microcalcification data. 
+## Predictions of observed FROC/AFROC/LROC curves
+Besides predicting ROC, FROC and AFROC curves, as shown in this TBA chapter, the RSM also predicts LROC curves [@RN1654]. Moreover, these are generally better fits to experimental data, since the RSM does not allow the AFROC and LROC curve to go continuously to (1,1), as do earlier models [@chakraborty1989maximum; @chakraborty1990free; @swensson1996unified]. ^[As a historical note, the FROCFIT and AFROC software [@chakraborty1989maximum; @chakraborty1990free] developed by me in 1989 was more successful at fitting microcalcification data than mass data (private communication, Prof. Heang-Ping Chan, ca. 1990). This is consistent with the premise that the microcalcification task is characterized by larger $\lambda$ than the mass task. Radiologists literally use a magnifying glass (a physical on or a software implementation) to search each image for the much smaller specks, and this increases the potential for finding NLs. Mass detection is more a function of the global gestalt view described in the previous chapter. Larger $lambda$ yields an FROC curve that traverses more to the right than the corresponding mass curve. The FROCFIT program allows the FROC curve to go far to the right and reach unit ordinate, which is not observed with mass data, but could approximate microcalcification data, especially in the lower-left region of the curve.] 
 
 
 ## Discussion / Summary {#rsm-evidence-discussion-summary}
-This chapter has detailed ROC, FROC and AFROC curves predicted by the radiological search model (RSM). All RSM-predicted curves share the constrained end-point property that is qualitatively different from previous ROC models. In the author's experience, it is a property that most researchers in this field have difficulty accepting. There is too much history going back to the early 1940s, of the ROC curve extending from (0,0) to (1,1) that one has to let go of, and this can be difficult. 
+Evidence for the RSM is summarized. Its correspondence to the empirical Kundel-Nodine model of visual search that is grounded in eye-tracking measurements. It reduces in the limit of large $\lambda$, which guarantees that every case will yield a decision variable sample, to the binormal model; the predicted pdfs in this limit are not strictly normal, but deviations from normality would require very large sample size to demonstrate. Examples were given where even with 1200 cases the binormal model provides statistically good fits. Since the binormal model has proven quite successful in describing a large body of data, it satisfying that the RSM can mimic it. The RSM explains most empirical results regarding binormal model fits: the common finding that b < 1; that $b$ decreases with increasing lesion contrast; and the finding that the difference in means divided by the difference in standard deviations is fairly constant for a fixed experimental situation. The RSM explains data degeneracy, especially for radiologists with high expertise.
 
-The author is not aware of any direct evidence that radiologists can move the operating point continuously in the range (0,0) to (1,1) in search tasks, so the existence of such an ROC is tantamount to an assumption. Algorithmic observers that do not involve the element of search can extend continuously to (1,1). An example of an algorithmic observer not involving search is a diagnostic test that rates the results of a laboratory measurement, e.g., the A1C measure of blood glucose  for presence of a disease. If A1C ≥ 6.5% the patient is diagnosed as diabetic. By moving the threshold from infinity to –infinity, and assuming a large population of patients, one can trace out the entire ROC curve from the origin to (1,1). This is because every patient yields an A1C value. Now imagine that some finite fraction of the test results are "lost in the mail"; then the ROC curve, calculated over all patients, would have the constrained end-point property, albeit due to an unreasonable cause.
 
-The situation in medical imaging involving search tasks is qualitatively different. Not every case yields a decision variable. There is a reasonable cause for this – to render a decision variable sample the radiologist must find something suspicious to report, and if none is found, there is no decision variable to report. The ROC curve calculated over all patients would exhibit the constrained end-point property, even in the limit of an infinite number of patients. If calculated over only those patients that yielded at least one mark, the ROC curve would extend from (0,0) to (1,1) but then one would be ignoring the cases with no marks, which represent valuable information: unmarked non-diseased cases represent perfect decisions and unmarked diseased cases represent worst-case decisions.
+## The Wagner review
 
-RSM-predicted ROC, FROC and AFROC curves were derived (wAFROC is implemented in the Rjafroc). These were used to demonstrate that the FROC is a poor descriptor of performance. Since almost all work to date, including some by the author47,48, has used FROC curves to measure performance, this is going to be difficulty for some to accept. The examples in Fig. 17.6 (A- F) and Fig. 17.7 (A-B) should convince one that the FROC curve is indeed a poor measure of performance. The only situation where one can safely use the FROC curve is if the two modalities produce curves extending over the same NLF range. This can happen with two variants of a CAD algorithm, but rarely with radiologist observers.
+The two RSM papers [@RN1564; @RN1566] were honored by being included in a list of 25 papers as the "Highlights of 2006" in Physics in Medicine and Biology. As stated by the publisher: 
 
-A unique feature is that the RSM provides measures of search and lesion-classification performance. It bears repeating that search performance is the ability to find lesions while avoiding finding non-lesions. Search performance can be determined from the position of the ROC end-point (which in turn is determined by RSM-based fitting of ROC data, Chapter 19). The perpendicular distance between the end-point and the chance diagonal is, apart from a factor of 1.414, a measure of search performance. All ROC models that predict continuous curves extending to (1,1), imply zero search performance. 
+> I am delighted to present a special collection of articles that highlight the very best research published in Physics in Medicine and Biology in 2006. Articles were selected for their presentation of outstanding new research, receipt of the highest praise from our international referees, and the highest number of downloads from the journal website.
 
-Lesion-classification performance is measured by the AUC value corresponding to the   parameter. Lesion-classification performance is the ability to discriminate between LLs and NLs, not between diseased and non-diseased cases: the latter is measured by RSM-AUC. There is a close analogy between the two ways of measuring lesion-classification performance and CAD used to find lesions in screening mammography vs. CAD used in the diagnostic context to determine if a lesion found at screening is actually malignant. The former is termed CADe, for CAD detection, which in the author's opinion, is slightly misleading as at screening lesions are found not detected ("detection" is "discover or identify the presence or existence of something ", correct localization is not necessarily implied; the more precise term is "localize"). In the diagnostic context one has CADx, for CAD diagnostic, i.e., given a specific region of the image, is the region malignant? 
+One of the reviewers was the late Dr. Robert ("Bob") F. Wagner – he had an open-minded approach to imaging science and a unique communication style. The author reproduces one of his comments with minor edits, as it pertains to the most interesting and misunderstood prediction of the RSM, namely its constrained end-point property.
 
-Search and lesion-classification performance can be used as "diagnostic aids" to optimize performance of a reader. For example, is search performance is low, then training using mainly non-diseased cases is called for, so the resident learns the different variants of non-diseased tissues that can appear to be true lesions. If lesion-classification performance is low then training with diseased cases only is called for, so the resident learns the distinguishing features characterizing true lesions from non-diseased tissues that fake true lesions.
-
-Finally, evidence for the RSM is summarized. Its correspondence to the empirical Kundel-Nodine model of visual search that is grounded in eye-tracking measurements. It reduces in the limit of large  , which guarantees that every case will yield a decision variable sample, to the binormal model; the predicted pdfs in this limit are not strictly normal, but deviations from normality would require very large sample size to demonstrate. Examples were given where even with 1200 cases the binormal model provides statistically good fits, as judged by the chi-square goodness of fit statistic, Table 17.2. Since the binormal model has proven quite successful in describing a large body of data, it satisfying that the RSM can mimic it in the limit of large  . The RSM explains most empirical results regarding binormal model fits: the common finding that b < 1; that b decreases with increasing lesion pSNR (large   and / or  ); and the finding that the difference in means divided by the difference in standard deviations is fairly constant for a fixed experimental situation, Table 17.3. The RSM explains data degeneracy, especially for radiologists with high expertise.
-
-The contaminated binormal model2-4 (CBM), Chapter 20, which models the diseased distribution as having two peaks, one at zero and the other at a constrained value, also explains the empirical observation that b-parameter < 1 and data degeneracy. Because it allows the ROC curve to go continuously to (1,1), CBM does not completely account for search performance – it accounts for search when it comes to finding lesions, but not for avoiding finding non-lesions.
-
-The author does not want to leave the impression that RSM is the ultimate model. The current model does not predict satisfaction of search (SOS) effects27-29. Attempts to incorporate SOS effects in the RSM are in the early research stage. As stated earlier, the RSM is a first-order model: a lot of interesting science remains to be uncovered.
-
-### The Wagner review
-
-The two RSM papers12,13 were honored by being included in a list of 25 papers the "Highlights of 2006" in Physics in Medicine and Biology. As stated by the publisher: "I am delighted to present a special collection of articles that highlight the very best research published in Physics in Medicine and Biology in 2006. Articles were selected for their presentation of outstanding new research, receipt of the highest praise from our international referees, and the highest number of downloads from the journal website.
-
-One of the reviewers was the late Dr. Robert ("Bob") Wagner – he had an open-minded approach to imaging science that is lacking these days, and a unique writing style. The author reproduces one of his comments with minor edits, as it pertains to the most interesting and misunderstood prediction of the RSM, namely its constrained end-point property.
-
-I'm thinking here about the straight-line piece of the ROC curve from the max to (1, 1). 
+> I'm thinking here about the straight-line piece of the ROC curve from the max to (1, 1). 
 1.	This can be thought of as resulting from two overlapping uniform distributions (thus guessing) far to the left in decision space (rather than delta functions). Please think some more about this point--because it might make better contact with the classical literature. 
 2.	BTW -- it just occurs to me (based on the classical early ROC work of Swets & co.) -- that there is a test that can resolve the issue that I struggled with in my earlier remarks. The experimenter can try to force the reader to provide further data that will fill in the space above the max point. If the results are a straight line, then the reader would just be guessing -- as implied by the present model. If the results are concave downward, then further information has been extracted from the data. This could require a great amount of data to sort out--but it's an interesting point (at least to me).
 
 
-Dr. Wagner made two interesting points. With his passing, the author has been deprived of the penetrating and incisive evaluation of his ongoing work, which the author deeply misses. Here is the author's response (ca. 2006):
+Dr. Wagner made two interesting points. Here is the author's response (ca. 2006):
 
-The need for delta functions at negative infinity can be seen from the following argument. Let us postulate two constrained width pdfs with the same shapes but different areas, centered at a common value far to the left in decision space, but not at negative infinity. These pdfs would also yield a straight-line portion to the ROC curve. However, they would be inconsistent with the search model assumption that some images yield no decision variable samples and therefore cannot be rated in bin ROC:2 or higher. Therefore, if the distributions are as postulated above then choice of a cutoff in the neighborhood of the overlap would result in some of these images being rated 2 or higher, contradicting the RSM assumption.  The delta function pdfs at negative infinity are seen to be a consequence of the search model. 
+> The need for delta functions at negative infinity can be seen from the following argument. Let us postulate two constrained width pdfs with the same shapes but different areas, centered at a common value far to the left in decision space, but not at negative infinity. These pdfs would also yield a straight-line portion to the ROC curve. However, they would be inconsistent with the search model assumption that some images yield no decision variable samples and therefore cannot be rated in bin ROC:2 or higher. Therefore, if the distributions are as postulated above then choice of a cutoff in the neighborhood of the overlap would result in some of these images being rated 2 or higher, contradicting the RSM assumption.  The delta function pdfs at negative infinity are seen to be a consequence of the search model. 
 
-One could argue that when the observer sees nothing to report then he starts guessing and indeed this would enable the observer to move along the dashed portion of the curve. This argument implies that the observer knows when the threshold is at negative infinity, at which point the observer turns on the guessing mechanism (the observer who always guesses would move along the chance diagonal). In the author's judgment, this is unreasonable. The existence of two thresholds, one for moving along the non-guessing portion and one for switching to the guessing mode would require abandoning the concept of a single decision rule. To preserve this concept one needs the delta functions at negative infinity.
+In hindsight I should never have introduced the delta functions and simply accepted the pdfs not integrating to unity for the simple reason that all cases do not generate decision variable samples.
+
+> One could argue that when the observer sees nothing to report then he starts guessing and indeed this would enable the observer to move along the dashed portion of the curve. This argument implies that the observer knows when the threshold is at negative infinity, at which point the observer turns on the guessing mechanism (the observer who always guesses would move along the chance diagonal). In the author's judgment, this is unreasonable. The existence of two thresholds, one for moving along the non-guessing portion and one for switching to the guessing mode would require abandoning the concept of a single decision rule. To preserve this concept one needs the delta functions at negative infinity.
 
 Regarding Dr. Wagner's second point, it would require a great amount of data to sort out whether forcing the observer to guess would fill in the dashed portion of the curve, but the author doubts it is worth the effort. Given the bad consequences of guessing (incorrect recalls) the author believes that in the clinical situation, the radiologist will never guess. If the radiologist sees nothing to report, nothing will be reported. In addition, the author believes that forcing the observer, to prove some research point, is not a good idea. 
 
 
-
-
-
-
-
-
-
-
-
-
 ## References {#rsm-evidence-references}
-1.	Chakraborty DP. Computer analysis of mammography phantom images (CAMPI): An application to the measurement of microcalcification image quality of directly acquired digital images. Medical Physics. 1997;24(8):1269-1277.
-2.	Chakraborty DP, Eckert MP. Quantitative versus subjective evaluation of mammography accreditation phantom images. Medical Physics. 1995;22(2):133-143.
-3.	Chakraborty DP, Yoon H-J, Mello-Thoms C. Application of threshold-bias independent analysis to eye-tracking and FROC data. Academic Radiology. 2012;In press.
-4.	Chakraborty DP. ROC Curves predicted by a model of visual search. Phys Med Biol. 2006;51:3463–3482.
-5.	Chakraborty DP. A search model and figure of merit for observer data acquired according to the free-response paradigm. Phys Med Biol. 2006;51:3449–3462.
+
 
