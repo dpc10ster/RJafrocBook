@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-12-26}
+\date{2020-12-27}
 
 \begin{document}
 \maketitle
@@ -6385,7 +6385,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.3652904          1   0.24262271}
+\CommentTok{#> 1    1.2179848          1   0.26975649}
 \end{Highlighting}
 \end{Shaded}
 
@@ -13067,10 +13067,10 @@ More than 55 years ago, \citep{RN2635} noticed in two non-medical imaging contex
 \item
   The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. In binormal parameter terms, \(b\) decreases as \(a\) increases.
 \item
-  The ratio \(R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)\), henceforth referrd to as the Swets Ratio, is approximately constant for a fixed set of experimental conditions. \(\Delta(mean)\) is the separation of the means of the two distributions and \(\Delta(\sigma)\) is the difference of the two standard deviations (diseased minus non-diseased). In binormal parameter terms, \(R_{Swets} \equiv \frac{a}{1-b}\) is approximately constant \footnote{The separation is \(a\), the wider signal distribution has standard deviation unity while the narrower noise distribution has standard deviation \(b\).}.
+  The ratio \(R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)\), henceforth referrd to as the Swets Ratio, has been conjectured to be approximately constant for a fixed set of experimental conditions. \(\Delta(mean)\) is the separation of the means of the two distributions and \(\Delta(\sigma)\) is the difference of the two standard deviations (diseased minus non-diseased). In binormal parameter terms, \(R_{Swets} \equiv \frac{a}{1-b}\) is supposed to be approximately constant \footnote{The separation is \(a\), the wider signal distribution has standard deviation unity while the narrower noise distribution has standard deviation \(b\).}.
 \end{itemize}
 
-The second observation implies a peculiar relation between the \(a\) and \(b\) parameters. Recall Figure \ref{fig:BinormalModel-ab2-mu-sigma}, Plot A, which shows the definitions of the binormal \(a\) and \(b\) parameters. The diseased pdf has unit standard deviation, while the non-diseased has standard deviation \(b < 1\), and the separation of the two distributions is \(a\). The constancy of Swets Ratio implies that as \(a\) increases \(b\) decreases (which implies that the first Swets observation is actually contained in the second) so as to increase \(1-b\) by the same factor. Since \(b\) is a standard deviation, i.e., \(b > 0\), it can only shrink so far, and eventually, for large enough \(a\), the presumed constancy must fail. In particular, as \(b\) approaches unity (corresponding to the equal variance binormal model) the ratio must approach infinity. Nevertheless, it is interesting to use the RSM to test this hypothesis. Another reason is that Don Dorfman used this to justify the bigamma model \citep{RN100}, and I am an admirer of the late Professor Dorfman's work.
+The second observation implies a peculiar relation between the \(a\) and \(b\) parameters. Recall Figure \ref{fig:BinormalModel-ab2-mu-sigma}, Plot A, which shows the definitions of the binormal \(a\) and \(b\) parameters. The diseased pdf has unit standard deviation, while the non-diseased has standard deviation \(b < 1\), and the separation of the two distributions is \(a\). The constancy of Swets Ratio implies that as \(a\) increases \(b\) decreases (which implies that the first Swets observation is actually contained in the second) so as to increase \(1-b\) by the same factor. Since \(b\) is a standard deviation, i.e., \(b > 0\), it can only shrink so far, and eventually, for large enough \(a\), the presumed constancy must fail. In particular, as \(b\) approaches unity (corresponding to the equal variance binormal model) the ratio must approach infinity. Nevertheless, it is interesting to use the RSM to test this hypothesis.
 
 Testing over a range of \(\mu\) using binormal model maximum likelihood fitting is direct but cumbersome and subject to failure as it depends on convergence of the binormal model algorithm, which is problematical for larger values of \(\mu\), which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas over the continuous sections. Normalization was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. Since the binormal model is not used, the effective binormal parameters will henceforth be referred to as \(a_{eff}\) and \(b_{eff}\). In this notation, the Swets Ratio is \(R_{Swets} \equiv \frac{a_{eff}}{1-b_{eff}}\).
 
@@ -13103,21 +13103,9 @@ R_{Swets} = & \frac{a_{eff}}{1 - b_{eff} }
 
 Varying experimental conditions were simulated by individually varying two of the three parameters of the RSM under the constraint that the RSM predicted AUC (assuming \(\zeta_1 = -\infty\)) remains constant at a specified value. Without this constraint, variation of a single parameter, e.g., \(\mu\), would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. Rather, we assume that observers characterized by different RSM parameters nevertheless converge to roughly the same RSM-AUCs. In other words, they trade deficiencies in one area (e.g., finding too many NLs, large \(\lambda\)) with increased performance in other areas (e.g., finding more lesions, i.e., larger \(\nu\), and/or greater perceptual signal to noise ratio, i.e., larger \(\mu\)).
 
-The number of lesions per diseased case was set to one. The function \texttt{FindParamFixAuc()} finds the missing RSM parameter, indicated by initializing it with \texttt{NA}. The function \texttt{effectiveAB()} calculates the separation \(a_{eff}\) and standard deviation ratio \(b_{eff}\) (non-diseased to diseased) of the two distributions, after normalizing each to unit area.
+In the code, the number of lesions per diseased case was set to one. The function \texttt{FindParamFixAuc()} finds the missing RSM parameter, indicated by initializing it with \texttt{NA}. The function \texttt{effectiveAB()} calculates the separation \(a_{eff}\) and standard deviation ratio \(b_{eff}\) (non-diseased to diseased) of the two distributions, after normalizing each to unit area.
 
-Shown first are three tables corresponding to RSM-AUC = 0.7.
-
-\begin{itemize}
-\tightlist
-\item
-  In Table \ref{tab:rsm-evidence-table1A} \(\lambda = 2\) is held constant while the other two parameters are varied to keep AUC at 0.7.
-\item
-  In Table \ref{tab:rsm-evidence-table1B} \(\nu = 1\) is held constant.
-\item
-  In Table \ref{tab:rsm-evidence-table1C} \(\mu = 2\) is held constant.
-\end{itemize}
-
-Perhaps the best way of illustrating the near constancy of the Swets Ratio is by fixing \(\lambda = 2\) and varying \(\mu\) and \(\nu\) to keep AUC constant, as in Table \ref{tab:rsm-evidence-table1A}. This results in a large range over which \(\mu\) is varied, from 2.000 to 5.000, and a corresponding large range for \(a_{eff}\), from 0.7717 to 1.3042. The RSM \(\nu'\) parameter is relatively constant, ranging from 0.4000 to 0.4556. Note tha only the \emph{physical (i.e., primed)} quantities are shown in the table. The RSM \(\mu\) parameter controls the separation of non-diseased and diseased pdfs and as such directly affects the binormal \(a_{eff}\) parameter. This table shows that the Swets Ratio is near constant, ranging from 2.162 to 3.136. Note the increase in the ratio for the largest value of \(b_{eff}\), which, as noted earlier, is as expected.
+Perhaps the best way of illustrating the near constancy of the Swets Ratio is by fixing \(\lambda = 2\) and varying \(\mu\) and \(\nu\) to keep AUC constant, as in Table \ref{tab:rsm-evidence-table1A}. This results in a large range over which \(\mu\) is varied, from 2.000 to 5.000. The RSM \(\mu\) parameter controls the separation of non-diseased and diseased pdfs and as such directly affects the binormal \(a_{eff}\) parameter. Hence the corresponding large range for \(a_{eff}\), from 0.7717 to 1.3042. The RSM \(\nu'\) parameter is relatively constant, ranging from 0.4000 to 0.4556. Note that the \emph{physical \(\lambda'\) and \(\nu'\) (i.e., primed) quantities} are shown in the table. This table shows that the Swets Ratio is near constant, ranging from 2.162 to 3.136. Note the increase in the ratio for the largest value of \(b_{eff}\), i.e., that closest to unity, which, as noted earlier, is as expected.
 
 \begin{table}[H]
 
@@ -13151,7 +13139,7 @@ $AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $\frac{a_{eff}}{1-
 \end{tabular}}
 \end{table}
 
-In Table \ref{tab:rsm-evidence-table1B} the parameter \(\nu = 1\) is held fixed while \(\mu\) and \(\lambda\) are varied. This time \(a_{eff}\) is relatively constant, ranging from 0.5914 to 0.7007, while \(b_{eff}\) is very close to unity, ranging from 0.9518 to 0.9767, leading to the very large values of the Swets Ratio, ranging from 14.54 to 25.96.
+In Table \ref{tab:rsm-evidence-table1B} the parameter \(\nu = 1\) is held fixed while \(\mu\) and \(\lambda\) are varied. This time \(a_{eff}\) is relatively constant, ranging from 0.5914 to 0.7007, while \(b_{eff}\) is very close to unity, ranging from 0.9518 to 0.9767, leading to the very large and varying values of the Swets Ratio, ranging from 14.54 to 25.96.
 
 \begin{table}[H]
 
@@ -13185,7 +13173,9 @@ $AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $\frac{a_{eff}}{1-
 \end{tabular}}
 \end{table}
 
-In Table \ref{tab:rsm-evidence-table1C} \(\mu = 2\) is held constant but the other two parameters \(\lambda, \nu\) are varied to keep AUC constant. This time the inverse dependence between \(a_{eff}\) and \(b_{eff}\) is \emph{not} observed. While \(a_{eff}\) decreases monotonically as one moves down the column, \(b_{eff}\) shows a minimum around the seventh row of this table.
+In Table \ref{tab:rsm-evidence-table1C}, the final example, \(\mu = 2\) is held constant but the other two parameters \(\lambda, \nu\) are varied to keep AUC constant. This time the inverse dependence between \(a_{eff}\) and \(b_{eff}\) is \emph{not} observed: while \(a_{eff}\) decreases monotonically as one moves down the column, \(b_{eff}\) shows a minimum around the seventh row of this table. Except for the first column, which corresponds to the largest value of \(b_{eff}\), the Swets Ratio is near constant.
+
+In practice datasets with \(b > 1\) are occasionally observed. These would lead to a negative Swets Ratio.
 
 \begin{table}[H]
 
@@ -13219,117 +13209,7 @@ $AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $\frac{a_{eff}}{1-
 \end{tabular}}
 \end{table}
 
-Shown next are three tables corresponding to RSM-AUC = 0.8.
-
-\begin{itemize}
-\tightlist
-\item
-  In Table \ref{tab:rsm-evidence-table2A} \(\lambda = 2\) is held constant while the other two parameters are varied to keep AUC at 0.8.
-\item
-  In Table \ref{tab:rsm-evidence-table2B} \(\nu = 1\) is held constant.
-\item
-  In Table \ref{tab:rsm-evidence-table2C} \(\mu = 2\) is held constant.
-\end{itemize}
-
-\begin{table}[H]
-
-\caption{\label{tab:rsm-evidence-table2A}Here $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.}
-\centering
-\resizebox{\linewidth}{!}{
-\begin{tabular}[t]{lllllll}
-\toprule
-$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $\frac{a_{eff}}{1-b_{eff}}$\\
-\midrule
- & 2.000 & 1.0000 & 0.6834 & 1.126 & 0.8106 & 5.946\\
-\cmidrule{2-7}
- & 2.214 & 0.9032 & 0.6566 & 1.178 & 0.7649 & 5.011\\
-\cmidrule{2-7}
- & 2.452 & 0.8158 & 0.6365 & 1.239 & 0.7208 & 4.439\\
-\cmidrule{2-7}
- & 2.714 & 0.7368 & 0.6221 & 1.310 & 0.6785 & 4.074\\
-\cmidrule{2-7}
- & 3.005 & 0.6655 & 0.6125 & 1.389 & 0.6382 & 3.839\\
-\cmidrule{2-7}
- & 3.327 & 0.6011 & 0.6063 & 1.476 & 0.6001 & 3.691\\
-\cmidrule{2-7}
- & 3.684 & 0.5429 & 0.6029 & 1.570 & 0.5643 & 3.603\\
-\cmidrule{2-7}
- & 4.079 & 0.4903 & 0.6011 & 1.670 & 0.5305 & 3.557\\
-\cmidrule{2-7}
- & 4.516 & 0.4429 & 0.6004 & 1.775 & 0.4987 & 3.540\\
-\cmidrule{2-7}
-\multirow{-10}{*}{\raggedright\arraybackslash 0.8} & 5.000 & 0.4000 & 0.6001 & 1.883 & 0.4688 & 3.545\\
-\bottomrule
-\end{tabular}}
-\end{table}
-
-\begin{table}[H]
-
-\caption{\label{tab:rsm-evidence-table2B}Here $\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.}
-\centering
-\resizebox{\linewidth}{!}{
-\begin{tabular}[t]{lllllll}
-\toprule
-$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $\frac{a_{eff}}{1-b_{eff}}$\\
-\midrule
- & 1.354 & 0.7383 & 0.7419 & 0.9944 & 0.9446 & 17.95\\
-\cmidrule{2-7}
- & 1.402 & 0.8532 & 0.7538 & 1.0062 & 0.9412 & 17.11\\
-\cmidrule{2-7}
- & 1.451 & 0.9855 & 0.7657 & 1.0184 & 0.9378 & 16.38\\
-\cmidrule{2-7}
- & 1.502 & 1.1383 & 0.7774 & 1.0306 & 0.9346 & 15.75\\
-\cmidrule{2-7}
- & 1.555 & 1.3148 & 0.7889 & 1.0426 & 0.9312 & 15.16\\
-\cmidrule{2-7}
- & 1.610 & 1.5191 & 0.8000 & 1.0540 & 0.9277 & 14.58\\
-\cmidrule{2-7}
- & 1.665 & 1.7561 & 0.8108 & 1.0646 & 0.9236 & 13.94\\
-\cmidrule{2-7}
- & 1.721 & 2.0311 & 0.8212 & 1.0738 & 0.9186 & 13.19\\
-\cmidrule{2-7}
- & 1.779 & 2.3510 & 0.8311 & 1.0812 & 0.9119 & 12.28\\
-\cmidrule{2-7}
-\multirow{-10}{*}{\raggedright\arraybackslash 0.8} & 1.836 & 2.7234 & 0.8405 & 1.0862 & 0.9029 & 11.19\\
-\bottomrule
-\end{tabular}}
-\end{table}
-
-\begin{table}[H]
-
-\caption{\label{tab:rsm-evidence-table2C}Here $\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.8. The last column lists the Swets Ratio. Note the lack of an inverse relation between $a_{eff}$ and $b_{eff}$.}
-\centering
-\resizebox{\linewidth}{!}{
-\begin{tabular}[t]{lllllll}
-\toprule
-$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $\frac{a_{eff}}{1-b_{eff}}$\\
-\midrule
- &  & 0.05000 & 0.6047 & 1.826 & 0.9476 & 34.849\\
-\cmidrule{3-7}
- &  & 0.07722 & 0.6072 & 1.752 & 0.9265 & 23.857\\
-\cmidrule{3-7}
- &  & 0.11927 & 0.6111 & 1.659 & 0.9009 & 16.744\\
-\cmidrule{3-7}
- &  & 0.18420 & 0.6170 & 1.547 & 0.8727 & 12.152\\
-\cmidrule{3-7}
- &  & 0.28449 & 0.6258 & 1.426 & 0.8453 & 9.215\\
-\cmidrule{3-7}
- &  & 0.43938 & 0.6391 & 1.305 & 0.8233 & 7.386\\
-\cmidrule{3-7}
- &  & 0.67860 & 0.6587 & 1.199 & 0.8110 & 6.344\\
-\cmidrule{3-7}
- &  & 1.04807 & 0.6869 & 1.119 & 0.8112 & 5.929\\
-\cmidrule{3-7}
- &  & 1.61870 & 0.7264 & 1.075 & 0.8241 & 6.112\\
-\cmidrule{3-7}
-\multirow{-10}{*}{\raggedright\arraybackslash 0.8} & \multirow{-10}{*}{\raggedright\arraybackslash 2} & 2.50000 & 0.7801 & 1.067 & 0.8448 & 6.877\\
-\bottomrule
-\end{tabular}}
-\end{table}
-
-Similar comments apply to the tables for AUC = 0.8. As long as \(\mu\) is varied over a wide range, as in Tables \ref{tab:rsm-evidence-table2A} there is an inverse dependence between \(a_{eff}\) and \(b_{eff}\) and the Swets Ratio is relatively consntant. When \(\mu\) is held constant, as in Table \ref{tab:rsm-evidence-table2C}, the inverse dependence is not present.
-
-Swets et al observations are based on only two datasets (as best as I can tell) and their observed value \(\frac{a}{1-b} \approx 4\) is probably not generally applicable. Nevertheless, it is a validation that the RSM predicts the inverse dependence of the binormal \(a\) and \(b\) parameters and the near constancy of the Swets Ratio as long as the \(\mu\) parameter is varied over a wide range.
+Swets et al observations are based on only two datasets (as best as I can tell) and their observed value was \(\frac{a}{1-b} \approx 4\). As shown above, depending on the value of \(b\), the ratio can reach very large values if \(b \rightarrow 1\), or even negative values if \(b > 1\). Therefore, the Swets Ratio observation is probably not generalizable. Nevertheless, as long as the \(\mu\) parameter is varied over a wide range and AUC is held constant, the RSM does predict the inverse dependence of the binormal \(a\) and \(b\) parameters and the near constancy of the Swets Ratio.
 
 \hypertarget{explanation-of-data-degeneracy}{%
 \section{Explanation of data degeneracy}\label{explanation-of-data-degeneracy}}
