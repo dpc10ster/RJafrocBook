@@ -1,0 +1,242 @@
+# RSM fitting {#rsm-fitting}
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+library(seqinr)
+library(RJafroc)
+library(ggplot2)
+library(gridExtra)
+library(binom)
+library(here)
+```
+
+## Introduction {#rsm-fitting-intro}
+
+The radiological search model (RSM) is based on what is known, via eye-tracking measurements, about how radiologists look at medical images [@RN1663]. The ability of this model to predict search and lesion-classification expertise was described in TBA Chapter 17. If one could estimate search and lesion-classification expertise from clinical datasets then one would know which of them is limiting performance. This would provide insight into the decision making efficiency of observers. For this potential to be realized, one has to be able to reliably estimate parameters of the RSM from data, and this turned out to be a difficult problem. 
+
+To put progress in this area in context a brief historical background is needed. The author has worked on and off on the FROC estimation problem since 2002, and two persons (Dr. Hong-Jun Yoon and Xuetong Zhai) can attest to the effort. Initial attempts focused on fitting the FROC curve, in the (subsequently shown to be mistaken) belief that this was using *all* the data. In fact unmarked non-diseased cases, which are perfect decisions, are not taken into account in the FROC plot. In addition, there are degeneracy issues, which make parameter estimation difficult except in uninteresting situations. Early work involved maximization of the FROC likelihood function. This method was applied to seven designer-level CAD datasets. With CAD data one has a large number of marks and unmarked cases are relatively rare. However, only the CAD designer knows of their existence since in the clinic only a small fraction of the marks, those whose z-samples exceed a manufacturer-selected threshold, are actually shown to the radiologist. In other words the full FROC curve, extending to the end-point, is available to the CAD algorithm designer, which makes estimation of the end-point defining parameters $\lambda', \nu'$ trivial. Estimating the remaining parameter of the RSM is then also relatively easy. 
+
+It was gradually recognized that the FROC curve based method worked only for designer level CAD data, and not for human observer data. Consequently, subsequent effort focused on ROC curve-based fitting, and this proved successful at fitting radiologist datasets, where detailed definition of the ROC curve is not available. A preliminary account of this work can be found in a conference proceeding [@RN2125]. 
+
+The reader may be surprised to read that the research eventually turned to ROC curve based fitting, which implies that one does not even need FROC data to estimate RSM parameters. The author has previously stated that the ROC paradigm ignores search, so how can one estimate search-model parameters from ROC data? The reason is that the *shape* of the ROC curve and the position of the upper-most observed operating point, depend on the RSM parameters, and this information can be used for a successful fitting method that is not susceptible to degeneracy. In addition, the algorithm to be described below has no problems with fitting degenerate datasets ^[Degenerate datasets are defined as those that do not provide any interior data points, i.e., all operating points lie on the edges of the ROC square, i.e., enclosed by the four lines defined by FPF = 0 or 1 and TPF = 0 or 1.].
+STOP
+The chapter starts with fitting FROC curves. This is partly for historical reasons and to make contact with a method used by CAD designers. Then focus shifts to fitting ROC curves and comparing the RSM-based method to existing methods, namely the proper ROC 6,7 (PROPROC) and the contaminated binormal model8-10 (CBM) methods, both of which are proper ROC fitting models. These are described in more detail in Chapter 20. The comparison is based on a large number of interpretations, namely, 14 datasets comprising 43 modalities, 80 readers and 2012 cases, most of which are from the author's international collaborations. The datasets are described in Online Chapter 24. Besides providing further evidence for the validity of the RSM, the estimates of search and lesion-classification performance derived from the fitted parameters demonstrate that there is information in ROC data that is currently ignored by analyses that do not account for search performance. Specifically, it shows that search performance is the bottleneck that is currently limiting radiologist performance. This is the scientific significance of the ability to fit the RSM to ROC data.
+
+The ability to fit RSM to clinical datasets is critical to sample size estimation – this was the practical reason why the RSM fitting problem had to be solved. Sample size estimation requires relating the wAFROC-AUC FOM to the corresponding ROC-AUC FOM in order to obtain a physically meaningful effect-size. Lacking a mathematical relationship between them, comparing the effect-sizes in the two units would be like comparing "apples and oranges". A mathematical relation is only possible if one has a parametric model that predicts both ROC and wAFROC curves, as does the RSM, Chapter 17. Therefore, this chapter concludes with sample size estimation for FROC studies using the wAFROC FOM. However, as long as one can predict the appropriate operating characteristic using RSM parameters, the method is readily extended to other paradigms11, e.g., the location ROC (LROC) and the region of interest (ROI) paradigms.
+
+A word of advice to the reader: this chapter may not be the easiest to assimilate. The author has spent considerable effort in the organization and writing of this chapter to make it as accessible as possible, but it will need some effort from the reader to understand the material. Since this is a key chapter, the author believes the effort will be worth it.
+
+
+
+## FROC likelihood function {#rsm-fitting-froc-likelihood}
+Recall that the likelihood function is the probability of observing the data as a function of the parameter values. FROC notation was summarized in Table 13.1. Thresholds   were defined, where   is the number of FROC bins, with  , and  . Since each z-sample is obtained by sampling an appropriately centered unit-variance normal distribution, the probability   that a latent NL will be marked and rated in FROC bin r, and the corresponding probability   that a latent LL will be marked and rated in FROC bin r, are given by: 
+
+ 		.	(18.1)
+
+Understanding these equations is easy. The CDF function evaluated at a threshold is the probability that a z-sample is less than the threshold, i.e.,  ; the 1-subscript corresponds to the non-diseased location level truth state (s = 1). The first equation is the difference between the CDF functions of a unit-normal distribution evaluated at the two thresholds. This is the probability that the NL z-sample falls in bin FROC: r. Likewise, since  , the second equation gives the probability that the LL z-sample falls in bin FROC: r; the 2-subscript corresponds to the diseased location level truth state (s = 2). The probabilities  ,   each sum to unity when all bins, including the zero bin, are included. 
+
+Since NL and LL events are assumed independent, the contributions to the log likelihood function can be separated, and one need not enumerate counts at the individual case-level; instead, in the description that follows, one enumerates NL and LL counts in the various bins over the whole dataset.
+
+
+### Contribution of NLs {#rsm-fitting-froc-nls}
+
+Define n (an unknown random non-negative integer) as the total number of latent NLs in the dataset; the observed NL counts vector is  . Here  is the total number of NL counts in FROC ratings bin r,  , is the (unknown) number of unmarked latent NLs and N is the total number of observed NLs in the dataset. The probability   of observing the NL counts vector   is (the factorials come from the multinomial distribution: 
+
+ 		.	(18.2)
+	
+Since n is a random integer, the above probability needs to be averaged over its Poisson distribution, i.e., one is calculating the expected value, yielding:
+
+ 		.	(18.3)
+
+In this expression   is the total number of cases. The   of the Poisson distribution yields the probability of n counts from a Poisson distribution with mean  ; the multiplication by the total number of cases is required because one is counting the total number of latent NLs over the entire dataset, not per case. The lower limit on n is needed because n cannot be smaller than N, the total number of observed NL counts. To summarize, the left hand side of Eqn. (18.3) is the probability of observing the NL counts vector   as a function of RSM parameters. Not surprisingly, since NLs are sampled from a zero-mean normal distribution, the   parameter does not enter the above expression. 
+
+### Contribution of LLs {#rsm-fitting-froc-lls}
+Likewise, define l (a non-negative random integer) the total number of latent LLs in the dataset and the LL counts vector is  . Here  is the number of LL counts in FROC ratings bin r,  is the (known) number of unmarked latent LLs and L is the total number of observed LLs in the dataset. The probability   of observing the LL counts vector   is:
+
+ 		.	(18.4)
+
+The above probability needs to be averaged over the binomial distribution of l:
+
+ 	.	(18.5)
+
+In this expression   is the total number of lesions in the dataset and the lower limit on l is needed because it cannot be smaller than L, the total number of observed LLs. Performing the two summations using Maple, multiplying the two probabilities, Eqn. (18.3) and Eqn. (18.5), and taking the logarithm yields the final expression4 for the log-likelihood function: 
+
+ 	.	(18.6)
+
+
+
+### Degeneracy problems {#rsm-fitting-froc-degeneracy}
+
+The product   reveals degeneracy : the effect of increasing   can be counter balanced by increasing  ; increasing   yields more latent NLs but increasing   results in fewer of them being marked. The two possibilities cannot be distinguished. A similar degeneracy occurs in the term involving the product  , where increasing   can be counter balanced by decreasing  , i.e., by increasing  . Again, the effect of increasing   is to produce more latent LLs, but increasing   results in fewer of them being marked. This is a fundamental problem with fitting RSM FROC curves to radiologist FROC data.
+
+	
+
+## IDCA Likelihood function {#rsm-fitting-froc-idca}
+In the limit  ,  ,  , and Eqn. (18.6) reduces to (notice that in this limit the degeneracies described above vanish):
+
+ 	.	(18.7)
+
+The superscript IDCA12 comes from "initial detection and candidate analysis". All CAD algorithms consist of an initial detection stage, corresponding the search stage of the RSM, which identifies possible lesion candidates. In the second stage, corresponding to the lesion-classification stage of the RSM, the algorithm analyzes each candidate lesion and calculates a probability of malignancy. If probability of malignancy exceeds a threshold value selected by the CAD manufacturer, and this is accomplished based on a compromise between sensitivity and specificity, the location of the candidate lesion is cued (i.e., shown) to the radiologist, Fig. 18.1. 
+
+ 
+Fig. 18.1: A typical 4-view display of a patient mammogram with the CAD cues (the red arrows) turned on. In practice the CAD cues are initially turned off, the radiologist interprets the case without CAD, and subsequently the cues are shown and the radiologist is free to use or ignore the CAD marks in revising their interpretation. The algorithm actually found many more candidate lesions but only the ones with probability of malignancy exceeding the CAD manufacturer's threshold were shown.
+
+
+According to Eqn. (17.30), in the limit   the observed end-point x, y coordinates of the FROC curve represent estimates of  , respectively: 
+
+ 	.	(18.8)
+
+In other words, if   then two of the parameters of the RSM are trivially determined from the location of the observed end-point. Suppressing all known (i.e., parameter independent) terms, the log-likelihood function, Eqn. (18.6), effectively reduces to:
+
+ 	.	(18.9)
+
+The additional terms in Eqn. (18.9) are independed of model parameters and can safely be ignored. The equation contains only one parameter, namely  , which is implicit in the definition of  , Eqn. (18.1). 
+
+Eqn. (18.9) resembles the log-likelihood function for the binormal model, since, according to Eqn. (6.37), the LL function for the binormal model with   bins , is: 
+
+  	.	(18.10)
+
+In this equation   is the number of counts in bin r of an ROC study consisting of   bins. Define the unequal-variance binormal model versions of Eqn. (18.1) as follows:
+
+ 		,	(18.11)
+
+Here (a,b) are the parameters the unequal variance binormal model. Then Eqn. (18.10) becomes, 
+
+  	.	(18.12)
+
+* With the identifications   and  , Eqn. (18.12) looks exactly like Eqn. (18.9). This implies that binormal ROC fitting method can be used to determine a and b. Notice that instead of fitting an equal variance binormal model to determine the remaining single remaining -parameter of the RSM, one is using an unequal-variance binormal model with two parameters, a and b. It turns out that the extra parameter helps. It gives some flexibility to the fitting curve to match the data. 
+* Here is the idea: regard the NL marks as non-diseased "cases" ( ) and the LL marks as diseased "cases" ( ). Construct a pseudo-ROC counts table, analogous to Table 4.1, where  is defined as the pseudo-FP counts in ratings bin r, and likewise,  is defined as the pseudo-TP counts in ratings bin r. The pseudo-ROC counts table has the same structure as the ROC counts table, Table 4.1, and can be fitted by the binormal model or other alternatives. 
+* The pseudo-FP and pseudo-TP counts can be used to define pseudo-FPF and pseudo-TPF in the usual manner; the respective denominators are the total number of NL and LL counts, respectively. These probabilities define the pseudo-ROC plot.
+* The prefix "pseudo" is needed because one is regarding localized regions in a case as independent "cases". Since the fitting algorithm assumes each rating is from an independent case, one is violating a basic assumption, but with CAD data it appears one can get away with it, because the method yields good fits, especially with the extra parameter! 
+* The fitted FROC curve is obtained by scaling (i.e., multiplying) the ROC curve along the y-axis by   and along the x-axis by  . The method is illustrated in Fig. 18.2.
+* This method of fitting FROC data was well known to CAD researchers but was first formalized in the referenced paper12.
+ 
+Fig. 18.2: This figure illustrates the IDCA method of fitting designer-level CAD FROC data. In the upper half of the figure, the y-axis of the pseudo-ROC is pseudo-TPF and the x-axis is pseudo-FPF. The method is illustrated for a dataset with four FROC bins  , but in practice CAD yields many more bins. Regarding the NLs and LLs as non-diseased and diseased cases, respectively, one constructs a table similar to Table 4.1, but this time with only four ROC bins (i.e., three non-trivial operating points). This defines the four operating points, the filled circles, including the trivial one at the upper right corner, shown in the upper half of the plot, which is the pseudo-ROC. One fits the ratings counts data using, for example, the binormal model, yielding the continuous line (based on experience the unequal variance binormal model is needed; the equal variance model does not fit as well). In practice, the operating points will not fall exactly on the fitted line. Finally, one scales (or "stretches", or multiplies) the y-axis by  . Likewise, the x-axis is scaled by  . This yields the continuous line shown in the lower half of the figure. Upon adding the FROC operating points one finds that they are magically fitted by the line, which is a scaled replica of the ROC fit in the upper curve. 
+
+Assuming binormal fitting is employed, yielding parameters a and b, the equations defining the IDCA fitted FROC curve are, see Eqn. (6.19) and Eqn. (6.20):
+
+ 	.	(18.13)
+
+The RSM predicted FROC curve is repeated below for convenience,
+
+ 	.	(18.14)
+
+IDCA uses the unequal variance binormal model to fit the pseudo-ROC, which of course opens up the possibility of an inappropriate chance-line crossing and a predicted FROC curve that is non-monotonically increasing with NLF (this is always present with IDCA fits, but one would need to examine the curve near the end-point very closely to see it). In practice, based on several datasets, the unequal variance model gives visually good fits for CAD datasets. 
+
+In fact, IDCA yields excellent fits to some designer-level FROC datasets. However, the issue is not with the quality of the fits, rather the appropriateness of the FROC curve as a measure of performance, especially for human observers. For CAD the method works, so if one wished one could use IDCA to fit designer level CAD FROC data. However, with closely spaced operating points, the empirical FROC would also work and it does not involve any fitting assumptions. The issue is not fitting designer level CAD data but comparing stand-alone performance of designer level CAD to radiologists, and this is not solved by IDCA, which works for designer level CAD, but not for human observers. The latter do not report every suspicious region, no matter how low its confidence level, so the IDCA assumption   is invalid. The problem of analyzing standalone performance of CAD against a group of radiologists interpreting the same cases is addressed in Chapter 22. 
+
+
+## ROC Likelihood function {#rsm-fitting-roc-likelihood}
+The second attempt used the ROC likelihood function. In Chapter 17 expressions were derived for the coordinates (x,y) of the ROC curve predicted by the RSM, see Eqn. (17.8) and Eqn. (17.16). 
+
+ 	.	(18.15)
+ 	.	(18.16)
+
+Let   denote the number of false positives and true positives, respectively, in ROC rating bin r defined by thresholds  .  The range of r shows explicitly that   FROC ratings correspond to   ROC bins. Specifically,   represent the known numbers of non-diseased and diseased cases, respectively, with no marks,   represent the numbers of non-diseased and diseased cases, respectively, with highest rating equal to one, etc. The probability  of a count in non-diseas edROC bin r is:
+
+ 	. 	(18.17)
+
+[One needs to subtract the CDF evaluated at r+1 and r; the CDF is the complement of x, which results in the reversal.] Likewise, the probability   of a count in diseased ROC bin r is:
+
+ 	. 	(18.18)
+
+The likelihood function is, ignoring combinatorial factors that do not depend on parameters:
+
+ 
+
+The log-likelihood function is:
+	
+ 	.	(18.19)
+
+The area   under the parametric RSM-ROC curve was obtained by numerical integration (x and y were defined above):
+
+ 			.	(18.20)
+
+The total number of parameters to be estimated, including the   thresholds, is 3 +  . Maximizing the likelihood function defined by Eqn. (18.19) yields parameter estimates. The Broyden–Fletcher–Goldfarb–Shanno (BFGS) 13-18 minimization algorithm, as implemented as function "mle2()" in the R-package "bbmle"19 was used to minimize the negative of the likelihood function. Since the BFGS algorithm varies each parameter in an unrestricted range  , which would cause problems (e.g., the parameters cannot be negative and thresholds need to be properly ordered), appropriate variable transformations (both "forward" and "inverse") were used so that parameters supplied to the log likelihood function were always in the valid range, irrespective of values chosen by the BFGS algorithm. The algorithm calculates the goodness of fit statistic using the method described in §6.4.2. Because of the additional parameter, the degrees-of-freedom (df) of the chisquare goodness of fit statistic is  – 4, where   is the number of ROC bins . Since the number of operating points is one less than the number of ROC bins, at least 4 operating points are needed in order to be able to calculate a goodness of fit statistic. One can appreciate that calculating goodness of fit for the RSM can fail in situations, where the corresponding statistic can be calculated for binormal model, e.g., three (non – trivial) ROC operating points, corresponding to df = 1 . With FROC data one needs at least four (non – trivial) ROC operating points, each defined by bins with at least five counts in both non-diseased and diseased categories. 
+
+## A serendipitous finding {#rsm-fitting-roc-serendipitious}
+The RSM fitting algorithm was tested against PROPROC and CBM, both of which are proper ROC fitting methods described in Chapter 20. Comparing RSM against the binormal model would be inappropriate, as the latter does not predict proper ROCs.
+
+The RSM and CBM, implemented in RJafroc and PROPROC, implemented in software available from the University of Iowa ROC website, were applied to fourteen (14) datasets described in Online Chapter 24, Online Table 23.1, comprising 43 modalities, 80 readers and 2012 cases. The total number of individual modality-reader combinations is 236, in other words, there are 236 datasets that each of the three algorithms was applied to. Use of these datasets in subsequent publications requires the user to cite the relevant original source references listed in Online Chapter 24 – that is only fair to the researchers who spent many hours conducting these studies.
+
+The RSM has three parameters  ,  , and   (excluding thresholds). CBM has two parameters   and  , detailed in Chapter 20. Both RSM and CBM fitting methods are implemented in RJafroc. PROPROC is a two-parameter model, with parameters  ,  , detailed in Chapter 20. The parameters were obtained by running Windows software20 OR DBM-MRMC 2.5 (Sept. 04, 2014) with PROPROC selected as the curve-fitting method. The relevant results are saved in files that end with "proproc norm area pooled.csv" contained in subdirectory MRMCRuns in the software directory corresponding to this chapter. The files can be opened by RStudio and the values   and   are in the last two columns, see screen-shot Fig. 18.3. For example, for modality 2 and reader 1,   =  0.321and   = 2.35. The .lrc files are the data files in one of the appropriate formats  for OR DBM-MRMC 2.5. 
+
+ 
+Fig. 18.3: Screen shot of the MRMCRuns directory, opened using RStudio, showing the contents of the file VD_MRMC proproc area pooled.csv generated by Windows DBM-MRMC for the VD dataset with PROPROC analysis selected. The last two columns contain the  ,   parameters of the PROPROC algorithm for this dataset. For example, for modality 2 and reader 1,   =  0.321and   = 2.35. Since there are five readers and two modalities, the file has 10 data rows. Row 10, showing results for modality 2 and reader 5, yielded c = 1 and  = 0, corresponding to perfect performance, AUC = 1 [T = treatment; R = reader; area = PROPROC AUC; numCAT = # ROC bins; adjPMean = undocumented value; c =  -parameter; d_a =  -parameter defined in Ref. 6.]
+
+The analysis code is in file mainRSM.R explained in Online Appendix 18.A.1. See (book) Appendix 18.A.1 and (book) Appendix 18.A.2 for further help in understanding the code. Briefly, it reads the dataset file, applies RSM and CBM fitting, reads the appropriate PROPROC parameters from OR DBM-MRMC 2.5 generated files, e.g., Fig. 18.3, and saves all results, and plots, to an object retSmRoc in an appropriately named disk file to prevent overwriting, Fig. 18.4. For example, saveRetRocDOB1 contains the saved retSmRoc object corresponding to dataset # 11 (Online Table 23.1).
+
+ 
+Fig. 18.4: Contents of directory software/ANALYZED/RSM-PROPROC-CBM. Each file contains the results of RSM, PROPROC and CBM fits to the dataset named following the string saveRetRoc. Plotting information (ggplot objects) for RSM ROC and other RSM operating characteristics are also saved, which explains the size of each dataset.
+
+The object retSmRoc contains everything necessary for subsequent analysis, and saves time by not having to reanalyze datasets. For convenience, relevant lines are reproduced below (red highlighting is used to denoted lines explained below) in the following partial code listing. 
+
+The 14 datasets are identified in the code by strings contained in the string-array variable fileNames (line 22 - 23). They are index by f (for filename). Line 24 selects the dataset to be analyzed. In the example shown the "TONY" dataset has been selected21. Line 27 - 28 loads the dataset (loadDataFile) and converts it to an ROC dataset (DfFRoc2HrRoc; for an ROC dataset this function is redundant). The PROPROC parameter values were extracted from the saved text files, described above, using function ProprocFits(), called at line 37. Line 55 implements Eqn. (36) of the Metz and Pan paper6 to calculate   from the retrieved  ,   parameters. The formula will be detailed later in Chapter 20. Line 56 calls function FitRsmRoc(frocData,i,j). The (i,j) indices tell the function which treatment and reader to analyze. The conversion to ROC data is performed internal to this function . Lines 57 – 60 extract the three parameters and the RSM-fitted AUC. Line 61 calls function UtilOperatingPoints() to get the ROC operating points defined by the selected dataset, modality and reader. Line 63 performs the CBM fit using function FitCbmRoc(). 
+
+Since all 14 datasets have already been analyzed and the results saved, all the the preceding analysis is bypassed (see test at line 43 for existence of a pre-analyzed results file) and program execution starts effectively at line 76, which loads the saved results using the load() function, which is the inverse of the save() function used at line 74 for a new dataset. Line 78 – 97 extract parameters of the three fits, and plot three curves, using PlotRsmPropCbm(), with superposed the operating points, with exact binomial confidence intervals. The black line fit is RSM, the red line fit is PROPROC and the blue line fit is CBM. An example is shown in 18.5 (A).
+
+Source the code, with the TONY dataset selected, yielding the following code output and plots like those in Fig. 18.5 (A - L). All generated plots for the TONY dataset are not shown in this figure, which shows instead, a sampling of 12 plots from the 14 datasets. The red font indicates an instance where the chi-square goodness of fit and degrees of freedom could be calculated; the NAs indicate when it could not.
+
+
+Here is an explanation of the variable names used in the code output:     
+
+* mu =   = RSM perceptual SNR parameter
+* lambdaP =  = RSM Poisson parameter (physical)
+* nuP =  = RSM binomial parameter (physical)
+* c =  = PROPROC c-parameter
+* da =  = PROPROC d-parameter
+* alpha =  = CBM alpha parameter, probability that disease is visible 
+* muCbm =  = CBM mu parameter
+* aucRsm = = RSM AUC
+* aucProproc = = PROPROC AUC
+* aucCbm = = CBM AUC
+* chisqr(p-value) =  = RSM goodness of fit statistic p-value
+* df =   = RSM goodness of fit degrees of freedom
+
+For the selected dataset, each line of the output lists  , , , , , , , ,   , . The last two values (chisquare goodness of fit statistic and degrees of freedom) are only listed if they can be calculated. Plots are produced of the predicted ROC curves with superposed operating points and 95% confidence intervals. Detailed results for three datasets ("TONY", "VD" and "FR") are reported here and results for all 236 datasets are in the online Supplemental Material directory corresponding to this chapter. 
+
+* The parameters and AUCs are summarized in file RSM Vs. Others.xlsx. 
+* Plots comparing the three methods are in RSM Vs. Others.docx.
+
+
+For this dataset the goodness of fit could only be calculated for modality 2 and reader 3, p-value = 0.18, df = 1, indicative of a valid fit, and the others are listed as NAs in code output. The output was used to populate the values in Table 18.1. 
+
+Sourcing mainRSM.R two more times, each time with the appropriate dataset specified, yields the results summarized in Table 18.1 for dataset "TONY", in Table 18.2 for (Van Dyke) dataset22 "VD", and in Table 18.3 for (Franken) dataset23 "FR". These tables list, for each modality (i) and reader (j) in the dataset, RSM parameter estimates  , followed by the corresponding PROPROC parameter estimates   and finally the CBM parameter estimates  . Listed next are the RSM, PROPROC and CBM fitted AUCs. The last row lists the averages of the corresponding AUC columns.
+
+
+The serendipitous finding, alluded to in the title to this section, is that all three proper ROC fitting methods yield almost identical AUCs, to within a few percent. This is best appreciated by comparing the numbers in the last (AVG) row of each table. To the best of the author's knowledge the near equality of proper ROC AUCs has not been noted in the literature except in a proceedings paper by the author and a collaborator5. The explanation is deferred to §18.6.
+
+
+
+
+
+
+## Discussion / Summary {#rsm-fitting-discussion-summary}
+Over the years, there have been several attempts at fitting FROC data. Prior to the RSM-based ROC curve approach described in this chapter, all methods were aimed at fitting FROC curves, in the mistaken belief that this approach was using all the data. The earliest was the author's FROCFIT software36. This was followed by Swensson's approach37, subsequently shown to be equivalent to the author's earlier work, as far as predicting the FROC curve was concerned11. In the meantime, CAD developers, who relied heavily on the FROC curve to evaluate their algorithms, developed an empirical approach that was subsequently put on a formal basis in the IDCA method12. 
+
+This chapter describes an approach to fitting ROC curves, instead of FROC curves, using the RSM. Fits were described for 14 datasets, comprising 236 distinct modality-reader combinations. All fits and parameter values are viewable in the online "Supplemental Material" directory corresponding to this chapter. Validity of fit was assessed by the chisquare goodness of fit p-value; unfortunately using adjacent bin combining this could not be calculated in most instances; ongoing research at other ways of validating the fits is underway. PROPROC and CBM were fitted to the same datasets, yielding further validation and insights. One of the insights was the finding that the AUCS were almost identical, with PROPROC yielding the highest value, followed by CBM and closely by the RSM. The PROPROC-AUC / CBM-AUC, vs. RSM-AUC straight-line fits, constrained to go through the origin, had slopes 1.0255 (1.021, 1.030) and 1.0097 (1.006, 1.013), respectively. The R2 values were generally in excess of 0.999, indicative of excellent fits.
+
+On the face of it, fitting the ROC curve seems to be ignoring much of the data. As an example, the ROC rating on a non-diseased case is the rating of the highest-rated mark on that image, or negative infinity if the case has no marks. If the case has several NL marks, only the highest rated one is used. In fact the highest rated mark contains information about the other marks on the case, namely they were all rated lower. There is a statistical term for this, namely sufficiency38. As an example, the highest of a number of samples from a uniform distribution is a sufficient statistic, i.e., it contains all the information contained in the observed samples. While not quite the same for normally distributed values, neglect of the NLs rated lower is not as bad as might seem at first. A similar argument applies to LLs and NLs on diseased cases. The advantage of fitting to the ROC is that the coupling of NLs and LLs on diseased cases breaks the degeneracy problem described in §18.2.3.
+
+The reader may wonder why the author chose not to fit the wAFROC. After all, it is the recommended figure of merit for FROC studies. While the methods described in this chapter are readily adapted to the wAFROC, they are more susceptible to degeneracy issues. The reason is that the y-axis is defined by LL-events, in other words by the   parameters, while the x-axis is defined by the highest rated NL on non-diseased cases, in other words by the   parameter. The consequent decoupling of parameters leads to degeneracy of the type described in §18.2.3. This is avoided in ROC fitting because the y-axis is defined by LLs and NLs, in other words all parameters of the RSM are involved. The situation with the wAFROC is not quite as severe as with fitting FROC curves but it does have a problem with degeneracy. There are some ideas on how to improve the fits, perhaps by simultaneously fitting ROC and wAFROC-operating points, which amounts to putting constraints on the parameters, but for now this remains an open research subject. Empirical wAFROC, which is the current method implemented in RJafroc, is expected to have the same issues with variability of thresholds between modalities as the empirical ROC-AUC, as discussed in §5.9. So the fitting problem has to be solved. There is no need to fit the FROC, as it should never be used as a basis of a figure of merit for human observer studies; this is distinct from the severe degeneracy issues encountered with fitting it for human observers.
+
+The application to a large number (236) of real datasets revealed that PROPROC has serious issues. These were apparently not revealed by the millions of simulations used to validate it39. To quote the cited reference, "The new algorithm never failed to converge and produced good fits for all of the several million datasets on which it was tested". This is a good illustration of why simulations studies are not a good alternative to the method described in §18.5.1.3.  In the author's experience, this is a common misconception in this field, and is discussed further in the following chapter. Fig. 18.5, panels (J), (K) and (L) show that PROPROC, and to a lesser extent CBM, can, under some circumstances, severely overestimate performance. Recommendations regarding usage of PROPROC and CBM are deferred to Chapter 20. 
+
+The current ROC-based effort led to some interesting findings. The near equality of the AUCs predicted by the three proper ROC fitting methods, summarized in Table 18.4, has been noted, which is explained by the fact that proper ROC fitting methods represent different approaches to realizing an ideal observer, and the ideal observer must be unique, §18.6. 
+
+This chapter explores what is termed inter-correlations, between RSM and CBM parameters. Since they have similar physical meanings, the RSM and CBM separation parameters were found to be significantly correlated,   = 0.86 (0.76, 0.89), as were the RSM and CBM parameters corresponding to the fraction of lesions that was actually visible,  = 0.77 (0.68, 0.82). This type of correspondence between two different models can be interpreted as evidence of mutually reinforcing validity of each of the models.
+
+The CBM method comes closest to the RSM in terms of yielding meaningful measures, but the fact that it allows the ROC curve to go continuously to (1,1) implies that it is not completely accounting for search performance, §17.8. There are two components to search performance: finding lesions and avoiding non-lesions. The CBM model accounts for finding lesions, but it does not account for avoiding suspicious regions that are non-diseased, an important characteristic of expert radiologists.
+
+An important finding is the inverse correlation between search performance and lesion-classification performance, which suggest there could be tradeoffs in attempts to optimize them. As a simplistic illustration, a low-resolution gestalt-view of the image1, such as seen by the peripheral viewing mechanism, is expected to make it easier to rapidly spot deviations from the expected normal template described in Chapter 15. However, the observer may not be able to switch effectively between this and the high-resolution viewing mode necessary to correctly classify found suspicious region. 
+
+The main scientific conclusion of this chapter is that search-performance is the primary bottleneck in limiting observer performance. It is unfortunate that search is ignored in the ROC paradigm, and influential persons still continue to advocate ROC methods40 because some have difficutly understanding the concept of a lesion, and in current model observer methods, also advocated by leading scientists . Evidence presented in this chapter should convince researchers to reconsider the focus of their investigations, most of which is currently directed at improving classification performance, which has been shown not to be the bottleneck. Another conclusion is that the three method of fitting ROC data yield almost identical AUCs. Relative to the RSM the PROPROC estimates are about 2.6% larger while CBM estimates are about 1% larger. This was a serendipitous finding that makes sense, in retrospect, but to the best of the author's knowledge is not known in the research community. PROPROC and to a lesser extent CBM are prone to severely overestimating performance in situations where the operating points are limited to a steep ascending section at the low end of false positive fraction scale. This parallels an earlier comment regarding the FROC, namely measurements derived from the steep part of the curve are unreliable, §17.10.1.
+
+
+
+
+## References {#rsm-fitting-references}
+
+
