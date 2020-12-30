@@ -684,8 +684,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="27.3" data-path="rsm-fitting.html"><a href="rsm-fitting.html#rsm-fitting-froc-idca"><i class="fa fa-check"></i><b>27.3</b> IDCA Likelihood function</a></li>
 <li class="chapter" data-level="27.4" data-path="rsm-fitting.html"><a href="rsm-fitting.html#rsm-fitting-roc-likelihood"><i class="fa fa-check"></i><b>27.4</b> ROC Likelihood function</a></li>
-<li class="chapter" data-level="27.5" data-path="rsm-fitting.html"><a href="rsm-fitting.html#rsm-fitting-discussion-summary"><i class="fa fa-check"></i><b>27.5</b> Discussion / Summary</a></li>
-<li class="chapter" data-level="27.6" data-path="rsm-fitting.html"><a href="rsm-fitting.html#rsm-fitting-references"><i class="fa fa-check"></i><b>27.6</b> References</a></li>
+<li class="chapter" data-level="27.5" data-path="rsm-fitting.html"><a href="rsm-fitting.html#rsm-fitting-fitrsmroc-implementation"><i class="fa fa-check"></i><b>27.5</b> <code>FitRsmROC</code> implementation</a></li>
+<li class="chapter" data-level="27.6" data-path="rsm-fitting.html"><a href="rsm-fitting.html#rsm-fitting-fitrsmroc-usage-example"><i class="fa fa-check"></i><b>27.6</b> <code>FitRsmROC</code> usage example</a></li>
+<li class="chapter" data-level="27.7" data-path="rsm-fitting.html"><a href="rsm-fitting.html#rsm-fitting-discussion-summary"><i class="fa fa-check"></i><b>27.7</b> Discussion / Summary</a></li>
+<li class="chapter" data-level="27.8" data-path="rsm-fitting.html"><a href="rsm-fitting.html#rsm-fitting-references"><i class="fa fa-check"></i><b>27.8</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="28" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html"><i class="fa fa-check"></i><b>28</b> Three proper ROC fits</a><ul>
 <li class="chapter" data-level="28.1" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-intro"><i class="fa fa-check"></i><b>28.1</b> Introduction</a></li>
@@ -878,43 +880,43 @@ FIGURE B.1: Truth worksheet for file inst/extdata/toyFiles/FROC/frocCr.xlsx
 <div id="the-structure-of-an-froc-dataset" class="section level2">
 <h2><span class="header-section-number">B.5</span> The structure of an FROC dataset</h2>
 <p>The example shown above corresponds to Excel file <code>inst/extdata/toyFiles/FROC/frocCr.xlsx</code> in the project directory.</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="frocdataformat.html#cb189-1"></a>frocCr &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;toyFiles/FROC/frocCr.xlsx&quot;</span>,</span>
-<span id="cb189-2"><a href="frocdataformat.html#cb189-2"></a>                        <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb189-3"><a href="frocdataformat.html#cb189-3"></a>x &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(frocCr, <span class="dt">newExcelFileFormat =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb189-4"><a href="frocdataformat.html#cb189-4"></a><span class="kw">str</span>(x)</span>
-<span id="cb189-5"><a href="frocdataformat.html#cb189-5"></a><span class="co">#&gt; List of 3</span></span>
-<span id="cb189-6"><a href="frocdataformat.html#cb189-6"></a><span class="co">#&gt;  $ ratings     :List of 3</span></span>
-<span id="cb189-7"><a href="frocdataformat.html#cb189-7"></a><span class="co">#&gt;   ..$ NL   : num [1:2, 1:3, 1:8, 1:2] 1.02 2.89 2.21 3.01 2.14 ...</span></span>
-<span id="cb189-8"><a href="frocdataformat.html#cb189-8"></a><span class="co">#&gt;   ..$ LL   : num [1:2, 1:3, 1:5, 1:3] 5.28 5.2 5.14 4.77 4.66 4.87 3.01 3.27 3.31 3.19 ...</span></span>
-<span id="cb189-9"><a href="frocdataformat.html#cb189-9"></a><span class="co">#&gt;   ..$ LL_IL: logi NA</span></span>
-<span id="cb189-10"><a href="frocdataformat.html#cb189-10"></a><span class="co">#&gt;  $ lesions     :List of 3</span></span>
-<span id="cb189-11"><a href="frocdataformat.html#cb189-11"></a><span class="co">#&gt;   ..$ perCase: int [1:5] 2 1 3 2 1</span></span>
-<span id="cb189-12"><a href="frocdataformat.html#cb189-12"></a><span class="co">#&gt;   ..$ IDs    : num [1:5, 1:3] 1 1 1 1 1 ...</span></span>
-<span id="cb189-13"><a href="frocdataformat.html#cb189-13"></a><span class="co">#&gt;   ..$ weights: num [1:5, 1:3] 0.3 1 0.333 0.1 1 ...</span></span>
-<span id="cb189-14"><a href="frocdataformat.html#cb189-14"></a><span class="co">#&gt;  $ descriptions:List of 7</span></span>
-<span id="cb189-15"><a href="frocdataformat.html#cb189-15"></a><span class="co">#&gt;   ..$ fileName     : chr &quot;frocCr&quot;</span></span>
-<span id="cb189-16"><a href="frocdataformat.html#cb189-16"></a><span class="co">#&gt;   ..$ type         : chr &quot;FROC&quot;</span></span>
-<span id="cb189-17"><a href="frocdataformat.html#cb189-17"></a><span class="co">#&gt;   ..$ name         : logi NA</span></span>
-<span id="cb189-18"><a href="frocdataformat.html#cb189-18"></a><span class="co">#&gt;   ..$ truthTableStr: num [1:2, 1:3, 1:8, 1:4] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb189-19"><a href="frocdataformat.html#cb189-19"></a><span class="co">#&gt;   ..$ design       : chr &quot;FCTRL&quot;</span></span>
-<span id="cb189-20"><a href="frocdataformat.html#cb189-20"></a><span class="co">#&gt;   ..$ modalityID   : Named chr [1:2] &quot;0&quot; &quot;1&quot;</span></span>
-<span id="cb189-21"><a href="frocdataformat.html#cb189-21"></a><span class="co">#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;0&quot; &quot;1&quot;</span></span>
-<span id="cb189-22"><a href="frocdataformat.html#cb189-22"></a><span class="co">#&gt;   ..$ readerID     : Named chr [1:3] &quot;0&quot; &quot;1&quot; &quot;2&quot;</span></span>
-<span id="cb189-23"><a href="frocdataformat.html#cb189-23"></a><span class="co">#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:3] &quot;0&quot; &quot;1&quot; &quot;2&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="frocdataformat.html#cb191-1"></a>frocCr &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;toyFiles/FROC/frocCr.xlsx&quot;</span>,</span>
+<span id="cb191-2"><a href="frocdataformat.html#cb191-2"></a>                        <span class="dt">package =</span> <span class="st">&quot;RJafroc&quot;</span>, <span class="dt">mustWork =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb191-3"><a href="frocdataformat.html#cb191-3"></a>x &lt;-<span class="st"> </span><span class="kw">DfReadDataFile</span>(frocCr, <span class="dt">newExcelFileFormat =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb191-4"><a href="frocdataformat.html#cb191-4"></a><span class="kw">str</span>(x)</span>
+<span id="cb191-5"><a href="frocdataformat.html#cb191-5"></a><span class="co">#&gt; List of 3</span></span>
+<span id="cb191-6"><a href="frocdataformat.html#cb191-6"></a><span class="co">#&gt;  $ ratings     :List of 3</span></span>
+<span id="cb191-7"><a href="frocdataformat.html#cb191-7"></a><span class="co">#&gt;   ..$ NL   : num [1:2, 1:3, 1:8, 1:2] 1.02 2.89 2.21 3.01 2.14 ...</span></span>
+<span id="cb191-8"><a href="frocdataformat.html#cb191-8"></a><span class="co">#&gt;   ..$ LL   : num [1:2, 1:3, 1:5, 1:3] 5.28 5.2 5.14 4.77 4.66 4.87 3.01 3.27 3.31 3.19 ...</span></span>
+<span id="cb191-9"><a href="frocdataformat.html#cb191-9"></a><span class="co">#&gt;   ..$ LL_IL: logi NA</span></span>
+<span id="cb191-10"><a href="frocdataformat.html#cb191-10"></a><span class="co">#&gt;  $ lesions     :List of 3</span></span>
+<span id="cb191-11"><a href="frocdataformat.html#cb191-11"></a><span class="co">#&gt;   ..$ perCase: int [1:5] 2 1 3 2 1</span></span>
+<span id="cb191-12"><a href="frocdataformat.html#cb191-12"></a><span class="co">#&gt;   ..$ IDs    : num [1:5, 1:3] 1 1 1 1 1 ...</span></span>
+<span id="cb191-13"><a href="frocdataformat.html#cb191-13"></a><span class="co">#&gt;   ..$ weights: num [1:5, 1:3] 0.3 1 0.333 0.1 1 ...</span></span>
+<span id="cb191-14"><a href="frocdataformat.html#cb191-14"></a><span class="co">#&gt;  $ descriptions:List of 7</span></span>
+<span id="cb191-15"><a href="frocdataformat.html#cb191-15"></a><span class="co">#&gt;   ..$ fileName     : chr &quot;frocCr&quot;</span></span>
+<span id="cb191-16"><a href="frocdataformat.html#cb191-16"></a><span class="co">#&gt;   ..$ type         : chr &quot;FROC&quot;</span></span>
+<span id="cb191-17"><a href="frocdataformat.html#cb191-17"></a><span class="co">#&gt;   ..$ name         : logi NA</span></span>
+<span id="cb191-18"><a href="frocdataformat.html#cb191-18"></a><span class="co">#&gt;   ..$ truthTableStr: num [1:2, 1:3, 1:8, 1:4] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb191-19"><a href="frocdataformat.html#cb191-19"></a><span class="co">#&gt;   ..$ design       : chr &quot;FCTRL&quot;</span></span>
+<span id="cb191-20"><a href="frocdataformat.html#cb191-20"></a><span class="co">#&gt;   ..$ modalityID   : Named chr [1:2] &quot;0&quot; &quot;1&quot;</span></span>
+<span id="cb191-21"><a href="frocdataformat.html#cb191-21"></a><span class="co">#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:2] &quot;0&quot; &quot;1&quot;</span></span>
+<span id="cb191-22"><a href="frocdataformat.html#cb191-22"></a><span class="co">#&gt;   ..$ readerID     : Named chr [1:3] &quot;0&quot; &quot;1&quot; &quot;2&quot;</span></span>
+<span id="cb191-23"><a href="frocdataformat.html#cb191-23"></a><span class="co">#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:3] &quot;0&quot; &quot;1&quot; &quot;2&quot;</span></span></code></pre></div>
 <ul>
 <li>This follows the general description in <strong>TBA chapter xx</strong>. The differences are described below.</li>
 <li>The <code>x$dataType</code> member indicates that this is an <code>FROC</code> dataset.</li>
 <li>The <code>x$lesionVector</code> member is a vector whose contents reflect the number of lesions in each diseased case, i.e., in the current example.</li>
 <li>The <code>x$lesionID</code> member indicates the labeling of the lesions in each diseased case.</li>
 </ul>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="frocdataformat.html#cb190-1"></a>x<span class="op">$</span>lesionID</span>
-<span id="cb190-2"><a href="frocdataformat.html#cb190-2"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="frocdataformat.html#cb192-1"></a>x<span class="op">$</span>lesionID</span>
+<span id="cb192-2"><a href="frocdataformat.html#cb192-2"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
 <ul>
 <li>This shows that the lesions on the first diseased case are labeled 1 and 2. The <code>-Inf</code> is a filler used to denote a missing value. The second diseased case has one lesion labeled 1. The third diseased case has three lesions labeled 1, 2 and 3, etc.</li>
 <li>The <code>lesionWeight</code> member is the clinical importance of each lesion. Lacking specific clinical reasons, the lesions should be equally weighted; this is <em>not</em> true for this toy dataset.</li>
 </ul>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="frocdataformat.html#cb191-1"></a>x<span class="op">$</span>lesionWeight</span>
-<span id="cb191-2"><a href="frocdataformat.html#cb191-2"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="frocdataformat.html#cb193-1"></a>x<span class="op">$</span>lesionWeight</span>
+<span id="cb193-2"><a href="frocdataformat.html#cb193-2"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
 <ul>
 <li>The first diseased case has two lesions, the first has weight 0.3 and the second has weight 0.7. The second diseased case has one lesion with weight 1.The third diseased case has three equally weighted lesions, each with weight 1/3. Etc.</li>
 </ul>
@@ -966,64 +968,64 @@ FIGURE B.3: Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.x
 <ul>
 <li>Consider a much larger dataset, <code>dataset11</code>, with structure as shown below:</li>
 </ul>
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="frocdataformat.html#cb192-1"></a>x &lt;-<span class="st"> </span>dataset11</span>
-<span id="cb192-2"><a href="frocdataformat.html#cb192-2"></a><span class="kw">str</span>(x)</span>
-<span id="cb192-3"><a href="frocdataformat.html#cb192-3"></a><span class="co">#&gt; List of 3</span></span>
-<span id="cb192-4"><a href="frocdataformat.html#cb192-4"></a><span class="co">#&gt;  $ ratings     :List of 3</span></span>
-<span id="cb192-5"><a href="frocdataformat.html#cb192-5"></a><span class="co">#&gt;   ..$ NL   : num [1:4, 1:5, 1:158, 1:4] -Inf -Inf -Inf -Inf -Inf ...</span></span>
-<span id="cb192-6"><a href="frocdataformat.html#cb192-6"></a><span class="co">#&gt;   ..$ LL   : num [1:4, 1:5, 1:115, 1:20] -Inf -Inf -Inf -Inf -Inf ...</span></span>
-<span id="cb192-7"><a href="frocdataformat.html#cb192-7"></a><span class="co">#&gt;   ..$ LL_IL: logi NA</span></span>
-<span id="cb192-8"><a href="frocdataformat.html#cb192-8"></a><span class="co">#&gt;  $ lesions     :List of 3</span></span>
-<span id="cb192-9"><a href="frocdataformat.html#cb192-9"></a><span class="co">#&gt;   ..$ perCase: int [1:115] 6 4 7 1 3 3 3 8 11 2 ...</span></span>
-<span id="cb192-10"><a href="frocdataformat.html#cb192-10"></a><span class="co">#&gt;   ..$ IDs    : num [1:115, 1:20] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb192-11"><a href="frocdataformat.html#cb192-11"></a><span class="co">#&gt;   ..$ weights: num [1:115, 1:20] 0.167 0.25 0.143 1 0.333 ...</span></span>
-<span id="cb192-12"><a href="frocdataformat.html#cb192-12"></a><span class="co">#&gt;  $ descriptions:List of 7</span></span>
-<span id="cb192-13"><a href="frocdataformat.html#cb192-13"></a><span class="co">#&gt;   ..$ fileName     : chr &quot;dataset11&quot;</span></span>
-<span id="cb192-14"><a href="frocdataformat.html#cb192-14"></a><span class="co">#&gt;   ..$ type         : chr &quot;FROC&quot;</span></span>
-<span id="cb192-15"><a href="frocdataformat.html#cb192-15"></a><span class="co">#&gt;   ..$ name         : chr &quot;DOBBINS-1&quot;</span></span>
-<span id="cb192-16"><a href="frocdataformat.html#cb192-16"></a><span class="co">#&gt;   ..$ truthTableStr: num [1:4, 1:5, 1:158, 1:21] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb192-17"><a href="frocdataformat.html#cb192-17"></a><span class="co">#&gt;   ..$ design       : chr &quot;FCTRL&quot;</span></span>
-<span id="cb192-18"><a href="frocdataformat.html#cb192-18"></a><span class="co">#&gt;   ..$ modalityID   : Named chr [1:4] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot;</span></span>
-<span id="cb192-19"><a href="frocdataformat.html#cb192-19"></a><span class="co">#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot;</span></span>
-<span id="cb192-20"><a href="frocdataformat.html#cb192-20"></a><span class="co">#&gt;   ..$ readerID     : Named chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...</span></span>
-<span id="cb192-21"><a href="frocdataformat.html#cb192-21"></a><span class="co">#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="frocdataformat.html#cb194-1"></a>x &lt;-<span class="st"> </span>dataset11</span>
+<span id="cb194-2"><a href="frocdataformat.html#cb194-2"></a><span class="kw">str</span>(x)</span>
+<span id="cb194-3"><a href="frocdataformat.html#cb194-3"></a><span class="co">#&gt; List of 3</span></span>
+<span id="cb194-4"><a href="frocdataformat.html#cb194-4"></a><span class="co">#&gt;  $ ratings     :List of 3</span></span>
+<span id="cb194-5"><a href="frocdataformat.html#cb194-5"></a><span class="co">#&gt;   ..$ NL   : num [1:4, 1:5, 1:158, 1:4] -Inf -Inf -Inf -Inf -Inf ...</span></span>
+<span id="cb194-6"><a href="frocdataformat.html#cb194-6"></a><span class="co">#&gt;   ..$ LL   : num [1:4, 1:5, 1:115, 1:20] -Inf -Inf -Inf -Inf -Inf ...</span></span>
+<span id="cb194-7"><a href="frocdataformat.html#cb194-7"></a><span class="co">#&gt;   ..$ LL_IL: logi NA</span></span>
+<span id="cb194-8"><a href="frocdataformat.html#cb194-8"></a><span class="co">#&gt;  $ lesions     :List of 3</span></span>
+<span id="cb194-9"><a href="frocdataformat.html#cb194-9"></a><span class="co">#&gt;   ..$ perCase: int [1:115] 6 4 7 1 3 3 3 8 11 2 ...</span></span>
+<span id="cb194-10"><a href="frocdataformat.html#cb194-10"></a><span class="co">#&gt;   ..$ IDs    : num [1:115, 1:20] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb194-11"><a href="frocdataformat.html#cb194-11"></a><span class="co">#&gt;   ..$ weights: num [1:115, 1:20] 0.167 0.25 0.143 1 0.333 ...</span></span>
+<span id="cb194-12"><a href="frocdataformat.html#cb194-12"></a><span class="co">#&gt;  $ descriptions:List of 7</span></span>
+<span id="cb194-13"><a href="frocdataformat.html#cb194-13"></a><span class="co">#&gt;   ..$ fileName     : chr &quot;dataset11&quot;</span></span>
+<span id="cb194-14"><a href="frocdataformat.html#cb194-14"></a><span class="co">#&gt;   ..$ type         : chr &quot;FROC&quot;</span></span>
+<span id="cb194-15"><a href="frocdataformat.html#cb194-15"></a><span class="co">#&gt;   ..$ name         : chr &quot;DOBBINS-1&quot;</span></span>
+<span id="cb194-16"><a href="frocdataformat.html#cb194-16"></a><span class="co">#&gt;   ..$ truthTableStr: num [1:4, 1:5, 1:158, 1:21] 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb194-17"><a href="frocdataformat.html#cb194-17"></a><span class="co">#&gt;   ..$ design       : chr &quot;FCTRL&quot;</span></span>
+<span id="cb194-18"><a href="frocdataformat.html#cb194-18"></a><span class="co">#&gt;   ..$ modalityID   : Named chr [1:4] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot;</span></span>
+<span id="cb194-19"><a href="frocdataformat.html#cb194-19"></a><span class="co">#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot;</span></span>
+<span id="cb194-20"><a href="frocdataformat.html#cb194-20"></a><span class="co">#&gt;   ..$ readerID     : Named chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...</span></span>
+<span id="cb194-21"><a href="frocdataformat.html#cb194-21"></a><span class="co">#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...</span></span></code></pre></div>
 <ul>
 <li>Focus for now in the 115 abnormal cases.</li>
 <li>The numbers of lesions in these cases is contained in <code>x$lesionVector</code>.</li>
 </ul>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="frocdataformat.html#cb193-1"></a>x<span class="op">$</span>lesions<span class="op">$</span>perCase</span>
-<span id="cb193-2"><a href="frocdataformat.html#cb193-2"></a><span class="co">#&gt;   [1]  6  4  7  1  3  3  3  8 11  2  4  6  2 16  5  2  8  3  4  7 11  1  4  3  4</span></span>
-<span id="cb193-3"><a href="frocdataformat.html#cb193-3"></a><span class="co">#&gt;  [26]  4  7  3  2  5  2  2  7  6  6  4 10 20 12  6  4  7 12  5  1  1  5  1  2  8</span></span>
-<span id="cb193-4"><a href="frocdataformat.html#cb193-4"></a><span class="co">#&gt;  [51]  3  1  2  2  3  2  8 16 10  1  2  2  6  3  2  2  4  6 10 11  1  2  6  2  4</span></span>
-<span id="cb193-5"><a href="frocdataformat.html#cb193-5"></a><span class="co">#&gt;  [76]  5  2  9  6  6  8  3  8  7  1  1  6  3  2  1  9  8  8  2  2 12  1  1  1  1</span></span>
-<span id="cb193-6"><a href="frocdataformat.html#cb193-6"></a><span class="co">#&gt; [101]  1  3  1  2  2  1  1  1  1  3  1  1  1  2  1</span></span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="frocdataformat.html#cb195-1"></a>x<span class="op">$</span>lesions<span class="op">$</span>perCase</span>
+<span id="cb195-2"><a href="frocdataformat.html#cb195-2"></a><span class="co">#&gt;   [1]  6  4  7  1  3  3  3  8 11  2  4  6  2 16  5  2  8  3  4  7 11  1  4  3  4</span></span>
+<span id="cb195-3"><a href="frocdataformat.html#cb195-3"></a><span class="co">#&gt;  [26]  4  7  3  2  5  2  2  7  6  6  4 10 20 12  6  4  7 12  5  1  1  5  1  2  8</span></span>
+<span id="cb195-4"><a href="frocdataformat.html#cb195-4"></a><span class="co">#&gt;  [51]  3  1  2  2  3  2  8 16 10  1  2  2  6  3  2  2  4  6 10 11  1  2  6  2  4</span></span>
+<span id="cb195-5"><a href="frocdataformat.html#cb195-5"></a><span class="co">#&gt;  [76]  5  2  9  6  6  8  3  8  7  1  1  6  3  2  1  9  8  8  2  2 12  1  1  1  1</span></span>
+<span id="cb195-6"><a href="frocdataformat.html#cb195-6"></a><span class="co">#&gt; [101]  1  3  1  2  2  1  1  1  1  3  1  1  1  2  1</span></span></code></pre></div>
 <ul>
 <li>For example, the first abnormal case contains 6 lesions, the second contains 4 lesions, the third contains 7 lesions, etc. and the last abnormal case contains 1 lesion.</li>
 <li>To get an idea of the distribution of the numbers of lesions per abnormal cases, one could interrogate this vector as shown below using the <code>which()</code> function:</li>
 </ul>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="frocdataformat.html#cb194-1"></a><span class="cf">for</span> (el <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">max</span>(x<span class="op">$</span>lesions<span class="op">$</span>perCase)) <span class="kw">cat</span>(</span>
-<span id="cb194-2"><a href="frocdataformat.html#cb194-2"></a>  <span class="st">&quot;abnormal cases with&quot;</span>, el, <span class="st">&quot;lesions = &quot;</span>, </span>
-<span id="cb194-3"><a href="frocdataformat.html#cb194-3"></a>  <span class="kw">length</span>(<span class="kw">which</span>(x<span class="op">$</span>lesionVector <span class="op">==</span><span class="st"> </span>el)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb194-4"><a href="frocdataformat.html#cb194-4"></a><span class="co">#&gt; abnormal cases with 1 lesions =  0 </span></span>
-<span id="cb194-5"><a href="frocdataformat.html#cb194-5"></a><span class="co">#&gt; abnormal cases with 2 lesions =  0 </span></span>
-<span id="cb194-6"><a href="frocdataformat.html#cb194-6"></a><span class="co">#&gt; abnormal cases with 3 lesions =  0 </span></span>
-<span id="cb194-7"><a href="frocdataformat.html#cb194-7"></a><span class="co">#&gt; abnormal cases with 4 lesions =  0 </span></span>
-<span id="cb194-8"><a href="frocdataformat.html#cb194-8"></a><span class="co">#&gt; abnormal cases with 5 lesions =  0 </span></span>
-<span id="cb194-9"><a href="frocdataformat.html#cb194-9"></a><span class="co">#&gt; abnormal cases with 6 lesions =  0 </span></span>
-<span id="cb194-10"><a href="frocdataformat.html#cb194-10"></a><span class="co">#&gt; abnormal cases with 7 lesions =  0 </span></span>
-<span id="cb194-11"><a href="frocdataformat.html#cb194-11"></a><span class="co">#&gt; abnormal cases with 8 lesions =  0 </span></span>
-<span id="cb194-12"><a href="frocdataformat.html#cb194-12"></a><span class="co">#&gt; abnormal cases with 9 lesions =  0 </span></span>
-<span id="cb194-13"><a href="frocdataformat.html#cb194-13"></a><span class="co">#&gt; abnormal cases with 10 lesions =  0 </span></span>
-<span id="cb194-14"><a href="frocdataformat.html#cb194-14"></a><span class="co">#&gt; abnormal cases with 11 lesions =  0 </span></span>
-<span id="cb194-15"><a href="frocdataformat.html#cb194-15"></a><span class="co">#&gt; abnormal cases with 12 lesions =  0 </span></span>
-<span id="cb194-16"><a href="frocdataformat.html#cb194-16"></a><span class="co">#&gt; abnormal cases with 13 lesions =  0 </span></span>
-<span id="cb194-17"><a href="frocdataformat.html#cb194-17"></a><span class="co">#&gt; abnormal cases with 14 lesions =  0 </span></span>
-<span id="cb194-18"><a href="frocdataformat.html#cb194-18"></a><span class="co">#&gt; abnormal cases with 15 lesions =  0 </span></span>
-<span id="cb194-19"><a href="frocdataformat.html#cb194-19"></a><span class="co">#&gt; abnormal cases with 16 lesions =  0 </span></span>
-<span id="cb194-20"><a href="frocdataformat.html#cb194-20"></a><span class="co">#&gt; abnormal cases with 17 lesions =  0 </span></span>
-<span id="cb194-21"><a href="frocdataformat.html#cb194-21"></a><span class="co">#&gt; abnormal cases with 18 lesions =  0 </span></span>
-<span id="cb194-22"><a href="frocdataformat.html#cb194-22"></a><span class="co">#&gt; abnormal cases with 19 lesions =  0 </span></span>
-<span id="cb194-23"><a href="frocdataformat.html#cb194-23"></a><span class="co">#&gt; abnormal cases with 20 lesions =  0</span></span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="frocdataformat.html#cb196-1"></a><span class="cf">for</span> (el <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">max</span>(x<span class="op">$</span>lesions<span class="op">$</span>perCase)) <span class="kw">cat</span>(</span>
+<span id="cb196-2"><a href="frocdataformat.html#cb196-2"></a>  <span class="st">&quot;abnormal cases with&quot;</span>, el, <span class="st">&quot;lesions = &quot;</span>, </span>
+<span id="cb196-3"><a href="frocdataformat.html#cb196-3"></a>  <span class="kw">length</span>(<span class="kw">which</span>(x<span class="op">$</span>lesionVector <span class="op">==</span><span class="st"> </span>el)), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb196-4"><a href="frocdataformat.html#cb196-4"></a><span class="co">#&gt; abnormal cases with 1 lesions =  0 </span></span>
+<span id="cb196-5"><a href="frocdataformat.html#cb196-5"></a><span class="co">#&gt; abnormal cases with 2 lesions =  0 </span></span>
+<span id="cb196-6"><a href="frocdataformat.html#cb196-6"></a><span class="co">#&gt; abnormal cases with 3 lesions =  0 </span></span>
+<span id="cb196-7"><a href="frocdataformat.html#cb196-7"></a><span class="co">#&gt; abnormal cases with 4 lesions =  0 </span></span>
+<span id="cb196-8"><a href="frocdataformat.html#cb196-8"></a><span class="co">#&gt; abnormal cases with 5 lesions =  0 </span></span>
+<span id="cb196-9"><a href="frocdataformat.html#cb196-9"></a><span class="co">#&gt; abnormal cases with 6 lesions =  0 </span></span>
+<span id="cb196-10"><a href="frocdataformat.html#cb196-10"></a><span class="co">#&gt; abnormal cases with 7 lesions =  0 </span></span>
+<span id="cb196-11"><a href="frocdataformat.html#cb196-11"></a><span class="co">#&gt; abnormal cases with 8 lesions =  0 </span></span>
+<span id="cb196-12"><a href="frocdataformat.html#cb196-12"></a><span class="co">#&gt; abnormal cases with 9 lesions =  0 </span></span>
+<span id="cb196-13"><a href="frocdataformat.html#cb196-13"></a><span class="co">#&gt; abnormal cases with 10 lesions =  0 </span></span>
+<span id="cb196-14"><a href="frocdataformat.html#cb196-14"></a><span class="co">#&gt; abnormal cases with 11 lesions =  0 </span></span>
+<span id="cb196-15"><a href="frocdataformat.html#cb196-15"></a><span class="co">#&gt; abnormal cases with 12 lesions =  0 </span></span>
+<span id="cb196-16"><a href="frocdataformat.html#cb196-16"></a><span class="co">#&gt; abnormal cases with 13 lesions =  0 </span></span>
+<span id="cb196-17"><a href="frocdataformat.html#cb196-17"></a><span class="co">#&gt; abnormal cases with 14 lesions =  0 </span></span>
+<span id="cb196-18"><a href="frocdataformat.html#cb196-18"></a><span class="co">#&gt; abnormal cases with 15 lesions =  0 </span></span>
+<span id="cb196-19"><a href="frocdataformat.html#cb196-19"></a><span class="co">#&gt; abnormal cases with 16 lesions =  0 </span></span>
+<span id="cb196-20"><a href="frocdataformat.html#cb196-20"></a><span class="co">#&gt; abnormal cases with 17 lesions =  0 </span></span>
+<span id="cb196-21"><a href="frocdataformat.html#cb196-21"></a><span class="co">#&gt; abnormal cases with 18 lesions =  0 </span></span>
+<span id="cb196-22"><a href="frocdataformat.html#cb196-22"></a><span class="co">#&gt; abnormal cases with 19 lesions =  0 </span></span>
+<span id="cb196-23"><a href="frocdataformat.html#cb196-23"></a><span class="co">#&gt; abnormal cases with 20 lesions =  0</span></span></code></pre></div>
 <ul>
 <li>This tells us that 25 cases contain 1 lesion</li>
 <li>Likewise, 23 cases contain 2 lesions</li>
@@ -1034,28 +1036,28 @@ FIGURE B.3: Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.x
 <ul>
 <li>Let us ask what is the fraction of (abnormal) cases with 1 lesion, 2 lesions etc.</li>
 </ul>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="frocdataformat.html#cb195-1"></a><span class="cf">for</span> (el <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">max</span>(x<span class="op">$</span>lesions<span class="op">$</span>perCase)) <span class="kw">cat</span>(<span class="st">&quot;fraction of abnormal cases with&quot;</span>, el, <span class="st">&quot;lesions = &quot;</span>, </span>
-<span id="cb195-2"><a href="frocdataformat.html#cb195-2"></a>                                              <span class="kw">length</span>(<span class="kw">which</span>(x<span class="op">$</span>lesions<span class="op">$</span>perCase <span class="op">==</span><span class="st"> </span>el))<span class="op">/</span><span class="kw">length</span>(x<span class="op">$</span>ratings<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>]), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb195-3"><a href="frocdataformat.html#cb195-3"></a><span class="co">#&gt; fraction of abnormal cases with 1 lesions =  0.2173913 </span></span>
-<span id="cb195-4"><a href="frocdataformat.html#cb195-4"></a><span class="co">#&gt; fraction of abnormal cases with 2 lesions =  0.2 </span></span>
-<span id="cb195-5"><a href="frocdataformat.html#cb195-5"></a><span class="co">#&gt; fraction of abnormal cases with 3 lesions =  0.1130435 </span></span>
-<span id="cb195-6"><a href="frocdataformat.html#cb195-6"></a><span class="co">#&gt; fraction of abnormal cases with 4 lesions =  0.08695652 </span></span>
-<span id="cb195-7"><a href="frocdataformat.html#cb195-7"></a><span class="co">#&gt; fraction of abnormal cases with 5 lesions =  0.04347826 </span></span>
-<span id="cb195-8"><a href="frocdataformat.html#cb195-8"></a><span class="co">#&gt; fraction of abnormal cases with 6 lesions =  0.09565217 </span></span>
-<span id="cb195-9"><a href="frocdataformat.html#cb195-9"></a><span class="co">#&gt; fraction of abnormal cases with 7 lesions =  0.05217391 </span></span>
-<span id="cb195-10"><a href="frocdataformat.html#cb195-10"></a><span class="co">#&gt; fraction of abnormal cases with 8 lesions =  0.06956522 </span></span>
-<span id="cb195-11"><a href="frocdataformat.html#cb195-11"></a><span class="co">#&gt; fraction of abnormal cases with 9 lesions =  0.0173913 </span></span>
-<span id="cb195-12"><a href="frocdataformat.html#cb195-12"></a><span class="co">#&gt; fraction of abnormal cases with 10 lesions =  0.02608696 </span></span>
-<span id="cb195-13"><a href="frocdataformat.html#cb195-13"></a><span class="co">#&gt; fraction of abnormal cases with 11 lesions =  0.02608696 </span></span>
-<span id="cb195-14"><a href="frocdataformat.html#cb195-14"></a><span class="co">#&gt; fraction of abnormal cases with 12 lesions =  0.02608696 </span></span>
-<span id="cb195-15"><a href="frocdataformat.html#cb195-15"></a><span class="co">#&gt; fraction of abnormal cases with 13 lesions =  0 </span></span>
-<span id="cb195-16"><a href="frocdataformat.html#cb195-16"></a><span class="co">#&gt; fraction of abnormal cases with 14 lesions =  0 </span></span>
-<span id="cb195-17"><a href="frocdataformat.html#cb195-17"></a><span class="co">#&gt; fraction of abnormal cases with 15 lesions =  0 </span></span>
-<span id="cb195-18"><a href="frocdataformat.html#cb195-18"></a><span class="co">#&gt; fraction of abnormal cases with 16 lesions =  0.0173913 </span></span>
-<span id="cb195-19"><a href="frocdataformat.html#cb195-19"></a><span class="co">#&gt; fraction of abnormal cases with 17 lesions =  0 </span></span>
-<span id="cb195-20"><a href="frocdataformat.html#cb195-20"></a><span class="co">#&gt; fraction of abnormal cases with 18 lesions =  0 </span></span>
-<span id="cb195-21"><a href="frocdataformat.html#cb195-21"></a><span class="co">#&gt; fraction of abnormal cases with 19 lesions =  0 </span></span>
-<span id="cb195-22"><a href="frocdataformat.html#cb195-22"></a><span class="co">#&gt; fraction of abnormal cases with 20 lesions =  0.008695652</span></span></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="frocdataformat.html#cb197-1"></a><span class="cf">for</span> (el <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">max</span>(x<span class="op">$</span>lesions<span class="op">$</span>perCase)) <span class="kw">cat</span>(<span class="st">&quot;fraction of abnormal cases with&quot;</span>, el, <span class="st">&quot;lesions = &quot;</span>, </span>
+<span id="cb197-2"><a href="frocdataformat.html#cb197-2"></a>                                              <span class="kw">length</span>(<span class="kw">which</span>(x<span class="op">$</span>lesions<span class="op">$</span>perCase <span class="op">==</span><span class="st"> </span>el))<span class="op">/</span><span class="kw">length</span>(x<span class="op">$</span>ratings<span class="op">$</span>LL[<span class="dv">1</span>,<span class="dv">1</span>,,<span class="dv">1</span>]), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb197-3"><a href="frocdataformat.html#cb197-3"></a><span class="co">#&gt; fraction of abnormal cases with 1 lesions =  0.2173913 </span></span>
+<span id="cb197-4"><a href="frocdataformat.html#cb197-4"></a><span class="co">#&gt; fraction of abnormal cases with 2 lesions =  0.2 </span></span>
+<span id="cb197-5"><a href="frocdataformat.html#cb197-5"></a><span class="co">#&gt; fraction of abnormal cases with 3 lesions =  0.1130435 </span></span>
+<span id="cb197-6"><a href="frocdataformat.html#cb197-6"></a><span class="co">#&gt; fraction of abnormal cases with 4 lesions =  0.08695652 </span></span>
+<span id="cb197-7"><a href="frocdataformat.html#cb197-7"></a><span class="co">#&gt; fraction of abnormal cases with 5 lesions =  0.04347826 </span></span>
+<span id="cb197-8"><a href="frocdataformat.html#cb197-8"></a><span class="co">#&gt; fraction of abnormal cases with 6 lesions =  0.09565217 </span></span>
+<span id="cb197-9"><a href="frocdataformat.html#cb197-9"></a><span class="co">#&gt; fraction of abnormal cases with 7 lesions =  0.05217391 </span></span>
+<span id="cb197-10"><a href="frocdataformat.html#cb197-10"></a><span class="co">#&gt; fraction of abnormal cases with 8 lesions =  0.06956522 </span></span>
+<span id="cb197-11"><a href="frocdataformat.html#cb197-11"></a><span class="co">#&gt; fraction of abnormal cases with 9 lesions =  0.0173913 </span></span>
+<span id="cb197-12"><a href="frocdataformat.html#cb197-12"></a><span class="co">#&gt; fraction of abnormal cases with 10 lesions =  0.02608696 </span></span>
+<span id="cb197-13"><a href="frocdataformat.html#cb197-13"></a><span class="co">#&gt; fraction of abnormal cases with 11 lesions =  0.02608696 </span></span>
+<span id="cb197-14"><a href="frocdataformat.html#cb197-14"></a><span class="co">#&gt; fraction of abnormal cases with 12 lesions =  0.02608696 </span></span>
+<span id="cb197-15"><a href="frocdataformat.html#cb197-15"></a><span class="co">#&gt; fraction of abnormal cases with 13 lesions =  0 </span></span>
+<span id="cb197-16"><a href="frocdataformat.html#cb197-16"></a><span class="co">#&gt; fraction of abnormal cases with 14 lesions =  0 </span></span>
+<span id="cb197-17"><a href="frocdataformat.html#cb197-17"></a><span class="co">#&gt; fraction of abnormal cases with 15 lesions =  0 </span></span>
+<span id="cb197-18"><a href="frocdataformat.html#cb197-18"></a><span class="co">#&gt; fraction of abnormal cases with 16 lesions =  0.0173913 </span></span>
+<span id="cb197-19"><a href="frocdataformat.html#cb197-19"></a><span class="co">#&gt; fraction of abnormal cases with 17 lesions =  0 </span></span>
+<span id="cb197-20"><a href="frocdataformat.html#cb197-20"></a><span class="co">#&gt; fraction of abnormal cases with 18 lesions =  0 </span></span>
+<span id="cb197-21"><a href="frocdataformat.html#cb197-21"></a><span class="co">#&gt; fraction of abnormal cases with 19 lesions =  0 </span></span>
+<span id="cb197-22"><a href="frocdataformat.html#cb197-22"></a><span class="co">#&gt; fraction of abnormal cases with 20 lesions =  0.008695652</span></span></code></pre></div>
 <ul>
 <li>This tells us that fraction 0.217 of (abnormal) cases contain 1 lesion</li>
 <li>And fraction 0.2 of (abnormal) cases contain 2 lesions</li>
@@ -1063,31 +1065,31 @@ FIGURE B.3: Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.x
 <li>This information is contained the the <code>lesDistr</code> array</li>
 <li>It is coded in the <code>Utility</code> function <code>UtilLesionDistr()</code></li>
 </ul>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="frocdataformat.html#cb196-1"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">UtilLesionDistr</span>(x)</span>
-<span id="cb196-2"><a href="frocdataformat.html#cb196-2"></a>lesDistr</span>
-<span id="cb196-3"><a href="frocdataformat.html#cb196-3"></a><span class="co">#&gt;       [,1]        [,2]</span></span>
-<span id="cb196-4"><a href="frocdataformat.html#cb196-4"></a><span class="co">#&gt;  [1,]    1 0.217391304</span></span>
-<span id="cb196-5"><a href="frocdataformat.html#cb196-5"></a><span class="co">#&gt;  [2,]    2 0.200000000</span></span>
-<span id="cb196-6"><a href="frocdataformat.html#cb196-6"></a><span class="co">#&gt;  [3,]    3 0.113043478</span></span>
-<span id="cb196-7"><a href="frocdataformat.html#cb196-7"></a><span class="co">#&gt;  [4,]    4 0.086956522</span></span>
-<span id="cb196-8"><a href="frocdataformat.html#cb196-8"></a><span class="co">#&gt;  [5,]    5 0.043478261</span></span>
-<span id="cb196-9"><a href="frocdataformat.html#cb196-9"></a><span class="co">#&gt;  [6,]    6 0.095652174</span></span>
-<span id="cb196-10"><a href="frocdataformat.html#cb196-10"></a><span class="co">#&gt;  [7,]    7 0.052173913</span></span>
-<span id="cb196-11"><a href="frocdataformat.html#cb196-11"></a><span class="co">#&gt;  [8,]    8 0.069565217</span></span>
-<span id="cb196-12"><a href="frocdataformat.html#cb196-12"></a><span class="co">#&gt;  [9,]    9 0.017391304</span></span>
-<span id="cb196-13"><a href="frocdataformat.html#cb196-13"></a><span class="co">#&gt; [10,]   10 0.026086957</span></span>
-<span id="cb196-14"><a href="frocdataformat.html#cb196-14"></a><span class="co">#&gt; [11,]   11 0.026086957</span></span>
-<span id="cb196-15"><a href="frocdataformat.html#cb196-15"></a><span class="co">#&gt; [12,]   12 0.026086957</span></span>
-<span id="cb196-16"><a href="frocdataformat.html#cb196-16"></a><span class="co">#&gt; [13,]   16 0.017391304</span></span>
-<span id="cb196-17"><a href="frocdataformat.html#cb196-17"></a><span class="co">#&gt; [14,]   20 0.008695652</span></span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="frocdataformat.html#cb198-1"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">UtilLesionDistr</span>(x)</span>
+<span id="cb198-2"><a href="frocdataformat.html#cb198-2"></a>lesDistr</span>
+<span id="cb198-3"><a href="frocdataformat.html#cb198-3"></a><span class="co">#&gt;       [,1]        [,2]</span></span>
+<span id="cb198-4"><a href="frocdataformat.html#cb198-4"></a><span class="co">#&gt;  [1,]    1 0.217391304</span></span>
+<span id="cb198-5"><a href="frocdataformat.html#cb198-5"></a><span class="co">#&gt;  [2,]    2 0.200000000</span></span>
+<span id="cb198-6"><a href="frocdataformat.html#cb198-6"></a><span class="co">#&gt;  [3,]    3 0.113043478</span></span>
+<span id="cb198-7"><a href="frocdataformat.html#cb198-7"></a><span class="co">#&gt;  [4,]    4 0.086956522</span></span>
+<span id="cb198-8"><a href="frocdataformat.html#cb198-8"></a><span class="co">#&gt;  [5,]    5 0.043478261</span></span>
+<span id="cb198-9"><a href="frocdataformat.html#cb198-9"></a><span class="co">#&gt;  [6,]    6 0.095652174</span></span>
+<span id="cb198-10"><a href="frocdataformat.html#cb198-10"></a><span class="co">#&gt;  [7,]    7 0.052173913</span></span>
+<span id="cb198-11"><a href="frocdataformat.html#cb198-11"></a><span class="co">#&gt;  [8,]    8 0.069565217</span></span>
+<span id="cb198-12"><a href="frocdataformat.html#cb198-12"></a><span class="co">#&gt;  [9,]    9 0.017391304</span></span>
+<span id="cb198-13"><a href="frocdataformat.html#cb198-13"></a><span class="co">#&gt; [10,]   10 0.026086957</span></span>
+<span id="cb198-14"><a href="frocdataformat.html#cb198-14"></a><span class="co">#&gt; [11,]   11 0.026086957</span></span>
+<span id="cb198-15"><a href="frocdataformat.html#cb198-15"></a><span class="co">#&gt; [12,]   12 0.026086957</span></span>
+<span id="cb198-16"><a href="frocdataformat.html#cb198-16"></a><span class="co">#&gt; [13,]   16 0.017391304</span></span>
+<span id="cb198-17"><a href="frocdataformat.html#cb198-17"></a><span class="co">#&gt; [14,]   20 0.008695652</span></span></code></pre></div>
 <ul>
 <li>The <code>UtilLesionDistr()</code> function returns an array with two columns and number of rows equal to the number of distinct values of lesions per case.</li>
 <li>The first column contains the number of distinct values of lesions per case, 14 in the current example.</li>
 <li>The second column contains the fraction of diseased cases with the number of lesions indicated in the first column.</li>
 <li>The second column must sum to unity</li>
 </ul>
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="frocdataformat.html#cb197-1"></a><span class="kw">sum</span>(<span class="kw">UtilLesionDistr</span>(x)[,<span class="dv">2</span>])</span>
-<span id="cb197-2"><a href="frocdataformat.html#cb197-2"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="frocdataformat.html#cb199-1"></a><span class="kw">sum</span>(<span class="kw">UtilLesionDistr</span>(x)[,<span class="dv">2</span>])</span>
+<span id="cb199-2"><a href="frocdataformat.html#cb199-2"></a><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 <ul>
 <li>The lesion distribution array will come in handy when it comes to predicting the operating characteristics from using the Radiological Search Model (RSM), as detailed in Chapter 17 of my book.</li>
 </ul>
@@ -1105,59 +1107,59 @@ FIGURE B.3: Fig. 3: TP/LL worksheet for file inst/extdata/toyFiles/FROC/frocCr.x
 <li>Etc.</li>
 <li>Missing values are filled with <code>-Inf</code>.</li>
 </ul>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="frocdataformat.html#cb198-1"></a>lesWghtDistr &lt;-<span class="st"> </span><span class="kw">UtilLesionWeightsDistr</span>(x)</span>
-<span id="cb198-2"><a href="frocdataformat.html#cb198-2"></a><span class="kw">cat</span>(<span class="st">&quot;dim(lesDistr) =&quot;</span>, <span class="kw">dim</span>(lesDistr),<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb198-3"><a href="frocdataformat.html#cb198-3"></a><span class="co">#&gt; dim(lesDistr) = 14 2</span></span>
-<span id="cb198-4"><a href="frocdataformat.html#cb198-4"></a><span class="kw">cat</span>(<span class="st">&quot;dim(lesWghtDistr) =&quot;</span>, <span class="kw">dim</span>(lesWghtDistr),<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb198-5"><a href="frocdataformat.html#cb198-5"></a><span class="co">#&gt; dim(lesWghtDistr) = 14 21</span></span>
-<span id="cb198-6"><a href="frocdataformat.html#cb198-6"></a><span class="kw">cat</span>(<span class="st">&quot;lesWghtDistr = </span><span class="ch">\n\n</span><span class="st">&quot;</span>)</span>
-<span id="cb198-7"><a href="frocdataformat.html#cb198-7"></a><span class="co">#&gt; lesWghtDistr =</span></span>
-<span id="cb198-8"><a href="frocdataformat.html#cb198-8"></a>lesWghtDistr</span>
-<span id="cb198-9"><a href="frocdataformat.html#cb198-9"></a><span class="co">#&gt;       [,1]       [,2]       [,3]       [,4]       [,5]       [,6]       [,7]</span></span>
-<span id="cb198-10"><a href="frocdataformat.html#cb198-10"></a><span class="co">#&gt;  [1,]    1 1.00000000       -Inf       -Inf       -Inf       -Inf       -Inf</span></span>
-<span id="cb198-11"><a href="frocdataformat.html#cb198-11"></a><span class="co">#&gt;  [2,]    2 0.50000000 0.50000000       -Inf       -Inf       -Inf       -Inf</span></span>
-<span id="cb198-12"><a href="frocdataformat.html#cb198-12"></a><span class="co">#&gt;  [3,]    3 0.33333333 0.33333333 0.33333333       -Inf       -Inf       -Inf</span></span>
-<span id="cb198-13"><a href="frocdataformat.html#cb198-13"></a><span class="co">#&gt;  [4,]    4 0.25000000 0.25000000 0.25000000 0.25000000       -Inf       -Inf</span></span>
-<span id="cb198-14"><a href="frocdataformat.html#cb198-14"></a><span class="co">#&gt;  [5,]    5 0.20000000 0.20000000 0.20000000 0.20000000 0.20000000       -Inf</span></span>
-<span id="cb198-15"><a href="frocdataformat.html#cb198-15"></a><span class="co">#&gt;  [6,]    6 0.16666667 0.16666667 0.16666667 0.16666667 0.16666667 0.16666667</span></span>
-<span id="cb198-16"><a href="frocdataformat.html#cb198-16"></a><span class="co">#&gt;  [7,]    7 0.14285714 0.14285714 0.14285714 0.14285714 0.14285714 0.14285714</span></span>
-<span id="cb198-17"><a href="frocdataformat.html#cb198-17"></a><span class="co">#&gt;  [8,]    8 0.12500000 0.12500000 0.12500000 0.12500000 0.12500000 0.12500000</span></span>
-<span id="cb198-18"><a href="frocdataformat.html#cb198-18"></a><span class="co">#&gt;  [9,]    9 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111</span></span>
-<span id="cb198-19"><a href="frocdataformat.html#cb198-19"></a><span class="co">#&gt; [10,]   10 0.10000000 0.10000000 0.10000000 0.10000000 0.10000000 0.10000000</span></span>
-<span id="cb198-20"><a href="frocdataformat.html#cb198-20"></a><span class="co">#&gt; [11,]   11 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909</span></span>
-<span id="cb198-21"><a href="frocdataformat.html#cb198-21"></a><span class="co">#&gt; [12,]   12 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333</span></span>
-<span id="cb198-22"><a href="frocdataformat.html#cb198-22"></a><span class="co">#&gt; [13,]   16 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000</span></span>
-<span id="cb198-23"><a href="frocdataformat.html#cb198-23"></a><span class="co">#&gt; [14,]   20 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000</span></span>
-<span id="cb198-24"><a href="frocdataformat.html#cb198-24"></a><span class="co">#&gt;             [,8]       [,9]      [,10]      [,11]      [,12]      [,13]  [,14]</span></span>
-<span id="cb198-25"><a href="frocdataformat.html#cb198-25"></a><span class="co">#&gt;  [1,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
-<span id="cb198-26"><a href="frocdataformat.html#cb198-26"></a><span class="co">#&gt;  [2,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
-<span id="cb198-27"><a href="frocdataformat.html#cb198-27"></a><span class="co">#&gt;  [3,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
-<span id="cb198-28"><a href="frocdataformat.html#cb198-28"></a><span class="co">#&gt;  [4,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
-<span id="cb198-29"><a href="frocdataformat.html#cb198-29"></a><span class="co">#&gt;  [5,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
-<span id="cb198-30"><a href="frocdataformat.html#cb198-30"></a><span class="co">#&gt;  [6,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
-<span id="cb198-31"><a href="frocdataformat.html#cb198-31"></a><span class="co">#&gt;  [7,] 0.14285714       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
-<span id="cb198-32"><a href="frocdataformat.html#cb198-32"></a><span class="co">#&gt;  [8,] 0.12500000 0.12500000       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
-<span id="cb198-33"><a href="frocdataformat.html#cb198-33"></a><span class="co">#&gt;  [9,] 0.11111111 0.11111111 0.11111111       -Inf       -Inf       -Inf   -Inf</span></span>
-<span id="cb198-34"><a href="frocdataformat.html#cb198-34"></a><span class="co">#&gt; [10,] 0.10000000 0.10000000 0.10000000 0.10000000       -Inf       -Inf   -Inf</span></span>
-<span id="cb198-35"><a href="frocdataformat.html#cb198-35"></a><span class="co">#&gt; [11,] 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909       -Inf   -Inf</span></span>
-<span id="cb198-36"><a href="frocdataformat.html#cb198-36"></a><span class="co">#&gt; [12,] 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333   -Inf</span></span>
-<span id="cb198-37"><a href="frocdataformat.html#cb198-37"></a><span class="co">#&gt; [13,] 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.0625</span></span>
-<span id="cb198-38"><a href="frocdataformat.html#cb198-38"></a><span class="co">#&gt; [14,] 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.0500</span></span>
-<span id="cb198-39"><a href="frocdataformat.html#cb198-39"></a><span class="co">#&gt;        [,15]  [,16]  [,17] [,18] [,19] [,20] [,21]</span></span>
-<span id="cb198-40"><a href="frocdataformat.html#cb198-40"></a><span class="co">#&gt;  [1,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-41"><a href="frocdataformat.html#cb198-41"></a><span class="co">#&gt;  [2,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-42"><a href="frocdataformat.html#cb198-42"></a><span class="co">#&gt;  [3,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-43"><a href="frocdataformat.html#cb198-43"></a><span class="co">#&gt;  [4,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-44"><a href="frocdataformat.html#cb198-44"></a><span class="co">#&gt;  [5,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-45"><a href="frocdataformat.html#cb198-45"></a><span class="co">#&gt;  [6,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-46"><a href="frocdataformat.html#cb198-46"></a><span class="co">#&gt;  [7,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-47"><a href="frocdataformat.html#cb198-47"></a><span class="co">#&gt;  [8,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-48"><a href="frocdataformat.html#cb198-48"></a><span class="co">#&gt;  [9,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-49"><a href="frocdataformat.html#cb198-49"></a><span class="co">#&gt; [10,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-50"><a href="frocdataformat.html#cb198-50"></a><span class="co">#&gt; [11,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-51"><a href="frocdataformat.html#cb198-51"></a><span class="co">#&gt; [12,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-52"><a href="frocdataformat.html#cb198-52"></a><span class="co">#&gt; [13,] 0.0625 0.0625 0.0625  -Inf  -Inf  -Inf  -Inf</span></span>
-<span id="cb198-53"><a href="frocdataformat.html#cb198-53"></a><span class="co">#&gt; [14,] 0.0500 0.0500 0.0500  0.05  0.05  0.05  0.05</span></span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="frocdataformat.html#cb200-1"></a>lesWghtDistr &lt;-<span class="st"> </span><span class="kw">UtilLesionWeightsDistr</span>(x)</span>
+<span id="cb200-2"><a href="frocdataformat.html#cb200-2"></a><span class="kw">cat</span>(<span class="st">&quot;dim(lesDistr) =&quot;</span>, <span class="kw">dim</span>(lesDistr),<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb200-3"><a href="frocdataformat.html#cb200-3"></a><span class="co">#&gt; dim(lesDistr) = 14 2</span></span>
+<span id="cb200-4"><a href="frocdataformat.html#cb200-4"></a><span class="kw">cat</span>(<span class="st">&quot;dim(lesWghtDistr) =&quot;</span>, <span class="kw">dim</span>(lesWghtDistr),<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb200-5"><a href="frocdataformat.html#cb200-5"></a><span class="co">#&gt; dim(lesWghtDistr) = 14 21</span></span>
+<span id="cb200-6"><a href="frocdataformat.html#cb200-6"></a><span class="kw">cat</span>(<span class="st">&quot;lesWghtDistr = </span><span class="ch">\n\n</span><span class="st">&quot;</span>)</span>
+<span id="cb200-7"><a href="frocdataformat.html#cb200-7"></a><span class="co">#&gt; lesWghtDistr =</span></span>
+<span id="cb200-8"><a href="frocdataformat.html#cb200-8"></a>lesWghtDistr</span>
+<span id="cb200-9"><a href="frocdataformat.html#cb200-9"></a><span class="co">#&gt;       [,1]       [,2]       [,3]       [,4]       [,5]       [,6]       [,7]</span></span>
+<span id="cb200-10"><a href="frocdataformat.html#cb200-10"></a><span class="co">#&gt;  [1,]    1 1.00000000       -Inf       -Inf       -Inf       -Inf       -Inf</span></span>
+<span id="cb200-11"><a href="frocdataformat.html#cb200-11"></a><span class="co">#&gt;  [2,]    2 0.50000000 0.50000000       -Inf       -Inf       -Inf       -Inf</span></span>
+<span id="cb200-12"><a href="frocdataformat.html#cb200-12"></a><span class="co">#&gt;  [3,]    3 0.33333333 0.33333333 0.33333333       -Inf       -Inf       -Inf</span></span>
+<span id="cb200-13"><a href="frocdataformat.html#cb200-13"></a><span class="co">#&gt;  [4,]    4 0.25000000 0.25000000 0.25000000 0.25000000       -Inf       -Inf</span></span>
+<span id="cb200-14"><a href="frocdataformat.html#cb200-14"></a><span class="co">#&gt;  [5,]    5 0.20000000 0.20000000 0.20000000 0.20000000 0.20000000       -Inf</span></span>
+<span id="cb200-15"><a href="frocdataformat.html#cb200-15"></a><span class="co">#&gt;  [6,]    6 0.16666667 0.16666667 0.16666667 0.16666667 0.16666667 0.16666667</span></span>
+<span id="cb200-16"><a href="frocdataformat.html#cb200-16"></a><span class="co">#&gt;  [7,]    7 0.14285714 0.14285714 0.14285714 0.14285714 0.14285714 0.14285714</span></span>
+<span id="cb200-17"><a href="frocdataformat.html#cb200-17"></a><span class="co">#&gt;  [8,]    8 0.12500000 0.12500000 0.12500000 0.12500000 0.12500000 0.12500000</span></span>
+<span id="cb200-18"><a href="frocdataformat.html#cb200-18"></a><span class="co">#&gt;  [9,]    9 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111</span></span>
+<span id="cb200-19"><a href="frocdataformat.html#cb200-19"></a><span class="co">#&gt; [10,]   10 0.10000000 0.10000000 0.10000000 0.10000000 0.10000000 0.10000000</span></span>
+<span id="cb200-20"><a href="frocdataformat.html#cb200-20"></a><span class="co">#&gt; [11,]   11 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909</span></span>
+<span id="cb200-21"><a href="frocdataformat.html#cb200-21"></a><span class="co">#&gt; [12,]   12 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333</span></span>
+<span id="cb200-22"><a href="frocdataformat.html#cb200-22"></a><span class="co">#&gt; [13,]   16 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000</span></span>
+<span id="cb200-23"><a href="frocdataformat.html#cb200-23"></a><span class="co">#&gt; [14,]   20 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000</span></span>
+<span id="cb200-24"><a href="frocdataformat.html#cb200-24"></a><span class="co">#&gt;             [,8]       [,9]      [,10]      [,11]      [,12]      [,13]  [,14]</span></span>
+<span id="cb200-25"><a href="frocdataformat.html#cb200-25"></a><span class="co">#&gt;  [1,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
+<span id="cb200-26"><a href="frocdataformat.html#cb200-26"></a><span class="co">#&gt;  [2,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
+<span id="cb200-27"><a href="frocdataformat.html#cb200-27"></a><span class="co">#&gt;  [3,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
+<span id="cb200-28"><a href="frocdataformat.html#cb200-28"></a><span class="co">#&gt;  [4,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
+<span id="cb200-29"><a href="frocdataformat.html#cb200-29"></a><span class="co">#&gt;  [5,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
+<span id="cb200-30"><a href="frocdataformat.html#cb200-30"></a><span class="co">#&gt;  [6,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
+<span id="cb200-31"><a href="frocdataformat.html#cb200-31"></a><span class="co">#&gt;  [7,] 0.14285714       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
+<span id="cb200-32"><a href="frocdataformat.html#cb200-32"></a><span class="co">#&gt;  [8,] 0.12500000 0.12500000       -Inf       -Inf       -Inf       -Inf   -Inf</span></span>
+<span id="cb200-33"><a href="frocdataformat.html#cb200-33"></a><span class="co">#&gt;  [9,] 0.11111111 0.11111111 0.11111111       -Inf       -Inf       -Inf   -Inf</span></span>
+<span id="cb200-34"><a href="frocdataformat.html#cb200-34"></a><span class="co">#&gt; [10,] 0.10000000 0.10000000 0.10000000 0.10000000       -Inf       -Inf   -Inf</span></span>
+<span id="cb200-35"><a href="frocdataformat.html#cb200-35"></a><span class="co">#&gt; [11,] 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909       -Inf   -Inf</span></span>
+<span id="cb200-36"><a href="frocdataformat.html#cb200-36"></a><span class="co">#&gt; [12,] 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333   -Inf</span></span>
+<span id="cb200-37"><a href="frocdataformat.html#cb200-37"></a><span class="co">#&gt; [13,] 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.0625</span></span>
+<span id="cb200-38"><a href="frocdataformat.html#cb200-38"></a><span class="co">#&gt; [14,] 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.0500</span></span>
+<span id="cb200-39"><a href="frocdataformat.html#cb200-39"></a><span class="co">#&gt;        [,15]  [,16]  [,17] [,18] [,19] [,20] [,21]</span></span>
+<span id="cb200-40"><a href="frocdataformat.html#cb200-40"></a><span class="co">#&gt;  [1,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-41"><a href="frocdataformat.html#cb200-41"></a><span class="co">#&gt;  [2,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-42"><a href="frocdataformat.html#cb200-42"></a><span class="co">#&gt;  [3,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-43"><a href="frocdataformat.html#cb200-43"></a><span class="co">#&gt;  [4,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-44"><a href="frocdataformat.html#cb200-44"></a><span class="co">#&gt;  [5,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-45"><a href="frocdataformat.html#cb200-45"></a><span class="co">#&gt;  [6,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-46"><a href="frocdataformat.html#cb200-46"></a><span class="co">#&gt;  [7,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-47"><a href="frocdataformat.html#cb200-47"></a><span class="co">#&gt;  [8,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-48"><a href="frocdataformat.html#cb200-48"></a><span class="co">#&gt;  [9,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-49"><a href="frocdataformat.html#cb200-49"></a><span class="co">#&gt; [10,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-50"><a href="frocdataformat.html#cb200-50"></a><span class="co">#&gt; [11,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-51"><a href="frocdataformat.html#cb200-51"></a><span class="co">#&gt; [12,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-52"><a href="frocdataformat.html#cb200-52"></a><span class="co">#&gt; [13,] 0.0625 0.0625 0.0625  -Inf  -Inf  -Inf  -Inf</span></span>
+<span id="cb200-53"><a href="frocdataformat.html#cb200-53"></a><span class="co">#&gt; [14,] 0.0500 0.0500 0.0500  0.05  0.05  0.05  0.05</span></span></code></pre></div>
 <ul>
 <li>Row 3 corresponds to 3 lesions per case and the weights are 1/3, 1/3 and 1/3.</li>
 <li>Row 13 corresponds to 16 lesions per case and the weights are 0.06250000, 0.06250000, …, repeated 13 times.</li>

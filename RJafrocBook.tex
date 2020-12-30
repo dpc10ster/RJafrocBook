@@ -6385,7 +6385,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.3474769          1    0.2457197}
+\CommentTok{#> 1    1.3771232          1   0.24059178}
 \end{Highlighting}
 \end{Shaded}
 
@@ -13500,14 +13500,14 @@ y \equiv y\left (\zeta , \mu, \lambda', \nu', \overrightarrow{f_L} \right ) = 1 
 \label{eq:rsm-fitting-roc-y}
 \end{equation}
 
-Let \((F_r,T_r)\) denote the number of false positives and true positives, respectively, in ROC rating bin \(r\) defined by thresholds \([\zeta_r, \zeta_{r+1})\), for \(r = 0, 1, ..., R_{FROC}\). The range of \(r\) shows explicitly that \(R_{FROC}\) FROC ratings correspond to \(R_{FROC}+1\) ROC bins \footnote{The rating bookkeeping can be confusing. Basically, \(r = 0\) corresponds to unmarked cases, \(r = 1\) corresponds to cases where the highest rated FROC mark was rated 1, etc., and \(r = R_{FROC}\) corresponds to cases where the highest rated FROC mark was rated \(R_{FROC}\).}. Note that \((F_0,T_0)\) represent the \emph{known} numbers of non-diseased and diseased cases, respectively, with no marks, \((F_1,T_1)\) represent the numbers of non-diseased and diseased cases, respectively, with highest rating equal to one, etc. The probability \(P_{1r}\) of a count in non-diseased ROC bin \(r\) is:
+Let \((F_r,T_r)\) denote the number of false positives and true positives, respectively, in ROC rating bin \(r\) defined by thresholds \([\zeta_r, \zeta_{r+1})\), for \(r = 0, 1, ..., R_{FROC}\). The range of \(r\) shows explicitly that \(R_{FROC}\) FROC ratings correspond to \(R_{FROC}+1\) ROC bins \footnote{The rating bookkeeping can be confusing. Basically, \(r = 0\) corresponds to unmarked cases, \(r = 1\) corresponds to cases where the highest rated FROC mark was rated 1, etc., and \(r = R_{FROC}\) corresponds to cases where the highest rated FROC mark was rated \(R_{FROC}\).}. Note that \((F_0,T_0)\) represent the \emph{known} numbers of non-diseased and diseased cases, respectively, with no marks, \((F_1,T_1)\) represent the numbers of non-diseased and diseased cases, respectively, with highest rating equal to one, etc. The probability \(P_{1r}\) of a count in non-diseased ROC bin \(r\) is \footnote{One needs to subtract the CDF evaluated at \(r+1\) from that at \(r\); the CDF is the complement of x, which results in the reversal. It should also make sense because the higher indexed x is to the right of the lower indexed one. Recall that the operating points are numbered starting from the top-right and working down.} :
 
 \begin{equation}
 P_{1r} = x\left ( \zeta_r \right ) - x\left ( \zeta_{r+1} \right )\\ 
 \label{eq:rsm-fitting-roc-p1r}
 \end{equation}
 
-\footnote{One needs to subtract the CDF evaluated at \(r+1\) from that at \(r\); the CDF is the complement of x, which results in the reversal. It should also make sense because the higher indexed x is to the right of the lower indexed one. Recall that the operating points are numbered starting from the top-right and working down.} Likewise, the probability \(P_{2r}\) of a count in diseased ROC bin \(r\) is:
+Likewise, the probability \(P_{2r}\) of a count in diseased ROC bin \(r\) is:
 
 \begin{equation}
 P_{2r} = y\left ( \zeta_r \right ) - y\left ( \zeta_{r+1} \right )\\ 
@@ -13535,6 +13535,93 @@ AUC_{ROC}^{RSM}\left ( \mu, \lambda', \nu', \overrightarrow{f_L} \right ) = \int
 The total number of parameters to be estimated, including the \(R_{FROC}\) thresholds, is \(3+R_{FROC}\). Maximizing the likelihood function yields parameter estimates. The Broyden--Fletcher--Goldfarb--Shanno (BFGS) \citep{RN2646, RN2647, RN2648, RN2649, RN2651, RN2650} minimization algorithm, as implemented as function \texttt{mle2()} in the R-package \texttt{bbmle} \citep{packageBbmle} was used to minimize the negative of the likelihood function. Since the BFGS algorithm varies each parameter in an unrestricted range \((-\infty, \infty)\), which would cause problems (e.g., RSM physical parameters cannot be negative and thresholds need to be properly ordered), appropriate variable transformations (both ``forward'' and ``inverse'') were used so that parameters supplied to the log-likelihood function were always in the valid range, irrespective of values chosen by the BFGS algorithm.
 
 The algorithm calculates the goodness of fit statistic using the method described in TBA §6.4.2. Because of the additional parameter, the degrees-of-freedom (df) of the chisquare goodness of fit statistic is \(R_{FROC} – 3\). One can appreciate that calculating goodness of fit for the RSM can fail in situations, where the corresponding statistic can be calculated for binormal model, e.g., three (non -- trivial) ROC operating points, corresponding to df = 1 . With FROC data one needs at least four (non -- trivial) ROC operating points, each defined by bins with at least five counts in both non-diseased and diseased categories. \footnote{With three operating points, each defined by bins with at least five counts in both non-diseased and diseased categories, the number of usable ROC bins is four. Subtracting three one gets \(df = 1\), and the statistic can be calculated. However, because of the extra RSM parameter, the corresponding \(df = 0\).}
+
+\hypertarget{rsm-fitting-fitrsmroc-implementation}{%
+\section{\texorpdfstring{\texttt{FitRsmROC} implementation}{FitRsmROC implementation}}\label{rsm-fitting-fitrsmroc-implementation}}
+
+The \texttt{RJafroc} function \texttt{FitRsmROC()} fits an RSM-predicted ROC curve to a binned single-modality single-reader ROC dataset. It is called by \texttt{ret\ \textless{}-\ FitRsmRoc(binnedRocData,\ lesDistr,\ trt\ =\ 1,\ rdr\ =\ 1)}, where \texttt{binnedRocData} is a binned ROC dataset, \texttt{lesDistr} is the lesion distribution vector (normalized histogram) in the dataset and \texttt{trt} and \texttt{rdr} are the desired treatment and reader to extract from the dataset, each of which defaults to one.
+
+The return value \texttt{ret} is a \texttt{list} with the following elements:
+
+\begin{itemize}
+\item
+  \texttt{ret\$mu} The mean of the diseased distribution relative to the non-diseased one
+\item
+  \texttt{ret\$lambdP} The Poisson parameter describing the distribution of latent NLs per case
+\item
+  \texttt{ret\$nuP} The binomial success probability describing the distribution of latent LLs per diseased case
+\item
+  \texttt{ret\$zetas} The RSM cutoffs, zetas or thresholds
+\item
+  \texttt{ret\$AUC} The RSM fitted ROC-AUC
+\item
+  \texttt{ret\$StdAUC} The standard deviation of AUC
+\item
+  \texttt{ret\$NLLIni} The initial value of negative LL
+\item
+  \texttt{ret\$NLLFin} The final value of negative LL
+\item
+  \texttt{ret\$ChisqrFitStats} The chisquare goodness of fit results
+\item
+  \texttt{ret\$covMat} The covariance matrix of the parameters
+\item
+  \texttt{ret\$fittedPlot} A \texttt{ggplot2} object containing the fitted operating characteristic along with the empirical operating points. Use \texttt{print} to display the object
+\end{itemize}
+
+\hypertarget{rsm-fitting-fitrsmroc-usage-example}{%
+\section{\texorpdfstring{\texttt{FitRsmROC} usage example}{FitRsmROC usage example}}\label{rsm-fitting-fitrsmroc-usage-example}}
+
+\begin{itemize}
+\tightlist
+\item
+  The following example uses the \emph{first} treatment of the ``FED'' dataset, \texttt{dataset04}, which is a 5 treatment 4 radiologist FROC dataset acquired by Dr.~Federica Zanca et. al.~\citep{RN1882}. The dataset has 5 treatments and 4 readers and 200 cases and was acquired on a 5-point integer scale, i.e., it is already binned. If not one needs to bin the dataset using \texttt{DfBinDataset()}. I need to emphasize this point: \textbf{if the dataset represents continuous ratings, as with a CAD algorithm, one must bin the dataset to (ideally) about 5-6 bins}. The number of parameters that must be estimated increases with the number of bins (because for each additional bin one needs to estimate an additional cutoff parameter).
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rocData <-}\StringTok{ }\KeywordTok{DfFroc2Roc}\NormalTok{(dataset04)}
+\NormalTok{lesDistr <-}\StringTok{ }\KeywordTok{UtilLesionDistr}\NormalTok{(dataset04)[,}\DecValTok{2}\NormalTok{]}
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{FitRsmRoc}\NormalTok{(rocData, }\DataTypeTok{lesDistr =}\NormalTok{ lesDistr)}
+\end{Highlighting}
+\end{Shaded}
+
+The lesion distribution vector is 0.69, 0.2, 0.11. This means that fraction 0.69 of abnormal cases contain one lesion each, fraction 0.2 contain two lesions each and fraction 0.11 contain three lesions each. The fitting algorithm needs to know the distribution of lesions per case, as the fitted curve depends on this distribution. For example, all else being equal, if all abnormal cases contain one lesion, the ROC curve will be lower than if all abnormal cases contain three lesions. With increased number of lesions per case TPF increases, as there is greater chance that at least one the lesions will be marked.
+
+The fitted parameter values are as follows (all cutoffs excepting \(\zeta_1\), the chi-square statistic (NA for this dataset) and the covariance matrix are not shown):
+
+\begin{itemize}
+\tightlist
+\item
+  \(\mu\) = 3.6551363
+\item
+  \(\lambda'\) = 9.8734529
+\item
+  \(\nu'\) = 0.7963126
+\item
+  \(\zeta_1\) = 1.5006824
+\item
+  \(AUC\) = 0.9065157
+\item
+  \(\sigma (AUC)\) = 0.0231988
+\item
+  \(NLLIni\) = 281.4024966
+\item
+  \(NLLFin\) = 267.2673434
+\end{itemize}
+
+The meaning of the parameters is as follows. The separation parameter \(\mu\) is 3.66. The relatively large separation will result in good classification performance. The large \(\lambda'\) parameter means that on the average the observer generates 9.87 latent NL marks per image. However, because of the relatively large value of \(\zeta_1\), i.e., 1.5, only fraction 0.067 of these are actually marked, resulting in 0.66 actual marks per image. The fitting program decreased the negative of the log-likelihood function from 281.4024966 to 267.2673434. A decrease in negative log-likelihood is equivalent to an increase in the likelihood, which is as expected, as the function maximizes the log-likelihood. Because the RSM contains 3 parameters, which is one more that other ROC models, the chisquare goodness of fit statistic usually cannot be calculated, except for large datasets - the criterion of 5 counts in each bin for true positives and false positives is usually hard to meet.
+
+Shown next is the fitted plot. Error bars (exact 95\% confidence intervals) are only shown for the lowest and highest operating points.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(ret}\OperatorTok{$}\NormalTok{fittedPlot)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{20-rsm-fitting_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+The fitted ROC curve is proper: it's slope decreases monotonically as one moves up the curve thereby ruling out hooks such as are predicted by the binormal model. The area under the proper ROC is 0.907 which will be shown in a subsequent chapter to be identical to that yielded by other proper ROC fitting methods and higher than the binormal model fitted value.
 
 \hypertarget{rsm-fitting-discussion-summary}{%
 \section{Discussion / Summary}\label{rsm-fitting-discussion-summary}}
