@@ -24,7 +24,7 @@
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2020-12-28" />
+<meta name="date" content="2020-12-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -849,7 +849,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="rsm-predictions-constrained-end-point-abscissa" class="section level3">
 <h3><span class="header-section-number">24.3.1</span> The abscissa of the ROC end-point</h3>
 <p>One needs the probability that a non-diseased case has at least one latent NL. Such a case will generate a finite value of <span class="math inline">\(h_{k_1 1}\)</span> and with an appropriately low <span class="math inline">\(\zeta_1\)</span> the case will be rated ROC:2 or higher. The probability of zero latent NLs, see TBA Eqn. 16.2, is:</p>
-<p><span class="math display">\[\text{Poi}_{pmf} \left (0,\lambda&#39; \right )\]</span>.</p>
+<p><span class="math display">\[\text{pmf}_{Poi} \left (0,\lambda&#39; \right )\]</span>.</p>
 <p>Therefore the probability that the case has at least one latent NL, which is the maximum continuously accessible abscissa of the ROC, is:</p>
 <p><span class="math display" id="eq:rsm-predictions-fpf-max">\[\begin{equation} 
 \text{FPF}_{max} = 1 - exp \left ( -\lambda&#39; \right ) = 1 - exp\left ( \frac{-\lambda}{\mu} \right )
@@ -928,7 +928,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \end{equation}\]</span></p>
 <p>The conditioning notation in Eqn. <a href="rsm-predictions.html#eq:rsm-predictions-fpf-zeta-n">(24.6)</a> reflects the fact that this expression applies specifically to non-diseased cases with <span class="math inline">\(n\)</span> latent NLs. To obtain <span class="math inline">\((FPF_{max}\)</span> one performs a Poisson-weighted summation of <span class="math inline">\(\text{FPF}\left (\zeta \mid n \right )\)</span> over <span class="math inline">\(n\)</span> from 1 to <span class="math inline">\(\infty\)</span> (in other words, one computes the expectation of <span class="math inline">\(\text{FPF}\left (\zeta \mid n \right )\)</span> by averaging over the Poisson distribution of the random variable <span class="math inline">\(n\)</span> from zero to infinity, as the zero term makes a zero contribution to the above equation):</p>
 <p><span class="math display" id="eq:rsm-predictions-fpf-zeta">\[\begin{equation}
-\text{FPF}\left (\zeta \right ) = \sum_{n=0}^{\infty} \text{Poi}_{pmf} \left ( n, \lambda&#39; \right )\text{FPF}\left (\zeta \mid n \right )
+\text{FPF}\left (\zeta \right ) = \sum_{n=0}^{\infty} \text{pmf}_{Poi} \left ( n, \lambda&#39; \right )\text{FPF}\left (\zeta \mid n \right )
 \tag{24.7}
 \end{equation}\]</span></p>
 <p>The infinite summations, see below, are easier performed using symbolic algebra software such as <span class="math inline">\(\text{Maple}^{TM}\)</span> Inclusion, in the summation, of <span class="math inline">\(n = 0\)</span>, which term evaluates to zero, is done to make it easier for Maple to evaluate the summation in closed form. Otherwise one would need to simplify the Maple-generated result. The result is shown below (Maple 17, Waterloo Maple Inc.), where <code>lambda</code> and <code>nu</code> refer to the primed quantities.</p>
@@ -970,7 +970,7 @@ erf \left (x \right ) =  2\Phi \left ( \sqrt{2} x\right ) - 1
 <p>The derivation of the true positive fraction <span class="math inline">\(FPF(\zeta)\)</span> follows a similar line of reasoning except this time one needs to consider the highest of the latent NLs and latent LL z-samples. Consider a diseased case with <span class="math inline">\(n\)</span> latent NLs and <span class="math inline">\(l\)</span> latent LLs. Each latent NL yields a decision variable sample from <span class="math inline">\(N(0,1)\)</span> and each latent LL yields a sample from <span class="math inline">\(N(\mu,1)\)</span>. The probability that all <span class="math inline">\(n\)</span> latent NLs have z-samples less than <span class="math inline">\(\zeta\)</span> is <span class="math inline">\([\Phi(\zeta)]^n\)</span>. The probability that all <span class="math inline">\(l\)</span> latent LLs have z-samples less than <span class="math inline">\(\zeta\)</span> is <span class="math inline">\([\Phi(\zeta - \mu)]^l\)</span>. Using the independence assumptions, the probability that all latent marks have z-samples less than <span class="math inline">\(\zeta\)</span> is the product of these two probabilities. The probability that <span class="math inline">\(h_{k_2 2}\)</span> (the highest z-sample on diseased case <span class="math inline">\(k_2 2\)</span>) is larger than <span class="math inline">\(\zeta\)</span> is the complement of the product probabilities, i.e.,</p>
 <p><span class="math display">\[\text{TPF}_{n,l}\left ( \zeta, \mu, n, l \right ) = P\left ( h_{k_2 2} &gt; \zeta \mid \mu, n, l \right ) = 1 - \left [ \Phi\left ( \zeta \right ) \right ]^n \left [ \Phi\left ( \zeta - \mu\right ) \right ]^l\]</span></p>
 <p>One averages over the distributions of <span class="math inline">\(n\)</span> and <span class="math inline">\(l\)</span> to obtain the desired ROC-ordinate,</p>
-<p><span class="math display">\[\text{TPF}\left ( \zeta, \mu, \lambda&#39;, \nu&#39; \right ) = \sum_{n=0}^{\infty} \text{Poi}_{pmf}(n,\lambda&#39;)\sum_{n=0}^{L} \text{Bin}_{pmf}(l,\nu&#39;,L) \text{TPF}_{n,l}\left ( \zeta, \mu, n, l \right )\]</span></p>
+<p><span class="math display">\[\text{TPF}\left ( \zeta, \mu, \lambda&#39;, \nu&#39; \right ) = \sum_{n=0}^{\infty} \text{pmf}_{Poi}(n,\lambda&#39;)\sum_{n=0}^{L} \text{Bin}_{pmf}(l,\nu&#39;,L) \text{TPF}_{n,l}\left ( \zeta, \mu, n, l \right )\]</span></p>
 <p>This can be evaluated using Maple, TBA Online Appendix 17.B, yielding:</p>
 <p><span class="math display" id="eq:rsm-predictions-tpf-after-maple">\[\begin{equation}
 \text{TPF}\left (\zeta , \mu, \lambda&#39;, \nu&#39;, L \right ) = 1 - \left ( 1 - \frac{\nu&#39;}{2} + \frac{\nu&#39;}{2} \text{erf} \left ( \frac{\zeta - \mu}{\sqrt{2}} \right ) \right )^L exp\left ( -\frac{\lambda&#39;}{2} + \frac{\lambda&#39;}{2} \left ( \text{erf} \left ( \frac {\zeta}{\sqrt{2}} \right ) \right )\right )
