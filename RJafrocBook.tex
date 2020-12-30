@@ -6385,7 +6385,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.2330584          1   0.26681308}
+\CommentTok{#> 1    1.3474769          1    0.2457197}
 \end{Highlighting}
 \end{Shaded}
 
@@ -13536,14 +13536,32 @@ The total number of parameters to be estimated, including the \(R_{FROC}\) thres
 
 The algorithm calculates the goodness of fit statistic using the method described in TBA §6.4.2. Because of the additional parameter, the degrees-of-freedom (df) of the chisquare goodness of fit statistic is \(R_{FROC} – 3\). One can appreciate that calculating goodness of fit for the RSM can fail in situations, where the corresponding statistic can be calculated for binormal model, e.g., three (non -- trivial) ROC operating points, corresponding to df = 1 . With FROC data one needs at least four (non -- trivial) ROC operating points, each defined by bins with at least five counts in both non-diseased and diseased categories. \footnote{With three operating points, each defined by bins with at least five counts in both non-diseased and diseased categories, the number of usable ROC bins is four. Subtracting three one gets \(df = 1\), and the statistic can be calculated. However, because of the extra RSM parameter, the corresponding \(df = 0\).}
 
-\hypertarget{rsm-fitting-roc-serendipitious}{%
-\section{A serendipitous finding}\label{rsm-fitting-roc-serendipitious}}
+\hypertarget{rsm-fitting-discussion-summary}{%
+\section{Discussion / Summary}\label{rsm-fitting-discussion-summary}}
 
-The RSM fitting algorithm was tested against PROPROC and CBM, both of which are proper ROC fitting methods described in Chapter 20. Comparing RSM against the binormal model would be inappropriate, as the latter does not predict proper ROCs.
+Over the years, there have been several attempts at fitting FROC data. Prior to the RSM-based ROC curve approach described in this chapter, all methods were aimed at fitting FROC curves, in the mistaken belief that this approach was using all the data. The earliest was the author's FROCFIT software 36. This was followed by Swensson's approach 37, subsequently shown to be equivalent to the author's earlier work, as far as predicting the FROC curve was concerned 11. In the meantime, CAD developers, who relied heavily on the FROC curve to evaluate their algorithms, developed an empirical approach that was subsequently put on a formal basis in the IDCA method 12.
 
-The RSM and CBM, implemented in RJafroc and PROPROC, implemented in software available from the University of Iowa ROC website, were applied to fourteen (14) datasets described in Online Chapter 24, Online Table 23.1, comprising 43 modalities, 80 readers and 2012 cases. The total number of individual modality-reader combinations is 236, in other words, there are 236 datasets that each of the three algorithms was applied to. Use of these datasets in subsequent publications requires the user to cite the relevant original source references listed in Online Chapter 24 -- that is only fair to the researchers who spent many hours conducting these studies.
+This chapter describes an approach to fitting ROC curves, instead of FROC curves, using the RSM. On the face of it, fitting the ROC curve seems to be ignoring much of the data. As an example, the ROC rating on a non-diseased case is the rating of the highest-rated mark on that image, or negative infinity if the case has no marks. If the case has several NL marks, only the highest rated one is used. In fact the highest rated mark contains information about the other marks on the case, namely they were all rated lower. There is a statistical term for this, namely sufficiency 38. As an example, the highest of a number of samples from a uniform distribution is a sufficient statistic, i.e., it contains all the information contained in the observed samples. While not quite the same for normally distributed values, neglect of the NLs rated lower is not as bad as might seem at first.
 
-The RSM has three parameters , , and (excluding thresholds). CBM has two parameters and , detailed in Chapter 20. Both RSM and CBM fitting methods are implemented in RJafroc. PROPROC is a two-parameter model, with parameters , , detailed in Chapter 20. The parameters were obtained by running Windows software20 OR DBM-MRMC 2.5 (Sept.~04, 2014) with PROPROC selected as the curve-fitting method. The relevant results are saved in files that end with ``proproc norm area pooled.csv'' contained in subdirectory MRMCRuns in the software directory corresponding to this chapter. The files can be opened by RStudio and the values and are in the last two columns, see screen-shot Fig. 18.3. For example, for modality 2 and reader 1, = 0.321and = 2.35. The .lrc files are the data files in one of the appropriate formats for OR DBM-MRMC 2.5.
+\hypertarget{rsm-fitting-references}{%
+\section{References}\label{rsm-fitting-references}}
+
+\hypertarget{rsm-3-fits}{%
+\chapter{Three proper ROC fits}\label{rsm-3-fits}}
+
+\hypertarget{rsm-3-fits-intro}{%
+\section{Introduction}\label{rsm-3-fits-intro}}
+
+There are three methods for fitting proper curves to ROC datasets. This chapter compares these fits for a number of datasets.
+
+\hypertarget{rsm-3-fits-roc-serendipitious}{%
+\section{A serendipitous finding}\label{rsm-3-fits-roc-serendipitious}}
+
+The RSM fitting algorithm was tested against PROPROC and CBM, both of which are proper ROC fitting methods described in TBA Chapter 20. Comparing RSM against the binormal model would be inappropriate, as the latter does not predict proper ROCs.
+
+The RSM and CBM, implemented in RJafroc and PROPROC, implemented in software available from the University of Iowa ROC website, were applied to fourteen (14) datasets described in the documentation of \texttt{RJafroc}.
+
+The RSM has three parameters \(\mu\), \(\lambda'\), and \(\nu'\) (excluding thresholds). CBM has two parameters \(\mu\) and \(\alpha\), as detailed in Chapter 20. Both RSM and CBM fitting methods are implemented in \texttt{RJafroc}. PROPROC is a two-parameter model, with parameters \(c\) and \(d_a\), as detailed in TBA Chapter 20: these parameters were obtained by running Windows software 20 OR DBM-MRMC 2.5 (Sept.~04, 2014) with PROPROC selected as the curve-fitting method. The relevant results are saved in files that end with ``proproc norm area pooled.csv'' contained in subdirectory MRMCRuns in the software directory corresponding to this chapter. The files can be opened by RStudio and the values and are in the last two columns, see screen-shot Fig. 18.3. For example, for modality 2 and reader 1, = 0.321and = 2.35. The .lrc files are the data files in one of the appropriate formats for OR DBM-MRMC 2.5.
 
 Fig. 18.3: Screen shot of the MRMCRuns directory, opened using RStudio, showing the contents of the file VD\_MRMC proproc area pooled.csv generated by Windows DBM-MRMC for the VD dataset with PROPROC analysis selected. The last two columns contain the , parameters of the PROPROC algorithm for this dataset. For example, for modality 2 and reader 1, = 0.321and = 2.35. Since there are five readers and two modalities, the file has 10 data rows. Row 10, showing results for modality 2 and reader 5, yielded c = 1 and = 0, corresponding to perfect performance, AUC = 1 {[}T = treatment; R = reader; area = PROPROC AUC; numCAT = \# ROC bins; adjPMean = undocumented value; c = -parameter; d\_a = -parameter defined in Ref. 6.{]}
 
@@ -13605,8 +13623,8 @@ Sourcing mainRSM.R two more times, each time with the appropriate dataset specif
 
 The serendipitous finding, alluded to in the title to this section, is that all three proper ROC fitting methods yield almost identical AUCs, to within a few percent. This is best appreciated by comparing the numbers in the last (AVG) row of each table. To the best of the author's knowledge the near equality of proper ROC AUCs has not been noted in the literature except in a proceedings paper by the author and a collaborator5. The explanation is deferred to §18.6.
 
-\hypertarget{rsm-fitting-discussion-summary}{%
-\section{Discussion / Summary}\label{rsm-fitting-discussion-summary}}
+\hypertarget{rsm-3-fits-discussion-summary}{%
+\section{Discussion / Summary}\label{rsm-3-fits-discussion-summary}}
 
 Over the years, there have been several attempts at fitting FROC data. Prior to the RSM-based ROC curve approach described in this chapter, all methods were aimed at fitting FROC curves, in the mistaken belief that this approach was using all the data. The earliest was the author's FROCFIT software36. This was followed by Swensson's approach37, subsequently shown to be equivalent to the author's earlier work, as far as predicting the FROC curve was concerned11. In the meantime, CAD developers, who relied heavily on the FROC curve to evaluate their algorithms, developed an empirical approach that was subsequently put on a formal basis in the IDCA method12.
 
@@ -13628,8 +13646,8 @@ An important finding is the inverse correlation between search performance and l
 
 The main scientific conclusion of this chapter is that search-performance is the primary bottleneck in limiting observer performance. It is unfortunate that search is ignored in the ROC paradigm, and influential persons still continue to advocate ROC methods40 because some have difficutly understanding the concept of a lesion, and in current model observer methods, also advocated by leading scientists . Evidence presented in this chapter should convince researchers to reconsider the focus of their investigations, most of which is currently directed at improving classification performance, which has been shown not to be the bottleneck. Another conclusion is that the three method of fitting ROC data yield almost identical AUCs. Relative to the RSM the PROPROC estimates are about 2.6\% larger while CBM estimates are about 1\% larger. This was a serendipitous finding that makes sense, in retrospect, but to the best of the author's knowledge is not known in the research community. PROPROC and to a lesser extent CBM are prone to severely overestimating performance in situations where the operating points are limited to a steep ascending section at the low end of false positive fraction scale. This parallels an earlier comment regarding the FROC, namely measurements derived from the steep part of the curve are unreliable, §17.10.1.
 
-\hypertarget{rsm-fitting-references}{%
-\section{References}\label{rsm-fitting-references}}
+\hypertarget{rsm-3-fits-references}{%
+\section{References}\label{rsm-3-fits-references}}
 
 \hypertarget{rsm-goodbye-froc}{%
 \chapter{The FROC should not be used to measure performance}\label{rsm-goodbye-froc}}
