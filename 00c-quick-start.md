@@ -22,7 +22,12 @@ This illustrates the `UtilOutputReport()` function. The arguments are the datase
 
 
 ```r
-ret <- ret <- UtilOutputReport(get("dataset03"), ReportFileBaseName = "R/quick-start/MyResults", ReportFileExt = "xlsx",  FOM = "Wilcoxon", method = "OR", overWrite = TRUE)
+ret <- UtilOutputReport(get("dataset03"), 
+                        ReportFileBaseName = "R/quick-start/MyResults", 
+                        ReportFileExt = "xlsx",  
+                        FOM = "Wilcoxon", 
+                        method = "OR", 
+                        overWrite = TRUE)
 ```
 
 The following screen shots display the contents of the created file `"R/quick-start/MyResults.xlsx"`.
