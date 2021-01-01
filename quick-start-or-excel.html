@@ -154,15 +154,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="2" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html"><i class="fa fa-check"></i><b>2</b> OR analysis text output</a><ul>
 <li class="chapter" data-level="2.1" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-intro"><i class="fa fa-check"></i><b>2.1</b> Introduction</a></li>
-<li class="chapter" data-level="2.2" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-output"><i class="fa fa-check"></i><b>2.2</b> Generating the Excel output file</a></li>
-<li class="chapter" data-level="2.3" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-significance-testing"><i class="fa fa-check"></i><b>2.3</b> ORH significance testing</a></li>
+<li class="chapter" data-level="2.2" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-analyze-dataset"><i class="fa fa-check"></i><b>2.2</b> Analyzing the ROC dataset</a></li>
+<li class="chapter" data-level="2.3" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-explanation"><i class="fa fa-check"></i><b>2.3</b> Explanation of the output</a></li>
 <li class="chapter" data-level="2.4" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-references"><i class="fa fa-check"></i><b>2.4</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html"><i class="fa fa-check"></i><b>3</b> OR analysis Excel output</a><ul>
 <li class="chapter" data-level="3.1" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html#quick-start-or-excel-intro"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
 <li class="chapter" data-level="3.2" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html#quick-start-or-excel-output"><i class="fa fa-check"></i><b>3.2</b> Generating the Excel output file</a></li>
-<li class="chapter" data-level="3.3" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html#quick-start-or-excel-significance-testing"><i class="fa fa-check"></i><b>3.3</b> ORH significance testing</a></li>
-<li class="chapter" data-level="3.4" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html#quick-start-or-excel-references"><i class="fa fa-check"></i><b>3.4</b> References</a></li>
+<li class="chapter" data-level="3.3" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html#quick-start-or-excel-references"><i class="fa fa-check"></i><b>3.3</b> References</a></li>
 </ul></li>
 <li class="part"><span><b>ROC paradigm</b></span></li>
 <li class="chapter" data-level="4" data-path="preliminaries.html"><a href="preliminaries.html"><i class="fa fa-check"></i><b>4</b> Preliminaries</a><ul>
@@ -867,29 +866,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 3</span> OR analysis Excel output</h1>
 <div id="quick-start-or-excel-intro" class="section level2">
 <h2><span class="header-section-number">3.1</span> Introduction</h2>
-<p>This vignette illustrates significance testing using the OR method. But, instead of the unwieldy output in <a href="quick-start-dbm-text.html#quick-start-dbm-text">1</a>, it generates an Excel output file containing the following worksheets:</p>
+<p>This vignette illustrates significance testing using the OR method. But, instead of the perhaps unwieldy output in Chapter <a href="quick-start-or-text.html#quick-start-or-text">2</a>, it generates an Excel output file containing the following worksheets:</p>
 <ul>
 <li><code>Summary</code></li>
 <li><code>FOMs</code></li>
+<li><code>ANOVA</code></li>
 <li><code>RRRC</code></li>
 <li><code>FRRC</code></li>
 <li><code>RRFC</code></li>
-<li><code>ANOVA</code></li>
 </ul>
 </div>
 <div id="quick-start-or-excel-output" class="section level2">
 <h2><span class="header-section-number">3.2</span> Generating the Excel output file</h2>
-<p>This illustrates the <code>UtilOutputReport()</code> function. The significance testing <code>method</code> is “DBM”, the default, and the figure of merit <code>FOM</code> is “Wilcoxon”. Note <code>ReportFileExt</code> = “xlsx”` telling
-the function to create an Excel output file. The Excel output is created in a temporary file.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="quick-start-or-excel.html#cb21-1"></a>ret &lt;-<span class="st"> </span><span class="kw">UtilOutputReport</span>(<span class="kw">get</span>(<span class="st">&quot;dataset03&quot;</span>), <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;DBM&quot;</span>, <span class="dt">overWrite =</span> <span class="ot">TRUE</span>, <span class="dt">ReportFileExt =</span> <span class="st">&quot;xlsx&quot;</span>)</span></code></pre></div>
+<p>This illustrates the <code>UtilOutputReport()</code> function. The arguments are the dataset, <code>dataset03</code> in the current example, the report file base name <code>ReportFileBaseName</code>, set to <code>R/quick-start/MyResults</code> in the current example, the report file extension <code>ReportFileExt</code>, set to <code>xlsx</code> in the current example, the FOM, the method of analysis and the flag <code>overWrite = TRUE</code> which overwrites an existing file with the same name, as otherwise the program will pause for user input.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="quick-start-or-excel.html#cb24-1"></a>ret &lt;-<span class="st"> </span>ret &lt;-<span class="st"> </span><span class="kw">UtilOutputReport</span>(<span class="kw">get</span>(<span class="st">&quot;dataset03&quot;</span>), <span class="dt">ReportFileBaseName =</span> <span class="st">&quot;R/quick-start/MyResults&quot;</span>, <span class="dt">ReportFileExt =</span> <span class="st">&quot;xlsx&quot;</span>,  <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;OR&quot;</span>, <span class="dt">overWrite =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p>The following screen shots display the contents of the created file <code>"R/quick-start/MyResults.xlsx"</code>.</p>
+<div class="figure" style="text-align: center"><span id="fig:quick-start-or-xlsx1"></span>
+<img src="R/quick-start/MyResultsSummary.png" alt="`Summary` and `FOMs` worksheets of Excel file `R/quick-start/MyResults.xlsx`" width="50%" height="20%" /><img src="R/quick-start/MyResultsFOMs.png" alt="`Summary` and `FOMs` worksheets of Excel file `R/quick-start/MyResults.xlsx`" width="50%" height="20%" />
+<p class="caption">
+FIGURE 3.1: <code>Summary</code> and <code>FOMs</code> worksheets of Excel file <code>R/quick-start/MyResults.xlsx</code>
+</p>
 </div>
-<div id="quick-start-or-excel-significance-testing" class="section level2">
-<h2><span class="header-section-number">3.3</span> ORH significance testing</h2>
-<p>Simply change <code>method = "DBM"</code> (the default) to <code>method = "OR"</code>.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="quick-start-or-excel.html#cb22-1"></a>ret &lt;-<span class="st"> </span><span class="kw">UtilOutputReport</span>(<span class="kw">get</span>(<span class="st">&quot;dataset03&quot;</span>), <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;OR&quot;</span>, <span class="dt">overWrite =</span> <span class="ot">TRUE</span>, <span class="dt">ReportFileExt =</span> <span class="st">&quot;xlsx&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:quick-start-or-xlsx2"></span>
+<img src="R/quick-start/MyResultsANOVA1.png" alt="`ANOVA` worksheet of Excel file `R/quick-start/MyResults.xlsx`" width="50%" height="20%" /><img src="R/quick-start/MyResultsANOVA2.png" alt="`ANOVA` worksheet of Excel file `R/quick-start/MyResults.xlsx`" width="50%" height="20%" />
+<p class="caption">
+FIGURE 3.2: <code>ANOVA</code> worksheet of Excel file <code>R/quick-start/MyResults.xlsx</code>
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:quick-start-or-xlsx3"></span>
+<img src="R/quick-start/MyResultsRRRC.png" alt="`RRRC`, `FRRC` and `RRFC` worksheets of Excel file `R/quick-start/MyResults.xlsx`" width="50%" height="20%" /><img src="R/quick-start/MyResultsFRRC.png" alt="`RRRC`, `FRRC` and `RRFC` worksheets of Excel file `R/quick-start/MyResults.xlsx`" width="50%" height="20%" /><img src="R/quick-start/MyResultsRRFC.png" alt="`RRRC`, `FRRC` and `RRFC` worksheets of Excel file `R/quick-start/MyResults.xlsx`" width="50%" height="20%" />
+<p class="caption">
+FIGURE 3.3: <code>RRRC</code>, <code>FRRC</code> and <code>RRFC</code> worksheets of Excel file <code>R/quick-start/MyResults.xlsx</code>
+</p>
+</div>
 </div>
 <div id="quick-start-or-excel-references" class="section level2">
-<h2><span class="header-section-number">3.4</span> References</h2>
+<h2><span class="header-section-number">3.3</span> References</h2>
 
 </div>
 </div>

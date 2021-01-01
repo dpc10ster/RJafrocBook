@@ -154,15 +154,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="2" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html"><i class="fa fa-check"></i><b>2</b> OR analysis text output</a><ul>
 <li class="chapter" data-level="2.1" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-intro"><i class="fa fa-check"></i><b>2.1</b> Introduction</a></li>
-<li class="chapter" data-level="2.2" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-output"><i class="fa fa-check"></i><b>2.2</b> Generating the Excel output file</a></li>
-<li class="chapter" data-level="2.3" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-significance-testing"><i class="fa fa-check"></i><b>2.3</b> ORH significance testing</a></li>
+<li class="chapter" data-level="2.2" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-analyze-dataset"><i class="fa fa-check"></i><b>2.2</b> Analyzing the ROC dataset</a></li>
+<li class="chapter" data-level="2.3" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-explanation"><i class="fa fa-check"></i><b>2.3</b> Explanation of the output</a></li>
 <li class="chapter" data-level="2.4" data-path="quick-start-or-text.html"><a href="quick-start-or-text.html#quick-start-or-text-references"><i class="fa fa-check"></i><b>2.4</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html"><i class="fa fa-check"></i><b>3</b> OR analysis Excel output</a><ul>
 <li class="chapter" data-level="3.1" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html#quick-start-or-excel-intro"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
 <li class="chapter" data-level="3.2" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html#quick-start-or-excel-output"><i class="fa fa-check"></i><b>3.2</b> Generating the Excel output file</a></li>
-<li class="chapter" data-level="3.3" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html#quick-start-or-excel-significance-testing"><i class="fa fa-check"></i><b>3.3</b> ORH significance testing</a></li>
-<li class="chapter" data-level="3.4" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html#quick-start-or-excel-references"><i class="fa fa-check"></i><b>3.4</b> References</a></li>
+<li class="chapter" data-level="3.3" data-path="quick-start-or-excel.html"><a href="quick-start-or-excel.html#quick-start-or-excel-references"><i class="fa fa-check"></i><b>3.3</b> References</a></li>
 </ul></li>
 <li class="part"><span><b>ROC paradigm</b></span></li>
 <li class="chapter" data-level="4" data-path="preliminaries.html"><a href="preliminaries.html"><i class="fa fa-check"></i><b>4</b> Preliminaries</a><ul>
@@ -1033,58 +1032,58 @@ O_4 \equiv \left ( FPF_4, TPF_4 \right ) = \left ( 0.017, 0.44 \right )\\
 \tag{8.5}
 \end{equation}\]</span></p>
 <p>In Table <a href="ratingsParadigm.html#tab:ratingsParadigmExampleTable">7.1</a> a sample clinical ratings data set was introduced. Shown below is a partial code listing of mainEmpRocPlot.R showing implementation of Eqn. (5.7). Except for the last statement, the plotting part of the code is suppressed.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="empirical-auc.html#cb44-1"></a>K1 &lt;-<span class="st"> </span><span class="dv">60</span></span>
-<span id="cb44-2"><a href="empirical-auc.html#cb44-2"></a>K2 &lt;-<span class="st"> </span><span class="dv">50</span></span>
-<span id="cb44-3"><a href="empirical-auc.html#cb44-3"></a>FPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">cumsum</span>(<span class="kw">rev</span>(<span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">19</span>, <span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">1</span>))) <span class="op">/</span><span class="st"> </span>K1)</span>
-<span id="cb44-4"><a href="empirical-auc.html#cb44-4"></a>TPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">cumsum</span>(<span class="kw">rev</span>(<span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">12</span>, <span class="dv">22</span>))) <span class="op">/</span><span class="st"> </span>K2)</span>
-<span id="cb44-5"><a href="empirical-auc.html#cb44-5"></a></span>
-<span id="cb44-6"><a href="empirical-auc.html#cb44-6"></a>ROCOp &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">FPF =</span> FPF, <span class="dt">TPF =</span> TPF)</span>
-<span id="cb44-7"><a href="empirical-auc.html#cb44-7"></a>ROCPlot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(</span>
-<span id="cb44-8"><a href="empirical-auc.html#cb44-8"></a>  <span class="dt">data =</span> ROCOp, </span>
-<span id="cb44-9"><a href="empirical-auc.html#cb44-9"></a>  <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> FPF, <span class="dt">y =</span> TPF)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb44-10"><a href="empirical-auc.html#cb44-10"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb44-11"><a href="empirical-auc.html#cb44-11"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb44-12"><a href="empirical-auc.html#cb44-12"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb44-13"><a href="empirical-auc.html#cb44-13"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb44-14"><a href="empirical-auc.html#cb44-14"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb44-15"><a href="empirical-auc.html#cb44-15"></a>        <span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>), </span>
-<span id="cb44-16"><a href="empirical-auc.html#cb44-16"></a>        <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">15</span>), </span>
-<span id="cb44-17"><a href="empirical-auc.html#cb44-17"></a>        <span class="dt">axis.title =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">20</span>)) <span class="op">+</span></span>
-<span id="cb44-18"><a href="empirical-auc.html#cb44-18"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(</span>
-<span id="cb44-19"><a href="empirical-auc.html#cb44-19"></a>    <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), </span>
-<span id="cb44-20"><a href="empirical-auc.html#cb44-20"></a>    <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb44-21"><a href="empirical-auc.html#cb44-21"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(</span>
-<span id="cb44-22"><a href="empirical-auc.html#cb44-22"></a>    <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>)) <span class="op">+</span></span>
-<span id="cb44-23"><a href="empirical-auc.html#cb44-23"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb44-24"><a href="empirical-auc.html#cb44-24"></a><span class="st">  </span><span class="kw">annotation_custom</span>(</span>
-<span id="cb44-25"><a href="empirical-auc.html#cb44-25"></a>    <span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(<span class="st">&quot;O&quot;</span>)),</span>
-<span id="cb44-26"><a href="empirical-auc.html#cb44-26"></a>                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">22</span>)), </span>
-<span id="cb44-27"><a href="empirical-auc.html#cb44-27"></a>    <span class="dt">xmin =</span> <span class="fl">-0.03</span>, <span class="dt">xmax =</span> <span class="fl">-0.03</span>, </span>
-<span id="cb44-28"><a href="empirical-auc.html#cb44-28"></a>    <span class="dt">ymin =</span> <span class="fl">-0.03</span>, <span class="dt">ymax =</span> <span class="fl">-0.03</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb44-29"><a href="empirical-auc.html#cb44-29"></a><span class="st">  </span><span class="kw">annotation_custom</span>(</span>
-<span id="cb44-30"><a href="empirical-auc.html#cb44-30"></a>    <span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(O[<span class="dv">4</span>])),</span>
-<span id="cb44-31"><a href="empirical-auc.html#cb44-31"></a>                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">22</span>)), </span>
-<span id="cb44-32"><a href="empirical-auc.html#cb44-32"></a>    <span class="dt">xmin =</span> <span class="fl">0.06</span>, <span class="dt">xmax =</span> <span class="fl">0.06</span>, </span>
-<span id="cb44-33"><a href="empirical-auc.html#cb44-33"></a>    <span class="dt">ymin =</span> <span class="fl">0.40</span>, <span class="dt">ymax =</span> <span class="fl">0.40</span>) <span class="op">+</span></span>
-<span id="cb44-34"><a href="empirical-auc.html#cb44-34"></a><span class="st">  </span><span class="kw">annotation_custom</span>(</span>
-<span id="cb44-35"><a href="empirical-auc.html#cb44-35"></a>    <span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(O[<span class="dv">3</span>])),</span>
-<span id="cb44-36"><a href="empirical-auc.html#cb44-36"></a>                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">22</span>)), </span>
-<span id="cb44-37"><a href="empirical-auc.html#cb44-37"></a>    <span class="dt">xmin =</span> <span class="fl">0.10</span>, <span class="dt">xmax =</span> <span class="fl">0.10</span>, </span>
-<span id="cb44-38"><a href="empirical-auc.html#cb44-38"></a>    <span class="dt">ymin =</span> <span class="fl">0.64</span>, <span class="dt">ymax =</span> <span class="fl">0.64</span>) <span class="op">+</span></span>
-<span id="cb44-39"><a href="empirical-auc.html#cb44-39"></a><span class="st">  </span><span class="kw">annotation_custom</span>(</span>
-<span id="cb44-40"><a href="empirical-auc.html#cb44-40"></a>    <span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(O[<span class="dv">2</span>])),</span>
-<span id="cb44-41"><a href="empirical-auc.html#cb44-41"></a>                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">22</span>)), </span>
-<span id="cb44-42"><a href="empirical-auc.html#cb44-42"></a>    <span class="dt">xmin =</span> <span class="fl">0.16</span>, <span class="dt">xmax =</span> <span class="fl">0.16</span>, </span>
-<span id="cb44-43"><a href="empirical-auc.html#cb44-43"></a>    <span class="dt">ymin =</span> <span class="fl">0.83</span>, <span class="dt">ymax =</span> <span class="fl">0.83</span>) <span class="op">+</span></span>
-<span id="cb44-44"><a href="empirical-auc.html#cb44-44"></a><span class="st">  </span><span class="kw">annotation_custom</span>(</span>
-<span id="cb44-45"><a href="empirical-auc.html#cb44-45"></a>    <span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(O[<span class="dv">1</span>])),</span>
-<span id="cb44-46"><a href="empirical-auc.html#cb44-46"></a>                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">22</span>)), </span>
-<span id="cb44-47"><a href="empirical-auc.html#cb44-47"></a>    <span class="dt">xmin =</span> <span class="fl">0.49</span>, <span class="dt">xmax =</span> <span class="fl">0.49</span>, </span>
-<span id="cb44-48"><a href="empirical-auc.html#cb44-48"></a>    <span class="dt">ymin =</span> <span class="fl">0.94</span>, <span class="dt">ymax =</span> <span class="fl">0.94</span>)  </span>
-<span id="cb44-49"><a href="empirical-auc.html#cb44-49"></a></span>
-<span id="cb44-50"><a href="empirical-auc.html#cb44-50"></a>p &lt;-<span class="st"> </span><span class="kw">ggplotGrob</span>(ROCPlot)</span>
-<span id="cb44-51"><a href="empirical-auc.html#cb44-51"></a>p<span class="op">$</span>layout<span class="op">$</span>clip[p<span class="op">$</span>layout<span class="op">$</span>name<span class="op">==</span><span class="st">&quot;panel&quot;</span>] &lt;-<span class="st"> &quot;off&quot;</span></span>
-<span id="cb44-52"><a href="empirical-auc.html#cb44-52"></a><span class="kw">grid.draw</span>(p)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="empirical-auc.html#cb46-1"></a>K1 &lt;-<span class="st"> </span><span class="dv">60</span></span>
+<span id="cb46-2"><a href="empirical-auc.html#cb46-2"></a>K2 &lt;-<span class="st"> </span><span class="dv">50</span></span>
+<span id="cb46-3"><a href="empirical-auc.html#cb46-3"></a>FPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">cumsum</span>(<span class="kw">rev</span>(<span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">19</span>, <span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">1</span>))) <span class="op">/</span><span class="st"> </span>K1)</span>
+<span id="cb46-4"><a href="empirical-auc.html#cb46-4"></a>TPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">cumsum</span>(<span class="kw">rev</span>(<span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">12</span>, <span class="dv">22</span>))) <span class="op">/</span><span class="st"> </span>K2)</span>
+<span id="cb46-5"><a href="empirical-auc.html#cb46-5"></a></span>
+<span id="cb46-6"><a href="empirical-auc.html#cb46-6"></a>ROCOp &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">FPF =</span> FPF, <span class="dt">TPF =</span> TPF)</span>
+<span id="cb46-7"><a href="empirical-auc.html#cb46-7"></a>ROCPlot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(</span>
+<span id="cb46-8"><a href="empirical-auc.html#cb46-8"></a>  <span class="dt">data =</span> ROCOp, </span>
+<span id="cb46-9"><a href="empirical-auc.html#cb46-9"></a>  <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> FPF, <span class="dt">y =</span> TPF)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-10"><a href="empirical-auc.html#cb46-10"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-11"><a href="empirical-auc.html#cb46-11"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-12"><a href="empirical-auc.html#cb46-12"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-13"><a href="empirical-auc.html#cb46-13"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb46-14"><a href="empirical-auc.html#cb46-14"></a>        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb46-15"><a href="empirical-auc.html#cb46-15"></a>        <span class="dt">panel.border =</span> <span class="kw">element_rect</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>), </span>
+<span id="cb46-16"><a href="empirical-auc.html#cb46-16"></a>        <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">15</span>), </span>
+<span id="cb46-17"><a href="empirical-auc.html#cb46-17"></a>        <span class="dt">axis.title =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">20</span>)) <span class="op">+</span></span>
+<span id="cb46-18"><a href="empirical-auc.html#cb46-18"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(</span>
+<span id="cb46-19"><a href="empirical-auc.html#cb46-19"></a>    <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), </span>
+<span id="cb46-20"><a href="empirical-auc.html#cb46-20"></a>    <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-21"><a href="empirical-auc.html#cb46-21"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(</span>
+<span id="cb46-22"><a href="empirical-auc.html#cb46-22"></a>    <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">breaks =</span> <span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb46-23"><a href="empirical-auc.html#cb46-23"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-24"><a href="empirical-auc.html#cb46-24"></a><span class="st">  </span><span class="kw">annotation_custom</span>(</span>
+<span id="cb46-25"><a href="empirical-auc.html#cb46-25"></a>    <span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(<span class="st">&quot;O&quot;</span>)),</span>
+<span id="cb46-26"><a href="empirical-auc.html#cb46-26"></a>                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">22</span>)), </span>
+<span id="cb46-27"><a href="empirical-auc.html#cb46-27"></a>    <span class="dt">xmin =</span> <span class="fl">-0.03</span>, <span class="dt">xmax =</span> <span class="fl">-0.03</span>, </span>
+<span id="cb46-28"><a href="empirical-auc.html#cb46-28"></a>    <span class="dt">ymin =</span> <span class="fl">-0.03</span>, <span class="dt">ymax =</span> <span class="fl">-0.03</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-29"><a href="empirical-auc.html#cb46-29"></a><span class="st">  </span><span class="kw">annotation_custom</span>(</span>
+<span id="cb46-30"><a href="empirical-auc.html#cb46-30"></a>    <span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(O[<span class="dv">4</span>])),</span>
+<span id="cb46-31"><a href="empirical-auc.html#cb46-31"></a>                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">22</span>)), </span>
+<span id="cb46-32"><a href="empirical-auc.html#cb46-32"></a>    <span class="dt">xmin =</span> <span class="fl">0.06</span>, <span class="dt">xmax =</span> <span class="fl">0.06</span>, </span>
+<span id="cb46-33"><a href="empirical-auc.html#cb46-33"></a>    <span class="dt">ymin =</span> <span class="fl">0.40</span>, <span class="dt">ymax =</span> <span class="fl">0.40</span>) <span class="op">+</span></span>
+<span id="cb46-34"><a href="empirical-auc.html#cb46-34"></a><span class="st">  </span><span class="kw">annotation_custom</span>(</span>
+<span id="cb46-35"><a href="empirical-auc.html#cb46-35"></a>    <span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(O[<span class="dv">3</span>])),</span>
+<span id="cb46-36"><a href="empirical-auc.html#cb46-36"></a>                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">22</span>)), </span>
+<span id="cb46-37"><a href="empirical-auc.html#cb46-37"></a>    <span class="dt">xmin =</span> <span class="fl">0.10</span>, <span class="dt">xmax =</span> <span class="fl">0.10</span>, </span>
+<span id="cb46-38"><a href="empirical-auc.html#cb46-38"></a>    <span class="dt">ymin =</span> <span class="fl">0.64</span>, <span class="dt">ymax =</span> <span class="fl">0.64</span>) <span class="op">+</span></span>
+<span id="cb46-39"><a href="empirical-auc.html#cb46-39"></a><span class="st">  </span><span class="kw">annotation_custom</span>(</span>
+<span id="cb46-40"><a href="empirical-auc.html#cb46-40"></a>    <span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(O[<span class="dv">2</span>])),</span>
+<span id="cb46-41"><a href="empirical-auc.html#cb46-41"></a>                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">22</span>)), </span>
+<span id="cb46-42"><a href="empirical-auc.html#cb46-42"></a>    <span class="dt">xmin =</span> <span class="fl">0.16</span>, <span class="dt">xmax =</span> <span class="fl">0.16</span>, </span>
+<span id="cb46-43"><a href="empirical-auc.html#cb46-43"></a>    <span class="dt">ymin =</span> <span class="fl">0.83</span>, <span class="dt">ymax =</span> <span class="fl">0.83</span>) <span class="op">+</span></span>
+<span id="cb46-44"><a href="empirical-auc.html#cb46-44"></a><span class="st">  </span><span class="kw">annotation_custom</span>(</span>
+<span id="cb46-45"><a href="empirical-auc.html#cb46-45"></a>    <span class="dt">grob =</span> <span class="kw">textGrob</span>(<span class="kw">bquote</span>(<span class="kw">italic</span>(O[<span class="dv">1</span>])),</span>
+<span id="cb46-46"><a href="empirical-auc.html#cb46-46"></a>                    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">22</span>)), </span>
+<span id="cb46-47"><a href="empirical-auc.html#cb46-47"></a>    <span class="dt">xmin =</span> <span class="fl">0.49</span>, <span class="dt">xmax =</span> <span class="fl">0.49</span>, </span>
+<span id="cb46-48"><a href="empirical-auc.html#cb46-48"></a>    <span class="dt">ymin =</span> <span class="fl">0.94</span>, <span class="dt">ymax =</span> <span class="fl">0.94</span>)  </span>
+<span id="cb46-49"><a href="empirical-auc.html#cb46-49"></a></span>
+<span id="cb46-50"><a href="empirical-auc.html#cb46-50"></a>p &lt;-<span class="st"> </span><span class="kw">ggplotGrob</span>(ROCPlot)</span>
+<span id="cb46-51"><a href="empirical-auc.html#cb46-51"></a>p<span class="op">$</span>layout<span class="op">$</span>clip[p<span class="op">$</span>layout<span class="op">$</span>name<span class="op">==</span><span class="st">&quot;panel&quot;</span>] &lt;-<span class="st"> &quot;off&quot;</span></span>
+<span id="cb46-52"><a href="empirical-auc.html#cb46-52"></a><span class="kw">grid.draw</span>(p)</span></code></pre></div>
 <div class="figure"><span id="fig:empirical-auc-EmpiricalPlot"></span>
 <img src="05-empirical-auc_files/figure-html/empirical-auc-EmpiricalPlot-1.png" alt="Empirical ROC plot for the data in Table 4.1. By convention the operating points are numbered starting with the uppermost non-trivial one and working down the plot and the trivial operating points (0,0) and (1,1) are not shown." width="672" />
 <p class="caption">
@@ -1097,41 +1096,41 @@ FIGURE 8.1: Empirical ROC plot for the data in Table 4.1. By convention the oper
 <div id="empirical-auc-area-under" class="section level2">
 <h2><span class="header-section-number">8.4</span> AUC under the empirical ROC plot</h2>
 <p>Fig. <a href="empirical-auc.html#fig:empirical-auc-EmpiricalAUC">8.2</a> shows the empirical plot for the data in Table 4.1. The area under the curve (AUC) is the shaded area. By dropping imaginary vertical lines from the non-trivial operating points onto the x-axis, the shaded area is seen to be the sum of one triangular shaped area and four trapezoids. One may be tempted to write equations to calculate the total area using elementary algebra, but that would be unproductive. There is a theorem (see below) that the empirical area is exactly equal to a particular statistic known as the Mann-Whitney-Wilcoxon statistic <span class="citation">(Wilcoxon <a href="#ref-RN2191" role="doc-biblioref">1945</a>; Mann and Whitney <a href="#ref-RN2197" role="doc-biblioref">1947</a>)</span>, which, in this book, is abbreviated to the Wilcoxon statistic. Calculating this statistic is much simpler than calculating and summing the areas of the triangle and trapezoids, or doing planimetry.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="empirical-auc.html#cb45-1"></a>RocDataTable =<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))</span>
-<span id="cb45-2"><a href="empirical-auc.html#cb45-2"></a>RocDataTable[<span class="dv">1</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">19</span>,<span class="dv">8</span>,<span class="dv">3</span>)</span>
-<span id="cb45-3"><a href="empirical-auc.html#cb45-3"></a>RocDataTable[<span class="dv">2</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">22</span>)</span>
-<span id="cb45-4"><a href="empirical-auc.html#cb45-4"></a></span>
-<span id="cb45-5"><a href="empirical-auc.html#cb45-5"></a>ret  &lt;-<span class="st"> </span><span class="kw">RocOperatingPointsFromRatingsTable</span>( </span>
-<span id="cb45-6"><a href="empirical-auc.html#cb45-6"></a>  RocDataTable[<span class="dv">1</span>,], </span>
-<span id="cb45-7"><a href="empirical-auc.html#cb45-7"></a>  RocDataTable[<span class="dv">2</span>,] )</span>
-<span id="cb45-8"><a href="empirical-auc.html#cb45-8"></a>FPF &lt;-<span class="st"> </span>ret<span class="op">$</span>FPF</span>
-<span id="cb45-9"><a href="empirical-auc.html#cb45-9"></a>TPF &lt;-<span class="st"> </span>ret<span class="op">$</span>TPF</span>
-<span id="cb45-10"><a href="empirical-auc.html#cb45-10"></a></span>
-<span id="cb45-11"><a href="empirical-auc.html#cb45-11"></a>ROC_Points &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">FPF =</span> FPF, <span class="dt">TPF =</span> TPF)</span>
-<span id="cb45-12"><a href="empirical-auc.html#cb45-12"></a><span class="co"># add the trivial points</span></span>
-<span id="cb45-13"><a href="empirical-auc.html#cb45-13"></a>ROC_Points &lt;-<span class="st"> </span><span class="kw">rbind</span>(</span>
-<span id="cb45-14"><a href="empirical-auc.html#cb45-14"></a>  <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), </span>
-<span id="cb45-15"><a href="empirical-auc.html#cb45-15"></a>  ROC_Points, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
-<span id="cb45-16"><a href="empirical-auc.html#cb45-16"></a></span>
-<span id="cb45-17"><a href="empirical-auc.html#cb45-17"></a>shade &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb45-18"><a href="empirical-auc.html#cb45-18"></a>  <span class="dt">FPF =</span> <span class="kw">c</span>(ROC_Points<span class="op">$</span>FPF, <span class="dv">1</span>), </span>
-<span id="cb45-19"><a href="empirical-auc.html#cb45-19"></a>  <span class="dt">TPF =</span> <span class="kw">c</span>(ROC_Points<span class="op">$</span>TPF, <span class="dv">0</span>))</span>
-<span id="cb45-20"><a href="empirical-auc.html#cb45-20"></a></span>
-<span id="cb45-21"><a href="empirical-auc.html#cb45-21"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(ROC_Points, </span>
-<span id="cb45-22"><a href="empirical-auc.html#cb45-22"></a>            <span class="kw">aes</span>(<span class="dt">x =</span> FPF, <span class="dt">y =</span> TPF) ) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb45-23"><a href="empirical-auc.html#cb45-23"></a><span class="st">  </span><span class="kw">geom_polygon</span>(<span class="dt">data =</span> shade, <span class="dt">fill =</span> <span class="st">&#39;grey&#39;</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb45-24"><a href="empirical-auc.html#cb45-24"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb45-25"><a href="empirical-auc.html#cb45-25"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb45-26"><a href="empirical-auc.html#cb45-26"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb45-27"><a href="empirical-auc.html#cb45-27"></a><span class="st">  </span><span class="kw">theme</span>(</span>
-<span id="cb45-28"><a href="empirical-auc.html#cb45-28"></a>    <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
-<span id="cb45-29"><a href="empirical-auc.html#cb45-29"></a>    <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></span>
-<span id="cb45-30"><a href="empirical-auc.html#cb45-30"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(FPF)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb45-31"><a href="empirical-auc.html#cb45-31"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="kw">expression</span>(TPF)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb45-32"><a href="empirical-auc.html#cb45-32"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb45-33"><a href="empirical-auc.html#cb45-33"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb45-34"><a href="empirical-auc.html#cb45-34"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb45-35"><a href="empirical-auc.html#cb45-35"></a><span class="kw">print</span>(p)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="empirical-auc.html#cb47-1"></a>RocDataTable =<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))</span>
+<span id="cb47-2"><a href="empirical-auc.html#cb47-2"></a>RocDataTable[<span class="dv">1</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">19</span>,<span class="dv">8</span>,<span class="dv">3</span>)</span>
+<span id="cb47-3"><a href="empirical-auc.html#cb47-3"></a>RocDataTable[<span class="dv">2</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">22</span>)</span>
+<span id="cb47-4"><a href="empirical-auc.html#cb47-4"></a></span>
+<span id="cb47-5"><a href="empirical-auc.html#cb47-5"></a>ret  &lt;-<span class="st"> </span><span class="kw">RocOperatingPointsFromRatingsTable</span>( </span>
+<span id="cb47-6"><a href="empirical-auc.html#cb47-6"></a>  RocDataTable[<span class="dv">1</span>,], </span>
+<span id="cb47-7"><a href="empirical-auc.html#cb47-7"></a>  RocDataTable[<span class="dv">2</span>,] )</span>
+<span id="cb47-8"><a href="empirical-auc.html#cb47-8"></a>FPF &lt;-<span class="st"> </span>ret<span class="op">$</span>FPF</span>
+<span id="cb47-9"><a href="empirical-auc.html#cb47-9"></a>TPF &lt;-<span class="st"> </span>ret<span class="op">$</span>TPF</span>
+<span id="cb47-10"><a href="empirical-auc.html#cb47-10"></a></span>
+<span id="cb47-11"><a href="empirical-auc.html#cb47-11"></a>ROC_Points &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">FPF =</span> FPF, <span class="dt">TPF =</span> TPF)</span>
+<span id="cb47-12"><a href="empirical-auc.html#cb47-12"></a><span class="co"># add the trivial points</span></span>
+<span id="cb47-13"><a href="empirical-auc.html#cb47-13"></a>ROC_Points &lt;-<span class="st"> </span><span class="kw">rbind</span>(</span>
+<span id="cb47-14"><a href="empirical-auc.html#cb47-14"></a>  <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), </span>
+<span id="cb47-15"><a href="empirical-auc.html#cb47-15"></a>  ROC_Points, <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb47-16"><a href="empirical-auc.html#cb47-16"></a></span>
+<span id="cb47-17"><a href="empirical-auc.html#cb47-17"></a>shade &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb47-18"><a href="empirical-auc.html#cb47-18"></a>  <span class="dt">FPF =</span> <span class="kw">c</span>(ROC_Points<span class="op">$</span>FPF, <span class="dv">1</span>), </span>
+<span id="cb47-19"><a href="empirical-auc.html#cb47-19"></a>  <span class="dt">TPF =</span> <span class="kw">c</span>(ROC_Points<span class="op">$</span>TPF, <span class="dv">0</span>))</span>
+<span id="cb47-20"><a href="empirical-auc.html#cb47-20"></a></span>
+<span id="cb47-21"><a href="empirical-auc.html#cb47-21"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(ROC_Points, </span>
+<span id="cb47-22"><a href="empirical-auc.html#cb47-22"></a>            <span class="kw">aes</span>(<span class="dt">x =</span> FPF, <span class="dt">y =</span> TPF) ) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-23"><a href="empirical-auc.html#cb47-23"></a><span class="st">  </span><span class="kw">geom_polygon</span>(<span class="dt">data =</span> shade, <span class="dt">fill =</span> <span class="st">&#39;grey&#39;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-24"><a href="empirical-auc.html#cb47-24"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-25"><a href="empirical-auc.html#cb47-25"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-26"><a href="empirical-auc.html#cb47-26"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-27"><a href="empirical-auc.html#cb47-27"></a><span class="st">  </span><span class="kw">theme</span>(</span>
+<span id="cb47-28"><a href="empirical-auc.html#cb47-28"></a>    <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), </span>
+<span id="cb47-29"><a href="empirical-auc.html#cb47-29"></a>    <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></span>
+<span id="cb47-30"><a href="empirical-auc.html#cb47-30"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(FPF)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-31"><a href="empirical-auc.html#cb47-31"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="kw">expression</span>(TPF)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-32"><a href="empirical-auc.html#cb47-32"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-33"><a href="empirical-auc.html#cb47-33"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-34"><a href="empirical-auc.html#cb47-34"></a><span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb47-35"><a href="empirical-auc.html#cb47-35"></a><span class="kw">print</span>(p)</span></code></pre></div>
 <div class="figure"><span id="fig:empirical-auc-EmpiricalAUC"></span>
 <img src="05-empirical-auc_files/figure-html/empirical-auc-EmpiricalAUC-1.png" alt="The empirical ROC plot corresponding to Table 4.1; the shaded area is the area AUC under this plot, a widely used figure of merit in non-parametric ROC analysis." width="672" />
 <p class="caption">
@@ -1167,58 +1166,58 @@ W = AUC
 \tag{8.8}
 \end{equation}\]</span></p>
 <p>Numerical illustration: While hardly a proof, as an illustration of the theorem it is helpful to calculate the sum on the right hand side of Eqn. <a href="empirical-auc.html#eq:empirical-auc-Wilcoxon">(8.6)</a> and compare it to direct integration of the area under the empirical ROC curve (i.e., adding the area of a triangle and several trapezoids). The function is called <code>trapz(x,y)</code>, see below. It takes two array arguments, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, where in the current case <span class="math inline">\(x\)</span> is <span class="math inline">\(FPF\)</span> and <span class="math inline">\(y\)</span> is <span class="math inline">\(TPF\)</span>. One has to be careful to include the end-points as otherwise the area will be underestimated. The Wilcoxon <span class="math inline">\(W\)</span> and the numerical estimate of the empirical area AUC are implemented in the following code.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="empirical-auc.html#cb46-1"></a>trapz =<span class="st"> </span><span class="cf">function</span>(x, y)</span>
-<span id="cb46-2"><a href="empirical-auc.html#cb46-2"></a>{ <span class="co">### computes the integral of y with respect to x using trapezoidal integration.</span></span>
-<span id="cb46-3"><a href="empirical-auc.html#cb46-3"></a>  idx =<span class="st"> </span><span class="dv">2</span><span class="op">:</span><span class="kw">length</span>(x)</span>
-<span id="cb46-4"><a href="empirical-auc.html#cb46-4"></a>  <span class="kw">return</span> (<span class="kw">as.double</span>( (x[idx] <span class="op">-</span><span class="st"> </span>x[idx<span class="dv">-1</span>]) <span class="op">%*%</span><span class="st"> </span>(y[idx] <span class="op">+</span><span class="st"> </span>y[idx<span class="dv">-1</span>])) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</span>
-<span id="cb46-5"><a href="empirical-auc.html#cb46-5"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="empirical-auc.html#cb47-1"></a>Wilcoxon &lt;-<span class="st"> </span><span class="cf">function</span> (zk1, zk2)</span>
-<span id="cb47-2"><a href="empirical-auc.html#cb47-2"></a>{</span>
-<span id="cb47-3"><a href="empirical-auc.html#cb47-3"></a>  K1 =<span class="st"> </span><span class="kw">length</span>(zk1)</span>
-<span id="cb47-4"><a href="empirical-auc.html#cb47-4"></a>  K2 =<span class="st"> </span><span class="kw">length</span>(zk2)</span>
-<span id="cb47-5"><a href="empirical-auc.html#cb47-5"></a>  W &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb47-6"><a href="empirical-auc.html#cb47-6"></a>  <span class="cf">for</span> (k1 <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K1) {</span>
-<span id="cb47-7"><a href="empirical-auc.html#cb47-7"></a>    W &lt;-<span class="st"> </span>W <span class="op">+</span><span class="st"> </span><span class="kw">sum</span>(zk1[k1] <span class="op">&lt;</span><span class="st"> </span>zk2)</span>
-<span id="cb47-8"><a href="empirical-auc.html#cb47-8"></a>    W &lt;-<span class="st"> </span>W <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(zk1[k1] <span class="op">==</span><span class="st"> </span>zk2)</span>
-<span id="cb47-9"><a href="empirical-auc.html#cb47-9"></a>  }</span>
-<span id="cb47-10"><a href="empirical-auc.html#cb47-10"></a>  W &lt;-<span class="st"> </span>W<span class="op">/</span>K1<span class="op">/</span>K2</span>
-<span id="cb47-11"><a href="empirical-auc.html#cb47-11"></a>  <span class="kw">return</span> (W)</span>
-<span id="cb47-12"><a href="empirical-auc.html#cb47-12"></a>}</span>
-<span id="cb47-13"><a href="empirical-auc.html#cb47-13"></a></span>
-<span id="cb47-14"><a href="empirical-auc.html#cb47-14"></a>RocOperatingPoints &lt;-<span class="st"> </span><span class="cf">function</span>( K1, K2 ) {</span>
-<span id="cb47-15"><a href="empirical-auc.html#cb47-15"></a>  </span>
-<span id="cb47-16"><a href="empirical-auc.html#cb47-16"></a>  nOpPts &lt;-<span class="st"> </span><span class="kw">length</span>(K1) <span class="op">-</span><span class="st"> </span><span class="dv">1</span> <span class="co"># number of op points</span></span>
-<span id="cb47-17"><a href="empirical-auc.html#cb47-17"></a>  FPF &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>,<span class="dt">dim =</span> nOpPts)</span>
-<span id="cb47-18"><a href="empirical-auc.html#cb47-18"></a>  TPF &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>,<span class="dt">dim =</span> nOpPts)</span>
-<span id="cb47-19"><a href="empirical-auc.html#cb47-19"></a>   </span>
-<span id="cb47-20"><a href="empirical-auc.html#cb47-20"></a>  <span class="cf">for</span> (r <span class="cf">in</span> (nOpPts<span class="op">+</span><span class="dv">1</span>)<span class="op">:</span><span class="dv">2</span>) {</span>
-<span id="cb47-21"><a href="empirical-auc.html#cb47-21"></a>    FPF[r<span class="dv">-1</span>] &lt;-<span class="st"> </span><span class="kw">sum</span>(K1[r<span class="op">:</span>(nOpPts<span class="op">+</span><span class="dv">1</span>)])<span class="op">/</span><span class="kw">sum</span>(K1)</span>
-<span id="cb47-22"><a href="empirical-auc.html#cb47-22"></a>    TPF[r<span class="dv">-1</span>] &lt;-<span class="st"> </span><span class="kw">sum</span>(K2[r<span class="op">:</span>(nOpPts<span class="op">+</span><span class="dv">1</span>)])<span class="op">/</span><span class="kw">sum</span>(K2)    </span>
-<span id="cb47-23"><a href="empirical-auc.html#cb47-23"></a>  }</span>
-<span id="cb47-24"><a href="empirical-auc.html#cb47-24"></a>  FPF &lt;-<span class="st"> </span><span class="kw">rev</span>(FPF)</span>
-<span id="cb47-25"><a href="empirical-auc.html#cb47-25"></a>  TPF &lt;-<span class="st"> </span><span class="kw">rev</span>(TPF)</span>
-<span id="cb47-26"><a href="empirical-auc.html#cb47-26"></a>  </span>
-<span id="cb47-27"><a href="empirical-auc.html#cb47-27"></a>  <span class="kw">return</span>( <span class="kw">list</span>(</span>
-<span id="cb47-28"><a href="empirical-auc.html#cb47-28"></a>    <span class="dt">FPF =</span> FPF,</span>
-<span id="cb47-29"><a href="empirical-auc.html#cb47-29"></a>    <span class="dt">TPF =</span> TPF</span>
-<span id="cb47-30"><a href="empirical-auc.html#cb47-30"></a>  ) )</span>
-<span id="cb47-31"><a href="empirical-auc.html#cb47-31"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="empirical-auc.html#cb48-1"></a>RocCountsTable =<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">5</span>))</span>
-<span id="cb48-2"><a href="empirical-auc.html#cb48-2"></a>RocCountsTable[<span class="dv">1</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">19</span>,<span class="dv">8</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
-<span id="cb48-3"><a href="empirical-auc.html#cb48-3"></a>RocCountsTable[<span class="dv">2</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">12</span>,<span class="dv">22</span>)</span>
-<span id="cb48-4"><a href="empirical-auc.html#cb48-4"></a></span>
-<span id="cb48-5"><a href="empirical-auc.html#cb48-5"></a>zk1  &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(RocCountsTable[<span class="dv">1</span>,]),RocCountsTable[<span class="dv">1</span>,])<span class="co">#convert frequency table to array</span></span>
-<span id="cb48-6"><a href="empirical-auc.html#cb48-6"></a>zk2  &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(RocCountsTable[<span class="dv">2</span>,]),RocCountsTable[<span class="dv">2</span>,])<span class="co">#do:</span></span>
-<span id="cb48-7"><a href="empirical-auc.html#cb48-7"></a></span>
-<span id="cb48-8"><a href="empirical-auc.html#cb48-8"></a>w  &lt;-<span class="st"> </span><span class="kw">Wilcoxon</span> (zk1, zk2)</span>
-<span id="cb48-9"><a href="empirical-auc.html#cb48-9"></a><span class="kw">cat</span>(<span class="st">&quot;The wilcoxon statistic is = &quot;</span>, w, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb48-10"><a href="empirical-auc.html#cb48-10"></a><span class="co">#&gt; The wilcoxon statistic is =  0.8606667</span></span>
-<span id="cb48-11"><a href="empirical-auc.html#cb48-11"></a>ret &lt;-<span class="st"> </span><span class="kw">RocOperatingPoints</span>(RocCountsTable[<span class="dv">1</span>,], RocCountsTable[<span class="dv">2</span>,])</span>
-<span id="cb48-12"><a href="empirical-auc.html#cb48-12"></a>FPF &lt;-<span class="st"> </span>ret<span class="op">$</span>FPF;FPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,FPF,<span class="dv">1</span>)</span>
-<span id="cb48-13"><a href="empirical-auc.html#cb48-13"></a>TPF &lt;-<span class="st"> </span>ret<span class="op">$</span>TPF;TPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,TPF,<span class="dv">1</span>)</span>
-<span id="cb48-14"><a href="empirical-auc.html#cb48-14"></a>AUC &lt;-<span class="st"> </span><span class="kw">trapz</span>(FPF,TPF) <span class="co"># trapezoidal integration</span></span>
-<span id="cb48-15"><a href="empirical-auc.html#cb48-15"></a><span class="kw">cat</span>(<span class="st">&quot;direct integration yields AUC = &quot;</span>, AUC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb48-16"><a href="empirical-auc.html#cb48-16"></a><span class="co">#&gt; direct integration yields AUC =  0.8606667</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="empirical-auc.html#cb48-1"></a>trapz =<span class="st"> </span><span class="cf">function</span>(x, y)</span>
+<span id="cb48-2"><a href="empirical-auc.html#cb48-2"></a>{ <span class="co">### computes the integral of y with respect to x using trapezoidal integration.</span></span>
+<span id="cb48-3"><a href="empirical-auc.html#cb48-3"></a>  idx =<span class="st"> </span><span class="dv">2</span><span class="op">:</span><span class="kw">length</span>(x)</span>
+<span id="cb48-4"><a href="empirical-auc.html#cb48-4"></a>  <span class="kw">return</span> (<span class="kw">as.double</span>( (x[idx] <span class="op">-</span><span class="st"> </span>x[idx<span class="dv">-1</span>]) <span class="op">%*%</span><span class="st"> </span>(y[idx] <span class="op">+</span><span class="st"> </span>y[idx<span class="dv">-1</span>])) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)</span>
+<span id="cb48-5"><a href="empirical-auc.html#cb48-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="empirical-auc.html#cb49-1"></a>Wilcoxon &lt;-<span class="st"> </span><span class="cf">function</span> (zk1, zk2)</span>
+<span id="cb49-2"><a href="empirical-auc.html#cb49-2"></a>{</span>
+<span id="cb49-3"><a href="empirical-auc.html#cb49-3"></a>  K1 =<span class="st"> </span><span class="kw">length</span>(zk1)</span>
+<span id="cb49-4"><a href="empirical-auc.html#cb49-4"></a>  K2 =<span class="st"> </span><span class="kw">length</span>(zk2)</span>
+<span id="cb49-5"><a href="empirical-auc.html#cb49-5"></a>  W &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb49-6"><a href="empirical-auc.html#cb49-6"></a>  <span class="cf">for</span> (k1 <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K1) {</span>
+<span id="cb49-7"><a href="empirical-auc.html#cb49-7"></a>    W &lt;-<span class="st"> </span>W <span class="op">+</span><span class="st"> </span><span class="kw">sum</span>(zk1[k1] <span class="op">&lt;</span><span class="st"> </span>zk2)</span>
+<span id="cb49-8"><a href="empirical-auc.html#cb49-8"></a>    W &lt;-<span class="st"> </span>W <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(zk1[k1] <span class="op">==</span><span class="st"> </span>zk2)</span>
+<span id="cb49-9"><a href="empirical-auc.html#cb49-9"></a>  }</span>
+<span id="cb49-10"><a href="empirical-auc.html#cb49-10"></a>  W &lt;-<span class="st"> </span>W<span class="op">/</span>K1<span class="op">/</span>K2</span>
+<span id="cb49-11"><a href="empirical-auc.html#cb49-11"></a>  <span class="kw">return</span> (W)</span>
+<span id="cb49-12"><a href="empirical-auc.html#cb49-12"></a>}</span>
+<span id="cb49-13"><a href="empirical-auc.html#cb49-13"></a></span>
+<span id="cb49-14"><a href="empirical-auc.html#cb49-14"></a>RocOperatingPoints &lt;-<span class="st"> </span><span class="cf">function</span>( K1, K2 ) {</span>
+<span id="cb49-15"><a href="empirical-auc.html#cb49-15"></a>  </span>
+<span id="cb49-16"><a href="empirical-auc.html#cb49-16"></a>  nOpPts &lt;-<span class="st"> </span><span class="kw">length</span>(K1) <span class="op">-</span><span class="st"> </span><span class="dv">1</span> <span class="co"># number of op points</span></span>
+<span id="cb49-17"><a href="empirical-auc.html#cb49-17"></a>  FPF &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>,<span class="dt">dim =</span> nOpPts)</span>
+<span id="cb49-18"><a href="empirical-auc.html#cb49-18"></a>  TPF &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>,<span class="dt">dim =</span> nOpPts)</span>
+<span id="cb49-19"><a href="empirical-auc.html#cb49-19"></a>   </span>
+<span id="cb49-20"><a href="empirical-auc.html#cb49-20"></a>  <span class="cf">for</span> (r <span class="cf">in</span> (nOpPts<span class="op">+</span><span class="dv">1</span>)<span class="op">:</span><span class="dv">2</span>) {</span>
+<span id="cb49-21"><a href="empirical-auc.html#cb49-21"></a>    FPF[r<span class="dv">-1</span>] &lt;-<span class="st"> </span><span class="kw">sum</span>(K1[r<span class="op">:</span>(nOpPts<span class="op">+</span><span class="dv">1</span>)])<span class="op">/</span><span class="kw">sum</span>(K1)</span>
+<span id="cb49-22"><a href="empirical-auc.html#cb49-22"></a>    TPF[r<span class="dv">-1</span>] &lt;-<span class="st"> </span><span class="kw">sum</span>(K2[r<span class="op">:</span>(nOpPts<span class="op">+</span><span class="dv">1</span>)])<span class="op">/</span><span class="kw">sum</span>(K2)    </span>
+<span id="cb49-23"><a href="empirical-auc.html#cb49-23"></a>  }</span>
+<span id="cb49-24"><a href="empirical-auc.html#cb49-24"></a>  FPF &lt;-<span class="st"> </span><span class="kw">rev</span>(FPF)</span>
+<span id="cb49-25"><a href="empirical-auc.html#cb49-25"></a>  TPF &lt;-<span class="st"> </span><span class="kw">rev</span>(TPF)</span>
+<span id="cb49-26"><a href="empirical-auc.html#cb49-26"></a>  </span>
+<span id="cb49-27"><a href="empirical-auc.html#cb49-27"></a>  <span class="kw">return</span>( <span class="kw">list</span>(</span>
+<span id="cb49-28"><a href="empirical-auc.html#cb49-28"></a>    <span class="dt">FPF =</span> FPF,</span>
+<span id="cb49-29"><a href="empirical-auc.html#cb49-29"></a>    <span class="dt">TPF =</span> TPF</span>
+<span id="cb49-30"><a href="empirical-auc.html#cb49-30"></a>  ) )</span>
+<span id="cb49-31"><a href="empirical-auc.html#cb49-31"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="empirical-auc.html#cb50-1"></a>RocCountsTable =<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">5</span>))</span>
+<span id="cb50-2"><a href="empirical-auc.html#cb50-2"></a>RocCountsTable[<span class="dv">1</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">19</span>,<span class="dv">8</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb50-3"><a href="empirical-auc.html#cb50-3"></a>RocCountsTable[<span class="dv">2</span>,]  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">12</span>,<span class="dv">22</span>)</span>
+<span id="cb50-4"><a href="empirical-auc.html#cb50-4"></a></span>
+<span id="cb50-5"><a href="empirical-auc.html#cb50-5"></a>zk1  &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(RocCountsTable[<span class="dv">1</span>,]),RocCountsTable[<span class="dv">1</span>,])<span class="co">#convert frequency table to array</span></span>
+<span id="cb50-6"><a href="empirical-auc.html#cb50-6"></a>zk2  &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(RocCountsTable[<span class="dv">2</span>,]),RocCountsTable[<span class="dv">2</span>,])<span class="co">#do:</span></span>
+<span id="cb50-7"><a href="empirical-auc.html#cb50-7"></a></span>
+<span id="cb50-8"><a href="empirical-auc.html#cb50-8"></a>w  &lt;-<span class="st"> </span><span class="kw">Wilcoxon</span> (zk1, zk2)</span>
+<span id="cb50-9"><a href="empirical-auc.html#cb50-9"></a><span class="kw">cat</span>(<span class="st">&quot;The wilcoxon statistic is = &quot;</span>, w, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb50-10"><a href="empirical-auc.html#cb50-10"></a><span class="co">#&gt; The wilcoxon statistic is =  0.8606667</span></span>
+<span id="cb50-11"><a href="empirical-auc.html#cb50-11"></a>ret &lt;-<span class="st"> </span><span class="kw">RocOperatingPoints</span>(RocCountsTable[<span class="dv">1</span>,], RocCountsTable[<span class="dv">2</span>,])</span>
+<span id="cb50-12"><a href="empirical-auc.html#cb50-12"></a>FPF &lt;-<span class="st"> </span>ret<span class="op">$</span>FPF;FPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,FPF,<span class="dv">1</span>)</span>
+<span id="cb50-13"><a href="empirical-auc.html#cb50-13"></a>TPF &lt;-<span class="st"> </span>ret<span class="op">$</span>TPF;TPF &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,TPF,<span class="dv">1</span>)</span>
+<span id="cb50-14"><a href="empirical-auc.html#cb50-14"></a>AUC &lt;-<span class="st"> </span><span class="kw">trapz</span>(FPF,TPF) <span class="co"># trapezoidal integration</span></span>
+<span id="cb50-15"><a href="empirical-auc.html#cb50-15"></a><span class="kw">cat</span>(<span class="st">&quot;direct integration yields AUC = &quot;</span>, AUC, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb50-16"><a href="empirical-auc.html#cb50-16"></a><span class="co">#&gt; direct integration yields AUC =  0.8606667</span></span></code></pre></div>
 <p>Note the equality of the two estimates.</p>
 <p>The following proof is adapted from <span class="citation">(Bamber <a href="#ref-RN2174" role="doc-biblioref">1975</a>)</span> and while it may appear to be restricted to discrete ratings, the result is in fact quite general, i.e., it is applicable even if the ratings are acquired on a continuous scale. The reason is that in an R-rating ROC study the observed z-samples or ratings take on integer values, 1 through R. If R is large enough, ordering information present in the continuous data is not lost upon binning. In the following it is helpful to keep in mind that one is dealing with discrete distributions of the ratings, described by probability mass functions as opposed to probability density functions, e.g., <span class="math inline">\(P(Z_2 = \zeta_i)\)</span> is not zero, as would be the case for continuous ratings. The proof is illustrated with Fig. <a href="empirical-auc.html#fig:empirical-auc-BambersTheorem">8.3</a>.</p>
 <div class="figure"><span id="fig:empirical-auc-BambersTheorem"></span>
