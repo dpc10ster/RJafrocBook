@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2020-12-31}
+\date{2021-01-01}
 
 \begin{document}
 \maketitle
@@ -242,6 +242,587 @@
 \item
   13-froc-empirical-examples.
 \end{itemize}
+
+\hypertarget{part-quick-start}{%
+\part*{Quick Start}\label{part-quick-start}}
+\addcontentsline{toc}{part}{Quick Start}
+
+\hypertarget{quick-start-dbm-text}{%
+\chapter{DBM analysis text output}\label{quick-start-dbm-text}}
+
+\hypertarget{quick-start-dbm-text-intro}{%
+\section{Introduction}\label{quick-start-dbm-text-intro}}
+
+This chapter is intended for those seeking a quick-and-easy transition from Windows \texttt{JAFROC} to \texttt{RJafroc}. Described first is the structure of an \texttt{RJafroc} dataset followed by how to read a JAFROC format Excel file to create an \texttt{RJafroc} dataset.
+
+\hypertarget{quick-start-dbm-text-read-file}{%
+\section{Reading a JAFROC format file}\label{quick-start-dbm-text-read-file}}
+
+There is a file \texttt{RocData.xlsx} contained in directory \texttt{R/quick-start}. This is identical to embedded \texttt{dataset02}, the Van Dyke dataset in the ROC literature \citep{RN1993}. Here are screen shots of the three worksheets comprising this Excel file.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth,height=0.2\textheight]{R/quick-start/RocTruth} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{R/quick-start/RocFP} \includegraphics[width=0.5\linewidth,height=0.2\textheight]{R/quick-start/RocTP} 
+
+}
+
+\caption{Three worksheets - Truth, FP and TP, comprising Excel file `R/quick-start/Roc.xlsx`}\label{fig:quick-start-dbm-roc-xlsx}
+\end{figure}
+
+Next, one uses \texttt{DfReadDataFile()} as follows, to read the data file into an \texttt{R} object.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fileName <-}\StringTok{ "R/quick-start/Roc.xlsx"}
+\NormalTok{ds2 <-}\StringTok{ }\KeywordTok{DfReadDataFile}\NormalTok{(fileName)}
+\KeywordTok{str}\NormalTok{(ds2)}
+\CommentTok{#> List of 3}
+\CommentTok{#>  $ ratings     :List of 3}
+\CommentTok{#>   ..$ NL   : num [1:2, 1:5, 1:114, 1] 1 3 2 3 2 2 1 2 3 2 ...}
+\CommentTok{#>   ..$ LL   : num [1:2, 1:5, 1:45, 1] 5 5 5 5 5 5 5 5 5 5 ...}
+\CommentTok{#>   ..$ LL_IL: logi NA}
+\CommentTok{#>  $ lesions     :List of 3}
+\CommentTok{#>   ..$ perCase: int [1:45] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>   ..$ IDs    : num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>   ..$ weights: num [1:45, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ descriptions:List of 7}
+\CommentTok{#>   ..$ fileName     : chr "Roc"}
+\CommentTok{#>   ..$ type         : chr "ROC"}
+\CommentTok{#>   ..$ name         : logi NA}
+\CommentTok{#>   ..$ truthTableStr: num [1:2, 1:5, 1:114, 1:2] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>   ..$ design       : chr "FCTRL"}
+\CommentTok{#>   ..$ modalityID   : Named chr [1:2] "0" "1"}
+\CommentTok{#>   .. ..- attr(*, "names")= chr [1:2] "0" "1"}
+\CommentTok{#>   ..$ readerID     : Named chr [1:5] "0" "1" "2" "3" ...}
+\CommentTok{#>   .. ..- attr(*, "names")= chr [1:5] "0" "1" "2" "3" ...}
+\end{Highlighting}
+\end{Shaded}
+
+The following illustration uses a different dataset.
+
+\hypertarget{quick-start-dbm-text-dataset-structure}{%
+\section{Dataset structure}\label{quick-start-dbm-text-dataset-structure}}
+
+Data set \texttt{dataset03} corresponding to the Franken ROC dataset \citep{RN1995} is embedded in \texttt{RJafroc}. The structure of this dataset is shown below.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ds <-}\StringTok{ }\NormalTok{dataset03}
+\KeywordTok{str}\NormalTok{(ds)}
+\CommentTok{#> List of 3}
+\CommentTok{#>  $ ratings     :List of 3}
+\CommentTok{#>   ..$ NL   : num [1:2, 1:4, 1:100, 1] 3 3 4 3 3 3 4 1 1 3 ...}
+\CommentTok{#>   ..$ LL   : num [1:2, 1:4, 1:67, 1] 5 5 4 4 5 4 4 5 2 2 ...}
+\CommentTok{#>   ..$ LL_IL: logi NA}
+\CommentTok{#>  $ lesions     :List of 3}
+\CommentTok{#>   ..$ perCase: num [1:67] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>   ..$ IDs    : num [1:67, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>   ..$ weights: num [1:67, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>  $ descriptions:List of 7}
+\CommentTok{#>   ..$ fileName     : chr "dataset03"}
+\CommentTok{#>   ..$ type         : chr "ROC"}
+\CommentTok{#>   ..$ name         : chr "FRANKEN"}
+\CommentTok{#>   ..$ truthTableStr: num [1:2, 1:4, 1:100, 1:2] 1 1 1 1 1 1 1 1 1 1 ...}
+\CommentTok{#>   ..$ design       : chr "FCTRL"}
+\CommentTok{#>   ..$ modalityID   : Named chr [1:2] "TREAT1" "TREAT2"}
+\CommentTok{#>   .. ..- attr(*, "names")= chr [1:2] "TREAT1" "TREAT2"}
+\CommentTok{#>   ..$ readerID     : Named chr [1:4] "READER_1" "READER_2" "READER_3" "READER_4"}
+\CommentTok{#>   .. ..- attr(*, "names")= chr [1:4] "READER_1" "READER_2" "READER_3" "READER_4"}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{ds} is a list with 3 members.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{ratings}
+  \item
+    \texttt{lesions}
+  \item
+    \texttt{descriptions}
+  \end{itemize}
+\item
+  \texttt{ratings} is a list with three members
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{NL} This contains the NL/FP ratings
+  \item
+    \texttt{LL} This contains the LL/TP ratings
+  \item
+    \texttt{LL\_IL} This contains the LROC incorrect localization ratings
+  \end{itemize}
+\item
+  \texttt{lesions} is a list with 3 members
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{perCase} number of lesions per diseased case array
+  \item
+    \texttt{IDs} lesion IDs array (labels attached to each lesion)
+  \item
+    \texttt{weights} lesion weights array
+  \end{itemize}
+\item
+  \texttt{descriptions} is a list with 7 members
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{fileName} name of the original file the data came from, if available, or the embedded dataset name
+  \item
+    \texttt{type} The type of dataset, ``ROC'', ``FROC'', ``LROC'' or ``ROI''
+  \item
+    \texttt{name} The name of the dataset
+  \item
+    \texttt{truthTableStr} The structure of the truth table, for internal use, for checking data consistency
+  \item
+    \texttt{design} The design of the dataset, FCTRL, SPLIT-PLOT-A or SPLIT-PLOT-C
+  \item
+    \texttt{modalityID} The IDs of the modalities
+  \item
+    \texttt{readerID} The IDs of the readers
+  \end{itemize}
+\end{itemize}
+
+The false positive ratings are contained in \texttt{NL}, an array with dimensions \texttt{{[}1:2,1:4,1:100,1{]}}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(ds}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL)}
+\CommentTok{#>  num [1:2, 1:4, 1:100, 1] 3 3 4 3 3 3 4 1 1 3 ...}
+\end{Highlighting}
+\end{Shaded}
+
+The first index corresponds to the two treatments. The second index corresponds to the four readers. The third index corresponds to the 100 cases. The fourth dimension, with length one, corresponds to one FP/NL per case; the redundant index is needed for consistency with FROC data, where multiple NLs per case are possible.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(ds}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{34}\OperatorTok{:}\DecValTok{100}\NormalTok{,}\DecValTok{1}\NormalTok{])}
+\CommentTok{#>  num [1:67] -Inf -Inf -Inf -Inf -Inf ...}
+\KeywordTok{all}\NormalTok{(ds}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[,,}\DecValTok{34}\OperatorTok{:}\DecValTok{100}\NormalTok{,}\DecValTok{1}\NormalTok{] }\OperatorTok{==}\StringTok{ }\OperatorTok{-}\OtherTok{Inf}\NormalTok{)}
+\CommentTok{#> [1] TRUE}
+\end{Highlighting}
+\end{Shaded}
+
+The entries in this array for cases 34 through 100 are all \texttt{-Inf} (this is tested for by the \texttt{all()} function, which yields \texttt{TRUE} if all of its arguments are true). In the ROC paradigm false positive are not possible on diseased cases (but they are possible for FROC data). So the actual FP ratings are contained in the first 33 elements of the array.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(ds}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{LL)}
+\CommentTok{#>  num [1:2, 1:4, 1:67, 1] 5 5 4 4 5 4 4 5 2 2 ...}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{LL} is an array with dimensions \texttt{{[}1:2,1:4,1:67,1{]}}. This implies 67 diseased cases and by subtraction from 100 there must be 33 non-diseased cases. The redundant dimension, with length one, is needed for consistency with FROC data, where multiple lesions per case are possible.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(ds}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{perCase)}
+\CommentTok{#>  num [1:67] 1 1 1 1 1 1 1 1 1 1 ...}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{perCase} is a vector with length 67, implying 100 - 67 = 33 non-diseased cases. Each element of \texttt{perCase} is unity, corresponding to one lesion per diseased case for ROC data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(ds}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{IDs)}
+\CommentTok{#>  num [1:67, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\KeywordTok{str}\NormalTok{(ds}\OperatorTok{$}\NormalTok{lesions}\OperatorTok{$}\NormalTok{weights)}
+\CommentTok{#>  num [1:67, 1] 1 1 1 1 1 1 1 1 1 1 ...}
+\end{Highlighting}
+\end{Shaded}
+
+The list members \texttt{lesionID} and \texttt{lesionWeight} are arrays with dimensions \texttt{{[}1:67,1{]}} containing ones. Again, these imply 67 diseased cases. The extra dimension, with length one, is needed for consistency with FROC data. The variables \texttt{perCase}, \texttt{IDs} and \texttt{weights}, while not needed for ROC data, are there for consistency with FROC data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(ds}\OperatorTok{$}\NormalTok{descriptions}\OperatorTok{$}\NormalTok{type)}
+\CommentTok{#>  chr "ROC"}
+\end{Highlighting}
+\end{Shaded}
+
+The \texttt{type} list member is the character string \texttt{"ROC"}, for an ROC dataset. Other possibilities are \texttt{"FROC"}, \texttt{"LROC"} and \texttt{"ROI"}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(ds}\OperatorTok{$}\NormalTok{descriptions}\OperatorTok{$}\NormalTok{modalityID)}
+\CommentTok{#>  Named chr [1:2] "TREAT1" "TREAT2"}
+\CommentTok{#>  - attr(*, "names")= chr [1:2] "TREAT1" "TREAT2"}
+\end{Highlighting}
+\end{Shaded}
+
+The \texttt{modalityID} list member is a character string with two entries, \texttt{"TREAT1"} and \texttt{"TREAT2"}, corresponding to the two modalities.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(ds}\OperatorTok{$}\NormalTok{descriptions}\OperatorTok{$}\NormalTok{readerID)}
+\CommentTok{#>  Named chr [1:4] "READER_1" "READER_2" "READER_3" "READER_4"}
+\CommentTok{#>  - attr(*, "names")= chr [1:4] "READER_1" "READER_2" "READER_3" "READER_4"}
+\end{Highlighting}
+\end{Shaded}
+
+The \texttt{readerID} list member is a character string with four entries, \texttt{"READER\_1"}, \texttt{"READER\_2"}, \texttt{"READER\_3"} and \texttt{"READER\_4"} corresponding to the four readers.
+
+Here are the actual ratings for cases 1 through 33.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ds}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{33}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>  [1] 3 1 2 2 2 2 2 4 1 1 4 2 1 2 4 2 1 2 1 2 4 2 3 2 2 2 4 3 2 2 2 5 3}
+\end{Highlighting}
+\end{Shaded}
+
+This says that for treatment 1 and reader 1, (non-diseased) case 1 was rated 3, case 2 was rated 1, cases 3-7 were rated 2, case 8 was rated 4, etc. As another example, for treatment 2 and reader 3, the FP ratings are:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ds}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\OperatorTok{:}\DecValTok{33}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\CommentTok{#>  [1] 3 1 2 2 2 2 4 4 2 3 2 2 1 3 2 4 2 3 2 2 2 2 2 4 2 2 1 2 2 2 2 4 2}
+\end{Highlighting}
+\end{Shaded}
+
+This says that for treatment 2 and reader 3, (non-diseased) case 1 was rated 3, case 2 was rated 1, cases 3-6 were rated 2, cases 7-8 were rated 4, etc.
+
+\hypertarget{quick-start-dbm-text-analyze-dataset}{%
+\section{Analyzing the ROC dataset}\label{quick-start-dbm-text-analyze-dataset}}
+
+This illustrates the \texttt{StSignificanceTesting()} function. The significance testing method is specified as \texttt{"DBM"} and the figure of merit \texttt{FOM} is specified as ``Wilcoxon''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{StSignificanceTesting}\NormalTok{(ds, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBM"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{quick-start-dbm-text-explanation}{%
+\section{Explanation of the output}\label{quick-start-dbm-text-explanation}}
+
+The function returns a list with 5 members:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{FOMs}: figures of merit.
+\item
+  \texttt{ANOVA}: ANOVA tables.
+\item
+  \texttt{RRRC}: random-reader random-case analyses results.
+\item
+  \texttt{FRRC}: fixed-reader random-case analyses results.
+\item
+  \texttt{RRFC}" random-reader fixed-case analyses results.
+\end{itemize}
+
+Let us consider them one by one.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{FOMs} is a list of 3
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{foms} is a {[}2x4{]} dataframe: the figure of merit for each of of the four observers in the two treatments.
+  \item
+    \texttt{trtMeans} is a {[}2x1{]} dataframe: the average figure of merit over all readers for each treatment.
+  \item
+    \texttt{trtMeanDiffs} a {[}1x1{]} dataframe: the difference(s) of the reader-averaged figures of merit for all different treatment pairings. In this example, with only two treatments, there is only one different treatment pairing.
+  \end{itemize}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FOMs}\OperatorTok{$}\NormalTok{foms}
+\CommentTok{#>           rdrREADER_1 rdrREADER_2 rdrREADER_3 rdrREADER_4}
+\CommentTok{#> trtTREAT1  0.85345997  0.86499322  0.85730439  0.81524197}
+\CommentTok{#> trtTREAT2  0.84961556  0.84350972  0.84011759  0.81433740}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FOMs}\OperatorTok{$}\NormalTok{trtMeans}
+\CommentTok{#>             Estimate}
+\CommentTok{#> trtTREAT1 0.84774989}
+\CommentTok{#> trtTREAT2 0.83689507}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FOMs}\OperatorTok{$}\NormalTok{trtMeanDiffs}
+\CommentTok{#>                        Estimate}
+\CommentTok{#> trtTREAT1-trtTREAT2 0.010854817}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  ANOVA is a list of 4
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{TRCanova} is a {[}8x3{]} dataframe: the treatment-reader-case ANOVA table, see below, where SS is the sum of squares, DF is the degrees of freedom and MS is the mean squares, and T = treatment, R = reader, C = case, TR = treatment-reader, TC = treatment-case, RC = reader-case, TRC = treatment-reader-case.\\
+  \item
+    \texttt{VarCom} is a {[}6x1{]} dataframe: the variance components, see below, where \texttt{varR} is the reader variance, \texttt{varC} is the case variance, \texttt{varTR} is the treatment-reader variance, \texttt{varTC} is the treatment-case variance, \texttt{varRC} is the reader-case variance, and \texttt{varTRC} is the treatment-reader-case variance.
+  \item
+    \texttt{IndividualTrt} is a {[}3x3{]} dataframe: the individual treatment variance components averaged over all readers, see below, where \texttt{msR} is the mean square reader, \texttt{msC} is the mean square case and \texttt{msRC} is the mean square reader-case.
+  \item
+    \texttt{IndividualRdr} is a {[}3x5{]} dataframe: the individual reader variance components averaged over treatments, see below, where \texttt{msT} is the mean square treatment, \texttt{msC} is the mean square case and \texttt{msTC} is the mean square treatment-case.
+  \end{itemize}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ANOVA}\OperatorTok{$}\NormalTok{TRCanova}
+\CommentTok{#>                  SS  DF           MS}
+\CommentTok{#> T       0.023565410   1 0.0235654097}
+\CommentTok{#> R       0.205217999   3 0.0684059998}
+\CommentTok{#> C      52.528398680  99 0.5305898857}
+\CommentTok{#> TR      0.015060792   3 0.0050202641}
+\CommentTok{#> TC      6.410048814  99 0.0647479678}
+\CommentTok{#> RC     39.242953812 297 0.1321311576}
+\CommentTok{#> TRC    22.660077641 297 0.0762965577}
+\CommentTok{#> Total 121.085323149 799           NA}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ANOVA}\OperatorTok{$}\NormalTok{VarCom}
+\CommentTok{#>             Estimates}
+\CommentTok{#> VarR    3.7755679e-05}
+\CommentTok{#> VarC    5.1250915e-02}
+\CommentTok{#> VarTR  -7.1276294e-04}
+\CommentTok{#> VarTC  -2.8871475e-03}
+\CommentTok{#> VarRC   2.7917300e-02}
+\CommentTok{#> VarErr  7.6296558e-02}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ANOVA}\OperatorTok{$}\NormalTok{IndividualTrt}
+\CommentTok{#>       DF   TrtTREAT1   TrtTREAT2}
+\CommentTok{#> msR    3 0.049266349 0.024159915}
+\CommentTok{#> msC   99 0.293967531 0.301370323}
+\CommentTok{#> msRC 297 0.105047872 0.103379843}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{ANOVA}\OperatorTok{$}\NormalTok{IndividualRdr}
+\CommentTok{#>      DF   rdrREADER_1 rdrREADER_2 rdrREADER_3   rdrREADER_4}
+\CommentTok{#> msT   1 0.00073897606 0.023077021 0.014769293 0.00004091217}
+\CommentTok{#> msC  99 0.20387477465 0.223441908 0.214246773 0.28541990211}
+\CommentTok{#> msTC 99 0.09155873437 0.080279256 0.061228980 0.06057067104}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  RRRC, a list of 3 containing results of random-reader random-case analyses
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{FTtests}: is a {[}2x4{]} dataframe: results of the F-tests, see below, where \texttt{FStat} is the F-statistic and \texttt{p} is the p-value.
+  \item
+    \texttt{ciDiffTrt}: is a {[}1x7{]} dataframe: the confidence intervals between different treatments, see below, where \texttt{StdErr} is the standard error of the estimate, \texttt{t} is the t-statistic and \texttt{PrGTt} is the p-value.
+  \item
+    \texttt{ciAvgRdrEachTrt}: is a {[}2x5{]} dataframe: the confidence intervals for the average reader over each treatment, see below, where \texttt{CILower} is the lower 95\% confidence interval and \texttt{CIUpper} is the upper 95\% confidence interval.
+  \end{itemize}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{FTests}
+\CommentTok{#>           DF           MS     FStat          p}
+\CommentTok{#> Treatment  1 0.0235654097 4.6940577 0.11883786}
+\CommentTok{#> Error      3 0.0050202641        NA         NA}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{ciDiffTrt}
+\CommentTok{#>                        Estimate       StdErr DF         t      PrGTt}
+\CommentTok{#> trtTREAT1-trtTREAT2 0.010854817 0.0050101218  3 2.1665774 0.11883786}
+\CommentTok{#>                           CILower     CIUpper}
+\CommentTok{#> trtTREAT1-trtTREAT2 -0.0050896269 0.026799261}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{RRRC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt}
+\CommentTok{#>             Estimate      StdErr         DF    CILower    CIUpper}
+\CommentTok{#> trtTREAT1 0.84774989 0.024402152  70.121788 0.79908282 0.89641696}
+\CommentTok{#> trtTREAT2 0.83689507 0.023566416 253.644028 0.79048429 0.88330585}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  FRRC, a list of 4 containing results of fixed-reader random-case analyses
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{FTtests}: is a {[}2x4{]} dataframe: results of the F-tests, see below.
+  \item
+    \texttt{ciDiffTrt}: is a {[}1x7{]} dataframe: the confidence intervals between different treatments, see below.
+  \item
+    \texttt{ciAvgRdrEachTrt}: is a {[}2x5{]} dataframe: the confidence intervals for the average reader over each treatment
+  \item
+    \texttt{ciDiffTrtEachRdr}: is a {[}4x7{]} dataframe: the confidence intervals for each different-treatment pairing for each reader.
+  \end{itemize}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests}
+\CommentTok{#>           DF          MS      FStat          p}
+\CommentTok{#> Treatment  1 0.023565410 0.36395597 0.54769704}
+\CommentTok{#> Error     99 0.064747968         NA         NA}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciDiffTrt}
+\CommentTok{#>                        Estimate      StdErr DF          t      PrGTt}
+\CommentTok{#> trtTREAT1-trtTREAT2 0.010854817 0.017992772 99 0.60328764 0.54769704}
+\CommentTok{#>                          CILower    CIUpper}
+\CommentTok{#> trtTREAT1-trtTREAT2 -0.024846746 0.04655638}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt}
+\CommentTok{#>             Estimate      StdErr DF    CILower    CIUpper}
+\CommentTok{#> trtTREAT1 0.84774989 0.027109386 99 0.79395898 0.90154079}
+\CommentTok{#> trtTREAT2 0.83689507 0.027448603 99 0.78243109 0.89135905}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{ciDiffTrtEachRdr}
+\CommentTok{#>                                       Estimate      StdErr DF           t}
+\CommentTok{#> rdrREADER_1::trtTREAT1-trtTREAT2 0.00384441429 0.042792227 99 0.089839080}
+\CommentTok{#> rdrREADER_2::trtTREAT1-trtTREAT2 0.02148349163 0.040069753 99 0.536152334}
+\CommentTok{#> rdrREADER_3::trtTREAT1-trtTREAT2 0.01718679331 0.034993994 99 0.491135520}
+\CommentTok{#> rdrREADER_4::trtTREAT1-trtTREAT2 0.00090456807 0.034805365 99 0.025989329}
+\CommentTok{#>                                       PrGTt      CILower     CIUpper}
+\CommentTok{#> rdrREADER_1::trtTREAT1-trtTREAT2 0.92859660 -0.081064648 0.088753476}
+\CommentTok{#> rdrREADER_2::trtTREAT1-trtTREAT2 0.59305592 -0.058023592 0.100990575}
+\CommentTok{#> rdrREADER_3::trtTREAT1-trtTREAT2 0.62441761 -0.052248882 0.086622469}
+\CommentTok{#> rdrREADER_4::trtTREAT1-trtTREAT2 0.97931817 -0.068156827 0.069965963}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  RRFC, a list of 3 containing results of random-reader fixed-case analyses
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{FTtests}: is a {[}2x4{]} dataframe: results of the F-tests, see below.
+  \item
+    \texttt{ciDiffTrt}: is a {[}1x7{]} dataframe: the confidence intervals between different treatments, see below.
+  \item
+    \texttt{ciAvgRdrEachTrt}: is a {[}2x5{]} dataframe: the confidence intervals for the average reader over each over each treatment.
+  \end{itemize}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{RRFC}\OperatorTok{$}\NormalTok{FTests}
+\CommentTok{#>           DF           MS     FStat          p}
+\CommentTok{#> Treatment  1 0.0235654097 4.6940577 0.11883786}
+\CommentTok{#> Error      3 0.0050202641        NA         NA}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{RRFC}\OperatorTok{$}\NormalTok{ciDiffTrt}
+\CommentTok{#>                        Estimate       StdErr DF         t      PrGTt}
+\CommentTok{#> trtTREAT1-trtTREAT2 0.010854817 0.0050101218  3 2.1665774 0.11883786}
+\CommentTok{#>                           CILower     CIUpper}
+\CommentTok{#> trtTREAT1-trtTREAT2 -0.0050896269 0.026799261}
+\NormalTok{ret}\OperatorTok{$}\NormalTok{RRFC}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt}
+\CommentTok{#>             Estimate      StdErr DF    CILower    CIUpper}
+\CommentTok{#> trtTREAT1 0.84774989 0.011098012  3 0.81243106 0.88306871}
+\CommentTok{#> trtTREAT2 0.83689507 0.007771730  3 0.81216196 0.86162818}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{quick-start-dbm-text-references}{%
+\section{References}\label{quick-start-dbm-text-references}}
+
+\hypertarget{quick-start-or-text}{%
+\chapter{OR analysis text output}\label{quick-start-or-text}}
+
+\hypertarget{quick-start-or-text-intro}{%
+\section{Introduction}\label{quick-start-or-text-intro}}
+
+This vignette illustrates significance testing using the OR method. But, instead of the unwieldy output in \ref{quick-start-dbm-text}, it generates an Excel output file containing the following worksheets:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{Summary}
+\item
+  \texttt{FOMs}
+\item
+  \texttt{RRRC}
+\item
+  \texttt{FRRC}
+\item
+  \texttt{RRFC}
+\item
+  \texttt{ANOVA}
+\end{itemize}
+
+\hypertarget{quick-start-or-text-output}{%
+\section{Generating the Excel output file}\label{quick-start-or-text-output}}
+
+This illustrates the \texttt{UtilOutputReport()} function. The significance testing \texttt{method} is ``DBM'', the default, and the figure of merit \texttt{FOM} is ``Wilcoxon''. Note \texttt{ReportFileExt} = ``xlsx''` telling
+the function to create an Excel output file. The Excel output is created in a temporary file.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(}\KeywordTok{get}\NormalTok{(}\StringTok{"dataset03"}\NormalTok{), }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBM"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{quick-start-or-text-significance-testing}{%
+\section{ORH significance testing}\label{quick-start-or-text-significance-testing}}
+
+Simply change \texttt{method\ =\ "DBM"} (the default) to \texttt{method\ =\ "OR"}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(}\KeywordTok{get}\NormalTok{(}\StringTok{"dataset03"}\NormalTok{), }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"OR"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{quick-start-or-text-references}{%
+\section{References}\label{quick-start-or-text-references}}
+
+\hypertarget{quick-start-or-excel}{%
+\chapter{OR analysis Excel output}\label{quick-start-or-excel}}
+
+\hypertarget{quick-start-or-excel-intro}{%
+\section{Introduction}\label{quick-start-or-excel-intro}}
+
+This vignette illustrates significance testing using the OR method. But, instead of the unwieldy output in \ref{quick-start-dbm-text}, it generates an Excel output file containing the following worksheets:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{Summary}
+\item
+  \texttt{FOMs}
+\item
+  \texttt{RRRC}
+\item
+  \texttt{FRRC}
+\item
+  \texttt{RRFC}
+\item
+  \texttt{ANOVA}
+\end{itemize}
+
+\hypertarget{quick-start-or-excel-output}{%
+\section{Generating the Excel output file}\label{quick-start-or-excel-output}}
+
+This illustrates the \texttt{UtilOutputReport()} function. The significance testing \texttt{method} is ``DBM'', the default, and the figure of merit \texttt{FOM} is ``Wilcoxon''. Note \texttt{ReportFileExt} = ``xlsx''` telling
+the function to create an Excel output file. The Excel output is created in a temporary file.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(}\KeywordTok{get}\NormalTok{(}\StringTok{"dataset03"}\NormalTok{), }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"DBM"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{quick-start-or-excel-significance-testing}{%
+\section{ORH significance testing}\label{quick-start-or-excel-significance-testing}}
+
+Simply change \texttt{method\ =\ "DBM"} (the default) to \texttt{method\ =\ "OR"}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{UtilOutputReport}\NormalTok{(}\KeywordTok{get}\NormalTok{(}\StringTok{"dataset03"}\NormalTok{), }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{, }\DataTypeTok{method =} \StringTok{"OR"}\NormalTok{, }\DataTypeTok{overWrite =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{ReportFileExt =} \StringTok{"xlsx"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{quick-start-or-excel-references}{%
+\section{References}\label{quick-start-or-excel-references}}
 
 \hypertarget{part-roc-paradigm}{%
 \part*{ROC paradigm}\label{part-roc-paradigm}}
@@ -6385,7 +6966,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.3134266          1   0.25177518}
+\CommentTok{#> 1    1.3546813          1    0.2444614}
 \end{Highlighting}
 \end{Shaded}
 
@@ -13382,8 +13963,6 @@ Regarding Dr.~Wagner's second point, it would require a great amount of data to 
 
 \hypertarget{analyzing-froc-data-intro}{%
 \section{Introduction}\label{analyzing-froc-data-intro}}
-
-Merge vignettes from QuickStart\ldots{}
 
 Analyzing FROC data is, apart from a single difference, very similar to analyzing ROC data. \emph{The crucial difference is the selection of an appropriate location-sensitive figure of merit.} The reason is that the DBMH and ORH methods are applicable to any scalar figure of merit. Any appropriate FROC figure of merit reduces the mark rating data for a single dataset (i.e., a single treatment, a single reader and a number of cases) to a single scalar figure of merit.
 
