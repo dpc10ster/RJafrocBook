@@ -231,14 +231,14 @@ gpfPlotRsmPropCbm <- function(fileName, mu, lambdaP, nuP, lesDistr, c1, da,
   FPF <- FPF[ciIndx]
   TPF <- TPF[ciIndx]
   fitPlot <- ggplot(data = plotCurve) + 
-    geom_line(mapping = aes(x = FPF, y = TPF, color = Model), size = 2) + 
-    geom_line(data = dashedRsm, aes(x = FPF, y = TPF, color = Model), linetype = 3, size = 2) + 
+    geom_line(mapping = aes(x = FPF, y = TPF, color = Model)) + 
+    geom_line(data = dashedRsm, aes(x = FPF, y = TPF, color = Model), linetype = 3) + 
     scale_color_manual(values = c("red", "darkblue", "black")) # color corresponds to order of plots in plotCurve
   
   fitPlot <- fitPlot + 
-    geom_point(mapping = aes(x = FPF, y = TPF), data = plotOp, size = 5) +
+    geom_point(mapping = aes(x = FPF, y = TPF), data = plotOp) +
     theme(legend.position = "none") + 
-    ggtitle(ij) + theme(plot.title = element_text(size = 20,face="bold"))
+    ggtitle(ij)# + theme(plot.title = element_text(size = 0.5,face="bold"))
   
   ciX <- binom.confint(x = FPF * K1, n = K1, methods = "exact")
   ciY <- binom.confint(x = TPF * K2, n = K2, methods = "exact")

@@ -13,22 +13,169 @@ library(here)
 ```
 
 ## Introduction {#rsm-3-fits-intro}
-There are three methods for fitting proper curves to ROC datasets. This chapter compares these fits for a number of datasets. 
+There are three methods for fitting proper curves to ROC datasets. This chapter compares these fits for a number of datasets. The RSM fitting algorithm was tested against PROPROC and CBM, both of which are proper ROC fitting methods described in TBA Chapter 20. Comparing RSM against the binormal model would be inappropriate, as the latter does not predict proper ROCs.
 
-## A serendipitous finding {#rsm-3-fits-roc-serendipitious}
-The RSM fitting algorithm was tested against PROPROC and CBM, both of which are proper ROC fitting methods described in TBA Chapter 20. Comparing RSM against the binormal model would be inappropriate, as the latter does not predict proper ROCs.
 
-The RSM and CBM, implemented in RJafroc and PROPROC, implemented in software available from the University of Iowa ROC website, were applied to fourteen (14) datasets described in the documentation of `RJafroc`.
 
-The RSM has three parameters  $\mu$,  $\lambda'$, and $\nu'$ (excluding thresholds). CBM has two parameters $\mu$ and $\alpha$, as detailed in Chapter 20. Both RSM and CBM fitting methods are implemented in `RJafroc`. PROPROC is a two-parameter model, with parameters $c$ and $d_a$, as detailed in TBA Chapter 20: these parameters were obtained by running Windows software 20 OR DBM-MRMC 2.5 (Sept. 04, 2014) with PROPROC selected as the curve-fitting method. The relevant results are saved in files that end with "proproc norm area pooled.csv" contained in subdirectory MRMCRuns in the software directory corresponding to this chapter. The files can be opened by RStudio and the values   and   are in the last two columns, see screen-shot Fig. 18.3. For example, for modality 2 and reader 1,   =  0.321and   = 2.35. The .lrc files are the data files in one of the appropriate formats  for OR DBM-MRMC 2.5. 
+## Datasets {#rsm-3-fits-14-datasets}
+
+```{r rsm-3-fits-datasets, echo=FALSE,fig.cap="RJafroc embedded datasets displayed by help file.",fig.show='hold',fig.align='center'}
+knitr::include_graphics("images/compare-3-fits/datasets.png")
+``` 
+
+Fig. \@ref(fig:rsm-3-fits-datasets): Screen shot of `RJafroc` help file showing the datasets included with the current distribution (v2.0.1).
+
+
+The datasets are identified in the code by character strings `datasetxx` as follows:
+
+* `dataset01` "TONY" FROC dataset [@RN2125]
+
+```{r, echo=FALSE}
+str(dataset01$ratings)
+str(dataset01$descriptions$design)
+```
+
+
+* `dataset01` "VAN-DYKE" Van Dyke ROC dataset [@RN1993]
+
+```{r, echo=FALSE}
+str(dataset02$ratings)
+str(dataset02$descriptions$design)
+```
+
+
+* `dataset03` "FRANKEN" Franken ROC dataset [@RN1995]
+
+```{r, echo=FALSE}
+str(dataset03$ratings)
+str(dataset03$descriptions$design)
+```
+
+
+* `dataset04` "FEDERICA" Federica Zanca FROC dataset [@RN1882]
+
+```{r, echo=FALSE}
+str(dataset04$ratings)
+str(dataset04$descriptions$design)
+```
+
+
+* `dataset05` "THOMPSON" John Thompson FROC dataset [@RN2368]
+
+```{r, echo=FALSE}
+str(dataset05$ratings)
+str(dataset05$descriptions$design)
+```
+
+
+
+* `dataset06` "MAGNUS" Magnus Bath FROC dataset [@RN1929]
+
+```{r, echo=FALSE}
+str(dataset06$ratings)
+str(dataset06$descriptions$design)
+```
+
+
+* `dataset07` "LUCY-WARREN" Lucy Warren FROC dataset [@RN2507]
+
+```{r, echo=FALSE}
+str(dataset07$ratings)
+str(dataset07$descriptions$design)
+```
+
+
+* `dataset08` "PENEDO" Monica Penedo FROC dataset [@RN1520]
+
+```{r, echo=FALSE}
+str(dataset08$ratings)
+str(dataset08$descriptions$design)
+```
+
+
+* `dataset09` "NICO-CAD-ROC" Nico Karssemeijer ROC dataset [@hupse2013standalone]
+
+```{r, echo=FALSE}
+str(dataset09$ratings)
+str(dataset09$descriptions$design)
+```
+
+
+* `dataset10` "RUSCHIN" Mark Ruschin ROC dataset [@RN1646]
+
+```{r, echo=FALSE}
+str(dataset10$ratings)
+str(dataset10$descriptions$design)
+```
+
+
+* `dataset11` "DOBBINS-1" Dobbins I FROC dataset [@Dobbins2016MultiInstitutional]
+
+```{r, echo=FALSE}
+str(dataset11$ratings)
+str(dataset11$descriptions$design)
+```
+
+
+* `dataset12`  "DOBBINS-2" Dobbins II ROC dataset [@Dobbins2016MultiInstitutional]
+
+```{r, echo=FALSE}
+str(dataset12$ratings)
+str(dataset12$descriptions$design)
+```
+
+
+
+* `dataset13` "DOBBINS-3" Dobbins III FROC dataset [@Dobbins2016MultiInstitutional]
+
+```{r, echo=FALSE}
+str(dataset13$ratings)
+str(dataset13$descriptions$design)
+```
+
+
+* `dataset14` "FEDERICA-REAL-ROC" Federical Zanca *real* ROC dataset [@RN2318]
+
+```{r, echo=FALSE}
+str(dataset14$ratings)
+str(dataset14$descriptions$design)
+```
+
+
+An additional dataset is not used in this chapter.
+
+
+* `datasetCrossedModality` "THOMPSON-X-MOD" John Thompson FROC dataset [@RN2419]
+
+```{r, echo=FALSE}
+str(datasetCrossedModality$ratings)
+str(datasetCrossedModality$descriptions$design)
+```
+
+
+
+## Application to 14 datasets {#rsm-3-fits-roc-application-14-datasets}
+The RSM and CBM, implemented in `RJafroc` and `PROPROC`, implemented in software available from the University of Iowa ROC website, were applied to the fourteen datasets.
+
+
+The RSM has three parameters (excluding thresholds) $\mu$, $\lambda'$, and $\nu'$. CBM has two parameters $\mu$ and $\alpha$, as detailed in TBA Chapter 20. Both RSM and CBM fitting methods are implemented in `RJafroc`. 
+
+PROPROC is a two-parameter model, with parameters $c$ and $d_a$, as detailed in TBA Chapter 20: these parameters were obtained by running Windows software (OR DBM-MRMC 2.5 (Sept. 04, 2014) with PROPROC selected as the curve-fitting method. The relevant results are saved in files that end with "proprocnormareapooled.csv" contained in "R/compare-3-fits/MRMCRuns/xx/", where xx denotes the name of the dataset (for example, for the Van Dyke dataset, xx = "VD") and white-spaces in the original output file name have been removed. The `*.lrc` files are the data files suitably formatted for input to OR DBM-MRMC 2.5. The output files can be opened by `RStudio` and the values $c$ and $d_a$  are in the last two columns, see Fig. \@ref(fig:rsm-3-fits-proproc-output-van-dyke). The column names are T = treatment; R = reader; area = PROPROC AUC; numCAT = number of ROC bins; adjPMean = undocumented value; c =  $c$ and d_a =  $d_a$ parameters defined in [@RN1499].
+
+
+```{r rsm-3-fits-proproc-output-van-dyke, echo=FALSE,out.width="50%",out.height="20%",fig.cap="PROPROC output for Van Dyke ROC data set.",fig.show='hold',fig.align='center'}
+knitr::include_graphics("images/compare-3-fits/vanDyke.png")
+``` 
+
+Fig. \@ref(fig:rsm-3-fits-proproc-output-van-dyke) Contents of file `VDproprocareapooled.csv` generated by Windows DBM-MRMC for the `VD` dataset. Since there are five readers and two treatments, the file has 10 data rows. Row 7, showing results for modality 2 and reader 1, yields $c$ = 0.321 and $d_a$ = 2.35, and PROPROC AUC = 0.952. Row 10, for modality 2 and reader 4, yields $c$ = 1 and  $d_a$ = 0, corresponding to perfect performance, PROPROC AUC = 1. 
 
 ```{r rsm-3-fits-code, echo=FALSE}
 source(here("R/compare-3-fits/Compare3ProperRocFits.R"))
 ```
 
 
-```{r rsm-3-fits-code2, echo=FALSE, cache=TRUE}
-startIndx <-  1
+```{r rsm-3-fits-code-f2, echo=FALSE, cache=TRUE}
+startIndx <-  2
 endIndx <- 2
 ret <- Compare3ProperRocFits(startIndx = startIndx, 
                              endIndx = endIndx, 
@@ -43,8 +190,8 @@ for (f in 1:(endIndx-startIndx+1)) {
 ```
 
 
-```{r optim-op-point-froc-AUC-vs-zeta1-01, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 1$.", fig.show='hold', echo=FALSE}
-for (f in 1:(endIndx-startIndx+1)) {
+```{r rsm-3-fits-f2, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 1$.", fig.show='hold', echo=FALSE}
+  f <- 1
   I <- dim(ret$allCompPlots[[f]])[1]
   J <- dim(ret$allCompPlots[[f]])[2]
   for (i in 1:I) {
@@ -52,26 +199,33 @@ for (f in 1:(endIndx-startIndx+1)) {
       if (i == ip) next
       if (i > ip) next
       for (j in 1:J) {
-        grid.arrange(plotArr[[f]][[i,j]], plotArr[[f]][[ip,j]], ncol = 2)
+        p1 <- plotArr[[f]][[i,j]]
+        p2 <- plotArr[[f]][[ip,j]]
+        gA <- ggplotGrob(p1)
+        gB <- ggplotGrob(p2)
+        #grid::grid.newpage()
+        #grid::grid.draw(cbind(gA, gB))
+        # see R/learn/_grid.arrange.Rmd
+        grid.arrange(gA,gB, ncol=2, widths = c(1,1), 
+             heights=unit(c(4), c("in")))
       }
     }
   }
-}
 ```
 
 
 
  
-Fig. 18.3: Screen shot of the MRMCRuns directory, opened using RStudio, showing the contents of the file VD_MRMC proproc area pooled.csv generated by Windows DBM-MRMC for the VD dataset with PROPROC analysis selected. The last two columns contain the  ,   parameters of the PROPROC algorithm for this dataset. For example, for modality 2 and reader 1,   =  0.321and   = 2.35. Since there are five readers and two modalities, the file has 10 data rows. Row 10, showing results for modality 2 and reader 5, yielded c = 1 and  = 0, corresponding to perfect performance, AUC = 1 [T = treatment; R = reader; area = PROPROC AUC; numCAT = # ROC bins; adjPMean = undocumented value; c =  -parameter; d_a =  -parameter defined in Ref. 6.]
+Fig. 18.3: Screen shot of the MRMCRuns directory, opened using RStudio, showing the contents of the file VD_MRMC proproc area pooled.csv generated by Windows DBM-MRMC for the VD dataset with PROPROC analysis selected. The last two columns contain the  ,   parameters of the PROPROC algorithm for this dataset. For example, for modality 2 and reader 1,   =  0.321 and   = 2.35. Since there are five readers and two treatments, the file has 10 data rows. Row 10, showing results for modality 2 and reader 5, yielded c = 1 and  = 0, corresponding to perfect performance, AUC = 1. `T` = treatment; `R` = reader; `area` = PROPROC AUC; `numCAT` = # ROC bins; `adjPMean` = undocumented value; `c` =  $c$ parameter; `d_a` =  $d_a$ parameter defined in [@RN1499].
 
-The analysis code is in file mainRSM.R explained in Online Appendix 18.A.1. See (book) Appendix 18.A.1 and (book) Appendix 18.A.2 for further help in understanding the code. Briefly, it reads the dataset file, applies RSM and CBM fitting, reads the appropriate PROPROC parameters from OR DBM-MRMC 2.5 generated files, e.g., Fig. 18.3, and saves all results, and plots, to an object retSmRoc in an appropriately named disk file to prevent overwriting, Fig. 18.4. For example, saveRetRocDOB1 contains the saved retSmRoc object corresponding to dataset # 11 (Online Table 23.1).
+The analysis code is in file `R/compare-3-fits/Compare3ProperRocFits.R`. Briefly, it reads the dataset file, applies RSM and CBM fitting, reads the appropriate PROPROC parameters from OR DBM-MRMC 2.5 generated files and returns results and plots. 
 
  
 Fig. 18.4: Contents of directory software/ANALYZED/RSM-PROPROC-CBM. Each file contains the results of RSM, PROPROC and CBM fits to the dataset named following the string saveRetRoc. Plotting information (ggplot objects) for RSM ROC and other RSM operating characteristics are also saved, which explains the size of each dataset.
 
 The object retSmRoc contains everything necessary for subsequent analysis, and saves time by not having to reanalyze datasets. For convenience, relevant lines are reproduced below (red highlighting is used to denoted lines explained below) in the following partial code listing. 
 
-The 14 datasets are identified in the code by strings contained in the string-array variable fileNames (line 22 - 23). They are index by f (for filename). Line 24 selects the dataset to be analyzed. In the example shown the "TONY" dataset has been selected21. Line 27 - 28 loads the dataset (loadDataFile) and converts it to an ROC dataset (DfFRoc2HrRoc; for an ROC dataset this function is redundant). The PROPROC parameter values were extracted from the saved text files, described above, using function ProprocFits(), called at line 37. Line 55 implements Eqn. (36) of the Metz and Pan paper6 to calculate   from the retrieved  ,   parameters. The formula will be detailed later in Chapter 20. Line 56 calls function FitRsmRoc(frocData,i,j). The (i,j) indices tell the function which treatment and reader to analyze. The conversion to ROC data is performed internal to this function . Lines 57 – 60 extract the three parameters and the RSM-fitted AUC. Line 61 calls function UtilOperatingPoints() to get the ROC operating points defined by the selected dataset, modality and reader. Line 63 performs the CBM fit using function FitCbmRoc(). 
+They are index by f (for filename). Line 24 selects the dataset to be analyzed. In the example shown the "TONY" dataset has been selected21. Line 27 - 28 loads the dataset (loadDataFile) and converts it to an ROC dataset (DfFRoc2HrRoc; for an ROC dataset this function is redundant). The PROPROC parameter values were extracted from the saved text files, described above, using function ProprocFits(), called at line 37. Line 55 implements Eqn. (36) of the Metz and Pan paper6 to calculate   from the retrieved  ,   parameters. The formula will be detailed later in Chapter 20. Line 56 calls function FitRsmRoc(frocData,i,j). The (i,j) indices tell the function which treatment and reader to analyze. The conversion to ROC data is performed internal to this function . Lines 57 – 60 extract the three parameters and the RSM-fitted AUC. Line 61 calls function UtilOperatingPoints() to get the ROC operating points defined by the selected dataset, modality and reader. Line 63 performs the CBM fit using function FitCbmRoc(). 
 
 Since all 14 datasets have already been analyzed and the results saved, all the the preceding analysis is bypassed (see test at line 43 for existence of a pre-analyzed results file) and program execution starts effectively at line 76, which loads the saved results using the load() function, which is the inverse of the save() function used at line 74 for a new dataset. Line 78 – 97 extract parameters of the three fits, and plot three curves, using PlotRsmPropCbm(), with superposed the operating points, with exact binomial confidence intervals. The black line fit is RSM, the red line fit is PROPROC and the blue line fit is CBM. An example is shown in 18.5 (A).
 
@@ -120,7 +274,7 @@ This chapter describes an approach to fitting ROC curves, instead of FROC curves
 
 On the face of it, fitting the ROC curve seems to be ignoring much of the data. As an example, the ROC rating on a non-diseased case is the rating of the highest-rated mark on that image, or negative infinity if the case has no marks. If the case has several NL marks, only the highest rated one is used. In fact the highest rated mark contains information about the other marks on the case, namely they were all rated lower. There is a statistical term for this, namely sufficiency38. As an example, the highest of a number of samples from a uniform distribution is a sufficient statistic, i.e., it contains all the information contained in the observed samples. While not quite the same for normally distributed values, neglect of the NLs rated lower is not as bad as might seem at first. A similar argument applies to LLs and NLs on diseased cases. The advantage of fitting to the ROC is that the coupling of NLs and LLs on diseased cases breaks the degeneracy problem described in §18.2.3.
 
-The reader may wonder why the author chose not to fit the wAFROC. After all, it is the recommended figure of merit for FROC studies. While the methods described in this chapter are readily adapted to the wAFROC, they are more susceptible to degeneracy issues. The reason is that the y-axis is defined by LL-events, in other words by the   parameters, while the x-axis is defined by the highest rated NL on non-diseased cases, in other words by the   parameter. The consequent decoupling of parameters leads to degeneracy of the type described in §18.2.3. This is avoided in ROC fitting because the y-axis is defined by LLs and NLs, in other words all parameters of the RSM are involved. The situation with the wAFROC is not quite as severe as with fitting FROC curves but it does have a problem with degeneracy. There are some ideas on how to improve the fits, perhaps by simultaneously fitting ROC and wAFROC-operating points, which amounts to putting constraints on the parameters, but for now this remains an open research subject. Empirical wAFROC, which is the current method implemented in RJafroc, is expected to have the same issues with variability of thresholds between modalities as the empirical ROC-AUC, as discussed in §5.9. So the fitting problem has to be solved. There is no need to fit the FROC, as it should never be used as a basis of a figure of merit for human observer studies; this is distinct from the severe degeneracy issues encountered with fitting it for human observers.
+The reader may wonder why the author chose not to fit the wAFROC. After all, it is the recommended figure of merit for FROC studies. While the methods described in this chapter are readily adapted to the wAFROC, they are more susceptible to degeneracy issues. The reason is that the y-axis is defined by LL-events, in other words by the   parameters, while the x-axis is defined by the highest rated NL on non-diseased cases, in other words by the   parameter. The consequent decoupling of parameters leads to degeneracy of the type described in §18.2.3. This is avoided in ROC fitting because the y-axis is defined by LLs and NLs, in other words all parameters of the RSM are involved. The situation with the wAFROC is not quite as severe as with fitting FROC curves but it does have a problem with degeneracy. There are some ideas on how to improve the fits, perhaps by simultaneously fitting ROC and wAFROC-operating points, which amounts to putting constraints on the parameters, but for now this remains an open research subject. Empirical wAFROC, which is the current method implemented in RJafroc, is expected to have the same issues with variability of thresholds between treatments as the empirical ROC-AUC, as discussed in §5.9. So the fitting problem has to be solved. There is no need to fit the FROC, as it should never be used as a basis of a figure of merit for human observer studies; this is distinct from the severe degeneracy issues encountered with fitting it for human observers.
 
 The application to a large number (236) of real datasets revealed that PROPROC has serious issues. These were apparently not revealed by the millions of simulations used to validate it39. To quote the cited reference, "The new algorithm never failed to converge and produced good fits for all of the several million datasets on which it was tested". This is a good illustration of why simulations studies are not a good alternative to the method described in §18.5.1.3.  In the author's experience, this is a common misconception in this field, and is discussed further in the following chapter. Fig. 18.5, panels (J), (K) and (L) show that PROPROC, and to a lesser extent CBM, can, under some circumstances, severely overestimate performance. Recommendations regarding usage of PROPROC and CBM are deferred to Chapter 20. 
 
@@ -132,9 +286,10 @@ The CBM method comes closest to the RSM in terms of yielding meaningful measures
 
 An important finding is the inverse correlation between search performance and lesion-classification performance, which suggest there could be tradeoffs in attempts to optimize them. As a simplistic illustration, a low-resolution gestalt-view of the image1, such as seen by the peripheral viewing mechanism, is expected to make it easier to rapidly spot deviations from the expected normal template described in Chapter 15. However, the observer may not be able to switch effectively between this and the high-resolution viewing mode necessary to correctly classify found suspicious region. 
 
-The main scientific conclusion of this chapter is that search-performance is the primary bottleneck in limiting observer performance. It is unfortunate that search is ignored in the ROC paradigm, and influential persons still continue to advocate ROC methods40 because some have difficutly understanding the concept of a lesion, and in current model observer methods, also advocated by leading scientists . Evidence presented in this chapter should convince researchers to reconsider the focus of their investigations, most of which is currently directed at improving classification performance, which has been shown not to be the bottleneck. Another conclusion is that the three method of fitting ROC data yield almost identical AUCs. Relative to the RSM the PROPROC estimates are about 2.6% larger while CBM estimates are about 1% larger. This was a serendipitous finding that makes sense, in retrospect, but to the best of the author's knowledge is not known in the research community. PROPROC and to a lesser extent CBM are prone to severely overestimating performance in situations where the operating points are limited to a steep ascending section at the low end of false positive fraction scale. This parallels an earlier comment regarding the FROC, namely measurements derived from the steep part of the curve are unreliable, §17.10.1.
+The main scientific conclusion of this chapter is that search-performance is the primary bottleneck in limiting observer performance. It is unfortunate that search is ignored in the ROC paradigm, usage of which is decreasing, albeit at an agonizingly slow rate. Evidence presented in this chapter should convince researchers to reconsider the focus of their investigations, most of which is currently directed at improving classification performance, which has been shown not to be the bottleneck. Another conclusion is that the three method of fitting ROC data yield almost identical AUCs. Relative to the RSM the PROPROC estimates are about 2.6% larger while CBM estimates are about 1% larger. This was a serendipitous finding that makes sense, in retrospect, but to the best of the author's knowledge is not known in the research community. PROPROC and to a lesser extent CBM are prone to severely overestimating performance in situations where the operating points are limited to a steep ascending section at the low end of false positive fraction scale. This parallels an earlier comment regarding the FROC, namely measurements derived from the steep part of the curve are unreliable, §17.10.1.
 
 
+## Appendix 1
 
 
 ## References {#rsm-3-fits-references}
