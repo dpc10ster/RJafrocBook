@@ -3,11 +3,21 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Introduction to the Obuchowski-Rockette method {#ORMethodIntro}
+
+
+# Introduction to the Obuchowski-Rockette method {#or-method-intro}
 
 
 
-## Introduction {#ORMethodIntro-introduction}
+
+
+## How much finished {#or-method-intro-how-much-finished}
+40%
+
+
+
+
+## Introduction {#or-method-intro-introduction}
 * This chapter starts with a gentle introduction to the Obuchowski and Rockette method. The reason is that the method was rather opaque to me, and I suspect most non-statistician users. Part of the problem, in my opinion, is the notation, namely lack of the *case-set* index $\{c\}$. While this may seem like a trivial point to statisticians, it did present a conceptual problem for me. 
 
 * A key difference of the Obuchowski and Rockette method from DBM is in how the error term is modeled by a non-diagonal covariance matrix. Therefore, the structure of the covariance matrix is examined in some detail.  
@@ -379,7 +389,7 @@ qchisq(0.05,4)/4
 #> [1] 0.1776808
 ```
 
-### p-value and confidence interval {#ORMethodIntro-pvalue-ci}
+### p-value and confidence interval {#or-method-intro-pvalue-ci}
 The p-value is the probability that a sample from the $F_{I-1,\infty}$ distribution is greater than the observed value of the test statistic, namely: 
 
 \begin{equation}
@@ -396,7 +406,7 @@ CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\inf
 
 Comparing Eqn. \@ref(eq:CIalpha1R) to Eqn. \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(\text{Var}-\text{Cov1})}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.] 
 
-### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments {#ORMethodIntro-CompareDBM2OR41R}
+### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments {#or-method-intro-CompareDBM2OR41R}
 We have shown two methods for analyzing a single reader in multiple treatments: the DBM method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap, or the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit, to get the covariance matrix. Since one is dealing with a single reader in multiple treatments, for DBM one needs the fixed-reader random-case analysis described in TBA §9.8 of the previous chapter (it should be obvious that with one reader the conclusions apply to the specific reader only, so reader must be regarded as a fixed factor).
 
 Shown below are results obtained using `RJafroc` function `StSignificanceTesting` with `analysisOption = "FRRC"` for `method` = "DBM" (which uses the jackknife), and for OR using 3 different ways of estimating the covariance matrix for the one-reader analysis (i.e., $\text{Cov1}$ and $\text{Var}$). 
@@ -435,7 +445,7 @@ data.frame("ORBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"],
            "ORBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
            "ORBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
 #>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-#> 1     1.050397          1   0.30541566
+#> 1    1.2834397          1   0.25726046
 ```
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBM and $\infty$ for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
@@ -729,7 +739,7 @@ Cov_3 \leq  Cov_2 \leq  \text{Cov1} \leq  \text{Var}
 (\#eq:CovOrderings)
 \end{equation}
 
-## Summary{#ORMethodIntro-Summary}
-## Discussion{#ORMethodIntro-Discussion}
-## References {#ORMethodIntro-references}
+## Summary{#or-method-intro-Summary}
+## Discussion{#or-method-intro-Discussion}
+## References {#or-method-intro-references}
 

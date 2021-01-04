@@ -5,6 +5,12 @@
 
 
 
+
+## How much finished {#quick-start-dbm-text-how-much-finished}
+90%
+
+
+
 ## Introduction {#quick-start-dbm-text-intro}
 This chapter is intended for those seeking a quick-and-easy transition from Windows `JAFROC` to `RJafroc`. Described first is the structure of an `RJafroc` dataset followed by how to read a JAFROC  format Excel file to create an `RJafroc` dataset.
 

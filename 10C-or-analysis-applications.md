@@ -3,11 +3,19 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Obuchowski Rockette Applications {#ORApplications} 
+# Obuchowski Rockette Applications {#or-applications} 
 
 
 
-## Introduction {#ORApplications-introduction}  
+
+
+
+
+## How much finished {#or-applications-how-much-finished}
+80%
+
+
+## Introduction {#or-applications-introduction}  
 
 This chapter illustrates Obuchowski-Rockette analysis with several examples. The first example is a full-blown "hand-calculation" for `dataset02`, showing explicit implementations of formulae presented in the previous chapter. The second example shows application of the `RJafroc` package function `StSignificanceTesting()` to the same dataset: this function encapsulates all formulae and accomplishes all analyses with one function call. The third example shows application of the `StSignificanceTesting()` function to an ROC dataset derived from the Federica Zanca dataset [@RN1882], which has five modalities and four readers. This illustrates multiple treatment pairings (in contrast, `dataset02` has only one treatment pairing). The fourth example shows application of `StSignificanceTesting()` to `dataset04`, which is an **FROC** dataset (in contrast to the previous examples, which employed **ROC** datasets). It illustrates the key difference involved in FROC analysis, namely the choice of figure of merit. The final example again uses `dataset04`, i.e., FROC data, *but this time we use DBM analysis*. Since DBM analysis is pseudovalue based, and the figure of merit is not the empirical AUC under the ROC, one may expect to see differences from the previously presented OR analysis on the same dataset.
 
@@ -21,7 +29,7 @@ Each analysis involves the following steps:
     + fixed-reader random-case (FRRC), and
     + random-reader fixed-case (RRFC).
 
-## Hand calculation {#ORApplications-dataset02-hand}
+## Hand calculation {#or-applications-dataset02-hand}
 
 Dataset `dataset02` is well-know in the literature [@RN1993] as it has been widely used to illustrate advances in ROC methodology. The following code extract the numbers of modalities, readers and cases for `dataset02` and defines strings `modalityID`, `readerID` and `diffTRName` that are needed for the hand-calculations.
 
@@ -48,7 +56,7 @@ for (i in 1:I) {
 
 The dataset consists of I = 2 treatments,  J = 5 readers and  K = 114 cases.
 
-### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset02-hand}
+### Random-Reader Random-Case (RRRC) analysis {#or-applications-RRRC-dataset02-hand}
 * The first step is to calculate the figures of merit using `UtilFigureOfMerit()`. 
 * Note that the `FOM` argument has to be explicitly specified as there is no default.
 
@@ -215,7 +223,7 @@ print(CI_RRRC_IndvlTrt, digits = 4)
 ```
 
 
-### Fixed-Reader Random-Case (FRRC) analysis {#ORApplications-FRRC-dataset02-hand}
+### Fixed-Reader Random-Case (FRRC) analysis {#or-applications-FRRC-dataset02-hand}
 * The chi-square statistic is calculated using Eqn. \@ref(eq:DefFStatFRRC-OR) and Eqn. \@ref(eq:ChisqStatFRRC-OR). 
 * The needed quantities are in `vc`. 
 * For example, MS(T) is in vc$TRanova["T", "MS"], see above. Likewise for `Cov2` and `Cov3`.
@@ -370,7 +378,7 @@ print(ciDiffTrtEachRdr, digits = 3)
 
 The notation in the first column shows the reader and the treatment pairing. For example, `rdr1::trt0-trt1` means the FOM difference for reader `rdr1`. Only the fifth reader, i.e., `rdr4`, shows a significant difference between the treatments: the p-value is 0.023001 and the confidence interval also does not include zero. The large FOM difference for this reader, -0.100161, was enough to result in a significant finding for FRRC analysis. The FOM differences for the other readers are about a factor of 2.1522491 or more smaller than that for this reader.
 
-### Random-Reader Fixed-Case (RRFC) analysis {#ORApplications-RRFC-dataset02-hand}
+### Random-Reader Fixed-Case (RRFC) analysis {#or-applications-RRFC-dataset02-hand}
 The F-statistic is shown in Eqn. \@ref(eq:DefFStatRRFC). This time `ndf` = $I-1$ and `ddf` = $(I-1) \times (J-1)$, the values proposed in the Obuchowski-Rockette paper. The implementation follows:
 
 
@@ -424,7 +432,7 @@ print(ciDiffTrt_RRFC, digits = 4)
 * As expected because the overall F-test showed significance, the confidence interval does not include zero (the p-value is identical to that found by the F-test). 
 * This completes the hand calculations.
 
-## RJafroc: dataset02 {#ORApplications-dataset02-RJafroc}
+## RJafroc: dataset02 {#or-applications-dataset02-RJafroc}
 
 The second example shows application of the `RJafroc` package function `StSignificanceTesting()` to `dataset02`. This function encapsulates all formulae discussed previously and accomplishes the analyses with a single function call. It returns an object, denoted `st1` below, that contains all results of the analysis. It is a `list` with the following components:
 
@@ -467,7 +475,7 @@ Online help on the `StSignificanceTesting()` function is available:
 
 The lower right `RStudio` panel contains the online description. Click on the small up-and-right pointing arrow icon to expand this to a new window. 
 
-### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset02-RJafroc}
+### Random-Reader Random-Case (RRRC) analysis {#or-applications-RRRC-dataset02-RJafroc}
 * Since `analysisOption` is not explicitly specified in the following code, the function `StSignificanceTesting` performs all three analyses: `RRRC`, `FRRC` and `RRFC`.
 * Likewise, the significance level of the test, also an argument, `alpha`, defaults to 0.05. 
 * The code below applies `StSignificanceTesting()` and saves the returned object to `st1`. 
@@ -566,7 +574,7 @@ print(st1$RRRC$ciAvgRdrEachTrt, digits = 4)
 
 * `st1$RRRC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet}}$.
 
-### Fixed-Reader Random-Case (FRRC) analysis {#ORApplications-FRRC-dataset02-RJafroc}
+### Fixed-Reader Random-Case (FRRC) analysis {#or-applications-FRRC-dataset02-RJafroc}
 
 * Displayed next are the results of FRRC analysis, contained in `st1$FRRC`.
 * `st1$FRRC$FTests` contains the results of the F-tests: the degrees of freedom, the mean-squares, the observed value of the F-statistic and the p-value for rejecting the NH, listed separately, where applicable, for the treatment and error terms. 
@@ -619,7 +627,7 @@ print(st1$FRRC$ciDiffTrtEachRdr, digits = 3)
 
 * `st1$FRRC$st1$FRRC$ciDiffTrtEachRdr` contains confidence intervals for inter-treatment difference FOMs, for each reader, i.e., $CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}}$.
 
-### Random-Reader Fixed-Case (RRFC) analysis {#ORApplications-RRFC-dataset02-RJafroc}
+### Random-Reader Fixed-Case (RRFC) analysis {#or-applications-RRFC-dataset02-RJafroc}
 
 
 ```r
@@ -652,7 +660,7 @@ print(st1$RRFC$ciAvgRdrEachTrt, digits = 4)
 
 * `st1$RRFC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRFC,\theta_{i \bullet}}$.
 
-## RJafroc: dataset04 {#ORApplications-dataset04-RJafroc}
+## RJafroc: dataset04 {#or-applications-dataset04-RJafroc}
 * The third example uses the Federica Zanca dataset [@RN1882], i.e., `dataset04`, which has five modalities and four readers. 
 * It illustrates the situation when multiple treatment pairings are involved. In contrast, the previous example had only one treatment pairing.
 * Since this is an FROC dataset, in order to keep it comparable with the previous example, one converts it to an inferred-ROC dataset.
@@ -866,7 +874,7 @@ print(st2, digits = 3)
 #> Trt5    0.808 0.0210  3   0.742   0.875
 ```
 
-### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset04}
+### Random-Reader Random-Case (RRRC) analysis {#or-applications-RRRC-dataset04}
 
 * `st2$RRRC$FTests` contains the results of the F-test.
 * In this example `ndf` = 4 because there are I = 5 treatments. Since the p-value is less than 0.05, at least one treatment-pairing FOM difference is significantly different from zero.
@@ -878,7 +886,7 @@ print(st2, digits = 3)
 * `st2$RRRC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet}}$.
 * Looking at the `Estimate` column one confirms that `trt5` has the smallest FOM while `trt4` has the highest.
 
-### Fixed-Reader Random-Case (FRRC) analysis {#ORApplications-FRRC-dataset04}
+### Fixed-Reader Random-Case (FRRC) analysis {#or-applications-FRRC-dataset04}
 
 * `st2$FRRC$FTests` contains results of the F-tests, which in this situation is actually a chi-square test of the NH.
 * Again, `ndf` = 4 because there are I = 5 treatments. Since the p-value is less than 0.05, at least one treatment-pairing FOM difference is significantly different from zero.
@@ -890,7 +898,7 @@ print(st2, digits = 3)
 * `st2$FRRC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,FRRC,\theta_{i \bullet}}$.
 * The `Estimate` column confirms that `trt5` has the smallest FOM while `trt4` has the highest.
 
-### Random-Reader Fixed-Case (RRFC) analysis {#ORApplications-RRFC-dataset04}
+### Random-Reader Fixed-Case (RRFC) analysis {#or-applications-RRFC-dataset04}
 
 * `st2$RRFC$FTests` contains the results of the F-test of the NH.
 * Again, `ndf` = 4 because there are I = 5 treatments. Since the p-value is less than 0.05, at least one treatment-pairing FOM difference is significantly different from zero.
@@ -902,7 +910,7 @@ print(st2, digits = 3)
 * `st2$RRFC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRFC,\theta_{i \bullet}}$.
 * The `Estimate` column confirms that `trt5` has the smallest FOM while `trt4` has the highest (the `Estimates` column is identical for RRRC, FRRC and RRFC analyses).
 
-## RJafroc: dataset04, FROC {#ORApplications-dataset04-FROC-RJafroc}
+## RJafroc: dataset04, FROC {#or-applications-dataset04-FROC-RJafroc}
 * The fourth example uses `dataset04`, but this time we use the FROC data, specifically, we do not convert it to inferred-ROC. 
 * Since this is an FROC dataset, one needs to use an FROC figure of merit. 
 * In this example the weighted AFROC figure of merit `FOM = "wAFROC"` is specified. This is the recommended figure of merit when both normal and abnormal cases are present in the dataset.
@@ -1113,7 +1121,7 @@ print(st3, digits = 3)
 #> Trt5    0.714 0.0273  3   0.627   0.801
 ```
 
-### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset04-FROC}
+### Random-Reader Random-Case (RRRC) analysis {#or-applications-RRRC-dataset04-FROC}
 
 * `st3$RRRC$FTests` contains the results of the F-tests.
 * The p-value is much smaller than that obtained after converting to an ROC dataset. Specifically, for FROC analysis, the p-value is 1.17105004\times 10^{-4} while that for ROC analysis is 0.03054456. The F-statistic and the `ddf` are both larger for FROC analysis, both of of which result in increased probability of rejecting the NH, i.e., FROC analysis has greater power than ROC analysis.
@@ -1128,7 +1136,7 @@ print(st3, digits = 3)
 
 * `st3$RRRC$st1$RRRC$ciDiffTrtEachRdr` contains confidence intervals for inter-treatment difference FOMs, for each reader, i.e., $CI_{1-\alpha,RRRC,\theta_{i j} - \theta_{i' j}}$.
 
-### Fixed-Reader Random-Case (FRRC) analysis {#ORApplications-FRRC-dataset04-FROC}
+### Fixed-Reader Random-Case (FRRC) analysis {#or-applications-FRRC-dataset04-FROC}
 
 * `st3$FRRC$FTests` contains results of the F-test of the NH.
 * Again, `ndf` = 4 because there are I = 5 treatments. Since the p-value is less than 0.05, at least one treatment-pairing FOM difference is significantly different from zero.
@@ -1142,7 +1150,7 @@ print(st3, digits = 3)
 
 * `st3$FRRC$st1$FRRC$ciDiffTrtEachRdr` contains confidence intervals for inter-treatment difference FOMs, for each reader, i.e., $CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}}$.
 
-### Random-Reader Fixed-Case (RRFC) analysis {#ORApplications-RRFC-dataset04-FROC}
+### Random-Reader Fixed-Case (RRFC) analysis {#or-applications-RRFC-dataset04-FROC}
 
 * `st3$RRFC$FTests` contains results of the F-test of the NH.
 * Again, `ndf` = 4 because there are I = 5 treatments. Since the p-value is less than 0.05, at least one treatment-pairing FOM difference is significantly different from zero.
@@ -1152,7 +1160,7 @@ print(st3, digits = 3)
 * `st3$RRFC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRFC,\theta_{i \bullet}}$.
 * The `Estimate` column confirms that `trt5` has the smallest FOM while `trt4` has the highest (the `Estimates` column is identical for RRRC, FRRC and RRFC analyses).
 
-## RJafroc: dataset04, FROC/DBM {#ORApplications-dataset04-FROC-DBM-RJafroc}
+## RJafroc: dataset04, FROC/DBM {#or-applications-dataset04-FROC-DBM-RJafroc}
 * The fourth example again uses `dataset04`, i.e., FROC data, *but this time using DBM analysis*.
 * The key difference below is in the call to `StSignificanceTesting()` function, where we set `method = "DBM"`.
 * Since DBM analysis is pseudovalue based, and the figure of merit is not the empirical AUC under the ROC, one expects to see differences from the previously presented OR analysis, contained in `st3`.
@@ -1354,7 +1362,7 @@ print(st4, digits = 3)
 #> trt5    0.714 0.0273  3   0.627   0.801
 ```
 
-### Random-Reader Random-Case (RRRC) analysis {#ORApplications-RRRC-dataset04-FROC-DBM}
+### Random-Reader Random-Case (RRRC) analysis {#or-applications-RRRC-dataset04-FROC-DBM}
 
 * `st4$RRRC$FTests` contains the results of the F-test of the NH.
 
@@ -1362,7 +1370,7 @@ print(st4, digits = 3)
 
 * `st4$RRRC$ciAvgRdrEachTrt` contains confidence intervals for each treatment, averaged over readers, i.e., $CI_{1-\alpha,RRRC,\theta_{i \bullet}}$.
 
-### Fixed-Reader Random-Case (FRRC) analysis {#ORApplications-FRRC-dataset04-FROC-DBM}
+### Fixed-Reader Random-Case (FRRC) analysis {#or-applications-FRRC-dataset04-FROC-DBM}
 
 * `st4$FRRC$FTests` contains results of the F-test of the NH, which is actually a chi-square statistic.
 
@@ -1374,7 +1382,7 @@ print(st4, digits = 3)
 
 * `st4$FRRC$ciDiffTrtEachRdr` contains confidence intervals for inter-treatment difference FOMs, for each reader, i.e., $CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}}$.
 
-### Random-Reader Fixed-Case (RRFC) analysis {#ORApplications-RRFC-dataset04-FROC-DBM}
+### Random-Reader Fixed-Case (RRFC) analysis {#or-applications-RRFC-dataset04-FROC-DBM}
 
 * `st4$RRFC$FTests` contains the results of the F-test of the NH.
 
@@ -1384,8 +1392,8 @@ print(st4, digits = 3)
 * The `Estimate` column confirms that `trt5` has the smallest FOM while `trt4` has the highest (the `Estimates` column is identical for RRRC, FRRC and RRFC analyses).
 
 
-## Summary{#ORApplications-Summary}
-## Discussion{#ORApplications-Discussion}
+## Summary{#or-applications-Summary}
+## Discussion{#or-applications-Discussion}
 ## Tentative {#ToMullOver1-tentative}
 
 
@@ -1412,5 +1420,5 @@ print(st5, digits = 4)
 
 A comparison was run between results of OR and DBM for the FROC dataset. Except for `FRRC`, where differences are expected (because `ddf` in the former is $\infty$, while that in the later is $(I-1)\times(J-1))$, the results for the p-values were identical. This was true for the following FOMs: `wAFROC`, with equal and unequal weights, and `MaxLLF`. The confidence intervals (again, excluding `FRRC`) were identical for `FOM` = `wAFROC`. Slight differences were observed for `FOM` = `MaxLLF`.  
 
-## References {#ORApplications-references}
+## References {#or-applications-references}
 

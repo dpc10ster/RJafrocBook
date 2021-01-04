@@ -4,6 +4,10 @@
 
 
 
+## How much finished {#quick-start-or-text-how-much-finished}
+90%
+
+
 ## Introduction {#quick-start-or-text-intro}
 This vignette illustrates significance testing using the OR method. 
 

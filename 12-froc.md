@@ -4,6 +4,15 @@
 
 
 
+
+
+
+## How much finished {#froc-paradigm-how-much-finished}
+70%
+
+
+
+
 ## Introduction {#froc-paradigm-intro}
 
 Until now the focus has been on the receiver operating characteristic (ROC) paradigm. For diagnostic tasks such as detecting diffuse interstitial lung disease[^1], or diseases similar to it, where *disease location is implicit* -- by definition diffuse interstitial lung disease is spread through, and confined to, lung tissues -- this is an appropriate paradigm in the sense that essential information is not being lost by limiting the radiologist's response in the study to a single rating categorizing the likelihood of presence of interstitial disease.

@@ -4,8 +4,14 @@ output:
   html_document: default
 ---
 
-# DBM method special cases {#DBMSpecialCases}
+# DBM method special cases {#dbm-analysis-special-cases}
 Special cases of DBM analysis are described here, namely fixed-reader random-case (FRRC), sub-special case of which is Single-reader multiple-treatment analysis, and random-reader fixed-case (RRFC). 
+
+
+## How much finished {#dbm-analysis-special-cases-fits-how-much-finished}
+30%
+
+
 
 
 
@@ -112,7 +118,7 @@ data.frame("pValue" = retRJafroc$FRRC$FTests$p[1],
 
 As one might expect, if one "freezes" reader variability, the FOM difference becomes significant, whether viewed from the point of view of the F-statistic exceeding the critical value, the observed p-value being smaller than alpha or the 95% CI for the difference FOM not including zero. 
 
-## Random-reader fixed-case (RRFC) analysis {#DBMSpecialCases-RRFCAnalysis}
+## Random-reader fixed-case (RRFC) analysis {#dbm-analysis-special-cases-RRFCAnalysis}
 The model is the same as in TBA \@ref(eq:pseudoValPrime) Eqn. (9.4) except one puts $\sigma_C^2 = \sigma_{\tau C}^2 =0$ in Table Table \@ref(tab:ExpValMs). It follows that: 
 
 \begin{equation}
@@ -191,5 +197,5 @@ data.frame("pValue" = retRJafroc$RRFC$FTests$p[1],
 ```
 
 
-## References {#DBMSpecialCases-references}
+## References {#dbm-analysis-special-cases-references}
 
