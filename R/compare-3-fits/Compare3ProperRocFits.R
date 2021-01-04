@@ -74,8 +74,8 @@ Compare3ProperRocFits <- function(startIndx = 1,
                   "DOB3", "FZR")
   if (!(startIndx %in% seq(1,14) && endIndx %in% seq(1,14))) stop("illegal values for startIndx and/ or endIndx")
   allBinnedDatasets <- as.list(array(dim = endIndx - startIndx + 1))
-  allDatasetsResults <- as.list(array(dim = endIndx - startIndx + 1))
-  allCompPlots <- as.list(array(dim = endIndx - startIndx + 1))
+  allResults <- as.list(array(dim = endIndx - startIndx + 1))
+  allPlots <- as.list(array(dim = endIndx - startIndx + 1))
   for (f in startIndx:endIndx) {
     fileName <- fileNames[f]
     theData <- get(sprintf("dataset%02d", f)) # the datasets already exist as R objects
@@ -134,7 +134,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
             lesDistr, c1[i, j], da[i, j],
             x$retCbm$mu, x$retCbm$alpha,
             fpf, tpf, i, j, K1, K2, c(1, length(fpf)))
-          allCompPlots[[f-startIndx + 1]] <- compPlot
+          allPlots[[f-startIndx + 1]] <- compPlot
           # follows same format as RSM Vs. Others.xlsx
           # cat(fileName, i, j, x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP,
           #     c1[i,j], da[i,j],
@@ -145,7 +145,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
           next
         }
       }
-      allDatasetsResults[[f-startIndx + 1]] <- allResults
+      allResults[[f-startIndx + 1]] <- allResults
       allBinnedDatasets[[f-startIndx + 1]] <- binnedRocData
       # cat("\n")
       ### safety comments
@@ -171,7 +171,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
             lesDistr, c1[i, j], da[i, j],
             x$retCbm$mu, x$retCbm$alpha,
             fpf, tpf, i, j, K1, K2, c(1, length(fpf)))
-          allCompPlots[[f-startIndx + 1]] <- compPlot
+          allPlots[[f-startIndx + 1]] <- compPlot
           # follows same format as RSM Vs. Others.xlsx
           # cat(fileName, i, j, x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
           #     c1[i,j], da[i,j], 
@@ -182,7 +182,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
           next
         }
       }
-      allDatasetsResults[[f-startIndx + 1]] <- allResults
+      allResults[[f-startIndx + 1]] <- allResults
       allBinnedDatasets[[f-startIndx + 1]] <- binnedRocData
       # cat("\n\n\n")
     }
@@ -191,9 +191,9 @@ Compare3ProperRocFits <- function(startIndx = 1,
   options(warn = 0) # warnings NOT as errors
   
   return(list(
-    allDatasetsResults = allDatasetsResults,
+    allResults = allResults,
     allBinnedDatasets = allBinnedDatasets,
-    allCompPlots = allCompPlots
+    allPlots = allPlots
   ))
 }
 
