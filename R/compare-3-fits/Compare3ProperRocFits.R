@@ -42,7 +42,6 @@ UtilBinCountsOpPts <- function(dataset, trt = 1, rdr = 1)
 # Compare three proper-ROC curve fitting models 
 Compare3ProperRocFits <- function(startIndx = 1, 
                                   endIndx = 14, 
-                                  showPlot = FALSE, 
                                   saveProprocLrcFile = FALSE, 
                                   reAnalyze = FALSE)
 {
@@ -127,17 +126,15 @@ Compare3ProperRocFits <- function(startIndx = 1,
                                            c1 = c1[i, j], da = da[i, j], aucProp = aucProproc, 
                                            I = I, J = J, K1 = K1, K2 = K2)
           x <- allResults[[AllResIndx]]
-          if (showPlot) {
-            lesDistr <- x$lesDistr
-            empOp <- UtilBinCountsOpPts(binnedRocData, trt = i, rdr = j)
-            fpf <- empOp$fpf; tpf <- empOp$tpf
-            compPlot[[i,j]] <- gpfPlotRsmPropCbm(
-              which(fileNames == fileName), x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
-              lesDistr, c1[i, j], da[i, j],
-              x$retCbm$mu, x$retCbm$alpha,
-              fpf, tpf, i, j, K1, K2, c(1, length(fpf)))
-            allCompPlots[[f-startIndx + 1]] <- compPlot
-          }
+          lesDistr <- x$lesDistr
+          empOp <- UtilBinCountsOpPts(binnedRocData, trt = i, rdr = j)
+          fpf <- empOp$fpf; tpf <- empOp$tpf
+          compPlot[[i,j]] <- gpfPlotRsmPropCbm(
+            which(fileNames == fileName), x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
+            lesDistr, c1[i, j], da[i, j],
+            x$retCbm$mu, x$retCbm$alpha,
+            fpf, tpf, i, j, K1, K2, c(1, length(fpf)))
+          allCompPlots[[f-startIndx + 1]] <- compPlot
           # follows same format as RSM Vs. Others.xlsx
           # cat(fileName, i, j, x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP,
           #     c1[i,j], da[i,j],
@@ -167,16 +164,14 @@ Compare3ProperRocFits <- function(startIndx = 1,
         for (j in 1:J){
           AllResIndx <- AllResIndx + 1
           x <- allResults[[AllResIndx]]
-          if (showPlot) {
-            empOp <- UtilBinCountsOpPts(binnedRocData, trt = i, rdr = j)
-            fpf <- empOp$fpf; tpf <- empOp$tpf
-            compPlot[[i,j]]  <- gpfPlotRsmPropCbm(
-              which(fileNames == fileName), x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
-              lesDistr, c1[i, j], da[i, j],
-              x$retCbm$mu, x$retCbm$alpha,
-              fpf, tpf, i, j, K1, K2, c(1, length(fpf)))
-            allCompPlots[[f-startIndx + 1]] <- compPlot
-          }
+          empOp <- UtilBinCountsOpPts(binnedRocData, trt = i, rdr = j)
+          fpf <- empOp$fpf; tpf <- empOp$tpf
+          compPlot[[i,j]]  <- gpfPlotRsmPropCbm(
+            which(fileNames == fileName), x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
+            lesDistr, c1[i, j], da[i, j],
+            x$retCbm$mu, x$retCbm$alpha,
+            fpf, tpf, i, j, K1, K2, c(1, length(fpf)))
+          allCompPlots[[f-startIndx + 1]] <- compPlot
           # follows same format as RSM Vs. Others.xlsx
           # cat(fileName, i, j, x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
           #     c1[i,j], da[i,j], 
@@ -189,7 +184,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
       }
       allDatasetsResults[[f-startIndx + 1]] <- allResults
       allBinnedDatasets[[f-startIndx + 1]] <- binnedRocData
-       # cat("\n\n\n")
+      # cat("\n\n\n")
     }
   }
   
