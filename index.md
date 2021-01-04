@@ -1,7 +1,7 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2021-01-03"
+date: "2021-01-04"
 site: bookdown::bookdown_site
 output: 
    bookdown::pdf_document: default
@@ -10,7 +10,7 @@ bibliography: [packages.bib, myRefs.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: dpc10ster/RJafrocBook
-description: "Updated observer-performance book based on RJafroc."
+description: "Artificial intelligence and observer performance book based on RJafroc."
 ---
 
 
@@ -40,8 +40,8 @@ description: "Updated observer-performance book based on RJafroc."
 * Diagnostic imaging system evaluation
 * Detection
 * Detection combined with localization
-* Detection combined with localization and classificatin
-* AI
+* Detection combined with localization and classification
+* Optimization of Artificial Intelligence (AI) algorithms
 * CV
 * Alternatives
 

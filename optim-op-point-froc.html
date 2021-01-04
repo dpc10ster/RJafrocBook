@@ -5,26 +5,26 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 36 Optimal operating point on FROC | The RJafroc Book</title>
-  <meta name="description" content="Updated observer-performance book based on RJafroc." />
+  <meta name="description" content="Artificial intelligence and observer performance book based on RJafroc." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 36 Optimal operating point on FROC | The RJafroc Book" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Updated observer-performance book based on RJafroc." />
+  <meta property="og:description" content="Artificial intelligence and observer performance book based on RJafroc." />
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 36 Optimal operating point on FROC | The RJafroc Book" />
   
-  <meta name="twitter:description" content="Updated observer-performance book based on RJafroc." />
+  <meta name="twitter:description" content="Artificial intelligence and observer performance book based on RJafroc." />
   
 
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2021-01-03" />
+<meta name="date" content="2021-01-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -739,7 +739,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="34" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html"><i class="fa fa-check"></i><b>34</b> Three proper ROC fits</a><ul>
 <li class="chapter" data-level="34.1" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-intro"><i class="fa fa-check"></i><b>34.1</b> Introduction</a></li>
 <li class="chapter" data-level="34.2" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-14-datasets"><i class="fa fa-check"></i><b>34.2</b> Datasets</a></li>
-<li class="chapter" data-level="34.3" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-roc-application-14-datasets"><i class="fa fa-check"></i><b>34.3</b> Application to 14 datasets</a></li>
+<li class="chapter" data-level="34.3" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-roc-application-datasets"><i class="fa fa-check"></i><b>34.3</b> Application to datasets</a></li>
 <li class="chapter" data-level="34.4" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-discussion-summary"><i class="fa fa-check"></i><b>34.4</b> Discussion / Summary</a></li>
 <li class="chapter" data-level="34.5" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#appendix-1"><i class="fa fa-check"></i><b>34.5</b> Appendix 1</a></li>
 <li class="chapter" data-level="34.6" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-references"><i class="fa fa-check"></i><b>34.6</b> References</a></li>
@@ -882,23 +882,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="zeta_1-optimization-for-lambda-10" class="section level3">
 <h3><span class="header-section-number">36.2.1</span> <span class="math inline">\(\zeta_1\)</span> optimization for <span class="math inline">\(\lambda = 10\)</span></h3>
 <p>Shown next is the variation of wAFROC AUC vs. <span class="math inline">\(\zeta_1\)</span> for <span class="math inline">\(\lambda = 10\)</span> and the four values of the <span class="math inline">\(\mu\)</span> parameter.</p>
-<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="optim-op-point-froc.html#cb242-1"></a><span class="co"># determine plotArr[[1,]], zetaMaxArr[1,] and maxFomArr[1,]</span></span>
-<span id="cb242-2"><a href="optim-op-point-froc.html#cb242-2"></a>lambda &lt;-<span class="st"> </span><span class="dv">10</span></span>
-<span id="cb242-3"><a href="optim-op-point-froc.html#cb242-3"></a>nu &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb242-4"><a href="optim-op-point-froc.html#cb242-4"></a>mu_arr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">1.5</span>, <span class="dv">2</span>, <span class="fl">2.5</span>)</span>
-<span id="cb242-5"><a href="optim-op-point-froc.html#cb242-5"></a>maxFomArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(mu_arr)))</span>
-<span id="cb242-6"><a href="optim-op-point-froc.html#cb242-6"></a>zetaMaxArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="kw">length</span>(mu_arr)))</span>
-<span id="cb242-7"><a href="optim-op-point-froc.html#cb242-7"></a>plotArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">list</span>(), <span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="kw">length</span>(mu_arr)))</span>
-<span id="cb242-8"><a href="optim-op-point-froc.html#cb242-8"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
-<span id="cb242-9"><a href="optim-op-point-froc.html#cb242-9"></a>relWeights &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
-<span id="cb242-10"><a href="optim-op-point-froc.html#cb242-10"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(mu_arr)) {</span>
-<span id="cb242-11"><a href="optim-op-point-froc.html#cb242-11"></a>  <span class="cf">if</span> (i <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) zeta1Arr &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">1.5</span>,<span class="fl">3.5</span>,<span class="fl">0.05</span>) <span class="cf">else</span> zeta1Arr &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.5</span>,<span class="fl">2.5</span>,<span class="fl">0.1</span>)</span>
-<span id="cb242-12"><a href="optim-op-point-froc.html#cb242-12"></a>  x &lt;-<span class="st"> </span><span class="kw">do_one_mu</span> (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights)</span>
-<span id="cb242-13"><a href="optim-op-point-froc.html#cb242-13"></a>  plotArr[[<span class="dv">1</span>,i]] &lt;-<span class="st"> </span>x<span class="op">$</span>p <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="kw">paste0</span>(<span class="st">&quot;mu = &quot;</span>, <span class="kw">as.character</span>(mu_arr[i]), <span class="st">&quot;, zetaMax = &quot;</span>,  <span class="kw">format</span>(x<span class="op">$</span>zetaMax, <span class="dt">digits =</span> <span class="dv">3</span>)))</span>
-<span id="cb242-14"><a href="optim-op-point-froc.html#cb242-14"></a>  zetaMaxArr[<span class="dv">1</span>,i] &lt;-<span class="st"> </span>x<span class="op">$</span>zetaMax</span>
-<span id="cb242-15"><a href="optim-op-point-froc.html#cb242-15"></a>  maxFomArr[<span class="dv">1</span>,i] &lt;-<span class="st"> </span>x<span class="op">$</span>maxFom</span>
-<span id="cb242-16"><a href="optim-op-point-froc.html#cb242-16"></a>  <span class="co"># plotArr[[2,i]] etc. reserved for lambda = 1 results, done later</span></span>
-<span id="cb242-17"><a href="optim-op-point-froc.html#cb242-17"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="optim-op-point-froc.html#cb243-1"></a><span class="co"># determine plotArr[[1,]], zetaMaxArr[1,] and maxFomArr[1,]</span></span>
+<span id="cb243-2"><a href="optim-op-point-froc.html#cb243-2"></a>lambda &lt;-<span class="st"> </span><span class="dv">10</span></span>
+<span id="cb243-3"><a href="optim-op-point-froc.html#cb243-3"></a>nu &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb243-4"><a href="optim-op-point-froc.html#cb243-4"></a>mu_arr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">1.5</span>, <span class="dv">2</span>, <span class="fl">2.5</span>)</span>
+<span id="cb243-5"><a href="optim-op-point-froc.html#cb243-5"></a>maxFomArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(mu_arr)))</span>
+<span id="cb243-6"><a href="optim-op-point-froc.html#cb243-6"></a>zetaMaxArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="kw">length</span>(mu_arr)))</span>
+<span id="cb243-7"><a href="optim-op-point-froc.html#cb243-7"></a>plotArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">list</span>(), <span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="kw">length</span>(mu_arr)))</span>
+<span id="cb243-8"><a href="optim-op-point-froc.html#cb243-8"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb243-9"><a href="optim-op-point-froc.html#cb243-9"></a>relWeights &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb243-10"><a href="optim-op-point-froc.html#cb243-10"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(mu_arr)) {</span>
+<span id="cb243-11"><a href="optim-op-point-froc.html#cb243-11"></a>  <span class="cf">if</span> (i <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) zeta1Arr &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">1.5</span>,<span class="fl">3.5</span>,<span class="fl">0.05</span>) <span class="cf">else</span> zeta1Arr &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.5</span>,<span class="fl">2.5</span>,<span class="fl">0.1</span>)</span>
+<span id="cb243-12"><a href="optim-op-point-froc.html#cb243-12"></a>  x &lt;-<span class="st"> </span><span class="kw">do_one_mu</span> (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights)</span>
+<span id="cb243-13"><a href="optim-op-point-froc.html#cb243-13"></a>  plotArr[[<span class="dv">1</span>,i]] &lt;-<span class="st"> </span>x<span class="op">$</span>p <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="kw">paste0</span>(<span class="st">&quot;mu = &quot;</span>, <span class="kw">as.character</span>(mu_arr[i]), <span class="st">&quot;, zetaMax = &quot;</span>,  <span class="kw">format</span>(x<span class="op">$</span>zetaMax, <span class="dt">digits =</span> <span class="dv">3</span>)))</span>
+<span id="cb243-14"><a href="optim-op-point-froc.html#cb243-14"></a>  zetaMaxArr[<span class="dv">1</span>,i] &lt;-<span class="st"> </span>x<span class="op">$</span>zetaMax</span>
+<span id="cb243-15"><a href="optim-op-point-froc.html#cb243-15"></a>  maxFomArr[<span class="dv">1</span>,i] &lt;-<span class="st"> </span>x<span class="op">$</span>maxFom</span>
+<span id="cb243-16"><a href="optim-op-point-froc.html#cb243-16"></a>  <span class="co"># plotArr[[2,i]] etc. reserved for lambda = 1 results, done later</span></span>
+<span id="cb243-17"><a href="optim-op-point-froc.html#cb243-17"></a>}</span></code></pre></div>
 <p>One sets <span class="math inline">\(\lambda = 10\)</span>, <span class="math inline">\(\nu = 1\)</span> and <span class="math inline">\(\mu\)</span> to successive values 1, 1.5, 2 and 2.5. Diseased cases with one or two lesions, with equal probability (<code>lesDistr</code>), and equally weighted lesions are assumed (<code>relWeights</code>). The <code>plotArr</code> list contains the generated plots (<code>x$p</code> plus a title sting) of wAFROC AUC vs. <span class="math inline">\(\zeta_1\)</span>, <code>zetaMaxArr</code> contains the value of <span class="math inline">\(\zeta_1\)</span> that maximizes wAFROC AUC (<code>x$zetaMax</code>) and <code>maxFomArr</code> contains the maximum achieved value of wAFROC AUC for each value of <span class="math inline">\(\mu\)</span> (<code>x$maxFom</code>). The first dimension of the arrays is reserved for the two values of <span class="math inline">\(\lambda\)</span>. In the above code this index is set to 1, corresponding to <span class="math inline">\(\lambda = 10\)</span>.</p>
 <div class="figure"><span id="fig:optim-op-point-froc-AUC-vs-zeta1-10"></span>
 <img src="21-optim-op-point_files/figure-html/optim-op-point-froc-AUC-vs-zeta1-10-1.png" alt="Variation of AUC vs. $\zeta_1$ for $\lambda = 10$; AUC is the wAFROC AUC. panels are labeled by the value of $\mu$ and zetaMax (i.e., $\zeta_{\text{max}}$, the value of $\zeta_1$ that maximizes AUC)." width="672" />
