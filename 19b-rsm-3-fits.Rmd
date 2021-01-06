@@ -10,7 +10,6 @@ library(ggplot2)
 library(gridExtra)
 library(binom)
 library(here)
-library(dplyr)
 ```
 
 
@@ -321,28 +320,46 @@ Shown next are the ten plots for the Van Dyke dataset. Each plot contains 3 curv
 
 ## Overview of findings {#rsm-3-fits-overview}
 
-With 14 datasets, comprising 43 modalities, 80 readers, 2012 cases, the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets that each of the three algorithms was applied to. It is easy to be overwhelmed by the numbers and this section aims to summarize the most important conclusion: *all three fitting methods are consistent with a single method-independent AUC*.
+With 14 datasets, comprising 43 modalities, 80 readers, 2012 cases, the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms was applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: *all three fitting methods are consistent with a single method-independent AUC*.
 
 ```{r rsm-3-fits-inter-corr-scatter, echo=FALSE}
 source(here("R/compare-3-fits/loadDataFile.R"))
-source(here("R/compare-3-fits/interCorrScatter.R"))
+source(here("R/compare-3-fits/slopesConvVsRsm.R"))
 ```
 
 ```{r rsm-3-fits-inter-corr-scatter2, echo=FALSE}
-ret <- interCorrScatter(type = "pearson", fileNames)
+ret <- slopesConvVsRsm(type = "pearson", fileNames)
 x <- cbind(ret$m_pro_rsm, ret$m_cbm_rsm)
 x <- rbind(x, apply(x,2, mean))
-x %>% mutate(across(is.numeric, ~ round(., 4))) -> x
+x  <- round(x, digits = 4)
 row.names(x) <- c(as.character(1:14), "AVG")
-colnames(x) <- c("m_pro_rsm", "R2_pro_rsm", "m_cbm_rsm", "R2_cbm_rsm")
+colnames(x) <- c("mProRsm", "R2ProRsm", "mCbmRsm", "R2CbmRsm")
 ```
 
 
-```{r}
+```{r rsm-3-fits-plots-12, fig.cap="TBA", fig.show='hold', echo=FALSE}
+grid.arrange(ret$p1[[1]], ret$p1[[2]], ncol = 2)
+```
+
+```{r rsm-3-fits-plots-34, fig.cap="TBA", fig.show='hold', echo=FALSE}
+grid.arrange(ret$p1[[3]], ret$p1[[4]], ncol = 2)
+```
+
+
+```{r rsm-3-fits-plots-56, fig.cap="TBA", fig.show='hold', echo=FALSE}
+grid.arrange(ret$p1[[5]], ret$p1[[6]], ncol = 2)
+```
+
+
+
+```{r rsm-3-fits-inter-corr-table1, echo=FALSE}
 kbl(x, caption = "TBA.", booktabs = TRUE, escape = FALSE) %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
+Table \@ref(tab:rsm-3-fits-inter-corr-table1): the first column, named $\text{mProRsm}$, shows results of fitting straight lines, each constrained to go through the origin, to fitted PROPROC AUC vs. RSM AUC results, for each of the 14 datasets, as labeled. the second column, named $\text{R2ProRsm}$, lists the square of the correlation coefficient for each fit. The third and fourth columns list the slopes and R2 for CBM AUC vs. RSM AUC.
 
+
+The last row lists the average. 
 
 STOP
 Look at book chapter

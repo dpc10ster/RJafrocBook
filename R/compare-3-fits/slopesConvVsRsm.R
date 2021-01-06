@@ -1,4 +1,4 @@
-interCorrScatter <- function(type, fileNames) {
+slopesConvVsRsm <- function(type, fileNames) {
   path <- "R/compare-3-fits/"
   m_pro_rsm <- data.frame(m_pro_rsm = rep(NA, length(fileNames)), 
                           r2_pro_rsm = rep(NA, length(fileNames)),
