@@ -10,6 +10,10 @@ library(ggplot2)
 library(gridExtra)
 library(binom)
 library(here)
+library(foreach)
+library(doRNG)
+library(doParallel)
+
 ```
 
 
@@ -322,47 +326,70 @@ Shown next are the ten plots for the Van Dyke dataset. Each plot contains 3 curv
 
 With 14 datasets, comprising 43 modalities, 80 readers, 2012 cases, the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms was applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: *all three fitting methods are consistent with a single method-independent AUC*.
 
+If one accepts the proposition that the AUCs of the three methods are identical, then the following relations should hold: 
+
+
+\begin{equation}
+\left. 
+\begin{aligned}
+AUC_{PRO} =& m_{PR} AUC_{PRO}  \\
+AUC_{CBM} =& m_{CR} AUC_{PRO}  
+\end{aligned}
+\right \}
+(\#eq:rsm-3-fits-slopes-equation1)
+\end{equation}
+
+For example, a plot of PROPROC vs. RSM AUCs should be linear with zero intercept and slope $m_{PR}$ (PR = PROPROC vs. RSM; CR= CBM vs. RSM). The reason for the zero intercept is because if one of the AUCs indicates zero performance the other AUC must also be zero. Likewise, chance level performance (AUC = 0.5) must be common to all method of estimating AUC. Finally, perfect performance must be common to all methods. All of these conditions dictate a zero-intercept fitting model. 
+
+An analysis was conducted to determine the average slopes (i.e., over all datasets) in Eqn. \@ref(eq:rsm-3-fits-slopes-equation1) and a bootstrap analysis was conducted to determine the corresponding confidence intervals. 
+
+
+Plots of PROPROC-AUC vs. RSM-AUC and CBM-AUC vs. RSM-AUC, where each plot has the constrained linear fit superposed on the data points, are shown below. Each point corresponds to a distinct modality-reader combination. The average slopes and $R^2$ values ($R^2$ is the fraction of variance explained by the constrained straight line fit) are listed in Table \@ref(tab:rsm-3-fits-slopes-table1). 
+
+
 ```{r rsm-3-fits-inter-corr-scatter, echo=FALSE}
 source(here("R/compare-3-fits/loadDataFile.R"))
 source(here("R/compare-3-fits/slopesConvVsRsm.R"))
+source(here("R/compare-3-fits/slopesConvVsRsmCI.R"))
 ```
 
-```{r rsm-3-fits-inter-corr-scatter2, echo=FALSE}
-ret <- slopesConvVsRsm(type = "pearson", fileNames)
+```{r rsm-3-fits-inter-corr-scatter2, cache=TRUE, echo=FALSE}
+ret <- slopesConvVsRsm(fileNames)
+retCI <- slopesConvVsRsmCI(fileNames)
 x <- cbind(ret$m_pro_rsm, ret$m_cbm_rsm)
 x <- rbind(x, apply(x,2, mean))
 x  <- round(x, digits = 4)
-row.names(x) <- c(as.character(1:14), "AVG")
+x <- rbind(x, 
+           c("(1.005, 1.011)", 
+             NA,
+             "(0.992, 0.997)", 
+             NA))
+row.names(x) <- c(as.character(1:14), "AVG", "CI")
 colnames(x) <- c("mProRsm", "R2ProRsm", "mCbmRsm", "R2CbmRsm")
 ```
 
 
-```{r rsm-3-fits-plots-12, fig.cap="TBA", fig.show='hold', echo=FALSE}
-grid.arrange(ret$p1[[1]], ret$p1[[2]], ncol = 2)
+```{r rsm-3-fits-plots-2, fig.cap="Dataset `D2` (Van Dyke): Left plot is PROPROC-AUC vs. RSM-AUC with the superposed constrained linear fit. The number of data points is `nPts` = 10, equal to `IJ`. Right plot is CBM-AUC vs. RSM-AUC. The slopes and R2 values are listed in the following Table.", fig.show='hold', echo=FALSE}
+grid.arrange(ret$p1[[2]], ret$p2[[2]], ncol = 2)
 ```
 
-```{r rsm-3-fits-plots-34, fig.cap="TBA", fig.show='hold', echo=FALSE}
-grid.arrange(ret$p1[[3]], ret$p1[[4]], ncol = 2)
-```
-
-
-```{r rsm-3-fits-plots-56, fig.cap="TBA", fig.show='hold', echo=FALSE}
-grid.arrange(ret$p1[[5]], ret$p1[[6]], ncol = 2)
+```{r rsm-3-fits-plots-3, fig.cap="Similar to previous plot, for dataset `D3` (Franken), `nPts` = 20.", fig.show='hold', echo=FALSE}
+grid.arrange(ret$p1[[3]], ret$p2[[4]], ncol = 3)
 ```
 
 
-
-```{r rsm-3-fits-inter-corr-table1, echo=FALSE}
-kbl(x, caption = "TBA.", booktabs = TRUE, escape = FALSE) %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```{r rsm-3-fits-plots-7, fig.cap="Similar to previous plot, for dataset `D7` (Lucy Warren), `nPts` = 35.", fig.show='hold', echo=FALSE}
+grid.arrange(ret$p1[[7]], ret$p2[[7]], ncol = 2)
 ```
 
-Table \@ref(tab:rsm-3-fits-inter-corr-table1): the first column, named $\text{mProRsm}$, shows results of fitting straight lines, each constrained to go through the origin, to fitted PROPROC AUC vs. RSM AUC results, for each of the 14 datasets, as labeled. the second column, named $\text{R2ProRsm}$, lists the square of the correlation coefficient for each fit. The third and fourth columns list the slopes and R2 for CBM AUC vs. RSM AUC.
 
 
-The last row lists the average. 
+```{r rsm-3-fits-slopes-table1, echo=FALSE}
+kbl(x, caption = "Summary of slopes and correlations for the two constrained fits: PROPROC AUC vs. RSM AUC and CBM AUC vs. RSM AUC; see below. The average of each slope equals unity to within 0.6 percent.", booktabs = TRUE, escape = FALSE) %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```
 
-STOP
-Look at book chapter
+Table \@ref(tab:rsm-3-fits-slopes-table1): The first column, labeled $mProRsm$, shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs. RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled $R2ProRsm$, lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs. RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
+
 
 ## Discussion / Summary {#rsm-3-fits-discussion-summary}
 
