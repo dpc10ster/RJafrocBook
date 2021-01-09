@@ -70,7 +70,7 @@ slopesConvVsRsmCI <- function(fileNames) {
   cl <- makeCluster(detectCores())
   registerDoParallel(cl)
   B <- 200
-  seed <- 1
+  seed <- 1 # NUll will yield different values everytime this is run
   bootStrapResults <- foreach (b = 1:B, .options.RNG = seed, .combine = "rbind", .packages = "RJafroc") %dorng% {
     slopeCbmRsm <- rep(NA, length(fileNames));avgR2CbmRsm <- slopeCbmRsm
     slopeProRsm <- slopeCbmRsm;avgR2ProRsm <- slopeCbmRsm
