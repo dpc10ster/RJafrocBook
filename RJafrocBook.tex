@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-01-06}
+\date{2021-01-09}
 
 \begin{document}
 \maketitle
@@ -7225,7 +7225,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.3247738          1    0.2497371}
+\CommentTok{#> 1    1.2963584          1   0.25487948}
 \end{Highlighting}
 \end{Shaded}
 
@@ -15254,60 +15254,75 @@ Shown next are the ten plots for the Van Dyke dataset. Each plot contains 3 curv
 
 With 14 datasets, comprising 43 modalities, 80 readers, 2012 cases, the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms was applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: \emph{all three fitting methods are consistent with a single method-independent AUC}.
 
+If one accepts the proposition that the AUCs of the three methods are identical, then the following relations should hold:
+
+\begin{equation}
+\left. 
+\begin{aligned}
+AUC_{PRO} =& m_{PR} AUC_{PRO}  \\
+AUC_{CBM} =& m_{CR} AUC_{PRO}  
+\end{aligned}
+\right \}
+\label{eq:rsm-3-fits-slopes-equation1}
+\end{equation}
+
+For example, a plot of PROPROC vs.~RSM AUCs should be linear with zero intercept and slope \(m_{PR}\) (PR = PROPROC vs.~RSM; CR= CBM vs.~RSM). The reason for the zero intercept is because if one of the AUCs indicates zero performance the other AUC must also be zero. Likewise, chance level performance (AUC = 0.5) must be common to all method of estimating AUC. Finally, perfect performance must be common to all methods. All of these conditions dictate a zero-intercept fitting model.
+
+An analysis was conducted to determine the average slopes (i.e., over all datasets) in Eqn. \eqref{eq:rsm-3-fits-slopes-equation1} and a bootstrap analysis was conducted to determine the corresponding confidence intervals.
+
+Plots of PROPROC-AUC vs.~RSM-AUC and CBM-AUC vs.~RSM-AUC, where each plot has the constrained linear fit superposed on the data points, are shown below. Each point corresponds to a distinct modality-reader combination. The average slopes and \(R^2\) values (\(R^2\) is the fraction of variance explained by the constrained straight line fit) are listed in Table \ref{tab:rsm-3-fits-slopes-table1}.
+
 \begin{figure}
 \centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-12-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-12}TBA}
+\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-2-1.pdf}
+\caption{\label{fig:rsm-3-fits-plots-2}Dataset \texttt{D2} (Van Dyke): Left plot is PROPROC-AUC vs.~RSM-AUC with the superposed constrained linear fit. The number of data points is \texttt{nPts} = 10, equal to \texttt{IJ}. Right plot is CBM-AUC vs.~RSM-AUC. The slopes and R2 values are listed in the following Table.}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-34-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-34}TBA}
+\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-3-1.pdf}
+\caption{\label{fig:rsm-3-fits-plots-3}Similar to previous plot, for dataset \texttt{D3} (Franken), \texttt{nPts} = 20.}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-56-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-56}TBA}
+\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-7-1.pdf}
+\caption{\label{fig:rsm-3-fits-plots-7}Similar to previous plot, for dataset \texttt{D7} (Lucy Warren), \texttt{nPts} = 35.}
 \end{figure}
 
 \begin{table}[H]
 
-\caption{\label{tab:rsm-3-fits-inter-corr-table1}TBA.}
+\caption{\label{tab:rsm-3-fits-slopes-table1}Summary of slopes and correlations for the two constrained fits: PROPROC AUC vs. RSM AUC and CBM AUC vs. RSM AUC; see below. The average of each slope equals unity to within 0.6 percent.}
 \centering
 \resizebox{\linewidth}{!}{
-\begin{tabular}[t]{lrrrr}
+\begin{tabular}[t]{lllll}
 \toprule
   & mProRsm & R2ProRsm & mCbmRsm & R2CbmRsm\\
 \midrule
 1 & 1.0002 & 0.9997 & 0.9933 & 0.9997\\
-2 & 1.0061 & 0.9998 & 1.0007 & 1.0000\\
-3 & 0.9995 & 1.0000 & 0.9977 & 1.0000\\
+2 & 1.0061 & 0.9998 & 1.0007 & 1\\
+3 & 0.9995 & 1 & 0.9977 & 1\\
 4 & 1.0146 & 0.9998 & 0.9999 & 0.9999\\
-5 & 0.9964 & 0.9995 & 0.9972 & 1.0000\\
+5 & 0.9964 & 0.9995 & 0.9972 & 1\\
 \addlinespace
-6 & 1.0360 & 0.9983 & 0.9953 & 1.0000\\
+6 & 1.036 & 0.9983 & 0.9953 & 1\\
 7 & 1.0184 & 0.9997 & 1.0059 & 0.9997\\
-8 & 1.0081 & 0.9996 & 0.9976 & 1.0000\\
-9 & 0.9843 & 0.9998 & 0.9970 & 1.0000\\
+8 & 1.0081 & 0.9996 & 0.9976 & 1\\
+9 & 0.9843 & 0.9998 & 0.997 & 1\\
 10 & 0.9989 & 0.9999 & 0.9921 & 0.9999\\
 \addlinespace
 11 & 1.0262 & 0.9963 & 0.9886 & 0.9962\\
-12 & 1.0056 & 0.9987 & 0.9710 & 0.9978\\
-13 & 1.0211 & 0.9980 & 0.9847 & 0.9986\\
-14 & 1.0027 & 0.9999 & 0.9996 & 1.0000\\
+12 & 1.0056 & 0.9987 & 0.971 & 0.9978\\
+13 & 1.0211 & 0.998 & 0.9847 & 0.9986\\
+14 & 1.0027 & 0.9999 & 0.9996 & 1\\
 AVG & 1.0084 & 0.9992 & 0.9943 & 0.9994\\
+\addlinespace
+CI & (1.005, 1.011) & NA & (0.992, 0.997) & NA\\
 \bottomrule
 \end{tabular}}
 \end{table}
 
-Table \ref{tab:rsm-3-fits-inter-corr-table1}: the first column, named \(\text{mProRsm}\), shows results of fitting straight lines, each constrained to go through the origin, to fitted PROPROC AUC vs.~RSM AUC results, for each of the 14 datasets, as labeled. the second column, named \(\text{R2ProRsm}\), lists the square of the correlation coefficient for each fit. The third and fourth columns list the slopes and R2 for CBM AUC vs.~RSM AUC.
-
-The last row lists the average.
-
-STOP
-Look at book chapter
+Table \ref{tab:rsm-3-fits-slopes-table1}: The first column, labeled \(mProRsm\), shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs.~RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled \(R2ProRsm\), lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs.~RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
 
 \hypertarget{rsm-3-fits-discussion-summary}{%
 \section{Discussion / Summary}\label{rsm-3-fits-discussion-summary}}

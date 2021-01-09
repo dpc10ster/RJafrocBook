@@ -392,156 +392,179 @@ Shown next are the ten plots for the Van Dyke dataset. Each plot contains 3 curv
 
 With 14 datasets, comprising 43 modalities, 80 readers, 2012 cases, the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms was applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: *all three fitting methods are consistent with a single method-independent AUC*.
 
+If one accepts the proposition that the AUCs of the three methods are identical, then the following relations should hold: 
+
+
+\begin{equation}
+\left. 
+\begin{aligned}
+AUC_{PRO} =& m_{PR} AUC_{PRO}  \\
+AUC_{CBM} =& m_{CR} AUC_{PRO}  
+\end{aligned}
+\right \}
+(\#eq:rsm-3-fits-slopes-equation1)
+\end{equation}
+
+For example, a plot of PROPROC vs. RSM AUCs should be linear with zero intercept and slope $m_{PR}$ (PR = PROPROC vs. RSM; CR= CBM vs. RSM). The reason for the zero intercept is because if one of the AUCs indicates zero performance the other AUC must also be zero. Likewise, chance level performance (AUC = 0.5) must be common to all method of estimating AUC. Finally, perfect performance must be common to all methods. All of these conditions dictate a zero-intercept fitting model. 
+
+An analysis was conducted to determine the average slopes (i.e., over all datasets) in Eqn. \@ref(eq:rsm-3-fits-slopes-equation1) and a bootstrap analysis was conducted to determine the corresponding confidence intervals. 
+
+
+Plots of PROPROC-AUC vs. RSM-AUC and CBM-AUC vs. RSM-AUC, where each plot has the constrained linear fit superposed on the data points, are shown below. Each point corresponds to a distinct modality-reader combination. The average slopes and $R^2$ values ($R^2$ is the fraction of variance explained by the constrained straight line fit) are listed in Table \@ref(tab:rsm-3-fits-slopes-table1). 
+
+
 
 
 
 
 
 <div class="figure">
-<img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-12-1.png" alt="TBA" width="672" />
-<p class="caption">(\#fig:rsm-3-fits-plots-12)TBA</p>
+<img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-2-1.png" alt="Dataset `D2` (Van Dyke): Left plot is PROPROC-AUC vs. RSM-AUC with the superposed constrained linear fit. The number of data points is `nPts` = 10, equal to `IJ`. Right plot is CBM-AUC vs. RSM-AUC. The slopes and R2 values are listed in the following Table." width="672" />
+<p class="caption">(\#fig:rsm-3-fits-plots-2)Dataset `D2` (Van Dyke): Left plot is PROPROC-AUC vs. RSM-AUC with the superposed constrained linear fit. The number of data points is `nPts` = 10, equal to `IJ`. Right plot is CBM-AUC vs. RSM-AUC. The slopes and R2 values are listed in the following Table.</p>
 </div>
 
 <div class="figure">
-<img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-34-1.png" alt="TBA" width="672" />
-<p class="caption">(\#fig:rsm-3-fits-plots-34)TBA</p>
+<img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-3-1.png" alt="Similar to previous plot, for dataset `D3` (Franken), `nPts` = 20." width="672" />
+<p class="caption">(\#fig:rsm-3-fits-plots-3)Similar to previous plot, for dataset `D3` (Franken), `nPts` = 20.</p>
 </div>
 
 
 <div class="figure">
-<img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-56-1.png" alt="TBA" width="672" />
-<p class="caption">(\#fig:rsm-3-fits-plots-56)TBA</p>
+<img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-7-1.png" alt="Similar to previous plot, for dataset `D7` (Lucy Warren), `nPts` = 35." width="672" />
+<p class="caption">(\#fig:rsm-3-fits-plots-7)Similar to previous plot, for dataset `D7` (Lucy Warren), `nPts` = 35.</p>
 </div>
 
 
 
 <table class="table" style="margin-left: auto; margin-right: auto;">
-<caption>(\#tab:rsm-3-fits-inter-corr-table1)TBA.</caption>
+<caption>(\#tab:rsm-3-fits-slopes-table1)Summary of slopes and correlations for the two constrained fits: PROPROC AUC vs. RSM AUC and CBM AUC vs. RSM AUC; see below. The average of each slope equals unity to within 0.6 percent.</caption>
  <thead>
   <tr>
    <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> mProRsm </th>
-   <th style="text-align:right;"> R2ProRsm </th>
-   <th style="text-align:right;"> mCbmRsm </th>
-   <th style="text-align:right;"> R2CbmRsm </th>
+   <th style="text-align:left;"> mProRsm </th>
+   <th style="text-align:left;"> R2ProRsm </th>
+   <th style="text-align:left;"> mCbmRsm </th>
+   <th style="text-align:left;"> R2CbmRsm </th>
   </tr>
  </thead>
 <tbody>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:right;"> 1.0002 </td>
-   <td style="text-align:right;"> 0.9997 </td>
-   <td style="text-align:right;"> 0.9933 </td>
-   <td style="text-align:right;"> 0.9997 </td>
+   <td style="text-align:left;"> 1.0002 </td>
+   <td style="text-align:left;"> 0.9997 </td>
+   <td style="text-align:left;"> 0.9933 </td>
+   <td style="text-align:left;"> 0.9997 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2 </td>
-   <td style="text-align:right;"> 1.0061 </td>
-   <td style="text-align:right;"> 0.9998 </td>
-   <td style="text-align:right;"> 1.0007 </td>
-   <td style="text-align:right;"> 1.0000 </td>
+   <td style="text-align:left;"> 1.0061 </td>
+   <td style="text-align:left;"> 0.9998 </td>
+   <td style="text-align:left;"> 1.0007 </td>
+   <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 3 </td>
-   <td style="text-align:right;"> 0.9995 </td>
-   <td style="text-align:right;"> 1.0000 </td>
-   <td style="text-align:right;"> 0.9977 </td>
-   <td style="text-align:right;"> 1.0000 </td>
+   <td style="text-align:left;"> 0.9995 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 0.9977 </td>
+   <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 4 </td>
-   <td style="text-align:right;"> 1.0146 </td>
-   <td style="text-align:right;"> 0.9998 </td>
-   <td style="text-align:right;"> 0.9999 </td>
-   <td style="text-align:right;"> 0.9999 </td>
+   <td style="text-align:left;"> 1.0146 </td>
+   <td style="text-align:left;"> 0.9998 </td>
+   <td style="text-align:left;"> 0.9999 </td>
+   <td style="text-align:left;"> 0.9999 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 5 </td>
-   <td style="text-align:right;"> 0.9964 </td>
-   <td style="text-align:right;"> 0.9995 </td>
-   <td style="text-align:right;"> 0.9972 </td>
-   <td style="text-align:right;"> 1.0000 </td>
+   <td style="text-align:left;"> 0.9964 </td>
+   <td style="text-align:left;"> 0.9995 </td>
+   <td style="text-align:left;"> 0.9972 </td>
+   <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 6 </td>
-   <td style="text-align:right;"> 1.0360 </td>
-   <td style="text-align:right;"> 0.9983 </td>
-   <td style="text-align:right;"> 0.9953 </td>
-   <td style="text-align:right;"> 1.0000 </td>
+   <td style="text-align:left;"> 1.036 </td>
+   <td style="text-align:left;"> 0.9983 </td>
+   <td style="text-align:left;"> 0.9953 </td>
+   <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 7 </td>
-   <td style="text-align:right;"> 1.0184 </td>
-   <td style="text-align:right;"> 0.9997 </td>
-   <td style="text-align:right;"> 1.0059 </td>
-   <td style="text-align:right;"> 0.9997 </td>
+   <td style="text-align:left;"> 1.0184 </td>
+   <td style="text-align:left;"> 0.9997 </td>
+   <td style="text-align:left;"> 1.0059 </td>
+   <td style="text-align:left;"> 0.9997 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 8 </td>
-   <td style="text-align:right;"> 1.0081 </td>
-   <td style="text-align:right;"> 0.9996 </td>
-   <td style="text-align:right;"> 0.9976 </td>
-   <td style="text-align:right;"> 1.0000 </td>
+   <td style="text-align:left;"> 1.0081 </td>
+   <td style="text-align:left;"> 0.9996 </td>
+   <td style="text-align:left;"> 0.9976 </td>
+   <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 9 </td>
-   <td style="text-align:right;"> 0.9843 </td>
-   <td style="text-align:right;"> 0.9998 </td>
-   <td style="text-align:right;"> 0.9970 </td>
-   <td style="text-align:right;"> 1.0000 </td>
+   <td style="text-align:left;"> 0.9843 </td>
+   <td style="text-align:left;"> 0.9998 </td>
+   <td style="text-align:left;"> 0.997 </td>
+   <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 10 </td>
-   <td style="text-align:right;"> 0.9989 </td>
-   <td style="text-align:right;"> 0.9999 </td>
-   <td style="text-align:right;"> 0.9921 </td>
-   <td style="text-align:right;"> 0.9999 </td>
+   <td style="text-align:left;"> 0.9989 </td>
+   <td style="text-align:left;"> 0.9999 </td>
+   <td style="text-align:left;"> 0.9921 </td>
+   <td style="text-align:left;"> 0.9999 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 11 </td>
-   <td style="text-align:right;"> 1.0262 </td>
-   <td style="text-align:right;"> 0.9963 </td>
-   <td style="text-align:right;"> 0.9886 </td>
-   <td style="text-align:right;"> 0.9962 </td>
+   <td style="text-align:left;"> 1.0262 </td>
+   <td style="text-align:left;"> 0.9963 </td>
+   <td style="text-align:left;"> 0.9886 </td>
+   <td style="text-align:left;"> 0.9962 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 12 </td>
-   <td style="text-align:right;"> 1.0056 </td>
-   <td style="text-align:right;"> 0.9987 </td>
-   <td style="text-align:right;"> 0.9710 </td>
-   <td style="text-align:right;"> 0.9978 </td>
+   <td style="text-align:left;"> 1.0056 </td>
+   <td style="text-align:left;"> 0.9987 </td>
+   <td style="text-align:left;"> 0.971 </td>
+   <td style="text-align:left;"> 0.9978 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 13 </td>
-   <td style="text-align:right;"> 1.0211 </td>
-   <td style="text-align:right;"> 0.9980 </td>
-   <td style="text-align:right;"> 0.9847 </td>
-   <td style="text-align:right;"> 0.9986 </td>
+   <td style="text-align:left;"> 1.0211 </td>
+   <td style="text-align:left;"> 0.998 </td>
+   <td style="text-align:left;"> 0.9847 </td>
+   <td style="text-align:left;"> 0.9986 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 14 </td>
-   <td style="text-align:right;"> 1.0027 </td>
-   <td style="text-align:right;"> 0.9999 </td>
-   <td style="text-align:right;"> 0.9996 </td>
-   <td style="text-align:right;"> 1.0000 </td>
+   <td style="text-align:left;"> 1.0027 </td>
+   <td style="text-align:left;"> 0.9999 </td>
+   <td style="text-align:left;"> 0.9996 </td>
+   <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> AVG </td>
-   <td style="text-align:right;"> 1.0084 </td>
-   <td style="text-align:right;"> 0.9992 </td>
-   <td style="text-align:right;"> 0.9943 </td>
-   <td style="text-align:right;"> 0.9994 </td>
+   <td style="text-align:left;"> 1.0084 </td>
+   <td style="text-align:left;"> 0.9992 </td>
+   <td style="text-align:left;"> 0.9943 </td>
+   <td style="text-align:left;"> 0.9994 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> CI </td>
+   <td style="text-align:left;"> (1.005, 1.011) </td>
+   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;"> (0.992, 0.997) </td>
+   <td style="text-align:left;"> NA </td>
   </tr>
 </tbody>
 </table>
 
-Table \@ref(tab:rsm-3-fits-inter-corr-table1): the first column, named $\text{mProRsm}$, shows results of fitting straight lines, each constrained to go through the origin, to fitted PROPROC AUC vs. RSM AUC results, for each of the 14 datasets, as labeled. the second column, named $\text{R2ProRsm}$, lists the square of the correlation coefficient for each fit. The third and fourth columns list the slopes and R2 for CBM AUC vs. RSM AUC.
+Table \@ref(tab:rsm-3-fits-slopes-table1): The first column, labeled $mProRsm$, shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs. RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled $R2ProRsm$, lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs. RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
 
-
-The last row lists the average. 
-
-STOP
-Look at book chapter
 
 ## Discussion / Summary {#rsm-3-fits-discussion-summary}
 
