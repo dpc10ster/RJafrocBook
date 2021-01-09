@@ -59,8 +59,8 @@ slopesConvVsRsmCI <- function(fileNames) {
   #   "  avg aucRsm =", mean(avgAucRsm),
   #   ", avg aucPro =", mean(avgAucPro),
   #   ", avg aucCbm =", mean(avgAucCbm),
-  #   ", slopeCbmRsm =", mean(slopeCbmRsm),", avg R2CbmRsm =", mean(avgR2CbmRsm),
-  #   ", slopeProRsm =", mean(slopeProRsm),", avg R2ProRsm =", mean(avgR2ProRsm),
+  #   ", avg slopeCbmRsm =", mean(slopeCbmRsm),", avg R2CbmRsm =", mean(avgR2CbmRsm),
+  #   ", avg slopeProRsm =", mean(slopeProRsm),", avg R2ProRsm =", mean(avgR2ProRsm),
   #   ", avg rhoMuRsmMuCbm =", mean(rhoMuRsmMuCbm),", avg rhoNupRsmAlphaCbm =", mean(rhoNupRsmAlphaCbm),
   #   "\n"
   # )
@@ -70,7 +70,7 @@ slopesConvVsRsmCI <- function(fileNames) {
   cl <- makeCluster(detectCores())
   registerDoParallel(cl)
   B <- 200
-  seed <- 1
+  seed <- 1 # don't use NULL as then results keep changing
   bootStrapResults <- foreach (b = 1:B, .options.RNG = seed, .combine = "rbind", .packages = "RJafroc") %dorng% {
     slopeCbmRsm <- rep(NA, length(fileNames));avgR2CbmRsm <- slopeCbmRsm
     slopeProRsm <- slopeCbmRsm;avgR2ProRsm <- slopeCbmRsm
@@ -83,7 +83,7 @@ slopesConvVsRsmCI <- function(fileNames) {
         J <- length(clParms[[fileNames[f]]]$aucRsm[1,])
         AucRsm <- array(dim = c(I,J,length(fileNames)));AucPro <- AucRsm;AucCbm <- AucRsm
         
-        jBs <- ceiling(runif(J) * J) # here is were we bootstap readers
+        jBs <- ceiling(runif(J) * J) # here is were we bootstrap readers
         
         AucRsm[,,f]  <-  clParms[[fileNames[f]]]$aucRsm[ , jBs]
         AucPro[,,f]  <-  clParms[[fileNames[f]]]$aucPro[ , jBs]
