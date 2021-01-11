@@ -555,7 +555,7 @@ Plots of PROPROC-AUC vs. RSM-AUC and CBM-AUC vs. RSM-AUC, where each plot has th
   </tr>
   <tr>
    <td style="text-align:left;"> CI </td>
-   <td style="text-align:left;"> (1.005, 1.011) </td>
+   <td style="text-align:left;"> (1.005, 1.012) </td>
    <td style="text-align:left;"> NA </td>
    <td style="text-align:left;"> (0.992, 0.997) </td>
    <td style="text-align:left;"> NA </td>
