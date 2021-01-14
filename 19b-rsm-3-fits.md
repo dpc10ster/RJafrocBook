@@ -407,7 +407,7 @@ AUC_{CBM} =& m_{CR} AUC_{PRO}
 
 For example, a plot of PROPROC vs. RSM AUCs should be linear with zero intercept and slope $m_{PR}$ (PR = PROPROC vs. RSM; CR= CBM vs. RSM). The reason for the zero intercept is because if one of the AUCs indicates zero performance the other AUC must also be zero. Likewise, chance level performance (AUC = 0.5) must be common to all method of estimating AUC. Finally, perfect performance must be common to all methods. All of these conditions dictate a zero-intercept fitting model. 
 
-An analysis was conducted to determine the average slopes (i.e., over all datasets) in Eqn. \@ref(eq:rsm-3-fits-slopes-equation1) and a bootstrap analysis was conducted to determine the corresponding confidence intervals. 
+An analysis was conducted to determine the average slopes, over all datasets, in Eqn. \@ref(eq:rsm-3-fits-slopes-equation1) and a bootstrap analysis was conducted to determine the corresponding confidence intervals. 
 
 
 Plots of PROPROC-AUC vs. RSM-AUC and CBM-AUC vs. RSM-AUC, where each plot has the constrained linear fit superposed on the data points, are shown below. Each point corresponds to a distinct modality-reader combination. The average slopes and $R^2$ values ($R^2$ is the fraction of variance explained by the constrained straight line fit) are listed in Table \@ref(tab:rsm-3-fits-slopes-table1). 
