@@ -12,9 +12,11 @@ slopesConvVsRsmCI <- function(fileNames) {
     retFileName <- paste0("R/compare-3-fits/RSM6/", "allResults", fileNames[f])
     if (file.exists(retFileName)){
       load(retFileName)
-      frocData <- loadDataFile(path = path, fileNames[f])
-      I <- length(frocData$descriptions$modalityID)
-      J <- length(frocData$descriptions$readerID)
+      # following allows elimination of the Datasets directory TBA
+      #theData <- get(sprintf("dataset%02d", f)) # the datasets already exist as R objects
+      theData <- loadDataFile(path = path, fileNames[f])
+      I <- length(theData$descriptions$modalityID)
+      J <- length(theData$descriptions$readerID)
       aucRsm <- array(dim = c(I, J));aucCbm <- array(dim = c(I, J));aucPro <- array(dim = c(I, J))
       muRsm <- array(dim = c(I, J));muCbm <- array(dim = c(I, J))
       nupRsm <- array(dim = c(I, J));alphaCbm <- array(dim = c(I, J))

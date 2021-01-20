@@ -1,3 +1,4 @@
+# TBA this function can be eliminated
 loadDataFile <- function(path, fileName)
 {
   if (fileName == "FED"){

@@ -74,7 +74,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
                   "DOB3", "FZR")
   if (!(startIndx %in% seq(1,14) && endIndx %in% seq(1,14))) stop("illegal values for startIndx and/ or endIndx")
   allBinnedDatasets <- as.list(array(dim = endIndx - startIndx + 1))
-  allResults <- as.list(array(dim = endIndx - startIndx + 1))
+  allResults1 <- as.list(array(dim = endIndx - startIndx + 1))
   allPlots <- as.list(array(dim = endIndx - startIndx + 1))
   for (f in startIndx:endIndx) {
     fileName <- fileNames[f]
@@ -145,7 +145,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
           next
         }
       }
-      allResults[[f-startIndx + 1]] <- allResults
+      allResults1[[f-startIndx + 1]] <- allResults
       allBinnedDatasets[[f-startIndx + 1]] <- binnedRocData
       # cat("\n")
       ### safety comments
@@ -182,7 +182,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
           next
         }
       }
-      allResults[[f-startIndx + 1]] <- allResults
+      allResults1[[f-startIndx + 1]] <- allResults
       allBinnedDatasets[[f-startIndx + 1]] <- binnedRocData
       # cat("\n\n\n")
     }
@@ -191,7 +191,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
   options(warn = 0) # warnings NOT as errors
   
   return(list(
-    allResults = allResults,
+    allResults = allResults1,
     allBinnedDatasets = allBinnedDatasets,
     allPlots = allPlots
   ))
