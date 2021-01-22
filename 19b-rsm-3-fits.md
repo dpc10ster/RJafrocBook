@@ -5,260 +5,54 @@
 
 
 ## How much finished {#rsm-3-fits-how-much-finished}
-40%
+60%
 
 
 ## Introduction {#rsm-3-fits-intro}
-There are three methods for fitting proper curves to ROC datasets. These are the RSM described in Chapter \@ref(rsm-fitting), and the PROPROC (proper ROC) and CBM (contaminated binormal model) described in TBA Chapter 20. This chapter compares these methods for a number of datasets. ^[Comparing the RSM to the binormal model would be inappropriate, as the latter does not predict proper ROCs.]
+A proper ROC curve is one whose slope decreases monotonically as the operating point moves up the curve, a consequence of which is that a proper ROC does not display an inappropriate chance line crossing followed by a sharp upward turn, i.e., a "hook", usually near the (1,1) upper right corner. 
 
+There are three methods for fitting proper curves to ROC datasets: 
 
-## Datasets {#rsm-3-fits-14-datasets}
+* The radiological search model (RSM) described in Chapter \@ref(rsm-fitting), 
+* The PROPROC (proper ROC) and CBM (contaminated binormal model) described in TBA Chapter 20. 
 
+This chapter compares these methods for a number of datasets. Comparing the RSM to the binormal model would be inappropriate, as the latter does not predict proper ROCs.
 
-```r
-?`RJafroc-package`
-```
-
-
-The datasets are embedded in ther `RJafroc` package. They can be viewed in the help file of the package, a partial screen-shot of which is shown next.
-
-
-<div class="figure" style="text-align: center">
-<img src="images/compare-3-fits/datasets.png" alt="Partial screen shot of `RJafroc` help file showing the datasets included with the current distribution (v2.0.1)."  />
-<p class="caption">(\#fig:rsm-3-fits-datasets)Partial screen shot of `RJafroc` help file showing the datasets included with the current distribution (v2.0.1).</p>
-</div>
-
-
-The datasets are identified in the code by dataset`dd` (where `dd` is an integer in the range `01` to `14`) as follows:
-
-* `dataset01` "TONY" FROC dataset [@RN2125]
-
-
-```
-## List of 3
-##  $ NL   : num [1:2, 1:5, 1:185, 1:3] 3 -Inf 3 -Inf 4 ...
-##  $ LL   : num [1:2, 1:5, 1:89, 1:2] 4 4 3 -Inf 3.5 ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset02` "VAN-DYKE" Van Dyke ROC dataset [@RN1993]
-
-
-```
-## List of 3
-##  $ NL   : num [1:2, 1:5, 1:114, 1] 1 3 2 3 2 2 1 2 3 2 ...
-##  $ LL   : num [1:2, 1:5, 1:45, 1] 5 5 5 5 5 5 5 5 5 5 ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset03` "FRANKEN" Franken ROC dataset [@RN1995]
-
-
-```
-## List of 3
-##  $ NL   : num [1:2, 1:4, 1:100, 1] 3 3 4 3 3 3 4 1 1 3 ...
-##  $ LL   : num [1:2, 1:4, 1:67, 1] 5 5 4 4 5 4 4 5 2 2 ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset04` "FEDERICA" Federica Zanca FROC dataset [@RN1882]
-
-
-```
-## List of 3
-##  $ NL   : num [1:5, 1:4, 1:200, 1:7] -Inf -Inf 1 -Inf -Inf ...
-##  $ LL   : num [1:5, 1:4, 1:100, 1:3] 4 5 4 5 4 3 5 4 4 3 ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset05` "THOMPSON" John Thompson FROC dataset [@RN2368]
-
-
-```
-## List of 3
-##  $ NL   : num [1:2, 1:9, 1:92, 1:7] 4 5 -Inf -Inf 8 ...
-##  $ LL   : num [1:2, 1:9, 1:47, 1:3] 5 9 -Inf 10 8 ...
-##  $ LL_IL: logi NA
-```
-
-
-
-* `dataset06` "MAGNUS" Magnus Bath FROC dataset [@RN1929]
-
-
-```
-## List of 3
-##  $ NL   : num [1:2, 1:4, 1:89, 1:17] 1 -Inf -Inf -Inf 1 ...
-##  $ LL   : num [1:2, 1:4, 1:42, 1:15] -Inf -Inf -Inf -Inf -Inf ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset07` "LUCY-WARREN" Lucy Warren FROC dataset [@RN2507]
-
-
-```
-## List of 3
-##  $ NL   : num [1:5, 1:7, 1:162, 1:4] 1 2 1 2 -Inf ...
-##  $ LL   : num [1:5, 1:7, 1:81, 1:3] 2 -Inf 2 -Inf 1 ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset08` "PENEDO" Monica Penedo FROC dataset [@RN1520]
-
-
-```
-## List of 3
-##  $ NL   : num [1:5, 1:5, 1:112, 1] 3 2 3 2 3 0 0 4 0 2 ...
-##  $ LL   : num [1:5, 1:5, 1:64, 1] 3 2 4 3 3 3 3 4 4 3 ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset09` "NICO-CAD-ROC" Nico Karssemeijer ROC dataset [@hupse2013standalone]
-
-
-```
-## List of 3
-##  $ NL   : num [1, 1:10, 1:200, 1] 28 0 14 0 16 0 31 0 0 0 ...
-##  $ LL   : num [1, 1:10, 1:80, 1] 29 12 13 10 41 67 61 51 67 0 ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset10` "RUSCHIN" Mark Ruschin ROC dataset [@RN1646]
-
-
-```
-## List of 3
-##  $ NL   : num [1:3, 1:8, 1:90, 1] 1 0 0 0 0 0 1 0 0 0 ...
-##  $ LL   : num [1:3, 1:8, 1:40, 1] 2 1 1 2 0 0 0 0 0 3 ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset11` "DOBBINS-1" Dobbins I FROC dataset [@Dobbins2016MultiInstitutional]
-
-
-```
-## List of 3
-##  $ NL   : num [1:4, 1:5, 1:158, 1:4] -Inf -Inf -Inf -Inf -Inf ...
-##  $ LL   : num [1:4, 1:5, 1:115, 1:20] -Inf -Inf -Inf -Inf -Inf ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset12`  "DOBBINS-2" Dobbins II ROC dataset [@Dobbins2016MultiInstitutional]
-
-
-```
-## List of 3
-##  $ NL   : num [1:4, 1:5, 1:152, 1] -Inf -Inf -Inf -Inf -Inf ...
-##  $ LL   : num [1:4, 1:5, 1:88, 1] 3 4 4 -Inf -Inf ...
-##  $ LL_IL: logi NA
-```
-
-
-
-* `dataset13` "DOBBINS-3" Dobbins III FROC dataset [@Dobbins2016MultiInstitutional]
-
-
-```
-## List of 3
-##  $ NL   : num [1:4, 1:5, 1:158, 1:4] -Inf 3 -Inf 4 5 ...
-##  $ LL   : num [1:4, 1:5, 1:106, 1:15] -Inf -Inf -Inf -Inf -Inf ...
-##  $ LL_IL: logi NA
-```
-
-
-* `dataset14` "FEDERICA-REAL-ROC" Federica Zanca *real* ROC dataset [@RN2318]
-
-
-```
-## List of 3
-##  $ NL   : num [1:2, 1:4, 1:200, 1] 2 2 2 2 1 3 2 2 3 1 ...
-##  $ LL   : num [1:2, 1:4, 1:100, 1] 6 5 6 4 5 5 5 5 5 4 ...
-##  $ LL_IL: logi NA
-```
-
+* Both RSM and CBM are implemented in `RJafroc`. 
+* `PROPROC` is implemented in Windows software ^[OR DBM-MRMC 2.5, Sept. 04, 2014; this version, used in this chapter, is no longer distributed but is available from the author upon request.] available [here](https://perception.lab.uiowa.edu/OR-DBM-MRMC-252), last accessed 1/4/21.
 
 
 ## Applications {#rsm-3-fits-applications}
 
-Both RSM and CBM fitting methods are implemented in `RJafroc`. `PROPROC` is implemented in Windows software ^[OR DBM-MRMC 2.5 (Sept. 04, 2014; this version is no longer distributed but is available upon request.] available [here](https://perception.lab.uiowa.edu/OR-DBM-MRMC-252), last accessed 1/4/21.
-
-
-The RSM has three parameters (excluding thresholds): $\mu$, $\lambda'$, and $\nu'$. CBM has two parameters $\mu_{CBM}$ and $\alpha$. `PROPROC` has two parameters $c$ and $d_a$. CBM and PROPROC are detailed in TBA Chapter 20. 
-
-
-### Location of PROPROC files {#rsm-3-fits-one-dataset-proproc}
-
-For each dataset PROPROC parameters were obtained by running the Windows software with PROPROC selected as the curve-fitting method. The results are saved to files that end with `proprocnormareapooled.csv` ^[In accordance with R-package policies white-spaces in the original `PROPROC` output file names have been removed.] contained in "R/compare-3-fits/MRMCRuns/C/", where `C` denotes the name of the dataset (for example, for the Van Dyke dataset, `C` = "VD"). Examples are shown in the next two screen-shots.
-
-
-<div class="figure" style="text-align: center">
-<img src="images/compare-3-fits/MRMCRuns.png" alt="Screen shot (1 of 2) of `R/compare-3-fits/MRMCRuns` showing the folders containing the results of PROPROC analysis on 14 datasets."  />
-<p class="caption">(\#fig:rsm-3-fits-mrmc-runs)Screen shot (1 of 2) of `R/compare-3-fits/MRMCRuns` showing the folders containing the results of PROPROC analysis on 14 datasets.</p>
-</div>
-
-
-<div class="figure" style="text-align: center">
-<img src="images/compare-3-fits/MRMCRuns-VD.png" alt="Screen shot (2 of 2) of `R/compare-3-fits/MRMCRuns/VD` showing files containing the results of PROPROC analysis for the Van Dyke dataset."  />
-<p class="caption">(\#fig:rsm-3-fits-mrmc-runs-vd)Screen shot (2 of 2) of `R/compare-3-fits/MRMCRuns/VD` showing files containing the results of PROPROC analysis for the Van Dyke dataset.</p>
-</div>
-
-The contents of `R/compare-3-fits/MRMCRuns/VD/VDproprocnormareapooled.csv` are shown next, see Fig. \@ref(fig:rsm-3-fits-proproc-output-van-dyke). ^[The `VD.lrc` file in this directory is the Van Dyke data formatted for input to OR DBM-MRMC 2.5.] The PROPROC parameters $c$ and $d_a$  are in the last two columns. The column names are `T` = treatment; `R` = reader; `return-code` = undocumented value, `area` = PROPROC AUC; `numCAT` = number of ROC bins; `adjPMean` = undocumented value; `c` =  $c$ and `d_a` =  $d_a$, are the PROPROC parameters defined in [@RN1499].
-
-
-<div class="figure" style="text-align: center">
-<img src="images/compare-3-fits/vanDyke.png" alt="PROPROC output for the Van Dyke ROC data set." width="50%" height="20%" />
-<p class="caption">(\#fig:rsm-3-fits-proproc-output-van-dyke)PROPROC output for the Van Dyke ROC data set.</p>
-</div>
-
-
-
-
-
-
-### Dataset indexing {#rsm-3-fits-one-dataset-indexing}
-
-The datasets are indexed by an integer 1 through 14. The following shows the correspondence of `index` to dataset name.
+The RSM, PROPROC and CBM algorithms were applied to the 14 datasets described in \@ref(rsm-3-fits-14-datasets). The datasets are indexed as described in \@ref(rsm-3-fits-one-dataset-indexing). To save time the datasets have already been analyzed and the location of pre-analyzed results files are in \@ref(rsm-3-fits-one-dataset-proproc) and \@ref(rsm-3-fits-pre-analyzed-results).
 
 
 ```r
-index <- seq(1:14)
-fileNames <-  c("TONY", "VD", "FR", 
+datasetNames <-  c("TONY", "VD", "FR", 
             "FED", "JT", "MAG", 
             "OPT", "PEN", "NICO",
             "RUS", "DOB1", "DOB2", 
             "DOB3", "FZR")
-
-cat("File name for index = ", index[2], " is ", fileNames[index[2]], "\n")
 ```
 
-```
-## File name for index =  2  is  VD
-```
+Instead of going through all 14 datasets in the following we focus on two ROC datasets widely used to illustrate 
+ROC methodological advances, namely the Van Dyke (VD) and the Franken (FR) datasets.
 
-### Location of pre-analyzed results {#rsm-3-fits-pre-analyzed-results}
-
-The following screen shot shows the pre-analyzed files created by the function `Compare3ProperRocFits()` described below. Each file is named `allResultsC`, where `C` is the abbreviated name of the dataset (uppercase C denotes one or more uppercase characters; for example, `C` = `VD` denotes the Van Dyke dataset.).
-
-<div class="figure" style="text-align: center">
-<img src="images/compare-3-fits/RSM6.png" alt="Screen shot of `R/compare-3-fits/RSM6` showing the results files created by  `Compare3ProperRocFits()` ."  />
-<p class="caption">(\#fig:rsm-3-fits-all-results-rsm6)Screen shot of `R/compare-3-fits/RSM6` showing the results files created by  `Compare3ProperRocFits()` .</p>
-</div>
 
 ### Application to two datasets {#rsm-3-fits-two-datasets}
 
-In the following example only the Van Dyke and Franken datasets are analyzed. The flag `reAnalyze` is set to `FALSE` causing pre-analyzed results (to be found in directory `R/compare-3-fits/RSM6`) to be retrieved; if `TRUE` the analysis is redone, leading to possibly slightly different results (the maximum likelihood algorithm has inherent randomness). 
+The code uses the function `Compare3ProperRocFits()`, located in `R/compare-3-fits/Compare3ProperRocFits.R`, to compute or retrieve the 3 fits. In the following code:
 
-The parameter results are contained in `ret$allResults`, and the composite (i.e., 3 combined plots) plots, are contained in `ret$allPlots`. In the following code these are saved to lists `plotArr` and `resultsArr`. The code uses the function `Compare3ProperRocFits()` to compute/retrieve the 3 fits. In this code `startIndx` is the  first `index` to analyze and `endIndx` is the last. In the current example two datasets are analyzed corresponding to `fileNames[2]` and `fileNames[3]`, i.e., VD and FR. To analyze all datasets one would set `startIndx <-  1` and `endIndx <-  14`. 
+* `startIndx` is the  first `index` to analyze and `endIndx` is the last. 
+* In the current example two datasets are analyzed corresponding to `datasetNames[2]` and `datasetNames[3]`, i.e., VD and FR. 
+* To analyze all datasets one would set `startIndx <-  1` and `endIndx <-  14`. 
+* `reAnalyze` is set to `FALSE` causing pre-analyzed results (to be found in directory `R/compare-3-fits/RSM6`) to be retrieved.
+* if `reAnalyze` is `TRUE` the analysis is repeated, leading to possibly slightly different results (the maximum likelihood parameter-search algorithm has inherent randomness aimed at avoiding finding false local maxima). 
+* The fitted parameter results are contained in `ret$allResults` and the *composite plots* (i.e., 3 combined plots corresponding to the three proper ROC fitting algorithms) are contained in `ret$allPlots`. 
+* These are saved to lists `plotArr` and `resultsArr`. 
+
+
+
 
 
 
@@ -278,25 +72,25 @@ for (f in 1:(endIndx-startIndx+1)) {
 }
 ```
 
+We next show how to display the composite plots.
 
 ### Displaying a composite plot {#rsm-3-fits-composite-plot}
 
-The `plotArr` list contains plots for two datasets. For the current example, the Van Dyke plots are contained in `plotArr[[1]]` while the Franken plots are contained in `plotArr[[2]]`. The Van Dyke plots contain $I \times J = 2 \times 5 = 10$ composite plots. To display the plot for the VD dataset for treatment 1 and reader 2, use `plotArr[[1]][[1,2]]` as shown below. ^[With two datasets, the first dataset plots would be in `plotArr[[1]]` and the second in `plotArr[[2]]`.] 
+The `plotArr` list contains plots for the two datasets. The Van Dyke dataset plots are in `plotArr[[1]]` and the Franken in `plotArr[[2]]`. The Van Dyke plots contain $I \times J = 2 \times 5 = 10$ composite plots, and similarly for the Franken dataset (both datasets consist of 2 treatments and 5 readers). The following shows how to display the composite plot for the Van Dyke dataset for treatment 1 and reader 2. 
 
 
 ```r
 plotArr[[1]][[1,2]]
 ```
 
-<img src="19b-rsm-3-fits_files/figure-html/unnamed-chunk-17-1.png" width="672" />
+<img src="19b-rsm-3-fits_files/figure-html/unnamed-chunk-2-1.png" width="672" />
 
 The plot is labeled **D2, i = 1, j = 2**, meaning the second dataset, the first treatment and the second reader. It contains 3 curves:
 
 * The RSM fitted curve is in black. It is the only one with a dotted line connecting the uppermost continuously accessible operating point to (1,1).
 * The PROPROC fitted curve is in red. 
 * The CBM fitted curve is in blue. 
-
-Three operating points from the binned data are shown as well as exact 95% confidence intervals for the lowest and uppermost operating points. 
+* Three operating points from the binned data are shown as well as exact 95% confidence intervals for the lowest and uppermost operating points. 
 
 The following example displays the composite plots for the Franken dataset, treatment 2 and reader 3:
 
@@ -305,18 +99,21 @@ The following example displays the composite plots for the Franken dataset, trea
 plotArr[[2]][[2,3]]
 ```
 
-<img src="19b-rsm-3-fits_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+<img src="19b-rsm-3-fits_files/figure-html/unnamed-chunk-3-1.png" width="672" />
 
+We next show how to display the parameters corresponding to the fitted curves.
 
 ### Displaying RSM parameter values {#rsm-3-fits-rsm-parameter-values}
 
-The parameters corresponding to the RSM plots are accessed as shown next. 
+The RSM has parameters: $\mu$, $\lambda'$, $\nu'$ and $\zeta_1$. The parameters corresponding to the RSM plots are accessed as shown next. 
 
 * `resultsArr[[1]][[2]]$retRsm$mu` is the RSM $\mu$ parameter for dataset 1, treatment 1 and reader 2, 
 * `resultsArr[[1]][[2]]$retRsm$lambdaP` is the corresponding $\lambda'$ parameter, and  
 * `resultsArr[[1]][[2]]$retRsm$nuP` is the corresponding $\nu'$ parameter. 
-* Treatment 2 and reader 1 would be indexed as `[[1]][[6]]`, or more generally as `[[f]][[(i-1)*J+j]]`, where `f` is the dataset index, `i` is the treatment index, `j` is the reader index and `J` is the total number of readers. 
-* For the Van Dyke dataset, `f = 1`, and for the Franken dataset, `f = 2`.
+* `resultsArr[[1]][[2]]$retRsm$zeta1` is the corresponding $\zeta_1$ parameter. 
+* Treatment 2 and reader 1 values would be accessed as `resultsArr[[1]][[6]]$retRsm$mu`, etc.
+* More generally the values are accessed as `[[f]][[(i-1)*J+j]]`, where `f` is the dataset index, `i` is the treatment index, `j` is the reader index and `J` is the total number of readers. 
+* For the Van Dyke dataset `f = 1` and for the Franken dataset `f = 2`.
 
 The first example displays RSM parameters for the Van Dyke dataset, treatment 1 and reader 2:
 
@@ -325,14 +122,14 @@ The first example displays RSM parameters for the Van Dyke dataset, treatment 1 
 ```r
 f <- 1;i <- 1; j <- 2;J <- 5
 cat("RSM parameters, Van Dyke Dataset, treatment 1, reader 2:",
-"\nmu = ", resultsArr[[f]][[(i-1)*J+j]]$retRsm$mu,
-"\nlambdaP = ", resultsArr[[f]][[(i-1)*J+j]]$retRsm$lambdaP,
-"\nnuP = ", resultsArr[[f]][[(i-1)*J+j]]$retRsm$nuP,
-"\nzeta_1 = ", as.numeric(resultsArr[[f]][[(i-1)*J+j]]$retRsm$zetas[1]),
-"\nAUC = ", resultsArr[[f]][[(i-1)*J+j]]$retRsm$AUC,
+"\nmu = ",        resultsArr[[f]][[(i-1)*J+j]]$retRsm$mu,
+"\nlambdaP = ",   resultsArr[[f]][[(i-1)*J+j]]$retRsm$lambdaP,
+"\nnuP = ",       resultsArr[[f]][[(i-1)*J+j]]$retRsm$nuP,
+"\nzeta_1 = ",    as.numeric(resultsArr[[f]][[(i-1)*J+j]]$retRsm$zetas[1]),
+"\nAUC = ",       resultsArr[[f]][[(i-1)*J+j]]$retRsm$AUC,
 "\nsigma_AUC = ", as.numeric(resultsArr[[f]][[(i-1)*J+j]]$retRsm$StdAUC),
-"\nNLLini = ", resultsArr[[f]][[(i-1)*J+j]]$retRsm$NLLIni,
-"\nNLLfin = ", resultsArr[[f]][[(i-1)*J+j]]$retRsm$NLLFin)
+"\nNLLini = ",    resultsArr[[f]][[(i-1)*J+j]]$retRsm$NLLIni,
+"\nNLLfin = ",    resultsArr[[f]][[(i-1)*J+j]]$retRsm$NLLFin)
 ```
 
 ```
@@ -369,24 +166,25 @@ The first four values are the fitted values for the RSM parameters $\mu$, $\lamb
 
 ### Displaying CBM parameter values {#rsm-3-fits-cbm-parameter-values}
 
-
-The next example displays CBM parameters for the Van Dyke dataset, treatment 1 and reader 2:
+CBM has parameters $\mu_{CBM}$, $\alpha$ and $\zeta_1$. The next example displays CBM parameters and AUC etc. for the Van Dyke dataset, treatment 1 and reader 2:
 
 
 
 ```r
 f <- 1;i <- 1; j <- 2;J <- 5
 cat("CBM parameters, Van Dyke Dataset, treatment 1, reader 2:",
-"\nalpha = ", resultsArr[[f]][[(i-1)*J+j]]$retCbm$alpha,
-"\nzeta_1 = ", as.numeric(resultsArr[[f]][[(i-1)*J+j]]$retCbm$zetas[1]),
-"\nAUC = ", resultsArr[[f]][[(i-1)*J+j]]$retCbm$AUC,
-"\nsigma_AUC = ", as.numeric(resultsArr[[f]][[(i-1)*J+j]]$retCbm$StdAUC),
-"\nNLLini = ", resultsArr[[f]][[(i-1)*J+j]]$retCbm$NLLIni,
-"\nNLLfin = ", resultsArr[[f]][[(i-1)*J+j]]$retCbm$NLLFin)
+"\nmu = ",         resultsArr[[f]][[(i-1)*J+j]]$retCbm$mu,
+"\nalpha = ",      resultsArr[[f]][[(i-1)*J+j]]$retCbm$alpha,
+"\nzeta_1 = ",     as.numeric(resultsArr[[f]][[(i-1)*J+j]]$retCbm$zetas[1]),
+"\nAUC = ",        resultsArr[[f]][[(i-1)*J+j]]$retCbm$AUC,
+"\nsigma_AUC = ",  as.numeric(resultsArr[[f]][[(i-1)*J+j]]$retCbm$StdAUC),
+"\nNLLini = ",     resultsArr[[f]][[(i-1)*J+j]]$retCbm$NLLIni,
+"\nNLLfin = ",     resultsArr[[f]][[(i-1)*J+j]]$retCbm$NLLFin)
 ```
 
 ```
 ## CBM parameters, Van Dyke Dataset, treatment 1, reader 2: 
+## mu =  2.745791 
 ## alpha =  0.7931264 
 ## zeta_1 =  1.125028 
 ## AUC =  0.8758668 
@@ -402,6 +200,7 @@ The next example displays CBM parameters for the Franken dataset, treatment 2 an
 
 ```
 ## CBM parameters, Franken dataset, treatment 2, reader 3: 
+## mu =  2.533668 
 ## alpha =  0.6892561 
 ## zeta_1 =  0.3097191 
 ## AUC =  0.8194009 
@@ -410,22 +209,23 @@ The next example displays CBM parameters for the Franken dataset, treatment 2 an
 ## NLLfin =  122.5604
 ```
 
-The first three values are the fitted values for the CBM parameters $\mu$, $\alpha$, and $\zeta_1$. The next value is the AUC under the fitted CBM curve followed by its standard error. The last two values are the initial and final values of negative log-likelihood.  
+
+The first three values are the fitted values for the CBM parameters $\mu$, $\alpha$ and $\zeta_1$. The next value is the AUC under the fitted CBM curve followed by its standard error. The last two values are the initial and final values of negative log-likelihood.  
 
 
 ### Displaying PROPROC parameter values {#rsm-3-fits-proproc-parameter-values}
 
 
-The next example displays PROPROC parameters for the Van Dyke dataset, treatment 1 and reader 2:
+`PROPROC` displayed parameters are $c$ and $d_a$. The next example displays PROPROC parameters for the Van Dyke dataset, treatment 1 and reader 2:
 
 
 
 ```r
 f <- 1;i <- 1; j <- 2;J <- 5
 cat("PROPROC parameters, Van Dyke Dataset, treatment 1, reader 2:",
-"\nc = ", resultsArr[[f]][[(i-1)*J+j]]$c1,
-"\nd_a = ", resultsArr[[f]][[(i-1)*J+j]]$da,
-"\nAUC = ", resultsArr[[f]][[(i-1)*J+j]]$aucProp)
+"\nc = ",     resultsArr[[f]][[(i-1)*J+j]]$c1,
+"\nd_a = ",   resultsArr[[f]][[(i-1)*J+j]]$da,
+"\nAUC = ",   resultsArr[[f]][[(i-1)*J+j]]$aucProp)
 ```
 
 ```
@@ -450,10 +250,12 @@ The next example displays PROPROC parameters for the Franken dataset, treatment 
 ```
 
 
+Shown next are all 10 composite plots for the Van Dyke dataset.
+
 
 ## Plots for Van Dyke dataset {#rsm-3-fits-representative-plots-van-dyke}
 
-Shown next are composite plots for the Van Dyke dataset. Each panel shows RSM (black), CBM (blue) and PROPROC (red) curves fitted to the same ROC dataset. Operating points are shown as filled circles. Confidence intervals are only shown for the lowest and uppermost points. In each plot the labels at the top identify the dataset `f`, the treatment `i` and the reader `j` indices. The plots are arranged in pairs, with the left plot corresponding to treatment 1 and the right plot corresponding to treatment 2. 
+The following plots are arranged in pairs, with the left plot corresponding to treatment 1 and the right to treatment 2. 
 
 
 <div class="figure">
@@ -466,6 +268,11 @@ Shown next are composite plots for the Van Dyke dataset. Each panel shows RSM (b
 <img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-1-2-1.png" alt="Composite plots in both treatments for Van Dyke dataset, reader 2. For treatment 2 the RSM and PROPROC fits are indistinguishable." width="672" />
 <p class="caption">(\#fig:rsm-3-fits-plots-1-2)Composite plots in both treatments for Van Dyke dataset, reader 2. For treatment 2 the RSM and PROPROC fits are indistinguishable.</p>
 </div>
+
+
+
+The RSM parameter values for the treatment 2 plot are: $\mu$ = 5.767237, $\lambda'$ = 2.7212621, $\nu'$ = 0.8021718, $\zeta_1$ = -1.5717303. The corresponding CBM values are $\mu$ = 5.4464738, $\alpha$ = 0.8023609, $\zeta_1$ = -1.4253826. The RSM and CBM $\mu$ parameters are close as well as the RSM $\nu'$ and CBM $\alpha$ parameters - this is because they have similar physical meanings. The CBM does not have a parameter analogous to the RSM $\lambda'$ parameter. 
+
 
 
 <div class="figure">
@@ -519,8 +326,8 @@ An analysis was conducted to determine the average slopes, over all datasets, in
 
 
 ```r
-ret <- slopesConvVsRsm(fileNames)
-retCI <- slopesConvVsRsmCI(fileNames)
+ret <- slopesConvVsRsm(datasetNames)
+retCI <- slopesConvVsRsmCI(datasetNames)
 x <- cbind(ret$m_pro_rsm, ret$m_cbm_rsm)
 x <- rbind(x, apply(x,2, mean))
 x  <- round(x, digits = 4)
@@ -733,8 +540,238 @@ An important finding is the inverse correlation between search performance and l
 The main scientific conclusion of this chapter is that search-performance is the primary bottleneck in limiting observer performance. It is unfortunate that search is ignored in the ROC paradigm, usage of which is decreasing, albeit at an agonizingly slow rate. Evidence presented in this chapter should convince researchers to reconsider the focus of their investigations, most of which is currently directed at improving classification performance, which has been shown not to be the bottleneck. Another conclusion is that the three method of fitting ROC data yield almost identical AUCs. Relative to the RSM the PROPROC estimates are about 2.6% larger while CBM estimates are about 1% larger. This was a serendipitous finding that makes sense, in retrospect, but to the best of the author's knowledge is not known in the research community. PROPROC and to a lesser extent CBM are prone to severely overestimating performance in situations where the operating points are limited to a steep ascending section at the low end of false positive fraction scale. This parallels an earlier comment regarding the FROC, namely measurements derived from the steep part of the curve are unreliable, §17.10.1.
 
 
-## Appendix 1
+## Appendices {#rsm-3-fits-appendices}
+### Datasets {#rsm-3-fits-14-datasets}
 
+
+```r
+?`RJafroc-package`
+```
+
+
+The datasets are embedded in ther `RJafroc` package. They can be viewed in the help file of the package, a partial screen-shot of which is shown next.
+
+
+<div class="figure" style="text-align: center">
+<img src="images/compare-3-fits/datasets.png" alt="Partial screen shot of `RJafroc` help file showing the datasets included with the current distribution (v2.0.1)."  />
+<p class="caption">(\#fig:rsm-3-fits-datasets)Partial screen shot of `RJafroc` help file showing the datasets included with the current distribution (v2.0.1).</p>
+</div>
+
+
+The datasets are identified in the code by dataset`dd` (where `dd` is an integer in the range `01` to `14`) as follows:
+
+* `dataset01` "TONY" FROC dataset [@RN2125]
+
+
+```
+## List of 3
+##  $ NL   : num [1:2, 1:5, 1:185, 1:3] 3 -Inf 3 -Inf 4 ...
+##  $ LL   : num [1:2, 1:5, 1:89, 1:2] 4 4 3 -Inf 3.5 ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset02` "VAN-DYKE" Van Dyke ROC dataset [@RN1993]
+
+
+```
+## List of 3
+##  $ NL   : num [1:2, 1:5, 1:114, 1] 1 3 2 3 2 2 1 2 3 2 ...
+##  $ LL   : num [1:2, 1:5, 1:45, 1] 5 5 5 5 5 5 5 5 5 5 ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset03` "FRANKEN" Franken ROC dataset [@RN1995]
+
+
+```
+## List of 3
+##  $ NL   : num [1:2, 1:4, 1:100, 1] 3 3 4 3 3 3 4 1 1 3 ...
+##  $ LL   : num [1:2, 1:4, 1:67, 1] 5 5 4 4 5 4 4 5 2 2 ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset04` "FEDERICA" Federica Zanca FROC dataset [@RN1882]
+
+
+```
+## List of 3
+##  $ NL   : num [1:5, 1:4, 1:200, 1:7] -Inf -Inf 1 -Inf -Inf ...
+##  $ LL   : num [1:5, 1:4, 1:100, 1:3] 4 5 4 5 4 3 5 4 4 3 ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset05` "THOMPSON" John Thompson FROC dataset [@RN2368]
+
+
+```
+## List of 3
+##  $ NL   : num [1:2, 1:9, 1:92, 1:7] 4 5 -Inf -Inf 8 ...
+##  $ LL   : num [1:2, 1:9, 1:47, 1:3] 5 9 -Inf 10 8 ...
+##  $ LL_IL: logi NA
+```
+
+
+
+* `dataset06` "MAGNUS" Magnus Bath FROC dataset [@RN1929]
+
+
+```
+## List of 3
+##  $ NL   : num [1:2, 1:4, 1:89, 1:17] 1 -Inf -Inf -Inf 1 ...
+##  $ LL   : num [1:2, 1:4, 1:42, 1:15] -Inf -Inf -Inf -Inf -Inf ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset07` "LUCY-WARREN" Lucy Warren FROC dataset [@RN2507]
+
+
+```
+## List of 3
+##  $ NL   : num [1:5, 1:7, 1:162, 1:4] 1 2 1 2 -Inf ...
+##  $ LL   : num [1:5, 1:7, 1:81, 1:3] 2 -Inf 2 -Inf 1 ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset08` "PENEDO" Monica Penedo FROC dataset [@RN1520]
+
+
+```
+## List of 3
+##  $ NL   : num [1:5, 1:5, 1:112, 1] 3 2 3 2 3 0 0 4 0 2 ...
+##  $ LL   : num [1:5, 1:5, 1:64, 1] 3 2 4 3 3 3 3 4 4 3 ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset09` "NICO-CAD-ROC" Nico Karssemeijer ROC dataset [@hupse2013standalone]
+
+
+```
+## List of 3
+##  $ NL   : num [1, 1:10, 1:200, 1] 28 0 14 0 16 0 31 0 0 0 ...
+##  $ LL   : num [1, 1:10, 1:80, 1] 29 12 13 10 41 67 61 51 67 0 ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset10` "RUSCHIN" Mark Ruschin ROC dataset [@RN1646]
+
+
+```
+## List of 3
+##  $ NL   : num [1:3, 1:8, 1:90, 1] 1 0 0 0 0 0 1 0 0 0 ...
+##  $ LL   : num [1:3, 1:8, 1:40, 1] 2 1 1 2 0 0 0 0 0 3 ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset11` "DOBBINS-1" Dobbins I FROC dataset [@Dobbins2016MultiInstitutional]
+
+
+```
+## List of 3
+##  $ NL   : num [1:4, 1:5, 1:158, 1:4] -Inf -Inf -Inf -Inf -Inf ...
+##  $ LL   : num [1:4, 1:5, 1:115, 1:20] -Inf -Inf -Inf -Inf -Inf ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset12`  "DOBBINS-2" Dobbins II ROC dataset [@Dobbins2016MultiInstitutional]
+
+
+```
+## List of 3
+##  $ NL   : num [1:4, 1:5, 1:152, 1] -Inf -Inf -Inf -Inf -Inf ...
+##  $ LL   : num [1:4, 1:5, 1:88, 1] 3 4 4 -Inf -Inf ...
+##  $ LL_IL: logi NA
+```
+
+
+
+* `dataset13` "DOBBINS-3" Dobbins III FROC dataset [@Dobbins2016MultiInstitutional]
+
+
+```
+## List of 3
+##  $ NL   : num [1:4, 1:5, 1:158, 1:4] -Inf 3 -Inf 4 5 ...
+##  $ LL   : num [1:4, 1:5, 1:106, 1:15] -Inf -Inf -Inf -Inf -Inf ...
+##  $ LL_IL: logi NA
+```
+
+
+* `dataset14` "FEDERICA-REAL-ROC" Federica Zanca *real* ROC dataset [@RN2318]
+
+
+```
+## List of 3
+##  $ NL   : num [1:2, 1:4, 1:200, 1] 2 2 2 2 1 3 2 2 3 1 ...
+##  $ LL   : num [1:2, 1:4, 1:100, 1] 6 5 6 4 5 5 5 5 5 4 ...
+##  $ LL_IL: logi NA
+```
+
+
+### Dataset indexing {#rsm-3-fits-one-dataset-indexing}
+
+The datasets are indexed by an integer 1 through 14. The following shows the correspondence of `index` to dataset name.
+
+
+```r
+index <- seq(1:14)
+datasetNames <-  c("TONY", "VD", "FR", 
+            "FED", "JT", "MAG", 
+            "OPT", "PEN", "NICO",
+            "RUS", "DOB1", "DOB2", 
+            "DOB3", "FZR")
+
+cat("File name for index = ", index[2], " is ", datasetNames[index[2]], "\n")
+```
+
+```
+## File name for index =  2  is  VD
+```
+
+### Location of PROPROC files {#rsm-3-fits-one-dataset-proproc}
+
+For each dataset PROPROC parameters were obtained by running the Windows software with PROPROC selected as the curve-fitting method. The results are saved to files that end with `proprocnormareapooled.csv` ^[In accordance with R-package policies white-spaces in the original `PROPROC` output file names have been removed.] contained in "R/compare-3-fits/MRMCRuns/C/", where `C` denotes the name of the dataset (for example, for the Van Dyke dataset, `C` = "VD"). Examples are shown in the next two screen-shots.
+
+
+<div class="figure" style="text-align: center">
+<img src="images/compare-3-fits/MRMCRuns.png" alt="Screen shot (1 of 2) of `R/compare-3-fits/MRMCRuns` showing the folders containing the results of PROPROC analysis on 14 datasets."  />
+<p class="caption">(\#fig:rsm-3-fits-mrmc-runs)Screen shot (1 of 2) of `R/compare-3-fits/MRMCRuns` showing the folders containing the results of PROPROC analysis on 14 datasets.</p>
+</div>
+
+
+<div class="figure" style="text-align: center">
+<img src="images/compare-3-fits/MRMCRuns-VD.png" alt="Screen shot (2 of 2) of `R/compare-3-fits/MRMCRuns/VD` showing files containing the results of PROPROC analysis for the Van Dyke dataset."  />
+<p class="caption">(\#fig:rsm-3-fits-mrmc-runs-vd)Screen shot (2 of 2) of `R/compare-3-fits/MRMCRuns/VD` showing files containing the results of PROPROC analysis for the Van Dyke dataset.</p>
+</div>
+
+The contents of `R/compare-3-fits/MRMCRuns/VD/VDproprocnormareapooled.csv` are shown next, see Fig. \@ref(fig:rsm-3-fits-proproc-output-van-dyke). ^[The `VD.lrc` file in this directory is the Van Dyke data formatted for input to OR DBM-MRMC 2.5.] The PROPROC parameters $c$ and $d_a$  are in the last two columns. The column names are `T` = treatment; `R` = reader; `return-code` = undocumented value, `area` = PROPROC AUC; `numCAT` = number of ROC bins; `adjPMean` = undocumented value; `c` =  $c$ and `d_a` =  $d_a$, are the PROPROC parameters defined in [@RN1499].
+
+
+<div class="figure" style="text-align: center">
+<img src="images/compare-3-fits/vanDyke.png" alt="PROPROC output for the Van Dyke ROC data set." width="50%" height="20%" />
+<p class="caption">(\#fig:rsm-3-fits-proproc-output-van-dyke)PROPROC output for the Van Dyke ROC data set.</p>
+</div>
+
+
+
+
+
+### Location of pre-analyzed results {#rsm-3-fits-pre-analyzed-results}
+
+The following screen shot shows the pre-analyzed files created by the function `Compare3ProperRocFits()` described below. Each file is named `allResultsC`, where `C` is the abbreviated name of the dataset (uppercase C denotes one or more uppercase characters; for example, `C` = `VD` denotes the Van Dyke dataset.).
+
+<div class="figure" style="text-align: center">
+<img src="images/compare-3-fits/RSM6.png" alt="Screen shot of `R/compare-3-fits/RSM6` showing the results files created by  `Compare3ProperRocFits()` ."  />
+<p class="caption">(\#fig:rsm-3-fits-all-results-rsm6)Screen shot of `R/compare-3-fits/RSM6` showing the results files created by  `Compare3ProperRocFits()` .</p>
+</div>
 
 ## References {#rsm-3-fits-references}
 
