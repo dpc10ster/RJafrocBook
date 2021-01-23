@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-01-22}
+\date{2021-01-23}
 
 \begin{document}
 \maketitle
@@ -7225,7 +7225,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.1830237          1   0.27674129}
+\CommentTok{#> 1    1.3294938          1   0.24889529}
 \end{Highlighting}
 \end{Shaded}
 
@@ -14898,7 +14898,8 @@ The code uses the function \texttt{Compare3ProperRocFits()}, located in \texttt{
 \begin{Highlighting}[]
 \NormalTok{startIndx <-}\StringTok{  }\DecValTok{2}
 \NormalTok{endIndx <-}\StringTok{ }\DecValTok{3}
-\NormalTok{ret <-}\StringTok{ }\KeywordTok{Compare3ProperRocFits}\NormalTok{(}\DataTypeTok{startIndx =}\NormalTok{ startIndx, }
+\NormalTok{ret <-}\StringTok{ }\KeywordTok{Compare3ProperRocFits}\NormalTok{(datasetNames,}
+                             \DataTypeTok{startIndx =}\NormalTok{ startIndx, }
                              \DataTypeTok{endIndx =}\NormalTok{ endIndx, }
                              \DataTypeTok{reAnalyze =} \OtherTok{FALSE}\NormalTok{)}
 
@@ -15118,13 +15119,15 @@ The following plots are arranged in pairs, with the left plot corresponding to t
 \caption{\label{fig:rsm-3-fits-plots-1-2}Composite plots in both treatments for Van Dyke dataset, reader 2. For treatment 2 the RSM and PROPROC fits are indistinguishable.}
 \end{figure}
 
-The RSM parameter values for the treatment 2 plot are: \(\mu\) = 5.767237, \(\lambda'\) = 2.7212621, \(\nu'\) = 0.8021718, \(\zeta_1\) = -1.5717303. The corresponding CBM values are \(\mu\) = 5.4464738, \(\alpha\) = 0.8023609, \(\zeta_1\) = -1.4253826. The RSM and CBM \(\mu\) parameters are close as well as the RSM \(\nu'\) and CBM \(\alpha\) parameters - this is because they have similar physical meanings. The CBM does not have a parameter analogous to the RSM \(\lambda'\) parameter.
+The RSM parameter values for the treatment 2 plot are: \(\mu\) = 5.767237, \(\lambda'\) = 2.7212621, \(\nu'\) = 0.8021718, \(\zeta_1\) = -1.5717303. The corresponding CBM values are \(\mu\) = 5.4464738, \(\alpha\) = 0.8023609, \(\zeta_1\) = -1.4253826. The RSM and CBM \(\mu\) parameters are very close and likewise the RSM \(\nu'\) and CBM \(\alpha\) parameters are very close - this is because they have similar physical meanings, which is investigated later in this chapter TBA. {[}The CBM does not have a parameter analogous to the RSM \(\lambda'\) parameter.{]}
 
 \begin{figure}
 \centering
 \includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-3-1.pdf}
 \caption{\label{fig:rsm-3-fits-plots-1-3}Composite plots in both treatments for Van Dyke dataset, reader 3.}
 \end{figure}
+
+The RSM parameters for the treatment 1 plot are: \(\mu\) = 3.1527627, \(\lambda'\) = 9.9986154, \(\nu'\) = 0.9899933, \(\zeta_1\) = 1.1733988. The corresponding CBM values are \(\mu\) = 2.1927712, \(\alpha\) = 0.98, \(\zeta_1\) = -0.5168848.
 
 \begin{figure}
 \centering
@@ -15141,7 +15144,7 @@ The RSM parameter values for the treatment 2 plot are: \(\mu\) = 5.767237, \(\la
 \hypertarget{rsm-3-fits-overview}{%
 \section{Overview of findings}\label{rsm-3-fits-overview}}
 
-With 14 datasets, comprising 43 modalities, 80 readers, 2012 cases, the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms was applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: \emph{all three fitting methods are consistent with a single method-independent AUC}.
+With 14 datasets the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms were applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: \emph{all three fitting methods are consistent with a single method-independent AUC}.
 
 If the AUCs of the three methods are identical the following relations should hold:
 
@@ -15169,7 +15172,7 @@ The abbreviations are as follows:
 
 For example, a plot of PROPROC AUC vs.~RSM AUC should be linear with zero intercept and slope \(m_{PR}\). The reason for the \emph{zero intercept} is that if one of the AUCs indicates zero performance the other AUC must also be zero. Likewise, chance level performance (AUC = 0.5) must be common to all method of estimating AUC. Finally, perfect performance must be common to all methods. All of these conditions require a zero-intercept linear fit.
 
-An analysis was conducted to determine the average slopes, over all datasets, in Eqn. \eqref{eq:rsm-3-fits-slopes-equation1} and a bootstrap analysis was conducted to determine the corresponding confidence intervals. The code for calculating the slopes is in \texttt{R/compare-3-fits/slopesConvVsRsm.R} and that for calculating the bootstrap confidence intervals is in \texttt{R/compare-3-fits/slopesConvVsRsmCI.R}. The actual datasets (Excel files) are in folder \texttt{R/compare-3-fits/Datasets} and \texttt{R/compare-3-fits/loadDataFile.R} shows the correspondence between \texttt{fileName} and a dataset: for example, the Van Dyke dataset corresponds to file \texttt{VanDykeData.xlsx} in the \texttt{Datasets} folder.
+An analysis was conducted to determine the average slopes \(<m_{PR}>\) and \(<m_{CR}>\), averaged over all datasets, and a bootstrap analysis was conducted to determine the corresponding confidence intervals. The code for calculating the slopes is in \texttt{R/compare-3-fits/slopesConvVsRsm.R} and that for calculating the bootstrap confidence intervals is in \texttt{R/compare-3-fits/slopesConvVsRsmCI.R}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -15190,43 +15193,125 @@ An analysis was conducted to determine the average slopes, over all datasets, in
 \end{Highlighting}
 \end{Shaded}
 
-The call to \texttt{slopesConvVsRsm} returns \texttt{ret} a \texttt{list} which contains, for each of 14 datasets, two plots and two slopes. For example,
+The call to function \texttt{slopesConvVsRsm()} returns \texttt{ret}, which contains, for each of 14 datasets, two plots and two slopes. For example:
 
 \begin{itemize}
 \tightlist
-\item
-  \texttt{ret\$p1{[}{[}1{]}{]}} is the plot of \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\) for the TONY dataset (\texttt{index} = 1).
-\item
-  \texttt{ret\$p2{[}{[}1{]}{]}} is the plot of \(AUC_{CBM}\) vs.~of \(AUC_{RSM}\) for the TONY dataset (\texttt{index} = 1).
 \item
   \texttt{ret\$p1{[}{[}2{]}{]}} is the plot of \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\) for the Van Dyke dataset (\texttt{index} = 2).
 \item
   \texttt{ret\$p2{[}{[}2{]}{]}} is the plot of \(AUC_{CBM}\) vs.~of \(AUC_{RSM}\) for the Van Dyke dataset (\texttt{index} = 2).
 \item
-  \texttt{ret\$m\_pro\_rsm} has two columns of length 14, the slopes \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\) for each dataset and the corresponding R2 values.\\
+  \texttt{ret\$p1{[}{[}3{]}{]}} is the plot of \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\) for the Franken dataset (\texttt{index} = 3).
 \item
-  \texttt{ret\$m\_cbm\_rsm} has two columns of length 14, the slopes \(AUC_{CBM}\) vs.~of \(AUC_{RSM}\) for each dataset and the corresponding R2 values.
+  \texttt{ret\$p2{[}{[}3{]}{]}} is the plot of \(AUC_{CBM}\) vs.~of \(AUC_{RSM}\) for the Franken dataset (\texttt{index} = 3).
+\item
+  \texttt{ret\$m\_pro\_rsm} has two columns, each of length 14, the slopes \(m_{PR}\) for the datasets and the corresponding R2 values.\\
+\item
+  \texttt{ret\$m\_cbm\_rsm} has two columns, each of length 14, the slopes \(m_{CR}\) for the datasets and the corresponding R2 values.
 \end{itemize}
 
-The call to \texttt{slopesConvVsRsmCI} returns \texttt{retCI}, containing:
+As an example, \texttt{ret\$p1{[}{[}2{]}{]}}, the plot plot of \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\) for the Van Dyke dataset (\texttt{index} = 2), is shown below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{p1[[}\DecValTok{2}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{19b-rsm-3-fits_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+It is labeled \textbf{D2, nPts = 10} since it corresponds to the Van Dyke dataset, with 10 treatment-reader pairings.
+
+The slopes and R2 values for the 14 datasets are shown next:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{m_pro_rsm[[}\DecValTok{1}\NormalTok{]][}\DecValTok{2}\NormalTok{] }\CommentTok{# slope m_PR for Van Dyke dataset }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.006127
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{m_pro_rsm[[}\DecValTok{2}\NormalTok{]][}\DecValTok{2}\NormalTok{] }\CommentTok{# corresponding R2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.999773
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{m_cbm_rsm[[}\DecValTok{1}\NormalTok{]][}\DecValTok{2}\NormalTok{] }\CommentTok{# slope m_CR for Van Dyke dataset }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.000699
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ret}\OperatorTok{$}\NormalTok{m_cbm_rsm[[}\DecValTok{2}\NormalTok{]][}\DecValTok{2}\NormalTok{] }\CommentTok{# corresponding R2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9999832
+\end{verbatim}
+
+The call to \texttt{slopesConvVsRsmCI} returns \texttt{retCI}, containing (note that \(<...>\) \emph{always} represents an average over 14 datasets.):
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{retCI\$cislopeProRsm} confidence intervals for the slope of \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\)
+  \texttt{retCI\$cislopeProRsm} confidence interval for \(<m_{PR}>\)
 \item
-  \texttt{retCI\$cislopeCbmRsm} confidence intervals for the slope of \(AUC_{CBM}\) vs.~of \(AUC_{RSM}\)
+  \texttt{retCI\$cislopeCbmRsm} confidence interval for \(<m_{CR}>\)
 \item
-  \texttt{retCI\$retCI\$ciAvgAucRsm} confidence intervals for \(AUC_{RSM}\)
+  \texttt{retCI\$histSlopeProRsm} histogram plot for 200 bootstrap values of \(<m_{PR}>\)
 \item
-  \texttt{retCI\$retCI\$ciAvgAucPro} confidence intervals for \(AUC_{RSM}\)
+  \texttt{retCI\$histSlopeCbmRsm} histogram plot for 200 bootstrap values of \(<m_{CR}>\)
 \item
-  \texttt{retCI\$retCI\$ciAvgAucCbm} confidence intervals for \(AUC_{CBM}\)
+  \texttt{retCI\$ciAvgAucRsm} confidence interval for 200 bootstrap values of \(<AUC_{RSM}>\)
 \item
-  \texttt{retCI\$retCI\$h1} histogram plot for 200 bootstrap values for slopes of \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\)
+  \texttt{retCI\$ciAvgAucPro} confidence interval for 200 bootstrap values of \(<AUC_{PRO}>\)
 \item
-  \texttt{retCI\$retCI\$h2} histogram plot for 200 bootstrap values for slopes of \(AUC_{CBM}\) vs.~of \(AUC_{RSM}\)
+  \texttt{retCI\$ciAvgAucCbm} confidence interval for 200 bootstrap values of \(<AUC_{CBM}>\)
 \end{itemize}
+
+As examples,
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{retCI}\OperatorTok{$}\NormalTok{cislopeProRsm}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     2.5%    97.5% 
+## 1.005092 1.012285
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{retCI}\OperatorTok{$}\NormalTok{cislopeCbmRsm}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      2.5%     97.5% 
+## 0.9919886 0.9966149
+\end{verbatim}
+
+The CI for \(<m_{PR}>\) is slightly above unity, while that for \(<m_{CR}>\) is slightly below. Shown next is the histogram plot for \(<m_{PR}>\) and \(<m_{CR}>\).
+
+TBA: commented out offending code until a solution can be found.
 
 \begin{figure}
 \centering
@@ -15533,6 +15618,8 @@ The datasets are indexed by an integer 1 through 14. The following shows the cor
 \begin{verbatim}
 ## File name for index =  2  is  VD
 \end{verbatim}
+
+The actual datasets (Excel files) are in folder \texttt{R/compare-3-fits/Datasets} and \texttt{R/compare-3-fits/loadDataFile.R} shows the correspondence between \texttt{datasetNames} and a dataset: for example, the Van Dyke dataset corresponds to file \texttt{VanDykeData.xlsx} in the \texttt{Datasets} folder.
 
 \hypertarget{rsm-3-fits-one-dataset-proproc}{%
 \subsection{Location of PROPROC files}\label{rsm-3-fits-one-dataset-proproc}}

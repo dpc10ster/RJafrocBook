@@ -59,7 +59,8 @@ The code uses the function `Compare3ProperRocFits()`, located in `R/compare-3-fi
 ```r
 startIndx <-  2
 endIndx <- 3
-ret <- Compare3ProperRocFits(startIndx = startIndx, 
+ret <- Compare3ProperRocFits(datasetNames,
+                             startIndx = startIndx, 
                              endIndx = endIndx, 
                              reAnalyze = FALSE)
 
@@ -271,7 +272,7 @@ The following plots are arranged in pairs, with the left plot corresponding to t
 
 
 
-The RSM parameter values for the treatment 2 plot are: $\mu$ = 5.767237, $\lambda'$ = 2.7212621, $\nu'$ = 0.8021718, $\zeta_1$ = -1.5717303. The corresponding CBM values are $\mu$ = 5.4464738, $\alpha$ = 0.8023609, $\zeta_1$ = -1.4253826. The RSM and CBM $\mu$ parameters are close as well as the RSM $\nu'$ and CBM $\alpha$ parameters - this is because they have similar physical meanings. The CBM does not have a parameter analogous to the RSM $\lambda'$ parameter. 
+The RSM parameter values for the treatment 2 plot are: $\mu$ = 5.767237, $\lambda'$ = 2.7212621, $\nu'$ = 0.8021718, $\zeta_1$ = -1.5717303. The corresponding CBM values are $\mu$ = 5.4464738, $\alpha$ = 0.8023609, $\zeta_1$ = -1.4253826. The RSM and CBM $\mu$ parameters are very close and likewise the RSM $\nu'$ and CBM $\alpha$ parameters are very close - this is because they have similar physical meanings, which is investigated later in this chapter TBA. [The CBM does not have a parameter analogous to the RSM $\lambda'$ parameter.] 
 
 
 
@@ -279,6 +280,11 @@ The RSM parameter values for the treatment 2 plot are: $\mu$ = 5.767237, $\lambd
 <img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-1-3-1.png" alt="Composite plots in both treatments for Van Dyke dataset, reader 3." width="672" />
 <p class="caption">(\#fig:rsm-3-fits-plots-1-3)Composite plots in both treatments for Van Dyke dataset, reader 3.</p>
 </div>
+
+
+
+The RSM parameters for the treatment 1 plot are: $\mu$ = 3.1527627, $\lambda'$ = 9.9986154, $\nu'$ = 0.9899933, $\zeta_1$ = 1.1733988. The corresponding CBM values are $\mu$ = 2.1927712, $\alpha$ = 0.98, $\zeta_1$ = -0.5168848. 
+
 
 
 <div class="figure">
@@ -294,7 +300,7 @@ The RSM parameter values for the treatment 2 plot are: $\mu$ = 5.767237, $\lambd
 
 ## Overview of findings {#rsm-3-fits-overview}
 
-With 14 datasets, comprising 43 modalities, 80 readers, 2012 cases, the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms was applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: *all three fitting methods are consistent with a single method-independent AUC*.
+With 14 datasets the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms were applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: *all three fitting methods are consistent with a single method-independent AUC*.
 
 If the AUCs of the three methods are identical the following relations should hold: 
 
@@ -321,7 +327,7 @@ For example, a plot of PROPROC AUC vs. RSM AUC should be linear with zero interc
 
 
 
-An analysis was conducted to determine the average slopes, over all datasets, in Eqn. \@ref(eq:rsm-3-fits-slopes-equation1) and a bootstrap analysis was conducted to determine the corresponding confidence intervals. The code for calculating the slopes is in `R/compare-3-fits/slopesConvVsRsm.R` and that for calculating the bootstrap confidence intervals is in  `R/compare-3-fits/slopesConvVsRsmCI.R`. The actual datasets (Excel files) are in folder `R/compare-3-fits/Datasets` and `R/compare-3-fits/loadDataFile.R` shows the correspondence between `fileName` and a dataset: for example, the Van Dyke dataset corresponds to file `VanDykeData.xlsx` in the `Datasets` folder.   
+An analysis was conducted to determine the average slopes $<m_{PR}>$ and $<m_{CR}>$, averaged over all datasets, and a bootstrap analysis was conducted to determine the corresponding confidence intervals. The code for calculating the slopes is in `R/compare-3-fits/slopesConvVsRsm.R` and that for calculating the bootstrap confidence intervals is in  `R/compare-3-fits/slopesConvVsRsmCI.R`.   
 
 
 
@@ -344,24 +350,100 @@ colnames(x) <- c("mProRsm", "R2ProRsm", "mCbmRsm", "R2CbmRsm")
 
 
 
-The call to `slopesConvVsRsm` returns `ret` a `list` which contains, for each of 14 datasets, two plots and two slopes. For example,
+The call to function `slopesConvVsRsm()` returns `ret`, which contains, for each of 14 datasets, two plots and two slopes. For example:
 
-* `ret$p1[[1]]` is the plot of $AUC_{PRO}$ vs. of $AUC_{RSM}$ for the TONY dataset (`index` = 1).
-* `ret$p2[[1]]` is the plot of $AUC_{CBM}$ vs. of $AUC_{RSM}$ for the TONY dataset (`index` = 1).
 * `ret$p1[[2]]` is the plot of $AUC_{PRO}$ vs. of $AUC_{RSM}$ for the Van Dyke dataset (`index` = 2).
 * `ret$p2[[2]]` is the plot of $AUC_{CBM}$ vs. of $AUC_{RSM}$ for the Van Dyke dataset (`index` = 2).
-* `ret$m_pro_rsm` has two columns of length 14, the slopes $AUC_{PRO}$ vs. of $AUC_{RSM}$ for each dataset and the corresponding R2 values.  
-* `ret$m_cbm_rsm` has two columns of length 14, the slopes $AUC_{CBM}$ vs. of $AUC_{RSM}$ for each dataset and the corresponding R2 values.  
+* `ret$p1[[3]]` is the plot of $AUC_{PRO}$ vs. of $AUC_{RSM}$ for the Franken dataset (`index` = 3).
+* `ret$p2[[3]]` is the plot of $AUC_{CBM}$ vs. of $AUC_{RSM}$ for the Franken dataset (`index` = 3).
+* `ret$m_pro_rsm` has two columns, each of length 14, the slopes $m_{PR}$ for the datasets and the corresponding R2 values.  
+* `ret$m_cbm_rsm` has two columns, each of length 14, the slopes $m_{CR}$ for the datasets and the corresponding R2 values.  
 
-The call to `slopesConvVsRsmCI` returns `retCI`, containing:
+As an example, `ret$p1[[2]]`, the plot plot of $AUC_{PRO}$ vs. of $AUC_{RSM}$ for the Van Dyke dataset (`index` = 2), is shown below:
 
-* `retCI$cislopeProRsm` confidence intervals for the slope of $AUC_{PRO}$ vs. of $AUC_{RSM}$
-* `retCI$cislopeCbmRsm` confidence intervals for the slope of $AUC_{CBM}$ vs. of $AUC_{RSM}$
-* `retCI$retCI$ciAvgAucRsm` confidence intervals for $AUC_{RSM}$
-* `retCI$retCI$ciAvgAucPro` confidence intervals for $AUC_{RSM}$
-* `retCI$retCI$ciAvgAucCbm` confidence intervals for $AUC_{CBM}$
-* `retCI$retCI$h1` histogram plot for 200 bootstrap values for slopes of $AUC_{PRO}$ vs. of $AUC_{RSM}$
-* `retCI$retCI$h2` histogram plot for 200 bootstrap values for slopes of $AUC_{CBM}$ vs. of $AUC_{RSM}$
+
+```r
+ret$p1[[2]]
+```
+
+<img src="19b-rsm-3-fits_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+
+It is labeled **D2, nPts = 10** since it corresponds to the Van Dyke dataset, with 10 treatment-reader pairings.
+
+The slopes and R2 values for the 14 datasets are shown next:
+
+
+```r
+ret$m_pro_rsm[[1]][2] # slope m_PR for Van Dyke dataset 
+```
+
+```
+## [1] 1.006127
+```
+
+```r
+ret$m_pro_rsm[[2]][2] # corresponding R2
+```
+
+```
+## [1] 0.999773
+```
+
+```r
+ret$m_cbm_rsm[[1]][2] # slope m_CR for Van Dyke dataset 
+```
+
+```
+## [1] 1.000699
+```
+
+```r
+ret$m_cbm_rsm[[2]][2] # corresponding R2
+```
+
+```
+## [1] 0.9999832
+```
+
+
+The call to `slopesConvVsRsmCI` returns `retCI`, containing (note that $<...>$ *always* represents an average over 14 datasets.):
+
+* `retCI$cislopeProRsm` confidence interval for $<m_{PR}>$
+* `retCI$cislopeCbmRsm` confidence interval for $<m_{CR}>$
+* `retCI$histSlopeProRsm` histogram plot for 200 bootstrap values of $<m_{PR}>$
+* `retCI$histSlopeCbmRsm` histogram plot for 200 bootstrap values of $<m_{CR}>$
+* `retCI$ciAvgAucRsm` confidence interval for 200 bootstrap values of $<AUC_{RSM}>$
+* `retCI$ciAvgAucPro` confidence interval for 200 bootstrap values of $<AUC_{PRO}>$
+* `retCI$ciAvgAucCbm` confidence interval for 200 bootstrap values of $<AUC_{CBM}>$
+
+As examples,
+
+
+```r
+retCI$cislopeProRsm
+```
+
+```
+##     2.5%    97.5% 
+## 1.005092 1.012285
+```
+
+```r
+retCI$cislopeCbmRsm
+```
+
+```
+##      2.5%     97.5% 
+## 0.9919886 0.9966149
+```
+
+The CI for $<m_{PR}>$ is slightly above unity, while that for $<m_{CR}>$ is slightly below. Shown next is the histogram plot for $<m_{PR}>$ and $<m_{CR}>$.
+
+
+TBA: commented out offending code until a solution can be found.
+
+
+
 
 
 
@@ -735,6 +817,9 @@ cat("File name for index = ", index[2], " is ", datasetNames[index[2]], "\n")
 ```
 ## File name for index =  2  is  VD
 ```
+
+
+The actual datasets (Excel files) are in folder `R/compare-3-fits/Datasets` and `R/compare-3-fits/loadDataFile.R` shows the correspondence between `datasetNames` and a dataset: for example, the Van Dyke dataset corresponds to file `VanDykeData.xlsx` in the `Datasets` folder. 
 
 ### Location of PROPROC files {#rsm-3-fits-one-dataset-proproc}
 
