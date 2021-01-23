@@ -350,14 +350,25 @@ colnames(x) <- c("mProRsm", "R2ProRsm", "mCbmRsm", "R2CbmRsm")
 
 
 
+<div class="figure">
+<img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-histo-slopes1-1.png" alt="TBA." width="672" />
+<p class="caption">(\#fig:rsm-3-fits-histo-slopes1)TBA.</p>
+</div>
+
+
+
 The call to function `slopesConvVsRsm()` returns `ret`, which contains, for each of 14 datasets, two plots and two slopes. For example:
 
 * `ret$p1[[2]]` is the plot of $AUC_{PRO}$ vs. of $AUC_{RSM}$ for the Van Dyke dataset (`index` = 2).
 * `ret$p2[[2]]` is the plot of $AUC_{CBM}$ vs. of $AUC_{RSM}$ for the Van Dyke dataset (`index` = 2).
+* `ret$m_pro_rsm` has two columns, each of length 14, the slopes $m_{PR}$ for the datasets and the corresponding R2 values. 
+* `ret$m_cbm_rsm` has two columns, each of length 14, the slopes $m_{CR}$ for the datasets and the corresponding R2 values.
+
+Likewise,
+
 * `ret$p1[[3]]` is the plot of $AUC_{PRO}$ vs. of $AUC_{RSM}$ for the Franken dataset (`index` = 3).
 * `ret$p2[[3]]` is the plot of $AUC_{CBM}$ vs. of $AUC_{RSM}$ for the Franken dataset (`index` = 3).
-* `ret$m_pro_rsm` has two columns, each of length 14, the slopes $m_{PR}$ for the datasets and the corresponding R2 values.  
-* `ret$m_cbm_rsm` has two columns, each of length 14, the slopes $m_{CR}$ for the datasets and the corresponding R2 values.  
+
 
 As an example, `ret$p1[[2]]`, the plot plot of $AUC_{PRO}$ vs. of $AUC_{RSM}$ for the Van Dyke dataset (`index` = 2), is shown below:
 
@@ -440,9 +451,10 @@ retCI$cislopeCbmRsm
 The CI for $<m_{PR}>$ is slightly above unity, while that for $<m_{CR}>$ is slightly below. Shown next is the histogram plot for $<m_{PR}>$ and $<m_{CR}>$.
 
 
-TBA: commented out offending code until a solution can be found.
-
-
+<div class="figure">
+<img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-histo-slopes-1.png" alt="TBA." width="672" />
+<p class="caption">(\#fig:rsm-3-fits-histo-slopes)TBA.</p>
+</div>
 
 
 
