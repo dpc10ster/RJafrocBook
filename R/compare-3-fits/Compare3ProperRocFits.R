@@ -40,7 +40,8 @@ UtilBinCountsOpPts <- function(dataset, trt = 1, rdr = 1)
 
 
 # Compare three proper-ROC curve fitting models 
-Compare3ProperRocFits <- function(startIndx = 1, 
+Compare3ProperRocFits <- function(datasetNames,
+                                  startIndx = 1, 
                                   endIndx = 14, 
                                   saveProprocLrcFile = FALSE, 
                                   reAnalyze = FALSE)
@@ -67,17 +68,17 @@ Compare3ProperRocFits <- function(startIndx = 1,
   options(warn = 2) # warnings AS errors
   # NOTE added 6/25/19 - this is matched at exit with: 
   # options(warn = 0) # warnings NOT as errors 
-  fileNames <-  c("TONY", "VD", "FR", 
-                  "FED", "JT", "MAG", 
-                  "OPT", "PEN", "NICO",
-                  "RUS", "DOB1", "DOB2", 
-                  "DOB3", "FZR")
+  # datasetNames <-  c("TONY", "VD", "FR", 
+  #                 "FED", "JT", "MAG", 
+  #                 "OPT", "PEN", "NICO",
+  #                 "RUS", "DOB1", "DOB2", 
+  #                 "DOB3", "FZR")
   if (!(startIndx %in% seq(1,14) && endIndx %in% seq(1,14))) stop("illegal values for startIndx and/ or endIndx")
   allBinnedDatasets <- as.list(array(dim = endIndx - startIndx + 1))
   allResults1 <- as.list(array(dim = endIndx - startIndx + 1))
   allPlots <- as.list(array(dim = endIndx - startIndx + 1))
   for (f in startIndx:endIndx) {
-    fileName <- fileNames[f]
+    fileName <- datasetNames[f]
     theData <- get(sprintf("dataset%02d", f)) # the datasets already exist as R objects
     lesDistr <- UtilLesionDistr(theData) # RSM ROC fitting needs to know lesDistr
     
@@ -130,7 +131,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
           empOp <- UtilBinCountsOpPts(binnedRocData, trt = i, rdr = j)
           fpf <- empOp$fpf; tpf <- empOp$tpf
           compPlot[[i,j]] <- gpfPlotRsmPropCbm(
-            which(fileNames == fileName), x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
+            which(datasetNames == fileName), x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
             lesDistr, c1[i, j], da[i, j],
             x$retCbm$mu, x$retCbm$alpha,
             fpf, tpf, i, j, K1, K2, c(1, length(fpf)))
@@ -167,7 +168,7 @@ Compare3ProperRocFits <- function(startIndx = 1,
           empOp <- UtilBinCountsOpPts(binnedRocData, trt = i, rdr = j)
           fpf <- empOp$fpf; tpf <- empOp$tpf
           compPlot[[i,j]]  <- gpfPlotRsmPropCbm(
-            which(fileNames == fileName), x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
+            which(datasetNames == fileName), x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
             lesDistr, c1[i, j], da[i, j],
             x$retCbm$mu, x$retCbm$alpha,
             fpf, tpf, i, j, K1, K2, c(1, length(fpf)))
