@@ -131,7 +131,7 @@ Compare3ProperRocFits <- function(datasetNames,
           empOp <- UtilBinCountsOpPts(binnedRocData, trt = i, rdr = j)
           fpf <- empOp$fpf; tpf <- empOp$tpf
           compPlot[[i,j]] <- gpfPlotRsmPropCbm(
-            which(datasetNames == fileName), x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
+            datasetNames[which(datasetNames == fileName)], x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
             lesDistr, c1[i, j], da[i, j],
             x$retCbm$mu, x$retCbm$alpha,
             fpf, tpf, i, j, K1, K2, c(1, length(fpf)))
@@ -168,7 +168,7 @@ Compare3ProperRocFits <- function(datasetNames,
           empOp <- UtilBinCountsOpPts(binnedRocData, trt = i, rdr = j)
           fpf <- empOp$fpf; tpf <- empOp$tpf
           compPlot[[i,j]]  <- gpfPlotRsmPropCbm(
-            which(datasetNames == fileName), x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
+            datasetNames[which(datasetNames == fileName)], x$retRsm$mu, x$retRsm$lambdaP, x$retRsm$nuP, 
             lesDistr, c1[i, j], da[i, j],
             x$retCbm$mu, x$retCbm$alpha,
             fpf, tpf, i, j, K1, K2, c(1, length(fpf)))
@@ -220,7 +220,7 @@ gpfPlotRsmPropCbm <- function(fileName, mu, lambdaP, nuP, lesDistr, c1, da,
   plotOp <- data.frame(FPF = fpf, TPF = tpf)
   plotOp <- as.data.frame(plotOp)
   
-  ij <- paste0("D", fileName, ", i = ", i, ", j = ", j)
+  ij <- paste0(fileName, ", i = ", i, ", j = ", j)
   Model <- NULL # to get around R CMD CHK throwing a Note
   FPF <- fpf
   TPF <- tpf

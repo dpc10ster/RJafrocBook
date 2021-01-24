@@ -19,7 +19,7 @@ library(doParallel)
 
 
 ## How much finished {#rsm-3-fits-how-much-finished}
-60%
+70%
 
 
 ## Introduction {#rsm-3-fits-intro}
@@ -70,7 +70,7 @@ source(here("R/compare-3-fits/Compare3ProperRocFits.R"))
 ```
 
 
-```{r rsm-3-fits-code-f2, echo=TRUE, cache=TRUE}
+```{r rsm-3-fits-code-f2, echo=TRUE, cache=FALSE}
 startIndx <-  2
 endIndx <- 3
 ret <- Compare3ProperRocFits(datasetNames,
@@ -322,7 +322,7 @@ The next section provides an overview of the most salient findings from analyzin
 With 14 datasets the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms were applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: *all three fitting methods are consistent with a single method-independent AUC*.
 
 
-If the AUCs of the three methods are identical the following relations should hold: 
+If the AUCs of the three methods are identical the following relations hold: 
 
 
 \begin{equation}
@@ -351,7 +351,7 @@ An analysis was conducted to determine the average slopes $<m_{PR}>$ and $<m_{CR
 The code for calculating the slopes is in `R/compare-3-fits/slopesConvVsRsm.R` and that for calculating the bootstrap confidence intervals is in  `R/compare-3-fits/slopesConvVsRsmCI.R`.   
 
 
-```{r rsm-3-fits-inter-corr-scatter, echo=FALSE}
+```{r rsm-3-fits-confidence-intervals, echo=FALSE}
 source(here("R/compare-3-fits/loadDataFile.R"))
 source(here("R/compare-3-fits/slopesConvVsRsm.R"))
 source(here("R/compare-3-fits/slopesConvVsRsmCI.R"))
@@ -359,21 +359,10 @@ source(here("R/compare-3-fits/slopesConvVsRsmCI.R"))
 
 
 
-```{r rsm-3-fits-inter-corr-scatter2, cache=TRUE, echo=TRUE}
+```{r rsm-3-fits-confidence-intervals2, cache=FALSE, echo=TRUE}
+
 ret <- slopesConvVsRsm(datasetNames)
 retCI <- slopesConvVsRsmCI(datasetNames)
-x <- cbind(ret$m_pro_rsm, ret$m_cbm_rsm)
-x <- rbind(x, apply(x,2, mean))
-x  <- round(x, digits = 4)
-z1 <- format(retCI$cislopeProRsm, digits = 4)
-z2 <- format(retCI$cislopeCbmRsm, digits = 3)
-x <- rbind(x, 
-           c(paste0("(", z1[1], ", ", z1[2], ")"), # for seed = 1
-             NA,
-             paste0("(", z2[1], ", ", z2[2], ")"), # for seed = 1
-             NA))
-row.names(x) <- c(as.character(1:14), "AVG", "CI")
-colnames(x) <- c("mProRsm", "R2ProRsm", "mCbmRsm", "R2CbmRsm")
 ```
 
 
@@ -393,7 +382,7 @@ Likewise,
 
 As an example, `ret$p1[[2]]`, the plot plot of $AUC_{PRO}$ vs. of $AUC_{RSM}$ for the Van Dyke dataset (`index` = 2), is shown below:
 
-```{r}
+```{r, echo=FALSE}
 ret$p1[[2]]
 ```
 
@@ -413,7 +402,7 @@ print(df)
 ### Confidence intervals and histograms {#rsm-3-fits-confidence-intervals-histograms}
 
 
-The call to `slopesConvVsRsmCI` returns `retCI`, containing:
+The call to `slopesConvVsRsmCI` returns `retCI`, containing the results of the bootstrap analysis:
 
 * `retCI$cislopeProRsm` confidence interval for $<m_{PR}>$ (note that $<...>$ *always* represents an average over 14 datasets)
 * `retCI$cislopeCbmRsm` confidence interval for $<m_{CR}>$
@@ -428,6 +417,7 @@ As examples,
 ```{r, echo=FALSE}
 df <- as.data.frame(retCI$cislopeProRsm)
 df <- cbind(df, retCI$cislopeCbmRsm)
+colnames(df) <- c("m_PR", "m_CR")
 print(df)
 ```
 
@@ -464,12 +454,31 @@ grid.arrange(ret$p1[[7]], ret$p2[[7]], ncol = 2)
 ```
 
 
+### Summary of slopes and confidence intervals {#rsm-3-fits-slopes-confidence-intervals-summary}
 
-```{r rsm-3-fits-slopes-table1, echo=FALSE}
-kbl(x, caption = "Summary of slopes and correlations for the two constrained fits: PROPROC AUC vs. RSM AUC and CBM AUC vs. RSM AUC; see below. The average of each slope equals unity to within 0.6 percent.", booktabs = TRUE, escape = FALSE) %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```{r rsm-3-fits-confidence-intervals3, cache=FALSE, echo=FALSE}
+
+x <- cbind(ret$m_pro_rsm, ret$m_cbm_rsm)
+x <- rbind(x, apply(x,2, mean))
+x  <- round(x, digits = 4)
+z1 <- format(retCI$cislopeProRsm, digits = 4)
+z2 <- format(retCI$cislopeCbmRsm, digits = 3)
+x <- rbind(x, 
+           c(paste0("(", z1[1], ", ", z1[2], ")"), # for seed = 1
+             NA,
+             paste0("(", z2[1], ", ", z2[2], ")"), # for seed = 1
+             NA))
+row.names(x) <- c(datasetNames, "AVG", "CI")
+colnames(x) <- c("m_PR", "R2_PR", "m_CR", "R2_CR")
 ```
 
-Table \@ref(tab:rsm-3-fits-slopes-table1): The first column, labeled $mProRsm$, shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs. RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled $R2ProRsm$, lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs. RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
+
+```{r rsm-3-fits-slopes-table1, echo=FALSE}
+kbl(x, caption = "Summary of slopes and correlations for the two constrained fits: PROPROC AUC vs. RSM AUC and CBM AUC vs. RSM AUC. The average of each slope equals unity to within 0.6 percent.", booktabs = TRUE, escape = FALSE) %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```
+
+
+Table \@ref(tab:rsm-3-fits-slopes-table1): The first column, labeled $m_{PR}$, shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs. RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled $R2_{PR}$, lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs. RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
 
 
 ## Discussion / Summary {#rsm-3-fits-discussion-summary}
@@ -497,11 +506,6 @@ The main scientific conclusion of this chapter is that search-performance is the
 
 ## Appendices {#rsm-3-fits-appendices}
 ### Datasets {#rsm-3-fits-14-datasets}
-
-```{r}
-?`RJafroc-package`
-```
-
 
 The datasets are embedded in ther `RJafroc` package. They can be viewed in the help file of the package, a partial screen-shot of which is shown next.
 

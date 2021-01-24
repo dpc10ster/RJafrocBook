@@ -1,19 +1,19 @@
-slopesConvVsRsm <- function(fileNames) {
+slopesConvVsRsm <- function(datasetNames) {
   path <- "R/compare-3-fits/"
-  m_pro_rsm <- data.frame(m_pro_rsm = rep(NA, length(fileNames)), 
-                          r2_pro_rsm = rep(NA, length(fileNames)),
+  m_pro_rsm <- data.frame(m_pro_rsm = rep(NA, length(datasetNames)), 
+                          r2_pro_rsm = rep(NA, length(datasetNames)),
                           stringsAsFactors = FALSE)
-  m_cbm_rsm <- data.frame(m_cbm_rsm = rep(NA, length(fileNames)), 
-                          r2_cbm_rsm = rep(NA, length(fileNames)),
+  m_cbm_rsm <- data.frame(m_cbm_rsm = rep(NA, length(datasetNames)), 
+                          r2_cbm_rsm = rep(NA, length(datasetNames)),
                           stringsAsFactors = FALSE)
-  p2 <- p1 <- array(list(), dim = c(length(fileNames)))
-  for (f in 1:length(fileNames)){
-      retFileName <- paste0("R/compare-3-fits/RSM6/", "allResults", fileNames[f])
+  p2 <- p1 <- array(list(), dim = c(length(datasetNames)))
+  for (f in 1:length(datasetNames)){
+      retFileName <- paste0("R/compare-3-fits/RSM6/", "allResults", datasetNames[f])
     if (file.exists(retFileName)){
       load(retFileName)
       # following allows elimination of the Datasets directory TBA
       #theData <- get(sprintf("dataset%02d", f)) # the datasets already exist as R objects
-      theData <- loadDataFile(path = path, fileNames[f])
+      theData <- loadDataFile(path = path, datasetNames[f])
       I <- length(theData$descriptions$modalityID)
       J <- length(theData$descriptions$readerID)
       aucRsm <- array(dim = c(I, J));aucCbm <- array(dim = c(I, J));aucPro <- array(dim = c(I, J))
@@ -33,7 +33,7 @@ slopesConvVsRsm <- function(fileNames) {
         }
       }
       df <- data.frame(aucPro = as.vector(aucPro), aucRsm = as.vector(aucRsm))
-      ij <- paste0("D", f, ", nPts = ", I * J)
+      ij <- paste0(datasetNames[f], ", nPts = ", I * J)
       p1[[f]] <- ggplot(data = df, aes(x = aucRsm, y = aucPro)) +
         geom_smooth(method = "lm", se = FALSE, color = "black", formula = y ~ 0 + x) +
         geom_point() + 
@@ -42,7 +42,7 @@ slopesConvVsRsm <- function(fileNames) {
       m_pro_rsm[f,] <- list(x$coefficients, (summary(x)$r.squared))
 
       df <- data.frame(aucCbm = as.vector(aucCbm), aucRsm = as.vector(aucRsm))
-      ij <- paste0("D", f, ", nPts = ", I * J)
+      ij <- paste0(datasetNames[f], ", nPts = ", I * J)
       p2[[f]] <- ggplot(data = df, aes(x = aucRsm, y = aucCbm)) +
         geom_smooth(method = "lm", se = FALSE, color = "black", formula = y ~ 0 + x) +
         geom_point() + 
