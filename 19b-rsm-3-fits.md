@@ -298,9 +298,14 @@ The RSM parameters for the treatment 1 plot are: $\mu$ = 3.1527627, $\lambda'$ =
 <p class="caption">(\#fig:rsm-3-fits-plots-1-5)Composite plots in both treatments for Van Dyke dataset, reader 5.</p>
 </div>
 
+
+The next section provides an overview of the most salient findings from analyzing the datasets.
+
+
 ## Overview of findings {#rsm-3-fits-overview}
 
 With 14 datasets the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms were applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: *all three fitting methods are consistent with a single method-independent AUC*.
+
 
 If the AUCs of the three methods are identical the following relations should hold: 
 
@@ -324,10 +329,15 @@ The abbreviations are as follows:
 For example, a plot of PROPROC AUC vs. RSM AUC should be linear with zero intercept and slope $m_{PR}$. The reason for the *zero intercept* is that if one of the AUCs indicates zero performance the other AUC must also be zero. Likewise, chance level performance (AUC = 0.5) must be common to all method of estimating AUC. Finally, perfect performance must be common to all methods. All of these conditions require a zero-intercept linear fit. 
 
 
+### Slopes {#rsm-3-fits-slopes}
+
+An analysis was conducted to determine the average slopes $<m_{PR}>$ and $<m_{CR}>$, where $<...>$ represents an average over all datasets, and a bootstrap analysis was conducted to determine the corresponding confidence intervals. 
+
+The code for calculating the slopes is in `R/compare-3-fits/slopesConvVsRsm.R` and that for calculating the bootstrap confidence intervals is in  `R/compare-3-fits/slopesConvVsRsmCI.R`.   
 
 
 
-An analysis was conducted to determine the average slopes $<m_{PR}>$ and $<m_{CR}>$, averaged over all datasets, and a bootstrap analysis was conducted to determine the corresponding confidence intervals. The code for calculating the slopes is in `R/compare-3-fits/slopesConvVsRsm.R` and that for calculating the bootstrap confidence intervals is in  `R/compare-3-fits/slopesConvVsRsmCI.R`.   
+
 
 
 
@@ -349,15 +359,8 @@ colnames(x) <- c("mProRsm", "R2ProRsm", "mCbmRsm", "R2CbmRsm")
 ```
 
 
-
-<div class="figure">
-<img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-histo-slopes1-1.png" alt="TBA." width="672" />
-<p class="caption">(\#fig:rsm-3-fits-histo-slopes1)TBA.</p>
-</div>
-
-
-
 The call to function `slopesConvVsRsm()` returns `ret`, which contains, for each of 14 datasets, two plots and two slopes. For example:
+
 
 * `ret$p1[[2]]` is the plot of $AUC_{PRO}$ vs. of $AUC_{RSM}$ for the Van Dyke dataset (`index` = 2).
 * `ret$p2[[2]]` is the plot of $AUC_{CBM}$ vs. of $AUC_{RSM}$ for the Van Dyke dataset (`index` = 2).
@@ -381,45 +384,29 @@ ret$p1[[2]]
 
 It is labeled **D2, nPts = 10** since it corresponds to the Van Dyke dataset, with 10 treatment-reader pairings.
 
-The slopes and R2 values for the 14 datasets are shown next:
+The slopes and R2 values for the Van Dyke dataset are shown next:
 
 
 ```r
-ret$m_pro_rsm[[1]][2] # slope m_PR for Van Dyke dataset 
+df <- as.data.frame(ret$m_pro_rsm[[1]][2])
+df <- cbind(df, ret$m_pro_rsm[[2]][2], ret$m_cbm_rsm[[1]][2], ret$m_cbm_rsm[[2]][2])
+colnames(df) <- c("m_PR", "R2", "m_CR", "R2")
+row.names(df) <- "VD"
+print(df)
 ```
 
 ```
-## [1] 1.006127
-```
-
-```r
-ret$m_pro_rsm[[2]][2] # corresponding R2
-```
-
-```
-## [1] 0.999773
-```
-
-```r
-ret$m_cbm_rsm[[1]][2] # slope m_CR for Van Dyke dataset 
-```
-
-```
-## [1] 1.000699
-```
-
-```r
-ret$m_cbm_rsm[[2]][2] # corresponding R2
-```
-
-```
-## [1] 0.9999832
+##        m_PR       R2     m_CR        R2
+## VD 1.006127 0.999773 1.000699 0.9999832
 ```
 
 
-The call to `slopesConvVsRsmCI` returns `retCI`, containing (note that $<...>$ *always* represents an average over 14 datasets.):
+### Confidence intervals and histograms {#rsm-3-fits-confidence-intervals-histograms}
 
-* `retCI$cislopeProRsm` confidence interval for $<m_{PR}>$
+
+The call to `slopesConvVsRsmCI` returns `retCI`, containing:
+
+* `retCI$cislopeProRsm` confidence interval for $<m_{PR}>$ (note that $<...>$ *always* represents an average over 14 datasets)
 * `retCI$cislopeCbmRsm` confidence interval for $<m_{CR}>$
 * `retCI$histSlopeProRsm` histogram plot for 200 bootstrap values of $<m_{PR}>$
 * `retCI$histSlopeCbmRsm` histogram plot for 200 bootstrap values of $<m_{CR}>$
@@ -430,22 +417,10 @@ The call to `slopesConvVsRsmCI` returns `retCI`, containing (note that $<...>$ *
 As examples,
 
 
-```r
-retCI$cislopeProRsm
 ```
-
-```
-##     2.5%    97.5% 
-## 1.005092 1.012285
-```
-
-```r
-retCI$cislopeCbmRsm
-```
-
-```
-##      2.5%     97.5% 
-## 0.9919886 0.9966149
+##       retCI$cislopeProRsm retCI$cislopeCbmRsm
+## 2.5%             1.005092           0.9919886
+## 97.5%            1.012285           0.9966149
 ```
 
 The CI for $<m_{PR}>$ is slightly above unity, while that for $<m_{CR}>$ is slightly below. Shown next is the histogram plot for $<m_{PR}>$ and $<m_{CR}>$.

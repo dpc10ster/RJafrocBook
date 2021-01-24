@@ -24,7 +24,7 @@
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2021-01-23" />
+<meta name="date" content="2021-01-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -772,7 +772,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="34.3.5" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-proproc-parameter-values"><i class="fa fa-check"></i><b>34.3.5</b> Displaying PROPROC parameter values</a></li>
 </ul></li>
 <li class="chapter" data-level="34.4" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-representative-plots-van-dyke"><i class="fa fa-check"></i><b>34.4</b> Plots for Van Dyke dataset</a></li>
-<li class="chapter" data-level="34.5" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-overview"><i class="fa fa-check"></i><b>34.5</b> Overview of findings</a></li>
+<li class="chapter" data-level="34.5" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-overview"><i class="fa fa-check"></i><b>34.5</b> Overview of findings</a><ul>
+<li class="chapter" data-level="34.5.1" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-slopes"><i class="fa fa-check"></i><b>34.5.1</b> Slopes</a></li>
+<li class="chapter" data-level="34.5.2" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-confidence-intervals-histograms"><i class="fa fa-check"></i><b>34.5.2</b> Confidence intervals and histograms</a></li>
+</ul></li>
 <li class="chapter" data-level="34.6" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-discussion-summary"><i class="fa fa-check"></i><b>34.6</b> Discussion / Summary</a></li>
 <li class="chapter" data-level="34.7" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-appendices"><i class="fa fa-check"></i><b>34.7</b> Appendices</a><ul>
 <li class="chapter" data-level="34.7.1" data-path="rsm-3-fits.html"><a href="rsm-3-fits.html#rsm-3-fits-14-datasets"><i class="fa fa-check"></i><b>34.7.1</b> Datasets</a></li>
@@ -1065,7 +1068,7 @@ ROC methodological advances, namely the Van Dyke (VD) and the Franken (FR) datas
 ## c =  -0.2809004 
 ## d_a =  1.731472 
 ## AUC =  0.8910714</code></pre>
-<p>The values are identical to those listed for treatment 1 and reader 2 in Fig. <a href="rsm-3-fits.html#fig:rsm-3-fits-proproc-output-van-dyke">34.14</a>. Other values, such as standard error of AUC, are not provided by PROPROC software.</p>
+<p>The values are identical to those listed for treatment 1 and reader 2 in Fig. <a href="rsm-3-fits.html#fig:rsm-3-fits-proproc-output-van-dyke">34.13</a>. Other values, such as standard error of AUC, are not provided by PROPROC software.</p>
 <p>The next example displays PROPROC parameters for the Franken dataset, treatment 2 and reader 3:</p>
 <pre><code>## PROPROC parameters, Franken dataset, treatment 2, reader 3: 
 ## c =  -0.4420007 
@@ -1109,6 +1112,7 @@ FIGURE 34.4: Composite plots in both treatments for Van Dyke dataset, reader 4. 
 FIGURE 34.5: Composite plots in both treatments for Van Dyke dataset, reader 5.
 </p>
 </div>
+<p>The next section provides an overview of the most salient findings from analyzing the datasets.</p>
 </div>
 <div id="rsm-3-fits-overview" class="section level2">
 <h2><span class="header-section-number">34.5</span> Overview of findings</h2>
@@ -1130,7 +1134,10 @@ AUC_{CBM} =&amp; m_{CR} AUC_{PRO}
 <li>CR = CBM vs. RSM.</li>
 </ul>
 <p>For example, a plot of PROPROC AUC vs. RSM AUC should be linear with zero intercept and slope <span class="math inline">\(m_{PR}\)</span>. The reason for the <em>zero intercept</em> is that if one of the AUCs indicates zero performance the other AUC must also be zero. Likewise, chance level performance (AUC = 0.5) must be common to all method of estimating AUC. Finally, perfect performance must be common to all methods. All of these conditions require a zero-intercept linear fit.</p>
-<p>An analysis was conducted to determine the average slopes <span class="math inline">\(&lt;m_{PR}&gt;\)</span> and <span class="math inline">\(&lt;m_{CR}&gt;\)</span>, averaged over all datasets, and a bootstrap analysis was conducted to determine the corresponding confidence intervals. The code for calculating the slopes is in <code>R/compare-3-fits/slopesConvVsRsm.R</code> and that for calculating the bootstrap confidence intervals is in <code>R/compare-3-fits/slopesConvVsRsmCI.R</code>.</p>
+<div id="rsm-3-fits-slopes" class="section level3">
+<h3><span class="header-section-number">34.5.1</span> Slopes</h3>
+<p>An analysis was conducted to determine the average slopes <span class="math inline">\(&lt;m_{PR}&gt;\)</span> and <span class="math inline">\(&lt;m_{CR}&gt;\)</span>, where <span class="math inline">\(&lt;...&gt;\)</span> represents an average over all datasets, and a bootstrap analysis was conducted to determine the corresponding confidence intervals.</p>
+<p>The code for calculating the slopes is in <code>R/compare-3-fits/slopesConvVsRsm.R</code> and that for calculating the bootstrap confidence intervals is in <code>R/compare-3-fits/slopesConvVsRsmCI.R</code>.</p>
 <div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="rsm-3-fits.html#cb219-1"></a>ret &lt;-<span class="st"> </span><span class="kw">slopesConvVsRsm</span>(datasetNames)</span>
 <span id="cb219-2"><a href="rsm-3-fits.html#cb219-2"></a>retCI &lt;-<span class="st"> </span><span class="kw">slopesConvVsRsmCI</span>(datasetNames)</span>
 <span id="cb219-3"><a href="rsm-3-fits.html#cb219-3"></a>x &lt;-<span class="st"> </span><span class="kw">cbind</span>(ret<span class="op">$</span>m_pro_rsm, ret<span class="op">$</span>m_cbm_rsm)</span>
@@ -1145,12 +1152,6 @@ AUC_{CBM} =&amp; m_{CR} AUC_{PRO}
 <span id="cb219-12"><a href="rsm-3-fits.html#cb219-12"></a>             <span class="ot">NA</span>))</span>
 <span id="cb219-13"><a href="rsm-3-fits.html#cb219-13"></a><span class="kw">row.names</span>(x) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">as.character</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">14</span>), <span class="st">&quot;AVG&quot;</span>, <span class="st">&quot;CI&quot;</span>)</span>
 <span id="cb219-14"><a href="rsm-3-fits.html#cb219-14"></a><span class="kw">colnames</span>(x) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;mProRsm&quot;</span>, <span class="st">&quot;R2ProRsm&quot;</span>, <span class="st">&quot;mCbmRsm&quot;</span>, <span class="st">&quot;R2CbmRsm&quot;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:rsm-3-fits-histo-slopes1"></span>
-<img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-histo-slopes1-1.png" alt="TBA." width="672" />
-<p class="caption">
-FIGURE 34.6: TBA.
-</p>
-</div>
 <p>The call to function <code>slopesConvVsRsm()</code> returns <code>ret</code>, which contains, for each of 14 datasets, two plots and two slopes. For example:</p>
 <ul>
 <li><code>ret$p1[[2]]</code> is the plot of <span class="math inline">\(AUC_{PRO}\)</span> vs. of <span class="math inline">\(AUC_{RSM}\)</span> for the Van Dyke dataset (<code>index</code> = 2).</li>
@@ -1167,18 +1168,20 @@ FIGURE 34.6: TBA.
 <div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="rsm-3-fits.html#cb220-1"></a>ret<span class="op">$</span>p1[[<span class="dv">2</span>]]</span></code></pre></div>
 <p><img src="19b-rsm-3-fits_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>It is labeled <strong>D2, nPts = 10</strong> since it corresponds to the Van Dyke dataset, with 10 treatment-reader pairings.</p>
-<p>The slopes and R2 values for the 14 datasets are shown next:</p>
-<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="rsm-3-fits.html#cb221-1"></a>ret<span class="op">$</span>m_pro_rsm[[<span class="dv">1</span>]][<span class="dv">2</span>] <span class="co"># slope m_PR for Van Dyke dataset </span></span></code></pre></div>
-<pre><code>## [1] 1.006127</code></pre>
-<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="rsm-3-fits.html#cb223-1"></a>ret<span class="op">$</span>m_pro_rsm[[<span class="dv">2</span>]][<span class="dv">2</span>] <span class="co"># corresponding R2</span></span></code></pre></div>
-<pre><code>## [1] 0.999773</code></pre>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="rsm-3-fits.html#cb225-1"></a>ret<span class="op">$</span>m_cbm_rsm[[<span class="dv">1</span>]][<span class="dv">2</span>] <span class="co"># slope m_CR for Van Dyke dataset </span></span></code></pre></div>
-<pre><code>## [1] 1.000699</code></pre>
-<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="rsm-3-fits.html#cb227-1"></a>ret<span class="op">$</span>m_cbm_rsm[[<span class="dv">2</span>]][<span class="dv">2</span>] <span class="co"># corresponding R2</span></span></code></pre></div>
-<pre><code>## [1] 0.9999832</code></pre>
-<p>The call to <code>slopesConvVsRsmCI</code> returns <code>retCI</code>, containing (note that <span class="math inline">\(&lt;...&gt;\)</span> <em>always</em> represents an average over 14 datasets.):</p>
+<p>The slopes and R2 values for the Van Dyke dataset are shown next:</p>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="rsm-3-fits.html#cb221-1"></a>df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(ret<span class="op">$</span>m_pro_rsm[[<span class="dv">1</span>]][<span class="dv">2</span>])</span>
+<span id="cb221-2"><a href="rsm-3-fits.html#cb221-2"></a>df &lt;-<span class="st"> </span><span class="kw">cbind</span>(df, ret<span class="op">$</span>m_pro_rsm[[<span class="dv">2</span>]][<span class="dv">2</span>], ret<span class="op">$</span>m_cbm_rsm[[<span class="dv">1</span>]][<span class="dv">2</span>], ret<span class="op">$</span>m_cbm_rsm[[<span class="dv">2</span>]][<span class="dv">2</span>])</span>
+<span id="cb221-3"><a href="rsm-3-fits.html#cb221-3"></a><span class="kw">colnames</span>(df) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;m_PR&quot;</span>, <span class="st">&quot;R2&quot;</span>, <span class="st">&quot;m_CR&quot;</span>, <span class="st">&quot;R2&quot;</span>)</span>
+<span id="cb221-4"><a href="rsm-3-fits.html#cb221-4"></a><span class="kw">row.names</span>(df) &lt;-<span class="st"> &quot;VD&quot;</span></span>
+<span id="cb221-5"><a href="rsm-3-fits.html#cb221-5"></a><span class="kw">print</span>(df)</span></code></pre></div>
+<pre><code>##        m_PR       R2     m_CR        R2
+## VD 1.006127 0.999773 1.000699 0.9999832</code></pre>
+</div>
+<div id="rsm-3-fits-confidence-intervals-histograms" class="section level3">
+<h3><span class="header-section-number">34.5.2</span> Confidence intervals and histograms</h3>
+<p>The call to <code>slopesConvVsRsmCI</code> returns <code>retCI</code>, containing:</p>
 <ul>
-<li><code>retCI$cislopeProRsm</code> confidence interval for <span class="math inline">\(&lt;m_{PR}&gt;\)</span></li>
+<li><code>retCI$cislopeProRsm</code> confidence interval for <span class="math inline">\(&lt;m_{PR}&gt;\)</span> (note that <span class="math inline">\(&lt;...&gt;\)</span> <em>always</em> represents an average over 14 datasets)</li>
 <li><code>retCI$cislopeCbmRsm</code> confidence interval for <span class="math inline">\(&lt;m_{CR}&gt;\)</span></li>
 <li><code>retCI$histSlopeProRsm</code> histogram plot for 200 bootstrap values of <span class="math inline">\(&lt;m_{PR}&gt;\)</span></li>
 <li><code>retCI$histSlopeCbmRsm</code> histogram plot for 200 bootstrap values of <span class="math inline">\(&lt;m_{CR}&gt;\)</span></li>
@@ -1187,36 +1190,33 @@ FIGURE 34.6: TBA.
 <li><code>retCI$ciAvgAucCbm</code> confidence interval for 200 bootstrap values of <span class="math inline">\(&lt;AUC_{CBM}&gt;\)</span></li>
 </ul>
 <p>As examples,</p>
-<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="rsm-3-fits.html#cb229-1"></a>retCI<span class="op">$</span>cislopeProRsm</span></code></pre></div>
-<pre><code>##     2.5%    97.5% 
-## 1.005092 1.012285</code></pre>
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="rsm-3-fits.html#cb231-1"></a>retCI<span class="op">$</span>cislopeCbmRsm</span></code></pre></div>
-<pre><code>##      2.5%     97.5% 
-## 0.9919886 0.9966149</code></pre>
+<pre><code>##       retCI$cislopeProRsm retCI$cislopeCbmRsm
+## 2.5%             1.005092           0.9919886
+## 97.5%            1.012285           0.9966149</code></pre>
 <p>The CI for <span class="math inline">\(&lt;m_{PR}&gt;\)</span> is slightly above unity, while that for <span class="math inline">\(&lt;m_{CR}&gt;\)</span> is slightly below. Shown next is the histogram plot for <span class="math inline">\(&lt;m_{PR}&gt;\)</span> and <span class="math inline">\(&lt;m_{CR}&gt;\)</span>.</p>
 <div class="figure"><span id="fig:rsm-3-fits-histo-slopes"></span>
 <img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-histo-slopes-1.png" alt="TBA." width="672" />
 <p class="caption">
-FIGURE 34.7: TBA.
+FIGURE 34.6: TBA.
 </p>
 </div>
 <div class="figure"><span id="fig:rsm-3-fits-plots-2"></span>
 <img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-2-1.png" alt="Dataset `D2` (Van Dyke): Left plot is PROPROC-AUC vs. RSM-AUC with the superposed constrained linear fit. The number of data points is `nPts` = 10, equal to `IJ`. Right plot is CBM-AUC vs. RSM-AUC. The slopes and R2 values are listed in the following Table." width="672" />
 <p class="caption">
-FIGURE 34.8: Dataset <code>D2</code> (Van Dyke): Left plot is PROPROC-AUC vs. RSM-AUC with the superposed constrained linear fit. The number of data points is <code>nPts</code> = 10, equal to <code>IJ</code>. Right plot is CBM-AUC vs. RSM-AUC. The slopes and R2 values are listed in the following Table.
+FIGURE 34.7: Dataset <code>D2</code> (Van Dyke): Left plot is PROPROC-AUC vs. RSM-AUC with the superposed constrained linear fit. The number of data points is <code>nPts</code> = 10, equal to <code>IJ</code>. Right plot is CBM-AUC vs. RSM-AUC. The slopes and R2 values are listed in the following Table.
 </p>
 </div>
 <p>Shown next are plots of PROPROC-AUC vs. RSM-AUC and CBM-AUC vs. RSM-AUC; each plot has the constrained linear fit superposed on the data points. Each point corresponds to a distinct modality-reader combination. The average slopes and <span class="math inline">\(R^2\)</span> values (<span class="math inline">\(R^2\)</span> is the fraction of variance explained by the constrained straight line fit) are listed in Table <a href="rsm-3-fits.html#tab:rsm-3-fits-slopes-table1">34.1</a>.</p>
 <div class="figure"><span id="fig:rsm-3-fits-plots-3"></span>
 <img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-3-1.png" alt="Similar to previous plot, for dataset `D3` (Franken), `nPts` = 20." width="672" />
 <p class="caption">
-FIGURE 34.9: Similar to previous plot, for dataset <code>D3</code> (Franken), <code>nPts</code> = 20.
+FIGURE 34.8: Similar to previous plot, for dataset <code>D3</code> (Franken), <code>nPts</code> = 20.
 </p>
 </div>
 <div class="figure"><span id="fig:rsm-3-fits-plots-7"></span>
 <img src="19b-rsm-3-fits_files/figure-html/rsm-3-fits-plots-7-1.png" alt="Similar to previous plot, for dataset `D7` (Lucy Warren), `nPts` = 35." width="672" />
 <p class="caption">
-FIGURE 34.10: Similar to previous plot, for dataset <code>D7</code> (Lucy Warren), <code>nPts</code> = 35.
+FIGURE 34.9: Similar to previous plot, for dataset <code>D7</code> (Lucy Warren), <code>nPts</code> = 35.
 </p>
 </div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -1518,6 +1518,7 @@ NA
 </table>
 <p>Table <a href="rsm-3-fits.html#tab:rsm-3-fits-slopes-table1">34.1</a>: The first column, labeled <span class="math inline">\(mProRsm\)</span>, shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs. RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled <span class="math inline">\(R2ProRsm\)</span>, lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs. RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.</p>
 </div>
+</div>
 <div id="rsm-3-fits-discussion-summary" class="section level2">
 <h2><span class="header-section-number">34.6</span> Discussion / Summary</h2>
 <p>Over the years, there have been several attempts at fitting FROC data. Prior to the RSM-based ROC curve approach described in this chapter, all methods were aimed at fitting FROC curves, in the mistaken belief that this approach was using all the data. The earliest was the author’s FROCFIT software36. This was followed by Swensson’s approach37, subsequently shown to be equivalent to the author’s earlier work, as far as predicting the FROC curve was concerned11. In the meantime, CAD developers, who relied heavily on the FROC curve to evaluate their algorithms, developed an empirical approach that was subsequently put on a formal basis in the IDCA method12.</p>
@@ -1535,12 +1536,12 @@ NA
 <h2><span class="header-section-number">34.7</span> Appendices</h2>
 <div id="rsm-3-fits-14-datasets" class="section level3">
 <h3><span class="header-section-number">34.7.1</span> Datasets</h3>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="rsm-3-fits.html#cb233-1"></a>?<span class="st">`</span><span class="dt">RJafroc-package</span><span class="st">`</span></span></code></pre></div>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="rsm-3-fits.html#cb224-1"></a>?<span class="st">`</span><span class="dt">RJafroc-package</span><span class="st">`</span></span></code></pre></div>
 <p>The datasets are embedded in ther <code>RJafroc</code> package. They can be viewed in the help file of the package, a partial screen-shot of which is shown next.</p>
 <div class="figure" style="text-align: center"><span id="fig:rsm-3-fits-datasets"></span>
 <img src="images/compare-3-fits/datasets.png" alt="Partial screen shot of `RJafroc` help file showing the datasets included with the current distribution (v2.0.1)."  />
 <p class="caption">
-FIGURE 34.11: Partial screen shot of <code>RJafroc</code> help file showing the datasets included with the current distribution (v2.0.1).
+FIGURE 34.10: Partial screen shot of <code>RJafroc</code> help file showing the datasets included with the current distribution (v2.0.1).
 </p>
 </div>
 <p>The datasets are identified in the code by dataset<code>dd</code> (where <code>dd</code> is an integer in the range <code>01</code> to <code>14</code>) as follows:</p>
@@ -1646,14 +1647,14 @@ FIGURE 34.11: Partial screen shot of <code>RJafroc</code> help file showing the 
 <div id="rsm-3-fits-one-dataset-indexing" class="section level3">
 <h3><span class="header-section-number">34.7.2</span> Dataset indexing</h3>
 <p>The datasets are indexed by an integer 1 through 14. The following shows the correspondence of <code>index</code> to dataset name.</p>
-<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="rsm-3-fits.html#cb248-1"></a>index &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">14</span>)</span>
-<span id="cb248-2"><a href="rsm-3-fits.html#cb248-2"></a>datasetNames &lt;-<span class="st">  </span><span class="kw">c</span>(<span class="st">&quot;TONY&quot;</span>, <span class="st">&quot;VD&quot;</span>, <span class="st">&quot;FR&quot;</span>, </span>
-<span id="cb248-3"><a href="rsm-3-fits.html#cb248-3"></a>            <span class="st">&quot;FED&quot;</span>, <span class="st">&quot;JT&quot;</span>, <span class="st">&quot;MAG&quot;</span>, </span>
-<span id="cb248-4"><a href="rsm-3-fits.html#cb248-4"></a>            <span class="st">&quot;OPT&quot;</span>, <span class="st">&quot;PEN&quot;</span>, <span class="st">&quot;NICO&quot;</span>,</span>
-<span id="cb248-5"><a href="rsm-3-fits.html#cb248-5"></a>            <span class="st">&quot;RUS&quot;</span>, <span class="st">&quot;DOB1&quot;</span>, <span class="st">&quot;DOB2&quot;</span>, </span>
-<span id="cb248-6"><a href="rsm-3-fits.html#cb248-6"></a>            <span class="st">&quot;DOB3&quot;</span>, <span class="st">&quot;FZR&quot;</span>)</span>
-<span id="cb248-7"><a href="rsm-3-fits.html#cb248-7"></a></span>
-<span id="cb248-8"><a href="rsm-3-fits.html#cb248-8"></a><span class="kw">cat</span>(<span class="st">&quot;File name for index = &quot;</span>, index[<span class="dv">2</span>], <span class="st">&quot; is &quot;</span>, datasetNames[index[<span class="dv">2</span>]], <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="rsm-3-fits.html#cb239-1"></a>index &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">14</span>)</span>
+<span id="cb239-2"><a href="rsm-3-fits.html#cb239-2"></a>datasetNames &lt;-<span class="st">  </span><span class="kw">c</span>(<span class="st">&quot;TONY&quot;</span>, <span class="st">&quot;VD&quot;</span>, <span class="st">&quot;FR&quot;</span>, </span>
+<span id="cb239-3"><a href="rsm-3-fits.html#cb239-3"></a>            <span class="st">&quot;FED&quot;</span>, <span class="st">&quot;JT&quot;</span>, <span class="st">&quot;MAG&quot;</span>, </span>
+<span id="cb239-4"><a href="rsm-3-fits.html#cb239-4"></a>            <span class="st">&quot;OPT&quot;</span>, <span class="st">&quot;PEN&quot;</span>, <span class="st">&quot;NICO&quot;</span>,</span>
+<span id="cb239-5"><a href="rsm-3-fits.html#cb239-5"></a>            <span class="st">&quot;RUS&quot;</span>, <span class="st">&quot;DOB1&quot;</span>, <span class="st">&quot;DOB2&quot;</span>, </span>
+<span id="cb239-6"><a href="rsm-3-fits.html#cb239-6"></a>            <span class="st">&quot;DOB3&quot;</span>, <span class="st">&quot;FZR&quot;</span>)</span>
+<span id="cb239-7"><a href="rsm-3-fits.html#cb239-7"></a></span>
+<span id="cb239-8"><a href="rsm-3-fits.html#cb239-8"></a><span class="kw">cat</span>(<span class="st">&quot;File name for index = &quot;</span>, index[<span class="dv">2</span>], <span class="st">&quot; is &quot;</span>, datasetNames[index[<span class="dv">2</span>]], <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## File name for index =  2  is  VD</code></pre>
 <p>The actual datasets (Excel files) are in folder <code>R/compare-3-fits/Datasets</code> and <code>R/compare-3-fits/loadDataFile.R</code> shows the correspondence between <code>datasetNames</code> and a dataset: for example, the Van Dyke dataset corresponds to file <code>VanDykeData.xlsx</code> in the <code>Datasets</code> folder.</p>
 </div>
@@ -1663,20 +1664,20 @@ FIGURE 34.11: Partial screen shot of <code>RJafroc</code> help file showing the 
 <div class="figure" style="text-align: center"><span id="fig:rsm-3-fits-mrmc-runs"></span>
 <img src="images/compare-3-fits/MRMCRuns.png" alt="Screen shot (1 of 2) of `R/compare-3-fits/MRMCRuns` showing the folders containing the results of PROPROC analysis on 14 datasets."  />
 <p class="caption">
-FIGURE 34.12: Screen shot (1 of 2) of <code>R/compare-3-fits/MRMCRuns</code> showing the folders containing the results of PROPROC analysis on 14 datasets.
+FIGURE 34.11: Screen shot (1 of 2) of <code>R/compare-3-fits/MRMCRuns</code> showing the folders containing the results of PROPROC analysis on 14 datasets.
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:rsm-3-fits-mrmc-runs-vd"></span>
 <img src="images/compare-3-fits/MRMCRuns-VD.png" alt="Screen shot (2 of 2) of `R/compare-3-fits/MRMCRuns/VD` showing files containing the results of PROPROC analysis for the Van Dyke dataset."  />
 <p class="caption">
-FIGURE 34.13: Screen shot (2 of 2) of <code>R/compare-3-fits/MRMCRuns/VD</code> showing files containing the results of PROPROC analysis for the Van Dyke dataset.
+FIGURE 34.12: Screen shot (2 of 2) of <code>R/compare-3-fits/MRMCRuns/VD</code> showing files containing the results of PROPROC analysis for the Van Dyke dataset.
 </p>
 </div>
-<p>The contents of <code>R/compare-3-fits/MRMCRuns/VD/VDproprocnormareapooled.csv</code> are shown next, see Fig. <a href="rsm-3-fits.html#fig:rsm-3-fits-proproc-output-van-dyke">34.14</a>.<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a> The PROPROC parameters <span class="math inline">\(c\)</span> and <span class="math inline">\(d_a\)</span> are in the last two columns. The column names are <code>T</code> = treatment; <code>R</code> = reader; <code>return-code</code> = undocumented value, <code>area</code> = PROPROC AUC; <code>numCAT</code> = number of ROC bins; <code>adjPMean</code> = undocumented value; <code>c</code> = <span class="math inline">\(c\)</span> and <code>d_a</code> = <span class="math inline">\(d_a\)</span>, are the PROPROC parameters defined in <span class="citation">(Metz and Pan <a href="#ref-RN1499" role="doc-biblioref">1999</a>)</span>.</p>
+<p>The contents of <code>R/compare-3-fits/MRMCRuns/VD/VDproprocnormareapooled.csv</code> are shown next, see Fig. <a href="rsm-3-fits.html#fig:rsm-3-fits-proproc-output-van-dyke">34.13</a>.<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a> The PROPROC parameters <span class="math inline">\(c\)</span> and <span class="math inline">\(d_a\)</span> are in the last two columns. The column names are <code>T</code> = treatment; <code>R</code> = reader; <code>return-code</code> = undocumented value, <code>area</code> = PROPROC AUC; <code>numCAT</code> = number of ROC bins; <code>adjPMean</code> = undocumented value; <code>c</code> = <span class="math inline">\(c\)</span> and <code>d_a</code> = <span class="math inline">\(d_a\)</span>, are the PROPROC parameters defined in <span class="citation">(Metz and Pan <a href="#ref-RN1499" role="doc-biblioref">1999</a>)</span>.</p>
 <div class="figure" style="text-align: center"><span id="fig:rsm-3-fits-proproc-output-van-dyke"></span>
 <img src="images/compare-3-fits/vanDyke.png" alt="PROPROC output for the Van Dyke ROC data set." width="50%" height="20%" />
 <p class="caption">
-FIGURE 34.14: PROPROC output for the Van Dyke ROC data set.
+FIGURE 34.13: PROPROC output for the Van Dyke ROC data set.
 </p>
 </div>
 </div>
@@ -1686,7 +1687,7 @@ FIGURE 34.14: PROPROC output for the Van Dyke ROC data set.
 <div class="figure" style="text-align: center"><span id="fig:rsm-3-fits-all-results-rsm6"></span>
 <img src="images/compare-3-fits/RSM6.png" alt="Screen shot of `R/compare-3-fits/RSM6` showing the results files created by  `Compare3ProperRocFits()` ."  />
 <p class="caption">
-FIGURE 34.15: Screen shot of <code>R/compare-3-fits/RSM6</code> showing the results files created by <code>Compare3ProperRocFits()</code> .
+FIGURE 34.14: Screen shot of <code>R/compare-3-fits/RSM6</code> showing the results files created by <code>Compare3ProperRocFits()</code> .
 </p>
 </div>
 </div>
