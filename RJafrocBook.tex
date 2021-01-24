@@ -7225,7 +7225,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.1308267          1   0.28759906}
+\CommentTok{#> 1    1.1580952          1   0.28186093}
 \end{Highlighting}
 \end{Shaded}
 
@@ -14826,7 +14826,7 @@ This chapter describes an approach to fitting ROC curves, instead of FROC curves
 \hypertarget{rsm-3-fits-how-much-finished}{%
 \section{How much finished}\label{rsm-3-fits-how-much-finished}}
 
-60\%
+70\%
 
 \hypertarget{rsm-3-fits-intro}{%
 \section{Introduction}\label{rsm-3-fits-intro}}
@@ -14874,7 +14874,8 @@ ROC methodological advances, namely the Van Dyke (VD) and the Franken (FR) datas
 \hypertarget{rsm-3-fits-two-datasets}{%
 \subsection{Application to two datasets}\label{rsm-3-fits-two-datasets}}
 
-The code uses the function \texttt{Compare3ProperRocFits()}, located in \texttt{R/compare-3-fits/Compare3ProperRocFits.R}, to compute or retrieve the 3 fits. In the following code:
+The code uses the function \texttt{Compare3ProperRocFits()}, located in
+\texttt{R/compare-3-fits/Compare3ProperRocFits.R}, to compute or retrieve the 3 fits. In the following code:
 
 \begin{itemize}
 \tightlist
@@ -14970,7 +14971,8 @@ The RSM has parameters: \(\mu\), \(\lambda'\), \(\nu'\) and \(\zeta_1\). The par
 \item
   \texttt{resultsArr{[}{[}1{]}{]}{[}{[}2{]}{]}\$retRsm\$zeta1} is the corresponding \(\zeta_1\) parameter.
 \item
-  Treatment 2 and reader 1 values would be accessed as \texttt{resultsArr{[}{[}1{]}{]}{[}{[}6{]}{]}\$retRsm\$mu}, etc.
+  Treatment 2 and reader 1 values would be accessed as
+  \texttt{resultsArr{[}{[}1{]}{]}{[}{[}6{]}{]}\$retRsm\$mu}, etc.
 \item
   More generally the values are accessed as \texttt{{[}{[}f{]}{]}{[}{[}(i-1)*J+j{]}{]}}, where \texttt{f} is the dataset index, \texttt{i} is the treatment index, \texttt{j} is the reader index and \texttt{J} is the total number of readers.
 \item
@@ -15148,7 +15150,7 @@ The next section provides an overview of the most salient findings from analyzin
 
 With 14 datasets the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms were applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: \emph{all three fitting methods are consistent with a single method-independent AUC}.
 
-If the AUCs of the three methods are identical the following relations should hold:
+If the AUCs of the three methods are identical the following relations hold:
 
 \begin{equation}
 \left. 
@@ -15185,18 +15187,6 @@ The code for calculating the slopes is in \texttt{R/compare-3-fits/slopesConvVsR
 \begin{Highlighting}[]
 \NormalTok{ret <-}\StringTok{ }\KeywordTok{slopesConvVsRsm}\NormalTok{(datasetNames)}
 \NormalTok{retCI <-}\StringTok{ }\KeywordTok{slopesConvVsRsmCI}\NormalTok{(datasetNames)}
-\NormalTok{x <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(ret}\OperatorTok{$}\NormalTok{m_pro_rsm, ret}\OperatorTok{$}\NormalTok{m_cbm_rsm)}
-\NormalTok{x <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(x, }\KeywordTok{apply}\NormalTok{(x,}\DecValTok{2}\NormalTok{, mean))}
-\NormalTok{x  <-}\StringTok{ }\KeywordTok{round}\NormalTok{(x, }\DataTypeTok{digits =} \DecValTok{4}\NormalTok{)}
-\NormalTok{z1 <-}\StringTok{ }\KeywordTok{format}\NormalTok{(retCI}\OperatorTok{$}\NormalTok{cislopeProRsm, }\DataTypeTok{digits =} \DecValTok{4}\NormalTok{)}
-\NormalTok{z2 <-}\StringTok{ }\KeywordTok{format}\NormalTok{(retCI}\OperatorTok{$}\NormalTok{cislopeCbmRsm, }\DataTypeTok{digits =} \DecValTok{3}\NormalTok{)}
-\NormalTok{x <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(x, }
-           \KeywordTok{c}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\StringTok{"("}\NormalTok{, z1[}\DecValTok{1}\NormalTok{], }\StringTok{", "}\NormalTok{, z1[}\DecValTok{2}\NormalTok{], }\StringTok{")"}\NormalTok{), }\CommentTok{# for seed = 1}
-             \OtherTok{NA}\NormalTok{,}
-             \KeywordTok{paste0}\NormalTok{(}\StringTok{"("}\NormalTok{, z2[}\DecValTok{1}\NormalTok{], }\StringTok{", "}\NormalTok{, z2[}\DecValTok{2}\NormalTok{], }\StringTok{")"}\NormalTok{), }\CommentTok{# for seed = 1}
-             \OtherTok{NA}\NormalTok{))}
-\KeywordTok{row.names}\NormalTok{(x) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{14}\NormalTok{), }\StringTok{"AVG"}\NormalTok{, }\StringTok{"CI"}\NormalTok{)}
-\KeywordTok{colnames}\NormalTok{(x) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"mProRsm"}\NormalTok{, }\StringTok{"R2ProRsm"}\NormalTok{, }\StringTok{"mCbmRsm"}\NormalTok{, }\StringTok{"R2CbmRsm"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -15226,12 +15216,6 @@ Likewise,
 
 As an example, \texttt{ret\$p1{[}{[}2{]}{]}}, the plot plot of \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\) for the Van Dyke dataset (\texttt{index} = 2), is shown below:
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{ret}\OperatorTok{$}\NormalTok{p1[[}\DecValTok{2}\NormalTok{]]}
-\end{Highlighting}
-\end{Shaded}
-
 \includegraphics{19b-rsm-3-fits_files/figure-latex/unnamed-chunk-10-1.pdf}
 
 It is labeled \textbf{D2, nPts = 10} since it corresponds to the Van Dyke dataset, with 10 treatment-reader pairings.
@@ -15242,21 +15226,21 @@ The slopes and R2 values for the Van Dyke dataset are shown next:
 \begin{Highlighting}[]
 \NormalTok{df <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(ret}\OperatorTok{$}\NormalTok{m_pro_rsm[[}\DecValTok{1}\NormalTok{]][}\DecValTok{2}\NormalTok{])}
 \NormalTok{df <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(df, ret}\OperatorTok{$}\NormalTok{m_pro_rsm[[}\DecValTok{2}\NormalTok{]][}\DecValTok{2}\NormalTok{], ret}\OperatorTok{$}\NormalTok{m_cbm_rsm[[}\DecValTok{1}\NormalTok{]][}\DecValTok{2}\NormalTok{], ret}\OperatorTok{$}\NormalTok{m_cbm_rsm[[}\DecValTok{2}\NormalTok{]][}\DecValTok{2}\NormalTok{])}
-\KeywordTok{colnames}\NormalTok{(df) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"m_PR"}\NormalTok{, }\StringTok{"R2"}\NormalTok{, }\StringTok{"m_CR"}\NormalTok{, }\StringTok{"R2"}\NormalTok{)}
+\KeywordTok{colnames}\NormalTok{(df) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"m-PR"}\NormalTok{, }\StringTok{"R2"}\NormalTok{, }\StringTok{"m-CR"}\NormalTok{, }\StringTok{"R2"}\NormalTok{)}
 \KeywordTok{row.names}\NormalTok{(df) <-}\StringTok{ "VD"}
 \KeywordTok{print}\NormalTok{(df)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-##        m_PR       R2     m_CR        R2
+##        m-PR       R2     m-CR        R2
 ## VD 1.006127 0.999773 1.000699 0.9999832
 \end{verbatim}
 
 \hypertarget{rsm-3-fits-confidence-intervals-histograms}{%
 \subsection{Confidence intervals and histograms}\label{rsm-3-fits-confidence-intervals-histograms}}
 
-The call to \texttt{slopesConvVsRsmCI} returns \texttt{retCI}, containing:
+The call to \texttt{slopesConvVsRsmCI} returns \texttt{retCI}, containing the results of the bootstrap analysis:
 
 \begin{itemize}
 \tightlist
@@ -15279,9 +15263,9 @@ The call to \texttt{slopesConvVsRsmCI} returns \texttt{retCI}, containing:
 As examples,
 
 \begin{verbatim}
-##       retCI$cislopeProRsm retCI$cislopeCbmRsm
-## 2.5%             1.005092           0.9919886
-## 97.5%            1.012285           0.9966149
+##           m-PR      m-CR
+## 2.5%  1.005092 0.9919886
+## 97.5% 1.012285 0.9966149
 \end{verbatim}
 
 The CI for \(<m_{PR}>\) is slightly above unity, while that for \(<m_{CR}>\) is slightly below. Shown next is the histogram plot for \(<m_{PR}>\) and \(<m_{CR}>\).
@@ -15312,31 +15296,34 @@ Shown next are plots of PROPROC-AUC vs.~RSM-AUC and CBM-AUC vs.~RSM-AUC; each pl
 \caption{\label{fig:rsm-3-fits-plots-7}Similar to previous plot, for dataset \texttt{D7} (Lucy Warren), \texttt{nPts} = 35.}
 \end{figure}
 
+\hypertarget{rsm-3-fits-slopes-confidence-intervals-summary}{%
+\subsection{Summary of slopes and confidence intervals}\label{rsm-3-fits-slopes-confidence-intervals-summary}}
+
 \begin{table}[H]
 
-\caption{\label{tab:rsm-3-fits-slopes-table1}Summary of slopes and correlations for the two constrained fits: PROPROC AUC vs. RSM AUC and CBM AUC vs. RSM AUC; see below. The average of each slope equals unity to within 0.6 percent.}
+\caption{\label{tab:rsm-3-fits-slopes-table1}Summary of slopes and correlations for the two constrained fits: PROPROC AUC vs. RSM AUC and CBM AUC vs. RSM AUC. The average of each slope equals unity to within 0.6 percent.}
 \centering
 \resizebox{\linewidth}{!}{
 \begin{tabular}[t]{lllll}
 \toprule
-  & mProRsm & R2ProRsm & mCbmRsm & R2CbmRsm\\
+  & m-PR & R2-PR & m-CR & R2-CR\\
 \midrule
-1 & 1.0002 & 0.9997 & 0.9933 & 0.9997\\
-2 & 1.0061 & 0.9998 & 1.0007 & 1\\
-3 & 0.9995 & 1 & 0.9977 & 1\\
-4 & 1.0146 & 0.9998 & 0.9999 & 0.9999\\
-5 & 0.9964 & 0.9995 & 0.9972 & 1\\
+TONY & 1.0002 & 0.9997 & 0.9933 & 0.9997\\
+VD & 1.0061 & 0.9998 & 1.0007 & 1\\
+FR & 0.9995 & 1 & 0.9977 & 1\\
+FED & 1.0146 & 0.9998 & 0.9999 & 0.9999\\
+JT & 0.9964 & 0.9995 & 0.9972 & 1\\
 \addlinespace
-6 & 1.036 & 0.9983 & 0.9953 & 1\\
-7 & 1.0184 & 0.9997 & 1.0059 & 0.9997\\
-8 & 1.0081 & 0.9996 & 0.9976 & 1\\
-9 & 0.9843 & 0.9998 & 0.997 & 1\\
-10 & 0.9989 & 0.9999 & 0.9921 & 0.9999\\
+MAG & 1.036 & 0.9983 & 0.9953 & 1\\
+OPT & 1.0184 & 0.9997 & 1.0059 & 0.9997\\
+PEN & 1.0081 & 0.9996 & 0.9976 & 1\\
+NICO & 0.9843 & 0.9998 & 0.997 & 1\\
+RUS & 0.9989 & 0.9999 & 0.9921 & 0.9999\\
 \addlinespace
-11 & 1.0262 & 0.9963 & 0.9886 & 0.9962\\
-12 & 1.0056 & 0.9987 & 0.971 & 0.9978\\
-13 & 1.0211 & 0.998 & 0.9847 & 0.9986\\
-14 & 1.0027 & 0.9999 & 0.9996 & 1\\
+DOB1 & 1.0262 & 0.9963 & 0.9886 & 0.9962\\
+DOB2 & 1.0056 & 0.9987 & 0.971 & 0.9978\\
+DOB3 & 1.0211 & 0.998 & 0.9847 & 0.9986\\
+FZR & 1.0027 & 0.9999 & 0.9996 & 1\\
 AVG & 1.0084 & 0.9992 & 0.9943 & 0.9994\\
 \addlinespace
 CI & (1.005, 1.012) & NA & (0.992, 0.997) & NA\\
@@ -15344,7 +15331,7 @@ CI & (1.005, 1.012) & NA & (0.992, 0.997) & NA\\
 \end{tabular}}
 \end{table}
 
-Table \ref{tab:rsm-3-fits-slopes-table1}: The first column, labeled \(mProRsm\), shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs.~RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled \(R2ProRsm\), lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs.~RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
+Table \ref{tab:rsm-3-fits-slopes-table1}: The first column, labeled \(m_{PR}\), shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs.~RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled \(R2_{PR}\), lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs.~RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
 
 \hypertarget{rsm-3-fits-discussion-summary}{%
 \section{Discussion / Summary}\label{rsm-3-fits-discussion-summary}}
@@ -15374,12 +15361,6 @@ The main scientific conclusion of this chapter is that search-performance is the
 
 \hypertarget{rsm-3-fits-14-datasets}{%
 \subsection{Datasets}\label{rsm-3-fits-14-datasets}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{?}\StringTok{`}\DataTypeTok{RJafroc-package}\StringTok{`}
-\end{Highlighting}
-\end{Shaded}
 
 The datasets are embedded in ther \texttt{RJafroc} package. They can be viewed in the help file of the package, a partial screen-shot of which is shown next.
 

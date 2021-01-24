@@ -5,7 +5,7 @@
 
 
 ## How much finished {#rsm-3-fits-how-much-finished}
-60%
+70%
 
 
 ## Introduction {#rsm-3-fits-intro}
@@ -41,7 +41,8 @@ ROC methodological advances, namely the Van Dyke (VD) and the Franken (FR) datas
 
 ### Application to two datasets {#rsm-3-fits-two-datasets}
 
-The code uses the function `Compare3ProperRocFits()`, located in `R/compare-3-fits/Compare3ProperRocFits.R`, to compute or retrieve the 3 fits. In the following code:
+The code uses the function `Compare3ProperRocFits()`, located in 
+`R/compare-3-fits/Compare3ProperRocFits.R`, to compute or retrieve the 3 fits. In the following code:
 
 * `startIndx` is the  first `index` to analyze and `endIndx` is the last. 
 * In the current example two datasets are analyzed corresponding to `datasetNames[2]` and `datasetNames[3]`, i.e., VD and FR. 
@@ -112,7 +113,8 @@ The RSM has parameters: $\mu$, $\lambda'$, $\nu'$ and $\zeta_1$. The parameters 
 * `resultsArr[[1]][[2]]$retRsm$lambdaP` is the corresponding $\lambda'$ parameter, and  
 * `resultsArr[[1]][[2]]$retRsm$nuP` is the corresponding $\nu'$ parameter. 
 * `resultsArr[[1]][[2]]$retRsm$zeta1` is the corresponding $\zeta_1$ parameter. 
-* Treatment 2 and reader 1 values would be accessed as `resultsArr[[1]][[6]]$retRsm$mu`, etc.
+* Treatment 2 and reader 1 values would be accessed as 
+`resultsArr[[1]][[6]]$retRsm$mu`, etc.
 * More generally the values are accessed as `[[f]][[(i-1)*J+j]]`, where `f` is the dataset index, `i` is the treatment index, `j` is the reader index and `J` is the total number of readers. 
 * For the Van Dyke dataset `f = 1` and for the Franken dataset `f = 2`.
 
@@ -307,7 +309,7 @@ The next section provides an overview of the most salient findings from analyzin
 With 14 datasets the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms were applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: *all three fitting methods are consistent with a single method-independent AUC*.
 
 
-If the AUCs of the three methods are identical the following relations should hold: 
+If the AUCs of the three methods are identical the following relations hold: 
 
 
 \begin{equation}
@@ -344,18 +346,6 @@ The code for calculating the slopes is in `R/compare-3-fits/slopesConvVsRsm.R` a
 ```r
 ret <- slopesConvVsRsm(datasetNames)
 retCI <- slopesConvVsRsmCI(datasetNames)
-x <- cbind(ret$m_pro_rsm, ret$m_cbm_rsm)
-x <- rbind(x, apply(x,2, mean))
-x  <- round(x, digits = 4)
-z1 <- format(retCI$cislopeProRsm, digits = 4)
-z2 <- format(retCI$cislopeCbmRsm, digits = 3)
-x <- rbind(x, 
-           c(paste0("(", z1[1], ", ", z1[2], ")"), # for seed = 1
-             NA,
-             paste0("(", z2[1], ", ", z2[2], ")"), # for seed = 1
-             NA))
-row.names(x) <- c(as.character(1:14), "AVG", "CI")
-colnames(x) <- c("mProRsm", "R2ProRsm", "mCbmRsm", "R2CbmRsm")
 ```
 
 
@@ -375,11 +365,6 @@ Likewise,
 
 As an example, `ret$p1[[2]]`, the plot plot of $AUC_{PRO}$ vs. of $AUC_{RSM}$ for the Van Dyke dataset (`index` = 2), is shown below:
 
-
-```r
-ret$p1[[2]]
-```
-
 <img src="19b-rsm-3-fits_files/figure-html/unnamed-chunk-10-1.png" width="672" />
 
 It is labeled **D2, nPts = 10** since it corresponds to the Van Dyke dataset, with 10 treatment-reader pairings.
@@ -390,13 +375,13 @@ The slopes and R2 values for the Van Dyke dataset are shown next:
 ```r
 df <- as.data.frame(ret$m_pro_rsm[[1]][2])
 df <- cbind(df, ret$m_pro_rsm[[2]][2], ret$m_cbm_rsm[[1]][2], ret$m_cbm_rsm[[2]][2])
-colnames(df) <- c("m_PR", "R2", "m_CR", "R2")
+colnames(df) <- c("m-PR", "R2", "m-CR", "R2")
 row.names(df) <- "VD"
 print(df)
 ```
 
 ```
-##        m_PR       R2     m_CR        R2
+##        m-PR       R2     m-CR        R2
 ## VD 1.006127 0.999773 1.000699 0.9999832
 ```
 
@@ -404,7 +389,7 @@ print(df)
 ### Confidence intervals and histograms {#rsm-3-fits-confidence-intervals-histograms}
 
 
-The call to `slopesConvVsRsmCI` returns `retCI`, containing:
+The call to `slopesConvVsRsmCI` returns `retCI`, containing the results of the bootstrap analysis:
 
 * `retCI$cislopeProRsm` confidence interval for $<m_{PR}>$ (note that $<...>$ *always* represents an average over 14 datasets)
 * `retCI$cislopeCbmRsm` confidence interval for $<m_{CR}>$
@@ -418,9 +403,9 @@ As examples,
 
 
 ```
-##       retCI$cislopeProRsm retCI$cislopeCbmRsm
-## 2.5%             1.005092           0.9919886
-## 97.5%            1.012285           0.9966149
+##           m-PR      m-CR
+## 2.5%  1.005092 0.9919886
+## 97.5% 1.012285 0.9966149
 ```
 
 The CI for $<m_{PR}>$ is slightly above unity, while that for $<m_{CR}>$ is slightly below. Shown next is the histogram plot for $<m_{PR}>$ and $<m_{CR}>$.
@@ -455,112 +440,116 @@ Shown next are plots of PROPROC-AUC vs. RSM-AUC and CBM-AUC vs. RSM-AUC; each pl
 </div>
 
 
+### Summary of slopes and confidence intervals {#rsm-3-fits-slopes-confidence-intervals-summary}
+
+
+
 
 <table class="table" style="margin-left: auto; margin-right: auto;">
-<caption>(\#tab:rsm-3-fits-slopes-table1)Summary of slopes and correlations for the two constrained fits: PROPROC AUC vs. RSM AUC and CBM AUC vs. RSM AUC; see below. The average of each slope equals unity to within 0.6 percent.</caption>
+<caption>(\#tab:rsm-3-fits-slopes-table1)Summary of slopes and correlations for the two constrained fits: PROPROC AUC vs. RSM AUC and CBM AUC vs. RSM AUC. The average of each slope equals unity to within 0.6 percent.</caption>
  <thead>
   <tr>
    <th style="text-align:left;">   </th>
-   <th style="text-align:left;"> mProRsm </th>
-   <th style="text-align:left;"> R2ProRsm </th>
-   <th style="text-align:left;"> mCbmRsm </th>
-   <th style="text-align:left;"> R2CbmRsm </th>
+   <th style="text-align:left;"> m-PR </th>
+   <th style="text-align:left;"> R2-PR </th>
+   <th style="text-align:left;"> m-CR </th>
+   <th style="text-align:left;"> R2-CR </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> TONY </td>
    <td style="text-align:left;"> 1.0002 </td>
    <td style="text-align:left;"> 0.9997 </td>
    <td style="text-align:left;"> 0.9933 </td>
    <td style="text-align:left;"> 0.9997 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;"> VD </td>
    <td style="text-align:left;"> 1.0061 </td>
    <td style="text-align:left;"> 0.9998 </td>
    <td style="text-align:left;"> 1.0007 </td>
    <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:left;"> FR </td>
    <td style="text-align:left;"> 0.9995 </td>
    <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.9977 </td>
    <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:left;"> FED </td>
    <td style="text-align:left;"> 1.0146 </td>
    <td style="text-align:left;"> 0.9998 </td>
    <td style="text-align:left;"> 0.9999 </td>
    <td style="text-align:left;"> 0.9999 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 5 </td>
+   <td style="text-align:left;"> JT </td>
    <td style="text-align:left;"> 0.9964 </td>
    <td style="text-align:left;"> 0.9995 </td>
    <td style="text-align:left;"> 0.9972 </td>
    <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 6 </td>
+   <td style="text-align:left;"> MAG </td>
    <td style="text-align:left;"> 1.036 </td>
    <td style="text-align:left;"> 0.9983 </td>
    <td style="text-align:left;"> 0.9953 </td>
    <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 7 </td>
+   <td style="text-align:left;"> OPT </td>
    <td style="text-align:left;"> 1.0184 </td>
    <td style="text-align:left;"> 0.9997 </td>
    <td style="text-align:left;"> 1.0059 </td>
    <td style="text-align:left;"> 0.9997 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 8 </td>
+   <td style="text-align:left;"> PEN </td>
    <td style="text-align:left;"> 1.0081 </td>
    <td style="text-align:left;"> 0.9996 </td>
    <td style="text-align:left;"> 0.9976 </td>
    <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 9 </td>
+   <td style="text-align:left;"> NICO </td>
    <td style="text-align:left;"> 0.9843 </td>
    <td style="text-align:left;"> 0.9998 </td>
    <td style="text-align:left;"> 0.997 </td>
    <td style="text-align:left;"> 1 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 10 </td>
+   <td style="text-align:left;"> RUS </td>
    <td style="text-align:left;"> 0.9989 </td>
    <td style="text-align:left;"> 0.9999 </td>
    <td style="text-align:left;"> 0.9921 </td>
    <td style="text-align:left;"> 0.9999 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 11 </td>
+   <td style="text-align:left;"> DOB1 </td>
    <td style="text-align:left;"> 1.0262 </td>
    <td style="text-align:left;"> 0.9963 </td>
    <td style="text-align:left;"> 0.9886 </td>
    <td style="text-align:left;"> 0.9962 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 12 </td>
+   <td style="text-align:left;"> DOB2 </td>
    <td style="text-align:left;"> 1.0056 </td>
    <td style="text-align:left;"> 0.9987 </td>
    <td style="text-align:left;"> 0.971 </td>
    <td style="text-align:left;"> 0.9978 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 13 </td>
+   <td style="text-align:left;"> DOB3 </td>
    <td style="text-align:left;"> 1.0211 </td>
    <td style="text-align:left;"> 0.998 </td>
    <td style="text-align:left;"> 0.9847 </td>
    <td style="text-align:left;"> 0.9986 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 14 </td>
+   <td style="text-align:left;"> FZR </td>
    <td style="text-align:left;"> 1.0027 </td>
    <td style="text-align:left;"> 0.9999 </td>
    <td style="text-align:left;"> 0.9996 </td>
@@ -583,7 +572,8 @@ Shown next are plots of PROPROC-AUC vs. RSM-AUC and CBM-AUC vs. RSM-AUC; each pl
 </tbody>
 </table>
 
-Table \@ref(tab:rsm-3-fits-slopes-table1): The first column, labeled $mProRsm$, shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs. RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled $R2ProRsm$, lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs. RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
+
+Table \@ref(tab:rsm-3-fits-slopes-table1): The first column, labeled $m_{PR}$, shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs. RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled $R2_{PR}$, lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs. RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
 
 
 ## Discussion / Summary {#rsm-3-fits-discussion-summary}
@@ -611,12 +601,6 @@ The main scientific conclusion of this chapter is that search-performance is the
 
 ## Appendices {#rsm-3-fits-appendices}
 ### Datasets {#rsm-3-fits-14-datasets}
-
-
-```r
-?`RJafroc-package`
-```
-
 
 The datasets are embedded in ther `RJafroc` package. They can be viewed in the help file of the package, a partial screen-shot of which is shown next.
 
