@@ -450,10 +450,10 @@ Shown next are plots of PROPROC-AUC vs. RSM-AUC and CBM-AUC vs. RSM-AUC; each pl
  <thead>
   <tr>
    <th style="text-align:left;">   </th>
-   <th style="text-align:left;"> m-PR </th>
-   <th style="text-align:left;"> R2-PR </th>
-   <th style="text-align:left;"> m-CR </th>
-   <th style="text-align:left;"> R2-CR </th>
+   <th style="text-align:left;"> $m_{PR}$ </th>
+   <th style="text-align:left;"> $R^2_{PR}$ </th>
+   <th style="text-align:left;"> $m_{CR}$ </th>
+   <th style="text-align:left;"> $R^2_{CR}$ </th>
   </tr>
  </thead>
 <tbody>
