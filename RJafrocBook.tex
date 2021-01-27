@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-01-25}
+\date{2021-01-27}
 
 \begin{document}
 \maketitle
@@ -7225,7 +7225,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.1223746          1   0.28940772}
+\CommentTok{#> 1    1.2606299          1    0.2615319}
 \end{Highlighting}
 \end{Shaded}
 
@@ -14826,7 +14826,7 @@ This chapter describes an approach to fitting ROC curves, instead of FROC curves
 \hypertarget{rsm-3-fits-how-much-finished}{%
 \section{How much finished}\label{rsm-3-fits-how-much-finished}}
 
-70\%
+75\%
 
 \hypertarget{rsm-3-fits-intro}{%
 \section{Introduction}\label{rsm-3-fits-intro}}
@@ -14856,7 +14856,7 @@ This chapter compares these methods for a number of datasets. Comparing the RSM 
 \hypertarget{rsm-3-fits-applications}{%
 \section{Applications}\label{rsm-3-fits-applications}}
 
-The RSM, PROPROC and CBM algorithms were applied to the 14 datasets described in \ref{rsm-3-fits-14-datasets}. The datasets are indexed as described in \ref{rsm-3-fits-one-dataset-indexing}. To save time the datasets have already been analyzed and the location of pre-analyzed results files are in \ref{rsm-3-fits-one-dataset-proproc} and \ref{rsm-3-fits-pre-analyzed-results}.
+The RSM, PROPROC and CBM algorithms were applied to the 14 embedded datasets described in \ref{rsm-3-fits-14-datasets}. The datasets have already been analyzed and the location of pre-analyzed results files are in \ref{rsm-3-fits-pre-analyzed-results}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -14868,27 +14868,23 @@ The RSM, PROPROC and CBM algorithms were applied to the 14 datasets described in
 \end{Highlighting}
 \end{Shaded}
 
-Instead of going through all 14 datasets in the following we focus on two ROC datasets widely used to illustrate
-ROC methodological advances, namely the Van Dyke (VD) and the Franken (FR) datasets.
+In the following we focus on just two ROC datasets, which have been widely used in the literature to illustrate ROC methodological advances, namely the Van Dyke (VD) and the Franken (FR) datasets.
 
 \hypertarget{rsm-3-fits-two-datasets}{%
 \subsection{Application to two datasets}\label{rsm-3-fits-two-datasets}}
 
-The code uses the function \texttt{Compare3ProperRocFits()}, located in
-\texttt{R/compare-3-fits/Compare3ProperRocFits.R}, to compute or retrieve the 3 fits. In the following code:
-
 \begin{itemize}
 \tightlist
 \item
+  The code uses the function \texttt{Compare3ProperRocFits()}.
+\item
+  The code file is \texttt{R/compare-3-fits/Compare3ProperRocFits.R}.
+\item
   \texttt{startIndx} is the first \texttt{index} to analyze and \texttt{endIndx} is the last.
 \item
-  In the current example two datasets are analyzed corresponding to \texttt{datasetNames{[}2{]}} and \texttt{datasetNames{[}3{]}}, i.e., VD and FR.
+  In the current example \texttt{startIndx\ =\ 2} and \texttt{endIndx\ =\ 3}; i.e., two datasets are analyzed corresponding to \texttt{datasetNames{[}2{]}} and \texttt{datasetNames{[}3{]}}, i.e., the VD and FR datasets. \footnote{To analyze all datasets one sets \texttt{startIndx\ \textless{}-\ \ 1} and \texttt{endIndx\ \textless{}-\ \ 14}.}
 \item
-  To analyze all datasets one would set \texttt{startIndx\ \textless{}-\ \ 1} and \texttt{endIndx\ \textless{}-\ \ 14}.
-\item
-  \texttt{reAnalyze} is set to \texttt{FALSE} causing pre-analyzed results (to be found in directory \texttt{R/compare-3-fits/RSM6}) to be retrieved.
-\item
-  if \texttt{reAnalyze} is \texttt{TRUE} the analysis is repeated, leading to possibly slightly different results (the maximum likelihood parameter-search algorithm has inherent randomness aimed at avoiding finding false local maxima).
+  \texttt{reAnalyze} is set to \texttt{FALSE} causing pre-analyzed results (to be found in directory \texttt{R/compare-3-fits/RSM6}) to be retrieved. If \texttt{reAnalyze} is \texttt{TRUE} the analysis is repeated, leading to possibly slightly different results (the maximum likelihood parameter-search algorithm has inherent randomness aimed at avoiding finding false local maxima).
 \item
   The fitted parameter results are contained in \texttt{ret\$allResults} and the \emph{composite plots} (i.e., 3 combined plots corresponding to the three proper ROC fitting algorithms) are contained in \texttt{ret\$allPlots}.
 \item
@@ -14914,12 +14910,20 @@ The code uses the function \texttt{Compare3ProperRocFits()}, located in
 \end{Highlighting}
 \end{Shaded}
 
-We next show how to display the composite plots.
+We show next how to display the composite plots.
 
-\hypertarget{rsm-3-fits-composite-plot}{%
-\subsection{Displaying a composite plot}\label{rsm-3-fits-composite-plot}}
+\hypertarget{rsm-3-fits-composite-plots}{%
+\section{Displaying composite plots}\label{rsm-3-fits-composite-plots}}
 
-The \texttt{plotArr} list contains plots for the two datasets. The Van Dyke dataset plots are in \texttt{plotArr{[}{[}1{]}{]}} and the Franken in \texttt{plotArr{[}{[}2{]}{]}}. The Van Dyke plots contain \(I \times J = 2 \times 5 = 10\) composite plots, and similarly for the Franken dataset (both datasets consist of 2 treatments and 5 readers). The following shows how to display the composite plot for the Van Dyke dataset for treatment 1 and reader 2.
+\begin{itemize}
+\tightlist
+\item
+  The \texttt{plotArr} list contains plots for the two datasets. The Van Dyke plots are in \texttt{plotArr{[}{[}1{]}{]}} and the Franken in \texttt{plotArr{[}{[}2{]}{]}}.
+\item
+  The Van Dyke plots contain \(I \times J = 2 \times 5 = 10\) composite plots, and similarly for the Franken dataset (both datasets consist of 2 treatments and 5 readers).
+\item
+  The following shows how to display the composite plot for the Van Dyke dataset for treatment 1 and reader 2.
+\end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -14953,17 +14957,17 @@ The following example displays the composite plots for the Franken dataset, trea
 
 \includegraphics{19b-rsm-3-fits_files/figure-latex/unnamed-chunk-3-1.pdf}
 
-We next show how to display the parameters corresponding to the fitted curves.
+Shown next is how to display the parameters corresponding to the fitted curves.
 
-\hypertarget{rsm-3-fits-rsm-parameter-values}{%
-\subsection{Displaying RSM parameter values}\label{rsm-3-fits-rsm-parameter-values}}
+\hypertarget{rsm-3-fits-rsm-parameters}{%
+\section{Displaying RSM parameters}\label{rsm-3-fits-rsm-parameters}}
 
 The RSM has parameters: \(\mu\), \(\lambda'\), \(\nu'\) and \(\zeta_1\). The parameters corresponding to the RSM plots are accessed as shown next.
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{resultsArr{[}{[}1{]}{]}{[}{[}2{]}{]}\$retRsm\$mu} is the RSM \(\mu\) parameter for dataset 1, treatment 1 and reader 2,
+  \texttt{resultsArr{[}{[}1{]}{]}{[}{[}2{]}{]}\$retRsm\$mu} is the RSM \(\mu\) parameter for dataset 1 (i.e., Van Dyke dataset), treatment 1 and reader 2,
 \item
   \texttt{resultsArr{[}{[}1{]}{]}{[}{[}2{]}{]}\$retRsm\$lambdaP} is the corresponding \(\lambda'\) parameter, and\\
 \item
@@ -15010,6 +15014,12 @@ The first example displays RSM parameters for the Van Dyke dataset, treatment 1 
 
 The next example displays RSM parameters for the Franken dataset, treatment 2 and reader 3:
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{f <-}\StringTok{ }\DecValTok{2}\NormalTok{;i <-}\StringTok{ }\DecValTok{2}\NormalTok{; j <-}\StringTok{ }\DecValTok{3}\NormalTok{;J <-}\StringTok{ }\DecValTok{5}
+\end{Highlighting}
+\end{Shaded}
+
 \begin{verbatim}
 ## RSM parameters, Franken dataset, treatment 2, reader 3: 
 ## mu =  3.287996 
@@ -15024,8 +15034,8 @@ The next example displays RSM parameters for the Franken dataset, treatment 2 an
 
 The first four values are the fitted values for the RSM parameters \(\mu\), \(\lambda'\), \(\nu'\) and \(\zeta_1\). The next value is the AUC under the fitted RSM curve followed by its standard error. The last two values are the initial and final values of negative log-likelihood \footnote{The initial value is calculated using initial estimates of parameters and the final value is that resulting from the log-likelihood maximization procedure. Since negative log-likelihood is being \emph{minimized}, the final value is smaller than the initial value.}.
 
-\hypertarget{rsm-3-fits-cbm-parameter-values}{%
-\subsection{Displaying CBM parameter values}\label{rsm-3-fits-cbm-parameter-values}}
+\hypertarget{rsm-3-fits-cbm-parameters}{%
+\section{Displaying CBM parameters}\label{rsm-3-fits-cbm-parameters}}
 
 CBM has parameters \(\mu_{CBM}\), \(\alpha\) and \(\zeta_1\). The next example displays CBM parameters and AUC etc. for the Van Dyke dataset, treatment 1 and reader 2:
 
@@ -15056,6 +15066,12 @@ CBM has parameters \(\mu_{CBM}\), \(\alpha\) and \(\zeta_1\). The next example d
 
 The next example displays CBM parameters for the Franken dataset, treatment 2 and reader 3:
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{f <-}\StringTok{ }\DecValTok{2}\NormalTok{;i <-}\StringTok{ }\DecValTok{2}\NormalTok{; j <-}\StringTok{ }\DecValTok{3}\NormalTok{;J <-}\StringTok{ }\DecValTok{5}
+\end{Highlighting}
+\end{Shaded}
+
 \begin{verbatim}
 ## CBM parameters, Franken dataset, treatment 2, reader 3: 
 ## mu =  2.533668 
@@ -15069,8 +15085,8 @@ The next example displays CBM parameters for the Franken dataset, treatment 2 an
 
 The first three values are the fitted values for the CBM parameters \(\mu\), \(\alpha\) and \(\zeta_1\). The next value is the AUC under the fitted CBM curve followed by its standard error. The last two values are the initial and final values of negative log-likelihood.
 
-\hypertarget{rsm-3-fits-proproc-parameter-values}{%
-\subsection{Displaying PROPROC parameter values}\label{rsm-3-fits-proproc-parameter-values}}
+\hypertarget{rsm-3-fits-proproc-parameters}{%
+\section{Displaying PROPROC parameters}\label{rsm-3-fits-proproc-parameters}}
 
 \texttt{PROPROC} displayed parameters are \(c\) and \(d_a\). The next example displays PROPROC parameters for the Van Dyke dataset, treatment 1 and reader 2:
 
@@ -15091,9 +15107,15 @@ The first three values are the fitted values for the CBM parameters \(\mu\), \(\
 ## AUC =  0.8910714
 \end{verbatim}
 
-The values are identical to those listed for treatment 1 and reader 2 in Fig. \ref{fig:rsm-3-fits-proproc-output-van-dyke}. Other values, such as standard error of AUC, are not provided by PROPROC software.
+The values are identical to those listed for treatment 1 and reader 2 in Fig. \ref{fig:rsm-3-fits-proproc-output-van-dyke}. Other statistics, such as standard error of AUC, are not provided by PROPROC software.
 
 The next example displays PROPROC parameters for the Franken dataset, treatment 2 and reader 3:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{f <-}\StringTok{ }\DecValTok{2}\NormalTok{;i <-}\StringTok{ }\DecValTok{2}\NormalTok{; j <-}\StringTok{ }\DecValTok{3}\NormalTok{;J <-}\StringTok{ }\DecValTok{5}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
 ## PROPROC parameters, Franken dataset, treatment 2, reader 3: 
@@ -15102,53 +15124,14 @@ The next example displays PROPROC parameters for the Franken dataset, treatment 
 ## AUC =  0.8252824
 \end{verbatim}
 
-Shown next are all 10 composite plots for the Van Dyke dataset.
-
-\hypertarget{rsm-3-fits-representative-plots-van-dyke}{%
-\section{Plots for Van Dyke dataset}\label{rsm-3-fits-representative-plots-van-dyke}}
-
-The following plots are arranged in pairs, with the left plot corresponding to treatment 1 and the right to treatment 2.
-
-\begin{figure}
-\centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-1-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-1-1}Composite plots in both treatments for Van Dyke dataset, reader 1.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-2-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-1-2}Composite plots in both treatments for Van Dyke dataset, reader 2. For treatment 2 the RSM and PROPROC fits are indistinguishable.}
-\end{figure}
-
-The RSM parameter values for the treatment 2 plot are: \(\mu\) = 5.767237, \(\lambda'\) = 2.7212621, \(\nu'\) = 0.8021718, \(\zeta_1\) = -1.5717303. The corresponding CBM values are \(\mu\) = 5.4464738, \(\alpha\) = 0.8023609, \(\zeta_1\) = -1.4253826. The RSM and CBM \(\mu\) parameters are very close and likewise the RSM \(\nu'\) and CBM \(\alpha\) parameters are very close - this is because they have similar physical meanings, which is investigated later in this chapter TBA. {[}The CBM does not have a parameter analogous to the RSM \(\lambda'\) parameter.{]}
-
-\begin{figure}
-\centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-3-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-1-3}Composite plots in both treatments for Van Dyke dataset, reader 3.}
-\end{figure}
-
-The RSM parameters for the treatment 1 plot are: \(\mu\) = 3.1527627, \(\lambda'\) = 9.9986154, \(\nu'\) = 0.9899933, \(\zeta_1\) = 1.1733988. The corresponding CBM values are \(\mu\) = 2.1927712, \(\alpha\) = 0.98, \(\zeta_1\) = -0.5168848.
-
-\begin{figure}
-\centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-4-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-1-4}Composite plots in both treatments for Van Dyke dataset, reader 4. For treatment 2 the 3 plots are indistinguishable and each one has AUC = 1. The degeneracy is due to all operating points being on the axes of the unit square.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-5-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-1-5}Composite plots in both treatments for Van Dyke dataset, reader 5.}
-\end{figure}
+All 10 composite plots for the Van Dyke dataset are shown in the Appendix to this chapter, \ref{rsm-3-fits-representative-plots-van-dyke}.
 
 The next section provides an overview of the most salient findings from analyzing the datasets.
 
 \hypertarget{rsm-3-fits-overview}{%
 \section{Overview of findings}\label{rsm-3-fits-overview}}
 
-With 14 datasets the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which the three algorithms were applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: \emph{all three fitting methods are consistent with a single method-independent AUC}.
+With 14 datasets the total number of individual modality-reader combinations is 236: in other words, there are 236 datasets to each of which three algorithms were applied. It is easy to be overwhelmed by the numbers and this section summarizes the most important conclusion: \emph{for each dataset, treatment and reader, the three fitting methods are consistent with a single method-independent AUC}.
 
 If the AUCs of the three methods are identical the following relations hold:
 
@@ -15167,26 +15150,28 @@ The abbreviations are as follows:
 \begin{itemize}
 \tightlist
 \item
-  PRO = PROPROC,
+  PRO = PROPROC
 \item
-  PR = PROPROC vs.~RSM and
+  PR = PROPROC vs.~RSM
 \item
   CR = CBM vs.~RSM.
 \end{itemize}
 
-For example, a plot of PROPROC AUC vs.~RSM AUC should be linear with zero intercept and slope \(m_{PR}\). The reason for the \emph{zero intercept} is that if one of the AUCs indicates zero performance the other AUC must also be zero. Likewise, chance level performance (AUC = 0.5) must be common to all method of estimating AUC. Finally, perfect performance must be common to all methods. All of these conditions require a zero-intercept linear fit.
+For each dataset the plot of PROPROC AUC vs.~RSM AUC should be linear with zero intercept and slope \(m_{PR}\). The reason for the \emph{zero intercept} is that if one of the AUCs indicates zero performance the other AUC must also be zero. Likewise, chance level performance (AUC = 0.5) must be common to all method of estimating AUC. Finally, perfect performance must be common to all methods. All of these conditions require a zero-intercept linear fit.
 
 \hypertarget{rsm-3-fits-slopes}{%
 \subsection{Slopes}\label{rsm-3-fits-slopes}}
 
-An analysis was conducted to determine the average slopes \(<m_{PR}>\) and \(<m_{CR}>\), where \(<...>\) represents an average over all datasets, and a bootstrap analysis was conducted to determine the corresponding confidence intervals.
+Denote PROPROC AUC for dataset \(f\), treatment \(i\) and reader \(j\) by \(\theta^{PRO}_{fij}\). Likewise, the corresponding RSM and CBM values are denoted by \(\theta^{RSM}_{fij}\) and \(\theta^{CBM}_{fij}\), respectively. For a given dataset the slope of the PROPROC values vs.~the RSM values is denoted \(m_{PR,f}\). The (grand) average over all datasets is denoted \(m^{PR}_\bullet\). Likewise, the average of the CBM AUC values vs.~the RSM value is denoted \(m^{CR}_\bullet\).
 
-The code for calculating the slopes is in \texttt{R/compare-3-fits/slopesConvVsRsm.R} and that for calculating the bootstrap confidence intervals is in \texttt{R/compare-3-fits/slopesConvVsRsmCI.R}.
+An analysis was conducted to determine the average slopes and a bootstrap analysis was conducted to determine the corresponding confidence intervals.
+
+The code for calculating the average slopes is in \texttt{R/compare-3-fits/slopesConvVsRsm.R} and that for calculating the bootstrap confidence intervals is in \texttt{R/compare-3-fits/slopesAucsConvVsRsmCI.R}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{ret <-}\StringTok{ }\KeywordTok{slopesConvVsRsm}\NormalTok{(datasetNames)}
-\NormalTok{retCI <-}\StringTok{ }\KeywordTok{slopesConvVsRsmCI}\NormalTok{(datasetNames)}
+\NormalTok{retCI <-}\StringTok{ }\KeywordTok{slopesAucsConvVsRsmCI}\NormalTok{(datasetNames)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -15195,13 +15180,13 @@ The call to function \texttt{slopesConvVsRsm()} returns \texttt{ret}, which cont
 \begin{itemize}
 \tightlist
 \item
-  \texttt{ret\$p1{[}{[}2{]}{]}} is the plot of \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\) for the Van Dyke dataset (\texttt{index} = 2).
+  \texttt{ret\$p1{[}{[}2{]}{]}} is the plot of \(\theta^{PRO}_{2ij}\) vs.~\(\theta^{RSM}_{2ij}\) for the Van Dyke dataset.
 \item
-  \texttt{ret\$p2{[}{[}2{]}{]}} is the plot of \(AUC_{CBM}\) vs.~of \(AUC_{RSM}\) for the Van Dyke dataset (\texttt{index} = 2).
+  \texttt{ret\$p2{[}{[}2{]}{]}} is the plot of \(\theta^{CBM}_{2ij}\) vs.~\(\theta^{RSM}_{2ij}\) for the Van Dyke dataset.
 \item
-  \texttt{ret\$m\_pro\_rsm} has two columns, each of length 14, the slopes \(m_{PR}\) for the datasets and the corresponding R2 values.
+  \texttt{ret\$m\_pro\_rsm} has two columns, each of length 14, the slopes \(m_{PR,f}\) for the datasets (indexed by \texttt{f}) and the corresponding \(R^2\) values. The first column is \texttt{ret\$m\_pro\_rsm{[}{[}1{]}{]}} and the second is \texttt{ret\$m\_pro\_rsm{[}{[}2{]}{]}}.
 \item
-  \texttt{ret\$m\_cbm\_rsm} has two columns, each of length 14, the slopes \(m_{CR}\) for the datasets and the corresponding R2 values.
+  \texttt{ret\$m\_cbm\_rsm} has two columns, each of length 14, the slopes \(m_{CR,f}\) for the datasets and the corresponding \(R^2\) values.
 \end{itemize}
 
 Likewise,
@@ -15209,55 +15194,57 @@ Likewise,
 \begin{itemize}
 \tightlist
 \item
-  \texttt{ret\$p1{[}{[}3{]}{]}} is the plot of \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\) for the Franken dataset (\texttt{index} = 3).
+  \texttt{ret\$p1{[}{[}3{]}{]}} is the plot of \(\theta^{PRO}_{3ij}\) vs.~\(\theta^{RSM}_{3ij}\) for the Franken dataset.
 \item
-  \texttt{ret\$p2{[}{[}3{]}{]}} is the plot of \(AUC_{CBM}\) vs.~of \(AUC_{RSM}\) for the Franken dataset (\texttt{index} = 3).
+  \texttt{ret\$p2{[}{[}3{]}{]}} is the plot of \(\theta^{CBM}_{3ij}\) vs.~\(\theta^{RSM}_{3ij}\) for the Franken dataset.
 \end{itemize}
 
-As an example, \texttt{ret\$p1{[}{[}2{]}{]}}, the plot plot of \(AUC_{PRO}\) vs.~of \(AUC_{RSM}\) for the Van Dyke dataset (\texttt{index} = 2), is shown below:
+As examples, \texttt{ret\$p1{[}{[}2{]}{]}} is the plot of \(\theta^{PRO}_{2ij}\) vs.~\(\theta^{RSM}_{2ij}\) for the Van Dyke dataset and \texttt{ret\$p1{[}{[}3{]}{]}} is the plot of \(\theta^{CBM}_{2ij}\) vs.~\(\theta^{RSM}_{2ij}\) for the Van Dyke dataset, shown next. Each plot has the constrained linear fit superposed on the data points; each data point represents a distinct modality-reader combination.
 
-\includegraphics{19b-rsm-3-fits_files/figure-latex/unnamed-chunk-10-1.pdf}
+\begin{figure}
+\centering
+\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-2-1.pdf}
+\caption{\label{fig:rsm-3-fits-plots-2}Van Dyke dataset: Left plot is PROPROC-AUC vs.~RSM-AUC with the superposed constrained linear fit. The number of data points is \texttt{nPts} = 10. Right plot is CBM-AUC vs.~RSM-AUC.}
+\end{figure}
 
-It is labeled \textbf{D2, nPts = 10} since it corresponds to the Van Dyke dataset, with 10 treatment-reader pairings.
+The next plot shows corresponding plots for the Franken dataset.
 
-The slopes and R2 values for the Van Dyke dataset are shown next:
+\begin{figure}
+\centering
+\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-3-1.pdf}
+\caption{\label{fig:rsm-3-fits-plots-3}Similar to previous plot, for Franken dataset.}
+\end{figure}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{df <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(ret}\OperatorTok{$}\NormalTok{m_pro_rsm[[}\DecValTok{1}\NormalTok{]][}\DecValTok{2}\NormalTok{])}
-\NormalTok{df <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(df, ret}\OperatorTok{$}\NormalTok{m_pro_rsm[[}\DecValTok{2}\NormalTok{]][}\DecValTok{2}\NormalTok{], ret}\OperatorTok{$}\NormalTok{m_cbm_rsm[[}\DecValTok{1}\NormalTok{]][}\DecValTok{2}\NormalTok{], ret}\OperatorTok{$}\NormalTok{m_cbm_rsm[[}\DecValTok{2}\NormalTok{]][}\DecValTok{2}\NormalTok{])}
-\KeywordTok{colnames}\NormalTok{(df) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"m-PR"}\NormalTok{, }\StringTok{"R2"}\NormalTok{, }\StringTok{"m-CR"}\NormalTok{, }\StringTok{"R2"}\NormalTok{)}
-\KeywordTok{row.names}\NormalTok{(df) <-}\StringTok{ "VD"}
-\KeywordTok{print}\NormalTok{(df)}
-\end{Highlighting}
-\end{Shaded}
+The average slopes and \(R^2\) values (\(R^2\) is the fraction of variance explained by the constrained straight line fit) are listed in Table \ref{tab:rsm-3-fits-slopes-table1}.
+
+The slopes and \(R^2\) values for the Van Dyke dataset are shown next:
 
 \begin{verbatim}
-##        m-PR       R2     m-CR        R2
+##        m-PR    R2-PR     m-CR     R2-CR
 ## VD 1.006127 0.999773 1.000699 0.9999832
 \end{verbatim}
 
-\hypertarget{rsm-3-fits-confidence-intervals-histograms}{%
-\subsection{Confidence intervals and histograms}\label{rsm-3-fits-confidence-intervals-histograms}}
+\hypertarget{rsm-3-fits-confidence-intervals}{%
+\subsection{Confidence intervals}\label{rsm-3-fits-confidence-intervals}}
 
-The call to \texttt{slopesConvVsRsmCI} returns \texttt{retCI}, containing the results of the bootstrap analysis:
+The call to \texttt{slopesAucsConvVsRsmCI} returns \texttt{retCI}, containing the results of the bootstrap analysis (note the bullet symbols \(\bullet\) denoting averages over 14 datasets):
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{retCI\$cislopeProRsm} confidence interval for \(<m_{PR}>\) (note that \(<...>\) \emph{always} represents an average over 14 datasets)
+  \texttt{retCI\$cislopeProRsm} confidence interval for \(m^{PR}_\bullet\)
 \item
-  \texttt{retCI\$cislopeCbmRsm} confidence interval for \(<m_{CR}>\)
+  \texttt{retCI\$cislopeCbmRsm} confidence interval for \(m^{CR}_\bullet\)
 \item
-  \texttt{retCI\$histSlopeProRsm} histogram plot for 200 bootstrap values of \(<m_{PR}>\)
+  \texttt{retCI\$histSlopeProRsm} histogram plot for 200 bootstrap values of \(m^{PR}_\bullet\)
 \item
-  \texttt{retCI\$histSlopeCbmRsm} histogram plot for 200 bootstrap values of \(<m_{CR}>\)
+  \texttt{retCI\$histSlopeCbmRsm} histogram plot for 200 bootstrap values of \(m^{CR}_\bullet\)
 \item
-  \texttt{retCI\$ciAvgAucRsm} confidence interval for 200 bootstrap values of \(<AUC_{RSM}>\)
+  \texttt{retCI\$ciAvgAucRsm} confidence interval for 200 bootstrap values of \(\theta^{RSM}_\bullet\)
 \item
-  \texttt{retCI\$ciAvgAucPro} confidence interval for 200 bootstrap values of \(<AUC_{PRO}>\)
+  \texttt{retCI\$ciAvgAucPro} confidence interval for 200 bootstrap values of \(\theta^{PRO}_\bullet\)
 \item
-  \texttt{retCI\$ciAvgAucCbm} confidence interval for 200 bootstrap values of \(<AUC_{CBM}>\)
+  \texttt{retCI\$ciAvgAucCbm} confidence interval for 200 bootstrap values of \(\theta^{CBM}_\bullet\)
 \end{itemize}
 
 As examples,
@@ -15268,32 +15255,12 @@ As examples,
 ## 97.5% 1.012285 0.9966149
 \end{verbatim}
 
-The CI for \(<m_{PR}>\) is slightly above unity, while that for \(<m_{CR}>\) is slightly below. Shown next is the histogram plot for \(<m_{PR}>\) and \(<m_{CR}>\).
+The CI for \(m^{PR}_\bullet\) is slightly above unity, while that for \(m^{CR}_\bullet\) is slightly below. Shown next is the histogram plot for \(m^{PR}_\bullet\) (left plot) and \(m^{CR}_\bullet\) (right plot). Quantiles of these histograms were used to compute the confidence intervals cited above.
 
 \begin{figure}
 \centering
 \includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-histo-slopes-1.pdf}
-\caption{\label{fig:rsm-3-fits-histo-slopes}TBA.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-2-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-2}Dataset \texttt{D2} (Van Dyke): Left plot is PROPROC-AUC vs.~RSM-AUC with the superposed constrained linear fit. The number of data points is \texttt{nPts} = 10, equal to \texttt{IJ}. Right plot is CBM-AUC vs.~RSM-AUC. The slopes and R2 values are listed in the following Table.}
-\end{figure}
-
-Shown next are plots of PROPROC-AUC vs.~RSM-AUC and CBM-AUC vs.~RSM-AUC; each plot has the constrained linear fit superposed on the data points. Each point corresponds to a distinct modality-reader combination. The average slopes and \(R^2\) values (\(R^2\) is the fraction of variance explained by the constrained straight line fit) are listed in Table \ref{tab:rsm-3-fits-slopes-table1}.
-
-\begin{figure}
-\centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-3-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-3}Similar to previous plot, for dataset \texttt{D3} (Franken), \texttt{nPts} = 20.}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-7-1.pdf}
-\caption{\label{fig:rsm-3-fits-plots-7}Similar to previous plot, for dataset \texttt{D7} (Lucy Warren), \texttt{nPts} = 35.}
+\caption{\label{fig:rsm-3-fits-histo-slopes}Histograms of slope PROPROC AUC vs.~RSM AUC (left) and slope CBM AUC vs.~RSM AUC (right).}
 \end{figure}
 
 \hypertarget{rsm-3-fits-slopes-confidence-intervals-summary}{%
@@ -15331,14 +15298,14 @@ CI & (1.005, 1.012) & NA & (0.992, 0.997) & NA\\
 \end{tabular}}
 \end{table}
 
-Table \ref{tab:rsm-3-fits-slopes-table1}: The first column, labeled \(m_{PR}\), shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs.~RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled \(R2_{PR}\), lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs.~RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
+Table \ref{tab:rsm-3-fits-slopes-table1}: The first column, labeled \(m_{PR}\), shows results of fitting straight lines, constrained to go through the origin, to fitted PROPROC AUC vs.~RSM AUC results, for each of the 14 datasets, as labeled. The second column, labeled \(R^2_{PR}\), lists the square of the correlation coefficient for each fit. The third and fourth columns list the corresponding values for the CBM AUC vs.~RSM AUC fits. The second last row lists the averages (AVG) and the last row lists the 95 percent confidence intervals (CI) for the average slopes.
 
 \hypertarget{rsm-3-fits-discussion-summary}{%
 \section{Discussion / Summary}\label{rsm-3-fits-discussion-summary}}
 
 Over the years, there have been several attempts at fitting FROC data. Prior to the RSM-based ROC curve approach described in this chapter, all methods were aimed at fitting FROC curves, in the mistaken belief that this approach was using all the data. The earliest was the author's FROCFIT software36. This was followed by Swensson's approach37, subsequently shown to be equivalent to the author's earlier work, as far as predicting the FROC curve was concerned11. In the meantime, CAD developers, who relied heavily on the FROC curve to evaluate their algorithms, developed an empirical approach that was subsequently put on a formal basis in the IDCA method12.
 
-This chapter describes an approach to fitting ROC curves, instead of FROC curves, using the RSM. Fits were described for 14 datasets, comprising 236 distinct treatment-reader combinations. All fits and parameter values are viewable in the online ``Supplemental Material'' directory corresponding to this chapter. Validity of fit was assessed by the chisquare goodness of fit p-value; unfortunately using adjacent bin combining this could not be calculated in most instances; ongoing research at other ways of validating the fits is underway. PROPROC and CBM were fitted to the same datasets, yielding further validation and insights. One of the insights was the finding that the AUCS were almost identical, with PROPROC yielding the highest value, followed by CBM and closely by the RSM. The PROPROC-AUC / CBM-AUC, vs.~RSM-AUC straight-line fits, constrained to go through the origin, had slopes 1.0255 (1.021, 1.030) and 1.0097 (1.006, 1.013), respectively. The R2 values were generally in excess of 0.999, indicative of excellent fits.
+This chapter describes an approach to fitting ROC curves, instead of FROC curves, using the RSM. Fits were described for 14 datasets, comprising 236 distinct treatment-reader combinations. All fits and parameter values are viewable in the online ``Supplemental Material'' directory corresponding to this chapter. Validity of fit was assessed by the chisquare goodness of fit p-value; unfortunately using adjacent bin combining this could not be calculated in most instances; ongoing research at other ways of validating the fits is underway. PROPROC and CBM were fitted to the same datasets, yielding further validation and insights. One of the insights was the finding that the AUCS were almost identical, with PROPROC yielding the highest value, followed by CBM and closely by the RSM. The PROPROC-AUC / CBM-AUC, vs.~RSM-AUC straight-line fits, constrained to go through the origin, had slopes 1.0255 (1.021, 1.030) and 1.0097 (1.006, 1.013), respectively. The \(R^2\) values were generally in excess of 0.999, indicative of excellent fits.
 
 On the face of it, fitting the ROC curve seems to be ignoring much of the data. As an example, the ROC rating on a non-diseased case is the rating of the highest-rated mark on that image, or negative infinity if the case has no marks. If the case has several NL marks, only the highest rated one is used. In fact the highest rated mark contains information about the other marks on the case, namely they were all rated lower. There is a statistical term for this, namely sufficiency38. As an example, the highest of a number of samples from a uniform distribution is a sufficient statistic, i.e., it contains all the information contained in the observed samples. While not quite the same for normally distributed values, neglect of the NLs rated lower is not as bad as might seem at first. A similar argument applies to LLs and NLs on diseased cases. The advantage of fitting to the ROC is that the coupling of NLs and LLs on diseased cases breaks the degeneracy problem described in §18.2.3.
 
@@ -15360,9 +15327,9 @@ The main scientific conclusion of this chapter is that search-performance is the
 \section{Appendices}\label{rsm-3-fits-appendices}}
 
 \hypertarget{rsm-3-fits-14-datasets}{%
-\subsection{Datasets}\label{rsm-3-fits-14-datasets}}
+\section{Datasets}\label{rsm-3-fits-14-datasets}}
 
-The datasets are embedded in ther \texttt{RJafroc} package. They can be viewed in the help file of the package, a partial screen-shot of which is shown next.
+The datasets are embedded in ther \texttt{RJafroc} package. They can be viewed in the help file of the package, a partial screen-shot of which is shown next \footnote{The raw datasets (Excel files) are in folder \texttt{R/compare-3-fits/Datasets} and file \texttt{R/compare-3-fits/loadDataFile.R} shows the correspondence between \texttt{datasetNames} and a dataset: for example, the Van Dyke dataset corresponds to file \texttt{VanDykeData.xlsx} in the \texttt{R/compare-3-fits/Datasets} folder.}.
 
 \begin{figure}
 
@@ -15557,32 +15524,8 @@ The datasets are identified in the code by dataset\texttt{dd} (where \texttt{dd}
 ##  $ LL_IL: logi NA
 \end{verbatim}
 
-\hypertarget{rsm-3-fits-one-dataset-indexing}{%
-\subsection{Dataset indexing}\label{rsm-3-fits-one-dataset-indexing}}
-
-The datasets are indexed by an integer 1 through 14. The following shows the correspondence of \texttt{index} to dataset name.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{index <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{14}\NormalTok{)}
-\NormalTok{datasetNames <-}\StringTok{  }\KeywordTok{c}\NormalTok{(}\StringTok{"TONY"}\NormalTok{, }\StringTok{"VD"}\NormalTok{, }\StringTok{"FR"}\NormalTok{, }
-            \StringTok{"FED"}\NormalTok{, }\StringTok{"JT"}\NormalTok{, }\StringTok{"MAG"}\NormalTok{, }
-            \StringTok{"OPT"}\NormalTok{, }\StringTok{"PEN"}\NormalTok{, }\StringTok{"NICO"}\NormalTok{,}
-            \StringTok{"RUS"}\NormalTok{, }\StringTok{"DOB1"}\NormalTok{, }\StringTok{"DOB2"}\NormalTok{, }
-            \StringTok{"DOB3"}\NormalTok{, }\StringTok{"FZR"}\NormalTok{)}
-
-\KeywordTok{cat}\NormalTok{(}\StringTok{"File name for index = "}\NormalTok{, index[}\DecValTok{2}\NormalTok{], }\StringTok{" is "}\NormalTok{, datasetNames[index[}\DecValTok{2}\NormalTok{]], }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## File name for index =  2  is  VD
-\end{verbatim}
-
-The actual datasets (Excel files) are in folder \texttt{R/compare-3-fits/Datasets} and \texttt{R/compare-3-fits/loadDataFile.R} shows the correspondence between \texttt{datasetNames} and a dataset: for example, the Van Dyke dataset corresponds to file \texttt{VanDykeData.xlsx} in the \texttt{Datasets} folder.
-
 \hypertarget{rsm-3-fits-one-dataset-proproc}{%
-\subsection{Location of PROPROC files}\label{rsm-3-fits-one-dataset-proproc}}
+\section{Location of PROPROC files}\label{rsm-3-fits-one-dataset-proproc}}
 
 For each dataset PROPROC parameters were obtained by running the Windows software with PROPROC selected as the curve-fitting method. The results are saved to files that end with \texttt{proprocnormareapooled.csv} \footnote{In accordance with R-package policies white-spaces in the original \texttt{PROPROC} output file names have been removed.} contained in ``R/compare-3-fits/MRMCRuns/C/'', where \texttt{C} denotes the name of the dataset (for example, for the Van Dyke dataset, \texttt{C} = ``VD''). Examples are shown in the next two screen-shots.
 
@@ -15616,7 +15559,7 @@ The contents of \texttt{R/compare-3-fits/MRMCRuns/VD/VDproprocnormareapooled.csv
 \end{figure}
 
 \hypertarget{rsm-3-fits-pre-analyzed-results}{%
-\subsection{Location of pre-analyzed results}\label{rsm-3-fits-pre-analyzed-results}}
+\section{Location of pre-analyzed results}\label{rsm-3-fits-pre-analyzed-results}}
 
 The following screen shot shows the pre-analyzed files created by the function \texttt{Compare3ProperRocFits()} described below. Each file is named \texttt{allResultsC}, where \texttt{C} is the abbreviated name of the dataset (uppercase C denotes one or more uppercase characters; for example, \texttt{C} = \texttt{VD} denotes the Van Dyke dataset.).
 
@@ -15627,6 +15570,45 @@ The following screen shot shows the pre-analyzed files created by the function \
 }
 
 \caption{Screen shot of `R/compare-3-fits/RSM6` showing the results files created by  `Compare3ProperRocFits()` .}\label{fig:rsm-3-fits-all-results-rsm6}
+\end{figure}
+
+\hypertarget{rsm-3-fits-representative-plots-van-dyke}{%
+\section{Plots for Van Dyke dataset}\label{rsm-3-fits-representative-plots-van-dyke}}
+
+The following plots are arranged in pairs, with the left plot corresponding to treatment 1 and the right to treatment 2.
+
+\begin{figure}
+\centering
+\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-1-1.pdf}
+\caption{\label{fig:rsm-3-fits-plots-1-1}Composite plots in both treatments for Van Dyke dataset, reader 1.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-2-1.pdf}
+\caption{\label{fig:rsm-3-fits-plots-1-2}Composite plots in both treatments for Van Dyke dataset, reader 2. For treatment 2 the RSM and PROPROC fits are indistinguishable.}
+\end{figure}
+
+The RSM parameter values for the treatment 2 plot are: \(\mu\) = 5.767237, \(\lambda'\) = 2.7212621, \(\nu'\) = 0.8021718, \(\zeta_1\) = -1.5717303. The corresponding CBM values are \(\mu\) = 5.4464738, \(\alpha\) = 0.8023609, \(\zeta_1\) = -1.4253826. The RSM and CBM \(\mu\) parameters are very close and likewise the RSM \(\nu'\) and CBM \(\alpha\) parameters are very close - this is because they have similar physical meanings, which is investigated later in this chapter TBA. {[}The CBM does not have a parameter analogous to the RSM \(\lambda'\) parameter.{]}
+
+\begin{figure}
+\centering
+\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-3-1.pdf}
+\caption{\label{fig:rsm-3-fits-plots-1-3}Composite plots in both treatments for Van Dyke dataset, reader 3.}
+\end{figure}
+
+The RSM parameters for the treatment 1 plot are: \(\mu\) = 3.1527627, \(\lambda'\) = 9.9986154, \(\nu'\) = 0.9899933, \(\zeta_1\) = 1.1733988. The corresponding CBM values are \(\mu\) = 2.1927712, \(\alpha\) = 0.98, \(\zeta_1\) = -0.5168848.
+
+\begin{figure}
+\centering
+\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-4-1.pdf}
+\caption{\label{fig:rsm-3-fits-plots-1-4}Composite plots in both treatments for Van Dyke dataset, reader 4. For treatment 2 the 3 plots are indistinguishable and each one has AUC = 1. The degeneracy is due to all operating points being on the axes of the unit square.}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{19b-rsm-3-fits_files/figure-latex/rsm-3-fits-plots-1-5-1.pdf}
+\caption{\label{fig:rsm-3-fits-plots-1-5}Composite plots in both treatments for Van Dyke dataset, reader 5.}
 \end{figure}
 
 \hypertarget{rsm-3-fits-references}{%
