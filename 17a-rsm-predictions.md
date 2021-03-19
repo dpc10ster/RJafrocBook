@@ -379,89 +379,89 @@ This code was used with varying RSM parameters to generate the following Table.
 <tbody>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 1 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="5"> 1 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.7148 </td>
    <td style="text-align:left;"> 0.5779 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 2 </td>
-   
-   
-   
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.9027 </td>
    <td style="text-align:left;"> 0.874 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 3 </td>
-   
-   
-   
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.97 </td>
    <td style="text-align:left;"> 0.9628 </td>
   </tr>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="7"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.5 </td>
-   
-   
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.7551 </td>
    <td style="text-align:left;"> 0.676 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.1 </td>
-   
-   
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.8016 </td>
    <td style="text-align:left;"> 0.7838 </td>
   </tr>
   <tr>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="6"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 2 </td>
-   
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.7939 </td>
    <td style="text-align:left;"> 0.7228 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.5 </td>
-   
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.6337 </td>
    <td style="text-align:left;"> 0.4292 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.25 </td>
-   
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 0.5752 </td>
    <td style="text-align:left;"> 0.3218 </td>
   </tr>
   <tr>
-   
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 0.8224 </td>
    <td style="text-align:left;"> 0.5779 </td>
   </tr>
   <tr>
-   
-   
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 3 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 3 </td>
    <td style="text-align:left;"> 0.8803 </td>
    <td style="text-align:left;"> 0.5779 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 3 </td>
-   
-   
-   
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;"> 3 </td>
    <td style="text-align:left;"> 0.9995 </td>
    <td style="text-align:left;"> 0.9628 </td>
   </tr>

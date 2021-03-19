@@ -279,7 +279,7 @@ Perhaps the best way of illustrating the near constancy of the Swets Ratio is by
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 2.000 </td>
    <td style="text-align:left;"> 1.0000 </td>
    <td style="text-align:left;"> 0.4556 </td>
@@ -288,7 +288,7 @@ Perhaps the best way of illustrating the near constancy of the Swets Ratio is by
    <td style="text-align:left;"> 3.136 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 2.214 </td>
    <td style="text-align:left;"> 0.9032 </td>
    <td style="text-align:left;"> 0.4377 </td>
@@ -297,7 +297,7 @@ Perhaps the best way of illustrating the near constancy of the Swets Ratio is by
    <td style="text-align:left;"> 2.812 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 2.452 </td>
    <td style="text-align:left;"> 0.8158 </td>
    <td style="text-align:left;"> 0.4244 </td>
@@ -306,7 +306,7 @@ Perhaps the best way of illustrating the near constancy of the Swets Ratio is by
    <td style="text-align:left;"> 2.585 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 2.714 </td>
    <td style="text-align:left;"> 0.7368 </td>
    <td style="text-align:left;"> 0.4148 </td>
@@ -315,7 +315,7 @@ Perhaps the best way of illustrating the near constancy of the Swets Ratio is by
    <td style="text-align:left;"> 2.426 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 3.005 </td>
    <td style="text-align:left;"> 0.6655 </td>
    <td style="text-align:left;"> 0.4083 </td>
@@ -324,7 +324,7 @@ Perhaps the best way of illustrating the near constancy of the Swets Ratio is by
    <td style="text-align:left;"> 2.315 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 3.327 </td>
    <td style="text-align:left;"> 0.6011 </td>
    <td style="text-align:left;"> 0.4042 </td>
@@ -333,7 +333,7 @@ Perhaps the best way of illustrating the near constancy of the Swets Ratio is by
    <td style="text-align:left;"> 2.241 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 3.684 </td>
    <td style="text-align:left;"> 0.5429 </td>
    <td style="text-align:left;"> 0.4020 </td>
@@ -342,7 +342,7 @@ Perhaps the best way of illustrating the near constancy of the Swets Ratio is by
    <td style="text-align:left;"> 2.195 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 4.079 </td>
    <td style="text-align:left;"> 0.4903 </td>
    <td style="text-align:left;"> 0.4008 </td>
@@ -351,7 +351,7 @@ Perhaps the best way of illustrating the near constancy of the Swets Ratio is by
    <td style="text-align:left;"> 2.170 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 4.516 </td>
    <td style="text-align:left;"> 0.4429 </td>
    <td style="text-align:left;"> 0.4003 </td>
@@ -360,7 +360,7 @@ Perhaps the best way of illustrating the near constancy of the Swets Ratio is by
    <td style="text-align:left;"> 2.162 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 5.000 </td>
    <td style="text-align:left;"> 0.4000 </td>
    <td style="text-align:left;"> 0.4000 </td>
@@ -391,7 +391,7 @@ In Table \@ref(tab:rsm-evidence-table1B) the parameter $\nu = 1$ is held fixed w
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 0.9453 </td>
    <td style="text-align:left;"> 1.058 </td>
    <td style="text-align:left;"> 0.6115 </td>
@@ -400,7 +400,7 @@ In Table \@ref(tab:rsm-evidence-table1B) the parameter $\nu = 1$ is held fixed w
    <td style="text-align:left;"> 25.43 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 0.9901 </td>
    <td style="text-align:left;"> 1.208 </td>
    <td style="text-align:left;"> 0.6285 </td>
@@ -409,7 +409,7 @@ In Table \@ref(tab:rsm-evidence-table1B) the parameter $\nu = 1$ is held fixed w
    <td style="text-align:left;"> 25.61 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 1.0368 </td>
    <td style="text-align:left;"> 1.379 </td>
    <td style="text-align:left;"> 0.6454 </td>
@@ -418,7 +418,7 @@ In Table \@ref(tab:rsm-evidence-table1B) the parameter $\nu = 1$ is held fixed w
    <td style="text-align:left;"> 25.83 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 1.0853 </td>
    <td style="text-align:left;"> 1.576 </td>
    <td style="text-align:left;"> 0.6622 </td>
@@ -427,7 +427,7 @@ In Table \@ref(tab:rsm-evidence-table1B) the parameter $\nu = 1$ is held fixed w
    <td style="text-align:left;"> 25.96 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 1.1354 </td>
    <td style="text-align:left;"> 1.801 </td>
    <td style="text-align:left;"> 0.6787 </td>
@@ -436,7 +436,7 @@ In Table \@ref(tab:rsm-evidence-table1B) the parameter $\nu = 1$ is held fixed w
    <td style="text-align:left;"> 25.78 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 1.1866 </td>
    <td style="text-align:left;"> 2.061 </td>
    <td style="text-align:left;"> 0.6947 </td>
@@ -445,7 +445,7 @@ In Table \@ref(tab:rsm-evidence-table1B) the parameter $\nu = 1$ is held fixed w
    <td style="text-align:left;"> 25.02 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 1.2389 </td>
    <td style="text-align:left;"> 2.360 </td>
    <td style="text-align:left;"> 0.7103 </td>
@@ -454,7 +454,7 @@ In Table \@ref(tab:rsm-evidence-table1B) the parameter $\nu = 1$ is held fixed w
    <td style="text-align:left;"> 23.42 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 1.2920 </td>
    <td style="text-align:left;"> 2.706 </td>
    <td style="text-align:left;"> 0.7253 </td>
@@ -463,7 +463,7 @@ In Table \@ref(tab:rsm-evidence-table1B) the parameter $\nu = 1$ is held fixed w
    <td style="text-align:left;"> 20.93 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 1.3457 </td>
    <td style="text-align:left;"> 3.107 </td>
    <td style="text-align:left;"> 0.7396 </td>
@@ -472,7 +472,7 @@ In Table \@ref(tab:rsm-evidence-table1B) the parameter $\nu = 1$ is held fixed w
    <td style="text-align:left;"> 17.80 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> 0.7 </td>
    <td style="text-align:left;"> 1.3999 </td>
    <td style="text-align:left;"> 3.572 </td>
    <td style="text-align:left;"> 0.7534 </td>
@@ -505,8 +505,8 @@ In practice datasets with $b > 1$ are occasionally observed. These would lead to
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 0.7 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="10"> 2 </td>
+   <td style="text-align:left;"> 0.7 </td>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 0.05000 </td>
    <td style="text-align:left;"> 0.4031 </td>
    <td style="text-align:left;"> 1.6629 </td>
@@ -514,8 +514,8 @@ In practice datasets with $b > 1$ are occasionally observed. These would lead to
    <td style="text-align:left;"> 16.091 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 0.7 </td>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 0.07722 </td>
    <td style="text-align:left;"> 0.4048 </td>
    <td style="text-align:left;"> 1.5425 </td>
@@ -523,8 +523,8 @@ In practice datasets with $b > 1$ are occasionally observed. These would lead to
    <td style="text-align:left;"> 11.272 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 0.7 </td>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 0.11927 </td>
    <td style="text-align:left;"> 0.4074 </td>
    <td style="text-align:left;"> 1.4030 </td>
@@ -532,8 +532,8 @@ In practice datasets with $b > 1$ are occasionally observed. These would lead to
    <td style="text-align:left;"> 8.132 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 0.7 </td>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 0.18420 </td>
    <td style="text-align:left;"> 0.4113 </td>
    <td style="text-align:left;"> 1.2531 </td>
@@ -541,8 +541,8 @@ In practice datasets with $b > 1$ are occasionally observed. These would lead to
    <td style="text-align:left;"> 6.084 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 0.7 </td>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 0.28449 </td>
    <td style="text-align:left;"> 0.4172 </td>
    <td style="text-align:left;"> 1.1043 </td>
@@ -550,8 +550,8 @@ In practice datasets with $b > 1$ are occasionally observed. These would lead to
    <td style="text-align:left;"> 4.750 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 0.7 </td>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 0.43938 </td>
    <td style="text-align:left;"> 0.4261 </td>
    <td style="text-align:left;"> 0.9676 </td>
@@ -559,8 +559,8 @@ In practice datasets with $b > 1$ are occasionally observed. These would lead to
    <td style="text-align:left;"> 3.897 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 0.7 </td>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 0.67860 </td>
    <td style="text-align:left;"> 0.4392 </td>
    <td style="text-align:left;"> 0.8520 </td>
@@ -568,8 +568,8 @@ In practice datasets with $b > 1$ are occasionally observed. These would lead to
    <td style="text-align:left;"> 3.380 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 0.7 </td>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 1.04807 </td>
    <td style="text-align:left;"> 0.4579 </td>
    <td style="text-align:left;"> 0.7635 </td>
@@ -577,8 +577,8 @@ In practice datasets with $b > 1$ are occasionally observed. These would lead to
    <td style="text-align:left;"> 3.118 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 0.7 </td>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 1.61870 </td>
    <td style="text-align:left;"> 0.4843 </td>
    <td style="text-align:left;"> 0.7053 </td>
@@ -586,8 +586,8 @@ In practice datasets with $b > 1$ are occasionally observed. These would lead to
    <td style="text-align:left;"> 3.063 </td>
   </tr>
   <tr>
-   
-   
+   <td style="text-align:left;"> 0.7 </td>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;"> 2.50000 </td>
    <td style="text-align:left;"> 0.5200 </td>
    <td style="text-align:left;"> 0.6765 </td>

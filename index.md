@@ -1,7 +1,7 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2021-01-27"
+date: "2021-03-19"
 site: bookdown::bookdown_site
 output: 
    bookdown::pdf_document: default
@@ -29,6 +29,18 @@ description: "Artificial intelligence and observer performance book based on RJa
 * For these reasons I have switched to `GitHub`. All previous instructions pertaining to `BitBucket` are obsolete.
 * In order to access `GitHub` material one needs to create a (free) `GitHub` account. 
 * Go to [this link](https://github.com) and click on `Sign Up`.
+
+## Structure of the book {-}
+The book is divided into parts as follows:
+
+* Part I: Quick Start: intended for existing Windows `JAFROC` users who are seeking a quick-and-easy transition from Windows `JAFROC` to `RJafroc`. 
+* Part II: Basics: this covers the basics of ROC methods 
+* Part III: Significance Testing: TBA
+* Part IV: FROC paradigm: TBA
+
+
+
+
 
 ## Contributing to this book {-}
 * I appreciate constructive feedback on this document, e.g., corrections, comments, etc.  

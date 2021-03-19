@@ -1,157 +1,86 @@
-# OR analysis text output {#quick-start-or-text}
+# Reading the Excel data file {#quick-start-read-datafile}
 
 
 
 
 
-## How much finished {#quick-start-or-text-how-much-finished}
-90%
+## How much finished {#quick-start-read-datafile-how-much-finished}
+10%
 
 
-## Introduction {#quick-start-or-text-intro}
-This vignette illustrates significance testing using the OR method. 
+## Introduction {#quick-start-read-datafile-intro}
+In the previous chapter I described the format of the Excel file `R/quick-start/rocCr.xlsx` corresponding to a small ROC dataset. Described here is how to read this file in order to create an `RJafroc` dataset. It introduces the `RJafroc` function `DfReadDataFile()`. Also shown are the correspondences between values in the Excel file and the dataset object.
 
 
-## Analyzing the ROC dataset {#quick-start-or-text-analyze-dataset}
+## The structure of an ROC dataset {#quick-start-data-format-structure-roc-dataset}
+![](images/quick-start/rocCrTruth.png){width=100%}
 
-The only change is to specify `method = "OR"` in the significance testing function. 
+In the following code chunk the second statement reads the Excel file using the function `DfReadDataFile()` and saves it to object `x`. The third statement shows the structure of `x`.
 
 
 ```r
-ret <- StSignificanceTesting(dataset03, FOM = "Wilcoxon", method = "OR")
+rocCr <- "R/quick-start/rocCr.xlsx"
+x <- DfReadDataFile(rocCr, newExcelFileFormat = TRUE)
+str(x)
+#> List of 3
+#>  $ ratings     :List of 3
+#>   ..$ NL   : num [1:2, 1:5, 1:8, 1] 1 3 2 3 2 2 1 2 3 2 ...
+#>   ..$ LL   : num [1:2, 1:5, 1:5, 1] 5 5 5 5 5 5 5 5 5 5 ...
+#>   ..$ LL_IL: logi NA
+#>  $ lesions     :List of 3
+#>   ..$ perCase: int [1:5] 1 1 1 1 1
+#>   ..$ IDs    : num [1:5, 1] 1 1 1 1 1
+#>   ..$ weights: num [1:5, 1] 1 1 1 1 1
+#>  $ descriptions:List of 7
+#>   ..$ fileName     : chr "rocCr"
+#>   ..$ type         : chr "ROC"
+#>   ..$ name         : logi NA
+#>   ..$ truthTableStr: num [1:2, 1:5, 1:8, 1:2] 1 1 1 1 1 1 1 1 1 1 ...
+#>   ..$ design       : chr "FCTRL"
+#>   ..$ modalityID   : Named chr [1:2] "0" "1"
+#>   .. ..- attr(*, "names")= chr [1:2] "0" "1"
+#>   ..$ readerID     : Named chr [1:5] "0" "1" "2" "3" ...
+#>   .. ..- attr(*, "names")= chr [1:5] "0" "1" "2" "3" ...
 ```
 
-## Explanation of the output {#quick-start-or-text-explanation}
-The function returns a list with 5 members.  
-
-* `FOMs`: figures of merit, identical to that in the DBM method. 
-* `ANOVA`: ANOVA tables.
-* `RRRC`: random-reader random-case analyses results.
-* `FRRC`: fixed-reader random-case analyses results.
-* `RRFC`" random-reader fixed-case analyses results.
-
-Let us consider the ones that are different from the DBM method. 
-
-
-* ANOVA is a list of 4
-    + `TRanova` is a [3x3] dataframe: the treatment-reader ANOVA table, see below, where SS is the sum of squares, DF is the denominator degrees of freedom and MS is the mean squares, and T = treatment, R = reader, TR = treatment-reader.  
-    + `VarCom` is a [6x2] dataframe: the variance components, see below, where `varR` is the reader variance, `varTR` is the treatment-reader variance, `Cov1`, `Cov2`,`Cov3` and `Var` are as defined in the OR model. The second column lists the correlations defined in the OR model.
-    + `IndividualTrt` is a [2x4] dataframe: the individual treatment mean-squares, variances and $Cov_2$, averaged over all readers, see below, where `msREachTrt` is the mean square reader, `varEachTrt` is the variance and `cov2EachTrt` is `Cov2EachTrt` in each treatment.
-    + `IndividualRdr` is a [2x4] dataframe: the individual reader variance components averaged over treatments, see below, where `msTEachRdr` is the mean square treatment, `varEachRdr` is the variance and `cov1EachRdr` is $Cov_1$ for each reader.
-    
-
-```r
-ret$ANOVA$TRanova
-#>               SS DF            MS
-#> T  0.00023565410  1 2.3565410e-04
-#> R  0.00205217999  3 6.8406000e-04
-#> TR 0.00015060792  3 5.0202641e-05
-ret$ANOVA$VarCom
-#>            Estimates       Rhos
-#> VarR   2.3319942e-05         NA
-#> VarTR -6.8389146e-04         NA
-#> Cov1   7.9168215e-04 0.51887172
-#> Cov2   4.8363767e-04 0.31697811
-#> Cov3   5.1250915e-04 0.33590059
-#> Var    1.5257762e-03         NA
-ret$ANOVA$IndividualTrt
-#>           DF    msREachTrt   varEachTrt   cov2EachTrt
-#> trtTREAT1  3 0.00049266349 0.0015227779 0.00047229915
-#> trtTREAT2  3 0.00024159915 0.0015287746 0.00049497620
-ret$ANOVA$IndividualRdr
-#>             DF    msTEachRdr   varEachRdr   cov1EachRdr
-#> rdrREADER_1  1 7.3897606e-06 0.0014771675 0.00056158020
-#> rdrREADER_2  1 2.3077021e-04 0.0015186058 0.00071581326
-#> rdrREADER_3  1 1.4769293e-04 0.0013773788 0.00076508897
-#> rdrREADER_4  1 4.0912170e-07 0.0017299529 0.00112424616
-```
-
-* RRRC, a list of 3 containing results of random-reader random-case analyses
-    + `FTtests`: is a [2x4] dataframe: results of the F-tests, see below, where `FStat` is the F-statistic and `p` is the p-value. The first row is the treatment effect and the second is the error term.
-    + `ciDiffTrt`: is a [1x7] dataframe: the confidence intervals between different treatments, see below, where `StdErr` is the standard error of the estimate, `t` is the t-statistic and `PrGTt` is the p-value.
-    + `ciAvgRdrEachTrt`: is a [2x5] dataframe: the confidence intervals for the average reader over each treatment, see below, where `CILower` is the lower 95% confidence interval and `CIUpper` is the upper 95% confidence interval.
-    
-
-```r
-ret$RRRC$FTests
-#>           DF            MS     FStat          p
-#> Treatment  1 2.3565410e-04 4.6940577 0.11883786
-#> Error      3 5.0202641e-05        NA         NA
-ret$RRRC$ciDiffTrt
-#>                        Estimate       StdErr DF         t      PrGTt
-#> trtTREAT1-trtTREAT2 0.010854817 0.0050101218  3 2.1665774 0.11883786
-#>                           CILower     CIUpper
-#> trtTREAT1-trtTREAT2 -0.0050896269 0.026799261
-ret$RRRC$ciAvgRdrEachTrt
-#>             Estimate      StdErr         DF    CILower    CIUpper          Cov2
-#> trtTREAT1 0.84774989 0.024402152  70.121788 0.79908282 0.89641696 0.00047229915
-#> trtTREAT2 0.83689507 0.023566416 253.644028 0.79048429 0.88330585 0.00049497620
-```
-
-* FRRC, a list of 5 containing results of fixed-reader random-case analyses
-    + `FTtests`: is a [2x4] dataframe: results of the chisquare-tests, see below. Here is a difference from DBM: in the OR method for FRRC the denominator degrees of freedom of the F-statistic is infinite, and the test becomes equivalent to a chisquare test with the degrees of freedom equal to $I-1$, where $I$ is the number of treatments.
-    + `ciDiffTrt`: is a [1x6] dataframe: the confidence intervals between different treatments, see below. An additional column lists 
-    + `ciAvgRdrEachTrt`: is a [2x5] dataframe: the confidence intervals for the average reader over each treatment
-    + `ciDiffTrtEachRdr`: is a [4x6] dataframe: the confidence intervals for each different-treatment pairing for each reader. 
-   + `IndividualRdrVarCov1`: is a [4x2] dataframe: $Var$ and $Cov_1$ for individual readers. 
-    
-
-```r
-ret$FRRC$FTests
-#>                     MS      Chisq DF          p
-#> Treatment 0.0002356541 0.32101347  1 0.57099922
-#> Error     0.0007340941         NA NA         NA
-ret$FRRC$ciDiffTrt
-#>                        Estimate      StdErr          z      PrGTz      CILower
-#> trtTREAT1-trtTREAT2 0.010854817 0.019158472 0.56658051 0.57099922 -0.026695098
-#>                         CIUpper
-#> trtTREAT1-trtTREAT2 0.048404732
-ret$FRRC$ciAvgRdrEachTrt
-#>             Estimate      StdErr DF    CILower    CIUpper
-#> trtTREAT1 0.84774989 0.027109386 99 0.79461647 0.90088331
-#> trtTREAT2 0.83689507 0.027448603 99 0.78309680 0.89069334
-ret$FRRC$ciDiffTrtEachRdr
-#>                                       Estimate      StdErr           z
-#> rdrREADER_1::trtTREAT1-trtTREAT2 0.00384441429 0.042792227 0.089839080
-#> rdrREADER_2::trtTREAT1-trtTREAT2 0.02148349163 0.040069753 0.536152334
-#> rdrREADER_3::trtTREAT1-trtTREAT2 0.01718679331 0.034993994 0.491135520
-#> rdrREADER_4::trtTREAT1-trtTREAT2 0.00090456807 0.034805365 0.025989329
-#>                                       PrGTz      CILower     CIUpper
-#> rdrREADER_1::trtTREAT1-trtTREAT2 0.92841509 -0.080026809 0.087715638
-#> rdrREADER_2::trtTREAT1-trtTREAT2 0.59185327 -0.057051781 0.100018765
-#> rdrREADER_3::trtTREAT1-trtTREAT2 0.62333060 -0.051400174 0.085773761
-#> rdrREADER_4::trtTREAT1-trtTREAT2 0.97926585 -0.067312693 0.069121830
-ret$FRRC$IndividualRdrVarCov1
-#>               varEachRdr   cov1EachRdr
-#> rdrREADER_1 0.0014771675 0.00056158020
-#> rdrREADER_2 0.0015186058 0.00071581326
-#> rdrREADER_3 0.0013773788 0.00076508897
-#> rdrREADER_4 0.0017299529 0.00112424616
-```
-
-    
-* RRFC, a list of 3 containing results of random-reader fixed-case analyses
-    + `FTtests`: is a [2x4] dataframe: results of the F-tests, see below. 
-    + `ciDiffTrt`: is a [1x7] dataframe: the confidence intervals between different treatments, see below. 
-    + `ciAvgRdrEachTrt`: is a [2x5] dataframe: the confidence intervals for the average reader over each  over each treatment.  
-
-    
-
-```r
-ret$RRFC$FTests
-#>    DF            MS         F          p
-#> T   1 2.3565410e-04 4.6940577 0.11883786
-#> TR  3 5.0202641e-05        NA         NA
-ret$RRFC$ciDiffTrt
-#>                        Estimate       StdErr DF         t      PrGTt
-#> trtTREAT1-trtTREAT2 0.010854817 0.0050101218  3 2.1665774 0.11883786
-#>                           CILower     CIUpper
-#> trtTREAT1-trtTREAT2 -0.0050896269 0.026799261
-ret$RRFC$ciAvgRdrEachTrt
-#>             Estimate      StdErr DF    CILower    CIUpper
-#> TrtTREAT1 0.84774989 0.011098012  3 0.81243106 0.88306871
-#> TrtTREAT2 0.83689507 0.007771730  3 0.81216196 0.86162818
-```
+* In the above code chunk flag `newExcelFileFormat` is set to `TRUE` as otherwise columns D - F in the `Truth` worksheet are ignored and the dataset is assumed to be factorial, with `dataType` "automatically" determined from the contents of the FP and TP worksheets. ^[The assumptions underlying the "automatic" determination could be defeated by data entry errors.] 
+* Flag `newExcelFileFormat = FALSE`, the default, is for compatibility with older JAFROC format Excel files, which did not have columns D - F in the `Truth` worksheet. Its usage is deprecated.
+* The dataset object `x` is a `list` variable with 3 members. 
+* The `x$ratings$NL` member, with dimension [2, 5, 8, 1], contains the ratings of normal cases. The five extra values ^[with only 3 non-diseased cases why does one need 8 values?] in the third dimension, which are filled with `NAs`, are needed for compatibility with FROC datasets.
+* The `x$ratings$LL`, with dimension [2, 5, 5, 1], contains the ratings of abnormal cases.
+* The `x$lesions$perCase` member is a vector with 5 ones representing the 5 diseased cases in the dataset. 
+* The `x$lesions$IDs` member is an array with 5 ones.
+* The `x$lesions$weights` member is an array with 5 ones. These values are irrelevant to an ROC dataset. Likewise, the `lesionVector`, `lesionID` and `lesionWeight` members are not used for ROC datasets. They are there for compatibility with FROC datasets.
+* The `dataType` member indicates that this is an `ROC` dataset. 
+* The `x$modalityID` member is a vector with two elements `"0"` and `"1"`, naming the two modalities. 
+* The `x$readerID` member is a vector with five elements  `"0"`, `"1"`, `"2"`, `"3"` and `"4"`, naming the five readers. 
+* The `x$design` member is ; specifies the dataset design, which is "FCTRL".
+* The `x$descriptions$truthTableStr` member quantifies the structure of the dataset, as explained in TBA**Vignette #3**. **It is used in the `DfReadDataFile()` function to check for data entry errors.**
 
 
-## References {#quick-start-or-text-references}
+## Correspondence between `NL` member of dataset and the `FP` worksheet {#quick-start-data-format-correspondence-nl-fp}
+![](images/quick-start/rocCrFp.png){width=100%}
+
+* The list member `x$ratings$NL` is an array with `dim = c(2,5,8,1)`. 
+    + The first dimension (2) comes from the number of modalities. 
+    + The second dimension (5) comes from the number of readers. 
+    + The third dimension (8) comes from the **total** number of cases. 
+    + The fourth dimension is alway 1 for an ROC dataset. 
+* The value of `x$ratings$NL[1,5,2,1]`, i.e., 5, corresponds to row 15 of the FP table, i.e., to `ModalityID` = 0, `ReaderID` = 4 and `CaseID` = 2.
+* The value of `x$ratings$NL[2,3,2,1]`, i.e., 4, corresponds to row 24 of the FP table, i.e., to `ModalityID` 1, `ReaderID` 2 and `CaseID` 2.
+* All values for case index > 3 are `-Inf`. For example the value of `x$ratings$NL[2,3,4,1]` is `-Inf`. This is because there are only 3 non-diseased cases. The extra length is needed for compatibility with FROC datasets.
+
+## Correspondence between `LL` member of dataset and the `TP` worksheet {#quick-start-data-format-correspondence-ll-tp}
+![](images/quick-start/rocCrTp.png){width=100%}
+
+* The list member `x$ratings$LL` is an array with `dim = c(2,5,5,1)`. 
+    + The first dimension (2) comes from the number of modalities. 
+    + The second dimension (5) comes from the number of readers. 
+    + The third dimension (5) comes from the number of diseased cases. 
+    + The fourth dimension is alway 1 for an ROC dataset. 
+
+* The value of `x$ratings$LL[1,1,5,1]`, i.e., 4, corresponds to row 6 of the TP table, i.e., to `ModalityID` = 0, `ReaderID` = 0 and `CaseID` = 74.
+* The value of `x$ratings$LL[1,2,2,1]`, i.e., 3, corresponds to row 8 of the TP table, i.e., to `ModalityID` = 0, `ReaderID` = 1 and `CaseID` = 71.
+* There are no -Inf values in `x$ratings$LL`: `any(x$ratings$LL == -Inf)` = FALSE.
+
+## References {#quick-start-read-datafile-references}

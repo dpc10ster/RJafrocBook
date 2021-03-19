@@ -560,160 +560,160 @@ Shown next, Table \@ref(tab:standalone-cad-table2), are the significance testing
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL\_0\_05 </td>
+   <td style="text-align:left;"> PCL\_0\_05 </td>
    <td style="text-align:left;"> 1T-RRFC </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 4.5e-01 </td>
+   <td style="text-align:left;"> 4.5e-01 </td>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 4.93e-01 </td>
+   <td style="text-align:left;"> 4.93e-01 </td>
    <td style="text-align:left;"> (4.18e-01,5.68e-01) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 4.33e-02 </td>
+   <td style="text-align:left;"> 4.33e-02 </td>
    <td style="text-align:left;"> (-3.16e-02,1.18e-01) </td>
    <td style="text-align:left;"> 1.77e+00 </td>
    <td style="text-align:left;"> 8e+00 </td>
    <td style="text-align:left;"> 2.2e-01 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_0\_05 </td>
    <td style="text-align:left;"> 2T-RRRC </td>
-   
+   <td style="text-align:left;"> 4.5e-01 </td>
    <td style="text-align:left;"> (2.58e-01,6.42e-01) </td>
-   
+   <td style="text-align:left;"> 4.93e-01 </td>
    <td style="text-align:left;"> (3.76e-01,6.11e-01) </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> (-1.57e-01,2.44e-01) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 1.79e-01 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 7.84e+02 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 6.7e-01 </td>
+   <td style="text-align:left;"> 4.33e-02 </td>
+   <td style="text-align:left;"> (-1.57e-01,2.44e-01) </td>
+   <td style="text-align:left;"> 1.79e-01 </td>
+   <td style="text-align:left;"> 7.84e+02 </td>
+   <td style="text-align:left;"> 6.7e-01 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_0\_05 </td>
    <td style="text-align:left;"> 1T-RRRC </td>
-   
+   <td style="text-align:left;"> 4.5e-01 </td>
    <td style="text-align:left;"> NA </td>
-   
+   <td style="text-align:left;"> 4.93e-01 </td>
    <td style="text-align:left;"> (2.93e-01,6.94e-01) </td>
-   
-   
-   
-   
-   
+   <td style="text-align:left;"> 4.33e-02 </td>
+   <td style="text-align:left;"> (-1.57e-01,2.44e-01) </td>
+   <td style="text-align:left;"> 1.79e-01 </td>
+   <td style="text-align:left;"> 7.84e+02 </td>
+   <td style="text-align:left;"> 6.7e-01 </td>
   </tr>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL\_0\_2 </td>
+   <td style="text-align:left;"> PCL\_0\_2 </td>
    <td style="text-align:left;"> 1T-RRFC </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 5.92e-01 </td>
+   <td style="text-align:left;"> 5.92e-01 </td>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 7.1e-01 </td>
+   <td style="text-align:left;"> 7.1e-01 </td>
    <td style="text-align:left;"> (6.69e-01,7.51e-01) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 1.19e-01 </td>
+   <td style="text-align:left;"> 1.19e-01 </td>
    <td style="text-align:left;"> (7.78e-02,1.59e-01) </td>
    <td style="text-align:left;"> 4.5e+01 </td>
    <td style="text-align:left;"> 8e+00 </td>
    <td style="text-align:left;"> 1.51e-04 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_0\_2 </td>
    <td style="text-align:left;"> 2T-RRRC </td>
-   
+   <td style="text-align:left;"> 5.92e-01 </td>
    <td style="text-align:left;"> (4.78e-01,7.05e-01) </td>
-   
+   <td style="text-align:left;"> 7.1e-01 </td>
    <td style="text-align:left;"> (6.33e-01,7.87e-01) </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> (4.45e-03,2.33e-01) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 4.16e+00 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 9.37e+02 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 4.2e-02 </td>
+   <td style="text-align:left;"> 1.19e-01 </td>
+   <td style="text-align:left;"> (4.45e-03,2.33e-01) </td>
+   <td style="text-align:left;"> 4.16e+00 </td>
+   <td style="text-align:left;"> 9.37e+02 </td>
+   <td style="text-align:left;"> 4.2e-02 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_0\_2 </td>
    <td style="text-align:left;"> 1T-RRRC </td>
-   
+   <td style="text-align:left;"> 5.92e-01 </td>
    <td style="text-align:left;"> NA </td>
-   
+   <td style="text-align:left;"> 7.1e-01 </td>
    <td style="text-align:left;"> (5.96e-01,8.24e-01) </td>
-   
-   
-   
-   
-   
+   <td style="text-align:left;"> 1.19e-01 </td>
+   <td style="text-align:left;"> (4.45e-03,2.33e-01) </td>
+   <td style="text-align:left;"> 4.16e+00 </td>
+   <td style="text-align:left;"> 9.37e+02 </td>
+   <td style="text-align:left;"> 4.2e-02 </td>
   </tr>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL\_1 </td>
+   <td style="text-align:left;"> PCL\_1 </td>
    <td style="text-align:left;"> 1T-RRFC </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 6.75e-01 </td>
+   <td style="text-align:left;"> 6.75e-01 </td>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 7.83e-01 </td>
+   <td style="text-align:left;"> 7.83e-01 </td>
    <td style="text-align:left;"> (7.4e-01,8.27e-01) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 1.08e-01 </td>
+   <td style="text-align:left;"> 1.08e-01 </td>
    <td style="text-align:left;"> (6.48e-02,1.52e-01) </td>
    <td style="text-align:left;"> 3.3e+01 </td>
    <td style="text-align:left;"> 8e+00 </td>
    <td style="text-align:left;"> 4.33e-04 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_1 </td>
    <td style="text-align:left;"> 2T-RRRC </td>
-   
+   <td style="text-align:left;"> 6.75e-01 </td>
    <td style="text-align:left;"> (5.71e-01,7.79e-01) </td>
-   
+   <td style="text-align:left;"> 7.83e-01 </td>
    <td style="text-align:left;"> (7.12e-01,8.54e-01) </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> (4.5e-03,2.12e-01) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 4.2e+00 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 4.93e+02 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 4.1e-02 </td>
+   <td style="text-align:left;"> 1.08e-01 </td>
+   <td style="text-align:left;"> (4.5e-03,2.12e-01) </td>
+   <td style="text-align:left;"> 4.2e+00 </td>
+   <td style="text-align:left;"> 4.93e+02 </td>
+   <td style="text-align:left;"> 4.1e-02 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_1 </td>
    <td style="text-align:left;"> 1T-RRRC </td>
-   
+   <td style="text-align:left;"> 6.75e-01 </td>
    <td style="text-align:left;"> NA </td>
-   
+   <td style="text-align:left;"> 7.83e-01 </td>
    <td style="text-align:left;"> (6.8e-01,8.87e-01) </td>
-   
-   
-   
-   
-   
+   <td style="text-align:left;"> 1.08e-01 </td>
+   <td style="text-align:left;"> (4.5e-03,2.12e-01) </td>
+   <td style="text-align:left;"> 4.2e+00 </td>
+   <td style="text-align:left;"> 4.93e+02 </td>
+   <td style="text-align:left;"> 4.1e-02 </td>
   </tr>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> Wilcoxon </td>
+   <td style="text-align:left;"> Wilcoxon </td>
    <td style="text-align:left;"> 1T-RRFC </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 8.17e-01 </td>
+   <td style="text-align:left;"> 8.17e-01 </td>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 8.49e-01 </td>
+   <td style="text-align:left;"> 8.49e-01 </td>
    <td style="text-align:left;"> (8.26e-01,8.71e-01) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> 3.17e-02 </td>
+   <td style="text-align:left;"> 3.17e-02 </td>
    <td style="text-align:left;"> (8.96e-03,5.45e-02) </td>
    <td style="text-align:left;"> 1.03e+01 </td>
    <td style="text-align:left;"> 8e+00 </td>
    <td style="text-align:left;"> 1.24e-02 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> Wilcoxon </td>
    <td style="text-align:left;"> 2T-RRRC </td>
-   
+   <td style="text-align:left;"> 8.17e-01 </td>
    <td style="text-align:left;"> (7.52e-01,8.82e-01) </td>
-   
+   <td style="text-align:left;"> 8.49e-01 </td>
    <td style="text-align:left;"> (8.07e-01,8.9e-01) </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> (-3.1e-02,9.45e-02) </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 9.86e-01 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 8.78e+02 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="2"> 3.2e-01 </td>
+   <td style="text-align:left;"> 3.17e-02 </td>
+   <td style="text-align:left;"> (-3.1e-02,9.45e-02) </td>
+   <td style="text-align:left;"> 9.86e-01 </td>
+   <td style="text-align:left;"> 8.78e+02 </td>
+   <td style="text-align:left;"> 3.2e-01 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> Wilcoxon </td>
    <td style="text-align:left;"> 1T-RRRC </td>
-   
+   <td style="text-align:left;"> 8.17e-01 </td>
    <td style="text-align:left;"> NA </td>
-   
+   <td style="text-align:left;"> 8.49e-01 </td>
    <td style="text-align:left;"> (7.86e-01,9.11e-01) </td>
-   
-   
-   
-   
-   
+   <td style="text-align:left;"> 3.17e-02 </td>
+   <td style="text-align:left;"> (-3.1e-02,9.45e-02) </td>
+   <td style="text-align:left;"> 9.86e-01 </td>
+   <td style="text-align:left;"> 8.78e+02 </td>
+   <td style="text-align:left;"> 3.2e-01 </td>
   </tr>
 </tbody>
 </table>
@@ -770,7 +770,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL\_0\_05 </td>
+   <td style="text-align:left;"> PCL\_0\_05 </td>
    <td style="text-align:left;"> 1T-RRFC </td>
    <td style="text-align:left;"> 9.5e-03 </td>
    <td style="text-align:left;"> NA </td>
@@ -780,7 +780,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> NA </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_0\_05 </td>
    <td style="text-align:left;"> 2T-RRRC </td>
    <td style="text-align:left;"> 1.84e-18 </td>
    <td style="text-align:left;"> -5.71e-03 </td>
@@ -790,7 +790,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> 1.65e-02 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_0\_05 </td>
    <td style="text-align:left;"> 1T-RRRC </td>
    <td style="text-align:left;"> 9.5e-03 </td>
    <td style="text-align:left;"> NA </td>
@@ -800,7 +800,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> 3.03e-02 </td>
   </tr>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL\_0\_2 </td>
+   <td style="text-align:left;"> PCL\_0\_2 </td>
    <td style="text-align:left;"> 1T-RRFC </td>
    <td style="text-align:left;"> 2.81e-03 </td>
    <td style="text-align:left;"> NA </td>
@@ -810,7 +810,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> NA </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_0\_2 </td>
    <td style="text-align:left;"> 2T-RRRC </td>
    <td style="text-align:left;"> -7.59e-19 </td>
    <td style="text-align:left;"> 2.65e-04 </td>
@@ -820,7 +820,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> 3.43e-03 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_0\_2 </td>
    <td style="text-align:left;"> 1T-RRRC </td>
    <td style="text-align:left;"> 2.81e-03 </td>
    <td style="text-align:left;"> NA </td>
@@ -830,7 +830,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> 5.34e-03 </td>
   </tr>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> PCL\_1 </td>
+   <td style="text-align:left;"> PCL\_1 </td>
    <td style="text-align:left;"> 1T-RRFC </td>
    <td style="text-align:left;"> 3.2e-03 </td>
    <td style="text-align:left;"> NA </td>
@@ -840,7 +840,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> NA </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_1 </td>
    <td style="text-align:left;"> 2T-RRRC </td>
    <td style="text-align:left;"> 1.63e-18 </td>
    <td style="text-align:left;"> 1e-03 </td>
@@ -850,7 +850,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> 2.46e-03 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> PCL\_1 </td>
    <td style="text-align:left;"> 1T-RRRC </td>
    <td style="text-align:left;"> 3.2e-03 </td>
    <td style="text-align:left;"> NA </td>
@@ -860,7 +860,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> 3.64e-03 </td>
   </tr>
   <tr>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="3"> Wilcoxon </td>
+   <td style="text-align:left;"> Wilcoxon </td>
    <td style="text-align:left;"> 1T-RRFC </td>
    <td style="text-align:left;"> 8.78e-04 </td>
    <td style="text-align:left;"> NA </td>
@@ -870,7 +870,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> NA </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> Wilcoxon </td>
    <td style="text-align:left;"> 2T-RRRC </td>
    <td style="text-align:left;"> 2.98e-19 </td>
    <td style="text-align:left;"> 2.01e-04 </td>
@@ -880,7 +880,7 @@ Shown next, Table \@ref(tab:standalone-cad-table3), are the model-parameters cor
    <td style="text-align:left;"> 9.62e-04 </td>
   </tr>
   <tr>
-   
+   <td style="text-align:left;"> Wilcoxon </td>
    <td style="text-align:left;"> 1T-RRRC </td>
    <td style="text-align:left;"> 8.78e-04 </td>
    <td style="text-align:left;"> NA </td>
