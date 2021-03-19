@@ -1,157 +1,368 @@
-# OR analysis text output {#quick-start-or-text}
+# Data format and read FROC data {#quick-start-froc-data-format}
 
 
 
 
 
-## How much finished {#quick-start-or-text-how-much-finished}
+
+
+## How much finished {#quick-start-froc-data-format-how-much-finished}
 90%
 
 
-## Introduction {#quick-start-or-text-intro}
-This vignette illustrates significance testing using the OR method. 
+## Introduction {#quick-start-froc-data-intro}
+In the Free-response Receiver Operating Characteristic (FROC) paradigm the observer searches each case for signs of **localized disease** and marks and rates localized regions that are sufficiently suspicious for presence of disease. FROC data consists of **mark-rating pairs**, where each mark is a localized-region that was considered sufficiently suspicious for presence of a localized lesion and the rating is it's confidence level. As in the ROC paradigm, the rating can be an integer or quasi-continuous (e.g., 0 – 100), or a floating point value, *as long as higher numbers represent greater confidence in presence of a lesion at the indicated region*. This is termed a positive-directed confidence level scheme. By adopting a proximity criterion, the investigator classifies each mark as a lesion localization (`LL`) - if it is close to a real lesion - or a non-lesion localization (`NL`) otherwise. 
 
+The purpose of this chapter is to:
 
-## Analyzing the ROC dataset {#quick-start-or-text-analyze-dataset}
+* Explain the data format of the input Excel file for FROC datasets. 
+* Explain the format of the FROC dataset.
+* Explain the lesion distribution array returned by `UtilLesionDistr()`.
+* Explain the lesion weights array returned by `UtilLesionWeightsDistr()`.
+* Details on the FROC paradigm are in my book [@chakraborty2017observer].
 
-The only change is to specify `method = "OR"` in the significance testing function. 
+The vignette is illustrated with a toy data file, `R/quick-start/frocCr.xlsx` in which readers '0', '1' and '2' interpret 8 cases in two modalities, '0' and '1'. The design is 'factorial', abbreviated to `FCTRL` in the software; this is also termed a 'fully-crossed' design. The Excel file has three worksheets named `Truth`, `NL` (or `FP`) and `LL` (or `TP`). 
+
+## The `Truth` worksheet {#quick-start-froc-data-truth}
+![](images/quick-start/frocCrTruth.png){width=100%}
+
+* The `Truth` worksheet contains 6 columns: `CaseID`, `LesionID`, `Weight`, `ReaderID`, `ModalityID` and `Paradigm`. 
+* Since a diseased case may have more than one lesion, the first five columns contain **at least** as many rows as there are cases (images) in the dataset. There are 8 cases in the dataset and 12 rows of data, because some of the diseased cases contain more than one lesion.
+* `CaseID`: unique **integers** representing the cases in the dataset: '1', '2', '3', the 3 non-diseased cases, and '70', '71', '72', '73', '74', the 5 diseased cases. The ordering of the numbers is inconsequential. 
+* `LesionID`: integers 0, 1, 2, etc., 
+    + Each 0 represents a non-diseased case, 
+    + Each 1 represents the *first* lesion on a diseased case, 2 the *second* lesion, if present, and so on. 
+    + This field is zero for non-diseased cases '1', '2', '3'. 
+    + For the first diseased case, i.e., '70', it is 1 for the first lesion and 2 for the second lesion. 
+    + For the second diseased case i.e., '71', it is 1, as this case has only one lesion.
+    + For the third diseased case, i.e., '72', it is 1 for the first lesion, 2 for the second lesion and 3 for the third lesion. 
+    + For the fourth diseased case, i.e., '73', it is 1 for the first lesion and 2 for the second lesion. 
+    + For the fifth diseased case i.e., '74', it is 1, as this case has only one lesion.
+* There are 3 non-diseased cases in the dataset (the number of 0's in the `LesionID` column).
+* There are 5 diseased cases in the dataset (the number of 1's in the `LesionID` column). 
+* `Weight` or clinical importance - e.g., mortality associated with lesion:
+    + non-negative floating point values 
+    + 0 for each non-diseased case
+    + For each diseased case values that sum to unity. 
+    + A simple way to assign equal weights to all lesions in a case is to fill the `Weight` column with zeroes.
+* `LesionID` 
+    + Diseased case `70` has two lesions, with `LesionID`s '1' and '2', and weights 0.3 and 0.7. 
+    + Diseased case `71` has one lesion, with `LesionID` = 1, and `Weight` = 1. 
+    + Diseased case `72` has three lesions, with `LesionID`s 1, 2 and 3 and weights 1/3 each. 
+    + Diseased case `73` has two lesions, with `LesionID`s 1, and 2 and weights 0.1 and 0.9. 
+    + Diseased case `74` has one lesion, with `LesionID` = 1 and `Weight` = 1.
+* `ReaderID`: a comma-separated listing of readers, each represented by a unique **text label**, that have interpreted the case. In the example shown below each cell has the value '0, 1, 2'. 
+* There are 3 readers in the dataset, as each cell in the `ReaderID` column contains '0, 1, 2'.
+* `ModalityID`: a comma-separated listing of modalities (or treatments), each represented by a unique **integer**, that apply to each case. In the example each cell has the value `0, 1`. **Each cell has to be text formatted.**
+* There are 2 modalities in the dataset, as each cell in the `ModalityID` column contains '0, 1'.
+* `Paradigm`: The contents are `FROC` and `FCTRL`: this is an `FROC` dataset and the design is "factorial".
+
+## Reading the FROC dataset {#quick-start-froc-data-structure}
+The example shown above corresponds to file `R/quick-start/frocCr.xlsx` in the project directory. The next code chunk reads this file into an `R` object `x`.
 
 
 ```r
-ret <- StSignificanceTesting(dataset03, FOM = "Wilcoxon", method = "OR")
+frocCr <- "R/quick-start/frocCr.xlsx"
+x <- DfReadDataFile(frocCr, newExcelFileFormat = TRUE)
+str(x)
+#> List of 3
+#>  $ ratings     :List of 3
+#>   ..$ NL   : num [1:2, 1:3, 1:8, 1:2] 1.02 2.89 2.21 3.01 2.14 ...
+#>   ..$ LL   : num [1:2, 1:3, 1:5, 1:3] 5.28 5.2 5.14 4.77 4.66 4.87 3.01 3.27 3.31 3.19 ...
+#>   ..$ LL_IL: logi NA
+#>  $ lesions     :List of 3
+#>   ..$ perCase: int [1:5] 2 1 3 2 1
+#>   ..$ IDs    : num [1:5, 1:3] 1 1 1 1 1 ...
+#>   ..$ weights: num [1:5, 1:3] 0.3 1 0.333 0.1 1 ...
+#>  $ descriptions:List of 7
+#>   ..$ fileName     : chr "frocCr"
+#>   ..$ type         : chr "FROC"
+#>   ..$ name         : logi NA
+#>   ..$ truthTableStr: num [1:2, 1:3, 1:8, 1:4] 1 1 1 1 1 1 1 1 1 1 ...
+#>   ..$ design       : chr "FCTRL"
+#>   ..$ modalityID   : Named chr [1:2] "0" "1"
+#>   .. ..- attr(*, "names")= chr [1:2] "0" "1"
+#>   ..$ readerID     : Named chr [1:3] "0" "1" "2"
+#>   .. ..- attr(*, "names")= chr [1:3] "0" "1" "2"
 ```
 
-## Explanation of the output {#quick-start-or-text-explanation}
-The function returns a list with 5 members.  
+This follows the general description in Chapter \@ref(quick-start-data-format). The differences are described below.
 
-* `FOMs`: figures of merit, identical to that in the DBM method. 
-* `ANOVA`: ANOVA tables.
-* `RRRC`: random-reader random-case analyses results.
-* `FRRC`: fixed-reader random-case analyses results.
-* `RRFC`" random-reader fixed-case analyses results.
+* The `x$descriptions$type` member indicates that this is an `FROC` dataset. 
+* The `x$lesions$perCase` member is a vector whose contents reflect the number of lesions in each diseased case, i.e., 2, 1, 3, 2, 1 in the current example.
+* The `x$lesions$IDs` member indicates the labeling of the lesions in each diseased case.
 
-Let us consider the ones that are different from the DBM method. 
-
-
-* ANOVA is a list of 4
-    + `TRanova` is a [3x3] dataframe: the treatment-reader ANOVA table, see below, where SS is the sum of squares, DF is the denominator degrees of freedom and MS is the mean squares, and T = treatment, R = reader, TR = treatment-reader.  
-    + `VarCom` is a [6x2] dataframe: the variance components, see below, where `varR` is the reader variance, `varTR` is the treatment-reader variance, `Cov1`, `Cov2`,`Cov3` and `Var` are as defined in the OR model. The second column lists the correlations defined in the OR model.
-    + `IndividualTrt` is a [2x4] dataframe: the individual treatment mean-squares, variances and $Cov_2$, averaged over all readers, see below, where `msREachTrt` is the mean square reader, `varEachTrt` is the variance and `cov2EachTrt` is `Cov2EachTrt` in each treatment.
-    + `IndividualRdr` is a [2x4] dataframe: the individual reader variance components averaged over treatments, see below, where `msTEachRdr` is the mean square treatment, `varEachRdr` is the variance and `cov1EachRdr` is $Cov_1$ for each reader.
-    
 
 ```r
-ret$ANOVA$TRanova
-#>               SS DF            MS
-#> T  0.00023565410  1 2.3565410e-04
-#> R  0.00205217999  3 6.8406000e-04
-#> TR 0.00015060792  3 5.0202641e-05
-ret$ANOVA$VarCom
-#>            Estimates       Rhos
-#> VarR   2.3319942e-05         NA
-#> VarTR -6.8389146e-04         NA
-#> Cov1   7.9168215e-04 0.51887172
-#> Cov2   4.8363767e-04 0.31697811
-#> Cov3   5.1250915e-04 0.33590059
-#> Var    1.5257762e-03         NA
-ret$ANOVA$IndividualTrt
-#>           DF    msREachTrt   varEachTrt   cov2EachTrt
-#> trtTREAT1  3 0.00049266349 0.0015227779 0.00047229915
-#> trtTREAT2  3 0.00024159915 0.0015287746 0.00049497620
-ret$ANOVA$IndividualRdr
-#>             DF    msTEachRdr   varEachRdr   cov1EachRdr
-#> rdrREADER_1  1 7.3897606e-06 0.0014771675 0.00056158020
-#> rdrREADER_2  1 2.3077021e-04 0.0015186058 0.00071581326
-#> rdrREADER_3  1 1.4769293e-04 0.0013773788 0.00076508897
-#> rdrREADER_4  1 4.0912170e-07 0.0017299529 0.00112424616
+x$lesions$IDs
+#>      [,1] [,2] [,3]
+#> [1,]    1    2 -Inf
+#> [2,]    1 -Inf -Inf
+#> [3,]    1    2    3
+#> [4,]    1    2 -Inf
+#> [5,]    1 -Inf -Inf
 ```
 
-* RRRC, a list of 3 containing results of random-reader random-case analyses
-    + `FTtests`: is a [2x4] dataframe: results of the F-tests, see below, where `FStat` is the F-statistic and `p` is the p-value. The first row is the treatment effect and the second is the error term.
-    + `ciDiffTrt`: is a [1x7] dataframe: the confidence intervals between different treatments, see below, where `StdErr` is the standard error of the estimate, `t` is the t-statistic and `PrGTt` is the p-value.
-    + `ciAvgRdrEachTrt`: is a [2x5] dataframe: the confidence intervals for the average reader over each treatment, see below, where `CILower` is the lower 95% confidence interval and `CIUpper` is the upper 95% confidence interval.
-    
+* This shows that the lesions on the first diseased case are labeled '1' and '2'. The `-Inf` is a filler used to denote a missing value. The second diseased case has one lesion labeled '1'. The third diseased case has three lesions labeled '1', '2' and '3', etc.
+* The `lesionWeight` member is the clinical importance of each lesion. Lacking specific clinical reasons, the lesions should be equally weighted; this is *not* true for this toy dataset.
+
 
 ```r
-ret$RRRC$FTests
-#>           DF            MS     FStat          p
-#> Treatment  1 2.3565410e-04 4.6940577 0.11883786
-#> Error      3 5.0202641e-05        NA         NA
-ret$RRRC$ciDiffTrt
-#>                        Estimate       StdErr DF         t      PrGTt
-#> trtTREAT1-trtTREAT2 0.010854817 0.0050101218  3 2.1665774 0.11883786
-#>                           CILower     CIUpper
-#> trtTREAT1-trtTREAT2 -0.0050896269 0.026799261
-ret$RRRC$ciAvgRdrEachTrt
-#>             Estimate      StdErr         DF    CILower    CIUpper          Cov2
-#> trtTREAT1 0.84774989 0.024402152  70.121788 0.79908282 0.89641696 0.00047229915
-#> trtTREAT2 0.83689507 0.023566416 253.644028 0.79048429 0.88330585 0.00049497620
+x$lesions$weights
+#>           [,1]      [,2]      [,3]
+#> [1,] 0.3000000 0.7000000      -Inf
+#> [2,] 1.0000000      -Inf      -Inf
+#> [3,] 0.3333333 0.3333333 0.3333333
+#> [4,] 0.1000000 0.9000000      -Inf
+#> [5,] 1.0000000      -Inf      -Inf
 ```
 
-* FRRC, a list of 5 containing results of fixed-reader random-case analyses
-    + `FTtests`: is a [2x4] dataframe: results of the chisquare-tests, see below. Here is a difference from DBM: in the OR method for FRRC the denominator degrees of freedom of the F-statistic is infinite, and the test becomes equivalent to a chisquare test with the degrees of freedom equal to $I-1$, where $I$ is the number of treatments.
-    + `ciDiffTrt`: is a [1x6] dataframe: the confidence intervals between different treatments, see below. An additional column lists 
-    + `ciAvgRdrEachTrt`: is a [2x5] dataframe: the confidence intervals for the average reader over each treatment
-    + `ciDiffTrtEachRdr`: is a [4x6] dataframe: the confidence intervals for each different-treatment pairing for each reader. 
-   + `IndividualRdrVarCov1`: is a [4x2] dataframe: $Var$ and $Cov_1$ for individual readers. 
-    
+* The first diseased case has two lesions, the first has weight 0.3 and the second has weight 0.7. 
+* The second diseased case has one lesion with weight 1. 
+* The third diseased case has three equally weighted lesions, each with weight 1/3. Etc.
+
+
+## The false positive (FP) ratings {#quick-start-froc-data-fp}
+These are found in the `FP` or `NL` worksheet.
+![](images/quick-start/frocCrNL.png){width=100%}
+
+* It consists of 4 columns, of equal length. The common length is an integer random variable greater than or equal to zero. It could be zero if the dataset has no NL marks (a possibility if the lesions are very easy to find and the observer has perfect performance).  
+* In the example dataset, the common length is 22.
+* `ReaderID`: the reader labels: these must be `0`, `1`, or `2`, as declared in the `Truth` worksheet. 
+* `ModalityID`: the modality labels: must be `0` or `1`, as declared in the `Truth` worksheet. 
+* `CaseID`: the labels of cases with `NL` marks. In the FROC paradigm `NL` events can occur on non-diseased **and** diseased cases. 
+* `FP_Rating`: the floating point ratings of `NL` marks. Each row of this worksheet yields a rating corresponding to the values of `ReaderID`, `ModalityID` and `CaseID` for that row.
+* For `ModalityID` 0, `ReaderID` 0 and `CaseID` 1 (the first non-diseased case declared in the `Truth` worksheet), there is a single `NL` mark that was rated 1.02, corresponding to row 2 of the `FP` worksheet.
+* Diseased cases with `NL` marks are also recorded in the `FP` worksheet. Some examples are seen at rows 15, 16 and 21, 22, 23. 
+* Rows 21 and 22 show that `caseID` = 71 got two `NL` marks, rated 2.24, 4.01. 
+* Since this is the *only* case with two NL marks, it determines the length of the fourth dimension of the `x$ratings$NL` list member, 2. Absent this case, the length would have been one.
+* The case with the most `NL` marks determines the length of the fourth dimension of the `x$ratings$NL` list member.
+* The reader should confirm that the ratings in `x$ratings$NL` reflect the contents of the `FP` worksheet.
+
+## The true positive (TP) ratings {#quick-start-froc-data-tp}
+These are found in the `TP` or `LL` worksheet, see below.
+
+![](images/quick-start/frocCrLL.png){width=100%}
+
+* This worksheet can only have diseased cases. The presence of a non-diseased case in this worksheet will generate an error.
+* The common vertical length, 31 in this example, is a-priori unpredictable. The maximum possible length, assuming every lesion is marked for each modality, reader and diseased case, is 9 X 2 X 3 = 54. The 9 comes from the total number of non-zero entries in the `LesionID` column of the `Truth` worksheet, the 2 from the number of modalities and 3 from the number of readers.
+* The fact that the actual length (31) is smaller than the maximum length (54) means that there are combinations of modality, reader and diseased cases on which some lesions were not marked.
+* As examples, line 2 in the worksheet, the first lesion in `CaseID` equal to `70` was marked (and rated 5.28) in `ModalityID` `0` and `ReaderID` `0`. Line 3 in the worksheet, the second lesion in `CaseID` equal to `70` was also marked (and rated 4.65) in `ModalityID` `0` and `ReaderID` `0`. However, lesions 2 and 3 in `CaseID` = 72 were not marked (line 5 in the worksheet indicates that for this modality-reader-case combination only the first lesion was marked).
+* The length of the fourth dimension of the `x$ratings$LL` list member, 3 in the present example, is determined by the diseased case (72) with the most lesions in the `Truth` worksheet.
+* The reader should confirm that the ratings in `x$ratings$LL` reflect the contents of the `TP` worksheet.
+
+## On the distribution of numbers of lesions in diseased cases {#quick-start-froc-data-distribution-diseased-cases}  
+* Consider a much larger dataset, `dataset11`, with structure as shown below (for descriptions of all embedded datasets the `RJafroc` documentation):
+
 
 ```r
-ret$FRRC$FTests
-#>                     MS      Chisq DF          p
-#> Treatment 0.0002356541 0.32101347  1 0.57099922
-#> Error     0.0007340941         NA NA         NA
-ret$FRRC$ciDiffTrt
-#>                        Estimate      StdErr          z      PrGTz      CILower
-#> trtTREAT1-trtTREAT2 0.010854817 0.019158472 0.56658051 0.57099922 -0.026695098
-#>                         CIUpper
-#> trtTREAT1-trtTREAT2 0.048404732
-ret$FRRC$ciAvgRdrEachTrt
-#>             Estimate      StdErr DF    CILower    CIUpper
-#> trtTREAT1 0.84774989 0.027109386 99 0.79461647 0.90088331
-#> trtTREAT2 0.83689507 0.027448603 99 0.78309680 0.89069334
-ret$FRRC$ciDiffTrtEachRdr
-#>                                       Estimate      StdErr           z
-#> rdrREADER_1::trtTREAT1-trtTREAT2 0.00384441429 0.042792227 0.089839080
-#> rdrREADER_2::trtTREAT1-trtTREAT2 0.02148349163 0.040069753 0.536152334
-#> rdrREADER_3::trtTREAT1-trtTREAT2 0.01718679331 0.034993994 0.491135520
-#> rdrREADER_4::trtTREAT1-trtTREAT2 0.00090456807 0.034805365 0.025989329
-#>                                       PrGTz      CILower     CIUpper
-#> rdrREADER_1::trtTREAT1-trtTREAT2 0.92841509 -0.080026809 0.087715638
-#> rdrREADER_2::trtTREAT1-trtTREAT2 0.59185327 -0.057051781 0.100018765
-#> rdrREADER_3::trtTREAT1-trtTREAT2 0.62333060 -0.051400174 0.085773761
-#> rdrREADER_4::trtTREAT1-trtTREAT2 0.97926585 -0.067312693 0.069121830
-ret$FRRC$IndividualRdrVarCov1
-#>               varEachRdr   cov1EachRdr
-#> rdrREADER_1 0.0014771675 0.00056158020
-#> rdrREADER_2 0.0015186058 0.00071581326
-#> rdrREADER_3 0.0013773788 0.00076508897
-#> rdrREADER_4 0.0017299529 0.00112424616
+x <- dataset11
+str(x)
+#> List of 3
+#>  $ ratings     :List of 3
+#>   ..$ NL   : num [1:4, 1:5, 1:158, 1:4] -Inf -Inf -Inf -Inf -Inf ...
+#>   ..$ LL   : num [1:4, 1:5, 1:115, 1:20] -Inf -Inf -Inf -Inf -Inf ...
+#>   ..$ LL_IL: logi NA
+#>  $ lesions     :List of 3
+#>   ..$ perCase: int [1:115] 6 4 7 1 3 3 3 8 11 2 ...
+#>   ..$ IDs    : num [1:115, 1:20] 1 1 1 1 1 1 1 1 1 1 ...
+#>   ..$ weights: num [1:115, 1:20] 0.167 0.25 0.143 1 0.333 ...
+#>  $ descriptions:List of 7
+#>   ..$ fileName     : chr "dataset11"
+#>   ..$ type         : chr "FROC"
+#>   ..$ name         : chr "DOBBINS-1"
+#>   ..$ truthTableStr: num [1:4, 1:5, 1:158, 1:21] 1 1 1 1 1 1 1 1 1 1 ...
+#>   ..$ design       : chr "FCTRL"
+#>   ..$ modalityID   : Named chr [1:4] "1" "2" "3" "4"
+#>   .. ..- attr(*, "names")= chr [1:4] "1" "2" "3" "4"
+#>   ..$ readerID     : Named chr [1:5] "1" "2" "3" "4" ...
+#>   .. ..- attr(*, "names")= chr [1:5] "1" "2" "3" "4" ...
 ```
 
-    
-* RRFC, a list of 3 containing results of random-reader fixed-case analyses
-    + `FTtests`: is a [2x4] dataframe: results of the F-tests, see below. 
-    + `ciDiffTrt`: is a [1x7] dataframe: the confidence intervals between different treatments, see below. 
-    + `ciAvgRdrEachTrt`: is a [2x5] dataframe: the confidence intervals for the average reader over each  over each treatment.  
+* Focus for now in the 115 diseased cases. 
+* The numbers of lesions in these cases is contained in `x$lesions$perCase`.
 
-    
 
 ```r
-ret$RRFC$FTests
-#>    DF            MS         F          p
-#> T   1 2.3565410e-04 4.6940577 0.11883786
-#> TR  3 5.0202641e-05        NA         NA
-ret$RRFC$ciDiffTrt
-#>                        Estimate       StdErr DF         t      PrGTt
-#> trtTREAT1-trtTREAT2 0.010854817 0.0050101218  3 2.1665774 0.11883786
-#>                           CILower     CIUpper
-#> trtTREAT1-trtTREAT2 -0.0050896269 0.026799261
-ret$RRFC$ciAvgRdrEachTrt
-#>             Estimate      StdErr DF    CILower    CIUpper
-#> TrtTREAT1 0.84774989 0.011098012  3 0.81243106 0.88306871
-#> TrtTREAT2 0.83689507 0.007771730  3 0.81216196 0.86162818
+x$lesions$perCase
+#>   [1]  6  4  7  1  3  3  3  8 11  2  4  6  2 16  5  2  8  3  4  7 11  1  4  3  4
+#>  [26]  4  7  3  2  5  2  2  7  6  6  4 10 20 12  6  4  7 12  5  1  1  5  1  2  8
+#>  [51]  3  1  2  2  3  2  8 16 10  1  2  2  6  3  2  2  4  6 10 11  1  2  6  2  4
+#>  [76]  5  2  9  6  6  8  3  8  7  1  1  6  3  2  1  9  8  8  2  2 12  1  1  1  1
+#> [101]  1  3  1  2  2  1  1  1  1  3  1  1  1  2  1
 ```
 
+* For example, the first diseased case contains 6 lesions, the second contains 4 lesions, the third contains 7 lesions, etc. and the last diseased case contains 1 lesion.
+* To get an idea of the distribution of the numbers of lesions per diseased cases, one could interrogate this vector as shown below using the `which()` function:
 
-## References {#quick-start-or-text-references}
+
+```r
+for (el in 1:max(x$lesions$perCase)) cat(
+  "number of diseased cases with", el, "lesions = ", 
+  length(which(x$lesions$perCase == el)), "\n")
+#> number of diseased cases with 1 lesions =  25 
+#> number of diseased cases with 2 lesions =  23 
+#> number of diseased cases with 3 lesions =  13 
+#> number of diseased cases with 4 lesions =  10 
+#> number of diseased cases with 5 lesions =  5 
+#> number of diseased cases with 6 lesions =  11 
+#> number of diseased cases with 7 lesions =  6 
+#> number of diseased cases with 8 lesions =  8 
+#> number of diseased cases with 9 lesions =  2 
+#> number of diseased cases with 10 lesions =  3 
+#> number of diseased cases with 11 lesions =  3 
+#> number of diseased cases with 12 lesions =  3 
+#> number of diseased cases with 13 lesions =  0 
+#> number of diseased cases with 14 lesions =  0 
+#> number of diseased cases with 15 lesions =  0 
+#> number of diseased cases with 16 lesions =  2 
+#> number of diseased cases with 17 lesions =  0 
+#> number of diseased cases with 18 lesions =  0 
+#> number of diseased cases with 19 lesions =  0 
+#> number of diseased cases with 20 lesions =  1
+```
+
+* This tells us that 25 cases contain 1 lesion
+* Likewise, 23 cases contain 2 lesions
+* Etc.
+
+### Definition of `lesDistr` array {#quick-start-froc-data-lesion-distribution}
+* What is the fraction of (diseased) cases with 1 lesion, 2 lesions etc.
+
+
+```r
+for (el in 1:max(x$lesions$perCase)) cat("fraction of diseased cases with", el, "lesions = ", 
+                                              length(which(x$lesions$perCase == el))/length(x$ratings$LL[1,1,,1]), "\n")
+#> fraction of diseased cases with 1 lesions =  0.2173913 
+#> fraction of diseased cases with 2 lesions =  0.2 
+#> fraction of diseased cases with 3 lesions =  0.1130435 
+#> fraction of diseased cases with 4 lesions =  0.08695652 
+#> fraction of diseased cases with 5 lesions =  0.04347826 
+#> fraction of diseased cases with 6 lesions =  0.09565217 
+#> fraction of diseased cases with 7 lesions =  0.05217391 
+#> fraction of diseased cases with 8 lesions =  0.06956522 
+#> fraction of diseased cases with 9 lesions =  0.0173913 
+#> fraction of diseased cases with 10 lesions =  0.02608696 
+#> fraction of diseased cases with 11 lesions =  0.02608696 
+#> fraction of diseased cases with 12 lesions =  0.02608696 
+#> fraction of diseased cases with 13 lesions =  0 
+#> fraction of diseased cases with 14 lesions =  0 
+#> fraction of diseased cases with 15 lesions =  0 
+#> fraction of diseased cases with 16 lesions =  0.0173913 
+#> fraction of diseased cases with 17 lesions =  0 
+#> fraction of diseased cases with 18 lesions =  0 
+#> fraction of diseased cases with 19 lesions =  0 
+#> fraction of diseased cases with 20 lesions =  0.008695652
+```
+
+* This tells us that fraction 0.217 of (diseased) cases contain 1 lesion
+* And fraction 0.2 of (diseased) cases contain 2 lesions
+* Etc.
+* This information is obtained using the function `UtilLesionDistr()` 
+
+
+```r
+lesDistr <- UtilLesionDistr(x)
+lesDistr
+#>       [,1]        [,2]
+#>  [1,]    1 0.217391304
+#>  [2,]    2 0.200000000
+#>  [3,]    3 0.113043478
+#>  [4,]    4 0.086956522
+#>  [5,]    5 0.043478261
+#>  [6,]    6 0.095652174
+#>  [7,]    7 0.052173913
+#>  [8,]    8 0.069565217
+#>  [9,]    9 0.017391304
+#> [10,]   10 0.026086957
+#> [11,]   11 0.026086957
+#> [12,]   12 0.026086957
+#> [13,]   16 0.017391304
+#> [14,]   20 0.008695652
+```
+
+* The `UtilLesionDistr()` function returns an array with two columns and number of rows equal to the number of *distinct non-zero* values of lesions per case.
+* The first column contains the number of distinct non-zero values of lesions per case, 14 in the current example.
+* The second column contains the fraction of diseased cases with the number of lesions indicated in the first column.
+* The second column must sum to unity
+
+
+```r
+sum(UtilLesionDistr(x)[,2])
+#> [1] 1
+```
+
+* The lesion distribution array will come in handy when it comes to predicting the operating characteristics from using the Radiological Search Model (RSM), as detailed in TBA Chapter 17.
+
+
+## Definition of `lesWghtDistr` array {#quick-start-froc-data-lesion-weights}
+* This is returned by `UtilLesionWeightsDistr()`.
+* This contains the same number of rows as `lesDistr`.
+* The number of columns is one plus the number of rows as `lesDistr`.
+* The first column contains the number of distinct non-zero values of lesions per case, 14 in the current example.
+* The second through the last columns contain the weights of cases with number of lesions per case corresponding to row 1.
+* Missing values are filled with `-Inf`.
+
+
+```r
+lesWghtDistr <- UtilLesionWeightsDistr(x)
+cat("dim(lesDistr) =", dim(lesDistr),"\n")
+#> dim(lesDistr) = 14 2
+cat("dim(lesWghtDistr) =", dim(lesWghtDistr),"\n")
+#> dim(lesWghtDistr) = 14 21
+cat("lesWghtDistr = \n\n")
+#> lesWghtDistr =
+lesWghtDistr
+#>       [,1]       [,2]       [,3]       [,4]       [,5]       [,6]       [,7]
+#>  [1,]    1 1.00000000       -Inf       -Inf       -Inf       -Inf       -Inf
+#>  [2,]    2 0.50000000 0.50000000       -Inf       -Inf       -Inf       -Inf
+#>  [3,]    3 0.33333333 0.33333333 0.33333333       -Inf       -Inf       -Inf
+#>  [4,]    4 0.25000000 0.25000000 0.25000000 0.25000000       -Inf       -Inf
+#>  [5,]    5 0.20000000 0.20000000 0.20000000 0.20000000 0.20000000       -Inf
+#>  [6,]    6 0.16666667 0.16666667 0.16666667 0.16666667 0.16666667 0.16666667
+#>  [7,]    7 0.14285714 0.14285714 0.14285714 0.14285714 0.14285714 0.14285714
+#>  [8,]    8 0.12500000 0.12500000 0.12500000 0.12500000 0.12500000 0.12500000
+#>  [9,]    9 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111 0.11111111
+#> [10,]   10 0.10000000 0.10000000 0.10000000 0.10000000 0.10000000 0.10000000
+#> [11,]   11 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909
+#> [12,]   12 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333
+#> [13,]   16 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000
+#> [14,]   20 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000
+#>             [,8]       [,9]      [,10]      [,11]      [,12]      [,13]  [,14]
+#>  [1,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf
+#>  [2,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf
+#>  [3,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf
+#>  [4,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf
+#>  [5,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf
+#>  [6,]       -Inf       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf
+#>  [7,] 0.14285714       -Inf       -Inf       -Inf       -Inf       -Inf   -Inf
+#>  [8,] 0.12500000 0.12500000       -Inf       -Inf       -Inf       -Inf   -Inf
+#>  [9,] 0.11111111 0.11111111 0.11111111       -Inf       -Inf       -Inf   -Inf
+#> [10,] 0.10000000 0.10000000 0.10000000 0.10000000       -Inf       -Inf   -Inf
+#> [11,] 0.09090909 0.09090909 0.09090909 0.09090909 0.09090909       -Inf   -Inf
+#> [12,] 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333 0.08333333   -Inf
+#> [13,] 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.06250000 0.0625
+#> [14,] 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000 0.0500
+#>        [,15]  [,16]  [,17] [,18] [,19] [,20] [,21]
+#>  [1,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#>  [2,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#>  [3,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#>  [4,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#>  [5,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#>  [6,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#>  [7,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#>  [8,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#>  [9,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#> [10,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#> [11,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#> [12,]   -Inf   -Inf   -Inf  -Inf  -Inf  -Inf  -Inf
+#> [13,] 0.0625 0.0625 0.0625  -Inf  -Inf  -Inf  -Inf
+#> [14,] 0.0500 0.0500 0.0500  0.05  0.05  0.05  0.05
+```
+
+* Row 3 corresponds to 3 lesions per case and the weights are 1/3, 1/3 and 1/3.
+* Row 13 corresponds to 16 lesions per case and the weights are 0.06250000, 0.06250000, ..., repeated 13 times.
+* Note that the number of rows is less than the maximum number of lesions per case (20).
+* This is because some configurations of lesions per case (e.g., cases with 13 lesions per case) do not occur in this dataset. 
+
+## References {#quick-start-froc-data-format-references}
