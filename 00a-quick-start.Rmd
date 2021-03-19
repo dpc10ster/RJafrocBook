@@ -1,6 +1,6 @@
 # (PART\*) Quick Start {-}
 
-# DBM analysis text output {#quick-start-dbm-text}
+# JAFROC data format {#quick-start-data-format}
 
 
 ```{r setup, include = FALSE}
@@ -12,225 +12,76 @@ library(RJafroc)
 ```
 
 
-## How much finished {#quick-start-dbm-text-how-much-finished}
-90%
+## How much finished {#quick-start-data-format-how-much-finished}
+80% (need to add images for one reader; add one-modality dataset)
 
 
 
-## Introduction {#quick-start-dbm-text-intro}
-This chapter is intended for those seeking a quick-and-easy transition from Windows `JAFROC` to `RJafroc`. Described first is the structure of an `RJafroc` dataset followed by how to read a JAFROC  format Excel file to create an `RJafroc` dataset.
+## Introduction {#quick-start-data-format-intro}
+* The purpose of this vignette is to explain the data format of the input Excel file. How to read this file into a dataset object suitable for `RJafroc`, is the subject of the next chapter. 
+* Background on observer performance methods are in my book [@chakraborty2017observer].
+* I will start with Receiver Operating Characteristic (ROC) data [@metz1978rocmethodology] as this is by far the simplest paradigm.
+* In the ROC paradigm the observer assigns a rating to each image. A rating is an ordered numeric label, and, in our convention, higher values represent greater certainty or **confidence level** for presence of disease. With human observers, a 5 (or 6) point rating scale is typically used, with 1 representing highest confidence for *absence* of disease and 5 (or 6) representing highest confidence for *presence* of disease. Intermediate values represent intermediate confidence levels for presence or absence of disease. 
+* Note that location information, if applicable, associated with the disease, is not collected. 
+* There is no restriction to 5 or 6 ratings. With algorithmic observers, e.g., computer aided detection (CAD) algorithms, the rating could be a floating point number and have infinite precision. All that is required is that higher values correspond to greater confidence in presence of disease.
+* The above is termed a *positive-directed* rating scale. If lower numbers correspond to greater confidence, termed a negative-directed rating scale, a simple transformation to $max(rating) - rating + 1$, where $max(rating)$ is the maximum rating, over all readers, modalities and cases, will convert a negative-directed rating scale to a positive directed rating scale. 
 
-## Reading a JAFROC format file {#quick-start-dbm-text-read-file}
+## Note to existing users {#quick-start-data-format-note-to-existing-users}
+* The Excel file format has recently undergone changes, involving three additional columns in the `Truth` worksheet.
+* `RJafroc` will work with old format Excel files as the additional columns are ignored. 
+* Reasons for the change will become clearer in later chapters ^[They are needed for generalization to other data collection paradigms and for better data entry error control].
 
-There is a file `RocData.xlsx` contained in directory `R/quick-start`. This is identical to embedded `dataset02`, the Van Dyke dataset in the ROC literature [@RN1993]. Here are screen shots of the three worksheets comprising this Excel file. 
+## Contents of Excel file {#quick-start-data-format-contents}
+* The illustrations in this chapter correspond to Excel file `R/quick-start/rocCr.xlsx` in the project directory ^[To access files one needs to `fork` the repository, which creates, on your computer, a copy of all files used to create this document]. This is a *toy file*, i.e., an artificial small dataset intended to illustrate essential features of the data format. 
+* The Excel file has three worksheets: `Truth`, `NL` (or `FP`) and `LL` (or `TP`).
 
+## The `Truth` worksheet {#quick-start-data-format-truth-worksheet}
+![](images/quick-start/rocCrTruth.png){width=100%}
 
+* The `Truth` worksheet contains 6 columns: `CaseID`, `LesionID`, `Weight`, `ReaderID`, `ModalityID` and `Paradigm`. 
+* The first five columns contain as many rows as there are cases (images) in the dataset. 
+* `CaseID`: **unique integers**, one per case, representing the cases in the dataset. 
+* `LesionID`: integers 0 or 1, with each 0 representing a non-diseased case and each 1 representing a diseased case. 
+* In the current dataset, the non-diseased cases are labeled `1`, `2` and `3`, while the diseased cases are labeled `70`, `71`, `72`, `73` and `74`. The values do not have to be consecutive integers; they need not be ordered; the only requirement is that they be **unique integers**.
+* `Weight`: A floating point value, typically filled in with 0 or 1; this field is not used for ROC data. 
+* `ReaderID`: a **comma-separated** listing of reader labels, each represented by a **unique integer**, that have interpreted the case. In the example shown below each cell has the value `0, 1, 2, 3, 4` meaning that each of these readers has interpreted all cases (hence the "factorial" design). **With multiple readers each cell in this column has to be text formatted as otherwise Excel will not accept it.**
+* `ModalityID`: a comma-separated listing of modalities, each represented by a **unique integer**, that are applied to each case. In the example each cell has the value `0, 1`. **With multiple modalities each cell has to be text formatted as otherwise Excel will not accept it.**
+* `Paradigm`: this column contains two cells, `ROC` and `factorial`. It informs the software that this is an ROC dataset, and the design is factorial, meaning each reader has interpreted each case in each modality. 
+* There are 5 diseased cases in the dataset (the number of 1's in the `LesionID` column of the `Truth` worksheet). 
+* There are 3 non-diseased cases in the dataset (the number of 0's in the `LesionID` column).
+* There are 5 readers in the dataset (each cell in the `ReaderID` column contains the string `0, 1, 2, 3, 4`).
+* There are 2 modalities in the dataset (each cell in the `ModalityID` column contains the string `0, 1`).
 
-```{r quick-start-dbm-roc-xlsx, echo=FALSE,out.width="50%",out.height="20%",fig.cap="Three worksheets - Truth, FP and TP, comprising Excel file `R/quick-start/Roc.xlsx`",fig.show='hold',fig.align='center'}
-knitr::include_graphics(c("R/quick-start/RocTruth.png", "R/quick-start/RocFP.png", "R/quick-start/RocTP.png"))
-``` 
+## The false positive (FP) ratings {#quick-start-data-fp-worksheet}
+These are found in the `FP` or `NL` worksheet, see below.
+![](images/quick-start/rocCrFp.png){width=100%}
 
+* It consists of 4 columns, each of length 30 (# of modalities X number of readers X number of non-diseased cases). 
+* `ReaderID`: the reader labels: `0`, `1`, `2`, `3` and `4`. Each reader label occurs 6 times (# of modalities X number of non-diseased cases). 
+* `ModalityID`: the modality or treatment labels: `0` and `1`. Each label occurs 15 times (# of readers X number of non-diseased cases). 
+* `CaseID`: the case labels for non-diseased cases: `1`, `2` and `3`. Each label occurs 10 times (# of modalities X # of readers). 
+* The label of a diseased case cannot occur in the FP worksheet. If it does the software generates an error. 
+* `FP_Rating`: the floating point ratings of non-diseased cases. Each row of this worksheet contains a rating corresponding to the values of `ReaderID`, `ModalityID` and `CaseID` for that row.  
 
-Next, one uses `DfReadDataFile()` as follows, to read the data file into an `R` object.
+## The true positive (TP) ratings {#quick-start-data-format-tp-worksheet}
+These are found in the `TP` or `LL` worksheet, see below.
+![](images/quick-start/rocCrTp.png){width=100%}
 
+* It consists of 5 columns, each of length 50 (# of modalities X number of readers X number of diseased cases). 
+* `ReaderID`: the reader labels: `0`, `1`, `2`, `3` and `4`. Each reader label occurs 10 times (# of modalities X number of diseased cases). 
+* `ModalityID`: the modality or treatment labels: `0` and `1`. Each label occurs 25 times (# of readers X number of diseased cases). 
+* `LesionID`: For an ROC dataset this column contains fifty 1's (each diseased case has one lesion). 
+* `CaseID`: the case labels for non-diseased cases: `70`, `71`, `72`, `73` and `74`. Each label occurs 10 times (# of modalities X # of readers). For an ROC dataset the label of a non-diseased case cannot occur in the TP worksheet. If it does the software generates an error. 
+* `TP_Rating`: the floating point ratings of diseased cases. Each row of this worksheet contains a rating corresponding to the values of `ReaderID`, `ModalityID`, `LesionID` and `CaseID` for that row.   
 
-```{r quick-start-dbm-text-read-data-file}
-fileName <- "R/quick-start/Roc.xlsx"
-ds2 <- DfReadDataFile(fileName)
-str(ds2)
-``` 
+## A single reader dataset {#quick-start-data-format-single-reader}
 
-
-The following illustration uses a different dataset.
-
-
-## Dataset structure {#quick-start-dbm-text-dataset-structure}
-Data set `dataset03` corresponding to the Franken ROC dataset [@RN1995] is embedded in `RJafroc`. The structure of this dataset is shown below.
-
-```{r dataset-str, echo=TRUE}
-ds <- dataset03
-str(ds)
-```             
-
-* `ds` is a list with 3 members. 
-    + `ratings`
-    + `lesions`
-    + `descriptions`
-* `ratings` is a list with three members
-    + `NL` This contains the NL/FP ratings
-    + `LL` This contains the LL/TP ratings
-    + `LL_IL` This contains the LROC incorrect localization ratings
-* `lesions` is a list with 3 members
-    + `perCase` number of lesions per diseased case array
-    + `IDs` lesion IDs array (labels attached to each lesion)
-    + `weights` lesion weights array
-* `descriptions` is a list with 7 members
-    + `fileName` name of the original file the data came from, if available, or the embedded dataset name
-    + `type` The type of dataset, "ROC", "FROC", "LROC" or "ROI"
-    + `name` The name of the dataset
-    + `truthTableStr` The structure of the truth table, for internal use, for checking data consistency
-    + `design` The design of the dataset, FCTRL, SPLIT-PLOT-A or SPLIT-PLOT-C
-    + `modalityID` The IDs of the modalities
-    + `readerID` The IDs of the readers
-
-
-The false positive ratings are contained in `NL`, an array with dimensions `[1:2,1:4,1:100,1]`. 
-
-```{r dataset-str-nl, echo=TRUE}
-str(ds$ratings$NL)
-```             
-
-The first index corresponds to the two treatments. The second index corresponds to the four readers. The third index corresponds to the 100 cases. The fourth dimension, with length one, corresponds to one FP/NL per case; the redundant index is needed for consistency with FROC data, where multiple NLs per case are possible.
-
-```{r dataset-str-nl34-100, echo=TRUE}
-str(ds$ratings$NL[1,1,34:100,1])
-all(ds$ratings$ratings$ratings$NL[,,34:100,1] == -Inf)
-```             
-
-
-The entries in this array for cases 34 through 100 are all `-Inf` (this is tested for by the `all()` function, which yields `TRUE` if all of its arguments are true). In the ROC paradigm false positive are not possible on diseased cases (but they are possible for FROC data). So the actual FP ratings are contained in the first 33 elements of the array. 
-
-
-```{r dataset-str-ll, echo=TRUE}
-str(ds$ratings$LL)
-```             
-
-`LL` is an array with dimensions `[1:2,1:4,1:67,1]`. This implies 67 diseased cases and by subtraction from 100 there must be 33 non-diseased cases. The redundant dimension, with length one, is needed for consistency with FROC data, where multiple lesions per case are possible.
-
-```{r dataset-str-perCase, echo=TRUE}
-str(ds$lesions$perCase)
-```             
-
-
-`perCase` is a vector with length 67, implying 100 - 67 = 33 non-diseased cases. Each element of `perCase` is unity, corresponding to one lesion per diseased case for ROC data.
-
-
-```{r dataset-str-ids-weights, echo=TRUE}
-str(ds$lesions$IDs)
-str(ds$lesions$weights)
-```             
-
-
-The list members `lesionID` and `lesionWeight` are arrays with dimensions `[1:67,1]` containing ones. Again, these imply 67 diseased cases. The extra dimension, with length one, is needed for consistency with FROC data. The variables `perCase`, `IDs` and `weights`, while not needed for ROC data, are there for consistency with FROC data.
-
-```{r dataset-str-type, echo=TRUE}
-str(ds$descriptions$type)
-```             
-
-
-The `type` list member is the character string `"ROC"`, for an ROC dataset. Other possibilities are `"FROC"`, `"LROC"` and `"ROI"`.
-
-    
-```{r dataset-str-modality-id, echo=TRUE}
-str(ds$descriptions$modalityID)
-```             
-
-
-The `modalityID` list member is a character string with two entries, `"TREAT1"` and `"TREAT2"`, corresponding to the two modalities. 
-
-    
-```{r dataset-str-reader-id, echo=TRUE}
-str(ds$descriptions$readerID)
-```             
-
-The `readerID` list member is a character string with four entries, `"READER_1"`,  `"READER_2"`, `"READER_3"` and `"READER_4"` corresponding to the four readers. 
-    
-
-Here are the actual ratings for cases 1 through 33.
-
-```{r list-nl-ratings-1-1}
-ds$ratings$NL[1,1,1:33,1]
-``` 
-
-This says that for treatment 1 and reader 1, (non-diseased) case 1 was rated 3, case 2 was rated 1, cases 3-7 were rated 2, case 8 was rated 4, etc. As another example, for treatment 2 and reader 3, the FP ratings are: 
-
-```{r list-nl-ratings-2-3}
-ds$ratings$NL[2,3,1:33,1]
-``` 
-
-
-This says that for treatment 2 and reader 3, (non-diseased) case 1 was rated 3, case 2 was rated 1, cases 3-6 were rated 2, cases 7-8 were rated 4, etc. 
-
-
-## Analyzing the ROC dataset {#quick-start-dbm-text-analyze-dataset}
-
-This illustrates the `StSignificanceTesting()` function. The significance testing method is specified as `"DBM"` and the figure of merit `FOM` is specified as "Wilcoxon".
-
-```{r quick-start-dbm-text-significance-testing}
-ret <- StSignificanceTesting(ds, FOM = "Wilcoxon", method = "DBM")
-```             
-
-## Explanation of the output {#quick-start-dbm-text-explanation}
-The function returns a list with 5 members: 
-
-* `FOMs`: figures of merit.
-* `ANOVA`: ANOVA tables.
-* `RRRC`: random-reader random-case analyses results.
-* `FRRC`: fixed-reader random-case analyses results.
-* `RRFC`" random-reader fixed-case analyses results.
-
-Let us consider them one by one. 
-
-* `FOMs` is a list of 3
-    + `foms` is a [2x4] dataframe: the figure of merit for each of of the four observers in the two treatments.
-    + `trtMeans` is a [2x1] dataframe: the average figure of merit over all readers for each treatment.
-    + `trtMeanDiffs` a [1x1] dataframe: the difference(s) of the reader-averaged figures of merit for all different treatment pairings. In this example, with only two treatments, there is only one different treatment pairing.
-    
 ```{r}
-ret$FOMs$foms
-ret$FOMs$trtMeans
-ret$FOMs$trtMeanDiffs
-```             
-
-* ANOVA is a list of 4
-    + `TRCanova` is a [8x3] dataframe: the treatment-reader-case ANOVA table, see below, where SS is the sum of squares, DF is the denominator degrees of freedom and MS is the mean squares, and T = treatment, R = reader, C = case, TR = treatment-reader, TC = treatment-case, RC = reader-case, TRC = treatment-reader-case.  
-    + `VarCom` is a [6x1] dataframe: the variance components, see below, where `varR` is the reader variance, `varC` is the case variance, `varTR` is the treatment-reader variance, `varTC` is the treatment-case variance, `varRC` is the reader-case variance, and `varTRC` is the treatment-reader-case variance.
-    + `IndividualTrt` is a [3x3] dataframe: the individual treatment variance components averaged over all readers, see below, where `msR` is the mean square reader, `msC` is the mean square case and `msRC` is the mean square reader-case.
-    + `IndividualRdr` is a [3x5] dataframe: the individual reader variance components averaged over treatments, see below, where `msT` is the mean square treatment, `msC` is the mean square case and `msTC` is the mean square treatment-case.
-    
-```{r}
-ret$ANOVA$TRCanova
-ret$ANOVA$VarCom
-ret$ANOVA$IndividualTrt
-ret$ANOVA$IndividualRdr
-```             
-
-* RRRC, a list of 3 containing results of random-reader random-case analyses
-    + `FTtests`: is a [2x4] dataframe: results of the F-tests, see below, where `FStat` is the F-statistic and `p` is the p-value. The first row is the treatment effect and the second is the error term. 
-    + `ciDiffTrt`: is a [1x7] dataframe: the confidence intervals between different treatments, see below, where `StdErr` is the standard error of the estimate, `t` is the t-statistic and `PrGTt` is the p-value.
-    + `ciAvgRdrEachTrt`: is a [2x5] dataframe: the confidence intervals for the average reader over each treatment, see below, where `CILower` is the lower 95% confidence interval and `CIUpper` is the upper 95% confidence interval.
-    
-```{r}
-ret$RRRC$FTests
-ret$RRRC$ciDiffTrt
-ret$RRRC$ciAvgRdrEachTrt
-```             
-
-* FRRC, a list of 4 containing results of fixed-reader random-case analyses
-    + `FTtests`: is a [2x4] dataframe: results of the F-tests, see below.
-    + `ciDiffTrt`: is a [1x7] dataframe: the confidence intervals between different treatments, see below.
-    + `ciAvgRdrEachTrt`: is a [2x5] dataframe: the confidence intervals for the average reader over each treatment
-    + `ciDiffTrtEachRdr`: is a [4x7] dataframe: the confidence intervals for each different-treatment pairing for each reader. 
-    
-```{r}
-ret$FRRC$FTests
-ret$FRRC$ciDiffTrt
-ret$FRRC$ciAvgRdrEachTrt
-ret$FRRC$ciDiffTrtEachRdr
-```             
-
-    
-* RRFC, a list of 3 containing results of random-reader fixed-case analyses
-    + `FTtests`: is a [2x4] dataframe: results of the F-tests, see below. 
-    + `ciDiffTrt`: is a [1x7] dataframe: the confidence intervals between different treatments, see below. 
-    + `ciAvgRdrEachTrt`: is a [2x5] dataframe: the confidence intervals for the average reader over each  over each treatment.  
-
-    
-```{r}
-ret$RRFC$FTests
-ret$RRFC$ciDiffTrt
-ret$RRFC$ciAvgRdrEachTrt
+rocCr1R <- "R/quick-start/rocCr1R.xlsx"
+x <- DfReadDataFile(rocCr1R, newExcelFileFormat = TRUE)
+str(x)
 ```             
 
 
-## References {#quick-start-dbm-text-references}
+
+## References {#quick-start-data-format-references}
