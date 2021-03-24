@@ -68,7 +68,7 @@ The reviewer is correct. The misconception is illustrated next.
 ```r
 # shows that monotone transformations have no effect on 
 # AUC even though the pdfs look non-gaussian
-# common statistician misconception about ROC analysis
+# common misconception about ROC analysis
 fArray <- c(0.1,0.5,0.9)
 seedArray <- c(10,11,12)
 for (row in 1:3) { 

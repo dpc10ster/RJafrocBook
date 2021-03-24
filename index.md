@@ -1,7 +1,7 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2021-03-19"
+date: "2021-03-24"
 site: bookdown::bookdown_site
 output: 
    bookdown::pdf_document: default
@@ -21,6 +21,11 @@ description: "Artificial intelligence and observer performance book based on RJa
 * This book is currently (as of November 2020) in preparation. 
 * It is intended as an online update to my "physical" book [@chakraborty2017observer]. Since its publication in 2017 the `RJafroc` package, on which the `R` code examples in the book depend, has evolved considerably, causing many of the examples to "break". This also gives me the opportunity to improve on the book and include additional material.
 * The physical book chapters are labeled (book), to distinguish them from the chapters in this online book.
+
+
+## How much finished {-}
+
+10%
 
 ## A note on the online distribution mechanism of the book {-}
 * In the hard-copy version of my book [@chakraborty2017observer] the online distribution mechanism was `BitBucket`. 
@@ -57,14 +62,24 @@ The book is divided into parts as follows:
 * CV
 * Alternatives
 
-## ToDos {-}
+## ToDos TBA {-}
 * Check Bamber theorem derivation.
 * Parts labeled TBA and TODOLAST need to be updated on final revision.
 * Change third person to first person in references to myself.
+* sprintf("%.4f", proper formatting of numbers
+* OpPtStr(, do:
 
 ## Chapters needing heavy edits {-}
 * 12-froc.
 * 13-froc-empirical.
 * 13-froc-empirical-examples.
 
-
+# Help on the software {-}
+* If you have installed `RJafroc` from `GitHub`:
+    + ?`RJafroc-package` (RStudio will auto complete ...)
+    + Scroll down all the way and click on `Index`
+* Regardless of where you installed from use the `RJafroc` help site:
+    + [RJafroc help site](https://dpc10ster.github.io/RJafroc/)
+    + Look under `References` 
+    + For example, for help on the function `PlotEmpiricalOperatingCharacteristics`:
+    + [PlotEmpiricalOperatingCharacteristics](https://dpc10ster.github.io/RJafroc/reference/PlotEmpiricalOperatingCharacteristics.html)

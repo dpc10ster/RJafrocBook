@@ -9,7 +9,7 @@
 
 
 ## Introduction {#quick-start-or-text-intro}
-This vignette illustrates significance testing using the DBM and OR methods. 
+This chapter illustrates significance testing using the DBM and OR methods. 
 
 
 ## Analyzing the ROC dataset {#quick-start-or-text-analyze-dataset}

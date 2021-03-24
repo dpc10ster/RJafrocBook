@@ -7,6 +7,13 @@ output:
 
 
 
+
+
+## How much finished {#SplitPlotChapter-how-much-finished}
+10%
+
+
+
 ## Mean Square R(T)
 R(T) is read as "reader nested within treatment" [@RN2508].  
 
