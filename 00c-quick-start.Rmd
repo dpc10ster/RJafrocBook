@@ -1,5 +1,4 @@
-# Data format and reading FROC data {#quick-start-froc-data-format}
-
+# Reading the Excel data file {#quick-start-read-datafile}
 
 
 ```{r setup, include = FALSE}
@@ -11,197 +10,83 @@ library(RJafroc)
 ```
 
 
-
-## How much finished {#quick-start-froc-data-format-how-much-finished}
+## How much finished {#quick-start-read-datafile-how-much-finished}
 90%
 
 
-## Introduction {#quick-start-froc-data-intro}
-In the Free-response Receiver Operating Characteristic (FROC) paradigm the observer searches each case for signs of **localized disease** and marks and rates localized regions that are sufficiently suspicious for presence of disease. FROC data consists of **mark-rating pairs**, where each mark is a localized-region that was considered sufficiently suspicious for presence of a localized lesion and the rating is it's confidence level. As in the ROC paradigm, the rating can be an integer or quasi-continuous (e.g., 0 – 100), or a floating point value, *as long as higher numbers represent greater confidence in presence of a lesion at the indicated region*. This is termed a positive-directed confidence level scheme. By adopting a proximity criterion, the investigator classifies each mark as a lesion localization (`LL`) - if it is close to a real lesion - or a non-lesion localization (`NL`) otherwise. 
+## Introduction {#quick-start-read-datafile-intro}
+In the previous chapter I described the format of the Excel file `R/quick-start/rocCr.xlsx` corresponding to a small factorial ROC dataset. Described here is how to read this file in order to create an `RJafroc` dataset. It introduces the `RJafroc` function `DfReadDataFile()`. Also shown are the correspondences between values in the Excel file and the dataset object. 
 
-The purpose of this chapter is to:
 
-* Explain the data format of the input Excel file for FROC datasets. 
-* Explain the format of the FROC dataset.
-* Explain the lesion distribution array returned by `UtilLesionDistr()`.
-* Explain the lesion weights array returned by `UtilLesionWeightsDistr()`.
-* Details on the FROC paradigm are in my book [@chakraborty2017observer].
+## The structure of an ROC dataset {#quick-start-read-datafile-structure-roc-dataset}
+![](images/quick-start/rocCrTruth.png){width=100%}
 
-The chapter is illustrated with a toy data file, `R/quick-start/frocCr.xlsx` in which readers '0', '1' and '2' interpret 8 cases in two modalities, '0' and '1'. The design is 'factorial', abbreviated to `FCTRL` in the software; this is also termed a 'fully-crossed' design. The Excel file has three worksheets named `Truth`, `NL` (or `FP`) and `LL` (or `TP`). 
-
-## The `Truth` worksheet {#quick-start-froc-data-truth}
-![](images/quick-start/frocCrTruth.png){width=100%}
-
-* The `Truth` worksheet contains 6 columns: `CaseID`, `LesionID`, `Weight`, `ReaderID`, `ModalityID` and `Paradigm`. 
-* Since a diseased case may have more than one lesion, the first five columns contain **at least** as many rows as there are cases (images) in the dataset. There are 8 cases in the dataset and 12 rows of data, because some of the diseased cases contain more than one lesion.
-* `CaseID`: unique **integers** representing the cases in the dataset: '1', '2', '3', the 3 non-diseased cases, and '70', '71', '72', '73', '74', the 5 diseased cases. The ordering of the numbers is inconsequential. 
-* `LesionID`: integers 0, 1, 2, etc., 
-    + Each 0 represents a non-diseased case, 
-    + Each 1 represents the *first* lesion on a diseased case, 2 the *second* lesion, if present, and so on. 
-    + This field is zero for non-diseased cases '1', '2', '3'. 
-    + For the first diseased case, i.e., '70', it is 1 for the first lesion and 2 for the second lesion. 
-    + For the second diseased case i.e., '71', it is 1, as this case has only one lesion.
-    + For the third diseased case, i.e., '72', it is 1 for the first lesion, 2 for the second lesion and 3 for the third lesion. 
-    + For the fourth diseased case, i.e., '73', it is 1 for the first lesion and 2 for the second lesion. 
-    + For the fifth diseased case i.e., '74', it is 1, as this case has only one lesion.
-* There are 3 non-diseased cases in the dataset (the number of 0's in the `LesionID` column).
-* There are 5 diseased cases in the dataset (the number of 1's in the `LesionID` column). 
-* `Weight` or clinical importance - e.g., mortality associated with lesion:
-    + non-negative floating point values 
-    + 0 for each non-diseased case
-    + For each diseased case values that sum to unity. 
-    + A simple way to assign equal weights to all lesions in a case is to fill the `Weight` column with zeroes.
-* `LesionID` 
-    + Diseased case `70` has two lesions, with `LesionID`s '1' and '2', and weights 0.3 and 0.7. 
-    + Diseased case `71` has one lesion, with `LesionID` = 1, and `Weight` = 1. 
-    + Diseased case `72` has three lesions, with `LesionID`s 1, 2 and 3 and weights 1/3 each. 
-    + Diseased case `73` has two lesions, with `LesionID`s 1, and 2 and weights 0.1 and 0.9. 
-    + Diseased case `74` has one lesion, with `LesionID` = 1 and `Weight` = 1.
-* `ReaderID`: a comma-separated listing of readers, each represented by a unique **text label**, that have interpreted the case. In the example shown below each cell has the value '0, 1, 2'. 
-* There are 3 readers in the dataset, as each cell in the `ReaderID` column contains '0, 1, 2'.
-* `ModalityID`: a comma-separated listing of modalities (or treatments), each represented by a unique **integer**, that apply to each case. In the example each cell has the value `0, 1`. **Each cell has to be text formatted.**
-* There are 2 modalities in the dataset, as each cell in the `ModalityID` column contains '0, 1'.
-* `Paradigm`: The contents are `FROC` and `FCTRL`: this is an `FROC` dataset and the design is "factorial".
-
-## Reading the FROC dataset {#quick-start-froc-data-structure}
-The example shown above corresponds to file `R/quick-start/frocCr.xlsx` in the project directory. The next code chunk reads this file into an `R` object `x`.
+In the following code chunk the second statement reads the Excel file using the function `DfReadDataFile()` and saves it to object `x`. The third statement shows the structure of `x`.
 
 ```{r}
-frocCr <- "R/quick-start/frocCr.xlsx"
-x <- DfReadDataFile(frocCr, newExcelFileFormat = TRUE)
+rocCr <- "R/quick-start/rocCr.xlsx"
+x <- DfReadDataFile(rocCr, newExcelFileFormat = TRUE)
 str(x)
 ```             
 
-This follows the general description in Chapter \@ref(quick-start-data-format). The differences are described below.
-
-* The `x$descriptions$type` member indicates that this is an `FROC` dataset. 
-* The `x$lesions$perCase` member is a vector whose contents reflect the number of lesions in each diseased case, i.e., `r x$lesions$perCase` in the current example.
-* The `x$lesions$IDs` member indicates the labeling of the lesions in each diseased case.
-
-```{r}
-x$lesions$IDs
-```             
-
-* This shows that the lesions on the first diseased case are labeled '1' and '2'. The `-Inf` is a filler used to denote a missing value. The second diseased case has one lesion labeled '1'. The third diseased case has three lesions labeled '1', '2' and '3', etc.
-* The `lesionWeight` member is the clinical importance of each lesion. Lacking specific clinical reasons, the lesions should be equally weighted; this is *not* true for this toy dataset.
-
-```{r}
-x$lesions$weights
-```             
-
-* The first diseased case has two lesions, the first has weight 0.3 and the second has weight 0.7. 
-* The second diseased case has one lesion with weight 1. 
-* The third diseased case has three equally weighted lesions, each with weight 1/3. Etc.
-
-
-## The false positive (FP) ratings {#quick-start-froc-data-fp}
-These are found in the `FP` or `NL` worksheet.
-
-![](images/quick-start/frocCrNL.png){width=100%}
-
-* It consists of 4 columns, of equal length. The common length is an integer random variable greater than or equal to zero. It could be zero if the dataset has no NL marks (a possibility if the lesions are very easy to find and the observer has perfect performance).  
-* In the example dataset, the common length is `r sum(x$ratings$NL != -Inf)`.
-* `ReaderID`: the reader labels: these must be `0`, `1`, or `2`, as declared in the `Truth` worksheet. 
-* `ModalityID`: the modality labels: must be `0` or `1`, as declared in the `Truth` worksheet. 
-* `CaseID`: the labels of cases with `NL` marks. In the FROC paradigm `NL` events can occur on non-diseased **and** diseased cases. 
-* `FP_Rating`: the floating point ratings of `NL` marks. Each row of this worksheet yields a rating corresponding to the values of `ReaderID`, `ModalityID` and `CaseID` for that row.
-* For `ModalityID` 0, `ReaderID` 0 and `CaseID` 1 (the first non-diseased case declared in the `Truth` worksheet), there is a single `NL` mark that was rated `r x$ratings$NL[1,1,1,1]`, corresponding to row 2 of the `FP` worksheet.
-* Diseased cases with `NL` marks are also recorded in the `FP` worksheet. Some examples are seen at rows 15, 16 and 21, 22, 23. 
-* Rows 21 and 22 show that `caseID` = 71 got two `NL` marks, rated `r x$ratings$NL[2,3,5,1:2]`. 
-* Since this is the *only* case with two NL marks, it determines the length of the fourth dimension of the `x$ratings$NL` list member, `r length(x$ratings$NL[1,1,1,])`. Absent this case, the length would have been one.
-* The case with the most `NL` marks determines the length of the fourth dimension of the `x$ratings$NL` list member.
-* The reader should confirm that the ratings in `x$ratings$NL` reflect the contents of the `FP` worksheet.
-
-## The true positive (TP) ratings {#quick-start-froc-data-tp}
-These are found in the `TP` or `LL` worksheet, see below.
+* In the above code chunk flag `newExcelFileFormat` is set to `TRUE` as otherwise columns D - F in the `Truth` worksheet are ignored and the dataset is assumed to be factorial, with `dataType` "automatically" determined from the contents of the FP and TP worksheets. ^[The assumptions underlying the "automatic" determination could be defeated by data entry errors.] 
+* Flag `newExcelFileFormat = FALSE`, the default, is for compatibility with older JAFROC format Excel files, which did not have columns D - F in the `Truth` worksheet. Its usage is deprecated.
+* The dataset object `x` is a `list` variable with `r length(x)` members: `ratings`, `lesions` and `descriptions`.
+* The `x$ratings` member contains 3 sub-lists.
+    + The `x$ratings$NL` member, with dimension [2, 5, 8, 1], contains the ratings of normal cases. The first dimension (2) is the number of treatments, the second (5) is the number of readers and the third (8) is the total number of cases. For ROC datasets the fourth dimension is always unity. The five extra values ^[with only 3 non-diseased cases why does one need 8 values?] in the third dimension, which are filled with `NAs`, are needed for compatibility with FROC datasets.
+    + The `x$ratings$LL`, with dimension [2, 5, 5, 1], contains the ratings of abnormal cases. The third dimension (5) corresponds to the 5 diseased cases.
+    + The `x$ratings$LL_IL` member, equal to NA'; this member is there for compatibility with LROC data, `_IL`  denotes incorrect-localizations. 
+* The `x$lesions` member contains 3 sub-lists.
+    + The `x$lesions$perCase` member is a vector with 5 ones representing the 5 diseased cases in the dataset. 
+    + The `x$lesions$IDs` member is an array with 5 ones.
+    + The `x$lesions$weights` member is an array with 5 ones.
+    + These are irrelevant for ROC datasets. They are there for compatibility with FROC datasets.
+* The `x$descriptions` member contains 7 sub-lists.
+    + The `x$descriptions$fileName` member is the base name of the file that was read to create this dataset, "rocCr" in the current example, otherwise it is `NA` (the latter would apply, for example, for a simulated dataset). 
+    + The `x$descriptions$type` member indicates that this is an `ROC` dataset. 
+    + The `x$descriptions$name` member is the name of this dataset, if it is an embedded dataset, otherwise `NA`. 
+    + The `x$descriptions$truthTableStr` member, with dimension [2, 5, 8, 2], quantifies the structure of the dataset, as explained in TBA Vignette #3 (it is used to check for data entry errors).
+    + The `x$descriptions$design` member specifies the dataset design, which is "FCTRL" in the present example (a factorial dataset).
+    + The `x$descriptions$modalityID` member is a vector with two elements `"0"` and `"1"`, naming the two modalities. 
+    + The `x$readerID` member is a vector with five elements  `"0"`, `"1"`, `"2"`, `"3"` and `"4"`, naming the five readers. 
 
 
-![](images/quick-start/frocCrLL.png){width=100%}
+## Correspondence between `NL` member of dataset and the `FP` worksheet {#quick-start-read-datafile-correspondence-nl-fp}
+![](images/quick-start/rocCrFp.png){width=100%}
 
-* This worksheet can only have diseased cases. The presence of a non-diseased case in this worksheet will generate an error.
-* The common vertical length, 31 in this example, is a-priori unpredictable. The maximum possible length, assuming every lesion is marked for each modality, reader and diseased case, is 9 X 2 X 3 = 54. The 9 comes from the total number of non-zero entries in the `LesionID` column of the `Truth` worksheet, the 2 from the number of modalities and 3 from the number of readers.
-* The fact that the actual length (31) is smaller than the maximum length (54) means that there are combinations of modality, reader and diseased cases on which some lesions were not marked.
-* As examples, line 2 in the worksheet, the first lesion in `CaseID` equal to `70` was marked (and rated `r x$ratings$LL[1,1,1,1]`) in `ModalityID` `0` and `ReaderID` `0`. Line 3 in the worksheet, the second lesion in `CaseID` equal to `70` was also marked (and rated `r x$ratings$LL[1,1,1,2]`) in `ModalityID` `0` and `ReaderID` `0`. However, lesions 2 and 3 in `CaseID` = 72 were not marked (line 5 in the worksheet indicates that for this modality-reader-case combination only the first lesion was marked).
-* The length of the fourth dimension of the `x$ratings$LL` list member, `r length(x$ratings$LL[1,1,1,])` in the present example, is determined by the diseased case (72) with the most lesions in the `Truth` worksheet.
-* The reader should confirm that the ratings in `x$ratings$LL` reflect the contents of the `TP` worksheet.
-
-## On the distribution of numbers of lesions in diseased cases {#quick-start-froc-data-distribution-diseased-cases}  
-* Consider a much larger dataset, `dataset11`, with structure as shown below (for descriptions of all embedded datasets the `RJafroc` documentation):
-
-```{r}
-x <- dataset11
-str(x)
-```
-
-* Focus for now in the 115 diseased cases. 
-* The numbers of lesions in these cases is contained in `x$lesions$perCase`.
-
-```{r}
-x$lesions$perCase
-```
-
-* For example, the first diseased case contains 6 lesions, the second contains 4 lesions, the third contains 7 lesions, etc. and the last diseased case contains 1 lesion.
-* To get an idea of the distribution of the numbers of lesions per diseased cases, one could interrogate this vector as shown below using the `which()` function:
-
-```{r}
-for (el in 1:max(x$lesions$perCase)) cat(
-  "number of diseased cases with", el, "lesions = ", 
-  length(which(x$lesions$perCase == el)), "\n")
-```
-
-* This tells us that 25 cases contain 1 lesion
-* Likewise, 23 cases contain 2 lesions
-* Etc.
-
-### Definition of `lesDistr` array {#quick-start-froc-data-lesion-distribution}
-* What is the fraction of (diseased) cases with 1 lesion, 2 lesions etc.
-
-```{r}
-for (el in 1:max(x$lesions$perCase)) cat("fraction of diseased cases with", el, "lesions = ", 
-                                              length(which(x$lesions$perCase == el))/length(x$ratings$LL[1,1,,1]), "\n")
-```
-
-* This tells us that fraction 0.217 of (diseased) cases contain 1 lesion
-* And fraction 0.2 of (diseased) cases contain 2 lesions
-* Etc.
-* This information is obtained using the function `UtilLesionDistr()` 
-
-```{r}
-lesDistr <- UtilLesionDistr(x)
-lesDistr
-```
-
-* The `UtilLesionDistr()` function returns an array with two columns and number of rows equal to the number of *distinct non-zero* values of lesions per case.
-* The first column contains the number of distinct non-zero values of lesions per case, 14 in the current example.
-* The second column contains the fraction of diseased cases with the number of lesions indicated in the first column.
-* The second column must sum to unity
-
-```{r}
-sum(UtilLesionDistr(x)[,2])
-```
-
-* The lesion distribution array will come in handy when it comes to predicting the operating characteristics from using the Radiological Search Model (RSM), as detailed in TBA Chapter 17.
+* The list member `x$ratings$NL` is an array with `dim = c(2,5,8,1)`. 
+    + The first dimension (2) comes from the number of modalities. 
+    + The second dimension (5) comes from the number of readers. 
+    + The third dimension (8) comes from the **total** number of cases. 
+    + The fourth dimension is alway 1 for an ROC dataset. 
+* The value of `x$ratings$NL[1,5,2,1]`, i.e., `r x$ratings$NL[1,5,2,1]`, corresponds to row 15 of the FP table, i.e., to `ModalityID` = 0, `ReaderID` = 4 and `CaseID` = 2.
+* The value of `x$ratings$NL[2,3,2,1]`, i.e., `r x$ratings$NL[2,3,2,1]`, corresponds to row 24 of the FP table, i.e., to `ModalityID` 1, `ReaderID` 2 and `CaseID` 2.
+* All values for case index > 3 and case index <= 8 are `-Inf`. For example the value of `x$ratings$NL[2,3,4,1]` is `-Inf`. This is because there are only 3 non-diseased cases. The extra length is needed for compatibility with FROC datasets.
 
 
-## Definition of `lesWghtDistr` array {#quick-start-froc-data-lesion-weights}
-* This is returned by `UtilLesionWeightsDistr()`.
-* This contains the same number of rows as `lesDistr`.
-* The number of columns is one plus the number of rows as `lesDistr`.
-* The first column contains the number of distinct non-zero values of lesions per case, 14 in the current example.
-* The second through the last columns contain the weights of cases with number of lesions per case corresponding to row 1.
-* Missing values are filled with `-Inf`.
+## Case-index vs. caseID {#quick-start-read-datafile-correspondence-case-index-vs-case-id}
+* Regardless of what order they occur in the worksheet, the non-diseased cases are always indexed first. In the current example the case indices are 1, 2 and 3, corresponding to the three non-diseased cases with `caseIDs` equal to 1, 2 and 3.
+* Regardless of what order they occur in the worksheet, in the NL array the diseased cases are always indexed after the last non-diseased case. In the current example the case indices in the `NL` array are 4, 5, 6, 7 and 8, corresponding to the five diseased cases with `caseIDs` equal to 70, 71, 72, 73, and 74. In the `LL` array they are numbered 1, 2, 3, 4 and 5, corresponding to the five diseased cases with `caseIDs` equal to 70, 71, 72, 73, and 74. Some examples follow:
+* `x$ratings$NL[1,3,2,1]`, a FP rating, refers to `ModalityID` 0, `ReaderID` 2 and `CaseID` 2 (since the modality and reader IDs start with 0).
+* `x$ratings$NL[2,5,4,1]`, a FP rating, refers to `ModalityID` 1, `ReaderID` 4 and `CaseID` 70, the first diseased case; this is `-Inf`.
+* `x$ratings$NL[1,4,8,1]`, a FP rating, refers to `ModalityID` 0, `ReaderID` 3 and `CaseID` 74, the last diseased case; this is `-Inf`.
+* `x$ratings$NL[1,3,9,1]`, a FP rating, is an illegal value, as the third index cannot exceed 8.
+* `x$ratings$NL[1,3,8,2]`, a FP rating, is an illegal value, as the fourth index cannot exceed 1 for an ROC dataset.
+* `x$ratings$LL[1,3,1,1]`, a TP rating, refers to `ModalityID` 0, `ReaderID` 2 and `CaseID` 70, the first diseased case.
+* `x$ratings$LL[2,5,4,1]`, a TP rating, refers to `ModalityID` 1, `ReaderID` 4 and `CaseID` 73, the fourth diseased case.
 
-```{r}
-lesWghtDistr <- UtilLesionWeightsDistr(x)
-cat("dim(lesDistr) =", dim(lesDistr),"\n")
-cat("dim(lesWghtDistr) =", dim(lesWghtDistr),"\n")
-cat("lesWghtDistr = \n\n")
-lesWghtDistr
-```
+## Correspondence between `LL` member of dataset and the `TP` worksheet {#quick-start-read-datafile-correspondence-ll-tp}
+![](images/quick-start/rocCrTp.png){width=100%}
 
-* Row 3 corresponds to 3 lesions per case and the weights are 1/3, 1/3 and 1/3.
-* Row 13 corresponds to 16 lesions per case and the weights are 0.06250000, 0.06250000, ..., repeated 13 times.
-* Note that the number of rows is less than the maximum number of lesions per case (20).
-* This is because some configurations of lesions per case (e.g., cases with 13 lesions per case) do not occur in this dataset. 
+* The list member `x$ratings$LL` is an array with `dim = c(2,5,5,1)`. 
+    + The first dimension (2) comes from the number of modalities. 
+    + The second dimension (5) comes from the number of readers. 
+    + The third dimension (5) comes from the number of diseased cases. 
+    + The fourth dimension is always 1 for an ROC dataset. 
+* The value of `x$ratings$LL[1,1,5,1]`, i.e., `r x$ratings$LL[1,1,5,1]`, corresponds to row 6 of the TP table, i.e., to `ModalityID` = 0, `ReaderID` = 0 and `CaseID` = 74.
+* The value of `x$ratings$LL[1,2,2,1]`, i.e., `r x$ratings$LL[1,2,2,1]`, corresponds to row 8 of the TP table, i.e., to `ModalityID` = 0, `ReaderID` = 1 and `CaseID` = 71.
+* The value of `x$ratings$LL[1,4,4,1]`, i.e., `r x$ratings$LL[1,4,4,1]`, corresponds to row 21 of the TP table, i.e., to `ModalityID` = 0, `ReaderID` = 3 and `CaseID` = 74.
+* The value of `x$ratings$LL[1,5,2,1]`, i.e., `r x$ratings$LL[1,5,2,1]`, corresponds to row 23 of the TP table, i.e., to `ModalityID` = 0, `ReaderID` = 4 and `CaseID` = 71.
+* There are no `-Inf` values in `x$ratings$LL`: `any(x$ratings$LL == -Inf)` = `r any(x$ratings$LL == -Inf)`. This is true for any ROC dataset.
 
-## References {#quick-start-froc-data-format-references}
+## References {#quick-start-read-datafile-references}
