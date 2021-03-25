@@ -1,7 +1,7 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2021-03-24"
+date: "2021-03-25"
 site: bookdown::bookdown_site
 output: 
    bookdown::pdf_document: default
@@ -73,13 +73,3 @@ The book is divided into parts as follows:
 * 12-froc.
 * 13-froc-empirical.
 * 13-froc-empirical-examples.
-
-# Help on the software {-}
-* If you have installed `RJafroc` from `GitHub`:
-    + ?`RJafroc-package` (RStudio will auto complete ...)
-    + Scroll down all the way and click on `Index`
-* Regardless of where you installed from use the `RJafroc` help site:
-    + [RJafroc help site](https://dpc10ster.github.io/RJafroc/)
-    + Look under `References` 
-    + For example, for help on the function `PlotEmpiricalOperatingCharacteristics`:
-    + [PlotEmpiricalOperatingCharacteristics](https://dpc10ster.github.io/RJafroc/reference/PlotEmpiricalOperatingCharacteristics.html)
