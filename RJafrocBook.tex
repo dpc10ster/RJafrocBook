@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-03-25}
+\date{2021-03-29}
 
 \begin{document}
 \maketitle
@@ -4664,18 +4664,18 @@ Multiplication of the last two expressions yields \(A_4\).
 \hypertarget{binormal-model-how-much-finished}{%
 \section{How much finished}\label{binormal-model-how-much-finished}}
 
-80\%
+60\%
 
 \hypertarget{binormal-model-introduction}{%
 \section{Introduction}\label{binormal-model-introduction}}
 
-The equal variance binormal model was described in Chapter 02. The ratings method of acquiring ROC data and calculation of operating points was discussed in Chapter 04. It was shown, Fig. \ref{fig:ratings-paradigmEqVarFitA}, that for a clinical dataset the unequal-variance binormal model visually fitted the data better than the equal-variance binormal model, although how the unequal variance fit was obtained was not discussed. This chapter deals with details of the unequal-variance binormal model, often abbreviated to \textbf{binormal model}, establishes necessary notation, and derives expressions for sensitivity, specificity and the area under the predicted ROC curve).
+The equal variance binormal model was described in TBA Chapter 02. The ratings method of acquiring ROC data and calculation of operating points was discussed in TBA Chapter 04. It was shown, TBA Fig. \ref{fig:ratings-paradigmEqVarFitA}, that for a clinical dataset the unequal-variance binormal model visually fitted the data better than the equal-variance binormal model, although how the unequal variance fit was obtained was not discussed. This chapter deals with details of the unequal-variance binormal model, often abbreviated to \textbf{binormal model}, establishes necessary notation, and derives expressions for sensitivity, specificity and the area under the predicted ROC curve).
 
 The binormal model describes univariate datasets, in which there is one ROC rating per case, as in a single observer interpreting cases, one at a time, in a single modality. By convention the qualifier ``univariate'' is often omitted. In TBA Chapter 21 a bivariate model will be described where each case yields two ratings, as in a single observer interpreting cases in two modalities, or the homologous problem of two observers interpreting cases in a single modality.
 
 The main aim of this chapter is to demystify statistical curve fitting. With the passing of Dorfman, Metz and Swensson, parametric modeling is being neglected. Researchers are instead focusing on non-parametric analysis using the empirical AUC. While useful, empirical AUC yields almost no insight into what is limiting performance. Taking the mystery out of curve fitting will allow the reader to appreciate later chapters that describe more complex fitting methods, which yield important insights into factors limiting performance.
 
-Here is the organization of this chapter. It starts with a description of the binormal model and how it accommodates data binning. An important point, on which there is much confusion, on the invariance of the binormal model to arbitrary monotone transformations of the ratings is explicated with an example. Expressions for sensitivity and specificity are derived. Two notations used to characterize the binormal model are explained. Expressions for the pdfs of the binormal model are derived. A simple linear fitting method is illustrated: this used to be the only recourse a researcher had before Dorfman and Alf's seminal publication \citep{RN1081}. The maximum likelihood method for estimating parameters of the binormal model is detailed. Validation of the fitting method is described, i.e., how can one be confident that the fitting method, which makes normality and other assumptions, is valid for a dataset arising from an unknown distribution. The Appendix has a detailed derivation, originally published in a terse paper \citep{RN2342} on the partial area under the ROC curve. The partial area is defined by the area under the binormal ROC curve from \(FPF = 0\) to \(FPF = c\), where \(0 \leq c \leq 1\). As a special case \(c = 1\) yields the total area under the binormal ROC.
+Here is the organization of this chapter. It starts with a description of the binormal model and how it accommodates data binning. An important point, on which there is much confusion, on the invariance of the binormal model to arbitrary monotone transformations of the ratings is explicated with an example. Expressions for sensitivity and specificity are derived. Two notations used to characterize the binormal model are explained. Expressions for the pdfs of the binormal model are derived. A simple linear fitting method is illustrated: this used to be the only recourse a researcher had before Dorfman and Alf's seminal publication \citep{RN1081}. The maximum likelihood method for estimating parameters of the binormal model is detailed. Validation of the fitting method is described, i.e., how can one be confident that the fitting method, which makes normality and other assumptions, is valid for a dataset arising from an unknown distribution. The Appendix has a detailed derivation, originally published in a terse paper \citep{thompson1989statistical} on the partial area under the ROC curve. The partial area is defined by the area under the binormal ROC curve from \(FPF = 0\) to \(FPF = c\), where \(0 \leq c \leq 1\). As a special case \(c = 1\) yields the total area under the binormal ROC.
 
 \hypertarget{binormal-modelTheModel}{%
 \section{The binormal model}\label{binormal-modelTheModel}}
@@ -4711,127 +4711,6 @@ In an R-rating ROC study the observed ratings r take on integer values, 1 throug
 \includegraphics{06-binormal-model_files/figure-latex/unnamed-chunk-2-1.pdf}
 
 In the unequal-variance binormal model, the variance \(\sigma^2\) of the z-samples for diseased cases is allowed to be different from unity. Most ROC datasets are consistent with \(\sigma > 1\). The above figure, generated with \(\mu = 1.5, \sigma = 1.5, \zeta_1 = -2, \zeta_2 = -0.5, \zeta_3 = 1, \zeta_4 = 2.5\), illustrates how realized z-samples are converted to ratings, i.e., application of the binning rule \eqref{eq:binormal-modelZBinning}. For example, a case with z-sample equal to -2.5 would be rated ``1'', and one with z-sample equal to -1 would be rated ``2'', cases with z-samples greater than 2.5 would be rated ``5'', etc.
-
-\hypertarget{invariance-of-the-binormal-model-to-arbitrary-monotone-transformations}{%
-\subsection{Invariance of the binormal model to arbitrary monotone transformations}\label{invariance-of-the-binormal-model-to-arbitrary-monotone-transformations}}
-
-The binormal model is not as restrictive as might appear at first sight. Any monotone increasing transformation \(Y=f(Z)\) applied to the observed z-samples, and the associated thresholds, will yield the same observed data, e.g., Table \ref{tab:ratings-paradigmExampleTable}. This is because such a transformation leaves the ordering of the ratings unaltered and hence results in the same operating points. While the distributions for \(Y\) will not be binormal (i.e., two independent normal distributions), one can safely ``pretend'' that one is still dealing with an underlying binormal model. An alternative way of stating this is that any pair of distributions is allowed as long as they are reducible to a binormal model form by a monotonic increasing transformation of Y: e.g., \(Z=f^{-1}\). {[}If \(f\) is a monotone increasing function of its argument, so is \(f^{-1}\)\}.{]} For this reason, the term ``pair of latent underlying normal distributions'' is sometimes used to describe the binormal model. The robustness of the binormal model has been investigated \citep{RN1216, RN100}. The referenced paper by Dorfman et al has an excellent discussion of the robustness of the binormal model.
-
-The robustness of the binormal model, i.e., the flexibility allowed by the infinite choices of monotonic increasing functions, application of each of which leaves the ordering of the data unaltered, is widely misunderstood. The non-Gaussian appearance of histograms of ratings in ROC studies can lead one to incorrect conclusions that the binormal model is inapplicable to these datasets. To quote a reviewer of one of the author's recent papers:
-
-\begin{quote}
-I have had multiple encounters with statisticians who do not understand this difference\ldots. They show me histograms of data, and tell me that the data is obviously not normal, therefore the binormal model should not be used.
-\end{quote}
-
-The reviewer is correct. The misconception is illustrated next.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# shows that monotone transformations have no effect on }
-\CommentTok{# AUC even though the pdfs look non-gaussian}
-\CommentTok{# common misconception about ROC analysis}
-\NormalTok{fArray <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.9}\NormalTok{)}
-\NormalTok{seedArray <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{,}\DecValTok{11}\NormalTok{,}\DecValTok{12}\NormalTok{)}
-\ControlFlowTok{for}\NormalTok{ (row }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{) \{ }
-\NormalTok{  f <-}\StringTok{ }\NormalTok{fArray[row]}
-\NormalTok{  seed <-}\StringTok{ }\NormalTok{seedArray[row]}
-  \KeywordTok{set.seed}\NormalTok{(seed) }
-  \CommentTok{# numbers of cases simulated}
-\NormalTok{  K1 <-}\StringTok{ }\DecValTok{900}
-\NormalTok{  K2 <-}\StringTok{ }\DecValTok{1000}
-\NormalTok{  mu1 <-}\StringTok{ }\DecValTok{30}
-\NormalTok{  sigma1 <-}\StringTok{ }\DecValTok{7}
-\NormalTok{  mu2 <-}\StringTok{ }\DecValTok{55}
-\NormalTok{  sigma2 <-}\StringTok{ }\DecValTok{7} 
-  \CommentTok{# Simulate true gaussian ratings using above parameter values}
-\NormalTok{  z1 <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K1,}\DataTypeTok{mean =}\NormalTok{ mu1,}\DataTypeTok{sd =}\NormalTok{ sigma1)}
-\NormalTok{  z1[z1}\OperatorTok{>}\DecValTok{100}\NormalTok{] <-}\StringTok{ }\DecValTok{100}\NormalTok{;z1[z1}\OperatorTok{<}\DecValTok{0}\NormalTok{] <-}\StringTok{ }\DecValTok{0} \CommentTok{# constrain to 0 to 100}
-\NormalTok{  z2 <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K2,}\DataTypeTok{mean =}\NormalTok{ mu2,}\DataTypeTok{sd =}\NormalTok{ sigma2)}
-\NormalTok{  z2[z2}\OperatorTok{>}\DecValTok{100}\NormalTok{] <-}\StringTok{ }\DecValTok{100}\NormalTok{;z2[z2}\OperatorTok{<}\DecValTok{0}\NormalTok{] <-}\StringTok{ }\DecValTok{0} \CommentTok{# constrain to 0 to 100}
-  \CommentTok{# calculate AUC for true Gaussian ratings}
-\NormalTok{  AUC1 <-}\StringTok{ }\KeywordTok{TrapezoidalArea}\NormalTok{(z1, z2)}
-\NormalTok{  Gaussians <-}\StringTok{ }\KeywordTok{c}\NormalTok{(z1, z2)}
-  \CommentTok{# display histograms of true Gaussian ratings, A1, A2 or A3}
-\NormalTok{  x <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x=}\NormalTok{Gaussians) }\CommentTok{#  line 27}
-\NormalTok{  x <-}\StringTok{  }
-\StringTok{    }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ x, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x)) }\OperatorTok{+}
-\StringTok{    }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{binwidth =} \DecValTok{5}\NormalTok{, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"grey"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"Original Rating"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"A"}\NormalTok{, row, }\StringTok{": "}\NormalTok{, }\StringTok{"Gaussians"}\NormalTok{))}
-  \KeywordTok{print}\NormalTok{(x)}
-\NormalTok{  z <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.0}\NormalTok{, }\DecValTok{100}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
-  \CommentTok{# transform the latent Gaussians to true Gaussians}
-\NormalTok{  transformation <-}\StringTok{ }
-\StringTok{    }\KeywordTok{data.frame}\NormalTok{(}
-      \DataTypeTok{x =}\NormalTok{ z, }
-      \DataTypeTok{z =}  \KeywordTok{Y}\NormalTok{(z,mu1,mu2,sigma1,sigma2,f))}
-  \CommentTok{# display transformation functions, B1, B2 or B3}
-\NormalTok{  x <-}\StringTok{ }
-\StringTok{    }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ z)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ transformation, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{) }\OperatorTok{+}
-\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"Original Rating"}\NormalTok{) }\OperatorTok{+}
-\StringTok{    }\KeywordTok{ylab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"Transformed Rating"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"B"}\NormalTok{, row, }\StringTok{": "}\NormalTok{,}\StringTok{"Monotone Transformation"}\NormalTok{))}
-  \KeywordTok{print}\NormalTok{(x)}
-\NormalTok{  y <-}\StringTok{ }\KeywordTok{Y}\NormalTok{(}\KeywordTok{c}\NormalTok{(z1, z2),mu1,mu2,sigma1,sigma2,f)}
-\NormalTok{  y1 <-}\StringTok{ }\NormalTok{y[}\DecValTok{1}\OperatorTok{:}\NormalTok{K1];y2 <-}\StringTok{ }\NormalTok{y[(K1}\OperatorTok{+}\DecValTok{1}\NormalTok{)}\OperatorTok{:}\NormalTok{(K1}\OperatorTok{+}\NormalTok{K2)]}
-  \CommentTok{# calculate AUC for transformed ratings}
-\NormalTok{  AUC2 <-}\StringTok{ }\KeywordTok{TrapezoidalArea}\NormalTok{( y1, y2)}
-  \CommentTok{# display histograms of latent Gaussian ratings, C1, C2 or C3}
-\NormalTok{  x <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x=}\NormalTok{y)}
-\NormalTok{  x <-}\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ x, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x)) }\OperatorTok{+}
-\StringTok{    }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{binwidth =} \DecValTok{5}\NormalTok{, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"grey"}\NormalTok{) }\OperatorTok{+}
-\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"Transformed Rating"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"C"}\NormalTok{, row, }\StringTok{": "}\NormalTok{, }\StringTok{"Latent Gaussians"}\NormalTok{))}
-  \KeywordTok{print}\NormalTok{(x)}
-\CommentTok{# print AUCs, note they are identical (for each row)  }
-\KeywordTok{options}\NormalTok{(}\DataTypeTok{digits =} \DecValTok{9}\NormalTok{)}
-  \KeywordTok{cat}\NormalTok{(}\StringTok{"row ="}\NormalTok{, row, }\StringTok{", seed ="}\NormalTok{, seed, }\StringTok{", f ="}\NormalTok{, f, }
-      \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{AUC of actual Gaussians ="}\NormalTok{, AUC1, }
-      \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{AUC of latent Gaussians ="}\NormalTok{, AUC2, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\NormalTok{\}}
-\CommentTok{#> row = 1 , seed = 10 , f = 0.1 }
-\CommentTok{#> AUC of actual Gaussians = 0.99308 }
-\CommentTok{#> AUC of latent Gaussians = 0.99308}
-\CommentTok{#> row = 2 , seed = 11 , f = 0.5 }
-\CommentTok{#> AUC of actual Gaussians = 0.993668889 }
-\CommentTok{#> AUC of latent Gaussians = 0.993668889}
-\CommentTok{#> row = 3 , seed = 12 , f = 0.9 }
-\CommentTok{#> AUC of actual Gaussians = 0.995041111 }
-\CommentTok{#> AUC of latent Gaussians = 0.995041111}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-1} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-2} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-3} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-4} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-5} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-6} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-7} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-8} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-4-9}
-
-\textbf{Figure captions (A1 - C3):} Illustrating the invariance of ROC analysis to arbitrary monotone transformations of the ratings. Each row contains 3 plots: labeled 1, 2 and 3. Each column contains 3 plots labeled A, B and C. So, for example, plot C2 refers to the second row and third column. The for-loop generates the plot one row at a time. Each of the latent Gaussian plots C1, C2 and C3 appears not binormal. However, using the inverse of the monotone transformations shown B1, B2 and B3, they can be transformed to the binormal model histograms A1, A2 and A3. Plot A1 shows the histogram of simulated ratings from a binormal model. Two peaks, one at 30 and the other at 55 are evident (by design, all ratings in this figure are in the range 0 to 100). Plot B1 shows the monotone transformation for \(f = 0.1\). Plot C1 shows the histogram of the transformed rating. The choice of \(f\) leads to a transformed rating histogram that is peaked near the high end of the rating scale. For A1 and C1 the corresponding AUCs are identical (0.993080000). Plot A2 is for a different seed value, plot B2 is the transformation for \(f = 0.5\) and now the transformed histogram is almost flat, plot C2. For plots A2 and C2 the corresponding AUCs are identical (0.993668889). Plot A3 is for a different seed value, B3 is the transformation for \(f = 0.9\) and the transformed histogram C3 is peaked near the low end of the transformed rating scale. For plots A3 and (C3) the corresponding AUCs are identical (0.995041111).
-
-The idea is to simulate continuous ratings data in the range 0 to 100 from a binormal model. \(K_1 = 900\) non-diseased cases are sampled from a Gaussian centered at \(\mu_1\) = 30 and standard deviation \(\sigma_1 = 7\). \(K_2 = 1000\) diseased cases are sampled from a Gaussian centered at \(\mu_2\) = 55 and standard deviation \(\sigma_2\) = 7. The variable \(f\), which is in the range (0,1), controls the shape of the transformed distribution. If \(f\) is small, the transformed distribution will be peaked towards 0 and if \(f\) is unity, it will be peaked at 100. If \(f\) equals 0.5, the transformed distribution is flat. Insight into the reason for this transformation is in \citep{RN300}, Chapter 7: it has to do with transformations of random variables. The transformation function, \(Y(Z)\), implements:
-
-\begin{equation} 
-Y\left ( Z \right )=\left [ \left ( 1-f \right )\Phi\left ( \frac{Z-\mu_1}{\sigma_1} \right )+f\Phi\left ( \frac{Z-\mu_2}{\sigma_2} \right ) \right ]100
-\label{eq:binormal-modelDemoMisconception}
-\end{equation}
-
-The multiplication by 100 ensures that the transformed variable is in the range 0 to 100 (if not, it is code-constrained to be). The code realizes the random samples, calculates the empirical AUC, displays the histogram of the true binormal samples, plots the transformation function, calculates the empirical AUC using the transformed samples, and plots the histogram of the transformed samples (the latent binormal).
-
-\begin{itemize}
-\tightlist
-\item
-  B1 shows the transformation for \(f = 0.1\). The steep initial rise of the curve has the effect of flattening the histogram of the transformed ratings at the low end of the rating scale, C1. Conversely, the flat nature of the curve near upper end of the rating range has the effect of causing the histogram of the transformed variable to peak in that range.
-\item
-  B2 shows the transformation for \(f = 0.5\). This time the latent rating histogram, C2, is almost flat over the entire range, definitely not visually binormal.
-\item
-  B3 shows the transformation for \(f = 0.9\). This time the transformed rating histogram, C3, is peaked at the low end of the transformed rating scale.
-\item
-  The output lists the values of the seed variable and the value of the shape parameter \(f\). \emph{For each value of seed and the shape parameter, the AUCs of the actual Gaussians and the transformed variables are identical}.
-\item
-  The values of the parameters were chosen to best illustrate the true binormal nature of the plots A2 and A3. This has the effect of making the AUCs close to unity.
-\end{itemize}
-
-The histograms in C1, C2 and C3 appear to be non-Gaussian. The corresponding non-diseased and diseased ratings will fail tests of normality. {[}Showing this is left as an exercise for the reader.{]} Nevertheless, they are latent Gaussians in the sense that the inverses of the transformations shown in B1, B2 and B3 will yield histograms that are strictly binormal, i.e., A1, A2 and A3. By appropriate changes to the monotone transformation function, the histograms shown in C1, C2 and C3 can be made to resemble a wide variety of shapes, for example, quasi-bimodal (don't confuse bimodal with binormal) histograms.{]}
-
-\textbf{Visual examination of the shape of the histograms of ratings, or standard tests for normality, yield little, if any, insight into whether the underlying binormal model assumptions are being violated.}
 
 \hypertarget{expressions-for-sensitivity-and-specificity}{%
 \subsection{Expressions for sensitivity and specificity}\label{expressions-for-sensitivity-and-specificity}}
@@ -4894,7 +4773,7 @@ Substitution of Eqn. \eqref{eq:binormal-modelZeta} in Eqn. \eqref{eq:binormal-mo
 
 \begin{equation} 
 TPF = \Phi\left ( \frac{\mu + \Phi^{-1}\left (FPF  \right )}{\sigma} \right )
-\label{eq:binormal-modelRocCurve1}
+\label{eq:binormal-model-roc-curve1}
 \end{equation}
 
 This equation gives the dependence of TPF on FPF, i.e., the equation for the ROC curve. It will be put into standard notation next.
@@ -4935,11 +4814,11 @@ Eqns. \eqref{eq:binormal-modelabParameters} and \eqref{eq:binormal-modelabParame
 \hypertarget{properties-of-the-binormal-model-roc-curve}{%
 \subsection{Properties of the binormal model ROC curve}\label{properties-of-the-binormal-model-roc-curve}}
 
-Using the \((a,b)\) notation, Eqn. \eqref{eq:binormal-modelRocCurve1} for the ROC curve reduces to:
+Using the \((a,b)\) notation, Eqn. \eqref{eq:binormal-model-roc-curve1} for the ROC curve reduces to:
 
 \begin{equation} 
 TPF = \Phi\left ( a+ b \Phi^{-1}\left (FPF  \right ) \right )
-\label{eq:binormal-modelRocCurve}
+\label{eq:binormal-model-roc-curve}
 \end{equation}
 
 Since \(\Phi^{-1}(FPF)\) is an increasing function of its argument \(FPF\), and \(b > 0\), the argument of the \(\Phi\) function is an increasing function of \(FPF\). Since \(\Phi\) is a monotonically increasing function of its argument, \(TPF\) is a monotonically increasing function of \(FPF\). This is true regardless of the sign of \(a\). If \(FPF = 0\), then \(\Phi^{-1}(0) = -\infty\) and \(TPF = 0\). If \(FPF = 1\), then \(\Phi^{-1}(1) = +\infty\) and \(TPF = 1\). Regardless of the value of \(a\), as long as \(b \ge 0\), the ROC curve starts at (0,0) and increases monotonically ending at (1,1).
@@ -5001,7 +4880,7 @@ To be described next is a method for fitting data such as in Table \ref{tab:rati
 \hypertarget{least-squares-estimation}{%
 \subsubsection{Least-squares estimation}\label{least-squares-estimation}}
 
-By applying the function \(\Phi^{-1}\) to both sides of Eqn. \eqref{eq:binormal-modelRocCurve1}, one gets (the ``inverse'' function cancels the ``forward'' function on the right hand side):
+By applying the function \(\Phi^{-1}\) to both sides of Eqn. \eqref{eq:binormal-model-roc-curve1}, one gets (the ``inverse'' function cancels the ``forward'' function on the right hand side):
 
 \begin{equation*} 
 \Phi^{-1}\left ( TPF \right ) = a + b \Phi^{-1}\left ( FPF \right )
@@ -5039,7 +4918,7 @@ The idea is to minimize S with respect to the parameters \((a,b)\). One approach
 \CommentTok{#> }
 \CommentTok{#> Coefficients:}
 \CommentTok{#> (Intercept)    PhiInvFPF  }
-\CommentTok{#>    1.328844     0.630746}
+\CommentTok{#>      1.3288       0.6307}
 \end{Highlighting}
 \end{Shaded}
 
@@ -5156,26 +5035,26 @@ The left hand side of Eqn. \eqref{eq:binormal-modelLL} is a function of the mode
 \NormalTok{retFit <-}\StringTok{ }\KeywordTok{FitBinormalRoc}\NormalTok{(dataset)}
 \NormalTok{retFit[}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{]}
 \CommentTok{#> $a}
-\CommentTok{#> [1] 1.32045261}
+\CommentTok{#> [1] 1.320453}
 \CommentTok{#> }
 \CommentTok{#> $b}
-\CommentTok{#> [1] 0.607492932}
+\CommentTok{#> [1] 0.6074929}
 \CommentTok{#> }
 \CommentTok{#> $zetas}
-\CommentTok{#>      zetaFwd1      zetaFwd2      zetaFwd3      zetaFwd4 }
-\CommentTok{#> 0.00768054675 0.89627306763 1.51564784976 2.39672209865 }
+\CommentTok{#>    zetaFwd1    zetaFwd2    zetaFwd3    zetaFwd4 }
+\CommentTok{#> 0.007680547 0.896273068 1.515647850 2.396722099 }
 \CommentTok{#> }
 \CommentTok{#> $AUC}
-\CommentTok{#> [1] 0.870452157}
+\CommentTok{#> [1] 0.8704522}
 \CommentTok{#> }
 \CommentTok{#> $StdAUC}
-\CommentTok{#>              [,1]}
-\CommentTok{#> [1,] 0.0379042262}
+\CommentTok{#>            [,1]}
+\CommentTok{#> [1,] 0.03790423}
 \KeywordTok{print}\NormalTok{(retFit}\OperatorTok{$}\NormalTok{fittedPlot)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{06-binormal-model_files/figure-latex/unnamed-chunk-7-1.pdf}
+\includegraphics{06-binormal-model_files/figure-latex/unnamed-chunk-5-1.pdf}
 
 Note the usage of the \texttt{RJafroc} package \citep{R-RJafroc}. Specifically, the function \texttt{FitBinormalRoc}. The ratings table is converted to an \texttt{RJafroc} dataset object, followed by application of the fitting function. The results, contained in \texttt{retFit} should be compared to those obtained from the \href{http://www.rad.jhmi.edu/jeng/javarad/roc/JROCFITi.html}{website implementation of ROCFIT}.
 
@@ -5267,6 +5146,356 @@ A recent example is Fig. 1 in the publication resulting from the Digital Mammogr
 The unphysical nature of the hook (predicting worse than chance-level performance for supposedly expert readers) is not the only reason for seeking alternate ROC models. The binormal model is susceptible to degeneracy problems. If the dataset does not provide any interior operating points (i.e., all observed points lie on the axes defined by FPF = 0 or TPF = 1) then the model fits these points with b = 0. The resulting straight-line segment fits do not make physical sense. These problems are addressed by the contaminated binormal model16 to be discussed in Chapter ``Other proper ROC models''. The first paper in the series has particularly readable accounts of data degeneracy.
 
 To this day the binormal model is widely used to fit ROC datasets. In spite of its limitations, the binormal model has been very useful in bringing a level of quantification to this field that did not exist prior to \citep{RN1081}.
+
+\hypertarget{binormal-model-appendix-1}{%
+\section{Appendix I: Derivation of area under the binormal ROC}\label{binormal-model-appendix-1}}
+
+\hypertarget{general-case-partial-area}{%
+\subsection{General case (partial area)}\label{general-case-partial-area}}
+
+This section is based on \citep{thompson1989statistical}. In what follows, FPF is abbreviates to x and TPF to y. Then the equation for the ROC curve is \eqref{eq:binormal-model-roc-curve}:
+
+\begin{equation} 
+y=\Phi\left ( a + b \Phi^{-1} \left ( x \right ) \right )
+\label{eq:binormal-model-xy}
+\end{equation}
+
+The partial area under the ROC curve from \(x = 0\) to \(x = c\), where \(0 ≤ c ≤ 1\), is given by:
+
+\begin{equation} 
+A_{z;c} = \int_{0}^{c} y dx =  \int_{0}^{c} dx \Phi\left ( a + b \Phi^{-1} \left ( x \right ) \right ) 
+\label{eq:binormal-model-partial-area-1}
+\end{equation}
+
+Define change of variable:
+
+\begin{equation} 
+x = \Phi\left ( x_1 \right )
+\label{eq:binormal-model-change-variable-1}
+\end{equation}
+
+which implies:
+
+\begin{equation}
+\left. 
+\begin{aligned}
+x_1 = &  \Phi^{-1}\left ( x \right ) \\
+dx = &  dx_1 \phi\left ( x_1 \right )
+\end{aligned}
+\right \}
+\label{eq:binormal-model-dx-dx1}
+\end{equation}
+
+This yields:
+
+\begin{equation}
+\left. 
+\begin{aligned}
+A_{z;c} = &  \int_{0}^{c} dx \Phi \left ( a + b x_1 \right )\\
+ = &  \int_{-\infty}^{\Phi^{-1}\left ( c \right )} dx_1 \phi\left ( x_1 \right )\Phi \left ( a + b x_1 \right )
+\end{aligned}
+\right \}
+\label{eq:binormal-model-partial-area-2}
+\end{equation}
+
+The right hand side of Eqn. \eqref{eq:binormal-model-partial-area-2} can be expressed as an integral over the bivariate normal distribution as follows. From the definition of the \(\Phi\) function the above integral can be written as the following double integral:
+
+\begin{equation}
+A_{z;c} = \int_{x_1=-\infty}^{\Phi^{-1}\left ( c \right )} dx_1 \phi\left ( x_1 \right ) \int_{x_2=-\infty}^{a+bx_1} \phi\left ( x_2 \right ) dx_2
+\label{eq:binormal-model-partial-area-double-integral-1}
+\end{equation}
+
+Change variables from \((x_1, x_2)\) to \((z_1, z_2)\) as follows:
+
+\begin{equation}
+\left. 
+\begin{aligned}
+z_2= &  x_1 \\
+z_1= &  \left ( x_2 - b x_1 \right ) f
+\end{aligned}
+\right \}
+\label{eq:binormal-model-change-variable-2}
+\end{equation}
+
+Here \(f\) is a quantity to be determined, which will allow us to complete the transformation to the desired bivariate integral. The second equation above can be written as:
+
+\begin{equation}
+x_2= \frac{z_1}{f} + bx_1 = \frac{z_1}{f}  + bz_2
+\label{eq:binormal-model-dx2-z1-f}
+\end{equation}
+
+The Jacobian \citep{stein1992calculus} of the transformation is
+
+\begin{equation}
+J = \left (\begin{matrix}
+0 & 1\\ 
+\frac{1}{f} & b
+\end{matrix}
+  \right )\label{eq:binormal-model-jacobian}
+\end{equation}
+
+The magnitude of the determinant of J is \(1/f\).
+
+From a theorem in calculus \citep{stein1992calculus}, the double integral over \((x_1,x_2)\) can be expressed in terms of a double integral over \((z_1,z_2)\) as follows:
+
+\begin{equation}
+A_{z;c} = \frac{1}{f}\int_{z_2=-\infty}^{\Phi^{-1}\left ( c \right )} dz_2 \phi\left ( z_2 \right ) \int_{z_1=-\infty}^{z_{1}^{UL}} \phi\left ( \frac{z_1}{f} + b z_2\right ) dz_1
+\label{eq:binormal-model-partial-area-double-integral-2}
+\end{equation}
+
+The upper limit of the inner integral can be calculated as follows. Using the second equation in Eqn. \eqref{eq:binormal-model-change-variable-2}:
+
+\begin{equation}
+z_{1}^{UL}=\left ( x_{2}^{UL} - b x_1\right ) f = \left ( a+b x_1-bx_1 \right ) f = af
+\label{eq:binormal-model-upper-limit-simplified}
+\end{equation}
+
+Then Eqn. \eqref{eq:binormal-model-partial-area-double-integral-2} simplifies to:
+
+\begin{equation}
+A_{z;c} = \frac{1}{f}\int_{z_2=-\infty}^{\Phi^{-1}\left ( c \right )} dz_2 \phi\left ( z_2 \right ) \int_{z_1=-\infty}^{af} \phi\left ( \frac{z_1}{f} + b z_2\right ) dz_1
+\label{eq:binormal-model-partial-area-double-integral-3}
+\end{equation}
+
+If we perform a change of variable from \(f\) to a correlation-like quantity \(\rho\) (whose magnitude must be less than or equal to unity) defined by:
+
+\begin{equation}
+f= \sqrt{1-\rho^2}
+\label{eq:binormal-model-partial-area-rho2}
+\end{equation}
+
+Then the argument of the right-most function \(\phi\) in Eqn. \eqref{eq:binormal-model-partial-area-double-integral-3} simplifies as follows:
+
+\begin{equation}
+\frac{z_1}{f} + bz_2 = \frac{z_1 + b z_2 \sqrt{1-\rho^2}}{\sqrt{1-\rho^2}}
+\label{eq:binormal-model-partial-simplification-1}
+\end{equation}
+
+Define \(\rho\) in terms of the b-parameter as follows:
+
+\begin{equation}
+b\sqrt{1-\rho^2} = - \rho
+\label{eq:binormal-model-partial-b-rho}
+\end{equation}
+
+This implies that \(\rho\) is given by:
+
+\begin{equation}
+\rho = - \frac{b}{\sqrt{1+b^2}}
+\label{eq:binormal-model-rho-final}
+\end{equation}
+
+The argument of the right-most \(\phi\) function in Eqn. \eqref{eq:binormal-model-partial-simplification-1} simplifies as follows:
+
+\begin{equation}
+\frac{z_1}{f} + bz_2 = \frac{z_1 + b z_2 \sqrt{1-\rho^2}}{\sqrt{1-\rho^2}} = \frac{z_1 - \rho z_2}{\sqrt{1-\rho^2}}
+\label{eq:binormal-model-partial-simplification-TBA}
+\end{equation}
+
+The expression for the partial area under the ROC reduces to:
+
+\begin{equation}
+A_{z;c} = \frac{1}{\sqrt{1-\rho^2}}\int_{z_2=-\infty}^{\Phi^{-1}\left ( c \right )} dz_2 \phi\left ( z_2 \right ) \int_{z_1=-\infty}^{a\sqrt{1-\rho^2}} \phi\left ( \frac{z_1 - \rho z_2}{\sqrt{1-\rho^2}}\right ) dz_1
+\label{eq:binormal-model-partial-area-double-integral-4}
+\end{equation}
+
+Eqn. \eqref{eq:binormal-model-partial-b-rho} implies:
+
+\begin{equation}
+1 - \rho^2 = \frac{1}{1+b^2}\\
+\label{eq:binormal-model-simplification-4}
+\end{equation}
+
+Therefore,
+
+\begin{equation}
+A_{z;c} = \frac{1}{\sqrt{1-\rho^2}}\int_{z_2=-\infty}^{\Phi^{-1}\left ( c \right )} dz_2 \phi\left ( z_2 \right ) \int_{z_1=-\infty}^{\frac{a}{\sqrt{1+b^2}}} \phi\left ( \frac{z_1 - \rho z_2}{\sqrt{1-\rho^2}}\right ) dz_1
+\label{eq:binormal-model-partial-area-double-integral-5}
+\end{equation}
+
+The standard bivariate normal distribution with correlation coefficient \(\rho\) is defined by:
+
+\begin{equation}
+\phi\left ( z_1,z_2;\rho \right ) = \frac{1}{2 \pi \sqrt{1-\rho^2}} \exp  \left ( -\frac{z_1^2 - 2 \rho z_1 z_2 + z_2^2}{2(1-\rho^2)}  \right )
+\label{eq:binormal-model-definition-standard-bivariate-distribution}
+\end{equation}
+
+The standard normal distribution is defined by:
+
+\begin{equation}
+\phi\left ( z\right ) = \frac{1}{\sqrt{2 \pi }} \exp  \left ( -\frac{z^2}{2}  \right )
+\label{eq:binormal-model-definition-standard-normal-distribution}
+\end{equation}
+
+It can be shown using these definitions that:
+
+\begin{equation}
+\phi\left ( z_1,z_2;\rho \right ) = \frac{1}{\sqrt{1-\rho^2}}\phi\left ( z_2 \right )\phi\left ( \frac{z_1-\rho z_2}{\sqrt{1-\rho^2}} \right )
+\label{eq:binormal-model-standard-bivariate-distribution-2}
+\end{equation}
+
+Using this form the expression for the partial area reduces to:
+
+\begin{equation}
+A_{z;c} = \int_{z_2=-\infty}^{\Phi^{-1}\left ( c \right )}   \int_{z_1=-\infty}^{\frac{a}{\sqrt{1+b^2}}} \phi\left ( z_1,z_2;\rho \right ) dz_1dz_2
+\label{eq:binormal-model-partial-area-final}
+\end{equation}
+
+\begin{verbatim}
+#> Az =  0.9408251 , max of plot =  0.9408251
+\end{verbatim}
+
+\includegraphics{06-binormal-model_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\hypertarget{special-case-total-area}{%
+\subsection{Special case (total area)}\label{special-case-total-area}}
+
+Since \(c\) is the upper limit of FPF, setting \(c = 1\) yields the total area under the binormal ROC curve \footnote{Since the integral over \(z_2\) is over the entire range it integrates out to unity leaving the one-dimensional density function \(\phi\left ( z_1 \right )\) inside the integral. The last step follows from the definition of the \(\Phi\) function.}:
+
+\begin{equation}
+\left. 
+\begin{aligned}
+A_{z} = & \int_{z_2=-\infty}^{\infty}   \int_{z_1=-\infty}^{\frac{a}{\sqrt{1+b^2}}} \phi\left ( z_1,z_2;\rho \right ) dz_1dz_2 \\
+= &  \int_{z_1=-\infty}^{\frac{a}{\sqrt{1+b^2}}} \phi\left ( z_1 \right ) dz_1 \\
+= & \Phi\left ( \frac{a}{\sqrt{1+b^2}} \right )
+\end{aligned}
+\right \}
+\label{eq:binormal-model-partial-area-special-case}
+\end{equation}
+
+An equivalent forms for the total area under the unequal variance binormal ROC curve is:
+
+\begin{equation}
+\left. 
+\begin{aligned}
+A_{z} =  & \Phi\left ( \frac{a}{\sqrt{1+b^2}} \right ) \\
+= & \Phi\left ( \frac{\frac{a}{b}}{\sqrt{1+\frac{1}{b^2}}} \right ) \\
+= & \Phi\left ( \frac{\mu}{\sqrt{1 + \sigma^2}} \right )
+\end{aligned}
+\right \}
+\label{eq:binormal-model-partial-area-special-case-2}
+\end{equation}
+
+\hypertarget{binormal-model-appendix-2}{%
+\section{Appendix II: invariance of the binormal model to arbitrary monotone transformations}\label{binormal-model-appendix-2}}
+
+The binormal model is not as restrictive as might appear at first sight. Any monotone increasing transformation \(Y=f(Z)\) applied to the observed z-samples, and the associated thresholds, will yield the same observed data, e.g., Table \ref{tab:ratings-paradigmExampleTable}. This is because such a transformation leaves the ordering of the ratings unaltered and hence results in the same operating points. While the distributions for \(Y\) will not be binormal (i.e., two independent normal distributions), one can safely ``pretend'' that one is still dealing with an underlying binormal model. An alternative way of stating this is that any pair of distributions is allowed as long as they are reducible to a binormal model form by a monotonic increasing transformation of Y: e.g., \(Z=f^{-1}\). {[}If \(f\) is a monotone increasing function of its argument, so is \(f^{-1}\)\}.{]} For this reason, the term ``pair of latent underlying normal distributions'' is sometimes used to describe the binormal model. The robustness of the binormal model has been investigated \citep{RN1216, RN100}. The referenced paper by Dorfman et al has an excellent discussion of the robustness of the binormal model.
+
+The robustness of the binormal model, i.e., the flexibility allowed by the infinite choices of monotonic increasing functions, application of each of which leaves the ordering of the data unaltered, is widely misunderstood. The non-Gaussian appearance of histograms of ratings in ROC studies can lead one to incorrect conclusions that the binormal model is inapplicable to these datasets. To quote a reviewer of one of the author's recent papers:
+
+\begin{quote}
+I have had multiple encounters with statisticians who do not understand this difference\ldots. They show me histograms of data, and tell me that the data is obviously not normal, therefore the binormal model should not be used.
+\end{quote}
+
+The reviewer is correct. The misconception is illustrated next.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# shows that monotone transformations have no effect on }
+\CommentTok{# AUC even though the pdfs look non-gaussian}
+\CommentTok{# common misconception about ROC analysis}
+\NormalTok{fArray <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.9}\NormalTok{)}
+\NormalTok{seedArray <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{,}\DecValTok{11}\NormalTok{,}\DecValTok{12}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (row }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{) \{ }
+\NormalTok{  f <-}\StringTok{ }\NormalTok{fArray[row]}
+\NormalTok{  seed <-}\StringTok{ }\NormalTok{seedArray[row]}
+  \KeywordTok{set.seed}\NormalTok{(seed) }
+  \CommentTok{# numbers of cases simulated}
+\NormalTok{  K1 <-}\StringTok{ }\DecValTok{900}
+\NormalTok{  K2 <-}\StringTok{ }\DecValTok{1000}
+\NormalTok{  mu1 <-}\StringTok{ }\DecValTok{30}
+\NormalTok{  sigma1 <-}\StringTok{ }\DecValTok{7}
+\NormalTok{  mu2 <-}\StringTok{ }\DecValTok{55}
+\NormalTok{  sigma2 <-}\StringTok{ }\DecValTok{7} 
+  \CommentTok{# Simulate true gaussian ratings using above parameter values}
+\NormalTok{  z1 <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K1,}\DataTypeTok{mean =}\NormalTok{ mu1,}\DataTypeTok{sd =}\NormalTok{ sigma1)}
+\NormalTok{  z1[z1}\OperatorTok{>}\DecValTok{100}\NormalTok{] <-}\StringTok{ }\DecValTok{100}\NormalTok{;z1[z1}\OperatorTok{<}\DecValTok{0}\NormalTok{] <-}\StringTok{ }\DecValTok{0} \CommentTok{# constrain to 0 to 100}
+\NormalTok{  z2 <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(K2,}\DataTypeTok{mean =}\NormalTok{ mu2,}\DataTypeTok{sd =}\NormalTok{ sigma2)}
+\NormalTok{  z2[z2}\OperatorTok{>}\DecValTok{100}\NormalTok{] <-}\StringTok{ }\DecValTok{100}\NormalTok{;z2[z2}\OperatorTok{<}\DecValTok{0}\NormalTok{] <-}\StringTok{ }\DecValTok{0} \CommentTok{# constrain to 0 to 100}
+  \CommentTok{# calculate AUC for true Gaussian ratings}
+\NormalTok{  AUC1 <-}\StringTok{ }\KeywordTok{TrapezoidalArea}\NormalTok{(z1, z2)}
+\NormalTok{  Gaussians <-}\StringTok{ }\KeywordTok{c}\NormalTok{(z1, z2)}
+  \CommentTok{# display histograms of true Gaussian ratings, A1, A2 or A3}
+\NormalTok{  x <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x=}\NormalTok{Gaussians) }\CommentTok{#  line 27}
+\NormalTok{  x <-}\StringTok{  }
+\StringTok{    }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ x, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{binwidth =} \DecValTok{5}\NormalTok{, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"grey"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"Original Rating"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"A"}\NormalTok{, row, }\StringTok{": "}\NormalTok{, }\StringTok{"Gaussians"}\NormalTok{))}
+  \KeywordTok{print}\NormalTok{(x)}
+\NormalTok{  z <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.0}\NormalTok{, }\DecValTok{100}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
+  \CommentTok{# transform the latent Gaussians to true Gaussians}
+\NormalTok{  transformation <-}\StringTok{ }
+\StringTok{    }\KeywordTok{data.frame}\NormalTok{(}
+      \DataTypeTok{x =}\NormalTok{ z, }
+      \DataTypeTok{z =}  \KeywordTok{Y}\NormalTok{(z,mu1,mu2,sigma1,sigma2,f))}
+  \CommentTok{# display transformation functions, B1, B2 or B3}
+\NormalTok{  x <-}\StringTok{ }
+\StringTok{    }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ z)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ transformation, }\DataTypeTok{size =} \DecValTok{1}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"Original Rating"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{ylab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"Transformed Rating"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"B"}\NormalTok{, row, }\StringTok{": "}\NormalTok{,}\StringTok{"Monotone Transformation"}\NormalTok{))}
+  \KeywordTok{print}\NormalTok{(x)}
+\NormalTok{  y <-}\StringTok{ }\KeywordTok{Y}\NormalTok{(}\KeywordTok{c}\NormalTok{(z1, z2),mu1,mu2,sigma1,sigma2,f)}
+\NormalTok{  y1 <-}\StringTok{ }\NormalTok{y[}\DecValTok{1}\OperatorTok{:}\NormalTok{K1];y2 <-}\StringTok{ }\NormalTok{y[(K1}\OperatorTok{+}\DecValTok{1}\NormalTok{)}\OperatorTok{:}\NormalTok{(K1}\OperatorTok{+}\NormalTok{K2)]}
+  \CommentTok{# calculate AUC for transformed ratings}
+\NormalTok{  AUC2 <-}\StringTok{ }\KeywordTok{TrapezoidalArea}\NormalTok{( y1, y2)}
+  \CommentTok{# display histograms of latent Gaussian ratings, C1, C2 or C3}
+\NormalTok{  x <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x=}\NormalTok{y)}
+\NormalTok{  x <-}\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ x, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{binwidth =} \DecValTok{5}\NormalTok{, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{fill=}\StringTok{"grey"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{xlab}\NormalTok{(}\DataTypeTok{label =} \StringTok{"Transformed Rating"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\DataTypeTok{label =} \KeywordTok{paste0}\NormalTok{(}\StringTok{"C"}\NormalTok{, row, }\StringTok{": "}\NormalTok{, }\StringTok{"Latent Gaussians"}\NormalTok{))}
+  \KeywordTok{print}\NormalTok{(x)}
+\CommentTok{# print AUCs, note they are identical (for each row)  }
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{digits =} \DecValTok{9}\NormalTok{)}
+  \KeywordTok{cat}\NormalTok{(}\StringTok{"row ="}\NormalTok{, row, }\StringTok{", seed ="}\NormalTok{, seed, }\StringTok{", f ="}\NormalTok{, f, }
+      \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{AUC of actual Gaussians ="}\NormalTok{, AUC1, }
+      \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{AUC of latent Gaussians ="}\NormalTok{, AUC2, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\}}
+\CommentTok{#> row = 1 , seed = 10 , f = 0.1 }
+\CommentTok{#> AUC of actual Gaussians = 0.99308 }
+\CommentTok{#> AUC of latent Gaussians = 0.99308}
+\CommentTok{#> row = 2 , seed = 11 , f = 0.5 }
+\CommentTok{#> AUC of actual Gaussians = 0.993668889 }
+\CommentTok{#> AUC of latent Gaussians = 0.993668889}
+\CommentTok{#> row = 3 , seed = 12 , f = 0.9 }
+\CommentTok{#> AUC of actual Gaussians = 0.995041111 }
+\CommentTok{#> AUC of latent Gaussians = 0.995041111}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-8-1} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-8-2} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-8-3} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-8-4} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-8-5} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-8-6} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-8-7} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-8-8} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-8-9}
+
+\textbf{Figure captions (A1 - C3):} Illustrating the invariance of ROC analysis to arbitrary monotone transformations of the ratings. Each row contains 3 plots: labeled 1, 2 and 3. Each column contains 3 plots labeled A, B and C. So, for example, plot C2 refers to the second row and third column. The for-loop generates the plot one row at a time. Each of the latent Gaussian plots C1, C2 and C3 appears not binormal. However, using the inverse of the monotone transformations shown B1, B2 and B3, they can be transformed to the binormal model histograms A1, A2 and A3. Plot A1 shows the histogram of simulated ratings from a binormal model. Two peaks, one at 30 and the other at 55 are evident (by design, all ratings in this figure are in the range 0 to 100). Plot B1 shows the monotone transformation for \(f = 0.1\). Plot C1 shows the histogram of the transformed rating. The choice of \(f\) leads to a transformed rating histogram that is peaked near the high end of the rating scale. For A1 and C1 the corresponding AUCs are identical (0.993080000). Plot A2 is for a different seed value, plot B2 is the transformation for \(f = 0.5\) and now the transformed histogram is almost flat, plot C2. For plots A2 and C2 the corresponding AUCs are identical (0.993668889). Plot A3 is for a different seed value, B3 is the transformation for \(f = 0.9\) and the transformed histogram C3 is peaked near the low end of the transformed rating scale. For plots A3 and (C3) the corresponding AUCs are identical (0.995041111).
+
+The idea is to simulate continuous ratings data in the range 0 to 100 from a binormal model. \(K_1 = 900\) non-diseased cases are sampled from a Gaussian centered at \(\mu_1\) = 30 and standard deviation \(\sigma_1 = 7\). \(K_2 = 1000\) diseased cases are sampled from a Gaussian centered at \(\mu_2\) = 55 and standard deviation \(\sigma_2\) = 7. The variable \(f\), which is in the range (0,1), controls the shape of the transformed distribution. If \(f\) is small, the transformed distribution will be peaked towards 0 and if \(f\) is unity, it will be peaked at 100. If \(f\) equals 0.5, the transformed distribution is flat. Insight into the reason for this transformation is in \citep{RN300}, Chapter 7: it has to do with transformations of random variables. The transformation function, \(Y(Z)\), implements:
+
+\begin{equation} 
+Y\left ( Z \right )=\left [ \left ( 1-f \right )\Phi\left ( \frac{Z-\mu_1}{\sigma_1} \right )+f\Phi\left ( \frac{Z-\mu_2}{\sigma_2} \right ) \right ]100
+\label{eq:binormal-modelDemoMisconception}
+\end{equation}
+
+The multiplication by 100 ensures that the transformed variable is in the range 0 to 100 (if not, it is code-constrained to be). The code realizes the random samples, calculates the empirical AUC, displays the histogram of the true binormal samples, plots the transformation function, calculates the empirical AUC using the transformed samples, and plots the histogram of the transformed samples (the latent binormal).
+
+\begin{itemize}
+\tightlist
+\item
+  B1 shows the transformation for \(f = 0.1\). The steep initial rise of the curve has the effect of flattening the histogram of the transformed ratings at the low end of the rating scale, C1. Conversely, the flat nature of the curve near upper end of the rating range has the effect of causing the histogram of the transformed variable to peak in that range.
+\item
+  B2 shows the transformation for \(f = 0.5\). This time the latent rating histogram, C2, is almost flat over the entire range, definitely not visually binormal.
+\item
+  B3 shows the transformation for \(f = 0.9\). This time the transformed rating histogram, C3, is peaked at the low end of the transformed rating scale.
+\item
+  The output lists the values of the seed variable and the value of the shape parameter \(f\). \emph{For each value of seed and the shape parameter, the AUCs of the actual Gaussians and the transformed variables are identical}.
+\item
+  The values of the parameters were chosen to best illustrate the true binormal nature of the plots A2 and A3. This has the effect of making the AUCs close to unity.
+\end{itemize}
+
+The histograms in C1, C2 and C3 appear to be non-Gaussian. The corresponding non-diseased and diseased ratings will fail tests of normality. {[}Showing this is left as an exercise for the reader.{]} Nevertheless, they are latent Gaussians in the sense that the inverses of the transformations shown in B1, B2 and B3 will yield histograms that are strictly binormal, i.e., A1, A2 and A3. By appropriate changes to the monotone transformation function, the histograms shown in C1, C2 and C3 can be made to resemble a wide variety of shapes, for example, quasi-bimodal (don't confuse bimodal with binormal) histograms.{]}
+
+\textbf{Visual examination of the shape of the histograms of ratings, or standard tests for normality, yield little, if any, insight into whether the underlying binormal model assumptions are being violated.}
 
 \hypertarget{binormal-model-references}{%
 \section{References}\label{binormal-model-references}}
@@ -8117,7 +8346,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.1776828          1   0.27782824}
+\CommentTok{#> 1    1.3563847          1   0.24416502}
 \end{Highlighting}
 \end{Shaded}
 
@@ -17326,15 +17555,6 @@ Notice that the \texttt{RRRC\_1T\_PCL\_0\_2} p value, i.e., 0.0417263, is identi
 \hypertarget{optim-op-point}{%
 \chapter{Optimal operating point on FROC}\label{optim-op-point}}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{OpPtStr <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x,y) \{}
-\NormalTok{  y <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"("}\NormalTok{, }\KeywordTok{sprintf}\NormalTok{(}\StringTok{"%.3f"}\NormalTok{, x), }\StringTok{", "}\NormalTok{, }\KeywordTok{sprintf}\NormalTok{(}\StringTok{"%.3f"}\NormalTok{, y), }\StringTok{")"}\NormalTok{)}
-  \KeywordTok{return}\NormalTok{(y)}
-\NormalTok{\}}
-\end{Highlighting}
-\end{Shaded}
-
 \hypertarget{optim-op-point-how-much-finished}{%
 \section{How much finished}\label{optim-op-point-how-much-finished}}
 
@@ -17347,7 +17567,7 @@ A CAD system yields FROC mark-rating data where the (continuous scale) ratings g
 
 TBA: literature review
 
-It is assumed that \emph{the optimal reporting threshold \(\zeta_{\text{max}}\) is that value of \(\zeta_1\) that maximizes the area under curve (AUC) of an appropriately selected operating characteristic}. This chapter examines the effect of changing the reporting threshold \(\zeta_1\) on the area under curve for (a) the receiver operating characteristic (ROC) and (b) the weighted alternative free-response receiver operating characteristic (wAFROC).
+It is assumed that \emph{the optimal reporting threshold \(\zeta_{\text{max}}\) is the value of \(\zeta_1\) that maximizes the area under curve (AUC) of an appropriately selected operating characteristic}. This chapter examines the effect of changing the reporting threshold \(\zeta_1\) on the area under curve for (a) the receiver operating characteristic (ROC) and (b) the weighted alternative free-response receiver operating characteristic (wAFROC).
 
 TBA Summarize the sections that follow.
 
