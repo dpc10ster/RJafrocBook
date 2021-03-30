@@ -1,7 +1,7 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2021-03-29"
+date: "2021-03-30"
 site: bookdown::bookdown_site
 output: 
    bookdown::pdf_document: default
