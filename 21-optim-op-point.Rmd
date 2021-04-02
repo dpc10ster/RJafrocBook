@@ -156,11 +156,18 @@ grid.arrange(p)
 
 
 ```{r do_one_mu, echo=FALSE}
-do_one_mu <- function(mu, lambda, nu, zeta1Arr, lesDistr, relWeights) {
+do_one_mu <- function(mu, lambda, nu, zeta1Arr, lesDistr, relWeights, do_youden) {
 
   fomArray <- array(dim = length(zeta1Arr))
   for (i1 in 1:length(zeta1Arr)) {
-    fomArray[i1] <- UtilAnalyticalAucsRSM(mu, lambda, nu, zeta1 = zeta1Arr[i1], lesDistr, relWeights)$aucwAFROC
+    if (!do_youden) {
+      fomArray[i1] <- UtilAnalyticalAucsRSM(mu, lambda, nu, zeta1 = zeta1Arr[i1], lesDistr, relWeights)$aucwAFROC
+      #fomArray[i1] <- UtilAnalyticalAucsRSM(mu, lambda, nu, zeta1 = zeta1Arr[i1], lesDistr, relWeights)$aucROC
+    } else {
+      # add sensitivity and specificity and subtract 1, i.e., Youden index
+      fomArray[i1] <- RSM_yROC(z = zeta1Arr[i1], mu, lambda, nu, lesDistr) + 
+        (1 - RSM_xROC(z = zeta1Arr[i1], lambda)) - 1
+    }
   }
   # generate plot of AUC vs. zeta1
   myData <- data.frame(zeta1 = zeta1Arr, AUC = fomArray)
@@ -188,26 +195,29 @@ Shown next is the variation of wAFROC AUC vs. $\zeta_1$ for $\lambda = 10$ and t
 ### $\zeta_1$ optimization for $\lambda = 10$
 
 ```{r maxFomArr_10, cache = FALSE, echo=TRUE}
-# determine plotArr[[1,]], zetaMaxArr[1,] and maxFomArr[1,]
+# determine plotArr[[y,1,]], zetaMaxArr[1,1,] and maxFomArr[y,1,]
 lambda <- 10
 nu <- 1
+youdenArr <- c(FALSE, TRUE)
 mu_arr <- c(1, 2)
-maxFomArr <- array(dim = c(2,length(mu_arr)))
-zetaMaxArr <- array(dim = c(2, length(mu_arr)))
-plotArr <- array(list(), dim = c(2, length(mu_arr)))
+maxFomArr <- array(dim = c(2,2,length(mu_arr)))
+zetaMaxArr <- array(dim = c(2,2,length(mu_arr)))
+plotArr <- array(list(), dim = c(2,2,length(mu_arr)))
 lesDistr <- c(0.5, 0.5)
 relWeights <- c(0.5, 0.5)
-for (i in 1:length(mu_arr)) {
-  if (i == 1) zeta1Arr <- seq(1.5,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
-  x <- do_one_mu (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights)
-  plotArr[[1,i]] <- x$p + 
-    ggtitle(paste0("mu = ", 
-                   as.character(mu_arr[i]), 
-                   ", zetaMax = ", 
-                   format(x$zetaMax, digits = 3)))
-  zetaMaxArr[1,i] <- x$zetaMax
-  maxFomArr[1,i] <- x$maxFom
-  # plotArr[[2,i]] etc. reserved for lambda = 1 results, done later
+for (y in 1:2) {
+  for (i in 1:length(mu_arr)) {
+    if (i == 1) zeta1Arr <- seq(1,3.5,0.05) else zeta1Arr <- seq(0.5,2.5,0.1)
+    x <- do_one_mu (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights, youdenArr[y])
+    plotArr[[y,1,i]] <- x$p + 
+      ggtitle(paste0("mu = ", 
+                     as.character(mu_arr[i]), 
+                     ", zetaMax = ", 
+                     format(x$zetaMax, digits = 3)))
+    zetaMaxArr[y,1,i] <- x$zetaMax
+    maxFomArr[y,1,i] <- x$maxFom
+    # plotArr[[y,2,i]] etc. reserved for lambda = 1 results, done later
+  }
 }
 ```
 
@@ -215,9 +225,17 @@ for (i in 1:length(mu_arr)) {
 In the above code `plotArr` contains the plots (`x$p` plus a title string) of wAFROC AUC vs. $\zeta_1$, `zetaMaxArr` contains the value of $\zeta_1$ that maximizes wAFROC AUC (`x$zetaMax`) and `maxFomArr` contains the maximum value of wAFROC (`x$maxFom`). The first dimension of the arrays is reserved for the two values of $\lambda$, the second for the two values of $\mu$. 
 
 
-```{r optim-op-point-auc-vs-zeta1-10, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 10$; AUC is the wAFROC AUC. Panels are labeled by the values of $\\mu$ and $\\zeta_{\\text{max}}$. For $\\mu = 1$ there is a broad maximum but for $\\mu = 2$ it is better defined.", fig.show='hold', echo=FALSE}
-grid.arrange(plotArr[[1,1]],plotArr[[1,2]], ncol = 2)
+```{r optim-op-point-auc-vs-zeta1-10-1, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 10$; AUC is the wAFROC AUC. Panels are labeled by the values of $\\mu$ and $\\zeta_{\\text{max}}$. For $\\mu = 1$ there is a broad maximum but for $\\mu = 2$ it is better defined.", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[1,1,1]],plotArr[[1,1,2]], ncol = 2)
 ```
+
+
+
+
+```{r optim-op-point-auc-vs-zeta1-10-2, fig.cap="Youden TRUE: Variation of AUC vs. $\\zeta_1$ for $\\lambda = 10$; AUC is the wAFROC AUC. Panels are labeled by the values of $\\mu$ and $\\zeta_{\\text{max}}$. For $\\mu = 1$ there is a broad maximum but for $\\mu = 2$ it is better defined.", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[2,1,1]],plotArr[[2,1,2]], ncol = 2)
+```
+
 
 
 Shown next is the variation of wAFROC AUC vs. $\zeta_1$ for $\lambda = 1$ and the two values of the $\mu$ parameter.
@@ -226,32 +244,44 @@ Shown next is the variation of wAFROC AUC vs. $\zeta_1$ for $\lambda = 1$ and th
 ### $\zeta_1$ optimization for $\lambda = 1$
 
 ```{r maxFomArr_01, cache = FALSE, echo=FALSE}
-# determine plotArr[[2,]], zetaMaxArr[2,] and maxFomArr[2,]
+# determine plotArr[[y,2,]], zetaMaxArr[2,] and maxFomArr[y,2,]
 lambda <- 1
 
-for (i in 1:length(mu_arr)) {
-  zeta1Arr <- seq(-1,1,0.05)
-  fomArray <- array(dim = length(zeta1Arr))
-  x <- do_one_mu (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights)
-  plotArr[[2,i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  format(x$zetaMax, digits = 3)))
-  zetaMaxArr[2,i] <- x$zetaMax
-  maxFomArr[2,i] <- x$maxFom
+for (y in 1:2) {
+  for (i in 1:length(mu_arr)) {
+    zeta1Arr <- seq(-1,1.5,0.05)
+    fomArray <- array(dim = length(zeta1Arr))
+    x <- do_one_mu (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights, youdenArr[y])
+    plotArr[[y,2,i]] <- x$p + ggtitle(paste0("mu = ", as.character(mu_arr[i]), ", zetaMax = ",  format(x$zetaMax, digits = 3)))
+    zetaMaxArr[y,2,i] <- x$zetaMax
+    maxFomArr[y,2,i] <- x$maxFom
+  }
 }
 ```
 
 
 
-```{r optim-op-point-auc-vs-zeta1-01, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 1$.", fig.show='hold', echo=FALSE}
-grid.arrange(plotArr[[2,1]],plotArr[[2,2]], ncol = 2)
+
+```{r optim-op-point-auc-vs-zeta1-01-1, fig.cap="Variation of AUC vs. $\\zeta_1$ for $\\lambda = 1$.", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[1,2,1]],plotArr[[1,2,2]], ncol = 2)
 ```
+
+
+
+
+```{r optim-op-point-auc-vs-zeta1-01-2, fig.cap="Youden = TRUE; Variation of AUC vs. $\\zeta_1$ for $\\lambda = 1$.", fig.show='hold', echo=FALSE}
+grid.arrange(plotArr[[2,2,1]],plotArr[[2,2,2]], ncol = 2)
+```
+
+
+
 
 Fig. \@ref(fig:optim-op-point-auc-vs-zeta1-01) corresponds to $\lambda = 1$ and employs a similar labeling scheme as Fig. \@ref(fig:optim-op-point-auc-vs-zeta1-10). For example, the panel labeled `mu = 1, zetaMax = 0.3` shows that AUC has a maximum at $\zeta_1 = 0.3$. 
 
 
 
 ```{r do_one_froc, echo=FALSE}
-do_one_froc <- function(mu, lambda, nu, zeta1, lesDistr, relWeights, llfRange) {
-  
+do_one_froc <- function(mu, lambda, nu, zeta1, lesDistr, relWeights, nlfRange, llfRange) {
   
   froc <- PlotRsmOperatingCharacteristics(
     mu, 
@@ -261,6 +291,7 @@ do_one_froc <- function(mu, lambda, nu, zeta1, lesDistr, relWeights, llfRange) {
     lesDistr = lesDistr, 
     relWeights = relWeights, 
     OpChType = "FROC",
+    nlfRange = nlfRange,
     llfRange = llfRange,
     legendPosition = "none")$FROCPlot
   
@@ -275,33 +306,35 @@ do_one_froc <- function(mu, lambda, nu, zeta1, lesDistr, relWeights, llfRange) {
 
 lambdaArr <- c(10,1)
 nu <- 1
-#mu_arr <- c(1, 1.5, 2, 2.5) #already defined above
-#zetaMaxArr                  #already defined above
-#plotArr <- array(list(), dim = c(2,length(mu_arr)))
+#mu_arr <- c(1, 2)    #already defined above
+#zetaMaxArr [2,2,2]    #already defined above
+#plotArr <- array(list(), dim = c(2,2,length(mu_arr)))
 
-# indices: lambda, nlf/llf, 2-values of mu
-OpPtMax <- optOpPt <- array(dim = c(2, 2, 2))
+# indices: youden, lambda, nlf/llf, 2-values of mu
+OpPtMax <- optOpPt <- array(dim = c(2, 2, 2, 2))
 
-for (j in 1:2) {
-  for (i in 1:length(mu_arr)) {
-    if ((j ==1) && (i ==1)) llfRange <- c(0, 0.1) else llfRange <- c(0,1) 
-    x <- do_one_froc (mu_arr[i],
-                      lambdaArr[j],
-                      nu,
-                      zeta1 = zetaMaxArr[j,i],
-                      lesDistr, 
-                      relWeights, 
-                      llfRange)
-    # optimal operating point
-    optOpPt[j,1,i] <- max(x$data$NLF)
-    optOpPt[j,2,i] <- max(x$data$LLF)
-    
-    # following are end-points assuming zeta1 = -Inf
-    physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambdaArr[j], nu)
-    # OpPtMax[j,1,i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[j,i])
-    # OpPtMax[j,2,i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[j,i])
-    OpPtMax[j,1,i] <- physicalValues$lambdaP
-    OpPtMax[j,2,i] <- physicalValues$nuP
+for (y in 1:2) {
+  for (j in 1:2) {
+    for (i in 1:length(mu_arr)) {
+      x <- do_one_froc (mu_arr[i],
+                        lambdaArr[j],
+                        nu,
+                        zeta1 = zetaMaxArr[y,j,i],
+                        lesDistr, 
+                        relWeights, 
+                        nlfRange = NULL,
+                        llfRange = NULL)
+      # optimal operating point
+      optOpPt[y,j,1,i] <- max(x$data$NLF)
+      optOpPt[y,j,2,i] <- max(x$data$LLF)
+      
+      # following are end-points assuming zeta1 = -Inf
+      physicalValues <- UtilIntrinsic2PhysicalRSM(mu_arr[i], lambdaArr[j], nu)
+      # OpPtMax[y,j,1,i] <- physicalValues$lambdaP*pnorm(-zetaMaxArr[y,j,i])
+      # OpPtMax[y,j,2,i] <- physicalValues$nuP*pnorm(mu_arr[i]-zetaMaxArr[y,j,i])
+      OpPtMax[y,j,1,i] <- physicalValues$lambdaP
+      OpPtMax[y,j,2,i] <- physicalValues$nuP
+    }
   }
 }
 ```
@@ -316,63 +349,96 @@ for (j in 1:2) {
 lambdaArr <- c(10,1)
 nu <- 1
 # following are coordinates of extended plots
-OpPtExtended <- array(dim = c(2, 2, 4))
+OpPtExtended <- array(dim = c(2,2,2,2))
 # optOpPt defined above
-#mu_arr <- c(1, 1.5, 2, 2.5) #already defined above
-#zetaMaxArr                  #already defined above
-plotArr <- array(list(), dim = c(2,length(mu_arr)))
+#mu_arr <- c(1,2) #already defined above
+#zetaMaxArr       #already defined above
+frocPlotArr <- array(list(), dim = c(2,length(mu_arr))) 
+# no need to have two Youden plots as only the vertical lines differ
 
 correction <- array(0.5, dim = c(2, 4))
 
-for (j in 1:2) {
-  for (i in 1:length(mu_arr)) {
-    if ((j ==1) && (i ==1)) llfRange <- c(0, 0.1) else llfRange <- c(0,1) 
-    x <- do_one_froc (
-      mu_arr[i],
-      lambdaArr[j],
-      nu,
-      # to show a fuller extent of the plot
-      zeta1 = zetaMaxArr[j,i] - correction[j,i],
-      lesDistr,
-      relWeights, 
-      llfRange)
-
-    plotArr[[j,i]] <- x +
-      geom_vline(
-        xintercept =
-          optOpPt[j,1,i], color = "blue")  +
-      ggtitle(
-        paste0(
-          as.character(lambdaArr[j]),
-          "-",
-          as.character(mu_arr[i])))
-
-    OpPtExtended[j,1,i] <- max(x$data$NLF)
-    OpPtExtended[j,2,i] <- max(x$data$LLF)
+for (y in 1:2) {
+  for (j in 1:2) {
+    for (i in 1:length(mu_arr)) {
+      if ((j ==1) && (i ==1)) {
+        nlfRange <- c(0, 0.6)
+        llfRange <- c(0, 0.2)
+      } else {
+        nlfRange <- NULL
+        llfRange <- NULL
+      } 
+      x <- do_one_froc (
+        mu_arr[i],
+        lambdaArr[j],
+        nu,
+        # to show a fuller extent of the plot
+        zeta1 = zetaMaxArr[y,j,i] - correction[j,i],
+        lesDistr,
+        relWeights,
+        nlfRange,
+        llfRange)
+      
+      frocPlotArr[[j,i]] <- x +
+        geom_vline(
+          xintercept =
+            optOpPt[1,j,1,i], color = "blue")  +
+        geom_vline(
+          xintercept =
+            optOpPt[2,j,1,i], color = "green3")  +
+        ggtitle(
+          paste0(
+            as.character(lambdaArr[j]),
+            "-",
+            as.character(mu_arr[i])))
+      
+      OpPtExtended[y,j,1,i] <- max(x$data$NLF)
+      OpPtExtended[y,j,2,i] <- max(x$data$LLF)
+    }
   }
 }
 ```
 
 
 
-```{r optim-op-point-cad-optim-zeta1, echo=FALSE}
-x1 <- rbind(sprintf( "%.3f", t(maxFomArr[1,]), digits = 3), sprintf( "%.3f", t(maxFomArr[2,]), digits = 3))
-x2 <- cbind(OpPtStr(optOpPt[1,1,1], optOpPt[1,2,1]), OpPtStr(optOpPt[1,1,2], optOpPt[1,2,2]))
-x3 <- cbind(OpPtStr(optOpPt[2,1,1], optOpPt[2,2,1]), OpPtStr(optOpPt[2,1,2], optOpPt[2,2,2]))
-x123 <- as.data.frame(rbind(x1, x2, x3))
-x123 <- cbind(c("AUC", "AUC", "(NLF, LLF)", "(NLF, LLF)"), x123)
-x123 <- cbind(c(10, 1, 10, 1), x123)
-colnames(x123) <- c("Lambda", "Measure", paste0("mu = ", as.character(mu_arr)))
+```{r optim-op-point-cad-optim-zeta1-1, echo=FALSE}
+x1 <- rbind(sprintf( "%.3f", t(maxFomArr[1,1,]), digits = 3), sprintf( "%.3f", t(maxFomArr[1,2,]), digits = 3))
+x2 <- cbind(OpPtStr(optOpPt[1,1,1,1], optOpPt[1,1,2,1]), OpPtStr(optOpPt[1,1,1,2], optOpPt[1,1,2,2]))
+x3 <- cbind(OpPtStr(optOpPt[1,2,1,1], optOpPt[1,2,2,1]), OpPtStr(optOpPt[1,2,1,2], optOpPt[1,2,2,2]))
+x123_1 <- as.data.frame(rbind(x1, x2, x3))
+x123_1 <- cbind(c("AUC", "AUC", "(NLF, LLF)", "(NLF, LLF)"), x123_1)
+x123_1 <- cbind(c(10, 1, 10, 1), x123_1)
+colnames(x123_1) <- c("Lambda", "Measure", paste0("mu = ", as.character(mu_arr)))
 ```
+
+
+```{r optim-op-point-cad-optim-zeta1-2, echo=FALSE}
+x1 <- rbind(sprintf( "%.3f", t(maxFomArr[2,1,]), digits = 3), sprintf( "%.3f", t(maxFomArr[2,2,]), digits = 3))
+x2 <- cbind(OpPtStr(optOpPt[2,1,1,1], optOpPt[2,1,2,1]), OpPtStr(optOpPt[2,1,1,2], optOpPt[2,1,2,2]))
+x3 <- cbind(OpPtStr(optOpPt[2,2,1,1], optOpPt[2,2,2,1]), OpPtStr(optOpPt[2,2,1,2], optOpPt[2,2,2,2]))
+x123_2 <- as.data.frame(rbind(x1, x2, x3))
+x123_2 <- cbind(c("AUC", "AUC", "(NLF, LLF)", "(NLF, LLF)"), x123_2)
+x123_2 <- cbind(c(10, 1, 10, 1), x123_2)
+colnames(x123_2) <- c("Lambda", "Measure", paste0("mu = ", as.character(mu_arr)))
+```
+
 
 
 ### Summary of optimization results {#optim-op-point-comments-threshold-optimization}
 
 
-```{r optim-op-point-cad-optim-table, echo=FALSE}
-kbl(x123, caption = "Summary of performance measures corresponding to optimal thresholds for the two $\\lambda$ and $\\mu$ values: \"Measure\" refers to a performance measure such as AUC or an operating point, AUC is the wAFROC AUC, etc.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+```{r optim-op-point-cad-optim-table1, echo=FALSE}
+kbl(x123_1, caption = "Summary of performance measures corresponding to optimal thresholds for the two $\\lambda$ and $\\mu$ values: \"Measure\" refers to a performance measure such as AUC or an operating point, AUC is the wAFROC AUC, etc.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 
 ```
+
+
+```{r optim-op-point-cad-optim-table2, echo=FALSE}
+kbl(x123_2, caption = "Summary of performance measures corresponding to optimal thresholds for the two $\\lambda$ and $\\mu$ values: \"Measure\" refers to a performance measure such as AUC or an operating point, AUC is the wAFROC AUC, etc.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+
+```
+
+
 
 Table \@ref(tab:optim-op-point-cad-optim-table) summarizes the results of the optimizations. The first two rows compare the AUCs for $\lambda=10$ and $\lambda=1$ for the two values of $\mu$. The next row shows the operating point (NLF, LLF) for $\lambda = 10$ for the two values of $\mu$ and the final row shows the operating point for $\lambda = 1$ for the two values of $\mu$. The following trends are evident (in the following *optimal NLF* means NLF at the optimal operating point on the FROC, etc.).
 
@@ -387,14 +453,15 @@ Table \@ref(tab:optim-op-point-cad-optim-table) summarizes the results of the op
 
 #### $\lambda = 10, \mu = 1$ {#optim-op-point-threshold-illustrations-10-1}
 
-```{r optim-op-point-froc-10, fig.cap="Extended FROC plots: panel labeled 10-1 is for $\\lambda = 10$ and $\\mu = 1$, and that labeled 10-1.5 is for $\\lambda = 10$ and $\\mu = 1.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
-grid.arrange(plotArr[[1,1]], plotArr[[1,2]], nrow = 1, ncol = 2)
+```{r optim-op-point-froc-10, fig.cap="Extended FROC plots for $\\lambda = 10$: panel labeled 10-1 is for $\\mu = 1$ and that labeled 10-2 is for $\\mu = 2$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
+grid.arrange(frocPlotArr[[1,1]], frocPlotArr[[1,2]], nrow = 1, ncol = 2)
 ```             
+
 
 
 * In order to show a fuller extent of the FROC curve it is necessary to *extend* the curves beyond the *optimal* operating point. This was done by setting $\zeta_1$ = $\zeta_{\text{max}} - 0.5$, which has the effect of letting the curve run a little bit further to the upper-right. 
 
-* The *optimal* operating-point, corresponding to the vertical blue line, for the curve in Fig. \@ref(fig:optim-op-point-froc-10) labeled **10-1** is `r OpPtStr(optOpPt[1,1,1], optOpPt[1,2,1])` while the *extended* point, corresponding to the edge of the plot, is `r OpPtStr(OpPtExtended[1,1,1], OpPtExtended[1,2,1])`. The *highest* operating point, that reached when all marks are reported, is `r OpPtStr(OpPtMax[1,1,1], OpPtMax[1,2,1])`. This point lies about a factor 300 to the right of the displayed curve and about a factor of six higher along the y-axis. It vividly illustrates a low-performing FROC curve. Note the "expanded-view" scale factors, focusing on the region very near the origin: the x-axis runs from 0 to 0.03 while the y-axis runs from 0 to 0.1. Otherwise this curve would be almost indistinguishable from the x-axis. For large $\lambda$ and small $\mu$ performance is very low, in fact wAFROC AUC = `r sprintf ("%.3f", maxFomArr[1,1])` (note that we are using the wAFROC FOM, whose minimum possible value is 0, not 0.5). The optimal operating point of the algorithm is close to the origin. With such poor algorithm performance the sensible choice is to only show those marks that have, according to the algorithm, very high confidence level for being right (an operating point near the origin corresponds to a high value of $\zeta$). 
+* The *optimal* operating-point, corresponding to the vertical blue line, for the curve in Fig. \@ref(fig:optim-op-point-froc-10) labeled **10-1** is `r OpPtStr(optOpPt[1,1,1,1], optOpPt[1,1,2,1])` while the *extended* point, corresponding to the edge of the plot, is `r OpPtStr(OpPtExtended[1,1,1,1], OpPtExtended[1,1,2,1])`. The *highest* operating point, that reached when all marks are reported, is `r OpPtStr(OpPtMax[1,1,1,1], OpPtMax[1,1,2,1])`. This point lies about a factor 300 to the right of the displayed curve and about a factor of six higher along the y-axis. It vividly illustrates a low-performing FROC curve. Note the "expanded-view" scale factors, focusing on the region very near the origin: the x-axis runs from 0 to 0.03 while the y-axis runs from 0 to 0.1. Otherwise this curve would be almost indistinguishable from the x-axis. For large $\lambda$ and small $\mu$ performance is very low, in fact wAFROC AUC = `r sprintf ("%.3f", maxFomArr[1,1,1])` (note that we are using the wAFROC FOM, whose minimum possible value is 0, not 0.5). The optimal operating point of the algorithm is close to the origin. With such poor algorithm performance the sensible choice is to only show those marks that have, according to the algorithm, very high confidence level for being right (an operating point near the origin corresponds to a high value of $\zeta$). 
 
 * Fig. \@ref(fig:optim-op-point-2plots) demonstrates visually the effect on wAFROC AUC of showing very few marks (red dashed line - this line extends almost all the way to the origin as on this scale the short continuous section is not visible) as compared to showing more marks (blue solid plus dashed line). These plots are for $\lambda = 10$, $\mu = 1$ and $\zeta_1 = 3.25$ for the upper curve and $\zeta_1 = 1.5$ for the lower curve. It shows that by adopting a stricter reporting threshold and showing fewer marks, performance as measured by the area under the wAFROC, is actually improved.
 
@@ -412,22 +479,23 @@ grid.arrange(x1, ncol = 1)
 #### $\lambda = 10, \mu = 2$ {#optim-op-point-threshold-illustrations-10-2}
 
 
-* In Fig. \@ref(fig:optim-op-point-froc-10) panel labeled **10-2**: the optimal operating point is `r OpPtStr(optOpPt[1,1,2], optOpPt[1,2,2])`. Given the higher value of $\mu$ the algorithm designer can show marks with lower confidence levels, corresponding to the optimal operating point moving up the FROC curve. The end-point of the extended curve is `r OpPtStr(OpPtExtended[1,1,2], OpPtExtended[1,2,2])`. The highest operating point, when all marks are reported, is `r OpPtStr(OpPtMax[1,1,2], OpPtMax[1,2,2])`. 
+* In Fig. \@ref(fig:optim-op-point-froc-10) panel labeled **10-2**: the optimal operating point is `r OpPtStr(optOpPt[1,1,1,2], optOpPt[1,1,2,2])`. Given the higher value of $\mu$ the algorithm designer can show marks with lower confidence levels, corresponding to the optimal operating point moving up the FROC curve. The end-point of the extended curve is `r OpPtStr(OpPtExtended[1,1,1,2], OpPtExtended[1,1,2,2])`. The highest operating point, when all marks are reported, is `r OpPtStr(OpPtMax[1,1,1,2], OpPtMax[1,1,2,2])`. 
 
 
 ```{r optim-op-point-froc-01, fig.cap="Extended FROC plots: panel labeled 1-1 is for $\\lambda = 1$ and $\\mu = 1$ and that labeled 10-1.5 is for $\\lambda = 1$ and $\\mu = 1.5$. The blue line indicates the optimal operating point.", fig.show='hold', echo=FALSE, fig.height=3.5,  fig.pos='H'}
-grid.arrange(plotArr[[2,1]], plotArr[[2,2]], ncol = 2)
+grid.arrange(frocPlotArr[[2,1]], frocPlotArr[[2,2]], ncol = 2)
 ```             
+
 
 
 #### $\lambda = 1, \mu = 1$ {#optim-op-point-threshold-illustrations-1-1}
 
-* In Fig. \@ref(fig:optim-op-point-froc-01) panel labeled **1-1**: The optimal operating point is `r OpPtStr(optOpPt[2,1,1], optOpPt[2,2,1])`. The end-point of the extended curve is `r OpPtStr(OpPtExtended[2,1,1], OpPtExtended[2,2,1])`. The highest operating point on the FROC is `r OpPtStr(OpPtMax[2,1,1], OpPtMax[2,2,1])`. 
+* In Fig. \@ref(fig:optim-op-point-froc-01) panel labeled **1-1**: The optimal operating point is `r OpPtStr(optOpPt[1,2,1,1], optOpPt[1,2,2,1])`. The end-point of the extended curve is `r OpPtStr(OpPtExtended[1,2,1,1], OpPtExtended[1,2,2,1])`. The highest operating point on the FROC is `r OpPtStr(OpPtMax[1,2,1,1], OpPtMax[1,2,2,1])`. 
 
 
 #### $\lambda = 1, \mu = 2$ {#optim-op-point-threshold-illustrations-1-2}
 
-* In Fig. \@ref(fig:optim-op-point-froc-01) panel labeled **1-2**: The optimal operating point is `r OpPtStr(optOpPt[2,1,2], optOpPt[2,2,2])`. The end-point of the extended curve is `r OpPtStr(OpPtExtended[2,1,2], OpPtExtended[2,2,2])`. The highest operating point on the FROC is  `r OpPtStr(OpPtMax[2,1,2], OpPtMax[2,2,2])`. 
+* In Fig. \@ref(fig:optim-op-point-froc-01) panel labeled **1-2**: The optimal operating point is `r OpPtStr(optOpPt[1,2,1,2], optOpPt[1,2,2,2])`. The end-point of the extended curve is `r OpPtStr(OpPtExtended[1,2,1,2], OpPtExtended[1,2,2,2])`. The highest operating point on the FROC is  `r OpPtStr(OpPtMax[1,2,1,2], OpPtMax[1,2,2,2])`. 
 
 
 
