@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-03-31}
+\date{2021-04-06}
 
 \begin{document}
 \maketitle
@@ -267,6 +267,20 @@ The book is divided into parts as follows:
   13-froc-empirical-examples.
 \end{itemize}
 
+\hypertarget{shelved-vs.-removed-folders-needing-heavy-edits}{%
+\section*{Shelved vs.~removed folders needing heavy edits}\label{shelved-vs.-removed-folders-needing-heavy-edits}}
+\addcontentsline{toc}{section}{Shelved vs.~removed folders needing heavy edits}
+
+\begin{itemize}
+\tightlist
+\item
+  TBA
+\item
+  Temporarily shelved 17c-rsm-evidence.Rmd in removed folder
+\item
+  Now 17-b is breaking; possibly related to changes in RJafroc: had to do with recent changes to RJafroc code - RSM\_xFROC etc requiring intrinsic parameters; fixed 17-b
+\end{itemize}
+
 \hypertarget{coding-aids}{%
 \section*{Coding aids}\label{coding-aids}}
 \addcontentsline{toc}{section}{Coding aids}
@@ -279,6 +293,10 @@ The book is divided into parts as follows:
   OpPtStr(, do:
 \item
   kbl(dfA, caption = ``\ldots.'', booktabs = TRUE, escape = FALSE) \%\textgreater\% collapse\_rows(columns = c(1, 3), valign = ``middle'') \%\textgreater\% kable\_styling(latex\_options = c(``basic'', ``scale\_down'', ``HOLD\_position''), row\_label\_position = ``c'')
+\item
+  ```\{r, attr.source = ``.numberLines''\}
+\item
+  kbl(x12, caption = ``Summary of optimization results using wAFROC-AUC.'', booktabs = TRUE, escape = FALSE) \%\textgreater\% collapse\_rows(columns = c(1), valign = ``middle'') \%\textgreater\% kable\_styling(latex\_options = c(``basic'', ``scale\_down'', ``HOLD\_position''), row\_label\_position = ``c'')
 \end{itemize}
 
 \hypertarget{part-quick-start}{%
@@ -8471,7 +8489,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.0365555          1   0.30862392}
+\CommentTok{#> 1    1.5950087          1   0.20661198}
 \end{Highlighting}
 \end{Shaded}
 
@@ -14272,7 +14290,7 @@ As a more complicated but clinically realistic example, consider a dataset with 
 While the parameters \(\mu\), \(\lambda'\) and \(\nu'\) are physically meaningful, and can be estimated from eye-tracking measurements, a little thought reveals that they cannot be varied independently of each other. Rather, \(\mu\) is an intrinsic parameter whose value, together with two other intrinsic parameters \(\lambda\) and \(\nu\), determine the physically more meaningful parameters \(\lambda'\) and \(\nu'\), respectively. The following is a convenient re-parameterization:
 
 \begin{equation} 
-\nu' = exp\left ( 1 - \mu \nu \right )
+\nu' = 1 - exp\left ( - \mu \nu \right )
 \label{eq:rsm-nup}
 \end{equation}
 
@@ -15099,333 +15117,6 @@ Regarding Dr.~Wagner's second point, it would require a great amount of data to 
   Chakraborty DP. A search model and figure of merit for observer data acquired according to the free-response paradigm. Phys Med Biol. 2006;51:3449--3462.
 \end{enumerate}
 
-\hypertarget{rsm-evidence}{%
-\chapter{Evidence for the RSM}\label{rsm-evidence}}
-
-\hypertarget{rsm-evidence-how-much-finished}{%
-\section{How much finished}\label{rsm-evidence-how-much-finished}}
-
-70\%
-
-\hypertarget{rsm-evidence-intro}{%
-\section{Introduction}\label{rsm-evidence-intro}}
-
-This chapter details evidence for the validity of the radiological search model (RSM). Briefly, these are:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Its correspondence to the empirical (i.e., measurement based) Kundel-Nodine model of radiological search.
-\item
-  In special cases, it reduces to being indistinguishable from the binormal model.
-\item
-  It explains:
-
-  \begin{enumerate}
-  \def\labelenumii{\alph{enumii}.}
-  \tightlist
-  \item
-    The empirical observation \citep{RN298} that most ROC datasets are characterized by b-parameter \(b < 1\).
-  \item
-    The empirical observation \citep{RN2635} that the \(b\) tends to decrease as contrast increases.
-  \item
-    The empirical observation \citep{RN2635}, that the difference in means of the two pdfs divided by the difference in standard deviations is roughly constant.
-  \end{enumerate}
-\item
-  It explains data degeneracy, i.e., no interior data points, sometimes observed especially with expert observers.
-\item
-  It predicts FROC/AFROC and LROC curves that better fit real datasets.
-\end{enumerate}
-
-As described in TBA Chapter 20, the CBM explains 3(a) and 4 while the bigamma model \citep{RN100} explains 3(c).
-
-\hypertarget{rsm-predictions-corresponence-kundel-nodine}{%
-\section{Correspondence to the Kundel-Nodine model}\label{rsm-predictions-corresponence-kundel-nodine}}
-
-The strongest evidence for the validity of the RSM is its close correspondence to the Kundel-Nodine model of radiological search \citep{RN1533, RN1388, RN438, RN1663}, which in turn is derived from eye-tracking measurements made on radiologists while they perform diagnostic tasks. These show that radiologists identify suspicious regions in a short time and this ability corresponds to the \(\lambda', \nu'\) parameters of the RSM. Having found suspicious regions, the next activity uncovered by eye-tracking measurements is the detailed examination of each suspicious region in order to determine if it is a significant finding. This is where the z-sample is calculated, and this process is modeled by two unit normal distributions separated by the \(\mu\) parameter of the RSM.
-
-Other ROC models do not share this close correspondence. The CBM model comes closest -- it models the probability that lesions are \emph{found}, which is part of search performance, but the ability to \emph{avoid finding NLs} is not modeled. Like other ROC models, CBM predicts that the point (1,1) is continuously accessible to observer, which implies zero search performance, TBA Fig. 17.6.
-
-\hypertarget{rsm-predictions-binormal-model-mimic}{%
-\section{The RSM can mimic the binormal model}\label{rsm-predictions-binormal-model-mimic}}
-
-ROC models assume that every case provides a finite decision variable sample. This is what permits the observer to \emph{continuously} move the operating point to (1,1). According to the RSM a decision sample on every case is possible if \(\lambda\) is large, since in the limit \(\lambda \rightarrow \infty\) every case has at least one latent NL. It turns out, as shown next, that it is not necessary to go to infinite values of \(\lambda\) to produce RSM-generated ratings data that are indistinguishable from those generated by the binormal model. Values of \(\lambda\) around 1 to 10 are sufficient to demonstrate this fact. A factor that helps showing the indistinguishability is that the binormal model is remarkably resilient to departures from normality, its \emph{robustness property}, demonstrated in \citep{RN1216}. It literally takes huge datasets, numbering in the thousands of cases, to show departures from strict normality.
-
-The ROC ratings datasets used in the following examples were generated by the RSM. The parameter values are listed in Table \ref{tab:rsm-evidence-binormal-table2}. RSM generated FROC datasets, in each case 500 non-diseased and 700 diseased cases were used, were converted to (highest rating) ROC datasets, each dataset was binned into 5 bins and then analyzed by an online Java program \citep{RN1975} which implements Metz's ROCFIT program, TBA Chapter 06, yielding the binormal parameters \(a, b\) and the p-value of the chisquare goodness of fit statistic. Shown next are the binormal-model-fitted ROC curves to these datasets as well as the corresponding \(a,b\) parameters. The value of Row corresponds to the row number in Table \ref{tab:rsm-evidence-binormal-table2}.
-
-\includegraphics{17c-rsm-evidence_files/figure-latex/rsm-evidence-binormal-plots1-do-not-use-1.pdf}
-
-\begin{figure}
-\centering
-\includegraphics{17c-rsm-evidence_files/figure-latex/rsm-evidence-binormal-plots2-1.pdf}
-\caption{\label{fig:rsm-evidence-binormal-plots2}RSM generated ROC points and corresponding binormal model fitted curves.}
-\end{figure}
-
-Fig. \ref{fig:rsm-evidence-binormal-plots2}: ROC \emph{operating points} obtained using RSM ratings-generator and corresponding binormal model \emph{fitted curves}. The \(a, b\) parameters are shown in the figure labels. The value of \texttt{Row} corresponds to the row number in Table \ref{tab:rsm-evidence-binormal-table2}. The plots show that over a wide range of parameters RSM generated ROC data is fitted reasonably by the binormal model. The p-values of the goodness of fit statistic, see Table \ref{tab:rsm-evidence-binormal-table2}, are all in the range of what is considered an acceptable fit to a model. As far as the binormal model-fitting software is concerned, the counts data arose from two \emph{effectively normal distributions} (i.e., apart from the intrinsic uncertainty due to allowed arbitrary monotone transformations). Even with the large number of cases, sampling variability affects the binormal model fits: e.g., the binormal model curves in plots labeled ``2'' and ``4'' differ only in seed values. The hooks near (1,1) in the binormal ROC fitted curves are not easily visible but are nevertheless present as each of the b-parameters in Table \ref{tab:rsm-evidence-binormal-table2} is less than unity. The error bars are exact 95\% binomial confidence intervals on the operating points.
-
-\textbf{Since the binormal model has been used successfully for almost six decades, the ability to the RSM to mimic it is an important justification for the validity of the RSM.}
-
-\begin{table}[H]
-
-\caption{\label{tab:rsm-evidence-binormal-table2}Simulating ROC binned ratings data using the RSM and fitting the ratings using the binormal model; s is the seed, L is the maximum number of lesions per case, A is the RSM-predicted ROC-AUC, Az is the binormal model fitted AUC and $\nu = 1$ for all datasets.}
-\centering
-\resizebox{\linewidth}{!}{
-\begin{tabular}[t]{llllllllll}
-\toprule
-Row & s & L & $\mu$ & $\lambda$ & A & a & b & Az & pVal\\
-\midrule
-1 & 1 & 1 & 2 & 10 & 0.787 & 1.002 & 0.861 & 0.776 & 0.223\\
-2 & 1 & 1 & 2.5 & 10 & 0.879 & 1.497 & 0.752 & 0.884 & 0.46\\
-3 & 1 & 1 & 3 & 10 & 0.938 & 1.928 & 0.736 & 0.94 & 0.198\\
-4 & 2 & 1 & 2.5 & 10 & 0.879 & 1.221 & 0.682 & 0.843 & 0.12\\
-5 & 2 & 2 & 2 & 10 & 0.844 & 1.25 & 0.786 & 0.837 & 0.903\\
-\addlinespace
-6 & 2 & 2 & 2.5 & 10 & 0.922 & 1.554 & 0.646 & 0.904 & 0.592\\
-7 & 2 & 2 & 3 & 10 & 0.965 & 2.057 & 0.676 & 0.956 & 0.009\\
-8 & 2 & 2 & 3 & 1 & 0.985 & 2.391 & 0.405 & 0.987 & 0.988\\
-\bottomrule
-\end{tabular}}
-\end{table}
-
-Table \ref{tab:rsm-evidence-binormal-table2}: Results of simulating ROC ratings tables using seeds and RSM parameter values specified in columns 2 -- 5 and fitting each ratings table using the binormal model. The corresponding binormal model fitted ROC curves are shown in Fig. \ref{fig:rsm-evidence-binormal-plots2}. The number of non-diseased cases was 500, the number of diseased cases was 700, and the reporting threshold \(\zeta_1 = -1\).
-
-Of interest in Table \ref{tab:rsm-evidence-binormal-table2} is the observation that \(b < 1\), and the qualities of the fits are quite good (p \textgreater{} 0.001 is generally considered acceptable, see \citep{RN300}, 3rd edition, page 779).
-
-One expects \(A \equiv AUC_{ROC}^{RSM}\) to exceed the binormal fitted value \(A_z\). This has to do with the ``proper'' property of the RSM-ROC curve, which implies an \emph{ideal observer}, while the binormal model predicts ``improper'' ROC curves, TBA Chapter 20. For rows 2 and 3, the expected orderings are reversed but the magnitudes of the discrepancies are small. This is because RSM-predicted values are \emph{not} subject to sampling variability as they are derived by numerical integration, whose estimation error is very small compared to sampling error. In contrast, the estimates of \(A_z\) are subject to sampling variability, even though large numbers of cases were used. Row-4 repeats Row-2 with a different value of \texttt{seed}: this time the expected ordering is observed \(A > Az\).
-
-\hypertarget{empirical-observations}{%
-\section{Empirical observations}\label{empirical-observations}}
-
-As summarized previously, there are three empirical observations regarding binormal parameters:
-
-\begin{itemize}
-\tightlist
-\item
-  \(b < 1\).
-\item
-  \(b\) decreases as \(a\) increases.
-\item
-  For fixed experimental conditions \(R_{Swets} \equiv \frac {a}{1-b}\) is approximately constant.
-\end{itemize}
-
-\hypertarget{explanation-for-b-1}{%
-\section{\texorpdfstring{Explanation for \(b < 1\)}{Explanation for b \textless{} 1}}\label{explanation-for-b-1}}
-
-The RSM-predicted ROC curves are consistent with empirical observations \citep{RN298} that observed ROC data, when fitted by the unequal variance binormal model, yield \(b < 1\), implying that the diseased case pdf is wider than the non-diseased case pdf. The RSM provides an explanation for this: diseased cases yield two types of z-samples, namely NL z-samples from a zero-centered unit variance normal distribution and LL z-samples from a \(\mu\)-centered unit variance normal distribution. The resulting \emph{mixture distribution} is expected, when one attempts to fit it with a normal distribution, to yield standard deviation for diseased cases greater than 1, or, equivalently, \(b < 1\). The fit is not expected to be ideal, but it is known that for relatively small numbers of cases, as is true with clinical data sets, it is difficult to detect deviations from strict normality; indeed, the binormal model is quite robust with respect to deviations from strict normality \citep{RN298}. Several examples of this were evident in the goodness of fit p-values in Table \ref{tab:rsm-evidence-binormal-table2}, which show good binormal fits to RSM generated data even with 1200 cases.
-
-\begin{figure}
-\centering
-\includegraphics{17c-rsm-evidence_files/figure-latex/rsm-evidence-pdf-plots-1.pdf}
-\caption{\label{fig:rsm-evidence-pdf-plots}pdfs along with the parameter values. The dotted curves correspond to non-diseased cases while solid curves correspond to diseased cases.}
-\end{figure}
-
-Fig. \ref{fig:rsm-evidence-pdf-plots}: This figure provides an explanation for empirical observation \(b < 1\). Displayed are pdfs along with the parameter values. For all plots \(\lambda = 1\) and \(L_{max} = 1\). The dotted curves correspond to non-diseased cases while the solid curves correspond to diseased cases. The solid curves are broader than the dotted ones. In (A) and (B) the solid curve is noticeably broader. In (D) there is a hint of a secondary peak at zero, which is quite prominent in (C), which corresponds to the largest \(\mu\) and the smallest \(\nu\). In each case the resulting mixture distribution is expected to lead to a larger estimate of standard deviation of the assumed normal distribution of diseased cases relative to non-diseased cases.
-
-\hypertarget{explanation-of-swets-et-al-observations}{%
-\section{Explanation of Swets et al observations}\label{explanation-of-swets-et-al-observations}}
-
-More than 55 years ago, \citep{RN2635} noticed in two non-medical imaging contexts:
-
-\begin{itemize}
-\item
-  The standard deviation of the non-diseased distribution divided by the standard deviation of the diseased distribution, tended to decrease as contrast increased. In binormal parameter terms, \(b\) decreases as \(a\) increases.
-\item
-  The ratio \(R_{Swets} \equiv \Delta(mean) / \Delta(\sigma)\), henceforth referrd to as the Swets Ratio, has been conjectured to be approximately constant for a fixed set of experimental conditions. \(\Delta(mean)\) is the separation of the means of the two distributions and \(\Delta(\sigma)\) is the difference of the two standard deviations (diseased minus non-diseased). In binormal parameter terms, \(R_{Swets} \equiv \frac{a}{1-b}\) is supposed to be approximately constant \footnote{The separation is \(a\), the wider signal distribution has standard deviation unity while the narrower noise distribution has standard deviation \(b\).}.
-\end{itemize}
-
-The second observation implies a peculiar relation between the \(a\) and \(b\) parameters. Recall Figure \ref{fig:binormal-model-ab2-mu-sigma}, Plot A, which shows the definitions of the binormal \(a\) and \(b\) parameters. The diseased pdf has unit standard deviation, while the non-diseased has standard deviation \(b < 1\), and the separation of the two distributions is \(a\). The constancy of Swets Ratio implies that as \(a\) increases \(b\) decreases (which implies that the first Swets observation is actually contained in the second) so as to increase \(1-b\) by the same factor. Since \(b\) is a standard deviation, i.e., \(b > 0\), it can only shrink so far, and eventually, for large enough \(a\), the presumed constancy must fail. In particular, as \(b\) approaches unity (corresponding to the equal variance binormal model) the ratio must approach infinity. Nevertheless, it is interesting to use the RSM to test this hypothesis.
-
-Testing over a range of \(\mu\) using binormal model maximum likelihood fitting is direct but cumbersome and subject to failure as it depends on convergence of the binormal model algorithm, which is problematical for larger values of \(\mu\), which lead to degenerate datasets. Instead, the following method was used. The search model predicted pdfs were normalized so that they individually integrated to unit areas over the continuous sections. Normalization was accomplished by dividing the non-diseased pdf by the x-coordinate of the end-point, and the diseased pdf by the y-coordinate of the end-point. The means and standard deviations of these distributions were calculated by numerical integration. Since the binormal model is not used, the effective binormal parameters will henceforth be referred to as \(a_{eff}\) and \(b_{eff}\). In this notation, the Swets Ratio is \(R_{Swets} \equiv \frac{a_{eff}}{1-b_{eff}}\).
-
-The following equations describe the calculations involved, which are implemented in the code:
-
-\begin{equation}
-\left. 
-\begin{aligned}
-\left \langle x \right \rangle_N = & \int_{-\infty}^{\infty} xf_N(x) dx \\
-\left \langle x \right \rangle_D = & \int_{-\infty}^{\infty} xf_D(x) dx \\
-\sigma_N^2 = & \int_{-\infty}^{\infty} \left (x - \left \langle x \right \rangle_N  \right )^2f_N(x) dx \\
-\sigma_D^2 = & \int_{-\infty}^{\infty} \left (x - \left \langle x \right \rangle_D  \right )^2f_D(x) dx \\
-\end{aligned}
-\right \}
-\label{eq:rsm-evidence-x-sigmax2}
-\end{equation}
-
-Subscripts \(N\) and \(D\) refer to non-diseased and diseased cases, respectively, while \(f(x)\) is the normalized \(pdf\) function. The effective binormal parameters are defined as:
-
-\begin{equation}
-\left. 
-\begin{aligned}
-a_{eff} = & \frac{\left \langle x \right \rangle_D - \left \langle x \right \rangle_N  } {\sigma_D}\\
-b_{eff} = & \frac{\sigma_N}{\sigma_D}\\
-R_{Swets} = & \frac{a_{eff}}{1 - b_{eff} }
-\end{aligned}
-\right \}
-\label{eq:rsm-evidence-delta-mean-sigma}
-\end{equation}
-
-Varying experimental conditions were simulated by individually varying two of the three parameters of the RSM under the constraint that the RSM predicted AUC (assuming \(\zeta_1 = -\infty\)) remains constant at a specified value. Without this constraint, variation of a single parameter, e.g., \(\mu\), would cause AUC to vary over the entire range 0.5 to 1, which is uncharacteristic of radiologists interpreting the same case set. Rather, we assume that observers characterized by different RSM parameters nevertheless converge to roughly the same RSM-AUCs. In other words, they trade deficiencies in one area (e.g., finding too many NLs, large \(\lambda\)) with increased performance in other areas (e.g., finding more lesions, i.e., larger \(\nu\), and/or greater perceptual signal to noise ratio, i.e., larger \(\mu\)).
-
-In the code, the number of lesions per diseased case was set to one. The function \texttt{FindParamFixAuc()} finds the missing RSM parameter, indicated by initializing it with \texttt{NA}. The function \texttt{effectiveAB()} calculates the separation \(a_{eff}\) and standard deviation ratio \(b_{eff}\) (non-diseased to diseased) of the two distributions, after normalizing each to unit area.
-
-Perhaps the best way of illustrating the near constancy of the Swets Ratio is by fixing \(\lambda = 2\) and varying \(\mu\) and \(\nu\) to keep AUC constant, as in Table \ref{tab:rsm-evidence-table1A}. This results in a large range over which \(\mu\) is varied, from 2.000 to 5.000. The RSM \(\mu\) parameter controls the separation of non-diseased and diseased pdfs and as such directly affects the binormal \(a_{eff}\) parameter. Hence the corresponding large range for \(a_{eff}\), from 0.7717 to 1.3042. The RSM \(\nu'\) parameter is relatively constant, ranging from 0.4000 to 0.4556. Note that the \emph{physical \(\lambda'\) and \(\nu'\) (i.e., primed) quantities} are shown in the table. This table shows that the Swets Ratio is near constant, ranging from 2.162 to 3.136. Note the increase in the ratio for the largest value of \(b_{eff}\), i.e., that closest to unity, which, as noted earlier, is as expected.
-
-\begin{table}[H]
-
-\caption{\label{tab:rsm-evidence-table1A}Here $\lambda = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.}
-\centering
-\resizebox{\linewidth}{!}{
-\begin{tabular}[t]{lllllll}
-\toprule
-$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $\frac{a_{eff}}{1-b_{eff}}$\\
-\midrule
- & 2.000 & 1.0000 & 0.4556 & 0.7717 & 0.7539 & 3.136\\
-\cmidrule{2-7}
- & 2.214 & 0.9032 & 0.4377 & 0.8136 & 0.7107 & 2.812\\
-\cmidrule{2-7}
- & 2.452 & 0.8158 & 0.4244 & 0.8608 & 0.6671 & 2.585\\
-\cmidrule{2-7}
- & 2.714 & 0.7368 & 0.4148 & 0.9131 & 0.6236 & 2.426\\
-\cmidrule{2-7}
- & 3.005 & 0.6655 & 0.4083 & 0.9700 & 0.5810 & 2.315\\
-\cmidrule{2-7}
- & 3.327 & 0.6011 & 0.4042 & 1.0310 & 0.5400 & 2.241\\
-\cmidrule{2-7}
- & 3.684 & 0.5429 & 0.4020 & 1.0956 & 0.5010 & 2.195\\
-\cmidrule{2-7}
- & 4.079 & 0.4903 & 0.4008 & 1.1629 & 0.4642 & 2.170\\
-\cmidrule{2-7}
- & 4.516 & 0.4429 & 0.4003 & 1.2327 & 0.4298 & 2.162\\
-\cmidrule{2-7}
-\multirow{-10}{*}{\raggedright\arraybackslash 0.7} & 5.000 & 0.4000 & 0.4000 & 1.3042 & 0.3978 & 2.166\\
-\bottomrule
-\end{tabular}}
-\end{table}
-
-In Table \ref{tab:rsm-evidence-table1B} the parameter \(\nu = 1\) is held fixed while \(\mu\) and \(\lambda\) are varied. This time \(a_{eff}\) is relatively constant, ranging from 0.5914 to 0.7007, while \(b_{eff}\) is very close to unity, ranging from 0.9518 to 0.9767, leading to the very large and varying values of the Swets Ratio, ranging from 14.54 to 25.96.
-
-\begin{table}[H]
-
-\caption{\label{tab:rsm-evidence-table1B}Here $\nu = 1$ is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the inverse relation between $a_{eff}$ and $b_{eff}$.}
-\centering
-\resizebox{\linewidth}{!}{
-\begin{tabular}[t]{lllllll}
-\toprule
-$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $\frac{a_{eff}}{1-b_{eff}}$\\
-\midrule
- & 0.9453 & 1.058 & 0.6115 & 0.5914 & 0.9767 & 25.43\\
-\cmidrule{2-7}
- & 0.9901 & 1.208 & 0.6285 & 0.6062 & 0.9763 & 25.61\\
-\cmidrule{2-7}
- & 1.0368 & 1.379 & 0.6454 & 0.6211 & 0.9760 & 25.83\\
-\cmidrule{2-7}
- & 1.0853 & 1.576 & 0.6622 & 0.6360 & 0.9755 & 25.96\\
-\cmidrule{2-7}
- & 1.1354 & 1.801 & 0.6787 & 0.6504 & 0.9748 & 25.78\\
-\cmidrule{2-7}
- & 1.1866 & 2.061 & 0.6947 & 0.6639 & 0.9735 & 25.02\\
-\cmidrule{2-7}
- & 1.2389 & 2.360 & 0.7103 & 0.6761 & 0.9711 & 23.42\\
-\cmidrule{2-7}
- & 1.2920 & 2.706 & 0.7253 & 0.6866 & 0.9672 & 20.93\\
-\cmidrule{2-7}
- & 1.3457 & 3.107 & 0.7396 & 0.6948 & 0.9610 & 17.80\\
-\cmidrule{2-7}
-\multirow{-10}{*}{\raggedright\arraybackslash 0.7} & 1.3999 & 3.572 & 0.7534 & 0.7007 & 0.9518 & 14.54\\
-\bottomrule
-\end{tabular}}
-\end{table}
-
-In Table \ref{tab:rsm-evidence-table1C}, the final example, \(\mu = 2\) is held constant but the other two parameters \(\lambda, \nu\) are varied to keep AUC constant. This time the inverse dependence between \(a_{eff}\) and \(b_{eff}\) is \emph{not} observed: while \(a_{eff}\) decreases monotonically as one moves down the column, \(b_{eff}\) shows a minimum around the seventh row of this table. Except for the first column, which corresponds to the largest value of \(b_{eff}\), the Swets Ratio is near constant.
-
-In practice datasets with \(b > 1\) are occasionally observed. These would lead to a negative Swets Ratio.
-
-\begin{table}[H]
-
-\caption{\label{tab:rsm-evidence-table1C}Here $\mu = 2$ is held constant while the other two parameters are varied to keep AUC at 0.7. The last column lists the Swets Ratio. Note the lack of an inverse relation between $a_{eff}$ and $b_{eff}$.}
-\centering
-\resizebox{\linewidth}{!}{
-\begin{tabular}[t]{lllllll}
-\toprule
-$AUC$ & $\mu$ & $\lambda'$ & $\nu'$ & $a_{eff}$ & $b_{eff}$ & $\frac{a_{eff}}{1-b_{eff}}$\\
-\midrule
- &  & 0.05000 & 0.4031 & 1.6629 & 0.8967 & 16.091\\
-\cmidrule{3-7}
- &  & 0.07722 & 0.4048 & 1.5425 & 0.8632 & 11.272\\
-\cmidrule{3-7}
- &  & 0.11927 & 0.4074 & 1.4030 & 0.8275 & 8.132\\
-\cmidrule{3-7}
- &  & 0.18420 & 0.4113 & 1.2531 & 0.7940 & 6.084\\
-\cmidrule{3-7}
- &  & 0.28449 & 0.4172 & 1.1043 & 0.7675 & 4.750\\
-\cmidrule{3-7}
- &  & 0.43938 & 0.4261 & 0.9676 & 0.7517 & 3.897\\
-\cmidrule{3-7}
- &  & 0.67860 & 0.4392 & 0.8520 & 0.7480 & 3.380\\
-\cmidrule{3-7}
- &  & 1.04807 & 0.4579 & 0.7635 & 0.7552 & 3.118\\
-\cmidrule{3-7}
- &  & 1.61870 & 0.4843 & 0.7053 & 0.7698 & 3.063\\
-\cmidrule{3-7}
-\multirow{-10}{*}{\raggedright\arraybackslash 0.7} & \multirow{-10}{*}{\raggedright\arraybackslash 2} & 2.50000 & 0.5200 & 0.6765 & 0.7857 & 3.157\\
-\bottomrule
-\end{tabular}}
-\end{table}
-
-Swets et al observations are based on only two datasets (as best as I can tell) and their observed value was \(\frac{a}{1-b} \approx 4\). As shown above, depending on the value of \(b\), the ratio can reach very large values if \(b \rightarrow 1\), or even negative values if \(b > 1\). Therefore, the Swets Ratio observation is probably not generalizable. Nevertheless, as long as the \(\mu\) parameter is varied over a wide range and AUC is held constant, the RSM does predict the inverse dependence of the binormal \(a\) and \(b\) parameters and the near constancy of the Swets Ratio.
-
-\hypertarget{explanation-of-data-degeneracy}{%
-\section{Explanation of data degeneracy}\label{explanation-of-data-degeneracy}}
-
-\emph{An ROC dataset is said to be degenerate if the corresponding ROC plot does not have any interior points.} Data degeneracy is a significant problem faced by the binormal model \citep{RN1081, RN1499, RN1083}. Degenerate datasets cannot be analyzed by the binormal model. The RSM provides a natural explanation for degeneracy, and moreover, as shown in TBA Chapter 19, such datasets are readily fitted by the RSM. {[}The CBM model \citep{RN1501} provides an alternative explanation for the data degeneracy and a method for fitting such datasets.{]}
-
-The possibility of degeneracy can be appreciated by examining Fig. \ref{fig:rsm-evidence-binormal-plots2}, in particular the plot labeled ``Row = 8'', i.e., corresponding to the highest values of \(\mu\), for which the accessible portion of the RSM-generated ROC curve shrinks and approaches the top-left corner of the plot. The operating points will be clustered near the initial near-vertical section of the ROC curve. \emph{It will be difficult to get such observers to generate appreciable numbers of false positives.} Instructions such as ``spread your ratings'' \citep{RN113} or the use ``continuous'' ratings \citep{RN1083} may not work. \emph{In any case, interfering with the radiologist's readings style to make the data easier to analyze is undesirable experimental practice.} To the experimenter it will appear that the observer is not cooperating, when in fact they are being perfectly reasonable. A similar issue affected Dr.~Swensson's LROC analysis method \citep{swensson1996unified} in which (originally) every case had to be assigned a ``most-suspicious'' region, even if the radiologist thought the case was perfectly normal. This met with resistance from radiologists. Radiologists don't like to be told, ``even if you believe the case is definitely normal, there must be some region that is least normal, or most suspicious''. All of these semantic difficulties go away if one abandons the premise that every case must generate a z-sample. \footnote{In later versions of his software, Dr.~Swensson removed the forced localization requirement and instead did it in the software by sampling a random number generator.}
-
-\hypertarget{predictions-of-observed-frocafroclroc-curves}{%
-\section{Predictions of observed FROC/AFROC/LROC curves}\label{predictions-of-observed-frocafroclroc-curves}}
-
-Besides predicting ROC, FROC and AFROC curves, as shown in this TBA chapter, the RSM also predicts LROC curves \citep{RN1654}. Moreover, these are generally better fits to experimental data, since the RSM does not allow the AFROC and LROC curve to go continuously to (1,1), as do earlier models \citep{chakraborty1989maximum, chakraborty1990free, swensson1996unified}. \footnote{As a historical note, the FROCFIT and AFROC software \citep{chakraborty1989maximum, chakraborty1990free} developed by me in 1989 was more successful at fitting microcalcification data than mass data (private communication, Prof.~Heang-Ping Chan, ca. 1990). This is consistent with the premise that the microcalcification task is characterized by larger \(\lambda\) than the mass task. Radiologists literally use a magnifying glass (a physical on or a software implementation) to search each image for the much smaller specks, and this increases the potential for finding NLs. Mass detection is more a function of the global gestalt view described in the previous chapter. Larger \(lambda\) yields an FROC curve that traverses more to the right than the corresponding mass curve. The FROCFIT program allows the FROC curve to go far to the right and reach unit ordinate, which is not observed with mass data, but could approximate microcalcification data, especially in the lower-left region of the curve.}
-
-\hypertarget{rsm-evidence-discussion-summary}{%
-\section{Discussion / Summary}\label{rsm-evidence-discussion-summary}}
-
-Evidence for the RSM is summarized. Its correspondence to the empirical Kundel-Nodine model of visual search that is grounded in eye-tracking measurements. It reduces in the limit of large \(\lambda\), which guarantees that every case will yield a decision variable sample, to the binormal model; the predicted pdfs in this limit are not strictly normal, but deviations from normality would require very large sample size to demonstrate. Examples were given where even with 1200 cases the binormal model provides statistically good fits. Since the binormal model has proven quite successful in describing a large body of data, it satisfying that the RSM can mimic it. The RSM explains most empirical results regarding binormal model fits: the common finding that b \textless{} 1; that \(b\) decreases with increasing lesion contrast; and the finding that the difference in means divided by the difference in standard deviations is fairly constant for a fixed experimental situation. The RSM explains data degeneracy, especially for radiologists with high expertise.
-
-\hypertarget{the-wagner-review-2}{%
-\section{The Wagner review}\label{the-wagner-review-2}}
-
-The two RSM papers \citep{RN1564, RN1566} were honored in Physics in Medicine and Biology by being included in a list of 25 papers deemed the ``Highlights of 2006''. As stated by the publisher:
-
-\begin{quote}
-I am delighted to present a special collection of articles that highlight the very best research published in Physics in Medicine and Biology in 2006. Articles were selected for their presentation of outstanding new research, receipt of the highest praise from our international referees, and the highest number of downloads from the journal website.
-\end{quote}
-
-One of the reviewers was the late Dr.~Robert (``Bob'') F. Wagner -- he had an open-minded approach to imaging science and a unique style. The author reproduces one of his comments with minor edits, as it pertains to the most interesting and misunderstood prediction of the RSM, namely its constrained end-point property.
-
-\begin{quote}
-I'm thinking here about the straight-line piece of the ROC curve from the max to (1, 1).
-1. This can be thought of as resulting from two overlapping uniform distributions (thus guessing) far to the left in decision space (rather than delta functions). Please think some more about this point--because it might make better contact with the classical literature.
-2. BTW -- it just occurs to me (based on the classical early ROC work of Swets \& co.) -- that there is a test that can resolve the issue that I struggled with in my earlier remarks. The experimenter can try to force the reader to provide further data that will fill in the space above the max point. If the results are a straight line, then the reader would just be guessing -- as implied by the present model. If the results are concave downward, then further information has been extracted from the data. This could require a great amount of data to sort out--but it's an interesting point (at least to me).
-\end{quote}
-
-Dr.~Wagner made two interesting points. Here is the author's response (ca. 2006):
-
-\begin{quote}
-The need for delta functions at negative infinity can be seen from the following argument. Let us postulate two constrained width pdfs with the same shapes but different areas, centered at a common value far to the left in decision space, but not at negative infinity. These pdfs would also yield a straight-line portion to the ROC curve. However, they would be inconsistent with the search model assumption that some images yield no decision variable samples and therefore cannot be rated in bin ROC:2 or higher. Therefore, if the distributions are as postulated above then choice of a cutoff in the neighborhood of the overlap would result in some of these images being rated 2 or higher, contradicting the RSM assumption. The delta function pdfs at negative infinity are seen to be a consequence of the search model.
-\end{quote}
-
-In hindsight, I should never have introduced the delta functions and simply accepted the pdfs not integrating to unity for the simple reason that all cases do not generate decision variable samples.
-
-\begin{quote}
-One could argue that when the observer sees nothing to report then he starts guessing and indeed this would enable the observer to move along the dashed portion of the curve. This argument implies that the observer knows when the threshold is at negative infinity, at which point the observer turns on the guessing mechanism (the observer who always guesses would move along the chance diagonal). In the author's judgment, this is unreasonable. The existence of two thresholds, one for moving along the non-guessing portion and one for switching to the guessing mode would require abandoning the concept of a single decision rule. To preserve this concept one needs the delta functions at negative infinity.
-\end{quote}
-
-Regarding Dr.~Wagner's second point, it would require effort to sort out whether forcing the observer to guess will fill in the dashed portion of the curve. Given the bad consequences of guessing I believe that in the clinical situation, the radiologist will never guess. If the radiologist sees nothing to report, nothing will be reported.
-
-\hypertarget{rsm-evidence-references}{%
-\section{References}\label{rsm-evidence-references}}
-
 \hypertarget{rsm-goodbye-froc}{%
 \chapter{The FROC should not be used to measure performance}\label{rsm-goodbye-froc}}
 
@@ -15509,8 +15200,8 @@ The contaminated binormal model2-4 (CBM), Chapter 20, which models the diseased 
 
 The author does not want to leave the impression that RSM is the ultimate model. The current model does not predict satisfaction of search (SOS) effects27-29. Attempts to incorporate SOS effects in the RSM are in the early research stage. As stated earlier, the RSM is a first-order model: a lot of interesting science remains to be uncovered.
 
-\hypertarget{the-wagner-review-3}{%
-\subsection{The Wagner review}\label{the-wagner-review-3}}
+\hypertarget{the-wagner-review-2}{%
+\subsection{The Wagner review}\label{the-wagner-review-2}}
 
 The two RSM papers12,13 were honored by being included in a list of 25 papers the ``Highlights of 2006'' in Physics in Medicine and Biology. As stated by the publisher: "I am delighted to present a special collection of articles that highlight the very best research published in Physics in Medicine and Biology in 2006. Articles were selected for their presentation of outstanding new research, receipt of the highest praise from our international referees, and the highest number of downloads from the journal website.
 
@@ -17683,241 +17374,413 @@ Notice that the \texttt{RRRC\_1T\_PCL\_0\_2} p value, i.e., 0.0417263, is identi
 \hypertarget{optim-op-point-how-much-finished}{%
 \section{How much finished}\label{optim-op-point-how-much-finished}}
 
-70\%
-
-\hypertarget{optim-op-point-intro}{%
-\section{Introduction}\label{optim-op-point-intro}}
-
-A CAD system yields FROC mark-rating data where the (continuous scale) ratings generated by the algorithm are available to the algorithm designer with the understanding that only marks with ratings exceeding a pre-selected threshold are to be displayed (or reported) to the radiologist. The problem addressed in this chapter is how to select the optimal reporting threshold.
-
-TBA: literature review
-
-It is assumed that \emph{the optimal reporting threshold \(\zeta_{\text{max}}\) is the value of \(\zeta_1\) that maximizes the AUC of an appropriately selected operating characteristic}. This chapter examines the effect of changing the reporting threshold \(\zeta_1\) on the AUC for (a) the receiver operating characteristic (ROC) and (b) the weighted alternative free-response receiver operating characteristic (wAFROC).
-
-TBA Summarize the sections that follow.
-
-\hypertarget{optim-op-point-dependence-threshold-roc}{%
-\section{Dependence of ROC performance on threshold}\label{optim-op-point-dependence-threshold-roc}}
-
-In Section \ref{binormal-model-partial-true} it was shown that true ROC-AUC performance of a partial-area observer \footnote{Recall that a \emph{partial area observer} was defined as follows: for cases with z-samples equal to or exceeding \(\zeta_1\) the observer reports ratings exactly equal to the observed z-samples but for the remaining cases the observer assigns a \emph{fixed value rating that is smaller than \(\zeta_1\)}.} is smaller than that of a full-area observer who rates all cases. Also, true performance of a partial-area observer as a function of FPF has a maximum at FPF = 1. In other words, using the ROC figure of merit, performance of the CAD algorithm is maximized by displaying \emph{all} the marks.
-
-\hypertarget{optim-op-point-dependence-threshold-wafroc}{%
-\section{Dependence of FROC performance on threshold}\label{optim-op-point-dependence-threshold-wafroc}}
-
-The situation is different if one uses the wAFROC figure of merit. Consider the three wAFROC plots shown in see Fig. \ref{fig:optim-op-point-dependence-threshold-wafroc-plot}. These correspond to \(\mu = 2\), \(\lambda = 5\), \(\nu = 1\), one lesion per case, and values of \(\zeta_1\), from left to right: \(\zeta_1 = 2\), \(\zeta_1 = 1\) and \(\zeta_1 = -1\). The area under the wAFROC curve in the middle plot is actually greater than that for the plots on either side of it, a fact that be difficult to appreciate, but is brought out more clearly in the next plot.
-
-\begin{figure}
-\centering
-\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-dependence-threshold-wafroc-plot-1.pdf}
-\caption{\label{fig:optim-op-point-dependence-threshold-wafroc-plot}Left plot: wAFROC curve for \(\zeta_1 = 2\); Middle plot: wAFROC curve for \(\zeta_1 = 1\); Right plot: wAFROC curve for \(\zeta_1 = -1\). The middle curve has the highest area under the curve. This fact is made clearer in the next figure.}
-\end{figure}
-
-The next plot, see Fig. \ref{fig:optim-op-point-dependence-threshold-wafroc-plot2}, in which three previous plots are superposed, shows the differences in areas more clearly. The green plot (solid green line plus the dashed green line), corresponding to \(\zeta_1 = 2\), clearly has the least area. The ``green-red'' plot (i.e., the solid green line plus the solid red line plus the dashed red line), corresponding to \(\zeta_1 = 1\), has the greatest area. The ``green-red-blue'' plot (i.e., the solid green line plus the solid red line plus the solid blue line plus the dashed blue line), corresponding to \(\zeta_1 = -1\), has slightly smaller area than that of the ``green-red'' plot. There is a maximum in area under the wAFROC curve near \(\zeta_1 = 1\). A more precise determination of the optimal value of \(\zeta_1\), using numerical search, will be shown later, but it is clear a maximum exists and that it does not correspond to \(\zeta_1 = -\infty\), in other words it does not correspond to showing all the marks, as was the case when one used the ROC operating characteristic.
-
-The essential difference between the ROC and the wAFROC examples is this: as one moves up the proper ROC curve:
-* The slope decreases monotonically;
-* At each point the slope is greater than that of the straight line connecting the point to (1,1) and
-* The curve ends at (1,1)
-
-In contrast, for the wAFROC curve:
-* The slope decreases monotonically
-* At each point the slope is not greater than that of the straight line connecting the point to (1,1) and
-* The curve ends below-left to (1,1)
-
-The wAFROC resembles an improper ROC but this time it is not a fitting artifact. \emph{The geometrical differences in the shapes of the two curves enables a finite and meaningful optimal \(\zeta_1\) determination for the wAFROC but not for the ROC}.
-
-In the following sections the optimal operating point determined using the wAFROC curve will be explored for two algorithmic observer, one with low performance and one with performance similar to an expert radiologist. Since CAD developers are more familiar with FROC curves than wAFROC curves, the optimal operating points for the two algorithms will be illustrated using FROC curves.
-
-\begin{figure}
-\centering
-\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-dependence-threshold-wafroc-plot2-1.pdf}
-\caption{\label{fig:optim-op-point-dependence-threshold-wafroc-plot2}The green curve corresponds to \(\zeta_1 = 2\), the green+red curve corresponds to \(\zeta_1 = 1\) and the green+red+blue curve corresponds to \(\zeta_1 = -1\). The green+red curve plus the red dashed line extension has the greatest area under the wAFROC, corresponding to being near the optimal choice of threshold. Note that each area includes that under the corresponding dashed line.}
-\end{figure}
+40\%
+Major update to 21-optim-op-point.Rmd - need to resolve plots in vary mu
 
 \hypertarget{optim-op-point-methods}{%
 \section{Methods}\label{optim-op-point-methods}}
 
-Two values of the \(\lambda\) parameter were used: \(\lambda = 10\) and \(\lambda = 1\). For each \(\lambda\) two value of \(\mu\) were used: \(\mu = 1\) and \(\mu = 2\). The \(\nu\) parameter was held constant at \(\nu = 1\). Diseased cases with one or two lesions occurring with equal probability (\texttt{lesDistr} in following code) and equally weighted lesions were assumed (\texttt{relWeights}).
+The RSM parameters are \(\lambda\), \(\nu\), \(\mu\) and \(\zeta_1\). In the following sections each of the first three parameters is varied in turn and the optimal \(\zeta_1\) determined by maximizing one of two figures of merit (FOM) namely, the wAFROC-AUC or the Youden-index. The two functions to be minimized, \texttt{wAFROC} and \texttt{Youden}, are defined next:
 
-\(\lambda = 10\) characterizes a CAD system that generates about 10 times the number of latent NL marks as an expert radiologist, while \(\lambda = 1\) characterizes a CAD system that generates about the same number of latent NL marks as an expert radiologist.
-
-For each \((\lambda,\mu)\) pair a range of values of \(\zeta_1\) was scanned. For each \(\zeta_1\) the area under the wAFROC curve was calculated using function \texttt{UtilAnalyticalAucsRSM()}. This function returns the wAFROC AUC. The procedure for different values of \(\zeta_1\) to find the value of \(\zeta_1\) -- denoted \(\zeta_{\text{max}}\) -- that maximized the AUC. The corresponding (NLF,LLF) values on the FROC curve and the optimal wAFROC AUC were recorded.
-
-Shown next is the variation of wAFROC AUC vs.~\(\zeta_1\) for \(\lambda = 10\) and the two values of the \(\mu\) parameter.
-
-\hypertarget{zeta_1-optimization-for-lambda-10}{%
-\subsection{\texorpdfstring{\(\zeta_1\) optimization for \(\lambda = 10\)}{\textbackslash zeta\_1 optimization for \textbackslash lambda = 10}}\label{zeta_1-optimization-for-lambda-10}}
+\begin{itemize}
+\item
+  wAFROC-AUC is computed by \texttt{UtilAnalyticalAucsRSM}. Lines 2 - 17 returns \texttt{-wAFROC}, the \emph{negative} of wAFROC-AUC. The negative sign is needed because the \texttt{optimize()} function, used later, finds the \emph{minimum} of wAFROC-AUC. The first argument is \(\zeta_1\), the variable to be varied to find the minimum. The remaining arguments are needed by \texttt{UtilAnalyticalAucsRSM}: \(\mu\), \(\lambda\), \(\nu\), \texttt{lesDistr} and \texttt{relWeights.} The last two specify the number of lesions per case and their weights. The example below uses \texttt{lesDistr\ =\ c(0.5,0.5)}, i.e., half the abnormal cases contain one lesion and the rest contain two lesions, and \texttt{relWeights\ =\ c(0.5,0.5)} specifies equal weights.
+\item
+  The Youden-index is defined as the sum of sensitivity and specificity minus 1. Sensitivity is computed by \texttt{RSM\_yROC} and specificity by \texttt{(1\ -\ RSM\_xROC)}. Lines 22 - 40 returns \texttt{-Youden}, the \emph{negative} of the Youden-index.
+\end{itemize}
 
 \begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# determine plotArr[[1,]], zetaMaxArr[1,] and maxFomArr[1,]}
-\NormalTok{lambda <-}\StringTok{ }\DecValTok{10}
-\NormalTok{nu <-}\StringTok{ }\DecValTok{1}
-\NormalTok{mu_arr <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)}
-\NormalTok{maxFomArr <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\KeywordTok{length}\NormalTok{(mu_arr)))}
-\NormalTok{zetaMaxArr <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\KeywordTok{length}\NormalTok{(mu_arr)))}
-\NormalTok{plotArr <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\KeywordTok{list}\NormalTok{(), }\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\KeywordTok{length}\NormalTok{(mu_arr)))}
-\NormalTok{lesDistr <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{)}
-\NormalTok{relWeights <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{)}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(mu_arr)) \{}
-  \ControlFlowTok{if}\NormalTok{ (i }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) zeta1Arr <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{1.5}\NormalTok{,}\FloatTok{3.5}\NormalTok{,}\FloatTok{0.05}\NormalTok{) }\ControlFlowTok{else}\NormalTok{ zeta1Arr <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\FloatTok{0.5}\NormalTok{,}\FloatTok{2.5}\NormalTok{,}\FloatTok{0.1}\NormalTok{)}
-\NormalTok{  x <-}\StringTok{ }\KeywordTok{do_one_mu}\NormalTok{ (mu_arr[i], lambda, nu, zeta1Arr, lesDistr, relWeights)}
-\NormalTok{  plotArr[[}\DecValTok{1}\NormalTok{,i]] <-}\StringTok{ }\NormalTok{x}\OperatorTok{$}\NormalTok{p }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(}\StringTok{"mu = "}\NormalTok{, }
-                   \KeywordTok{as.character}\NormalTok{(mu_arr[i]), }
-                   \StringTok{", zetaMax = "}\NormalTok{, }
-                   \KeywordTok{format}\NormalTok{(x}\OperatorTok{$}\NormalTok{zetaMax, }\DataTypeTok{digits =} \DecValTok{3}\NormalTok{)))}
-\NormalTok{  zetaMaxArr[}\DecValTok{1}\NormalTok{,i] <-}\StringTok{ }\NormalTok{x}\OperatorTok{$}\NormalTok{zetaMax}
-\NormalTok{  maxFomArr[}\DecValTok{1}\NormalTok{,i] <-}\StringTok{ }\NormalTok{x}\OperatorTok{$}\NormalTok{maxFom}
-  \CommentTok{# plotArr[[2,i]] etc. reserved for lambda = 1 results, done later}
+\begin{Highlighting}[numbers=left,,]
+
+\NormalTok{wAFROC <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{ (}
+\NormalTok{  zeta1, }
+\NormalTok{  mu, }
+\NormalTok{  lambda, }
+\NormalTok{  nu, }
+\NormalTok{  lesDistr, }
+\NormalTok{  relWeights) \{}
+\NormalTok{  x <-}\StringTok{ }\KeywordTok{UtilAnalyticalAucsRSM}\NormalTok{(}
+\NormalTok{    mu, }
+\NormalTok{    lambda, }
+\NormalTok{    nu, zeta1, }
+\NormalTok{    lesDistr, }
+\NormalTok{    relWeights)}\OperatorTok{$}\NormalTok{aucwAFROC}
+  \CommentTok{# return negative of aucwAFROC }
+  \CommentTok{# (as optimize finds minimum of function)}
+  \KeywordTok{return}\NormalTok{(}\OperatorTok{-}\NormalTok{x)}
+  
+\NormalTok{\}}
+
+
+\NormalTok{Youden <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{ (}
+\NormalTok{  zeta1, }
+\NormalTok{  mu, }
+\NormalTok{  lambda, }
+\NormalTok{  nu, }
+\NormalTok{  lesDistr, }
+\NormalTok{  relWeights) \{}
+  \CommentTok{# add sensitivity and specificity }
+  \CommentTok{# and subtract 1, i.e., Youden's index}
+\NormalTok{  x <-}\StringTok{ }\KeywordTok{RSM_yROC}\NormalTok{(}
+\NormalTok{    zeta1, }
+\NormalTok{    mu, }
+\NormalTok{    lambda, }
+\NormalTok{    nu, }
+\NormalTok{    lesDistr) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{RSM_xROC}\NormalTok{(zeta1, lambda)) }\OperatorTok{-}\StringTok{ }\DecValTok{1}
+  \CommentTok{# return negative of Youden }
+  \CommentTok{# (as optimize finds minimum of function)}
+  \KeywordTok{return}\NormalTok{(}\OperatorTok{-}\NormalTok{x)}
+  
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
 
-In the above code \texttt{plotArr} contains the plots (\texttt{x\$p} plus a title string) of wAFROC AUC vs.~\(\zeta_1\), \texttt{zetaMaxArr} contains the value of \(\zeta_1\) that maximizes wAFROC AUC (\texttt{x\$zetaMax}) and \texttt{maxFomArr} contains the maximum value of wAFROC (\texttt{x\$maxFom}). The first dimension of the arrays is reserved for the two values of \(\lambda\), the second for the two values of \(\mu\).
+\hypertarget{optim-op-point-vary-lambda}{%
+\section{Vary lambda}\label{optim-op-point-vary-lambda}}
 
-\begin{figure}
-\centering
-\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-auc-vs-zeta1-10-1.pdf}
-\caption{\label{fig:optim-op-point-auc-vs-zeta1-10}Variation of AUC vs.~\(\zeta_1\) for \(\lambda = 10\); AUC is the wAFROC AUC. Panels are labeled by the values of \(\mu\) and \(\zeta_{\text{max}}\). For \(\mu = 1\) there is a broad maximum but for \(\mu = 2\) it is better defined.}
-\end{figure}
+For \(\mu = 2\) and \(\nu = 1\) wAFROC and Youden-index based optimizations were performed for 4 values of \(\lambda = 1, 5, 10, 15\). The following quantities were calculated:
 
-Shown next is the variation of wAFROC AUC vs.~\(\zeta_1\) for \(\lambda = 1\) and the two values of the \(\mu\) parameter.
+\begin{itemize}
+\tightlist
+\item
+  \texttt{zetaOptArr}, a {[}2,4{]} array, the optimal thresholds \(\zeta_1\);
+\item
+  \texttt{maxFomArr}, a {[}2,4{]} array, the optimal values of the figures of merit, wAFROC-AUC or Youden;
+\item
+  \texttt{rocAucArr}, a {[}2,4{]} array, the AUCs under the ROC curves corresponding to optimizations based on wAFROC or Youden-index;\\
+\item
+  \texttt{nlfOptArr}, a {[}2,4{]} array, the abscissa of the FROC curve corresponding to optimizations based on wAFROC or Youden-index;\\
+\item
+  \texttt{llfOptArr}, a {[}2,4{]} array, the ordinate of the FROC curve corresponding to optimizations based on wAFROC or Youden-index.
+\end{itemize}
 
-\hypertarget{zeta_1-optimization-for-lambda-1}{%
-\subsection{\texorpdfstring{\(\zeta_1\) optimization for \(\lambda = 1\)}{\textbackslash zeta\_1 optimization for \textbackslash lambda = 1}}\label{zeta_1-optimization-for-lambda-1}}
+In each of these arrays the first index \texttt{y} denotes whether wAFROC-AUC is being maximized (\texttt{y} = 1, see lines 14 - 20) - or if Youden-index is being optimized (\texttt{y} = 2, see lines 39 - 45). The second index corresponds to \(\lambda\).
 
-\begin{figure}
-\centering
-\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-auc-vs-zeta1-01-1.pdf}
-\caption{\label{fig:optim-op-point-auc-vs-zeta1-01}Variation of AUC vs.~\(\zeta_1\) for \(\lambda = 1\).}
-\end{figure}
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{mu <-}\StringTok{ }\DecValTok{2}
+\NormalTok{nu <-}\StringTok{ }\DecValTok{1}
+\NormalTok{lambdaArr <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{10}\NormalTok{,}\DecValTok{15}\NormalTok{)}
+\NormalTok{maxFomArr <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\KeywordTok{length}\NormalTok{(lambdaArr)))}
+\NormalTok{zetaOptArr <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\KeywordTok{length}\NormalTok{(lambdaArr)))}
+\NormalTok{rocAucArr <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\KeywordTok{length}\NormalTok{(lambdaArr)))}
+\NormalTok{nlfOptArr <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\KeywordTok{length}\NormalTok{(lambdaArr)))}
+\NormalTok{llfOptArr <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\KeywordTok{length}\NormalTok{(lambdaArr)))}
+\NormalTok{lesDistr <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{)}
+\NormalTok{relWeights <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (y }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{) \{}
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(lambdaArr)) \{}
+    \ControlFlowTok{if}\NormalTok{ (y }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) \{}
+\NormalTok{      x <-}\StringTok{ }\KeywordTok{optimize}\NormalTok{(wAFROC, }
+                    \DataTypeTok{interval =} \KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{5}\NormalTok{,}\DecValTok{5}\NormalTok{), }
+\NormalTok{                    mu, }
+\NormalTok{                    lambdaArr[i], }
+\NormalTok{                    nu, }
+\NormalTok{                    lesDistr, }
+\NormalTok{                    relWeights)}
+\NormalTok{      zetaOptArr[y,i] <-}\StringTok{ }\NormalTok{x}\OperatorTok{$}\NormalTok{minimum}
+\NormalTok{      maxFomArr[y,i] <-}\StringTok{ }\OperatorTok{-}\NormalTok{x}\OperatorTok{$}\NormalTok{objective}
+\NormalTok{      rocAucArr[y,i] <-}\StringTok{ }\KeywordTok{UtilAnalyticalAucsRSM}\NormalTok{(}
+\NormalTok{        mu, }
+\NormalTok{        lambdaArr[i], }
+\NormalTok{        nu, }
+        \DataTypeTok{zeta1 =}\NormalTok{ x}\OperatorTok{$}\NormalTok{minimum, }
+\NormalTok{        lesDistr, }
+\NormalTok{        relWeights)}\OperatorTok{$}\NormalTok{aucROC}
+\NormalTok{      nlfOptArr[y,i] <-}\StringTok{ }\KeywordTok{RSM_xFROC}\NormalTok{(}
+        \DataTypeTok{z =}\NormalTok{ x}\OperatorTok{$}\NormalTok{minimum, }
+\NormalTok{        mu, }
+        \DataTypeTok{lambda =}\NormalTok{ lambdaArr[i])}
+\NormalTok{      llfOptArr[y,i] <-}\StringTok{ }\KeywordTok{RSM_yFROC}\NormalTok{(}
+        \DataTypeTok{z =}\NormalTok{ x}\OperatorTok{$}\NormalTok{minimum, }
+\NormalTok{        mu, }
+\NormalTok{        nu)}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (y }\OperatorTok{==}\StringTok{ }\DecValTok{2}\NormalTok{) \{}
+\NormalTok{      x <-}\StringTok{ }\KeywordTok{optimize}\NormalTok{(Youden, }
+                    \DataTypeTok{interval =} \KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{5}\NormalTok{,}\DecValTok{5}\NormalTok{), }
+\NormalTok{                    mu, }
+\NormalTok{                    lambdaArr[i], }
+\NormalTok{                    nu, }
+\NormalTok{                    lesDistr, }
+\NormalTok{                    relWeights)}
+\NormalTok{      zetaOptArr[y,i] <-}\StringTok{ }\NormalTok{x}\OperatorTok{$}\NormalTok{minimum}
+\NormalTok{      maxFomArr[y,i] <-}\StringTok{ }\OperatorTok{-}\NormalTok{x}\OperatorTok{$}\NormalTok{objective}
+\NormalTok{      rocAucArr[y,i] <-}\StringTok{ }\KeywordTok{UtilAnalyticalAucsRSM}\NormalTok{(}
+\NormalTok{        mu, }
+\NormalTok{        lambdaArr[i], }
+\NormalTok{        nu, }
+        \DataTypeTok{zeta1 =}\NormalTok{ x}\OperatorTok{$}\NormalTok{minimum, }
+\NormalTok{        lesDistr, }
+\NormalTok{        relWeights)}\OperatorTok{$}\NormalTok{aucROC}
+\NormalTok{      nlfOptArr[y,i] <-}\StringTok{ }\KeywordTok{RSM_xFROC}\NormalTok{(}
+        \DataTypeTok{z =}\NormalTok{ x}\OperatorTok{$}\NormalTok{minimum, }
+\NormalTok{        mu, }
+        \DataTypeTok{lambda =}\NormalTok{ lambdaArr[i])}
+\NormalTok{      llfOptArr[y,i] <-}\StringTok{ }\KeywordTok{RSM_yFROC}\NormalTok{(}
+        \DataTypeTok{z =}\NormalTok{ x}\OperatorTok{$}\NormalTok{minimum, mu, nu)}
+\NormalTok{    \} }\ControlFlowTok{else} \KeywordTok{stop}\NormalTok{(}\StringTok{"incorrect y"}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
 
-Fig. \ref{fig:optim-op-point-auc-vs-zeta1-01} corresponds to \(\lambda = 1\) and employs a similar labeling scheme as Fig. \ref{fig:optim-op-point-auc-vs-zeta1-10}. For example, the panel labeled \texttt{mu\ =\ 1,\ zetaMax\ =\ 0.3} shows that AUC has a maximum at \(\zeta_1 = 0.3\).
+Table \ref{tab:optim-op-point-table1} summarizes the results. The column labeled ``FOM'' shows what is being maximized, ``lambda'' corresponds to the 4 values of \(\lambda\), ``zeta1'' is the optimal value of \(\zeta_1\) that maximizes FOM, ``wAFROC'' is the wAFROC-AUC, ``ROC'' is the AUC under the ROC curve, i.e., ROC-AUC, and ``OptOpPt'' is the optimal operating point on the FROC curve.
 
-\hypertarget{optim-op-point-comments-threshold-optimization}{%
-\subsection{Summary of optimization results}\label{optim-op-point-comments-threshold-optimization}}
+Focusing on the wAFROC-AUC based optimizations (first four rows of table), it is seen that as \(\lambda\) increases:
+
+\begin{itemize}
+\tightlist
+\item
+  The optimal threshold \(\zeta_1\) increases;
+\item
+  wAFROC-AUC decreases;
+\item
+  ROC-AUC decreases;
+\item
+  The optimal operating point on the FROC moves to lower LLF values, i.e., lower values of lesion-level ``sensitivity''.
+\end{itemize}
+
+The \(\lambda\) Poisson parameter controls the average number of latent non-lesion localizations (NLs or ``false-positives'') per case. For example, for \(\mu = 2\) and \(\lambda = 1\), the average number of latent NLs per case is \(\lambda' = \lambda /\mu = 0.5\), i.e., an average of one NL every two non-diseased case. With increasing numbers of NLs it is necessary to adopt an increasing reporting threshold in order to not overwhelm the radiologist with NLs, and the price paid is decreasing LLF. Overall CAD performance, regardless of how it is measured, decreases.
+
+Similar trends are observed for the Youden-index based optimizations (last four rows of table). However, comparing Youden-index based optimizations to wAFROC-AUC based optimizations shows that Youden-index based optimizations yield higher reporting thresholds resulting in lower wAFROC-AUC, lower ROC-AUC and lower LLF values.
 
 \begin{table}[H]
 
-\caption{\label{tab:optim-op-point-cad-optim-table}Summary of performance measures corresponding to optimal thresholds for the two $\lambda$ and $\mu$ values: "Measure" refers to a performance measure such as AUC or an operating point, AUC is the wAFROC AUC, etc.}
+\caption{\label{tab:optim-op-point-table1}Summary of optimization results for $\mu = 2$ and $\nu = 1$ .}
 \centering
 \resizebox{\linewidth}{!}{
-\begin{tabular}[t]{rlll}
+\begin{tabular}[t]{llllll}
 \toprule
-Lambda & Measure & mu = 1 & mu = 2\\
+FOM & lambda & zeta1 & wAFROC & ROC & OptOpPt\\
 \midrule
-10 &  & 0.501 & 0.699\\
-\cmidrule{1-1}
-\cmidrule{3-4}
-1 & \multirow{-2}{*}{\raggedright\arraybackslash AUC} & 0.603 & 0.880\\
-\cmidrule{1-4}
-10 &  & (0.006, 0.008) & (0.404, 0.628)\\
-\cmidrule{1-1}
-\cmidrule{3-4}
-1 & \multirow{-2}{*}{\raggedright\arraybackslash (NLF, LLF)} & (0.382, 0.479) & (0.299, 0.854)\\
+ & 1 & -0.235 & 0.880 & 0.937 & (0.296, 0.854)\\
+\cmidrule{2-6}
+ & 5 & 0.810 & 0.768 & 0.875 & (0.522, 0.763)\\
+\cmidrule{2-6}
+ & 10 & 1.373 & 0.699 & 0.825 & (0.424, 0.635)\\
+\cmidrule{2-6}
+\multirow{-4}{*}{\raggedright\arraybackslash wAFROC} & 15 & 1.697 & 0.660 & 0.788 & (0.336, 0.535)\\
+\cmidrule{1-6}
+ & 1 & 1.100 & 0.695 & 0.896 & (0.068, 0.706)\\
+\cmidrule{2-6}
+ & 5 & 1.729 & 0.495 & 0.810 & (0.105, 0.525)\\
+\cmidrule{2-6}
+ & 10 & 1.992 & 0.399 & 0.764 & (0.116, 0.435)\\
+\cmidrule{2-6}
+\multirow{-4}{*}{\raggedright\arraybackslash Youden} & 15 & 2.146 & 0.344 & 0.736 & (0.120, 0.382)\\
 \bottomrule
 \end{tabular}}
 \end{table}
 
-Table \ref{tab:optim-op-point-cad-optim-table} summarizes the results of the optimizations. The first two rows compare the AUCs for \(\lambda=10\) and \(\lambda=1\) for the two values of \(\mu\). The next row shows the operating point (NLF, LLF) for \(\lambda = 10\) for the two values of \(\mu\) and the final row shows the operating point for \(\lambda = 1\) for the two values of \(\mu\). The following trends are evident (in the following \emph{optimal NLF} means NLF at the optimal operating point on the FROC, etc.).
+It remains to display the FROC curves with superimposed optimal operating points. One could generate 8 FROC plots, each corresponding to a row of the preceding table, but there is a more efficient method. The FROC curve is defined by the search model parameters as follows:
 
-\begin{itemize}
-\tightlist
-\item
-  AUC increases with increasing \(\mu\). Increasing the separation of the two unit variance normal distributions that determine the ratings of NLs and LLs leads to higher performance.
-\item
-  AUC increases with \emph{decreasing} \(\lambda\). Decreasing the tendency of the observer to generate NLs leads to increasing performance.
-\item
-  Increasing \(\mu\) causes the optimal operating point to move up the FROC curve.
-\item
-  Decreasing \(\lambda\) causes the optimal operating point to move up the FROC curve.
-\item
-  All of these observations can be summarized by the following: \emph{as performance increases the CAD designer can afford to show more of the marks generated by the algorithm}.
-\end{itemize}
+\begin{equation}
+\left. 
+\begin{aligned}
+NLF \left ( \zeta, \lambda' \right ) =& \lambda' \Phi \left (-\zeta \right ) \\
+LLF\left ( \zeta, \mu, \nu', \overrightarrow{f_L} \right ) =& \nu' \Phi \left ( \mu - \zeta \right ) 
+\end{aligned}
+\right \}
+\label{eq:rsm-froc-predictions}
+\end{equation}
 
-\hypertarget{optim-op-point-threshold-illustrations}{%
-\subsection{Illustrative FROC curves}\label{optim-op-point-threshold-illustrations}}
+The \emph{physical} parameters \(\lambda'\) and \(\nu'\) are related to the \emph{intrinsic} parameters \(\mu\), \(\lambda\) and \(\nu\) by:
 
-\hypertarget{optim-op-point-threshold-illustrations-10-1}{%
-\subsubsection{\texorpdfstring{\(\lambda = 10, \mu = 1\)}{\textbackslash lambda = 10, \textbackslash mu = 1}}\label{optim-op-point-threshold-illustrations-10-1}}
+\begin{equation}
+\left. 
+\begin{aligned}
+\lambda' =& \frac{\lambda  }{\mu} \\
+\nu' =& 1 - exp\left (-\mu \nu \right ) 
+\end{aligned}
+\right \}
+\label{eq:rsm-intrinsic-physical}
+\end{equation}
 
-\begin{figure}
-\centering
-\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-froc-10-1.pdf}
-\caption{\label{fig:optim-op-point-froc-10}Extended FROC plots: panel labeled 10-1 is for \(\lambda = 10\) and \(\mu = 1\), and that labeled 10-1.5 is for \(\lambda = 10\) and \(\mu = 1.5\). The blue line indicates the optimal operating point.}
-\end{figure}
+Since the \(\Phi\) function ranges from one to unity, the \emph{four FROC curves are scaled versions of a single curve whose x-axis ranges from 0 to 1}. The single curve corresponds to \(\lambda' = 1\) and the true curves are obtained by scaling this curve along the x-axis by the appropriate \(\lambda'\) factor. With this understanding one can display 4 FROC curves with a single FROC curve where the x-axis is \(NLF \left ( \zeta, \lambda' = 1 \right )\). The true FROC curve is defined by:
 
-\begin{itemize}
-\item
-  In order to show a fuller extent of the FROC curve it is necessary to \emph{extend} the curves beyond the \emph{optimal} operating point. This was done by setting \(\zeta_1\) = \(\zeta_{\text{max}} - 0.5\), which has the effect of letting the curve run a little bit further to the upper-right.
-\item
-  The \emph{optimal} operating-point, corresponding to the vertical blue line, for the curve in Fig. \ref{fig:optim-op-point-froc-10} labeled \textbf{10-1} is (0.006, 0.008) while the \emph{extended} point, corresponding to the edge of the plot, is (0.030, 0.025). The \emph{highest} operating point, that reached when all marks are reported, is (10.000, 0.632). This point lies about a factor 300 to the right of the displayed curve and about a factor of six higher along the y-axis. It vividly illustrates a low-performing FROC curve. Note the ``expanded-view'' scale factors, focusing on the region very near the origin: the x-axis runs from 0 to 0.03 while the y-axis runs from 0 to 0.1. Otherwise this curve would be almost indistinguishable from the x-axis. For large \(\lambda\) and small \(\mu\) performance is very low, in fact wAFROC AUC = 0.501 (note that we are using the wAFROC FOM, whose minimum possible value is 0, not 0.5). The optimal operating point of the algorithm is close to the origin. With such poor algorithm performance the sensible choice is to only show those marks that have, according to the algorithm, very high confidence level for being right (an operating point near the origin corresponds to a high value of \(\zeta\)).
-\item
-  Fig. \ref{fig:optim-op-point-2plots} demonstrates visually the effect on wAFROC AUC of showing very few marks (red dashed line - this line extends almost all the way to the origin as on this scale the short continuous section is not visible) as compared to showing more marks (blue solid plus dashed line). These plots are for \(\lambda = 10\), \(\mu = 1\) and \(\zeta_1 = 3.25\) for the upper curve and \(\zeta_1 = 1.5\) for the lower curve. It shows that by adopting a stricter reporting threshold and showing fewer marks, performance as measured by the area under the wAFROC, is actually improved.
-\end{itemize}
-
-\begin{figure}
-\centering
-\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-2plots-1.pdf}
-\caption{\label{fig:optim-op-point-2plots} With a poor algorithm it pays to not show too many marks. Shown are wAFROC plots for \(\mu = 1\), \(\lambda = 10\) and \(\nu = 1\). The upper curve corresponds to \(\zeta_1 = 3.25\), the lower to \(\zeta_1 = 1.5\). By reporting fewer marks algorithm performance in the upper plot is improved over that in the lower.}
-\end{figure}
-
-\hypertarget{optim-op-point-threshold-illustrations-10-2}{%
-\subsubsection{\texorpdfstring{\(\lambda = 10, \mu = 2\)}{\textbackslash lambda = 10, \textbackslash mu = 2}}\label{optim-op-point-threshold-illustrations-10-2}}
-
-\begin{itemize}
-\tightlist
-\item
-  In Fig. \ref{fig:optim-op-point-froc-10} panel labeled \textbf{10-2}: the optimal operating point is (0.404, 0.628). Given the higher value of \(\mu\) the algorithm designer can show marks with lower confidence levels, corresponding to the optimal operating point moving up the FROC curve. The end-point of the extended curve is (0.920, 0.747). The highest operating point, when all marks are reported, is (5.000, 0.865).
-\end{itemize}
+\begin{equation}
+\left. 
+\begin{aligned}
+NLF \left ( \zeta, \lambda' \right ) =& \lambda' NLF \left ( \zeta, \lambda' = 1 \right ) \\
+LLF\left ( \zeta, \mu, \nu', \overrightarrow{f_L} \right ) =& \nu' \Phi \left ( \mu - \zeta \right ) 
+\end{aligned}
+\right \}
+\label{eq:rsm-froc-predictions2}
+\end{equation}
 
 \begin{figure}
 \centering
-\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-froc-01-1.pdf}
-\caption{\label{fig:optim-op-point-froc-01}Extended FROC plots: panel labeled 1-1 is for \(\lambda = 1\) and \(\mu = 1\) and that labeled 10-1.5 is for \(\lambda = 1\) and \(\mu = 1.5\). The blue line indicates the optimal operating point.}
+\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-vary-lambda-1.pdf}
+\caption{\label{fig:optim-op-point-vary-lambda}Left panel: maximized wAFROC AUC was used to find optimal \(\zeta_1\). Right panel: maximized Youden index was used to find optimal \(\zeta_1\). Dot colors: black means \(\lambda = 1\), red means \(\lambda = 5\), green means \(\lambda = 10\) and blue means \(\lambda = 15\).}
 \end{figure}
 
-\hypertarget{optim-op-point-threshold-illustrations-1-1}{%
-\subsubsection{\texorpdfstring{\(\lambda = 1, \mu = 1\)}{\textbackslash lambda = 1, \textbackslash mu = 1}}\label{optim-op-point-threshold-illustrations-1-1}}
+The left panel in \ref{fig:optim-op-point-vary-lambda} shows the optimal operating points when wAFROC-AUC is maximized. The 4 operating points are color coded as follows:
 
 \begin{itemize}
 \tightlist
 \item
-  In Fig. \ref{fig:optim-op-point-froc-01} panel labeled \textbf{1-1}: The optimal operating point is (0.382, 0.479). The end-point of the extended curve is (0.579, 0.559). The highest operating point on the FROC is (1.000, 0.632).
+  Black dot corresponds to \(\lambda = 1\), i.e., \(\lambda' = 1/2 = 0.5\). In other words, the true FROC is obtained by \emph{shrinking} the plot, including the superposed black dot, along the x-axis by a factor of 2.\\
+\item
+  Red dot corresponds to \(\lambda' = 2.5\). In other words, the true FROC is obtained by \emph{magnifying} that shown, including the red dot, along the x-axis by a factor of 2.5.\\
+\item
+  Green dot corresponds to \(\lambda' = 5\).
+\item
+  Blue dot corresponds to \(\lambda' = 7.5\).
 \end{itemize}
 
-\hypertarget{optim-op-point-threshold-illustrations-1-2}{%
-\subsubsection{\texorpdfstring{\(\lambda = 1, \mu = 2\)}{\textbackslash lambda = 1, \textbackslash mu = 2}}\label{optim-op-point-threshold-illustrations-1-2}}
+These plots illustrate the previous comments, namely, as \(\lambda\) increases, \emph{the optimal operating point moves down the scaled curve}.
+
+The right panel shows the optimal operating point when the Youden index is maximized. It shows the same general features as the previous example - the optimal operating point moves down the scaled curve - and additionally, the group of four operating points in the right panel are below-left those in the left panel, representing higher values of optimal \(\zeta_1\), i.e., a more stringent criteria.
+
+The FROC curve does not represent true performance. To visualize true performance one compares wAFROC curves, as done below for \(\lambda = 1\) and \(\lambda = 15\).
+
+\begin{figure}
+\centering
+\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-vary-lambda-wafroc-1.pdf}
+\caption{\label{fig:optim-op-point-vary-lambda-wafroc}Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to \(\lambda = 1\), red curve, and \(\lambda = 15\), blue curve.}
+\end{figure}
+
+Only results of wAFROC-AUC based optimizations are shown in \ref{fig:optim-op-point-vary-lambda-wafroc}. The larger area under the red curve, corresponding to the lower value of \(\lambda\) is obvious. Each curve ends at the optimal threshold listed in Table \ref{tab:optim-op-point-table1}, namely \(\zeta_1\) = -0.235 for the red curve and \(\zeta_1\) = 1.697 for the blue curve. The lower performance represented by the blue curve, relative to the red curve, requires the adoption of a higher reporting threshold. For either curve the maximization procedure means that any threshold other than that used would depress performance.
+
+\hypertarget{optim-op-point-vary-nu}{%
+\section{Vary nu}\label{optim-op-point-vary-nu}}
+
+For \(\mu = 2\) and \(\lambda= 5\) wAFROC and Youden-index based optimizations were performed for 4 values of \(\nu = 0.1,0.5,1,2\). Table \ref{tab:optim-op-point-table2} summarizes the results.
+
+\begin{table}[H]
+
+\caption{\label{tab:optim-op-point-table2}Summary of optimization results for $\mu = 2$ and $\lambda = 5$ .}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{llllll}
+\toprule
+FOM & nu & zeta1 & wAFROC & ROC & OptOpPt\\
+\midrule
+ & 0.1 & 2.275 & 0.522 & 0.551 & (0.029, 0.071)\\
+\cmidrule{2-6}
+ & 0.5 & 1.376 & 0.660 & 0.771 & (0.211, 0.464)\\
+\cmidrule{2-6}
+ & 1 & 0.810 & 0.768 & 0.875 & (0.522, 0.763)\\
+\cmidrule{2-6}
+\multirow{-4}{*}{\raggedright\arraybackslash wAFROC} & 2 & -0.311 & 0.841 & 0.915 & (1.555, 0.971)\\
+\cmidrule{1-6}
+ & 0.1 & 2.156 & 0.075 & 0.557 & (0.039, 0.079)\\
+\cmidrule{2-6}
+ & 0.5 & 1.763 & 0.363 & 0.736 & (0.097, 0.375)\\
+\cmidrule{2-6}
+ & 1 & 1.729 & 0.495 & 0.810 & (0.105, 0.525)\\
+\cmidrule{2-6}
+\multirow{-4}{*}{\raggedright\arraybackslash Youden} & 2 & 1.727 & 0.555 & 0.843 & (0.105, 0.597)\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+The effect of increasing \(\nu\) is to cause the optimal operationg point to move up the FROC curve: it is opposite to the effect of increasing \(\lambda\). Focusing on the wAFROC-AUC based optimizations (first four rows of table), it is seen that as \(\nu\) increases:
 
 \begin{itemize}
 \tightlist
 \item
-  In Fig. \ref{fig:optim-op-point-froc-01} panel labeled \textbf{1-2}: The optimal operating point is (0.299, 0.854). The end-point of the extended curve is (0.387, 0.862). The highest operating point on the FROC is (0.500, 0.865).
+  The optimal threshold \(\zeta_1\) decreases, resulting in more marks being reported;
+\item
+  wAFROC-AUC increases;
+\item
+  ROC-AUC increases;
+\item
+  The optimal operating point on the FROC moves to higher LLF values, i.e., higher values of lesion-level ``sensitivity''.
 \end{itemize}
 
-\hypertarget{optim-op-point-how-to-use-method}{%
-\subsection{Applying the method}\label{optim-op-point-how-to-use-method}}
+The \(\nu\) binomial parameter controls the average fraction of latent lesion localizations (LLs or ``true-positives'') per diseased case. For example, for \(\mu = 2\) and \(\nu = 0.1\), the fraction is \(\nu' = 1 - \exp(-\mu \nu) = 0.1813\), i.e., an average of 18 percent of lesions present are seen by CAD at confidence level \$ \textgreater{} -\infty\$. Overall CAD performance increases with increasing \(\nu\).
+
+Comparing Youden-index based optimizations (last four rows of table) to wAFROC-AUC based optimizations shows that the former yields higher reporting thresholds, lower wAFROC-AUC, lower ROC-AUC and lower LLF values.
+
+\begin{figure}
+\centering
+\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-vary-nu-1.pdf}
+\caption{\label{fig:optim-op-point-vary-nu}Left panel: maximized wAFROC AUC was used to find optimal \(\zeta_1\). Right panel: maximized Youden index was used to find optimal \(\zeta_1\). Dot colors: black means \(\nu = 0.1\), red means \(\nu = 0.5\), green means \(\nu = 1\) and blue means \(\nu = 2\).}
+\end{figure}
+
+Fig. \ref{fig:optim-op-point-vary-nu} shows the FROC curves with optimal operating points superimposed. The left panel corresponds to wAFROC-AUC based optimizations while the right panel corresponds to Youden-index based optimizations. These illustrate the previous comments, namely, as \(\nu\) increases, \emph{the optimal operating point moves up the FROC curve}.
+
+To visualize true performance one compares wAFROC curves as done in Fig. \ref{fig:optim-op-point-vary-mu-wafroc} for \(\nu = 0.1\) and \(\nu = 2\).
+
+\begin{figure}
+\centering
+\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-vary-nu-wafroc-1.pdf}
+\caption{\label{fig:optim-op-point-vary-nu-wafroc}Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to \(\nu = 0.1\), red curve, and \(\nu = 2\), blue curve.}
+\end{figure}
+
+The larger area under the red curve, corresponding to the lower value of \(\nu\), is obvious. Each curve ends at the optimal threshold listed in Table \ref{tab:optim-op-point-table2}, namely \(\zeta_1\) = 2.275 for the red curve and \(\zeta_1\) = -0.311 for the blue curve. The lower performance represented by the red curve requires the adoption of a higher reporting threshold.
+
+\hypertarget{optim-op-point-vary-mu}{%
+\section{Vary mu}\label{optim-op-point-vary-mu}}
+
+For \(\nu = 1\) and \(\lambda= 1\) wAFROC and Youden-index based optimizations were performed for 4 values of \(\mu = 0.75,1,1.25,1.5\). Table \ref{tab:optim-op-point-table2} summarizes the results.
+
+\begin{table}[H]
+
+\caption{\label{tab:optim-op-point-table3}Summary of optimization results for $\nu = 1$ and $\lambda = 1$ .}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{llllll}
+\toprule
+FOM & mu & zeta1 & wAFROC & ROC & OptOpPt\\
+\midrule
+ & 0.75 & 1.422 & 0.518 & 0.587 & (0.103, 0.132)\\
+\cmidrule{2-6}
+ & 1 & 0.310 & 0.603 & 0.745 & (0.378, 0.477)\\
+\cmidrule{2-6}
+ & 1.25 & -0.132 & 0.699 & 0.823 & (0.442, 0.654)\\
+\cmidrule{2-6}
+\multirow{-4}{*}{\raggedright\arraybackslash wAFROC} & 1.5 & -0.268 & 0.777 & 0.875 & (0.404, 0.747)\\
+\cmidrule{1-6}
+ & 0.75 & 0.144 & 0.366 & 0.676 & (0.590, 0.384)\\
+\cmidrule{2-6}
+ & 1 & 0.386 & 0.413 & 0.741 & (0.350, 0.462)\\
+\cmidrule{2-6}
+ & 1.25 & 0.599 & 0.482 & 0.793 & (0.220, 0.530)\\
+\cmidrule{2-6}
+\multirow{-4}{*}{\raggedright\arraybackslash Youden} & 1.5 & 0.782 & 0.557 & 0.835 & (0.145, 0.593)\\
+\bottomrule
+\end{tabular}}
+\end{table}
 
 \begin{itemize}
 \item
-  Assume that one has designed an algorithmic observer that has been optimized with respect to all other parameters except the reporting threshold and that with sufficiently low reporting threshold the algorithm reports \emph{every} suspicious region it found. All that remains is to find the optimal reporting threshold.
+  From Table \ref{tab:optim-op-point-table3} for the lowest value \(\mu = 0.75\) the end-point of the FROC, corresponding to \(\zeta_1 = -\infty\), is the farthest to the right and lowest in the vertical direction, and the optimal operating point is closest to the origin, i.e., (0.103, 0.132). wAFROC-AUC performance = 0.518 is least as is ROC-AUC = 0.587. \footnote{With even lower performance - achieved by choosing, for example, a smaller value of \(\mu\), both wAFROC and ROC AUCs approach 0.5 and the optimal operating point is at the origin - basically the algorithm is so poor that none of its marks should be shown to the radiologist.}
 \item
-  The mark-rating pairs are entered into a \texttt{RJafroc} format Excel input file.
+  As \(\mu\) increases, the FROC end-point moves to the upper left and the optimal operating point moves up.
 \item
-  Read the data file -- \texttt{DfReadDataFile()} -- and convert it to an ROC dataset -- \texttt{DfFroc2Roc()}.
+  At the highest value \(\mu = 1.5\) the end-point of the FROC is the closest to (0,1), and the optimal operating point is farthest from the origin, i.e., (0.404, 0.747). wAFROC-AUC performance = 0.777 is greatest as is ROC-AUC = 0.875. With good performance one shows lower confidence level marks: \(\zeta_1\) = -0.268 than is possible with poorer performance. With even higher values of \(\mu\) both wAFROC and ROC AUCs approach 1 and the optimal operating point approaches (0,1) - the algorithm is so good that all of its marks should be shown to the radiologist.
 \item
-  Fit the radiological search model (RSM) to the ROC dataset -- \texttt{FitRsmRoc()}.
+  At the lowest value \(\mu = 0.75\) the end-point of the FROC is at (0.590, 0.384). wAFROC-AUC performance = 0.366 and ROC-AUC = 0.676, both of which are smaller than the values obtained using wAFROC-AUC maximization.
 \item
-  This yields the parameters -- \(\lambda, \mu, \nu\) -- needed to perform the calculations described in the embedded code of this chapter.
+  At the highest value \(\mu = 1.5\) the end-point of the FROC at (0.145, 0.593). wAFROC-AUC performance = 0.557 and ROC-AUC = 0.835, both of which are smaller that the values obtained using wAFROC-AUC maximization.
 \item
-  This determines the optimal reporting threshold \(\zeta_{\text{max}}\).
-\item
-  Set the algorithm to only report marks with confidence levels exceeding \(\zeta_{\text{max}}\).
+  TBA With one exception the operating points in the right panel are below-left (i.e., represent higher thresholds) those in the left panel. The Youden-index based optimization yields stricter reporting threshold. Somewhat paradoxically, for the lowest value of \(\mu\) the method predicts a lenient threshold.
 \end{itemize}
 
-\hypertarget{optim-op-point-Discussion}{%
-\section{Discussion}\label{optim-op-point-Discussion}}
+Fig. \ref{fig:optim-op-point-vary-mu} shows FROC curves with superimposed optimal operating points.
+
+\begin{figure}
+\centering
+\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-vary-mu-1.pdf}
+\caption{\label{fig:optim-op-point-vary-mu}Left panel: maximized wAFROC AUC was used to find optimal \(\zeta_1\). Right panel: maximized Youden-index was used to find optimal \(\zeta_1\). Dot colors: black means \(\mu = 0.75\), red means \(\mu = 1\), green means \(\lambda = 1.25\) and blue means \(\mu = 1.5\).}
+\end{figure}
+
+For each of the four values of \(\mu\) the left panel in Fig. \ref{fig:optim-op-point-vary-mu} shows the optimal operating point when wAFROC-AUC is maximized. It shows the FROC curves with optimal operating points superimposed. These illustrate the previous comments, namely, as \(\mu\) increases, \emph{the optimal operating point moves up the FROC curve}.
+
+The right panel in Fig. \ref{fig:optim-op-point-vary-mu} shows the optimal operating point when the Youden-index is maximized.
+
+To visualize true performance one compares wAFROC curves as done in Fig. \ref{fig:optim-op-point-vary-mu-wafroc} for \(\mu = 0.75\) and \(\mu = 1.5\).
+
+\begin{figure}
+\centering
+\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-vary-mu-wafroc-1.pdf}
+\caption{\label{fig:optim-op-point-vary-mu-wafroc}Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to \(\mu = 0.75\), red curve, and \(\mu = 1.5\), blue curve.}
+\end{figure}
+
+The larger area under the blue curve, corresponding to the greater value of \(\mu\), is obvious. Each curve ends at the optimal threshold listed in Table \ref{tab:optim-op-point-table3}, namely \(\zeta_1\) = 1.422 for the red curve and \(\zeta_1\) = -0.268 for the blue curve. The lower performance represented by the red curve requires the adoption of a higher reporting threshold.
 
 \hypertarget{optim-op-point-references}{%
 \section{References}\label{optim-op-point-references}}
