@@ -296,11 +296,15 @@ gpfCbmOperatingCharacteristic <- function(mu, alpha){
 
 
 gpfRsmOperatingCharacteristic <- function(mu, lambdaP, nuP, lesDistr){
+  
+  x <- UtilPhysical2IntrinsicRSM(mu,lambdaP,nuP)
+  lambda <- x$lambda
+  nu <- x$nu
   plotZeta <- seq(-4, mu+4, by = 0.01)
   
-  FPFRsm <- sapply(plotZeta, RSM_xROC, lambdaP = lambdaP)
-  TPFRsm <- sapply(plotZeta, RSM_yROC, mu = mu, lambdaP = lambdaP, 
-                   nuP = nuP, lesDistr = lesDistr)
+  FPFRsm <- sapply(plotZeta, RSM_xROC, lambda = lambda)
+  TPFRsm <- sapply(plotZeta, RSM_yROC, mu = mu, lambda = lambda, 
+                   nu = nu, lesDistr = lesDistr)
   
   return(list(FPF = FPFRsm,
               TPF = TPFRsm
