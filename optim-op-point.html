@@ -849,13 +849,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="39" data-path="optim-op-point.html"><a href="optim-op-point.html"><i class="fa fa-check"></i><b>39</b> Optimal operating point on FROC</a><ul>
 <li class="chapter" data-level="39.1" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-how-much-finished"><i class="fa fa-check"></i><b>39.1</b> How much finished</a></li>
-<li class="chapter" data-level="39.2" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-methods"><i class="fa fa-check"></i><b>39.2</b> Methods</a></li>
-<li class="chapter" data-level="39.3" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-vary-lambda"><i class="fa fa-check"></i><b>39.3</b> Vary lambda</a></li>
-<li class="chapter" data-level="39.4" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-vary-nu"><i class="fa fa-check"></i><b>39.4</b> Vary nu</a></li>
-<li class="chapter" data-level="39.5" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-vary-mu"><i class="fa fa-check"></i><b>39.5</b> Vary mu</a></li>
-<li class="chapter" data-level="39.6" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-how-to-use-method"><i class="fa fa-check"></i><b>39.6</b> Using the method</a></li>
-<li class="chapter" data-level="39.7" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-application"><i class="fa fa-check"></i><b>39.7</b> Application</a></li>
-<li class="chapter" data-level="39.8" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-references"><i class="fa fa-check"></i><b>39.8</b> References</a></li>
+<li class="chapter" data-level="39.2" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-intro"><i class="fa fa-check"></i><b>39.2</b> Introduction</a></li>
+<li class="chapter" data-level="39.3" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-methods"><i class="fa fa-check"></i><b>39.3</b> Methods</a><ul>
+<li class="chapter" data-level="39.3.1" data-path="optim-op-point.html"><a href="optim-op-point.html#functions-to-be-maximized"><i class="fa fa-check"></i><b>39.3.1</b> Functions to be maximized</a></li>
+<li class="chapter" data-level="39.3.2" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-vary-lambda"><i class="fa fa-check"></i><b>39.3.2</b> Vary lambda</a></li>
+<li class="chapter" data-level="39.3.3" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-vary-nu"><i class="fa fa-check"></i><b>39.3.3</b> Vary nu</a></li>
+<li class="chapter" data-level="39.3.4" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-vary-mu"><i class="fa fa-check"></i><b>39.3.4</b> Vary mu</a></li>
+</ul></li>
+<li class="chapter" data-level="39.4" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-how-to-use-method"><i class="fa fa-check"></i><b>39.4</b> Using the method</a></li>
+<li class="chapter" data-level="39.5" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-application"><i class="fa fa-check"></i><b>39.5</b> An application</a></li>
+<li class="chapter" data-level="39.6" data-path="optim-op-point.html"><a href="optim-op-point.html#optim-op-point-references"><i class="fa fa-check"></i><b>39.6</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>REFERENCES</a></li>
 <li class="chapter" data-level="40" data-path="classification-tasks.html"><a href="classification-tasks.html"><i class="fa fa-check"></i><b>40</b> Localization - classification tasks</a><ul>
@@ -909,12 +912,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>40%
 Major update to 21-optim-op-point.Rmd - need to resolve plots in vary mu</p>
 </div>
+<div id="optim-op-point-intro" class="section level2">
+<h2><span class="header-section-number">39.2</span> Introduction</h2>
+<p>This chapter deals with finding the optimal reporting threshold of an algorithmic observer, such as CAD. We assume that designer level FROC data is available for the algorithm: the data consists of mark-rating pairs, with the continuous-scale ratings extending from low to high values, and a decision needs to be made as to which of these marks, if any, are to be reported to the radiologist. This is a familiar problem faced by a CAD algorithm designer, and to the best of my knowledge, it has not been solved.</p>
+<p>A proposed approach is to set the operating point on the ROC curve such as to maximize the Youden-index. The Youden-index is defined as the sum of sensitivity and specificity minus one. Typically it is maximized at the point that is closest to the (0,1) point on the ROC. However, in practice, CAD manufacturers set a site-specific reporting threshold in consultation with the radiologists who will be using the algorithm. For example, if radiologists are comfortable with more false marks as the price of potentially greater lesion-level sensitivity, the reporting threshold is adjusted downward. At sites where the radiologists are uncomfortable with more false marks being shown, the reporting threshold is adjusted upward.</p>
+<p>This chapter describes a method of finding the optimal reporting threshold based on maximizing the AUC under the wAFROC curve. For completeness it is compared to the Youden-index based method.</p>
+</div>
 <div id="optim-op-point-methods" class="section level2">
-<h2><span class="header-section-number">39.2</span> Methods</h2>
-<p>The RSM parameters are <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\nu\)</span>, <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\zeta_1\)</span>. In the following sections each of the first three parameters is varied in turn and the optimal <span class="math inline">\(\zeta_1\)</span> determined by maximizing one of two figures of merit (FOM) namely, the wAFROC-AUC or the Youden-index. The two functions to be minimized, <code>wAFROC</code> and <code>Youden</code>, are defined next:</p>
+<h2><span class="header-section-number">39.3</span> Methods</h2>
+<p>The RSM (radiological search model) parameters are <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\nu\)</span>, <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\zeta_1\)</span>. The ROC, FROC and wAFROC curves are completely defined by them. The parameters have the following meanings:</p>
 <ul>
-<li><p>wAFROC-AUC is computed by <code>UtilAnalyticalAucsRSM</code>. Lines 2 - 17 returns <code>-wAFROC</code>, the <em>negative</em> of wAFROC-AUC. The negative sign is needed because the <code>optimize()</code> function, used later, finds the <em>minimum</em> of wAFROC-AUC. The first argument is <span class="math inline">\(\zeta_1\)</span>, the variable to be varied to find the minimum. The remaining arguments are needed by <code>UtilAnalyticalAucsRSM</code>: <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\nu\)</span>, <code>lesDistr</code> and <code>relWeights.</code> The last two specify the number of lesions per case and their weights. The example below uses <code>lesDistr = c(0.5,0.5)</code>, i.e., half the abnormal cases contain one lesion and the rest contain two lesions, and <code>relWeights = c(0.5,0.5)</code> specifies equal weights.</p></li>
-<li><p>The Youden-index is defined as the sum of sensitivity and specificity minus 1. Sensitivity is computed by <code>RSM_yROC</code> and specificity by <code>(1 - RSM_xROC)</code>. Lines 22 - 40 returns <code>-Youden</code>, the <em>negative</em> of the Youden-index.</p></li>
+<li><p>The <span class="math inline">\(\mu\)</span> parameter is the perceptual signal to noise ratio of lesions measured under location-known-exactly conditions. These have a direct effect on the search mechanism, since, as <span class="math inline">\(\mu\)</span> increases, lesions are more likely to be found and non-diseased regions are less likely to be mistaken for lesions. Higher values of <span class="math inline">\(\mu\)</span> lead to increased overall performance of the algorithm.</p></li>
+<li><p>The <span class="math inline">\(\lambda\)</span> parameter determines the number of non-lesion localizations, NLs, per case (location level “false positives”). Lower values lead to fewer NL marks and increased overall performance of the algorithm.</p></li>
+<li><p>The <span class="math inline">\(\nu\)</span> parameter determines the probability of a lesion localizations, LLs, (location level “true positives”). Higher values lead to more LL marks.</p></li>
+<li><p>The <span class="math inline">\(\zeta_1\)</span> parameter determines if a suspicious region found by the algorithm is actually marked. The higher this value, the fewer the reported marks.</p></li>
+</ul>
+<p>In the following sections each of the first three parameters is varied in turn and the corresponding optimal <span class="math inline">\(\zeta_1\)</span> determined by maximizing one of two figures of merit (FOMs) namely, the wAFROC-AUC and the Youden-index.</p>
+<div id="functions-to-be-maximized" class="section level3">
+<h3><span class="header-section-number">39.3.1</span> Functions to be maximized</h3>
+<p>The functions to be maximized, <code>wAFROC</code> and <code>Youden</code>, are defined next:</p>
+<ul>
+<li><p>wAFROC-AUC is computed by <code>UtilAnalyticalAucsRSM</code>. Lines 2 - 19 returns <code>-wAFROC</code>, the <em>negative</em> of wAFROC-AUC. The negative sign is needed because the <code>optimize()</code> function, used later, finds the <em>minimum</em> of wAFROC-AUC. The first argument is <span class="math inline">\(\zeta_1\)</span>, the variable to be varied to find the maximum. The remaining arguments passed to the function, needed to calculate the FOMs, are <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\nu\)</span>, <code>lesDistr</code> and <code>relWeights.</code> The last two specify the number of lesions per case and their weights. The following code below uses <code>lesDistr = c(0.5,0.5)</code>, i.e., half of the diseased cases contain one lesion and the rest contain two lesions, and <code>relWeights = c(0.5,0.5)</code>, which specifies equal weights to all lesions.</p></li>
+<li><p>The Youden-index is defined as the sum of sensitivity and specificity minus 1. Sensitivity is computed by <code>RSM_yROC</code> and specificity by <code>(1 - RSM_xROC)</code>. Lines 22 - 42 returns <code>-Youden</code>, the <em>negative</em> of the Youden-index.</p></li>
 </ul>
 <div class="sourceCode" id="cb252"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb252-1"><a href="optim-op-point.html#cb252-1"></a></span>
 <span id="cb252-2"><a href="optim-op-point.html#cb252-2"></a>wAFROC &lt;-<span class="st"> </span><span class="cf">function</span> (</span>
@@ -953,29 +972,29 @@ Major update to 21-optim-op-point.Rmd - need to resolve plots in vary mu</p>
 <span id="cb252-35"><a href="optim-op-point.html#cb252-35"></a>    nu, </span>
 <span id="cb252-36"><a href="optim-op-point.html#cb252-36"></a>    lesDistr) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb252-37"><a href="optim-op-point.html#cb252-37"></a><span class="st">    </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">RSM_xROC</span>(zeta1, lambda)) <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb252-38"><a href="optim-op-point.html#cb252-38"></a>  <span class="co"># return negative of Youden </span></span>
+<span id="cb252-38"><a href="optim-op-point.html#cb252-38"></a>  <span class="co"># return negative of Youden-index </span></span>
 <span id="cb252-39"><a href="optim-op-point.html#cb252-39"></a>  <span class="co"># (as optimize finds minimum of function)</span></span>
 <span id="cb252-40"><a href="optim-op-point.html#cb252-40"></a>  <span class="kw">return</span>(<span class="op">-</span>x)</span>
 <span id="cb252-41"><a href="optim-op-point.html#cb252-41"></a>  </span>
 <span id="cb252-42"><a href="optim-op-point.html#cb252-42"></a>}</span></code></pre></div>
 </div>
-<div id="optim-op-point-vary-lambda" class="section level2">
-<h2><span class="header-section-number">39.3</span> Vary lambda</h2>
-<p>For <span class="math inline">\(\mu = 2\)</span> and <span class="math inline">\(\nu = 1\)</span> wAFROC and Youden-index based optimizations were performed for 4 values of <span class="math inline">\(\lambda = 1, 5, 10, 15\)</span>. The following quantities were calculated:</p>
+<div id="optim-op-point-vary-lambda" class="section level3">
+<h3><span class="header-section-number">39.3.2</span> Vary lambda</h3>
+<p>For <span class="math inline">\(\mu = 2\)</span> and <span class="math inline">\(\nu = 1\)</span> wAFROC-AUC and Youden-index based optimizations were performed for 4 values of <span class="math inline">\(\lambda = 1, 5, 10, 15\)</span>. The following quantities were calculated:</p>
 <ul>
 <li><code>zetaOptArr</code>, a [2,4] array, the optimal thresholds <span class="math inline">\(\zeta_1\)</span>;</li>
-<li><code>maxFomArr</code>, a [2,4] array, the optimal values of the figures of merit, wAFROC-AUC or Youden;</li>
-<li><code>rocAucArr</code>, a [2,4] array, the AUCs under the ROC curves corresponding to optimizations based on wAFROC or Youden-index;<br />
+<li><code>fomMaxArr</code>, a [2,4] array, the maximized values of the figures of merit, wAFROC-AUC or Youden-index;</li>
+<li><code>rocAucArr</code>, a [2,4] array, the AUCs under the ROC curves corresponding to optimizations based on wAFROC-AUC or Youden-index;<br />
 </li>
-<li><code>nlfOptArr</code>, a [2,4] array, the abscissa of the FROC curve corresponding to optimizations based on wAFROC or Youden-index;<br />
+<li><code>nlfOptArr</code>, a [2,4] array, the abscissa of the optimal reporting point on the FROC curve corresponding to optimizations based on wAFROC-AUC or Youden-index;<br />
 </li>
-<li><code>llfOptArr</code>, a [2,4] array, the ordinate of the FROC curve corresponding to optimizations based on wAFROC or Youden-index.</li>
+<li><code>llfOptArr</code>, a [2,4] array, the ordinate of the optimal reporting point on the FROC curve corresponding to optimizations based on wAFROC-AUC or Youden-index.</li>
 </ul>
 <p>In each of these arrays the first index <code>y</code> denotes whether wAFROC-AUC is being maximized (<code>y</code> = 1, see lines 14 - 20) - or if Youden-index is being optimized (<code>y</code> = 2, see lines 39 - 45). The second index corresponds to <span class="math inline">\(\lambda\)</span>.</p>
 <div class="sourceCode" id="cb253"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb253-1"><a href="optim-op-point.html#cb253-1"></a>mu &lt;-<span class="st"> </span><span class="dv">2</span></span>
 <span id="cb253-2"><a href="optim-op-point.html#cb253-2"></a>nu &lt;-<span class="st"> </span><span class="dv">1</span></span>
 <span id="cb253-3"><a href="optim-op-point.html#cb253-3"></a>lambdaArr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">15</span>)</span>
-<span id="cb253-4"><a href="optim-op-point.html#cb253-4"></a>maxFomArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
+<span id="cb253-4"><a href="optim-op-point.html#cb253-4"></a>fomMaxArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
 <span id="cb253-5"><a href="optim-op-point.html#cb253-5"></a>zetaOptArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
 <span id="cb253-6"><a href="optim-op-point.html#cb253-6"></a>rocAucArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
 <span id="cb253-7"><a href="optim-op-point.html#cb253-7"></a>nlfOptArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
@@ -993,7 +1012,7 @@ Major update to 21-optim-op-point.Rmd - need to resolve plots in vary mu</p>
 <span id="cb253-19"><a href="optim-op-point.html#cb253-19"></a>                    lesDistr, </span>
 <span id="cb253-20"><a href="optim-op-point.html#cb253-20"></a>                    relWeights)</span>
 <span id="cb253-21"><a href="optim-op-point.html#cb253-21"></a>      zetaOptArr[y,i] &lt;-<span class="st"> </span>x<span class="op">$</span>minimum</span>
-<span id="cb253-22"><a href="optim-op-point.html#cb253-22"></a>      maxFomArr[y,i] &lt;-<span class="st"> </span><span class="op">-</span>x<span class="op">$</span>objective</span>
+<span id="cb253-22"><a href="optim-op-point.html#cb253-22"></a>      fomMaxArr[y,i] &lt;-<span class="st"> </span><span class="op">-</span>x<span class="op">$</span>objective</span>
 <span id="cb253-23"><a href="optim-op-point.html#cb253-23"></a>      rocAucArr[y,i] &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(</span>
 <span id="cb253-24"><a href="optim-op-point.html#cb253-24"></a>        mu, </span>
 <span id="cb253-25"><a href="optim-op-point.html#cb253-25"></a>        lambdaArr[i], </span>
@@ -1018,7 +1037,7 @@ Major update to 21-optim-op-point.Rmd - need to resolve plots in vary mu</p>
 <span id="cb253-44"><a href="optim-op-point.html#cb253-44"></a>                    lesDistr, </span>
 <span id="cb253-45"><a href="optim-op-point.html#cb253-45"></a>                    relWeights)</span>
 <span id="cb253-46"><a href="optim-op-point.html#cb253-46"></a>      zetaOptArr[y,i] &lt;-<span class="st"> </span>x<span class="op">$</span>minimum</span>
-<span id="cb253-47"><a href="optim-op-point.html#cb253-47"></a>      maxFomArr[y,i] &lt;-<span class="st"> </span><span class="op">-</span>x<span class="op">$</span>objective</span>
+<span id="cb253-47"><a href="optim-op-point.html#cb253-47"></a>      fomMaxArr[y,i] &lt;-<span class="st"> </span><span class="op">-</span>x<span class="op">$</span>objective</span>
 <span id="cb253-48"><a href="optim-op-point.html#cb253-48"></a>      rocAucArr[y,i] &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(</span>
 <span id="cb253-49"><a href="optim-op-point.html#cb253-49"></a>        mu, </span>
 <span id="cb253-50"><a href="optim-op-point.html#cb253-50"></a>        lambdaArr[i], </span>
@@ -1035,7 +1054,7 @@ Major update to 21-optim-op-point.Rmd - need to resolve plots in vary mu</p>
 <span id="cb253-61"><a href="optim-op-point.html#cb253-61"></a>    } <span class="cf">else</span> <span class="kw">stop</span>(<span class="st">&quot;incorrect y&quot;</span>)</span>
 <span id="cb253-62"><a href="optim-op-point.html#cb253-62"></a>  }</span>
 <span id="cb253-63"><a href="optim-op-point.html#cb253-63"></a>}</span></code></pre></div>
-<p>Table <a href="optim-op-point.html#tab:optim-op-point-table1">39.1</a> summarizes the results. The column labeled “FOM” shows what is being maximized, “lambda” corresponds to the 4 values of <span class="math inline">\(\lambda\)</span>, “zeta1” is the optimal value of <span class="math inline">\(\zeta_1\)</span> that maximizes FOM, “wAFROC” is the wAFROC-AUC, “ROC” is the AUC under the ROC curve, i.e., ROC-AUC, and “OptOpPt” is the optimal operating point on the FROC curve.</p>
+<p>Table <a href="optim-op-point.html#tab:optim-op-point-table1">39.1</a> summarizes the results. The column labeled “FOM” shows the quantity being maximized, “lambda” corresponds to the 4 values of <span class="math inline">\(\lambda\)</span>, “zeta1” is the optimal value of <span class="math inline">\(\zeta_1\)</span> that maximizes FOM, “wAFROC” is the wAFROC-AUC, “ROC” is the AUC under the ROC curve, i.e., ROC-AUC, and “OptOpPt” is the optimal operating point on the FROC curve.</p>
 <p>Focusing on the wAFROC-AUC based optimizations (first four rows of table), it is seen that as <span class="math inline">\(\lambda\)</span> increases:</p>
 <ul>
 <li>The optimal threshold <span class="math inline">\(\zeta_1\)</span> increases;</li>
@@ -1043,11 +1062,11 @@ Major update to 21-optim-op-point.Rmd - need to resolve plots in vary mu</p>
 <li>ROC-AUC decreases;</li>
 <li>The optimal operating point on the FROC moves to lower LLF values, i.e., lower values of lesion-level “sensitivity”.</li>
 </ul>
-<p>The <span class="math inline">\(\lambda\)</span> Poisson parameter controls the average number of latent non-lesion localizations (NLs or “false-positives”) per case. For example, for <span class="math inline">\(\mu = 2\)</span> and <span class="math inline">\(\lambda = 1\)</span>, the average number of latent NLs per case is <span class="math inline">\(\lambda&#39; = \lambda /\mu = 0.5\)</span>, i.e., an average of one NL every two non-diseased case. With increasing numbers of NLs it is necessary to adopt an increasing reporting threshold in order to not overwhelm the radiologist with NLs, and the price paid is decreasing LLF. Overall CAD performance, regardless of how it is measured, decreases.</p>
-<p>Similar trends are observed for the Youden-index based optimizations (last four rows of table). However, comparing Youden-index based optimizations to wAFROC-AUC based optimizations shows that Youden-index based optimizations yield higher reporting thresholds resulting in lower wAFROC-AUC, lower ROC-AUC and lower LLF values.</p>
+<p>The <span class="math inline">\(\lambda\)</span> Poisson parameter controls the average number of latent non-lesion localizations (NLs or location-level “false-positives”) per case. For example, for <span class="math inline">\(\mu = 2\)</span> and <span class="math inline">\(\lambda = 1\)</span>, the average number of latent NLs per case is <span class="math inline">\(\lambda&#39; = \lambda /\mu = 0.5\)</span>, i.e., an average of one NL every two non-diseased case. With increasing numbers of NLs it is necessary to increase the reporting threshold in order to not overwhelm the radiologist with NLs, and the price paid is decreasing LLF, as evident in the last column of the table. Overall CAD performance, regardless of how it is measured (i.e., wAFROC-AUC or ROC-AUC), decreases.</p>
+<p>Similar trends are observed for the Youden-index based optimizations (last four rows of table). However, comparing Youden-index based optimizations as a group to wAFROC-AUC based optimizations shows that the former yield higher reporting thresholds, lower wAFROC-AUC, lower ROC-AUC and lower LLF values.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:optim-op-point-table1">TABLE 39.1: </span>Summary of optimization results for <span class="math inline">\(\mu = 2\)</span> and <span class="math inline">\(\nu = 1\)</span> .
+<span id="tab:optim-op-point-table1">TABLE 39.1: </span>Summary of optimization results for <span class="math inline">\(\mu = 2\)</span>, <span class="math inline">\(\nu = 1\)</span> and different values of <span class="math inline">\(\lambda\)</span>.
 </caption>
 <thead>
 <tr>
@@ -1234,7 +1253,7 @@ Youden
 </tr>
 </tbody>
 </table>
-<p>It remains to display the FROC curves with superimposed optimal operating points. One could generate 8 FROC plots, each corresponding to a row of the preceding table, but there is a more efficient method. The FROC curve is defined by the search model parameters as follows:</p>
+<p>As regards displaying FROC curves with superimposed optimal operating points, one could generate 8 plots, each corresponding to a row of the preceding table, but there is a more efficient method. The FROC curve is defined in terms of the RSM parameters as follows:</p>
 <p><span class="math display" id="eq:rsm-froc-predictions">\[\begin{equation}
 \left. 
 \begin{aligned}
@@ -1244,7 +1263,7 @@ LLF\left ( \zeta, \mu, \nu&#39;, \overrightarrow{f_L} \right ) =&amp; \nu&#39; \
 \right \}
 \tag{39.1}
 \end{equation}\]</span></p>
-<p>The <em>physical</em> parameters <span class="math inline">\(\lambda&#39;\)</span> and <span class="math inline">\(\nu&#39;\)</span> are related to the <em>intrinsic</em> parameters <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\nu\)</span> by:</p>
+<p>Here <span class="math inline">\(\overrightarrow{f_L}\)</span> is the lesion-distribution vector, <code>c(0.5, 0.5)</code> in the current example. The <em>physical</em> parameters (that determine the FROC) <span class="math inline">\(\lambda&#39;\)</span> and <span class="math inline">\(\nu&#39;\)</span> are related to the <em>intrinsic</em> parameters <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\nu\)</span> by:</p>
 <p><span class="math display" id="eq:rsm-intrinsic-physical">\[\begin{equation}
 \left. 
 \begin{aligned}
@@ -1254,7 +1273,7 @@ LLF\left ( \zeta, \mu, \nu&#39;, \overrightarrow{f_L} \right ) =&amp; \nu&#39; \
 \right \}
 \tag{39.2}
 \end{equation}\]</span></p>
-<p>Since the <span class="math inline">\(\Phi\)</span> function ranges from one to unity, the <em>four FROC curves are scaled versions of a single curve whose x-axis ranges from 0 to 1</em>. The single curve corresponds to <span class="math inline">\(\lambda&#39; = 1\)</span> and the true curves are obtained by scaling this curve along the x-axis by the appropriate <span class="math inline">\(\lambda&#39;\)</span> factor. With this understanding one can display 4 FROC curves with a single FROC curve where the x-axis is <span class="math inline">\(NLF \left ( \zeta, \lambda&#39; = 1 \right )\)</span>. The true FROC curve is defined by:</p>
+<p>Since the <span class="math inline">\(\Phi\)</span> function ranges from one to unity, the <em>four FROC curves for different values of <span class="math inline">\(\lambda\)</span> are scaled versions of a single curve whose x-axis ranges from 0 to 1</em>. The single curve corresponds to <span class="math inline">\(\lambda&#39; = 1\)</span> and the true curves are obtained by scaling this curve along the x-axis by the appropriate <span class="math inline">\(\lambda&#39;\)</span> factor. With this understanding one can display 4 FROC curves with a single FROC curve where the x-axis is <span class="math inline">\(NLF \left ( \zeta, \lambda&#39; = 1 \right )\)</span>. The true FROC curve is defined by:</p>
 <p><span class="math display" id="eq:rsm-froc-predictions2">\[\begin{equation}
 \left. 
 \begin{aligned}
@@ -1272,30 +1291,30 @@ FIGURE 39.1: Left panel: maximized wAFROC AUC was used to find optimal <span cla
 </div>
 <p>The left panel in <a href="optim-op-point.html#fig:optim-op-point-vary-lambda">39.1</a> shows the optimal operating points when wAFROC-AUC is maximized. The 4 operating points are color coded as follows:</p>
 <ul>
-<li>Black dot corresponds to <span class="math inline">\(\lambda = 1\)</span>, i.e., <span class="math inline">\(\lambda&#39; = 1/2 = 0.5\)</span>. In other words, the true FROC is obtained by <em>shrinking</em> the plot, including the superposed black dot, along the x-axis by a factor of 2.<br />
+<li>The black dot corresponds to <span class="math inline">\(\lambda = 1\)</span>, i.e., <span class="math inline">\(\lambda&#39; = 1/2 = 0.5\)</span>. In other words, the true FROC is obtained by <em>shrinking</em> the plot shown, including the superposed black dot, along the x-axis by a factor of 2.<br />
 </li>
-<li>Red dot corresponds to <span class="math inline">\(\lambda&#39; = 2.5\)</span>. In other words, the true FROC is obtained by <em>magnifying</em> that shown, including the red dot, along the x-axis by a factor of 2.5.<br />
+<li>The red dot corresponds to <span class="math inline">\(\lambda&#39; = 2.5\)</span>. In other words, the true FROC is obtained by <em>magnifying</em> that shown, including the red dot, along the x-axis by a factor of 2.5.<br />
 </li>
-<li>Green dot corresponds to <span class="math inline">\(\lambda&#39; = 5\)</span>.</li>
-<li>Blue dot corresponds to <span class="math inline">\(\lambda&#39; = 7.5\)</span>.</li>
+<li>The green dot corresponds to <span class="math inline">\(\lambda&#39; = 5\)</span>.</li>
+<li>The blue dot corresponds to <span class="math inline">\(\lambda&#39; = 7.5\)</span>.</li>
 </ul>
 <p>These plots illustrate the previous comments, namely, as <span class="math inline">\(\lambda\)</span> increases, <em>the optimal operating point moves down the scaled curve</em>.</p>
-<p>The right panel shows the optimal operating point when the Youden index is maximized. It shows the same general features as the previous example - the optimal operating point moves down the scaled curve - and additionally, the group of four operating points in the right panel are below-left those in the left panel, representing higher values of optimal <span class="math inline">\(\zeta_1\)</span>, i.e., a more stringent criteria.</p>
-<p>The FROC curve does not represent true performance. To visualize true performance one compares wAFROC curves, as done below for <span class="math inline">\(\lambda = 1\)</span> and <span class="math inline">\(\lambda = 15\)</span>.</p>
+<p>The right panel shows the optimal operating point when the Youden-index is maximized. It shows the same general features as the previous example but the group of four operating points in the right panel are below-left those in the left panel, representing higher values of optimal <span class="math inline">\(\zeta_1\)</span>, i.e., a more stringent criteria. As seen in the preceding table the overly strict critera obtained using Youden-index based optimization, leads to lower overall performance: i.e., lower wAFROC-AUC and lower ROC-AUC.</p>
+<p>The FROC curve does not represent true performance. To visualize true performance one compares wAFROC curves.</p>
 <div class="figure"><span id="fig:optim-op-point-vary-lambda-wafroc"></span>
-<img src="21-optim-op-point_files/figure-html/optim-op-point-vary-lambda-wafroc-1.png" alt="Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to $\lambda = 1$, red curve, and $\lambda = 15$, blue curve." width="672" />
+<img src="21-optim-op-point_files/figure-html/optim-op-point-vary-lambda-wafroc-1.png" alt="wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to $\mu = 2$, $\nu = 1$ and $\lambda = 1$. The optimal reporting theshold $\zeta_1$ is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC." width="672" />
 <p class="caption">
-FIGURE 39.2: Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to <span class="math inline">\(\lambda = 1\)</span>, red curve, and <span class="math inline">\(\lambda = 15\)</span>, blue curve.
+FIGURE 39.2: wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to <span class="math inline">\(\mu = 2\)</span>, <span class="math inline">\(\nu = 1\)</span> and <span class="math inline">\(\lambda = 1\)</span>. The optimal reporting theshold <span class="math inline">\(\zeta_1\)</span> is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC.
 </p>
 </div>
-<p>Only results of wAFROC-AUC based optimizations are shown in <a href="optim-op-point.html#fig:optim-op-point-vary-lambda-wafroc">39.2</a>. The larger area under the red curve, corresponding to the lower value of <span class="math inline">\(\lambda\)</span> is obvious. Each curve ends at the optimal threshold listed in Table <a href="optim-op-point.html#tab:optim-op-point-table1">39.1</a>, namely <span class="math inline">\(\zeta_1\)</span> = -0.235 for the red curve and <span class="math inline">\(\zeta_1\)</span> = 1.697 for the blue curve. The lower performance represented by the blue curve, relative to the red curve, requires the adoption of a higher reporting threshold. For either curve the maximization procedure means that any threshold other than that used would depress performance.</p>
+<p>Each curve ends at the optimal threshold listed in Table <a href="optim-op-point.html#tab:optim-op-point-table1">39.1</a>, namely <span class="math inline">\(\zeta_1\)</span> = -0.235 for the red curve and <span class="math inline">\(\zeta_1\)</span> = 1.100 for the blue curve. The lower performance represented by the blue curve, based on Youden-index maximization, is due to the adoption of an overly strict threshold.</p>
 </div>
-<div id="optim-op-point-vary-nu" class="section level2">
-<h2><span class="header-section-number">39.4</span> Vary nu</h2>
-<p>For <span class="math inline">\(\mu = 2\)</span> and <span class="math inline">\(\lambda= 5\)</span> wAFROC and Youden-index based optimizations were performed for 4 values of <span class="math inline">\(\nu = 0.1,0.5,1,2\)</span>. Table <a href="optim-op-point.html#tab:optim-op-point-table2">39.2</a> summarizes the results.</p>
+<div id="optim-op-point-vary-nu" class="section level3">
+<h3><span class="header-section-number">39.3.3</span> Vary nu</h3>
+<p>For <span class="math inline">\(\mu = 2\)</span> and <span class="math inline">\(\lambda= 5\)</span> wAFROC-AUC and Youden-index based optimizations were performed for 4 values of <span class="math inline">\(\nu = 0.1,0.5,1,2\)</span>. Table <a href="optim-op-point.html#tab:optim-op-point-table2">39.2</a> summarizes the results.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:optim-op-point-table2">TABLE 39.2: </span>Summary of optimization results for <span class="math inline">\(\mu = 2\)</span> and <span class="math inline">\(\lambda = 5\)</span> .
+<span id="tab:optim-op-point-table2">TABLE 39.2: </span>Summary of optimization results for <span class="math inline">\(\mu = 2\)</span>, <span class="math inline">\(\lambda = 5\)</span> and different values of <span class="math inline">\(\nu\)</span>.
 </caption>
 <thead>
 <tr>
@@ -1492,27 +1511,27 @@ Youden
 <p>The <span class="math inline">\(\nu\)</span> binomial parameter controls the average fraction of latent lesion localizations (LLs or “true-positives”) per diseased case. For example, for <span class="math inline">\(\mu = 2\)</span> and <span class="math inline">\(\nu = 0.1\)</span>, the fraction is <span class="math inline">\(\nu&#39; = 1 - \exp(-\mu \nu) = 0.1813\)</span>, i.e., an average of 18 percent of lesions present are seen by CAD at confidence level $ &gt; -$. Overall CAD performance increases with increasing <span class="math inline">\(\nu\)</span>.</p>
 <p>Comparing Youden-index based optimizations (last four rows of table) to wAFROC-AUC based optimizations shows that the former yields higher reporting thresholds, lower wAFROC-AUC, lower ROC-AUC and lower LLF values.</p>
 <div class="figure"><span id="fig:optim-op-point-vary-nu"></span>
-<img src="21-optim-op-point_files/figure-html/optim-op-point-vary-nu-1.png" alt="Left panel: maximized wAFROC AUC was used to find optimal $\zeta_1$. Right panel: maximized Youden index was used to find optimal $\zeta_1$. Dot colors: black means $\nu = 0.1$, red means $\nu = 0.5$, green means $\nu = 1$ and blue means $\nu = 2$." width="672" />
+<img src="21-optim-op-point_files/figure-html/optim-op-point-vary-nu-1.png" alt="Left panel: maximized wAFROC-AUC was used to find optimal $\zeta_1$. Right panel: maximized Youden-index was used to find optimal $\zeta_1$. Dot colors: black means $\nu = 0.1$, red means $\nu = 0.5$, green means $\nu = 1$ and blue means $\nu = 2$." width="672" />
 <p class="caption">
-FIGURE 39.3: Left panel: maximized wAFROC AUC was used to find optimal <span class="math inline">\(\zeta_1\)</span>. Right panel: maximized Youden index was used to find optimal <span class="math inline">\(\zeta_1\)</span>. Dot colors: black means <span class="math inline">\(\nu = 0.1\)</span>, red means <span class="math inline">\(\nu = 0.5\)</span>, green means <span class="math inline">\(\nu = 1\)</span> and blue means <span class="math inline">\(\nu = 2\)</span>.
+FIGURE 39.3: Left panel: maximized wAFROC-AUC was used to find optimal <span class="math inline">\(\zeta_1\)</span>. Right panel: maximized Youden-index was used to find optimal <span class="math inline">\(\zeta_1\)</span>. Dot colors: black means <span class="math inline">\(\nu = 0.1\)</span>, red means <span class="math inline">\(\nu = 0.5\)</span>, green means <span class="math inline">\(\nu = 1\)</span> and blue means <span class="math inline">\(\nu = 2\)</span>.
 </p>
 </div>
 <p>Fig. <a href="optim-op-point.html#fig:optim-op-point-vary-nu">39.3</a> shows the FROC curves with optimal operating points superimposed. The left panel corresponds to wAFROC-AUC based optimizations while the right panel corresponds to Youden-index based optimizations. These illustrate the previous comments, namely, as <span class="math inline">\(\nu\)</span> increases, <em>the optimal operating point moves up the FROC curve</em>.</p>
-<p>To visualize true performance one compares wAFROC curves as done in Fig. <a href="optim-op-point.html#fig:optim-op-point-vary-mu-wafroc">39.6</a> for <span class="math inline">\(\nu = 0.1\)</span> and <span class="math inline">\(\nu = 2\)</span>.</p>
+<p>To visualize true performance one compares wAFROC curves.</p>
 <div class="figure"><span id="fig:optim-op-point-vary-nu-wafroc"></span>
-<img src="21-optim-op-point_files/figure-html/optim-op-point-vary-nu-wafroc-1.png" alt="Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to $\nu = 0.1$, red curve, and $\nu = 2$, blue curve." width="672" />
+<img src="21-optim-op-point_files/figure-html/optim-op-point-vary-nu-wafroc-1.png" alt="wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to $\mu = 2$, $\lambda = 5$ and $\nu = 2$. The optimal reporting theshold $\zeta_1$ is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC." width="672" />
 <p class="caption">
-FIGURE 39.4: Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to <span class="math inline">\(\nu = 0.1\)</span>, red curve, and <span class="math inline">\(\nu = 2\)</span>, blue curve.
+FIGURE 39.4: wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to <span class="math inline">\(\mu = 2\)</span>, <span class="math inline">\(\lambda = 5\)</span> and <span class="math inline">\(\nu = 2\)</span>. The optimal reporting theshold <span class="math inline">\(\zeta_1\)</span> is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC.
 </p>
 </div>
-<p>The larger area under the red curve, corresponding to the lower value of <span class="math inline">\(\nu\)</span>, is obvious. Each curve ends at the optimal threshold listed in Table <a href="optim-op-point.html#tab:optim-op-point-table2">39.2</a>, namely <span class="math inline">\(\zeta_1\)</span> = 2.275 for the red curve and <span class="math inline">\(\zeta_1\)</span> = -0.311 for the blue curve. The lower performance represented by the red curve requires the adoption of a higher reporting threshold.</p>
+<p>Each curve ends at the optimal threshold listed in Table <a href="optim-op-point.html#tab:optim-op-point-table2">39.2</a>, namely <span class="math inline">\(\zeta_1\)</span> = -0.311 for the red curve and <span class="math inline">\(\zeta_1\)</span> = 1.727 for the blue curve. The lower performance represented by the blue curve, based on Youden-index maximization, is due to the adoption of an overly strict threshold.</p>
 </div>
-<div id="optim-op-point-vary-mu" class="section level2">
-<h2><span class="header-section-number">39.5</span> Vary mu</h2>
-<p>For <span class="math inline">\(\nu = 1\)</span> and <span class="math inline">\(\lambda= 1\)</span> wAFROC and Youden-index based optimizations were performed for 4 values of <span class="math inline">\(\mu = 0.75,1,1.25,1.5\)</span>. Table <a href="optim-op-point.html#tab:optim-op-point-table2">39.2</a> summarizes the results.</p>
+<div id="optim-op-point-vary-mu" class="section level3">
+<h3><span class="header-section-number">39.3.4</span> Vary mu</h3>
+<p>For <span class="math inline">\(\nu = 1\)</span> and <span class="math inline">\(\lambda= 1\)</span> wAFROC-AUC and Youden-index based optimizations were performed for 4 values of <span class="math inline">\(\mu = 0.75,1,1.25,1.5\)</span>. Table <a href="optim-op-point.html#tab:optim-op-point-table2">39.2</a> summarizes the results.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:optim-op-point-table3">TABLE 39.3: </span>Summary of optimization results for <span class="math inline">\(\nu = 1\)</span> and <span class="math inline">\(\lambda = 1\)</span> .
+<span id="tab:optim-op-point-table3">TABLE 39.3: </span>Summary of optimization results for <span class="math inline">\(\nu = 1\)</span>, <span class="math inline">\(\lambda = 1\)</span> and different values of <span class="math inline">\(\mu\)</span>.
 </caption>
 <thead>
 <tr>
@@ -1709,28 +1728,29 @@ Youden
 </ul>
 <p>Fig. <a href="optim-op-point.html#fig:optim-op-point-vary-mu">39.5</a> shows FROC curves with superimposed optimal operating points.</p>
 <div class="figure"><span id="fig:optim-op-point-vary-mu"></span>
-<img src="21-optim-op-point_files/figure-html/optim-op-point-vary-mu-1.png" alt="Left panel: maximized wAFROC AUC was used to find optimal $\zeta_1$. Right panel: maximized Youden-index was used to find optimal $\zeta_1$. Dot colors: black means $\mu = 0.75$, red means $\mu = 1$, green means $\lambda = 1.25$ and blue means $\mu = 1.5$." width="672" />
+<img src="21-optim-op-point_files/figure-html/optim-op-point-vary-mu-1.png" alt="Left panel: maximized wAFROC-AUC was used to find optimal $\zeta_1$. Right panel: maximized Youden-index was used to find optimal $\zeta_1$. Dot colors: black means $\mu = 0.75$, red means $\mu = 1$, green means $\lambda = 1.25$ and blue means $\mu = 1.5$." width="672" />
 <p class="caption">
-FIGURE 39.5: Left panel: maximized wAFROC AUC was used to find optimal <span class="math inline">\(\zeta_1\)</span>. Right panel: maximized Youden-index was used to find optimal <span class="math inline">\(\zeta_1\)</span>. Dot colors: black means <span class="math inline">\(\mu = 0.75\)</span>, red means <span class="math inline">\(\mu = 1\)</span>, green means <span class="math inline">\(\lambda = 1.25\)</span> and blue means <span class="math inline">\(\mu = 1.5\)</span>.
+FIGURE 39.5: Left panel: maximized wAFROC-AUC was used to find optimal <span class="math inline">\(\zeta_1\)</span>. Right panel: maximized Youden-index was used to find optimal <span class="math inline">\(\zeta_1\)</span>. Dot colors: black means <span class="math inline">\(\mu = 0.75\)</span>, red means <span class="math inline">\(\mu = 1\)</span>, green means <span class="math inline">\(\lambda = 1.25\)</span> and blue means <span class="math inline">\(\mu = 1.5\)</span>.
 </p>
 </div>
 <p>For each of the four values of <span class="math inline">\(\mu\)</span> the left panel in Fig. <a href="optim-op-point.html#fig:optim-op-point-vary-mu">39.5</a> shows the optimal operating point when wAFROC-AUC is maximized. It shows the FROC curves with optimal operating points superimposed. These illustrate the previous comments, namely, as <span class="math inline">\(\mu\)</span> increases, <em>the optimal operating point moves up the FROC curve</em>.</p>
 <p>The right panel in Fig. <a href="optim-op-point.html#fig:optim-op-point-vary-mu">39.5</a> shows the optimal operating point when the Youden-index is maximized.</p>
-<p>To visualize true performance one compares wAFROC curves as done in Fig. <a href="optim-op-point.html#fig:optim-op-point-vary-mu-wafroc">39.6</a> for <span class="math inline">\(\mu = 0.75\)</span> and <span class="math inline">\(\mu = 1.5\)</span>.</p>
+<p>To visualize true performance one compares wAFROC curves.</p>
 <div class="figure"><span id="fig:optim-op-point-vary-mu-wafroc"></span>
-<img src="21-optim-op-point_files/figure-html/optim-op-point-vary-mu-wafroc-1.png" alt="Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to $\mu = 0.75$, red curve, and $\mu = 1.5$, blue curve." width="672" />
+<img src="21-optim-op-point_files/figure-html/optim-op-point-vary-mu-wafroc-1.png" alt="wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to $\lambda = 1$, $\nu = 1$ and $\mu = 1.5$. The optimal reporting theshold $\zeta_1$ is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC." width="672" />
 <p class="caption">
-FIGURE 39.6: Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to <span class="math inline">\(\mu = 0.75\)</span>, red curve, and <span class="math inline">\(\mu = 1.5\)</span>, blue curve.
+FIGURE 39.6: wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to <span class="math inline">\(\lambda = 1\)</span>, <span class="math inline">\(\nu = 1\)</span> and <span class="math inline">\(\mu = 1.5\)</span>. The optimal reporting theshold <span class="math inline">\(\zeta_1\)</span> is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC.
 </p>
 </div>
-<p>The larger area under the blue curve, corresponding to the greater value of <span class="math inline">\(\mu\)</span>, is obvious. Each curve ends at the optimal threshold listed in Table <a href="optim-op-point.html#tab:optim-op-point-table3">39.3</a>, namely <span class="math inline">\(\zeta_1\)</span> = 1.422 for the red curve and <span class="math inline">\(\zeta_1\)</span> = -0.268 for the blue curve. The lower performance represented by the red curve requires the adoption of a higher reporting threshold.</p>
+<p>Each curve ends at the optimal threshold listed in Table <a href="optim-op-point.html#tab:optim-op-point-table3">39.3</a>, namely <span class="math inline">\(\zeta_1\)</span> = -0.268 for the red curve, and <span class="math inline">\(\zeta_1\)</span> = 0.782 for the blue curve. The lower performance represented by the blue curve, based on Youden-index maximization, is due to the adoption of an overly strict threshold.</p>
+</div>
 </div>
 <div id="optim-op-point-how-to-use-method" class="section level2">
-<h2><span class="header-section-number">39.6</span> Using the method</h2>
-<p>Assume that one has designed an algorithmic observer that has been optimized with respect to all other parameters except the reporting threshold. At this point the algorithm reports every suspicious region, no matter how low the malignancy index. The mark-rating pairs are entered into a <code>RJafroc</code> format Excel input file. The next step is to read the data file – <code>DfReadDataFile()</code> – convert it to an ROC dataset – <code>DfFroc2Roc()</code> – and then perform a radiological search model (RSM) fit to the dataset using function <code>FitRsmRoc()</code>. This yields the necessary <span class="math inline">\(\lambda, \mu, \nu\)</span> parameters. These values are used to perform the computations described in the embedded code in this chapter, see for example Section <a href="optim-op-point.html#optim-op-point-vary-lambda">39.3</a>. This determines the optimal reporting threshold. The RSM parameter values and the reporting threshold determine the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence levels exceeding this threshold.</p>
+<h2><span class="header-section-number">39.4</span> Using the method</h2>
+<p>Assume that one has designed an algorithmic observer that has been optimized with respect to all other parameters except the reporting threshold. At this point the algorithm reports every suspicious region, no matter how low the malignancy index. The mark-rating pairs are entered into a <code>RJafroc</code> format Excel input file. The next step is to read the data file – <code>DfReadDataFile()</code> – convert it to an ROC dataset – <code>DfFroc2Roc()</code> – and then perform a radiological search model (RSM) fit to the dataset using function <code>FitRsmRoc()</code>. This yields the necessary <span class="math inline">\(\lambda, \mu, \nu\)</span> parameters. These values are used to perform the computations described in the embedded code in this chapter, see for example Section <a href="optim-op-point.html#optim-op-point-vary-lambda">39.3.2</a>. This determines the optimal reporting threshold. The RSM parameter values and the reporting threshold determine the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence levels exceeding this threshold.</p>
 </div>
 <div id="optim-op-point-application" class="section level2">
-<h2><span class="header-section-number">39.7</span> Application</h2>
+<h2><span class="header-section-number">39.5</span> An application</h2>
 <p>TBA Fit the LROC dataset to the RSM.</p>
 <div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="optim-op-point.html#cb254-1"></a>ds &lt;-<span class="st"> </span>datasetCadSimuFroc</span>
 <span id="cb254-2"><a href="optim-op-point.html#cb254-2"></a>dsCad &lt;-<span class="st"> </span><span class="kw">DfExtractDataset</span>(ds, <span class="dt">rdrs =</span> <span class="dv">1</span>)</span>
@@ -1747,7 +1767,7 @@ FIGURE 39.6: Results of wAFROC-AUC based optimizations; wAFROC curves correspond
 <p>Table <a href="optim-op-point.html#tab:optim-op-point-table4">39.4</a> summarizes the results.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:optim-op-point-table4">TABLE 39.4: </span>Summary of optimization results for <span class="math inline">\(\nu = 1\)</span> and <span class="math inline">\(\lambda = 1\)</span> .
+<span id="tab:optim-op-point-table4">TABLE 39.4: </span>Summary of optimization results for example FROC dataset.
 </caption>
 <thead>
 <tr>
@@ -1816,9 +1836,9 @@ Youden
 </table>
 <p>Fig. <a href="optim-op-point.html#fig:optim-op-point-application-froc">39.7</a> shows FROC curves with superimposed optimal operating points.</p>
 <div class="figure"><span id="fig:optim-op-point-application-froc"></span>
-<img src="21-optim-op-point_files/figure-html/optim-op-point-application-froc-1.png" alt="Maximized wAFROC AUC was used to find optimal $\zeta_1$." width="672" />
+<img src="21-optim-op-point_files/figure-html/optim-op-point-application-froc-1.png" alt="Maximized wAFROC-AUC was used to find optimal $\zeta_1$." width="672" />
 <p class="caption">
-FIGURE 39.7: Maximized wAFROC AUC was used to find optimal <span class="math inline">\(\zeta_1\)</span>.
+FIGURE 39.7: Maximized wAFROC-AUC was used to find optimal <span class="math inline">\(\zeta_1\)</span>.
 </p>
 </div>
 <div class="figure"><span id="fig:optim-op-point-application-wafroc"></span>
@@ -1829,7 +1849,7 @@ FIGURE 39.8: Results of wAFROC-AUC based optimizations; wAFROC curves correspond
 </div>
 </div>
 <div id="optim-op-point-references" class="section level2">
-<h2><span class="header-section-number">39.8</span> References</h2>
+<h2><span class="header-section-number">39.6</span> References</h2>
 
 </div>
 </div>
