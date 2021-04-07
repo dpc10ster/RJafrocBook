@@ -689,7 +689,7 @@ Assume that one has designed an algorithmic observer that has been optimized wit
 
 ## Application {#optim-op-point-application}
 
-Fit the LROC dataset to the RSM.
+TBA Fit the LROC dataset to the RSM.
 
 ```{r}
 ds <- datasetCadSimuFroc
@@ -795,7 +795,7 @@ xFROC <- RSM_xFROC(z, mu, lambda)
 yFROC <- RSM_yFROC(z, mu, nu) 
 df_froc <- data.frame(NLF = xFROC, LLF = yFROC)
 froc  <- froc  + 
-  geom_line(data = df_froc, aes(x = NLF, y = LLF)) +
+  geom_line(data = df_froc, aes(x = NLF, y = LLF), na.rm = TRUE) +
   scale_x_continuous(limits = c(0,2)) + scale_y_continuous(limits = c(0,1))
 optPt <- data.frame(
   NLF = nlfOptArr[1,1], 
@@ -812,6 +812,25 @@ Fig. \@ref(fig:optim-op-point-application-froc) shows FROC curves with superimpo
 
 ```{r optim-op-point-application-froc, fig.cap="Maximized wAFROC AUC was used to find optimal $\\zeta_1$.", fig.show='hold', echo=FALSE}
 grid.arrange(froc)
+```
+
+
+```{r, echo=FALSE}
+wafroc <- PlotRsmOperatingCharacteristics(
+     mu,
+     lambda,
+     nu,
+     zetaOptArr[1,1],
+     lesDistr,
+     relWeights,
+     OpChType = "wAFROC",
+     legendPosition = "null"
+)$wAFROCPlot
+```
+
+
+```{r optim-op-point-application-wafroc, fig.cap="Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to $\\mu = 0.75$, red curve, and $\\mu = 1.5$, blue curve.", fig.show='hold', echo=FALSE}
+grid.arrange(wafroc)
 ```
 
 
