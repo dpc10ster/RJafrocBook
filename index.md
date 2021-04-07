@@ -1,7 +1,7 @@
 --- 
 title: "The RJafroc Book"
 author: "Dev P. Chakraborty, PhD"
-date: "2021-04-06"
+date: "2021-04-07"
 site: bookdown::bookdown_site
 output: 
    bookdown::pdf_document: default
@@ -70,11 +70,11 @@ The book is divided into parts as follows:
 * 13-froc-empirical-examples.
 
 
-## Shelved vs. removed folders needing heavy edits {-}
+## Shelved vs. removed vs. parked folders needing heavy edits {-}
 * TBA
 * Temporarily shelved 17c-rsm-evidence.Rmd in removed folder
 * Now 17-b is breaking; possibly related to changes in RJafroc: had to do with recent changes to RJafroc code - RSM_xFROC etc requiring intrinsic parameters; fixed 17-b
-
+* parked has dependence of ROC/FROC performance on threshold
 
 
 ## Coding aids {-}

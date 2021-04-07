@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-04-06}
+\date{2021-04-07}
 
 \begin{document}
 \maketitle
@@ -267,9 +267,9 @@ The book is divided into parts as follows:
   13-froc-empirical-examples.
 \end{itemize}
 
-\hypertarget{shelved-vs.-removed-folders-needing-heavy-edits}{%
-\section*{Shelved vs.~removed folders needing heavy edits}\label{shelved-vs.-removed-folders-needing-heavy-edits}}
-\addcontentsline{toc}{section}{Shelved vs.~removed folders needing heavy edits}
+\hypertarget{shelved-vs.-removed-vs.-parked-folders-needing-heavy-edits}{%
+\section*{Shelved vs.~removed vs.~parked folders needing heavy edits}\label{shelved-vs.-removed-vs.-parked-folders-needing-heavy-edits}}
+\addcontentsline{toc}{section}{Shelved vs.~removed vs.~parked folders needing heavy edits}
 
 \begin{itemize}
 \tightlist
@@ -279,6 +279,8 @@ The book is divided into parts as follows:
   Temporarily shelved 17c-rsm-evidence.Rmd in removed folder
 \item
   Now 17-b is breaking; possibly related to changes in RJafroc: had to do with recent changes to RJafroc code - RSM\_xFROC etc requiring intrinsic parameters; fixed 17-b
+\item
+  parked has dependence of ROC/FROC performance on threshold
 \end{itemize}
 
 \hypertarget{coding-aids}{%
@@ -8489,7 +8491,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.5950087          1   0.20661198}
+\CommentTok{#> 1    1.3952784          1   0.23751573}
 \end{Highlighting}
 \end{Shaded}
 
@@ -17781,6 +17783,65 @@ To visualize true performance one compares wAFROC curves as done in Fig. \ref{fi
 \end{figure}
 
 The larger area under the blue curve, corresponding to the greater value of \(\mu\), is obvious. Each curve ends at the optimal threshold listed in Table \ref{tab:optim-op-point-table3}, namely \(\zeta_1\) = 1.422 for the red curve and \(\zeta_1\) = -0.268 for the blue curve. The lower performance represented by the red curve requires the adoption of a higher reporting threshold.
+
+\hypertarget{optim-op-point-how-to-use-method}{%
+\section{Using the method}\label{optim-op-point-how-to-use-method}}
+
+Assume that one has designed an algorithmic observer that has been optimized with respect to all other parameters except the reporting threshold. At this point the algorithm reports every suspicious region, no matter how low the malignancy index. The mark-rating pairs are entered into a \texttt{RJafroc} format Excel input file. The next step is to read the data file -- \texttt{DfReadDataFile()} -- convert it to an ROC dataset -- \texttt{DfFroc2Roc()} -- and then perform a radiological search model (RSM) fit to the dataset using function \texttt{FitRsmRoc()}. This yields the necessary \(\lambda, \mu, \nu\) parameters. These values are used to perform the computations described in the embedded code in this chapter, see for example Section \ref{optim-op-point-vary-lambda}. This determines the optimal reporting threshold. The RSM parameter values and the reporting threshold determine the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence levels exceeding this threshold.
+
+\hypertarget{optim-op-point-application}{%
+\section{Application}\label{optim-op-point-application}}
+
+TBA Fit the LROC dataset to the RSM.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ds <-}\StringTok{ }\NormalTok{datasetCadSimuFroc}
+\NormalTok{dsCad <-}\StringTok{ }\KeywordTok{DfExtractDataset}\NormalTok{(ds, }\DataTypeTok{rdrs =} \DecValTok{1}\NormalTok{)}
+\NormalTok{dsCadRoc <-}\StringTok{ }\KeywordTok{DfFroc2Roc}\NormalTok{(dsCad)}
+\NormalTok{dsCadRocBinned <-}\StringTok{ }\KeywordTok{DfBinDataset}\NormalTok{(dsCadRoc, }\DataTypeTok{opChType =} \StringTok{"ROC"}\NormalTok{)}
+\NormalTok{lesDistr <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{fit <-}\StringTok{ }\KeywordTok{FitRsmRoc}\NormalTok{(dsCadRocBinned, lesDistr)}
+\NormalTok{mu <-}\StringTok{ }\NormalTok{fit}\OperatorTok{$}\NormalTok{mu}
+\NormalTok{lambdaP <-}\StringTok{ }\NormalTok{fit}\OperatorTok{$}\NormalTok{lambdaP}
+\NormalTok{nuP <-}\StringTok{ }\NormalTok{fit}\OperatorTok{$}\NormalTok{nuP}
+\NormalTok{x <-}\StringTok{ }\KeywordTok{UtilPhysical2IntrinsicRSM}\NormalTok{(mu, lambdaP, nuP)}
+\NormalTok{lambda <-}\StringTok{ }\NormalTok{x}\OperatorTok{$}\NormalTok{lambda}
+\NormalTok{nu <-}\StringTok{ }\NormalTok{x}\OperatorTok{$}\NormalTok{nu}
+\end{Highlighting}
+\end{Shaded}
+
+Table \ref{tab:optim-op-point-table4} summarizes the results.
+
+\begin{table}[H]
+
+\caption{\label{tab:optim-op-point-table4}Summary of optimization results for $\nu = 1$ and $\lambda = 1$ .}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}[t]{llllll}
+\toprule
+FOM & lambda & zeta1 & wAFROC & ROC & OptOpPt\\
+\midrule
+wAFROC & 18.680 & 1.739 & 0.774 & 0.815 & (0.278, 0.679)\\
+\cmidrule{1-6}
+Youden & 18.680 & 2.406 & 0.398 & 0.750 & (0.055, 0.512)\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+Fig. \ref{fig:optim-op-point-application-froc} shows FROC curves with superimposed optimal operating points.
+
+\begin{figure}
+\centering
+\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-application-froc-1.pdf}
+\caption{\label{fig:optim-op-point-application-froc}Maximized wAFROC AUC was used to find optimal \(\zeta_1\).}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics{21-optim-op-point_files/figure-latex/optim-op-point-application-wafroc-1.pdf}
+\caption{\label{fig:optim-op-point-application-wafroc}Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to \(\mu = 0.75\), red curve, and \(\mu = 1.5\), blue curve.}
+\end{figure}
 
 \hypertarget{optim-op-point-references}{%
 \section{References}\label{optim-op-point-references}}

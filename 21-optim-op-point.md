@@ -651,6 +651,99 @@ The larger area under the blue curve, corresponding to the greater value of $\mu
 
 
 
+## Using the method {#optim-op-point-how-to-use-method}
+Assume that one has designed an algorithmic observer that has been optimized with respect to all other parameters except the reporting threshold. At this point the algorithm reports every suspicious region, no matter how low the malignancy index. The mark-rating pairs are entered into a `RJafroc` format Excel input file. The next step is to read the data file -- `DfReadDataFile()` -- convert it to an ROC dataset -- `DfFroc2Roc()` -- and then perform a radiological search model (RSM) fit to the dataset using function `FitRsmRoc()`. This yields the necessary $\lambda, \mu, \nu$ parameters. These values are used to perform the computations described in the embedded code in this chapter, see for example Section \@ref(optim-op-point-vary-lambda). This determines the optimal reporting threshold. The RSM parameter values and the reporting threshold determine the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence levels exceeding this threshold. 
+
+
+
+
+## Application {#optim-op-point-application}
+
+TBA Fit the LROC dataset to the RSM.
+
+
+```r
+ds <- datasetCadSimuFroc
+dsCad <- DfExtractDataset(ds, rdrs = 1)
+dsCadRoc <- DfFroc2Roc(dsCad)
+dsCadRocBinned <- DfBinDataset(dsCadRoc, opChType = "ROC")
+lesDistr <- c(1)
+fit <- FitRsmRoc(dsCadRocBinned, lesDistr)
+mu <- fit$mu
+lambdaP <- fit$lambdaP
+nuP <- fit$nuP
+x <- UtilPhysical2IntrinsicRSM(mu, lambdaP, nuP)
+lambda <- x$lambda
+nu <- x$nu
+```
+
+
+
+
+
+
+Table \@ref(tab:optim-op-point-table4) summarizes the results.
+
+
+
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>(\#tab:optim-op-point-table4)Summary of optimization results for $\nu = 1$ and $\lambda = 1$ .</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> FOM </th>
+   <th style="text-align:left;"> lambda </th>
+   <th style="text-align:left;"> zeta1 </th>
+   <th style="text-align:left;"> wAFROC </th>
+   <th style="text-align:left;"> ROC </th>
+   <th style="text-align:left;"> OptOpPt </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> wAFROC </td>
+   <td style="text-align:left;"> 18.680 </td>
+   <td style="text-align:left;"> 1.739 </td>
+   <td style="text-align:left;"> 0.774 </td>
+   <td style="text-align:left;"> 0.815 </td>
+   <td style="text-align:left;"> (0.278, 0.679) </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Youden </td>
+   <td style="text-align:left;"> 18.680 </td>
+   <td style="text-align:left;"> 2.406 </td>
+   <td style="text-align:left;"> 0.398 </td>
+   <td style="text-align:left;"> 0.750 </td>
+   <td style="text-align:left;"> (0.055, 0.512) </td>
+  </tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+Fig. \@ref(fig:optim-op-point-application-froc) shows FROC curves with superimposed optimal operating points. 
+
+
+<div class="figure">
+<img src="21-optim-op-point_files/figure-html/optim-op-point-application-froc-1.png" alt="Maximized wAFROC AUC was used to find optimal $\zeta_1$." width="672" />
+<p class="caption">(\#fig:optim-op-point-application-froc)Maximized wAFROC AUC was used to find optimal $\zeta_1$.</p>
+</div>
+
+
+
+
+
+<div class="figure">
+<img src="21-optim-op-point_files/figure-html/optim-op-point-application-wafroc-1.png" alt="Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to $\mu = 0.75$, red curve, and $\mu = 1.5$, blue curve." width="672" />
+<p class="caption">(\#fig:optim-op-point-application-wafroc)Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to $\mu = 0.75$, red curve, and $\mu = 1.5$, blue curve.</p>
+</div>
+
+
 
 
 ## References {#optim-op-point-references}
