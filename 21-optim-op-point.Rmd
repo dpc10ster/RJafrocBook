@@ -681,6 +681,10 @@ The larger area under the blue curve, corresponding to the greater value of $\mu
 
 
 
+## Using the method {#optim-op-point-how-to-use-method}
+Assume that one has designed an algorithmic observer that has been optimized with respect to all other parameters except the reporting threshold. At this point the algorithm reports every suspicious region, no matter how low the malignancy index. The mark-rating pairs are entered into a `RJafroc` format Excel input file. The next step is to read the data file -- `DfReadDataFile()` -- convert it to an ROC dataset -- `DfFroc2Roc()` -- and then perform a radiological search model (RSM) fit to the dataset using function `FitRsmRoc()`. This yields the necessary $\lambda, \mu, \nu$ parameters. These values are used to perform the computations described in the embedded code in this chapter, see for example Section \@ref(optim-op-point-vary-lambda). This determines the optimal reporting threshold. The RSM parameter values and the reporting threshold determine the optimal reporting point on the FROC curve. The designer sets the algorithm to only report marks with confidence levels exceeding this threshold. 
+
+
 
 
 ## Application {#optim-op-point-application}
@@ -781,6 +785,34 @@ colnames(x12) <- c("FOM", "lambda", "zeta1", "wAFROC", "ROC", "OptOpPt")
 kbl(x12, caption = "Summary of optimization results for $\\nu = 1$ and $\\lambda = 1$ .", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
+
+
+
+```{r, echo=FALSE}
+froc <- ggplot2::ggplot()
+z <- seq(-5,zetaOptArr[1,1]+5,0.1)
+xFROC <- RSM_xFROC(z, mu, lambda)
+yFROC <- RSM_yFROC(z, mu, nu) 
+df_froc <- data.frame(NLF = xFROC, LLF = yFROC)
+froc  <- froc  + 
+  geom_line(data = df_froc, aes(x = NLF, y = LLF)) +
+  scale_x_continuous(limits = c(0,2)) + scale_y_continuous(limits = c(0,1))
+optPt <- data.frame(
+  NLF = nlfOptArr[1,1], 
+  LLF = llfOptArr[1,1]) 
+froc  <- froc  + 
+  geom_point(data = optPt, 
+             aes(x = NLF, y = LLF))
+```
+
+
+
+Fig. \@ref(fig:optim-op-point-application-froc) shows FROC curves with superimposed optimal operating points. 
+
+
+```{r optim-op-point-application-froc, fig.cap="Maximized wAFROC AUC was used to find optimal $\\zeta_1$.", fig.show='hold', echo=FALSE}
+grid.arrange(froc)
+```
 
 
 
