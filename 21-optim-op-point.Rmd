@@ -130,7 +130,7 @@ Youden <- function (
 For $\mu = 2$ and $\nu = 1$, wAFROC-AUC and Youden-index based optimizations were performed for $\lambda = 1, 5, 10, 15$. The following quantities were calculated:
 
 * `zetaOptArr`, a [2,4] array, the optimal thresholds $\zeta_1$; 
-* `fomMaxArr`, a [2,4] array, the maximized values of the figures of merit, wAFROC-AUC or Youden-index; 
+* `fomMaxArr`, a [2,4] array, the maximized values of wAFROC-AUC, using either wAFROC based or Youden-index based optimization; note that in the latter we report wAFROC-AUC even though the optimized quantity is the Youden-index.
 * `rocAucArr`, a [2,4] array, the AUCs under the ROC curves corresponding to optimizations based on wAFROC-AUC or Youden-index;   
 * `nlfOptArr`, a [2,4] array, the abscissa of the optimal reporting point on the FROC curve corresponding to optimizations based on wAFROC-AUC or Youden-index;   
 * `llfOptArr`, a [2,4] array, the ordinate of the optimal reporting point on the FROC curve corresponding to optimizations based on wAFROC-AUC or Youden-index.   
@@ -239,7 +239,7 @@ colnames(x12) <- c("FOM", "lambda", "zeta1", "wAFROC", "ROC", "OptOpPt")
 
 
 ```{r optim-op-point-table1, echo=FALSE}
-kbl(x12, caption = "Summary of optimization results for $\\mu = 2$, $\\nu = 1$ and different values of $\\lambda$.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(x12, caption = "Summary of optimization results for $\\mu = 2$, $\\nu = 1$ and different values of $\\lambda$. The wAFROC column always displays wAFROC-AUC, even though the optimized quantity may the Youden-index, as in the last four rows.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
@@ -327,7 +327,7 @@ for (y in 1:2) {
 
 
 
-```{r optim-op-point-vary-lambda, fig.cap="Left panel: maximized wAFROC AUC was used to find optimal $\\zeta_1$. Right panel: maximized Youden index was used to find optimal $\\zeta_1$. Dot colors: black means $\\lambda = 1$, red means $\\lambda = 5$, green means $\\lambda = 10$ and blue means $\\lambda = 15$.", fig.show='hold', echo=FALSE}
+```{r optim-op-point-vary-lambda, fig.cap="Left panel: maximized wAFROC AUC was used to find optimal $\\zeta_1$. Right panel: maximized Youden-index was used to find optimal $\\zeta_1$. Dot colors: black means $\\lambda = 1$, red means $\\lambda = 5$, green means $\\lambda = 10$ and blue means $\\lambda = 15$.", fig.show='hold', echo=FALSE}
 grid.arrange(scaled_froc[[1]], scaled_froc[[2]], ncol = 2)
 ```
 
@@ -364,7 +364,7 @@ wafroc <- PlotRsmOperatingCharacteristics(
 
 
 
-```{r optim-op-point-vary-lambda-wafroc, fig.cap="wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to $\\mu = 2$, $\\nu = 1$ and $\\lambda = 1$. The optimal reporting theshold $\\zeta_1$ is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC.", fig.show='hold', echo=FALSE}
+```{r optim-op-point-vary-lambda-wafroc, fig.cap="wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to $\\mu = 2$, $\\nu = 1$ and $\\lambda = 1$. The optimal reporting theshold $\\zeta_1$ is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC.  The two wAFROC-AUCs are 0.880 and 0.856, respectively.", fig.show='hold', echo=FALSE}
 grid.arrange(wafroc)
 ```
 
@@ -467,7 +467,7 @@ colnames(x12) <- c("FOM", "nu", "zeta1", "wAFROC", "ROC", "OptOpPt")
 
 
 ```{r optim-op-point-table2, echo=FALSE}
-kbl(x12, caption = "Summary of optimization results for $\\mu = 2$, $\\lambda = 5$ and different values of $\\nu$.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(x12, caption = "Summary of optimization results for $\\mu = 2$, $\\lambda = 5$ and different values of $\\nu$. The wAFROC column always displays wAFROC-AUC, even though the optimized quantity may the Youden-index, as in the last four rows.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
@@ -533,7 +533,7 @@ wafroc <- PlotRsmOperatingCharacteristics(
 ```
 
 
-```{r optim-op-point-vary-nu-wafroc, fig.cap="wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to $\\mu = 2$, $\\lambda = 5$ and $\\nu = 2$. The optimal reporting theshold $\\zeta_1$ is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC.", fig.show='hold', echo=FALSE}
+```{r optim-op-point-vary-nu-wafroc, fig.cap="wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to $\\mu = 2$, $\\lambda = 5$ and $\\nu = 2$. The optimal reporting theshold $\\zeta_1$ is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC.  The two wAFROC-AUCs are 0.841 and 0.793, respectively.", fig.show='hold', echo=FALSE}
 grid.arrange(wafroc)
 ```
 
@@ -637,7 +637,7 @@ colnames(x12) <- c("FOM", "mu", "zeta1", "wAFROC", "ROC", "OptOpPt")
 
 
 ```{r optim-op-point-table3, echo=FALSE}
-kbl(x12, caption = "Summary of optimization results for $\\nu = 1$, $\\lambda = 1$ and different values of $\\mu$.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(x12, caption = "Summary of optimization results for $\\nu = 1$, $\\lambda = 1$ and different values of $\\mu$. The wAFROC column always displays wAFROC-AUC, even though the optimized quantity may the Youden-index, as in the last four rows.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
@@ -720,7 +720,7 @@ wafroc <- PlotRsmOperatingCharacteristics(
 ```
 
 
-```{r optim-op-point-vary-mu-wafroc, fig.cap="wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to $\\lambda = 1$, $\\nu = 1$ and $\\mu = 1.5$. The optimal reporting theshold $\\zeta_1$ is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC.", fig.show='hold', echo=FALSE}
+```{r optim-op-point-vary-mu-wafroc, fig.cap="wAFROC curves for wAFROC-AUC and Youden-index based optimizations: both curves correspond to $\\lambda = 1$, $\\nu = 1$ and $\\mu = 1.5$. The optimal reporting theshold $\\zeta_1$ is determined by the selected FOM. The red curve corresponds to FOM = wAFROC-AUC and the blue curve corresponds to FOM = Youden-index. The stricter reporting threshold found by the Youden-index based method sacrifices a considerable amount of area under the wAFROC. The two wAFROC-AUCs are 0.777 and 0.760, respectively.", fig.show='hold', echo=FALSE}
 grid.arrange(wafroc)
 ```
 
@@ -778,7 +778,7 @@ for (y in 1:2) {
       fomMaxArr[y,i] <- -x$objective  # safe to use objective here
       rocAucArr[y,i] <- UtilAnalyticalAucsRSM(
         mu, 
-        lambda[i], 
+        lambda, 
         nu, 
         zeta1 = x$minimum, 
         lesDistr, 
@@ -795,21 +795,21 @@ for (y in 1:2) {
       x <- optimize(Youden, 
                     interval = c(-5,5), 
                     mu, 
-                    lambda[i], 
+                    lambda, 
                     nu, 
                     lesDistr, 
                     relWeights)
       zetaOptArr[y,i] <- x$minimum
       fomMaxArr[y,i] <- UtilAnalyticalAucsRSM(
         mu, 
-        lambda[i], 
+        lambda, 
         nu, 
         zeta1 = x$minimum, 
         lesDistr, 
         relWeights)$aucwAFROC
       rocAucArr[y,i] <- UtilAnalyticalAucsRSM(
         mu, 
-        lambda[i], 
+        lambda, 
         nu, 
         zeta1 = x$minimum, 
         lesDistr, 
@@ -817,7 +817,7 @@ for (y in 1:2) {
       nlfOptArr[y,i] <- RSM_xFROC(
         z = x$minimum, 
         mu, 
-        lambda = lambda[i])
+        lambda = lambda)
       llfOptArr[y,i] <- RSM_yFROC(
         z = x$minimum, mu, nu)
     } else stop("incorrect y")
@@ -837,27 +837,32 @@ colnames(x12) <- c("FOM", "lambda", "zeta1", "wAFROC", "ROC", "OptOpPt")
 
 
 ```{r optim-op-point-table4, echo=FALSE}
-kbl(x12, caption = "Summary of optimization results for example FROC dataset.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+kbl(x12, caption = "Summary of optimization results for example FROC dataset. The wAFROC column always displays wAFROC-AUC, even though the optimized quantity may the Youden-index, as in the last four rows.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(2), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
 ```
 
 
 
 
 ```{r, echo=FALSE}
-froc <- ggplot2::ggplot()
-z <- seq(-5,zetaOptArr[1,1]+5,0.1)
-xFROC <- RSM_xFROC(z, mu, lambda)
-yFROC <- RSM_yFROC(z, mu, nu) 
-df_froc <- data.frame(NLF = xFROC, LLF = yFROC)
-froc  <- froc  + 
-  geom_line(data = df_froc, aes(x = NLF, y = LLF), na.rm = TRUE) +
-  scale_x_continuous(limits = c(0,2)) + scale_y_continuous(limits = c(0,1))
-optPt <- data.frame(
-  NLF = nlfOptArr[1,1], 
-  LLF = llfOptArr[1,1]) 
-froc  <- froc  + 
-  geom_point(data = optPt, 
-             aes(x = NLF, y = LLF))
+froc <- array(list(), dim = c(2))
+for (y in 1:2) {
+  froc[[y]] <- ggplot2::ggplot()
+  for ( i in 1:1) {
+    z <- seq(-5,zetaOptArr[y,1]+5,0.1)
+    xFROC <- RSM_xFROC(z, mu, lambda)
+    yFROC <- RSM_yFROC(z, mu, nu) 
+    df_froc <- data.frame(NLF = xFROC, LLF = yFROC)
+    froc[[y]] <- froc[[y]] + 
+      geom_line(data = df_froc, aes(x = NLF, y = LLF))
+    optPt <- data.frame(
+      NLF = nlfOptArr[y,1], 
+      LLF = llfOptArr[y,1]) 
+    froc[[y]] <- froc[[y]] + 
+      geom_point(data = optPt, 
+                 aes(x = NLF, y = LLF),  
+                 color = y)
+  }
+}
 ```
 
 
@@ -865,17 +870,17 @@ froc  <- froc  +
 Fig. \@ref(fig:optim-op-point-application-froc) shows FROC curves with superimposed optimal operating points. 
 
 
-```{r optim-op-point-application-froc, fig.cap="Maximized wAFROC-AUC was used to find optimal $\\zeta_1$.", fig.show='hold', echo=FALSE}
-grid.arrange(froc)
+```{r optim-op-point-application-froc, fig.cap="Left panel: maximized wAFROC-AUC was used to find optimal $\\zeta_1$. Right panel: maximized Youden-index was used.", fig.show='hold', echo=FALSE}
+grid.arrange(froc[[1]], froc[[2]], ncol = 2)
 ```
 
 
 ```{r, echo=FALSE}
 wafroc <- PlotRsmOperatingCharacteristics(
-     mu,
-     lambda,
-     nu,
-     zetaOptArr[1,1],
+     c(mu,mu),
+     c(lambda,lambda),
+     c(nu,nu),
+     c(zetaOptArr[1,1], zetaOptArr[2,1]),
      lesDistr,
      relWeights,
      OpChType = "wAFROC",
@@ -884,9 +889,18 @@ wafroc <- PlotRsmOperatingCharacteristics(
 ```
 
 
-```{r optim-op-point-application-wafroc, fig.cap="Results of wAFROC-AUC based optimizations; wAFROC curves corresponding to $\\mu = 0.75$, red curve, and $\\mu = 1.5$, blue curve.", fig.show='hold', echo=FALSE}
+```{r optim-op-point-application-wafroc, fig.cap="Red line and dots: wAFROC-AUC based optimization; blue line and dots: Youden-index based optimization. The two wAFROC-AUCs are 0.774 and 0.770, respectively.", fig.show='hold', echo=FALSE}
 grid.arrange(wafroc)
 ```
+
+
+
+## Discussion {#optim-op-point-discussion}
+
+Described is a method for finding the optimal operating point on an FROC curve. The method varies the reporting threshold to maximize the area under the wAFROC. An alternate method, based on maximization of the well-known Youden-index, was also tested. Both methods are illustrated using the radiological search model to parameterize the FROC data. In all cases studied the Youden-index based method selected a stricter reporting threshold than optimal, resulting in lower wAFROC-AUC as compared to wAFROC-AUC based optimization. In some situations the differences were relatively large. The results are illustrated using FROC curves, which are quite familiar to CAD designers. 
+
+The method was applied to a quasi-FROC dataset created from an originally LROC dataset. For this dataset the optimized wAFROC-AUC was marginally superior to that using the Youden-index.  
+
 
 
 
