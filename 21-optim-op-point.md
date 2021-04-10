@@ -17,34 +17,37 @@ output:
 
 
 ## How much finished {#optim-op-point-how-much-finished}
-40%
-Major update to 21-optim-op-point.Rmd - need to resolve plots in vary mu
+80%
+
+Discussion and Intro need more work; coding is done
 
 
 ## Introduction {#optim-op-point-intro}
 
-This chapter deals with finding the optimal reporting threshold of an algorithmic observer, such as CAD. We assume that designer level FROC data is available for the algorithm: the data consists of mark-rating pairs, with the continuous-scale ratings extending from low to high values, and a decision needs to be made as to which of these marks, if any, are to be reported to the radiologist. This is a familiar problem faced by a CAD algorithm designer, and to the best of my knowledge, it has not been solved. 
+This chapter deals with finding the optimal reporting threshold of an algorithmic observer, such as CAD. We assume that designer level FROC data is available for the algorithm: the data consists of mark-rating pairs, with the continuous-scale ratings extending from low to high values, and a decision needs to be made as to the optimal reporting threshold, i.e., the minimum rating of a mark before it is shown to the radiologist. This is a familiar problem faced by a CAD algorithm designer. 
 
-A proposed approach is to set the operating point on the ROC curve such as to maximize the Youden-index. The Youden-index is defined as the sum of sensitivity and specificity minus one. Typically it is maximized at the point that is closest to the (0,1) point on the ROC. However, in practice, CAD manufacturers set a site-specific reporting threshold in consultation with the radiologists who will be using the algorithm. For example, if radiologists are comfortable with more false marks as the price of potentially greater lesion-level sensitivity, the reporting threshold is adjusted downward. At sites where the radiologists are uncomfortable with more false marks being shown, the reporting threshold is adjusted upward.
+This problem has been solved in the context of ROC analysis [@metz1978rocmethodology], namely, the optimal point on the ROC corresponds to a slope determined by disease prevalence and the cost of decisions in the four basic binary paradigm categories: true and false positives and true and false negatives. In practice the costs are very difficult to quantify. However, for equal numbers of diseased and non-diseased cases and equal costs it can be shown that the slope of the ROC curve at the optimal point is unity. For a proper ROC curve this corresponds to the point that maximizes the Youden-index [@youden1950index], defined as the sum of sensitivity and specificity minus one. Typically it is maximized at the point that is closest to the (0,1) corner of the ROC. 
 
-This chapter describes a method of finding the optimal reporting threshold based on maximizing the AUC under the wAFROC curve. For completeness it is compared to the Youden-index based method.  
+CAD produces FROC data and lacking a procedure for setting it analytically, CAD manufacturers, in consultation with radiologists, set site-specific reporting thresholds. For example, if radiologists at a site are comfortable with more false marks as the price of potentially greater lesion-level sensitivity, the reporting threshold for them is adjusted downward. 
+
+This chapter describes an analytic method for finding the optimal reporting threshold. The method is based on maximizing the AUC under the wAFROC curve. The method is compared to the Youden-index based method.   
 
 
 
 ## Methods {#optim-op-point-methods}
 
-The RSM (radiological search model) parameters are $\lambda$, $\nu$, $\mu$ and $\zeta_1$. The ROC, FROC and wAFROC curves are completely defined by them. The parameters have the following meanings:
+The ROC, FROC and wAFROC curves are completely defined by the RSM (radiological search model) parameters: $\lambda$, $\nu$, $\mu$ and $\zeta_1$, which have the following meanings:
 
-* The $\mu$ parameter is the perceptual signal to noise ratio of lesions measured under location-known-exactly conditions. These have a direct effect on the search mechanism, since, as $\mu$ increases, lesions are more likely to be found and non-diseased regions are less likely to be mistaken for lesions. Higher values of $\mu$ lead to increased overall performance of the algorithm.
+* The $\mu$ parameter is the perceptual signal to noise ratio of lesions measured under location-known-exactly conditions. Higher values of $\mu$ lead to increased overall performance of the algorithm.
 
-* The $\lambda$ parameter determines the number of non-lesion localizations, NLs, per case (location level "false positives"). Lower values lead to fewer NL marks and increased overall performance of the algorithm.
+* The intrinsic $\lambda$ parameter determines the number of non-lesion localizations, NLs, per case (location level "false positives"). Lower values lead to fewer NL marks and increased algorithm performance. It is related to the physical $\lambda'$ parameter by $\lambda' = \lambda/\mu$. The physical parameter $\lambda'$ equals the mean of the assumed Poisson distribution of NLs per case.
 
-* The $\nu$ parameter determines the probability of a lesion localizations, LLs, (location level "true positives"). Higher values lead to more LL marks.
+* The intrinsic $\nu$ parameter determines the probability of a lesion localizations, LLs, (location level "true positives"). Higher values lead to more LL marks. It is related to the physical $\nu'$ parameter by $\nu' = 1 - \exp(-\mu \nu)$. The physical parameter $\nu'$ equals the success probability of the assumed binomial distribution of LLs per case.
 
-* The $\zeta_1$ parameter determines if a suspicious region found by the algorithm is actually marked. The higher this value, the fewer the reported marks.
+* The $\zeta_1$ parameter determines if a suspicious region found by the algorithm is actually marked. The higher this value, the fewer the reported marks. The objective is to optimize $\zeta_1$. 
 
 
-In the following sections each of the first three parameters is varied in turn and the corresponding optimal $\zeta_1$ determined by maximizing one of two figures of merit (FOMs) namely, the wAFROC-AUC and the Youden-index. 
+In the following sections each of the first three parameters is varied in turn and the corresponding optimal $\zeta_1$ determined by maximizing one of two figures of merit (FOMs), namely, the wAFROC-AUC and the Youden-index. 
 
 
 ### Functions to be maximized
@@ -194,17 +197,17 @@ for (y in 1:2) {
 
 Table \@ref(tab:optim-op-point-table1) summarizes the results. The column labeled "FOM" shows the quantity being maximized, "lambda" corresponds to the 4 values of $\lambda$, "zeta1" is the optimal value of $\zeta_1$ that maximizes FOM, "wAFROC" is the wAFROC-AUC, "ROC" is the AUC under the ROC curve, i.e., ROC-AUC, and "OptOpPt" is the optimal operating point on the FROC curve. 
 
-Focusing on the wAFROC-AUC based optimizations (first four rows of table), it is seen that as $\lambda$ increases:
+For the wAFROC-AUC based optimizations (first four rows of table), as $\lambda$ increases:
 
 * The optimal threshold $\zeta_1$ increases;
 * wAFROC-AUC decreases;
 * ROC-AUC decreases;
-* The optimal operating point moves to lower LLF values, i.e., lower values of lesion-level "sensitivity".
-* TBA comment on broad maxima for $\zeta_1$ = 0.310 to 0.386 
+* The optimal operating point moves to lower LLF values, i.e., lower values of location-level "sensitivity".
+* The advantage of wAFROC-AUC over Youden-index based optimizations, as measured by the differences between the corresponding wAFROC-AUCs, decreases with increasing $\lambda$: `fomMaxArr[1,] - fomMaxArr[2,]` = 0.024, 0.018, 0.007, 0.001, where the successive values correspond to $\lambda = 1, 5, 10, 15$.   
 
-The $\lambda$ Poisson parameter controls the average number of latent (i.e., perceived; it is marked if its confidence level exceeds $\zeta_1$) non-lesion localizations (NLs or location-level "false-positives") per case. For example, for $\mu = 2$ and $\lambda = 1$, the average number of latent NLs per case is $\lambda' = \lambda /\mu = 0.5$, i.e., an average of one latent NL every two non-diseased case. With increasing numbers of NLs it is necessary to increase the reporting threshold and LLF decreases. Also, overall CAD performance, regardless of how it is measured (i.e., wAFROC-AUC or ROC-AUC), decreases.   
+The $\lambda'$ Poisson parameter controls the average number of perceived NLs per case. For example, for $\mu = 2$ and $\lambda = 1$, the average number is $\lambda' = \lambda /\mu = 0.5$, i.e., an average of one perceived NL every two non-diseased case. With increasing numbers of NLs per case it is necessary to increase the reporting threshold and LLF consequently decreases. Also, overall CAD performance, regardless of how it is measured (i.e., wAFROC-AUC or ROC-AUC), decreases.   
 
-Similar trends are observed for the Youden-index based optimizations (last four rows of table). However, Youden-index based optimizations compared as a group to wAFROC-AUC based optimizations show that the former yield higher reporting thresholds, lower wAFROC-AUC, lower ROC-AUC and lower LLF values. 
+Similar trends are observed for the Youden-index based optimizations (last four rows of table). However, Youden-index based optimizations compared as a group to wAFROC-AUC based optimizations show that Youden yields higher reporting thresholds, lower wAFROC-AUC, lower ROC-AUC and lower LLF values. 
 
 
 
@@ -295,7 +298,7 @@ Similar trends are observed for the Youden-index based optimizations (last four 
 
 
 
-As regards displaying FROC curves with superimposed optimal operating points, one could generate 8 plots, each corresponding to a row of the preceding table, but there is a more efficient method. The FROC curve is defined in terms of the RSM parameters as follows:
+One could display 8 FROC plots, each corresponding to a row of the preceding table, but there is a more efficient method. The FROC curve is defined in terms of the RSM parameters as follows:
 
 
 
@@ -312,19 +315,6 @@ LLF\left ( \zeta, \mu, \nu', \overrightarrow{f_L} \right ) =& \nu' \Phi \left ( 
 Here $\overrightarrow{f_L}$ is the lesion-distribution vector, `c(0.5, 0.5)` in the current example. 
 
 The *end-point* of the FROC defined by $\left ( \lambda', \nu' \right )$ is not to be confused with the *optimal* value of $\zeta_1$; the former corresponds to $\zeta_1 = -\infty$ while the latter is a finite value of $\zeta_1$ as found by the optimization procedure.
-
-
-The *physical* parameters $\lambda'$ and $\nu'$, that determine the FROC, are related to the *intrinsic* parameters $\mu$, $\lambda$ and $\nu$ by: 
-
-\begin{equation}
-\left. 
-\begin{aligned}
-\lambda' =& \frac{\lambda  }{\mu} \\
-\nu' =& 1 - exp\left (-\mu \nu \right ) 
-\end{aligned}
-\right \}
-(\#eq:rsm-intrinsic-physical)
-\end{equation}
 
 
 Since the $\Phi$ function ranges from one to unity, the *four FROC curves for different values of $\lambda$ are scaled versions of a single curve whose x-axis ranges from 0 to 1*. The single curve corresponds to $\lambda' = 1$ and the true curves are obtained by scaling this curve along the x-axis by the appropriate $\lambda'$ factor. With this understanding one can display 4 FROC curves with a single FROC curve where the x-axis is $NLF \left ( \zeta, \lambda' = 1 \right )$. The true FROC curve is defined by:  
@@ -364,7 +354,7 @@ The left panel in \@ref(fig:optim-op-point-vary-lambda) shows the optimal operat
 
 These plots illustrate the previous comments, namely, as $\lambda$ increases, *the optimal operating point moves down the scaled curve*.
 
-The right panel shows the optimal operating point when the Youden-index is maximized. It shows the same general features as the previous example but the group of four operating points in the right panel are below-left those in the left panel, representing higher values of optimal $\zeta_1$, i.e., a more stringent criteria. As seen in the preceding table the overly strict critera obtained using Youden-index based optimization, leads to lower true performance: i.e., lower wAFROC-AUC and lower ROC-AUC.
+The right panel shows the optimal operating point when the Youden-index is maximized. It shows the same general features as the previous example but the group of four operating points in the right panel are below-left those in the left panel, representing higher values of optimal $\zeta_1$, i.e., a more stringent criteria. As seen in the preceding table the overly strict criteria, using Youden-index based optimization, leads to lower true performance: i.e., lower wAFROC-AUC and lower ROC-AUC, and lower LLF.
 
 
 The FROC curve does not represent true performance. To visualize true performance one compares wAFROC curves.    
@@ -485,14 +475,15 @@ For $\mu = 2$ and $\lambda= 5$, wAFROC-AUC and Youden-index based optimizations 
 </table>
 
 
-Focusing on the wAFROC-AUC based optimizations (first four rows of table), it is seen that as $\nu$ increases: 
+Focusing on the wAFROC-AUC based optimizations (first four rows of table), as $\nu$ increases: 
 
 * The optimal threshold $\zeta_1$ decreases, resulting in more marks being reported; wAFROC-AUC increases; ROC-AUC increases and the optimal operating point on the FROC moves to higher LLF values, i.e., higher values of lesion-level "sensitivity".
 
-All of these are opposite to the effect of increasing $\lambda$. The $\nu'$ binomial success probability parameter, defined in Eqn. \@ref(eq:rsm-intrinsic-physical), is the probability of a latent lesion localization (LL or "true-positive"). For example, for $\mu = 2$ and $\nu = 0.1$, $\nu' = 1 - \exp(-\mu \nu)$ = 0.1812692, i.e., an average of 18 percent of lesions present are found by the algorithm.   
+All of these are opposite to the effect of increasing $\lambda$. The $\nu'$ binomial success probability parameter is the probability of a perceived LL event. For example, for $\mu = 2$ and $\nu = 0.1$, $\nu' = 1 - \exp(-\mu \nu)$ = 0.1812692, i.e., an average of 18 percent of lesions present are found by the algorithm at the *initial detection* stage, using terminology in [@edwards2002maximum].   
 
-Similar trends are observed for the Youden-index based optimizations (last four rows of table). Youden-index based optimizations (last four rows of table) compared to wAFROC-AUC based optimizations show that the former yields higher reporting thresholds, lower wAFROC-AUC, lower ROC-AUC and lower LLF values. 
+With one exception similar trends are observed for the Youden-index based optimizations (last four rows of table). As a group Youden-index based optimizations (last four rows of table) compared to wAFROC-AUC based optimizations show that the former yields higher reporting thresholds, lower wAFROC-AUC, lower ROC-AUC and lower LLF values. 
 
+The exception is that as $\nu$ increases the optimal threshold increases, but more slowly. The increasing separation of the two underlying probability density functions that generate the ROC causes the optimal threshold to increase (similar to the explanation in Section \@ref(optim-op-point-vary-mu)).
 
 
 
@@ -627,22 +618,16 @@ For $\nu = 1$ and $\lambda= 1$ wAFROC-AUC and Youden-index based optimizations w
 </table>
 
 
-As evident from Eqn. \@ref(eq:rsm-intrinsic-physical), increasing $\mu$, while holding $\lambda$ and $\nu$ constant, simultaneously decreases $\lambda'$ and increases $\mu'$. As the latter two parameters work in opposite directions (increasing one has a similar effect as decreasing the other) the simultaneous changes result in an amplified effect. The values in the table can be understood from this. 
+Increasing $\mu$, while holding $\lambda$ and $\nu$ constant, *simultaneously decreases* $\lambda'$ and increases $\mu'$. As the latter two parameters work in opposite directions (increasing one has a similar effect as decreasing the other) the simultaneous changes result in an amplified effect. The values in the table can be understood from this. 
 
-Focusing on the wAFROC-AUC based optimizations (first four rows of table), it is seen that as $\mu$ increases the reporting threshold $\zeta_1$ decreases, both wAFROC-AUC and ROC-AUC increase, the FROC end-point moves to the upper left, and the optimal operating point moves to higher LLF values.
+For the wAFROC-AUC based optimizations (first four rows of table), as $\mu$ increases the reporting threshold $\zeta_1$ decreases, both wAFROC-AUC and ROC-AUC increase, and the optimal operating point moves to higher LLF values.
 
 
-* From Table \@ref(tab:optim-op-point-table3) for the lowest value $\mu = 0.75$ the end-point of the FROC, corresponding to $\zeta_1 = -\infty$, is the farthest to the right and lowest in the vertical direction, and the optimal operating point is closest to the origin, i.e., (0.103, 0.132). wAFROC-AUC performance = 0.518 is least as is ROC-AUC = 0.587. ^[With even lower performance - achieved by choosing, for example, a smaller value of $\mu$, both wAFROC and ROC AUCs approach 0.5 and the optimal operating point is at the origin - basically the algorithm is so poor that none of its marks should be shown to the radiologist.] 
+For the Youden-index based optimizations (last four rows of table), as $\mu$ increases the reporting threshold $\zeta_1$ increases (but the magnitude of the change is smaller than for the first four rows), both wAFROC-AUC and ROC-AUC increase, and the optimal operating point moves to higher LLF values. 
 
-* As $\mu$ increases, the FROC end-point moves to the upper left and the optimal operating point moves up.
+The effect of increasing $\mu$ can be understood as resulting from the competing effects of *greater search performance*, greater numbers of LLs and fewer NLs, both allowing the threshold to be moved down, and *greater classification performance*, allowing the threshold to be moved up (as the separation of two unit normal distribution increases, the optimal threshold for discriminating between them increases).  
 
-* At the highest value $\mu = 1.5$ the end-point of the FROC is the closest to (0,1), and the optimal operating point is farthest from the origin, i.e., (0.404, 0.747). wAFROC-AUC performance = 0.777 is greatest as is ROC-AUC = 0.875. With good performance one shows lower confidence level marks: $\zeta_1$ = -0.268 than is possible with poorer performance. With even higher values of $\mu$ both wAFROC and ROC AUCs approach 1 and the optimal operating point approaches (0,1) - the algorithm is so good that all of its marks should be shown to the radiologist. 
 
-* At the lowest value $\mu = 0.75$ the end-point of the FROC is at (0.476, 0.343). wAFROC-AUC performance = 0.493 and ROC-AUC = 0.668, both of which are smaller than the values obtained using wAFROC-AUC maximization. 
-
-* At the highest value $\mu = 1.5$ the end-point of the FROC at (0.191, 0.641). wAFROC-AUC performance = 0.760 and ROC-AUC = 0.850, both of which are smaller that the values obtained using wAFROC-AUC maximization. 
-
-* TBA With one exception the operating points in the right panel are below-left (i.e., represent higher thresholds) those in the left panel. The Youden-index based optimization yields stricter reporting threshold. Somewhat paradoxically, for the lowest value of $\mu$ the method predicts a lenient threshold.  
 
 
 
@@ -695,7 +680,7 @@ Assume that one has designed an algorithmic observer that has been optimized wit
 
 ## An application {#optim-op-point-application}
 
-TBA Fit the LROC dataset to the RSM.
+The standalone CAD LROC dataset described in [@hupse2013standalone] was used to create the quasi-FROC ROC-AUC equivalent dataset embedded in `RJafroc` as object `datasetCadSimuFroc`. In the following code the first reader for this dataset, corresponding to CAD, is extracted using `DfExtractDataset` (the other readers, corresponding to radiologists who interpreted the same cases, are not used here). The function `DfFroc2Roc` converts this to an ROC dataset. The function `DfBinDataset` bins the data to about 7 bins. One lesion per abnormal case is assumed: `lesDistr = c(1)`. `FitRsmRoc` fits the binned ROC dataset to the radiological search model RSM. Object `fit` contains all necessary parameters required to perform the optimizations described in previous sections. 
 
 
 ```r
@@ -705,13 +690,9 @@ dsCadRoc <- DfFroc2Roc(dsCad)
 dsCadRocBinned <- DfBinDataset(dsCadRoc, opChType = "ROC")
 lesDistr <- c(1)
 fit <- FitRsmRoc(dsCadRocBinned, lesDistr)
-mu <- fit$mu
-lambdaP <- fit$lambdaP
-nuP <- fit$nuP
-x <- UtilPhysical2IntrinsicRSM(mu, lambdaP, nuP)
-lambda <- x$lambda
-nu <- x$nu
 ```
+
+
 
 
 
@@ -756,6 +737,8 @@ Table \@ref(tab:optim-op-point-table4) summarizes the results.
 </table>
 
 
+The dataset is characterized by a large $\lambda$ parameter and, consistent with the finding in \@ref(optim-op-point-vary-lambda), the advantage of wAFROC-AUC over Youden-index based optimization, as measured by the difference in corresponding wAFROC-AUCs, is small.
+
 
 
 
@@ -783,11 +766,11 @@ Fig. \@ref(fig:optim-op-point-application-froc) shows FROC curves with superimpo
 
 ## Discussion {#optim-op-point-discussion}
 
-Described is a method for finding the optimal operating point on an FROC curve. The method varies the reporting threshold to maximize the area under the wAFROC. An alternate method, based on maximization of the well-known Youden-index, was also tested. Both methods are illustrated using the radiological search model to parameterize the FROC data. In all cases studied the Youden-index based method selected a stricter reporting threshold than optimal, resulting in lower wAFROC-AUC as compared to wAFROC-AUC based optimization. In some situations the differences were relatively large. The results are illustrated using FROC curves, which are quite familiar to CAD designers. 
+Described is a method for finding the optimal operating point on an FROC curve. The method consists of varying the reporting threshold to maximize the area under the wAFROC. An alternate method, based on maximization of the Youden-index, was also tested. Both methods are illustrated using the radiological search model to parameterize the FROC data. In all cases studied the Youden-index based method selected a stricter reporting threshold than optimal, resulting in lower wAFROC-AUC and ROC-AUC as compared to wAFROC-AUC based optimization. The results are illustrated using FROC curves, which are more familiar to CAD designers. 
 
 The method was applied to a quasi-FROC dataset created from an originally LROC dataset. For this dataset the optimized wAFROC-AUC was marginally superior to that using the Youden-index.  
 
-
+With increasing $\lambda$ every case is guaranteed at least one z-sample, and the model becomes more ROC-like.
 
 
 
