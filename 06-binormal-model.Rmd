@@ -13,6 +13,32 @@ library(grid)
 library(gridExtra)
 ```
 
+
+```{r, echo=FALSE}
+OpPtStr <- function(x,y) {
+  y <- paste0("(", sprintf("%.3f", x), ", ", sprintf("%.3f", y), ")")
+  return(y)
+}
+
+simplePrint <- function(x) {
+  sprintf("%.3f", x)
+}
+
+Wilcoxon <- function (zk1, zk2)
+{
+  K1 = length(zk1)
+  K2 = length(zk2)
+  W <- 0
+    for (k1 in 1:K1) {
+      W <- W + sum(zk1[k1] < zk2)
+      W <- W + 0.5 * sum(zk1[k1] == zk2)
+    }
+    W <- W/K1/K2
+  return (W)
+}
+```
+
+
 ```{r, echo=FALSE}
 plotROC <- function (mu, sigma, FPF, TPF)
 {
@@ -204,7 +230,7 @@ TPF = \Phi\left ( \frac{\mu + \Phi^{-1}\left (FPF  \right )}{\sigma} \right )
 This equation gives the dependence of TPF on FPF, i.e., the equation for the ROC curve. It will be put into standard notation next.  
 
 
-### Binormal model in standard notation
+### Binormal model in conventional notation
 The following notation is widely used in the literature: 
 
 \begin{equation} 
@@ -457,11 +483,14 @@ pdf_D\left ( \zeta \right ) = b\phi\left ( b\zeta-a \right ) = \frac{b}{\sqrt{2 
 \end{equation*}
 
 
-## Area under ROC curve {#binormal-model-roc-aucs} 
-Sensitivity and specificity are *dual* measures of overall performance. It is hard to unambiguosly compare two systems usng dual measures. For example, if sensitivity is higher for one system but specificity is higher for another, which is the superior system? Of course, this is a consequence of sensitivity and specificity depending on the position of the operating point on the ROC curve. As the position changes, both sensitivity and specificity are affected. 
+## Partial and full ROC AUC {#binormal-model-roc-aucs}
+
+Sensitivity and specificity are *dual* measures of overall performance. Using dual measures it is hard to unambiguosly compare two systems. For example, if sensitivity is higher for one system but specificity is higher for another, which is the superior system? Of course, this is a consequence of sensitivity and specificity depending on the position of the operating point on the ROC curve. As the position changes, both sensitivity and specificity are affected in opposite directions. Desirable is a *single* measure of performance that takes this variation into account. 
+
+Generally accepted measures are the binormal model predicted partial-area measure $A_{z;c}$, the full-area $A_z$ under the ROC curve, and the $d'$ index. Here $c$ is the FPF value determining the upper limit of the integration for the partial area AUC. It corresponds to threshold $\zeta_1$ defined by Eqn.  \@ref(eq:binormal-model-zeta-c-relation).
 
 
-Desirable is a *single* measure of performance that takes into account performance over the entire ROC curve. Generally accepted measures are the binormal model predicted full-area $A_z$ under the ROC curve, partial-area measures, and the $d'$ index, which is related to $Az$, see Eqn. \@ref(eq:binormal-model-ab-2dprime). 
+### Partial AUC {#binormal-model-partial-auc}
 
 Section \@ref(binormal-model-appendix-1-partial-auc) derives the formula for the partial-area under the unequal-variance binormal model and the final result is:
 
@@ -485,7 +514,59 @@ $A_{z;c}$ is the area under the partial ROC curve extending from $FPF = 0$ to $F
 (\#eq:binormal-model-rho-final)
 \end{equation}
 
-The bivariate 2D integral can be evaluated numerically using function `pmvnorm` in `R` package `mvtnorm`. 
+The bivariate 2D integral can be evaluated numerically. The following code illustrates calculation of the partial-area measure using the function `pmvnorm` in `R` package `mvtnorm`. The following parameter values were used: $a = 2$, $b = 1$ and $\zeta_1 = 1.5$. The parameter $b$ was deliberately chosen equal to one so that we do not have to worry about improper ROC curves.
+
+
+
+```{r}
+a <- 2;b <- 1; zeta1 <- 1.5
+A_z <- pnorm(a/sqrt(1+b^2))
+fpf <- pnorm(-zeta1)
+tpf <- pnorm(a - b * zeta1)
+rho <- -b/sqrt(1+b^2)
+Lower1 <- -Inf
+Upper1 <- qnorm(fpf)
+Lower2 <- -Inf
+Upper2 <- a/sqrt(1+b^2)
+sigma <- rbind(c(1, rho), c(rho, 1))
+A_zc <- as.numeric(pmvnorm(
+  c(Lower1, Lower2), 
+  c(Upper1, Upper2), 
+  sigma = sigma))
+```
+
+
+The partial-area measure is $A_{z;c}$ = `r A_zc`. The value is small because the reporting threshold is high. However, this is not be confused with true performance of the observer, as shown next.
+
+The following code generates 10,000 pairs of ratings for two arrays: `z[1,]` and `z[2,]`. The first array corresponds to non-diseased cases and the second to diseased cases. Note the usage of the a,b notation to define the two distributions. The array `zc`, initially a copy of `z`, is selectively binned by setting all ratings less than $\zeta_1$ to -100. The ordering information for these z-samples is lost. It is shown in a following section, TBA, that true AUC of the partial-area observer, including the area under the straight line section from $(FPF,TPF)$ to $(1,1)$ equals $A_{z;c,\text{TRUE}} = A_{z;c} + \frac{(1-FPF)(1+TPF)}{2}$, where $(FPF, TPF)$ is the operating point defined by threshold $\zeta_1$. The code prints the predicted and observer full areas under the ROCs followed by the predicted and observed partial areas under the ROCs. With this many cases sampling variability is small and the predicted and observed values are close. 
+
+
+```{r}
+npairs <- 10000
+z <- array(dim = c(2, npairs))
+z[1,] <- rnorm(npairs, sd = b)
+z[2,] <- rnorm(npairs, mean = a, sd = 1)
+zc <- z
+zc[1,z[1,] < zeta1] <- -100 # ratings of partial area observer
+zc[2,z[2,] < zeta1] <- -100 # do:
+cat("A_z predicted = ", 
+    A_z, 
+    "\nA_z observed = ", 
+    Wilcoxon(z[1,], z[2,]),"\n")
+cat("A_z{c;true} predicted = ", 
+    A_zc + (1-fpf)*(1+tpf)/2, 
+    "\nA_z{c;true} observed = ", 
+    Wilcoxon(zc[1,], zc[2,]),"\n")
+```
+
+
+$A_{z;c,\text{TRUE}}$ defines the classification ability of the observer, i.e. the ability of the observer to separate the two classes of cases: non-diseased and diseased. Equivalently, it is the fraction correct of the observer's decisions in a 2AFC task where the observer is presented pairs of non-diseased and diseased cases and is asked to choose the diseased cases. This is measured by the `Wilcoxon` function used in the code: if the z-sample of a diseased case exceeds that of a non-diseased case one adds unity to a zero-initialized counter; if they are equal one adds 0.5, and finally one divides the number of comparisons.
+
+The reason $A_{z;c,\text{TRUE}} < A_z$ is because ordering information is lost for all cases with z-samples less than $\zeta_1$. Note also that $A_{z;c,\text{TRUE}} >> A_{z;c}$, because of the large contribution from the area under the straight line. 
+
+
+
+### Full AUC {#binormal-model-full-auc}
 
 A special case of this formula is the area under the full ROC curve, shown below using both parameterizations of the binormal model:
 
@@ -494,7 +575,10 @@ A_z=\Phi\left ( \frac{a}{\sqrt{1+b^2}} \right )=\Phi\left ( \frac{\mu}{\sqrt{1+\
 (\#eq:binormal-model-ab-2az)
 \end{equation} 
 
-The binormal fitted AUC increases as $a$ increases or as $b$ decreases. Equivalently, it increases as $\mu$ increases or as $\sigma$ decreases. 
+The binormal fitted AUC increases as $a$ increases or as $b$ decreases. Equivalently, it increases as $\mu$ increases or as $\sigma$ decreases. In the example just given, the full AUC is $A_z$ = `r A_z`.
+
+
+### The d' measure {#binormal-model-d-prime}
 
 The $d'$ parameter is defined as the separation of two unit-variance normal distributions yielding the same AUC as that predicted by the $(a,b)$ parameter binormal model. It is defined by:
 
@@ -505,7 +589,7 @@ d'=\sqrt{2}\Phi^{-1}\left ( A_z \right )
 
 
 ## Optimal operating point on the ROC curve {#binormal-model-optimal-op-pt} 
-While 
+TBA While 
 
 [@metz1978rocmethodology]  
 [@youden1950index]
@@ -515,24 +599,22 @@ In this section we focus on ROC-AUC performance, meaning the full-area (AUC) und
 
 Changing the reporting threshold $\zeta_1$ moves the operating point along the ROC curve, with each point corresponding to a pair of sensitivity-specificity values. This was the reason, Section \@ref(binary-task-model-auc-roc-important), for preferring, as a single figure of merit, the area under the full ROC curve in lieu of reporting pairs of values. *One might incorrectly assume that this means that ROC-AUC performance is independent of reporting threshold.* This section shows that true ROC-AUC performance of the observer does depend on choice of the reporting threshold and, additionally, that true  ROC-AUC performance is less than that of an observer adopting an infinitely low reporting threshold.
 
-* A *partial-area observer* is defined as one who rates cases according to two rules: 
+* A *partial-area observer* rates cases according to two rules: 
 
-    + Rule 1: For the sub-set of cases defined by those with with z-samples satisfying $z \ge \zeta_1$ the observer reports ratings exactly equal to the observed z-samples (or some monotonic transformation of the z-samples). 
+    + Rule 1: For the sub-set of cases defined by those with with z-samples satisfying $z \ge \zeta_1$ the observer reports ratings exactly equal to the observed z-samples (or some monotonic transformation of the z-samples). Alternatively, the observer adopts a large number of rating bins, so-called quasi-continuous ratings. 
     + Rule 2: For the remaining cases, i.e., those with $z < \zeta_1$, the observer assigns a *fixed value rating that is smaller than $\zeta_1$* (the exact value does not matter). 
 
-* In contrast the *full-area observer* is one who rates cases according to a single rule: namely, the reported ratings are exactly equal to the observed z-samples *for all cases*. 
+* In contrast the *full-area observer* rates cases according to a single rule: namely, the reported ratings are exactly equal to the observed z-samples *for all cases*. 
     + The full-area observer is identical to a partial-area observer with $\zeta_1 = -\infty$.
 
-* Unlike the full-area observer, the partial-area observer does not preserve rating-ordering information for all cases ^[Since cases with $z < \zeta_1$ are all assigned the same rating.]. Therefore performance of the partial-area observer is *smaller* than that of the full-area observer. ^[The same reasoning explains why AUC under the empirical ROC defined by a few (typically 5 or 6) ratings bins is smaller than that of the underlying ROC curve.]
+* Since cases with $z < \zeta_1$ are all assigned the same rating, the partial-area observer does not preserve rating-ordering information for all cases. Therefore performance of the partial-area observer is *smaller* than that of the full-area observer. The same reasoning explains why AUC under the *empirical* ROC defined by a few (typically 5 or 6) ratings bins is smaller than that achieved by adopting a large number of rating bins.
 
 
-For a sufficiently large number of cases the empirical ROC curve for the partial-area observer extends continuously from the origin to a limiting point determined by $\zeta_1$ followed by a discontinuous jump to the (1,1) point. The region between the limiting point and (1,1) is inaccessible to the observer. In the example plots below the partial-area observer curve is shown as a continuous line extending from the origin to the limiting point *plus* a dotted line extending from the limiting point to (1,1). The continuous section is determined by cumulating cases with z-samples with $z \ge \zeta_1$ while the (1,1) point is determined by cumulating all cases. 
-
-The ROC curve for both types of observers is shown in \@ref(fig:binormal-model-threshold-dependence-1) for the following parameters: $a = 2$, $b = 0.8$ and $\zeta_1 = 1.5$; $\zeta_1$ corresponds to $c \equiv FPF =  \Phi(-\zeta_1) = 0.0668$ and $TPF =  \Phi(a - b\zeta_1) = 0.788$. In other words the limiting point coordinates are (0.0668, 0.788), shown in the plot by the solid dot. The ROC curve of the partial-area observer stops at the solid dot, and the partial area AUC $A_{z;c}$ equals the area under the continuous section of the ROC curve ending at the solid dot, corresponding to $z \geq \zeta_1$. The full ROC curve, shown by the complete solid curve, extends from (0,0) to (1,1), the area under which is $A_z$ = 0.9408251. $A_z$ represents performance of the full-area observer who assigns ratings exactly equal to the observed z-samples for all cases (i.e., no exception is made for a sub-set of cases).
+For a sufficiently large number of cases the empirical ROC curve for the partial-area observer extends continuously from the origin to a limiting point determined by $\zeta_1$ followed by a discontinuous jump to the (1,1) point. The region between the limiting point and (1,1) is inaccessible to the observer. In the example plots below the partial-area observer curve is shown as a continuous line extending from the origin to the limiting point *plus* a dotted line extending from the limiting point to (1,1). The continuous section is determined by cumulating cases with z-samples $z \ge \zeta_1$ while the (1,1) point is determined by cumulating all cases. 
 
 
 ```{r echo=FALSE}
-a <- 2; b <- 0.8; zeta1Arr <- seq(1.5,5.5,0.05)
+zeta1Arr <- seq(zeta1,5.5,0.05)
 zeta1ArrAll <- seq(-3,5.5,0.05)
 FPF <- pnorm(-zeta1Arr)
 TPF <- pnorm(a - b*zeta1Arr)
@@ -547,14 +629,17 @@ p1 <- ggplot2::ggplot(continuous, aes(x = FPF, y = TPF)) +
 ```
 
 
+The ROC curve for both types of observers is shown in \@ref(fig:binormal-model-threshold-dependence-1) for the following parameters: $a = 2$, $b = 1$ and $\zeta_1 = 1.5$; $\zeta_1$ corresponds to $c \equiv FPF =  \Phi(-\zeta_1)$ = `r pnorm(-zeta1)` and $TPF =  \Phi(a - b\zeta_1)$ = `r pnorm(a - b * zeta1)`. In other words the limiting point coordinates are `r OpPtStr(FPF[1], TPF[1])`, shown in the plot by the solid dot. The ROC curve of the partial-area observer stops at the solid dot, and the partial area AUC $A_{z;c}$ equals the area under the continuous section of the ROC curve ending at the solid dot, corresponding to $z \geq \zeta_1$. The full ROC curve, shown by the complete solid curve, extends from (0,0) to (1,1), the area under which is $A_z$ = `r A_z``. $A_z$ represents performance of the full-area observer who assigns ratings exactly equal to the observed z-samples for all cases (i.e., no exception is made for a sub-set of cases).
 
 
-```{r binormal-model-threshold-dependence-1, fig.cap="A quasi-proper binormal ROC curve corresponding to a = 2 and b = 0.8. The solid dot is the operating point corresponding to $\\zeta_1 = 1.5$ representing the upper limit of the partial ROC curve. The dotted line connects the solid dot to (1,1). The solid curve extending from the origin to (1,1) represents the full ROC. Note that in the region above the solid dot the solid curve is above the dotted line, meaning true performance of an observer who only rates a sub-set of cases, those with z-samples greater than $\\zeta_1 = 1.5$, is less than performance of an observer who rates all cases.", fig.show='hold', echo=FALSE}
+
+
+```{r binormal-model-threshold-dependence-1, fig.cap="A quasi-proper binormal ROC curve corresponding to a = 2 and b = 1. The solid dot is the operating point corresponding to $\\zeta_1 = 1.5$ representing the upper limit of the partial ROC curve. The dotted line connects the solid dot to (1,1). The solid curve extending from the origin to (1,1) represents the full ROC. Note that in the region above the solid dot the solid curve is above the dotted line, meaning true performance of an observer who only rates a sub-set of cases, those with z-samples greater than $\\zeta_1 = 1.5$, is less than performance of an observer who rates all cases.", fig.show='hold', echo=FALSE}
 grid.arrange(p1)
 ```
 
 
-*To measure true performance of the partial-area observer one must, of course, include all cases.* True performance is measured by the area under the ROC curve from the origin to the solid dot *plus the area under the dotted line* extending from the solid dot to (1,1). The physical interpretation of the area under the dotted line is given - in the context of the wAFROC in \@ref(froc-meanings-two-theorems-2) - one simply replaces wLLF with TPF. True performance is denoted $A_{z;c,TRUE}$ and is defined by:
+*To measure true performance of the partial-area observer one must, of course, include all cases.* True performance is measured by the area under the ROC curve from the origin to the solid dot *plus the area under the dotted line* extending from the solid dot to (1,1). The physical interpretation of the area under the dotted line is given - in the context of the wAFROC in \@ref(froc-meanings-two-theorems-2) - in the current context one simply replaces wLLF with TPF. True performance is denoted $A_{z;c,TRUE}$ and is defined by:
 
 
 \begin{equation} 
@@ -567,40 +652,15 @@ In other words one adds to $A_{z;c}$ the area of the trapezoid with bases each e
 * According to Eqn. \@ref(eq:binormal-model-partial-area-true-performance), the area under the dotted line increases as $\text{FPF}$ decreases, i.e., as more non-diseased cases are unrated (using the abbreviation "rated" for cases with $z \ge \zeta_1$ and "unrated" for all other cases), and as $\text{TPF}$ increases, i.e., as more diseased cases are rated. Both observations are in keeping with the behavior of a valid FOM.
 * Failure to include the area under the straight-line extension results in not counting the full positive contribution to true performance of unrated non-diseased cases and rated diseased cases. 
 
-
-
-The following code illustrates calculation of the partial-area measure using the function `pmvnorm`. 
-
-
-
 ```{r}
-a <- 2;b <- 0.8; zeta1 <- 1.5
-Az <-pnorm(a/sqrt(1+b^2))
-fpf <- pnorm(-zeta1)
-tpf <- pnorm(a + b * qnorm(fpf))
-rho <- -b/sqrt(1+b^2)
-Lower1 <- -Inf
-Upper1 <- qnorm(fpf)
-Lower2 <- -Inf
-Upper2 <- a/sqrt(1+b^2)
-sigma <- rbind(c(1, rho), c(rho, 1))
-pAuc <- as.numeric(pmvnorm(
-  c(Lower1, Lower2), 
-  c(Upper1, Upper2), 
-  sigma = sigma))
-# add area under dashed line
-pAucTrue <- pAuc + (1 - fpf)*(1+tpf)/2
+pAucTrue <- A_zc + (1 - fpf)*(1+tpf)/2
+pAucTrue
 ```
-
-
-The area under the full curve is $A_z$ = `r Az`, the partial-area measure is $A_{z;c}$ = `r pAuc`, while true performance of the partial-area observer is $A_{z;c,\text{TRUE}}$ = `r pAucTrue`. For this example the major contribution to true performance comes from the area under the dotted straight line.
 
 The next figure, Fig. \@ref(fig:binormal-model-threshold-dependence-2) shows the variation of true performance $A_{z;c,\text{TRUE}}$ with FPF. The curve starts from (0, 0.5) and ends at (1, 0.9408251). For low values of FPF the curve is very steep while for FPF > 0.25 the curve levels out. 
 
 
 ```{r, echo=FALSE, cache=TRUE}
-a <- 2;b <- 0.8
-Az <-pnorm(a/sqrt(1+b^2))
 fpf <- c(seq(0.0 , 0.0625, 0.001), seq(0.0625, 1, 0.01)) # FPF array
 tpf <- pnorm(a + b * qnorm(fpf)) # TPF array
 rho <- -b/sqrt(1+b^2)
@@ -623,7 +683,7 @@ p2 <- ggplot2::ggplot(data = df, mapping = aes(x = FPF, y = pAUC_TRUE)) +
 ```
 
 
-```{r binormal-model-threshold-dependence-2, fig.cap="Variation of true performance pAUC_TRUE with FPF for a = 2 and b = 0.8. The curve levels out at pAUC_TRUE = $A_z$ = 0.9408251.", fig.show='hold', echo=FALSE}
+```{r binormal-model-threshold-dependence-2, fig.cap="Variation of true performance pAUC_TRUE with FPF for a = 2 and b = 1. The curve levels out at pAUC_TRUE = $A_z$ = 0.9408251.", fig.show='hold', echo=FALSE}
 grid.arrange(p2)
 ```
 
@@ -652,7 +712,7 @@ p1 <- ggplot2::ggplot(continuous, aes(x = FPF, y = TPF)) +
 
 ```{r, echo=FALSE, cache=TRUE}
 a <- 2;b <- 0.2
-Az <-pnorm(a/sqrt(1+b^2))
+A_z <- pnorm(a/sqrt(1+b^2))
 fpf <- c(seq(0.0 , 0.0625, 0.001), seq(0.0625, 1, 0.01)) # FPF array
 tpf <- pnorm(a + b * qnorm(fpf)) # TPF array
 rho <- -b/sqrt(1+b^2)
@@ -890,10 +950,10 @@ Under the null hypothesis (i.e., model is valid) $C^2$ is distributed as $\chi_{
 At the 5% significance level, one concludes that the fit is not good if $p < 0.05$. In practice one occasionally accepts smaller values of $p$, $p > 0.001$ before completely abandoning a model. It is known that adoption of a stricter criterion, e.g., $p > 0.05$, can occasionally lead to rejection of a retrospectively valid model [@RN300].
 
 ### Estimating the covariance matrix
-TBA See book chapter 6.4.3. This is implemented in RJafroc.
+TBA See book chapter 6.4.3. This is implemented in `RJafroc.`
 
 ### Estimating the variance of Az
-TBA See book chapter 6.4.4. This is implemented in RJafroc.
+TBA See book chapter 6.4.4. This is implemented in `RJafroc`.
 
 
 ## Discussion{#binormal-model-discussion}
