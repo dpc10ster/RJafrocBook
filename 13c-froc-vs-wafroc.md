@@ -12,12 +12,6 @@ output:
 
 
 
-```r
-OpPtStr <- function(x,y) {
-  y <- paste0("(", sprintf("%.3f", x), ", ", sprintf("%.3f", y), ")")
-  return(y)
-}
-```
 
 
 ## How much finished {#froc-vs-wafroc-how-much-finished}

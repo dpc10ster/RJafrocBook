@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-04-10}
+\date{2021-04-16}
 
 \begin{document}
 \maketitle
@@ -4733,7 +4733,7 @@ In an R-rating ROC study the observed ratings \(r\) take on integer values, 1 th
 \label{eq:binormal-modelZBinning}
 \end{equation}
 
-\includegraphics{06-binormal-model_files/figure-latex/unnamed-chunk-2-1.pdf}
+\includegraphics{06-binormal-model_files/figure-latex/unnamed-chunk-3-1.pdf}
 
 In the unequal-variance binormal model, the variance \(\sigma^2\) of the z-samples for diseased cases is allowed to be different from unity. Most ROC datasets are consistent with \(\sigma > 1\). The above figure, generated with \(\mu = 1.5, \sigma = 1.5, \zeta_1 = -2, \zeta_2 = -0.5, \zeta_3 = 1, \zeta_4 = 2.5\), illustrates how realized z-samples are converted to ratings, i.e., application of the binning rule \eqref{eq:binormal-modelZBinning}. For example, a case with z-sample equal to -2.5 would be rated ``1'', and one with z-sample equal to -1 would be rated ``2'', cases with z-samples greater than 2.5 would be rated ``5'', etc.
 
@@ -4803,8 +4803,8 @@ TPF = \Phi\left ( \frac{\mu + \Phi^{-1}\left (FPF  \right )}{\sigma} \right )
 
 This equation gives the dependence of TPF on FPF, i.e., the equation for the ROC curve. It will be put into standard notation next.
 
-\hypertarget{binormal-model-in-standard-notation}{%
-\subsection{Binormal model in standard notation}\label{binormal-model-in-standard-notation}}
+\hypertarget{binormal-model-in-conventional-notation}{%
+\subsection{Binormal model in conventional notation}\label{binormal-model-in-conventional-notation}}
 
 The following notation is widely used in the literature:
 
@@ -4890,11 +4890,14 @@ pdf_D\left ( \zeta \right ) = b\phi\left ( b\zeta-a \right ) = \frac{b}{\sqrt{2 
 \end{equation*}
 
 \hypertarget{binormal-model-roc-aucs}{%
-\section{Area under ROC curve}\label{binormal-model-roc-aucs}}
+\section{Partial and full ROC AUC}\label{binormal-model-roc-aucs}}
 
-Sensitivity and specificity are \emph{dual} measures of overall performance. It is hard to unambiguosly compare two systems usng dual measures. For example, if sensitivity is higher for one system but specificity is higher for another, which is the superior system? Of course, this is a consequence of sensitivity and specificity depending on the position of the operating point on the ROC curve. As the position changes, both sensitivity and specificity are affected.
+Sensitivity and specificity are \emph{dual} measures of overall performance. Using dual measures it is hard to unambiguosly compare two systems. For example, if sensitivity is higher for one system but specificity is higher for another, which is the superior system? Of course, this is a consequence of sensitivity and specificity depending on the position of the operating point on the ROC curve. As the position changes, both sensitivity and specificity are affected in opposite directions. Desirable is a \emph{single} measure of performance that takes this variation into account.
 
-Desirable is a \emph{single} measure of performance that takes into account performance over the entire ROC curve. Generally accepted measures are the binormal model predicted full-area \(A_z\) under the ROC curve, partial-area measures, and the \(d'\) index, which is related to \(Az\), see Eqn. \eqref{eq:binormal-model-ab-2dprime}.
+Generally accepted measures are the binormal model predicted partial-area measure \(A_{z;c}\), the full-area \(A_z\) under the ROC curve, and the \(d'\) index. Here \(c\) is the FPF value determining the upper limit of the integration for the partial area AUC. It corresponds to threshold \(\zeta_1\) defined by Eqn. \eqref{eq:binormal-model-zeta-c-relation}.
+
+\hypertarget{binormal-model-partial-auc}{%
+\subsection{Partial AUC}\label{binormal-model-partial-auc}}
 
 Section \ref{binormal-model-appendix-1-partial-auc} derives the formula for the partial-area under the unequal-variance binormal model and the final result is:
 
@@ -4917,7 +4920,61 @@ The threshold \(\zeta_1\) corresponding to \(FPF = c\) is given by:
 \label{eq:binormal-model-rho-final}
 \end{equation}
 
-The bivariate 2D integral can be evaluated numerically using function \texttt{pmvnorm} in \texttt{R} package \texttt{mvtnorm}.
+The bivariate 2D integral can be evaluated numerically. The following code illustrates calculation of the partial-area measure using the function \texttt{pmvnorm} in \texttt{R} package \texttt{mvtnorm}. The following parameter values were used: \(a = 2\), \(b = 1\) and \(\zeta_1 = 1.5\). The parameter \(b\) was deliberately chosen equal to one so that we do not have to worry about improper ROC curves.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a <-}\StringTok{ }\DecValTok{2}\NormalTok{;b <-}\StringTok{ }\DecValTok{1}\NormalTok{; zeta1 <-}\StringTok{ }\FloatTok{1.5}
+\NormalTok{A_z <-}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(a}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{b}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\NormalTok{fpf <-}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(}\OperatorTok{-}\NormalTok{zeta1)}
+\NormalTok{tpf <-}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(a }\OperatorTok{-}\StringTok{ }\NormalTok{b }\OperatorTok{*}\StringTok{ }\NormalTok{zeta1)}
+\NormalTok{rho <-}\StringTok{ }\OperatorTok{-}\NormalTok{b}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{b}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{Lower1 <-}\StringTok{ }\OperatorTok{-}\OtherTok{Inf}
+\NormalTok{Upper1 <-}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(fpf)}
+\NormalTok{Lower2 <-}\StringTok{ }\OperatorTok{-}\OtherTok{Inf}
+\NormalTok{Upper2 <-}\StringTok{ }\NormalTok{a}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{b}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{sigma <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, rho), }\KeywordTok{c}\NormalTok{(rho, }\DecValTok{1}\NormalTok{))}
+\NormalTok{A_zc <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{pmvnorm}\NormalTok{(}
+  \KeywordTok{c}\NormalTok{(Lower1, Lower2), }
+  \KeywordTok{c}\NormalTok{(Upper1, Upper2), }
+  \DataTypeTok{sigma =}\NormalTok{ sigma))}
+\end{Highlighting}
+\end{Shaded}
+
+The partial-area measure is \(A_{z;c}\) = 0.0352195. The value is small because the reporting threshold is high. However, this is not be confused with true performance of the observer, as shown next.
+
+The following code generates 10,000 pairs of ratings for two arrays: \texttt{z{[}1,{]}} and \texttt{z{[}2,{]}}. The first array corresponds to non-diseased cases and the second to diseased cases. Note the usage of the a,b notation to define the two distributions. The array \texttt{zc}, initially a copy of \texttt{z}, is selectively binned by setting all ratings less than \(\zeta_1\) to -100. The ordering information for these z-samples is lost. It is shown in a following section, TBA, that true AUC of the partial-area observer, including the area under the straight line section from \((FPF,TPF)\) to \((1,1)\) equals \(A_{z;c,\text{TRUE}} = A_{z;c} + \frac{(1-FPF)(1+TPF)}{2}\), where \((FPF, TPF)\) is the operating point defined by threshold \(\zeta_1\). The code prints the predicted and observer full areas under the ROCs followed by the predicted and observed partial areas under the ROCs. With this many cases sampling variability is small and the predicted and observed values are close.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{npairs <-}\StringTok{ }\DecValTok{10000}
+\NormalTok{z <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, npairs))}
+\NormalTok{z[}\DecValTok{1}\NormalTok{,] <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(npairs, }\DataTypeTok{sd =}\NormalTok{ b)}
+\NormalTok{z[}\DecValTok{2}\NormalTok{,] <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(npairs, }\DataTypeTok{mean =}\NormalTok{ a, }\DataTypeTok{sd =} \DecValTok{1}\NormalTok{)}
+\NormalTok{zc <-}\StringTok{ }\NormalTok{z}
+\NormalTok{zc[}\DecValTok{1}\NormalTok{,z[}\DecValTok{1}\NormalTok{,] }\OperatorTok{<}\StringTok{ }\NormalTok{zeta1] <-}\StringTok{ }\DecValTok{-100} \CommentTok{# ratings of partial area observer}
+\NormalTok{zc[}\DecValTok{2}\NormalTok{,z[}\DecValTok{2}\NormalTok{,] }\OperatorTok{<}\StringTok{ }\NormalTok{zeta1] <-}\StringTok{ }\DecValTok{-100} \CommentTok{# do:}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"A_z predicted = "}\NormalTok{, }
+\NormalTok{    A_z, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{A_z observed = "}\NormalTok{, }
+    \KeywordTok{Wilcoxon}\NormalTok{(z[}\DecValTok{1}\NormalTok{,], z[}\DecValTok{2}\NormalTok{,]),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{#> A_z predicted =  0.9213504 }
+\CommentTok{#> A_z observed =  0.9202708}
+\KeywordTok{cat}\NormalTok{(}\StringTok{"A_z\{c;true\} predicted = "}\NormalTok{, }
+\NormalTok{    A_zc }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{fpf)}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{tpf)}\OperatorTok{/}\DecValTok{2}\NormalTok{, }
+    \StringTok{"}\CharTok{\textbackslash{}n}\StringTok{A_z\{c;true\} observed = "}\NormalTok{, }
+    \KeywordTok{Wilcoxon}\NormalTok{(zc[}\DecValTok{1}\NormalTok{,], zc[}\DecValTok{2}\NormalTok{,]),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\CommentTok{#> A_z\{c;true\} predicted =  0.8244498 }
+\CommentTok{#> A_z\{c;true\} observed =  0.8232901}
+\end{Highlighting}
+\end{Shaded}
+
+\(A_{z;c,\text{TRUE}}\) defines the classification ability of the observer, i.e.~the ability of the observer to separate the two classes of cases: non-diseased and diseased. Equivalently, it is the fraction correct of the observer's decisions in a 2AFC task where the observer is presented pairs of non-diseased and diseased cases and is asked to choose the diseased cases. This is measured by the \texttt{Wilcoxon} function used in the code: if the z-sample of a diseased case exceeds that of a non-diseased case one adds unity to a zero-initialized counter; if they are equal one adds 0.5, and finally one divides the number of comparisons.
+
+The reason \(A_{z;c,\text{TRUE}} < A_z\) is because ordering information is lost for all cases with z-samples less than \(\zeta_1\). Note also that \(A_{z;c,\text{TRUE}} >> A_{z;c}\), because of the large contribution from the area under the straight line.
+
+\hypertarget{binormal-model-full-auc}{%
+\subsection{Full AUC}\label{binormal-model-full-auc}}
 
 A special case of this formula is the area under the full ROC curve, shown below using both parameterizations of the binormal model:
 
@@ -4926,7 +4983,10 @@ A_z=\Phi\left ( \frac{a}{\sqrt{1+b^2}} \right )=\Phi\left ( \frac{\mu}{\sqrt{1+\
 \label{eq:binormal-model-ab-2az}
 \end{equation}
 
-The binormal fitted AUC increases as \(a\) increases or as \(b\) decreases. Equivalently, it increases as \(\mu\) increases or as \(\sigma\) decreases.
+The binormal fitted AUC increases as \(a\) increases or as \(b\) decreases. Equivalently, it increases as \(\mu\) increases or as \(\sigma\) decreases. In the example just given, the full AUC is \(A_z\) = 0.9213504.
+
+\hypertarget{binormal-model-d-prime}{%
+\subsection{The d' measure}\label{binormal-model-d-prime}}
 
 The \(d'\) parameter is defined as the separation of two unit-variance normal distributions yielding the same AUC as that predicted by the \((a,b)\) parameter binormal model. It is defined by:
 
@@ -4938,7 +4998,7 @@ d'=\sqrt{2}\Phi^{-1}\left ( A_z \right )
 \hypertarget{binormal-model-optimal-op-pt}{%
 \section{Optimal operating point on the ROC curve}\label{binormal-model-optimal-op-pt}}
 
-While
+TBA While
 
 \citep{metz1978rocmethodology}\\
 \citep{youden1950index}
@@ -4952,17 +5012,17 @@ Changing the reporting threshold \(\zeta_1\) moves the operating point along the
 
 \begin{itemize}
 \item
-  A \emph{partial-area observer} is defined as one who rates cases according to two rules:
+  A \emph{partial-area observer} rates cases according to two rules:
 
   \begin{itemize}
   \tightlist
   \item
-    Rule 1: For the sub-set of cases defined by those with with z-samples satisfying \(z \ge \zeta_1\) the observer reports ratings exactly equal to the observed z-samples (or some monotonic transformation of the z-samples).
+    Rule 1: For the sub-set of cases defined by those with with z-samples satisfying \(z \ge \zeta_1\) the observer reports ratings exactly equal to the observed z-samples (or some monotonic transformation of the z-samples). Alternatively, the observer adopts a large number of rating bins, so-called quasi-continuous ratings.
   \item
     Rule 2: For the remaining cases, i.e., those with \(z < \zeta_1\), the observer assigns a \emph{fixed value rating that is smaller than \(\zeta_1\)} (the exact value does not matter).
   \end{itemize}
 \item
-  In contrast the \emph{full-area observer} is one who rates cases according to a single rule: namely, the reported ratings are exactly equal to the observed z-samples \emph{for all cases}.
+  In contrast the \emph{full-area observer} rates cases according to a single rule: namely, the reported ratings are exactly equal to the observed z-samples \emph{for all cases}.
 
   \begin{itemize}
   \tightlist
@@ -4970,20 +5030,20 @@ Changing the reporting threshold \(\zeta_1\) moves the operating point along the
     The full-area observer is identical to a partial-area observer with \(\zeta_1 = -\infty\).
   \end{itemize}
 \item
-  Unlike the full-area observer, the partial-area observer does not preserve rating-ordering information for all cases \footnote{Since cases with \(z < \zeta_1\) are all assigned the same rating.}. Therefore performance of the partial-area observer is \emph{smaller} than that of the full-area observer. \footnote{The same reasoning explains why AUC under the empirical ROC defined by a few (typically 5 or 6) ratings bins is smaller than that of the underlying ROC curve.}
+  Since cases with \(z < \zeta_1\) are all assigned the same rating, the partial-area observer does not preserve rating-ordering information for all cases. Therefore performance of the partial-area observer is \emph{smaller} than that of the full-area observer. The same reasoning explains why AUC under the \emph{empirical} ROC defined by a few (typically 5 or 6) ratings bins is smaller than that achieved by adopting a large number of rating bins.
 \end{itemize}
 
-For a sufficiently large number of cases the empirical ROC curve for the partial-area observer extends continuously from the origin to a limiting point determined by \(\zeta_1\) followed by a discontinuous jump to the (1,1) point. The region between the limiting point and (1,1) is inaccessible to the observer. In the example plots below the partial-area observer curve is shown as a continuous line extending from the origin to the limiting point \emph{plus} a dotted line extending from the limiting point to (1,1). The continuous section is determined by cumulating cases with z-samples with \(z \ge \zeta_1\) while the (1,1) point is determined by cumulating all cases.
+For a sufficiently large number of cases the empirical ROC curve for the partial-area observer extends continuously from the origin to a limiting point determined by \(\zeta_1\) followed by a discontinuous jump to the (1,1) point. The region between the limiting point and (1,1) is inaccessible to the observer. In the example plots below the partial-area observer curve is shown as a continuous line extending from the origin to the limiting point \emph{plus} a dotted line extending from the limiting point to (1,1). The continuous section is determined by cumulating cases with z-samples \(z \ge \zeta_1\) while the (1,1) point is determined by cumulating all cases.
 
-The ROC curve for both types of observers is shown in \ref{fig:binormal-model-threshold-dependence-1} for the following parameters: \(a = 2\), \(b = 0.8\) and \(\zeta_1 = 1.5\); \(\zeta_1\) corresponds to \(c \equiv FPF = \Phi(-\zeta_1) = 0.0668\) and \(TPF = \Phi(a - b\zeta_1) = 0.788\). In other words the limiting point coordinates are (0.0668, 0.788), shown in the plot by the solid dot. The ROC curve of the partial-area observer stops at the solid dot, and the partial area AUC \(A_{z;c}\) equals the area under the continuous section of the ROC curve ending at the solid dot, corresponding to \(z \geq \zeta_1\). The full ROC curve, shown by the complete solid curve, extends from (0,0) to (1,1), the area under which is \(A_z\) = 0.9408251. \(A_z\) represents performance of the full-area observer who assigns ratings exactly equal to the observed z-samples for all cases (i.e., no exception is made for a sub-set of cases).
+The ROC curve for both types of observers is shown in \ref{fig:binormal-model-threshold-dependence-1} for the following parameters: \(a = 2\), \(b = 1\) and \(\zeta_1 = 1.5\); \(\zeta_1\) corresponds to \(c \equiv FPF = \Phi(-\zeta_1)\) = 0.0668072 and \(TPF = \Phi(a - b\zeta_1)\) = 0.6914625. In other words the limiting point coordinates are (0.067, 0.691), shown in the plot by the solid dot. The ROC curve of the partial-area observer stops at the solid dot, and the partial area AUC \(A_{z;c}\) equals the area under the continuous section of the ROC curve ending at the solid dot, corresponding to \(z \geq \zeta_1\). The full ROC curve, shown by the complete solid curve, extends from (0,0) to (1,1), the area under which is \(A_z\) = 0.9213504`. \(A_z\) represents performance of the full-area observer who assigns ratings exactly equal to the observed z-samples for all cases (i.e., no exception is made for a sub-set of cases).
 
 \begin{figure}
 \centering
 \includegraphics{06-binormal-model_files/figure-latex/binormal-model-threshold-dependence-1-1.pdf}
-\caption{\label{fig:binormal-model-threshold-dependence-1}A quasi-proper binormal ROC curve corresponding to a = 2 and b = 0.8. The solid dot is the operating point corresponding to \(\zeta_1 = 1.5\) representing the upper limit of the partial ROC curve. The dotted line connects the solid dot to (1,1). The solid curve extending from the origin to (1,1) represents the full ROC. Note that in the region above the solid dot the solid curve is above the dotted line, meaning true performance of an observer who only rates a sub-set of cases, those with z-samples greater than \(\zeta_1 = 1.5\), is less than performance of an observer who rates all cases.}
+\caption{\label{fig:binormal-model-threshold-dependence-1}A quasi-proper binormal ROC curve corresponding to a = 2 and b = 1. The solid dot is the operating point corresponding to \(\zeta_1 = 1.5\) representing the upper limit of the partial ROC curve. The dotted line connects the solid dot to (1,1). The solid curve extending from the origin to (1,1) represents the full ROC. Note that in the region above the solid dot the solid curve is above the dotted line, meaning true performance of an observer who only rates a sub-set of cases, those with z-samples greater than \(\zeta_1 = 1.5\), is less than performance of an observer who rates all cases.}
 \end{figure}
 
-\emph{To measure true performance of the partial-area observer one must, of course, include all cases.} True performance is measured by the area under the ROC curve from the origin to the solid dot \emph{plus the area under the dotted line} extending from the solid dot to (1,1). The physical interpretation of the area under the dotted line is given - in the context of the wAFROC in \ref{froc-meanings-two-theorems-2} - one simply replaces wLLF with TPF. True performance is denoted \(A_{z;c,TRUE}\) and is defined by:
+\emph{To measure true performance of the partial-area observer one must, of course, include all cases.} True performance is measured by the area under the ROC curve from the origin to the solid dot \emph{plus the area under the dotted line} extending from the solid dot to (1,1). The physical interpretation of the area under the dotted line is given - in the context of the wAFROC in \ref{froc-meanings-two-theorems-2} - in the current context one simply replaces wLLF with TPF. True performance is denoted \(A_{z;c,TRUE}\) and is defined by:
 
 \begin{equation} 
 A_{z;c,\text{TRUE}} = A_{z;c} + \frac {\left ( 1 - FPF \right ) \left ( 1 + TPF \right )}{2}
@@ -5000,37 +5060,20 @@ In other words one adds to \(A_{z;c}\) the area of the trapezoid with bases each
   Failure to include the area under the straight-line extension results in not counting the full positive contribution to true performance of unrated non-diseased cases and rated diseased cases.
 \end{itemize}
 
-The following code illustrates calculation of the partial-area measure using the function \texttt{pmvnorm}.
-
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{a <-}\StringTok{ }\DecValTok{2}\NormalTok{;b <-}\StringTok{ }\FloatTok{0.8}\NormalTok{; zeta1 <-}\StringTok{ }\FloatTok{1.5}
-\NormalTok{Az <-}\KeywordTok{pnorm}\NormalTok{(a}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{b}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
-\NormalTok{fpf <-}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(}\OperatorTok{-}\NormalTok{zeta1)}
-\NormalTok{tpf <-}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(a }\OperatorTok{+}\StringTok{ }\NormalTok{b }\OperatorTok{*}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(fpf))}
-\NormalTok{rho <-}\StringTok{ }\OperatorTok{-}\NormalTok{b}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{b}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-\NormalTok{Lower1 <-}\StringTok{ }\OperatorTok{-}\OtherTok{Inf}
-\NormalTok{Upper1 <-}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(fpf)}
-\NormalTok{Lower2 <-}\StringTok{ }\OperatorTok{-}\OtherTok{Inf}
-\NormalTok{Upper2 <-}\StringTok{ }\NormalTok{a}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{b}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-\NormalTok{sigma <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, rho), }\KeywordTok{c}\NormalTok{(rho, }\DecValTok{1}\NormalTok{))}
-\NormalTok{pAuc <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{pmvnorm}\NormalTok{(}
-  \KeywordTok{c}\NormalTok{(Lower1, Lower2), }
-  \KeywordTok{c}\NormalTok{(Upper1, Upper2), }
-  \DataTypeTok{sigma =}\NormalTok{ sigma))}
-\CommentTok{# add area under dashed line}
-\NormalTok{pAucTrue <-}\StringTok{ }\NormalTok{pAuc }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{fpf)}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{tpf)}\OperatorTok{/}\DecValTok{2}
+\NormalTok{pAucTrue <-}\StringTok{ }\NormalTok{A_zc }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{fpf)}\OperatorTok{*}\NormalTok{(}\DecValTok{1}\OperatorTok{+}\NormalTok{tpf)}\OperatorTok{/}\DecValTok{2}
+\NormalTok{pAucTrue}
+\CommentTok{#> [1] 0.8244498}
 \end{Highlighting}
 \end{Shaded}
-
-The area under the full curve is \(A_z\) = 0.9408251, the partial-area measure is \(A_{z;c}\) = 0.0446362, while true performance of the partial-area observer is \(A_{z;c,\text{TRUE}}\) = 0.878978. For this example the major contribution to true performance comes from the area under the dotted straight line.
 
 The next figure, Fig. \ref{fig:binormal-model-threshold-dependence-2} shows the variation of true performance \(A_{z;c,\text{TRUE}}\) with FPF. The curve starts from (0, 0.5) and ends at (1, 0.9408251). For low values of FPF the curve is very steep while for FPF \textgreater{} 0.25 the curve levels out.
 
 \begin{figure}
 \centering
 \includegraphics{06-binormal-model_files/figure-latex/binormal-model-threshold-dependence-2-1.pdf}
-\caption{\label{fig:binormal-model-threshold-dependence-2}Variation of true performance pAUC\_TRUE with FPF for a = 2 and b = 0.8. The curve levels out at pAUC\_TRUE = \(A_z\) = 0.9408251.}
+\caption{\label{fig:binormal-model-threshold-dependence-2}Variation of true performance pAUC\_TRUE with FPF for a = 2 and b = 1. The curve levels out at pAUC\_TRUE = \(A_z\) = 0.9408251.}
 \end{figure}
 
 The next figure, corresponding to \(b = 0.2\) with other parameters unchanged, shows the case of a visibly improper ROC curve. The left panel in Fig. \ref{fig:binormal-model-threshold-dependence-3} shows the the ROC curve. Now the dashed line is slightly above the continuous curve and true performance is maximized at a finite value of \(\zeta_1\), corresponding to \(FPF \approx 0.1\), see right panel. This is an invalid conclusion due to the fact that an improper ROC curve is a fitting artifact of the binormal model easily avoided by using modern curve-fitting methods (eg., PROPROC, CBM or RSM). However, this example serves a purpose, elaborated on in Chapter \ref{optim-op-point}, where it is shown that by using the area under the wAFROC as the performance measure - the wAFROC has an operating characteristic with an improper-like feature but which is not a fitting artifact - one can find the optimal reporting threshold of an algorithmic observer.
@@ -5231,7 +5274,7 @@ The left hand side of Eqn. \eqref{eq:binormal-modelLL} is a function of the mode
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{06-binormal-model_files/figure-latex/unnamed-chunk-10-1.pdf}
+\includegraphics{06-binormal-model_files/figure-latex/unnamed-chunk-13-1.pdf}
 
 Note the usage of the \texttt{RJafroc} package \citep{R-RJafroc}. Specifically, the function \texttt{FitBinormalRoc}. The ratings table is converted to an \texttt{RJafroc} dataset object, followed by application of the fitting function. The results, contained in \texttt{retFit} should be compared to those obtained from the \href{http://www.rad.jhmi.edu/jeng/javarad/roc/JROCFITi.html}{website implementation of ROCFIT}.
 
@@ -5281,12 +5324,12 @@ At the 5\% significance level, one concludes that the fit is not good if \(p < 0
 \hypertarget{estimating-the-covariance-matrix}{%
 \subsection{Estimating the covariance matrix}\label{estimating-the-covariance-matrix}}
 
-TBA See book chapter 6.4.3. This is implemented in RJafroc.
+TBA See book chapter 6.4.3. This is implemented in \texttt{RJafroc.}
 
 \hypertarget{estimating-the-variance-of-az}{%
 \subsection{Estimating the variance of Az}\label{estimating-the-variance-of-az}}
 
-TBA See book chapter 6.4.4. This is implemented in RJafroc.
+TBA See book chapter 6.4.4. This is implemented in \texttt{RJafroc}.
 
 \hypertarget{binormal-model-discussion}{%
 \section{Discussion}\label{binormal-model-discussion}}
@@ -5611,7 +5654,7 @@ The reviewer is correct. The misconception is illustrated next.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-12-1} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-12-2} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-12-3} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-12-4} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-12-5} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-12-6} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-12-7} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-12-8} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-12-9}
+\includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-15-1} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-15-2} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-15-3} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-15-4} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-15-5} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-15-6} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-15-7} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-15-8} \includegraphics[width=0.33\linewidth]{06-binormal-model_files/figure-latex/unnamed-chunk-15-9}
 
 \textbf{Figure captions (A1 - C3):} Illustrating the invariance of ROC analysis to arbitrary monotone transformations of the ratings. Each row contains 3 plots: labeled 1, 2 and 3. Each column contains 3 plots labeled A, B and C. So, for example, plot C2 refers to the second row and third column. The for-loop generates the plot one row at a time. Each of the latent Gaussian plots C1, C2 and C3 appears not binormal. However, using the inverse of the monotone transformations shown B1, B2 and B3, they can be transformed to the binormal model histograms A1, A2 and A3. Plot A1 shows the histogram of simulated ratings from a binormal model. Two peaks, one at 30 and the other at 55 are evident (by design, all ratings in this figure are in the range 0 to 100). Plot B1 shows the monotone transformation for \(f = 0.1\). Plot C1 shows the histogram of the transformed rating. The choice of \(f\) leads to a transformed rating histogram that is peaked near the high end of the rating scale. For A1 and C1 the corresponding AUCs are identical (0.993080000). Plot A2 is for a different seed value, plot B2 is the transformation for \(f = 0.5\) and now the transformed histogram is almost flat, plot C2. For plots A2 and C2 the corresponding AUCs are identical (0.993668889). Plot A3 is for a different seed value, B3 is the transformation for \(f = 0.9\) and the transformed histogram C3 is peaked near the low end of the transformed rating scale. For plots A3 and (C3) the corresponding AUCs are identical (0.995041111).
 
@@ -8491,7 +8534,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
            \StringTok{"ORBoot:ddf"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"DF"}\NormalTok{], }
            \StringTok{"ORBoot:P-val"}\NormalTok{ =}\StringTok{ }\NormalTok{ret4}\OperatorTok{$}\NormalTok{FRRC}\OperatorTok{$}\NormalTok{FTests[}\StringTok{"Treatment"}\NormalTok{, }\StringTok{"p"}\NormalTok{])}
 \CommentTok{#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val}
-\CommentTok{#> 1    1.2380849          1   0.26584046}
+\CommentTok{#> 1    1.4722986          1   0.22498338}
 \end{Highlighting}
 \end{Shaded}
 
@@ -12836,15 +12879,6 @@ TBA
 \hypertarget{froc-vs-wafroc}{%
 \chapter{FROC vs.~wAFROC}\label{froc-vs-wafroc}}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{OpPtStr <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x,y) \{}
-\NormalTok{  y <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"("}\NormalTok{, }\KeywordTok{sprintf}\NormalTok{(}\StringTok{"%.3f"}\NormalTok{, x), }\StringTok{", "}\NormalTok{, }\KeywordTok{sprintf}\NormalTok{(}\StringTok{"%.3f"}\NormalTok{, y), }\StringTok{")"}\NormalTok{)}
-  \KeywordTok{return}\NormalTok{(y)}
-\NormalTok{\}}
-\end{Highlighting}
-\end{Shaded}
-
 \hypertarget{froc-vs-wafroc-how-much-finished}{%
 \section{How much finished}\label{froc-vs-wafroc-how-much-finished}}
 
@@ -15344,32 +15378,31 @@ Since confusion still appears to exist, especially among statisticians, regardin
 \section{How much finished}\label{froc-sample-size-how-much-finished}}
 
 10\%
+TBA Merge the vignette into this \ldots{}
 
 \hypertarget{froc-sample-size-intro}{%
 \section{Introduction}\label{froc-sample-size-intro}}
 
-TBA Merge the vignette into this \ldots{}
+FROC sample size estimation is not fundamentally different from the procedure outlined in Chapter 11 for the ROC paradigm. To recapitulate, based on analysis of a pilot ROC dataset and using a specified FOM, e.g., the ROC-AUC, and either the DBMH or the ORH method for significance testing, one estimates the intrinsic variability of the data expressed in terms of variance components. For DBMH analysis, these are the pseudovalue variance components, while for ORH analysis these are the FOM treatment-reader variance component and the FOM covariances. The second step is to specify a clinically realistic effect-size, e.g., the AUC difference between the two modalities. Given these values, the sample size functions implemented in \texttt{RJafroc} allow one to estimate the number of readers and cases necessary to detect (i.e., reject the null hypothesis) the modality AUC difference at specified Type II error rate \(\beta\), typically chosen to be 20\% - corresponding to 80\% statistical power - and specified Type I error rate \(\alpha\), typically chosen to be 5\%.
 
-FROC sample size estimation is not fundamentally different from the procedure outlined in Chapter 11 for the ROC paradigm. To recapitulate, based on analysis of a pilot ROC dataset and using a specified FOM, e.g., the ROC-AUC, and either the DBMH or the ORH method for significance testing, one estimates the intrinsic variability of the data expressed in terms of variance components. For DBMH analysis, these are the pseudovalue variance components, while for ORH analysis these are the FOM treatment-reader variance component and the FOM covariances. The second step is to postulate a clinically realistic effect-size, e.g., the AUC difference between the two modalities. Given these values, the sample size functions implemented in RJafroc allow one to estimate the number of readers and cases necessary to detect (i.e., reject the null hypothesis) the modality AUC difference at specified Type II error rate, typically chosen to be 20\% (corresponding to 80\% statistical power) and specified Type I error rate, typically chosen to be 5\%.
-
-In FROC analysis the only difference, indeed the critical difference, is the choice of FOM; e.g., the wAFROC-AUC instead of the inferred ROC-AUC. The FROC dataset is analyzed using either the DBMH or the ORH method. This yields the necessary variance components or the covariance matrix corresponding to the wAFROC-AUC. The next step is to specify an effect-size in wAFROC-AUC units, and therein is the rub. What value does one use? The ROC-AUC has a historically well-known interpretation: the classification ability at separating diseased patients from non-diseased patients. Needed is a way of relating the effect-size in ROC-AUC units to one in wAFROC-AUC units.
+In FROC analysis the only difference, indeed the critical difference, is the choice of FOM; e.g., the wAFROC-AUC instead of the inferred ROC-AUC. The FROC dataset is analyzed using either the DBMH or the ORH method. This yields the necessary variance components or the covariance matrix corresponding to the wAFROC-AUC. The next step is to specify an effect-size in wAFROC-AUC units, and therein lies the problem. What value does one use? The ROC-AUC has a historically well-known interpretation: the classification ability at separating diseased patients from non-diseased patients. Needed is a way of relating the effect-size in ROC-AUC units to one in wAFROC-AUC units.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  One chooses an ROC-AUC effect-size that is realistic, one that clinicians understand and can therefore participate in, in the effect-size postulation process.
+  Choose an ROC-AUC effect-size that is realistic, one that clinicians understand and can therefore participate in, in the effect-size postulation process.
 \item
-  One converts the ROC effect-size to a wAFROC-AUC effect-size: the method for this is described in the next section.
+  Convert the ROC effect-size to a wAFROC-AUC effect-size: the method for this is described in the next section.
 \item
-  One uses the sample size tools in in RJafroc, i.e., functions with names beginning with Ss, to determine the necessary sample size.
+  Use the sample size tools in in \texttt{RJafroc}, i.e., functions with names beginning with \texttt{Ss}, to determine the necessary sample size.
 \end{enumerate}
 
-It is important to recognize is that all quantities have to be in the same ``units''. The quotes are used since the units are not like units in physics, e.g., the MKS vs.~CGS systems, or Rad vs.~Gray. When doing ROC analysis, everything (variance components and effect-size) has to be in units of the selected FOM, e.g., ROC-AUC. When doing wAFROC analysis, everything has to be in units of the wAFROC-AUC. The variance components and effect-size in wAFROC-AUC units will be different from their corresponding ROC counterparts. In particular, as shown next, an ROC-AUC effect-size of 0.05 generally correspond to a larger effect-size in wAFROC-AUC units. The reason for this is that the range over which wAFROC-AUC can vary, namely 0 to 1, is twice the corresponding ROC-AUC range.
+\emph{It is important to recognize is that all quantities have to be in the same units. When performing ROC analysis, everything (variance components and effect-size) has to be in units of the selected FOM, e.g., Wilcoxon statistic. When performing wAFROC analysis, everything has to be in units of the wAFROC-AUC. The variance components and effect-size in wAFROC-AUC units will be different from their corresponding ROC counterparts. In particular, as shown next, an ROC-AUC effect-size of 0.05 generally correspond to a larger effect-size in wAFROC-AUC units. The reason for this is that the range over which wAFROC-AUC can vary, namely 0 to 1, is twice the corresponding ROC-AUC range.}
 
 The next section explains the steps used to implement \#2 above.
 
-For each modality-reader (ij) dataset, the inferred ROC data is fitted by the procedure described above, yielding estimates of the parameters (notice the usage of intrinsic RSM parameters, not the primed values; the latter are easily converted to intrinsic values). The pilot study represents an ``almost'' null hypothesis dataset: if a significance difference was observed one would not be going through the exercise of samples size estimation. In any case, the author recommends taking the median of the three sets of parameters, over all indices, as representing the average NH dataset. The reason for this is that the median is less sensitive to outliers than the average.
+For each modality-reader (ij) dataset, the inferred ROC data is fitted by the procedure described above, yielding estimates of the parameters (notice the usage of intrinsic RSM parameters, not the primed values; the latter are easily converted to intrinsic values). The pilot study represents an ``almost'' null hypothesis dataset: if a significance difference was observed one would not be going through the exercise of samples size estimation. In any case, I recommend taking the median of the three sets of parameters, over all indices, as representing the average NH dataset. The median is less sensitive to outliers than the average.
 
 \begin{verbatim}
 .   (19.1)
@@ -17383,13 +17416,13 @@ Discussion and Intro need more work; coding is done
 \hypertarget{optim-op-point-intro}{%
 \section{Introduction}\label{optim-op-point-intro}}
 
-This chapter deals with finding the optimal reporting threshold of an algorithmic observer, such as CAD. We assume that designer level FROC data is available for the algorithm: the data consists of mark-rating pairs, with the continuous-scale ratings extending from low to high values, and a decision needs to be made as to the optimal reporting threshold, i.e., the minimum rating of a mark before it is shown to the radiologist. This is a familiar problem faced by a CAD algorithm designer.
+This chapter deals with finding the optimal reporting threshold of an algorithmic observer, such as CAD. We assume that designer level FROC data is available for the algorithm, i.e., the data consists of mark-rating pairs, with continuous-scale ratings, and a decision needs to be made as to the optimal reporting threshold, i.e., the minimum rating of a mark before it is shown to the radiologist. This is a familiar problem faced by a CAD algorithm designer.
 
-This problem has been solved in the context of ROC analysis \citep{metz1978rocmethodology}, namely, the optimal point on the ROC corresponds to a slope determined by disease prevalence and the cost of decisions in the four basic binary paradigm categories: true and false positives and true and false negatives. In practice the costs are very difficult to quantify. However, for equal numbers of diseased and non-diseased cases and equal costs it can be shown that the slope of the ROC curve at the optimal point is unity. For a proper ROC curve this corresponds to the point that maximizes the Youden-index \citep{youden1950index}, defined as the sum of sensitivity and specificity minus one. Typically it is maximized at the point that is closest to the (0,1) corner of the ROC.
+The problem has been solved in the context of ROC analysis \citep{metz1978rocmethodology}, namely, the optimal operating point on the ROC corresponds to a slope determined by disease prevalence and the cost of decisions in the four basic binary paradigm categories: true and false positives and true and false negatives. In practice the costs are difficult to quantify. However, for equal numbers of diseased and non-diseased cases and equal costs it can be shown that the slope of the ROC curve at the optimal point is unity. For a proper ROC curve this corresponds to the point that maximizes the Youden-index \citep{youden1950index}, defined as the sum of sensitivity and specificity minus one. Typically it is maximized at the point that is closest to the (0,1) corner of the ROC.
 
 CAD produces FROC data and lacking a procedure for setting it analytically, CAD manufacturers, in consultation with radiologists, set site-specific reporting thresholds. For example, if radiologists at a site are comfortable with more false marks as the price of potentially greater lesion-level sensitivity, the reporting threshold for them is adjusted downward.
 
-This chapter describes an analytic method for finding the optimal reporting threshold. The method is based on maximizing the AUC under the wAFROC curve. The method is compared to the Youden-index based method.
+This chapter describes an analytic method for finding the optimal reporting threshold. The method is based on maximizing AUC (area under curve) under the wAFROC curve. The method is compared to the Youden-index based method.
 
 \hypertarget{optim-op-point-methods}{%
 \section{Methods}\label{optim-op-point-methods}}
