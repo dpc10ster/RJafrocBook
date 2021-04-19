@@ -343,7 +343,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.6" data-path="binormal-model.html"><a href="binormal-model.html#binormal-model-partial-true"><i class="fa fa-check"></i><b>13.6</b> Partial AUC vs. true performance</a></li>
 <li class="chapter" data-level="13.7" data-path="binormal-model.html"><a href="binormal-model.html#binormal-model-illustrative-plots"><i class="fa fa-check"></i><b>13.7</b> Illustrative plots</a></li>
 <li class="chapter" data-level="13.8" data-path="binormal-model.html"><a href="binormal-model.html#binormal-model-geometrical-argument"><i class="fa fa-check"></i><b>13.8</b> Geometrical argument</a></li>
-<li class="chapter" data-level="13.9" data-path="binormal-model.html"><a href="binormal-model.html#binormal-model-optimal-op-pt"><i class="fa fa-check"></i><b>13.9</b> TBA Optimal operating point on ROC</a></li>
+<li class="chapter" data-level="13.9" data-path="binormal-model.html"><a href="binormal-model.html#binormal-model-optimal-op-pt"><i class="fa fa-check"></i><b>13.9</b> Optimal operating point on ROC</a></li>
 <li class="chapter" data-level="13.10" data-path="binormal-model.html"><a href="binormal-model.html#binormal-model-discussion"><i class="fa fa-check"></i><b>13.10</b> Discussion</a></li>
 <li class="chapter" data-level="13.11" data-path="binormal-model.html"><a href="binormal-model.html#binormal-model-pdf-curves-appendix-1"><i class="fa fa-check"></i><b>13.11</b> Appendix I: Density functions</a></li>
 <li class="chapter" data-level="13.12" data-path="binormal-model.html"><a href="binormal-model.html#binormal-model-appendix-2"><i class="fa fa-check"></i><b>13.12</b> Appendix II: Area under binormal ROC</a><ul>
@@ -944,48 +944,48 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>wAFROC-AUC is computed by <code>UtilAnalyticalAucsRSM</code>. Lines 2 - 19 returns <code>-wAFROC</code>, the <em>negative</em> of wAFROC-AUC. The negative sign is needed because the <code>optimize()</code> function, used later, finds the <em>minimum</em> of wAFROC-AUC. The first argument is <span class="math inline">\(\zeta_1\)</span>, the variable to be varied to find the maximum. The remaining arguments passed to the function, needed to calculate the FOMs, are <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\nu\)</span>, <code>lesDistr</code> and <code>relWeights.</code> The last two specify the number of lesions per case and their weights. The following code below uses <code>lesDistr = c(0.5,0.5)</code>, i.e., half of the diseased cases contain one lesion and the rest contain two lesions, and <code>relWeights = c(0.5,0.5)</code>, which specifies equal weights to all lesions.</p></li>
 <li><p>The Youden-index is defined as the sum of sensitivity and specificity minus 1. Sensitivity is computed by <code>RSM_yROC</code> and specificity by <code>(1 - RSM_xROC)</code>. Lines 22 - 42 returns <code>-Youden</code>, the <em>negative</em> of the Youden-index.</p></li>
 </ul>
-<div class="sourceCode" id="cb255"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb255-1"><a href="optim-op-point.html#cb255-1"></a></span>
-<span id="cb255-2"><a href="optim-op-point.html#cb255-2"></a>wAFROC &lt;-<span class="st"> </span><span class="cf">function</span> (</span>
-<span id="cb255-3"><a href="optim-op-point.html#cb255-3"></a>  zeta1, </span>
-<span id="cb255-4"><a href="optim-op-point.html#cb255-4"></a>  mu, </span>
-<span id="cb255-5"><a href="optim-op-point.html#cb255-5"></a>  lambda, </span>
-<span id="cb255-6"><a href="optim-op-point.html#cb255-6"></a>  nu, </span>
-<span id="cb255-7"><a href="optim-op-point.html#cb255-7"></a>  lesDistr, </span>
-<span id="cb255-8"><a href="optim-op-point.html#cb255-8"></a>  relWeights) {</span>
-<span id="cb255-9"><a href="optim-op-point.html#cb255-9"></a>  x &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(</span>
-<span id="cb255-10"><a href="optim-op-point.html#cb255-10"></a>    mu, </span>
-<span id="cb255-11"><a href="optim-op-point.html#cb255-11"></a>    lambda, </span>
-<span id="cb255-12"><a href="optim-op-point.html#cb255-12"></a>    nu, zeta1, </span>
-<span id="cb255-13"><a href="optim-op-point.html#cb255-13"></a>    lesDistr, </span>
-<span id="cb255-14"><a href="optim-op-point.html#cb255-14"></a>    relWeights)<span class="op">$</span>aucwAFROC</span>
-<span id="cb255-15"><a href="optim-op-point.html#cb255-15"></a>  <span class="co"># return negative of aucwAFROC </span></span>
-<span id="cb255-16"><a href="optim-op-point.html#cb255-16"></a>  <span class="co"># (as optimize finds minimum of function)</span></span>
-<span id="cb255-17"><a href="optim-op-point.html#cb255-17"></a>  <span class="kw">return</span>(<span class="op">-</span>x)</span>
-<span id="cb255-18"><a href="optim-op-point.html#cb255-18"></a>  </span>
-<span id="cb255-19"><a href="optim-op-point.html#cb255-19"></a>}</span>
-<span id="cb255-20"><a href="optim-op-point.html#cb255-20"></a></span>
-<span id="cb255-21"><a href="optim-op-point.html#cb255-21"></a></span>
-<span id="cb255-22"><a href="optim-op-point.html#cb255-22"></a>Youden &lt;-<span class="st"> </span><span class="cf">function</span> (</span>
-<span id="cb255-23"><a href="optim-op-point.html#cb255-23"></a>  zeta1, </span>
-<span id="cb255-24"><a href="optim-op-point.html#cb255-24"></a>  mu, </span>
-<span id="cb255-25"><a href="optim-op-point.html#cb255-25"></a>  lambda, </span>
-<span id="cb255-26"><a href="optim-op-point.html#cb255-26"></a>  nu, </span>
-<span id="cb255-27"><a href="optim-op-point.html#cb255-27"></a>  lesDistr, </span>
-<span id="cb255-28"><a href="optim-op-point.html#cb255-28"></a>  relWeights) {</span>
-<span id="cb255-29"><a href="optim-op-point.html#cb255-29"></a>  <span class="co"># add sensitivity and specificity </span></span>
-<span id="cb255-30"><a href="optim-op-point.html#cb255-30"></a>  <span class="co"># and subtract 1, i.e., Youden&#39;s index</span></span>
-<span id="cb255-31"><a href="optim-op-point.html#cb255-31"></a>  x &lt;-<span class="st"> </span><span class="kw">RSM_yROC</span>(</span>
-<span id="cb255-32"><a href="optim-op-point.html#cb255-32"></a>    zeta1, </span>
-<span id="cb255-33"><a href="optim-op-point.html#cb255-33"></a>    mu, </span>
-<span id="cb255-34"><a href="optim-op-point.html#cb255-34"></a>    lambda, </span>
-<span id="cb255-35"><a href="optim-op-point.html#cb255-35"></a>    nu, </span>
-<span id="cb255-36"><a href="optim-op-point.html#cb255-36"></a>    lesDistr) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb255-37"><a href="optim-op-point.html#cb255-37"></a><span class="st">    </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">RSM_xROC</span>(zeta1, lambda<span class="op">/</span>mu)) <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb255-38"><a href="optim-op-point.html#cb255-38"></a>  <span class="co"># return negative of Youden-index </span></span>
-<span id="cb255-39"><a href="optim-op-point.html#cb255-39"></a>  <span class="co"># (as optimize finds minimum of function)</span></span>
-<span id="cb255-40"><a href="optim-op-point.html#cb255-40"></a>  <span class="kw">return</span>(<span class="op">-</span>x)</span>
-<span id="cb255-41"><a href="optim-op-point.html#cb255-41"></a>  </span>
-<span id="cb255-42"><a href="optim-op-point.html#cb255-42"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb256"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb256-1"><a href="optim-op-point.html#cb256-1"></a></span>
+<span id="cb256-2"><a href="optim-op-point.html#cb256-2"></a>wAFROC &lt;-<span class="st"> </span><span class="cf">function</span> (</span>
+<span id="cb256-3"><a href="optim-op-point.html#cb256-3"></a>  zeta1, </span>
+<span id="cb256-4"><a href="optim-op-point.html#cb256-4"></a>  mu, </span>
+<span id="cb256-5"><a href="optim-op-point.html#cb256-5"></a>  lambda, </span>
+<span id="cb256-6"><a href="optim-op-point.html#cb256-6"></a>  nu, </span>
+<span id="cb256-7"><a href="optim-op-point.html#cb256-7"></a>  lesDistr, </span>
+<span id="cb256-8"><a href="optim-op-point.html#cb256-8"></a>  relWeights) {</span>
+<span id="cb256-9"><a href="optim-op-point.html#cb256-9"></a>  x &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(</span>
+<span id="cb256-10"><a href="optim-op-point.html#cb256-10"></a>    mu, </span>
+<span id="cb256-11"><a href="optim-op-point.html#cb256-11"></a>    lambda, </span>
+<span id="cb256-12"><a href="optim-op-point.html#cb256-12"></a>    nu, zeta1, </span>
+<span id="cb256-13"><a href="optim-op-point.html#cb256-13"></a>    lesDistr, </span>
+<span id="cb256-14"><a href="optim-op-point.html#cb256-14"></a>    relWeights)<span class="op">$</span>aucwAFROC</span>
+<span id="cb256-15"><a href="optim-op-point.html#cb256-15"></a>  <span class="co"># return negative of aucwAFROC </span></span>
+<span id="cb256-16"><a href="optim-op-point.html#cb256-16"></a>  <span class="co"># (as optimize finds minimum of function)</span></span>
+<span id="cb256-17"><a href="optim-op-point.html#cb256-17"></a>  <span class="kw">return</span>(<span class="op">-</span>x)</span>
+<span id="cb256-18"><a href="optim-op-point.html#cb256-18"></a>  </span>
+<span id="cb256-19"><a href="optim-op-point.html#cb256-19"></a>}</span>
+<span id="cb256-20"><a href="optim-op-point.html#cb256-20"></a></span>
+<span id="cb256-21"><a href="optim-op-point.html#cb256-21"></a></span>
+<span id="cb256-22"><a href="optim-op-point.html#cb256-22"></a>Youden &lt;-<span class="st"> </span><span class="cf">function</span> (</span>
+<span id="cb256-23"><a href="optim-op-point.html#cb256-23"></a>  zeta1, </span>
+<span id="cb256-24"><a href="optim-op-point.html#cb256-24"></a>  mu, </span>
+<span id="cb256-25"><a href="optim-op-point.html#cb256-25"></a>  lambda, </span>
+<span id="cb256-26"><a href="optim-op-point.html#cb256-26"></a>  nu, </span>
+<span id="cb256-27"><a href="optim-op-point.html#cb256-27"></a>  lesDistr, </span>
+<span id="cb256-28"><a href="optim-op-point.html#cb256-28"></a>  relWeights) {</span>
+<span id="cb256-29"><a href="optim-op-point.html#cb256-29"></a>  <span class="co"># add sensitivity and specificity </span></span>
+<span id="cb256-30"><a href="optim-op-point.html#cb256-30"></a>  <span class="co"># and subtract 1, i.e., Youden&#39;s index</span></span>
+<span id="cb256-31"><a href="optim-op-point.html#cb256-31"></a>  x &lt;-<span class="st"> </span><span class="kw">RSM_yROC</span>(</span>
+<span id="cb256-32"><a href="optim-op-point.html#cb256-32"></a>    zeta1, </span>
+<span id="cb256-33"><a href="optim-op-point.html#cb256-33"></a>    mu, </span>
+<span id="cb256-34"><a href="optim-op-point.html#cb256-34"></a>    lambda, </span>
+<span id="cb256-35"><a href="optim-op-point.html#cb256-35"></a>    nu, </span>
+<span id="cb256-36"><a href="optim-op-point.html#cb256-36"></a>    lesDistr) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb256-37"><a href="optim-op-point.html#cb256-37"></a><span class="st">    </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">RSM_xROC</span>(zeta1, lambda<span class="op">/</span>mu)) <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb256-38"><a href="optim-op-point.html#cb256-38"></a>  <span class="co"># return negative of Youden-index </span></span>
+<span id="cb256-39"><a href="optim-op-point.html#cb256-39"></a>  <span class="co"># (as optimize finds minimum of function)</span></span>
+<span id="cb256-40"><a href="optim-op-point.html#cb256-40"></a>  <span class="kw">return</span>(<span class="op">-</span>x)</span>
+<span id="cb256-41"><a href="optim-op-point.html#cb256-41"></a>  </span>
+<span id="cb256-42"><a href="optim-op-point.html#cb256-42"></a>}</span></code></pre></div>
 </div>
 <div id="optim-op-point-vary-lambda" class="section level3">
 <h3><span class="header-section-number">39.3.2</span> Vary lambda</h3>
@@ -1000,75 +1000,75 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>llfOptArr</code>, a [2,4] array, the ordinate of the optimal reporting point on the FROC curve corresponding to optimizations based on wAFROC-AUC or Youden-index.</li>
 </ul>
 <p>In each of these arrays the first index, <code>y</code> in the following code, denotes whether wAFROC-AUC is being maximized (<code>y</code> = 1, see lines 14 - 20) - or if Youden-index is being optimized (<code>y</code> = 2, see lines 39 - 45). The second index <code>i</code> in the following code, corresponds to <span class="math inline">\(\lambda\)</span>.</p>
-<div class="sourceCode" id="cb256"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb256-1"><a href="optim-op-point.html#cb256-1"></a>mu &lt;-<span class="st"> </span><span class="dv">2</span></span>
-<span id="cb256-2"><a href="optim-op-point.html#cb256-2"></a>nu &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb256-3"><a href="optim-op-point.html#cb256-3"></a>lambdaArr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">15</span>)</span>
-<span id="cb256-4"><a href="optim-op-point.html#cb256-4"></a>fomMaxArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
-<span id="cb256-5"><a href="optim-op-point.html#cb256-5"></a>zetaOptArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
-<span id="cb256-6"><a href="optim-op-point.html#cb256-6"></a>rocAucArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
-<span id="cb256-7"><a href="optim-op-point.html#cb256-7"></a>nlfOptArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
-<span id="cb256-8"><a href="optim-op-point.html#cb256-8"></a>llfOptArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
-<span id="cb256-9"><a href="optim-op-point.html#cb256-9"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
-<span id="cb256-10"><a href="optim-op-point.html#cb256-10"></a>relWeights &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
-<span id="cb256-11"><a href="optim-op-point.html#cb256-11"></a><span class="cf">for</span> (y <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) {</span>
-<span id="cb256-12"><a href="optim-op-point.html#cb256-12"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(lambdaArr)) {</span>
-<span id="cb256-13"><a href="optim-op-point.html#cb256-13"></a>    <span class="cf">if</span> (y <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) {</span>
-<span id="cb256-14"><a href="optim-op-point.html#cb256-14"></a>      x &lt;-<span class="st"> </span><span class="kw">optimize</span>(wAFROC, </span>
-<span id="cb256-15"><a href="optim-op-point.html#cb256-15"></a>                    <span class="dt">interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>), </span>
-<span id="cb256-16"><a href="optim-op-point.html#cb256-16"></a>                    mu, </span>
-<span id="cb256-17"><a href="optim-op-point.html#cb256-17"></a>                    lambdaArr[i], </span>
-<span id="cb256-18"><a href="optim-op-point.html#cb256-18"></a>                    nu, </span>
-<span id="cb256-19"><a href="optim-op-point.html#cb256-19"></a>                    lesDistr, </span>
-<span id="cb256-20"><a href="optim-op-point.html#cb256-20"></a>                    relWeights)</span>
-<span id="cb256-21"><a href="optim-op-point.html#cb256-21"></a>      zetaOptArr[y,i] &lt;-<span class="st"> </span>x<span class="op">$</span>minimum</span>
-<span id="cb256-22"><a href="optim-op-point.html#cb256-22"></a>      fomMaxArr[y,i] &lt;-<span class="st"> </span><span class="op">-</span>x<span class="op">$</span>objective <span class="co"># safe to use objective here</span></span>
-<span id="cb256-23"><a href="optim-op-point.html#cb256-23"></a>      rocAucArr[y,i] &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(</span>
-<span id="cb256-24"><a href="optim-op-point.html#cb256-24"></a>        mu, </span>
-<span id="cb256-25"><a href="optim-op-point.html#cb256-25"></a>        lambdaArr[i], </span>
-<span id="cb256-26"><a href="optim-op-point.html#cb256-26"></a>        nu, </span>
-<span id="cb256-27"><a href="optim-op-point.html#cb256-27"></a>        <span class="dt">zeta1 =</span> x<span class="op">$</span>minimum, </span>
-<span id="cb256-28"><a href="optim-op-point.html#cb256-28"></a>        lesDistr, </span>
-<span id="cb256-29"><a href="optim-op-point.html#cb256-29"></a>        relWeights)<span class="op">$</span>aucROC</span>
-<span id="cb256-30"><a href="optim-op-point.html#cb256-30"></a>      nlfOptArr[y,i] &lt;-<span class="st"> </span><span class="kw">RSM_xFROC</span>(</span>
-<span id="cb256-31"><a href="optim-op-point.html#cb256-31"></a>        <span class="dt">z =</span> x<span class="op">$</span>minimum, </span>
-<span id="cb256-32"><a href="optim-op-point.html#cb256-32"></a>        mu, </span>
-<span id="cb256-33"><a href="optim-op-point.html#cb256-33"></a>        <span class="dt">lambda =</span> lambdaArr[i])</span>
-<span id="cb256-34"><a href="optim-op-point.html#cb256-34"></a>      llfOptArr[y,i] &lt;-<span class="st"> </span><span class="kw">RSM_yFROC</span>(</span>
-<span id="cb256-35"><a href="optim-op-point.html#cb256-35"></a>        <span class="dt">z =</span> x<span class="op">$</span>minimum, </span>
-<span id="cb256-36"><a href="optim-op-point.html#cb256-36"></a>        mu, </span>
-<span id="cb256-37"><a href="optim-op-point.html#cb256-37"></a>        nu)</span>
-<span id="cb256-38"><a href="optim-op-point.html#cb256-38"></a>    } <span class="cf">else</span> <span class="cf">if</span> (y <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) {</span>
-<span id="cb256-39"><a href="optim-op-point.html#cb256-39"></a>      x &lt;-<span class="st"> </span><span class="kw">optimize</span>(Youden, </span>
-<span id="cb256-40"><a href="optim-op-point.html#cb256-40"></a>                    <span class="dt">interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>), </span>
-<span id="cb256-41"><a href="optim-op-point.html#cb256-41"></a>                    mu, </span>
-<span id="cb256-42"><a href="optim-op-point.html#cb256-42"></a>                    lambdaArr[i], </span>
-<span id="cb256-43"><a href="optim-op-point.html#cb256-43"></a>                    nu, </span>
-<span id="cb256-44"><a href="optim-op-point.html#cb256-44"></a>                    lesDistr, </span>
-<span id="cb256-45"><a href="optim-op-point.html#cb256-45"></a>                    relWeights)</span>
-<span id="cb256-46"><a href="optim-op-point.html#cb256-46"></a>      zetaOptArr[y,i] &lt;-<span class="st"> </span>x<span class="op">$</span>minimum</span>
-<span id="cb256-47"><a href="optim-op-point.html#cb256-47"></a>      fomMaxArr[y,i] &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(</span>
-<span id="cb256-48"><a href="optim-op-point.html#cb256-48"></a>        mu, </span>
-<span id="cb256-49"><a href="optim-op-point.html#cb256-49"></a>        lambdaArr[i], </span>
-<span id="cb256-50"><a href="optim-op-point.html#cb256-50"></a>        nu, </span>
-<span id="cb256-51"><a href="optim-op-point.html#cb256-51"></a>        <span class="dt">zeta1 =</span> x<span class="op">$</span>minimum, </span>
-<span id="cb256-52"><a href="optim-op-point.html#cb256-52"></a>        lesDistr, </span>
-<span id="cb256-53"><a href="optim-op-point.html#cb256-53"></a>        relWeights)<span class="op">$</span>aucwAFROC</span>
-<span id="cb256-54"><a href="optim-op-point.html#cb256-54"></a>      rocAucArr[y,i] &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(</span>
-<span id="cb256-55"><a href="optim-op-point.html#cb256-55"></a>        mu, </span>
-<span id="cb256-56"><a href="optim-op-point.html#cb256-56"></a>        lambdaArr[i], </span>
-<span id="cb256-57"><a href="optim-op-point.html#cb256-57"></a>        nu, </span>
-<span id="cb256-58"><a href="optim-op-point.html#cb256-58"></a>        <span class="dt">zeta1 =</span> x<span class="op">$</span>minimum, </span>
-<span id="cb256-59"><a href="optim-op-point.html#cb256-59"></a>        lesDistr, </span>
-<span id="cb256-60"><a href="optim-op-point.html#cb256-60"></a>        relWeights)<span class="op">$</span>aucROC</span>
-<span id="cb256-61"><a href="optim-op-point.html#cb256-61"></a>      nlfOptArr[y,i] &lt;-<span class="st"> </span><span class="kw">RSM_xFROC</span>(</span>
-<span id="cb256-62"><a href="optim-op-point.html#cb256-62"></a>        <span class="dt">z =</span> x<span class="op">$</span>minimum, </span>
-<span id="cb256-63"><a href="optim-op-point.html#cb256-63"></a>        mu, </span>
-<span id="cb256-64"><a href="optim-op-point.html#cb256-64"></a>        <span class="dt">lambda =</span> lambdaArr[i])</span>
-<span id="cb256-65"><a href="optim-op-point.html#cb256-65"></a>      llfOptArr[y,i] &lt;-<span class="st"> </span><span class="kw">RSM_yFROC</span>(</span>
-<span id="cb256-66"><a href="optim-op-point.html#cb256-66"></a>        <span class="dt">z =</span> x<span class="op">$</span>minimum, mu, nu)</span>
-<span id="cb256-67"><a href="optim-op-point.html#cb256-67"></a>    } <span class="cf">else</span> <span class="kw">stop</span>(<span class="st">&quot;incorrect y&quot;</span>)</span>
-<span id="cb256-68"><a href="optim-op-point.html#cb256-68"></a>  }</span>
-<span id="cb256-69"><a href="optim-op-point.html#cb256-69"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb257"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb257-1"><a href="optim-op-point.html#cb257-1"></a>mu &lt;-<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb257-2"><a href="optim-op-point.html#cb257-2"></a>nu &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb257-3"><a href="optim-op-point.html#cb257-3"></a>lambdaArr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">15</span>)</span>
+<span id="cb257-4"><a href="optim-op-point.html#cb257-4"></a>fomMaxArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
+<span id="cb257-5"><a href="optim-op-point.html#cb257-5"></a>zetaOptArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
+<span id="cb257-6"><a href="optim-op-point.html#cb257-6"></a>rocAucArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
+<span id="cb257-7"><a href="optim-op-point.html#cb257-7"></a>nlfOptArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
+<span id="cb257-8"><a href="optim-op-point.html#cb257-8"></a>llfOptArr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="kw">length</span>(lambdaArr)))</span>
+<span id="cb257-9"><a href="optim-op-point.html#cb257-9"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb257-10"><a href="optim-op-point.html#cb257-10"></a>relWeights &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb257-11"><a href="optim-op-point.html#cb257-11"></a><span class="cf">for</span> (y <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) {</span>
+<span id="cb257-12"><a href="optim-op-point.html#cb257-12"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(lambdaArr)) {</span>
+<span id="cb257-13"><a href="optim-op-point.html#cb257-13"></a>    <span class="cf">if</span> (y <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) {</span>
+<span id="cb257-14"><a href="optim-op-point.html#cb257-14"></a>      x &lt;-<span class="st"> </span><span class="kw">optimize</span>(wAFROC, </span>
+<span id="cb257-15"><a href="optim-op-point.html#cb257-15"></a>                    <span class="dt">interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>), </span>
+<span id="cb257-16"><a href="optim-op-point.html#cb257-16"></a>                    mu, </span>
+<span id="cb257-17"><a href="optim-op-point.html#cb257-17"></a>                    lambdaArr[i], </span>
+<span id="cb257-18"><a href="optim-op-point.html#cb257-18"></a>                    nu, </span>
+<span id="cb257-19"><a href="optim-op-point.html#cb257-19"></a>                    lesDistr, </span>
+<span id="cb257-20"><a href="optim-op-point.html#cb257-20"></a>                    relWeights)</span>
+<span id="cb257-21"><a href="optim-op-point.html#cb257-21"></a>      zetaOptArr[y,i] &lt;-<span class="st"> </span>x<span class="op">$</span>minimum</span>
+<span id="cb257-22"><a href="optim-op-point.html#cb257-22"></a>      fomMaxArr[y,i] &lt;-<span class="st"> </span><span class="op">-</span>x<span class="op">$</span>objective <span class="co"># safe to use objective here</span></span>
+<span id="cb257-23"><a href="optim-op-point.html#cb257-23"></a>      rocAucArr[y,i] &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(</span>
+<span id="cb257-24"><a href="optim-op-point.html#cb257-24"></a>        mu, </span>
+<span id="cb257-25"><a href="optim-op-point.html#cb257-25"></a>        lambdaArr[i], </span>
+<span id="cb257-26"><a href="optim-op-point.html#cb257-26"></a>        nu, </span>
+<span id="cb257-27"><a href="optim-op-point.html#cb257-27"></a>        <span class="dt">zeta1 =</span> x<span class="op">$</span>minimum, </span>
+<span id="cb257-28"><a href="optim-op-point.html#cb257-28"></a>        lesDistr, </span>
+<span id="cb257-29"><a href="optim-op-point.html#cb257-29"></a>        relWeights)<span class="op">$</span>aucROC</span>
+<span id="cb257-30"><a href="optim-op-point.html#cb257-30"></a>      nlfOptArr[y,i] &lt;-<span class="st"> </span><span class="kw">RSM_xFROC</span>(</span>
+<span id="cb257-31"><a href="optim-op-point.html#cb257-31"></a>        <span class="dt">z =</span> x<span class="op">$</span>minimum, </span>
+<span id="cb257-32"><a href="optim-op-point.html#cb257-32"></a>        mu, </span>
+<span id="cb257-33"><a href="optim-op-point.html#cb257-33"></a>        <span class="dt">lambda =</span> lambdaArr[i])</span>
+<span id="cb257-34"><a href="optim-op-point.html#cb257-34"></a>      llfOptArr[y,i] &lt;-<span class="st"> </span><span class="kw">RSM_yFROC</span>(</span>
+<span id="cb257-35"><a href="optim-op-point.html#cb257-35"></a>        <span class="dt">z =</span> x<span class="op">$</span>minimum, </span>
+<span id="cb257-36"><a href="optim-op-point.html#cb257-36"></a>        mu, </span>
+<span id="cb257-37"><a href="optim-op-point.html#cb257-37"></a>        nu)</span>
+<span id="cb257-38"><a href="optim-op-point.html#cb257-38"></a>    } <span class="cf">else</span> <span class="cf">if</span> (y <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) {</span>
+<span id="cb257-39"><a href="optim-op-point.html#cb257-39"></a>      x &lt;-<span class="st"> </span><span class="kw">optimize</span>(Youden, </span>
+<span id="cb257-40"><a href="optim-op-point.html#cb257-40"></a>                    <span class="dt">interval =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>), </span>
+<span id="cb257-41"><a href="optim-op-point.html#cb257-41"></a>                    mu, </span>
+<span id="cb257-42"><a href="optim-op-point.html#cb257-42"></a>                    lambdaArr[i], </span>
+<span id="cb257-43"><a href="optim-op-point.html#cb257-43"></a>                    nu, </span>
+<span id="cb257-44"><a href="optim-op-point.html#cb257-44"></a>                    lesDistr, </span>
+<span id="cb257-45"><a href="optim-op-point.html#cb257-45"></a>                    relWeights)</span>
+<span id="cb257-46"><a href="optim-op-point.html#cb257-46"></a>      zetaOptArr[y,i] &lt;-<span class="st"> </span>x<span class="op">$</span>minimum</span>
+<span id="cb257-47"><a href="optim-op-point.html#cb257-47"></a>      fomMaxArr[y,i] &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(</span>
+<span id="cb257-48"><a href="optim-op-point.html#cb257-48"></a>        mu, </span>
+<span id="cb257-49"><a href="optim-op-point.html#cb257-49"></a>        lambdaArr[i], </span>
+<span id="cb257-50"><a href="optim-op-point.html#cb257-50"></a>        nu, </span>
+<span id="cb257-51"><a href="optim-op-point.html#cb257-51"></a>        <span class="dt">zeta1 =</span> x<span class="op">$</span>minimum, </span>
+<span id="cb257-52"><a href="optim-op-point.html#cb257-52"></a>        lesDistr, </span>
+<span id="cb257-53"><a href="optim-op-point.html#cb257-53"></a>        relWeights)<span class="op">$</span>aucwAFROC</span>
+<span id="cb257-54"><a href="optim-op-point.html#cb257-54"></a>      rocAucArr[y,i] &lt;-<span class="st"> </span><span class="kw">UtilAnalyticalAucsRSM</span>(</span>
+<span id="cb257-55"><a href="optim-op-point.html#cb257-55"></a>        mu, </span>
+<span id="cb257-56"><a href="optim-op-point.html#cb257-56"></a>        lambdaArr[i], </span>
+<span id="cb257-57"><a href="optim-op-point.html#cb257-57"></a>        nu, </span>
+<span id="cb257-58"><a href="optim-op-point.html#cb257-58"></a>        <span class="dt">zeta1 =</span> x<span class="op">$</span>minimum, </span>
+<span id="cb257-59"><a href="optim-op-point.html#cb257-59"></a>        lesDistr, </span>
+<span id="cb257-60"><a href="optim-op-point.html#cb257-60"></a>        relWeights)<span class="op">$</span>aucROC</span>
+<span id="cb257-61"><a href="optim-op-point.html#cb257-61"></a>      nlfOptArr[y,i] &lt;-<span class="st"> </span><span class="kw">RSM_xFROC</span>(</span>
+<span id="cb257-62"><a href="optim-op-point.html#cb257-62"></a>        <span class="dt">z =</span> x<span class="op">$</span>minimum, </span>
+<span id="cb257-63"><a href="optim-op-point.html#cb257-63"></a>        mu, </span>
+<span id="cb257-64"><a href="optim-op-point.html#cb257-64"></a>        <span class="dt">lambda =</span> lambdaArr[i])</span>
+<span id="cb257-65"><a href="optim-op-point.html#cb257-65"></a>      llfOptArr[y,i] &lt;-<span class="st"> </span><span class="kw">RSM_yFROC</span>(</span>
+<span id="cb257-66"><a href="optim-op-point.html#cb257-66"></a>        <span class="dt">z =</span> x<span class="op">$</span>minimum, mu, nu)</span>
+<span id="cb257-67"><a href="optim-op-point.html#cb257-67"></a>    } <span class="cf">else</span> <span class="kw">stop</span>(<span class="st">&quot;incorrect y&quot;</span>)</span>
+<span id="cb257-68"><a href="optim-op-point.html#cb257-68"></a>  }</span>
+<span id="cb257-69"><a href="optim-op-point.html#cb257-69"></a>}</span></code></pre></div>
 <p>Table <a href="optim-op-point.html#tab:optim-op-point-table1">39.1</a> summarizes the results. The column labeled “FOM” shows the quantity being maximized, “lambda” corresponds to the 4 values of <span class="math inline">\(\lambda\)</span>, “zeta1” is the optimal value of <span class="math inline">\(\zeta_1\)</span> that maximizes FOM, “wAFROC” is the wAFROC-AUC, “ROC” is the AUC under the ROC curve, i.e., ROC-AUC, and “OptOpPt” is the optimal operating point on the FROC curve.</p>
 <p>For the wAFROC-AUC based optimizations (first four rows of table), as <span class="math inline">\(\lambda\)</span> increases:</p>
 <ul>
@@ -1754,12 +1754,12 @@ FIGURE 39.6: wAFROC curves for wAFROC-AUC and Youden-index based optimizations: 
 <div id="optim-op-point-application" class="section level2">
 <h2><span class="header-section-number">39.5</span> An application</h2>
 <p>The standalone CAD LROC dataset described in <span class="citation">(Hupse et al. <a href="#ref-hupse2013standalone" role="doc-biblioref">2013</a>)</span> was used to create the quasi-FROC ROC-AUC equivalent dataset embedded in <code>RJafroc</code> as object <code>datasetCadSimuFroc</code>. In the following code the first reader for this dataset, corresponding to CAD, is extracted using <code>DfExtractDataset</code> (the other readers, corresponding to radiologists who interpreted the same cases, are not used here). The function <code>DfFroc2Roc</code> converts this to an ROC dataset. The function <code>DfBinDataset</code> bins the data to about 7 bins. One lesion per abnormal case is assumed: <code>lesDistr = c(1)</code>. <code>FitRsmRoc</code> fits the binned ROC dataset to the radiological search model RSM. Object <code>fit</code> contains all necessary parameters required to perform the optimizations described in previous sections.</p>
-<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="optim-op-point.html#cb257-1"></a>ds &lt;-<span class="st"> </span>datasetCadSimuFroc</span>
-<span id="cb257-2"><a href="optim-op-point.html#cb257-2"></a>dsCad &lt;-<span class="st"> </span><span class="kw">DfExtractDataset</span>(ds, <span class="dt">rdrs =</span> <span class="dv">1</span>)</span>
-<span id="cb257-3"><a href="optim-op-point.html#cb257-3"></a>dsCadRoc &lt;-<span class="st"> </span><span class="kw">DfFroc2Roc</span>(dsCad)</span>
-<span id="cb257-4"><a href="optim-op-point.html#cb257-4"></a>dsCadRocBinned &lt;-<span class="st"> </span><span class="kw">DfBinDataset</span>(dsCadRoc, <span class="dt">opChType =</span> <span class="st">&quot;ROC&quot;</span>)</span>
-<span id="cb257-5"><a href="optim-op-point.html#cb257-5"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>)</span>
-<span id="cb257-6"><a href="optim-op-point.html#cb257-6"></a>fit &lt;-<span class="st"> </span><span class="kw">FitRsmRoc</span>(dsCadRocBinned, lesDistr)</span></code></pre></div>
+<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="optim-op-point.html#cb258-1"></a>ds &lt;-<span class="st"> </span>datasetCadSimuFroc</span>
+<span id="cb258-2"><a href="optim-op-point.html#cb258-2"></a>dsCad &lt;-<span class="st"> </span><span class="kw">DfExtractDataset</span>(ds, <span class="dt">rdrs =</span> <span class="dv">1</span>)</span>
+<span id="cb258-3"><a href="optim-op-point.html#cb258-3"></a>dsCadRoc &lt;-<span class="st"> </span><span class="kw">DfFroc2Roc</span>(dsCad)</span>
+<span id="cb258-4"><a href="optim-op-point.html#cb258-4"></a>dsCadRocBinned &lt;-<span class="st"> </span><span class="kw">DfBinDataset</span>(dsCadRoc, <span class="dt">opChType =</span> <span class="st">&quot;ROC&quot;</span>)</span>
+<span id="cb258-5"><a href="optim-op-point.html#cb258-5"></a>lesDistr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>)</span>
+<span id="cb258-6"><a href="optim-op-point.html#cb258-6"></a>fit &lt;-<span class="st"> </span><span class="kw">FitRsmRoc</span>(dsCadRocBinned, lesDistr)</span></code></pre></div>
 <p>Table <a href="optim-op-point.html#tab:optim-op-point-table4">39.4</a> summarizes the results.</p>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
