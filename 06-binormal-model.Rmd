@@ -619,12 +619,12 @@ Note that:
 * $A_{z;c,\text{TRUE}} >> A_{z;c}$, because of the large contribution from the area under the straight line, left poanel Fig. \@ref(fig:binormal-model-threshold-dependence-2). 
 
 
-## ROC and true performance plots {#binormal-model-partial-full-roc-curves}
+## Illustrative plots {#binormal-model-illustrative-plots}
 
-In the example plots below the partial-area observer curve is shown as a continuous line extending from the origin to the limiting point *plus* a dotted line extending from the limiting point to (1,1). The continuous section is determined by cumulating cases with z-samples $z \ge \zeta_1$ while the (1,1) point is determined by cumulating all cases. 
+In the ROC plots below the partial-area observer curve is shown as a continuous line extending from the origin to the limiting point *plus* a dotted line extending from the limiting point to (1,1). The continuous section is determined by cumulating cases with z-samples $z \ge \zeta_1$ while the (1,1) point is determined by cumulating all cases. 
 
 
-The ROC curve for both types of observers is shown in the left panel of \@ref(fig:binormal-model-threshold-dependence-2) for the following parameters: $a = 2$, $b = 1$ and $\zeta_1 = 1.5$; $\zeta_1$ corresponds to $c \equiv FPF =  \Phi(-\zeta_1)$ = `r pnorm(-zeta1)` and $TPF =  \Phi(a - b\zeta_1)$ = `r pnorm(a - b * zeta1)`. In other words the limiting point coordinates are `r OpPtStr(opPtx, opPty)`, shown in the plot by the solid dot. The continuous section of the ROC curve of the partial-area observer stops at the solid dot, and the partial area AUC $A_{z;c}$ equals `r A_zc`. The full-area ROC curve, shown by the complete solid curve, extends from (0,0) to (1,1), the area under which is $A_z$ = `r A_z`. 
+The ROC curve for both types of observers is shown in the left panel of \@ref(fig:binormal-model-threshold-dependence-2) for the following parameters: $a = 2$, $b = 1$ and $\zeta_1 = 1.5$; $\zeta_1$ corresponds to $c \equiv FPF =  \Phi(-\zeta_1)$ = `r pnorm(-zeta1)` and $TPF =  \Phi(a - b\zeta_1)$ = `r pnorm(a - b * zeta1)`. In other words the limiting point coordinates are `r OpPtStr(opPtx, opPty)`, shown in the plot by the solid dot. Partial AUC $A_{z;c}$ equals `r A_zc`. The full-area ROC curve, shown by the complete solid curve, extends from (0,0) to (1,1), the area under which is $A_z$ = `r A_z`. 
 
 
 
@@ -673,16 +673,16 @@ p2 <- ggplot2::ggplot(data = df, mapping = aes(x = FPF, y = pAUC_TRUE)) +
 
 
 
-```{r binormal-model-threshold-dependence-2, fig.cap="Left panel: a binormal ROC curve corresponding to a = 2 and b = 1. The solid dot is the operating point corresponding to $\\zeta_1 = 1.5$, representing the upper limit of the partial ROC AUC. The dotted line connects the solid dot to (1,1). The solid curve extending from the origin to (1,1) represents the full ROC. Note that in the region above the solid dot the solid curve is above the dotted line, meaning true performance of an observer who only rates a sub-set of cases, those with z-samples greater than $\\zeta_1 = 1.5$, is less than performance of an observer who rates all cases. Right panel: variation of true performance with FPF; at FPF = 0 the plot starts at ordinate equal to 0.5 and levels out at FPF = 1 at AUC = $A_z = 0.921.$", fig.show='hold', echo=FALSE}
+```{r binormal-model-threshold-dependence-2, fig.cap="Left panel: binormal ROC curve corresponding to a = 2 and b = 1. The dot is the operating point corresponding to $\\zeta_1 = 1.5$. The continuous curve extending from the origin to (1,1) represents the full ROC. Note that in the region above the dot the continuus curve is above the dotted line, meaning true performance of an observer who only rates a sub-set of cases is less than performance of an observer who rates all cases. Right panel: variation of true performance with FPF; at FPF = 0 the plot starts at ordinate equal to 0.5 and levels out at FPF = 1 at AUC = $A_z = 0.921.$", fig.show='hold', echo=FALSE}
 grid.arrange(p1, p2, ncol = 2)
 ```
 
 
-As FPF increases true-performance increases. the right panel of Fig. \@ref(fig:binormal-model-threshold-dependence-2) shows the variation of true performance $A_{z;c,\text{TRUE}}$ with FPF. The curve starts from (0, 0.5) and ends at `r OpPtStr(1, max(pAucTrue))`. For low values of FPF the curve is very steep while for FPF > 0.25 the curve levels out, approaching the maximum value defined by $A_z$ = `r A_z`. 
+As FPF increases true-performance increases. the right panel of Fig. \@ref(fig:binormal-model-threshold-dependence-2) shows the variation of true performance $A_{z;c,\text{TRUE}}$ with FPF. The curve starts from (0, 0.5) and ends at `r OpPtStr(1, max(pAucTrue))`. For low values of FPF the curve is very steep while for FPF > 0.25 the curve levels out, approaching the maximum value defined by $A_z$ = `r A_z`. True performance is maximized at $\zeta_1 = -\infty$.
 
 
 
-The next figure, corresponding to $a = 1$, $b = 0.2$ and $\zeta_1 = 1.5$ shows an improper ROC curve. The left panel in Fig. \@ref(fig:binormal-model-threshold-dependence-3) shows the the ROC curve. Now the dashed line is well above the continuous curve and true performance is maximized at a finite value of $\zeta_1$, corresponding to $FPF =  0.153$, see right panel. This is an invalid conclusion since an improper ROC curve is a fitting artifact of the binormal model easily avoided by using modern curve-fitting methods (eg., PROPROC, CBM or RSM). However, since the wAFROC has an operating characteristic with an improper-like feature but which is not a fitting artifact, this example serves a purpose, elaborated on in Chapter \@ref(optim-op-point), where it is shown that by maximzing the area under the wAFROC one can find the optimal reporting threshold of an algorithmic observer.
+Fig. \@ref(fig:binormal-model-threshold-dependence-3), left panel, corresponding to $a = 1$, $b = 0.2$ and $\zeta_1 = 1.5$, shows an improper ROC curve. The dashed line is well above the continuous curve and true performance is maximized at a finite value of $\zeta_1$, corresponding to $FPF =  0.153$, see right panel. This is an invalid conclusion since an improper ROC curve is a fitting artifact of the binormal model easily avoided by using modern curve-fitting methods (eg., PROPROC, CBM or RSM). However, since the wAFROC has an operating characteristic with an improper-like feature but which is not a fitting artifact, this example serves a purpose, elaborated on in Chapter \@ref(optim-op-point), where it is shown that by maximzing the area under the wAFROC one can find the optimal threshold of an algorithmic observer.
 
 
 ```{r echo=FALSE}
@@ -729,13 +729,20 @@ cat("true performance max occurs at FPF = ", fpfArr[which (pAucTrue == max(pAucT
 ```
 
 
-```{r binormal-model-threshold-dependence-3, fig.cap="The left panel shows the visibly improper ROC curve and now the solid line is not always above the dotted line. The right panel shows the variation of true performance pAUC_TRUE with FPF for a = 1 and b = 0.2. The curve exhibits a maximum at FPF equal to 0.153.", fig.show='hold', echo=FALSE}
+```{r binormal-model-threshold-dependence-3, fig.cap="The left panel shows the visibly improper ROC curve for a = 1 and b = 0.2. The solid line is below the dotted line. The right panel shows the variation of true performance pAUC_TRUE with FPF. True performance is maximized at FPF = 0.153. Since improper ROC fits are fitting artifacts, this example does not negate the previous finding that true performance for a proper ROC curve is maximized by setting the threshold to report all cases, i.e., FPF = 1.", fig.show='hold', echo=FALSE}
 grid.arrange(p1, p2, ncol = 2)
 ```
 
 
+## Geometrical argument {#binormal-model-geometrical-argument}
 
+Defining geometrical features of a proper ROC are: 
 
+* As one moves up the curve the slope decreases monotonically; 
+* At each point the slope is greater than that of the straight line connecting the point to (1,1); 
+* The curve ends at (1,1). 
+
+The geometry ensures that true performance for a proper ROC is maximized at $\zeta_1 = -\infty$, i.e., at FPF = 1, as in Fig. \@ref(fig:binormal-model-threshold-dependence-2), right panel.
 
 
 ## TBA Optimal operating point on ROC {#binormal-model-optimal-op-pt} 
