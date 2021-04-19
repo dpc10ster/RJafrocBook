@@ -12,7 +12,7 @@
 
 
 
-## How much finished {#ratings-paradigm-how-much-finished}
+## TBA How much finished {#ratings-paradigm-how-much-finished}
 80%
 
 

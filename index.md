@@ -23,7 +23,7 @@ description: "Artificial intelligence and observer performance book based on RJa
 * The physical book chapters are labeled (book), to distinguish them from the chapters in this online book.
 
 
-## How much finished {-}
+## TBA How much finished {-}
 
 10%
 

@@ -16,7 +16,7 @@ output:
 
 
 
-## How much finished {#optim-op-point-how-much-finished}
+## TBA How much finished {#optim-op-point-how-much-finished}
 80%
 
 Discussion and Intro need more work; coding is done

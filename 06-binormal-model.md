@@ -9,7 +9,7 @@
 
 
 
-## How much finished {#binormal-model-how-much-finished}
+## TBA How much finished {#binormal-model-how-much-finished}
 70%
 
 
@@ -348,9 +348,9 @@ The following code prints the predicted and observed full areas under the ROCs f
 
 ```
 #> A_z predicted =  0.9213504 
-#> A_z observed =  0.922908
+#> A_z observed =  0.9213329
 #> A_z{c;true} predicted =  0.8244498 
-#> A_z{c;true} observed =  0.8259404
+#> A_z{c;true} observed =  0.825861
 ```
 
 
