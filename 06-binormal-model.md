@@ -348,9 +348,9 @@ The following code prints the predicted and observed full areas under the ROCs f
 
 ```
 #> A_z predicted =  0.9213504 
-#> A_z observed =  0.9232382
+#> A_z observed =  0.9209746
 #> A_z{c;true} predicted =  0.8244498 
-#> A_z{c;true} observed =  0.8257136
+#> A_z{c;true} observed =  0.8242749
 ```
 
 
@@ -489,7 +489,7 @@ This defines the slope $\frac{d(\text{TPF})}{d(\text{FPF})}$ of the ROC at the o
 * For a given disease prevalence, if the cost of a FN decision is high (or if the benefit of a TP is high), then the optimal operating point is where the slope of the ROC is low, which is near the  upper-right corner. One sets the operating point at high sensitivity and low specificity.
 
 
-The costs and benefits are often difficult to quantify. If one assumes that the right hand side of Eqn. \@ref(eq:binormal-model-cost4) equals unity (roughly speaking, the four costs / benefits are equal and disease-prevalence is 50%) then the optimal operating point is defined by that point on the ROC curve where the slope is unity, which is the point of nearest approach of the curve to the upper-left corner. This corresponds maximizing the Youden index [@youden1950index], defined as the sum of sensitivity and specificity minus one. This is demonstrated in the following code.
+The costs and benefits are often difficult to quantify. If one assumes that the right hand side of Eqn. \@ref(eq:binormal-model-cost4) equals unity (e.g., the four costs / benefits are equal and disease-prevalence is 50%) then the optimal operating point is defined by that point on the ROC curve where the slope is unity, which is the point of nearest approach of the curve to the upper-left corner. This corresponds to maximizing the Youden index [@youden1950index], defined as the sum of sensitivity and specificity minus one. This is demonstrated in the following code.
 
 
 ```r
@@ -498,12 +498,12 @@ z <- seq(-3,5.5,0.05)
 FPF <- pnorm(-z)
 TPF <- pnorm(a - b*z)
 Youden <- TPF + (1 - FPF) - 1
-curve <- data.frame(FPF = FPF, TPF = TPF)
+curve <- data.frame(FPF = FPF, TPF = TPF, YOU = Youden)
 dist <- sqrt(FPF^2 + (1 - TPF)^2)
 p1 <- ggplot2::ggplot(curve, aes(x = FPF, y = TPF)) + 
   geom_line() +
   scale_x_continuous(limits = c(0,1)) + scale_y_continuous(limits = c(0,1))
-p2 <- ggplot2::ggplot(curve, aes(x = FPF, y = Youden)) + 
+p2 <- ggplot2::ggplot(curve, aes(x = FPF, y = YOU)) + 
   geom_line() +
   scale_x_continuous(limits = c(0,1)) + scale_y_continuous(limits = c(0,1))
 indxDist <- which(dist == min(dist))
@@ -511,18 +511,18 @@ indxYoud <- which(Youden == max(Youden))
 if (indxDist != indxYoud) stop("The two indices are different") else {
   cat("Op Pt corresponding to max Youden and min distance is: \nFPF = ", 
       FPF[indxDist], 
-      ", \nTPF = ", 
+      "\nTPF = ", 
       TPF[indxDist])
 }
 #> Op Pt corresponding to max Youden and min distance is: 
-#> FPF =  0.1586553 , 
+#> FPF =  0.1586553 
 #> TPF =  0.8413447
 ```
 
 
 <div class="figure">
-<img src="06-binormal-model_files/figure-html/binormal-model-youden-max-1.png" alt="Left panel: binormal ROC curve corresponding to a = 2 and b = 1. Right panel: variation of Youden index with FPF; at FPF = 0.1586553 the plot shows a maximum; this point corresponds to the point of nearest approch of the ROC to the upper-left corner. The corresponding TPF is 0.8413447." width="672" />
-<p class="caption">(\#fig:binormal-model-youden-max)Left panel: binormal ROC curve corresponding to a = 2 and b = 1. Right panel: variation of Youden index with FPF; at FPF = 0.1586553 the plot shows a maximum; this point corresponds to the point of nearest approch of the ROC to the upper-left corner. The corresponding TPF is 0.8413447.</p>
+<img src="06-binormal-model_files/figure-html/binormal-model-youden-max-1.png" alt="Left panel: binormal ROC curve corresponding to a = 2 and b = 1. Right panel: variation of Youden index with FPF; the plot shows a maximum at FPF = 0.1586553; this corresponds to the nearest approch of the ROC curve to the upper-left corner." width="672" />
+<p class="caption">(\#fig:binormal-model-youden-max)Left panel: binormal ROC curve corresponding to a = 2 and b = 1. Right panel: variation of Youden index with FPF; the plot shows a maximum at FPF = 0.1586553; this corresponds to the nearest approch of the ROC curve to the upper-left corner.</p>
 </div>
 
 

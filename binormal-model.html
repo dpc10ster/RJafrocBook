@@ -1148,9 +1148,9 @@ A_{z;c,\text{TRUE}} \le A_{z}
 <span id="cb59-7"><a href="binormal-model.html#cb59-7"></a>zc[<span class="dv">2</span>,z[<span class="dv">2</span>,] <span class="op">&lt;</span><span class="st"> </span>zeta1] &lt;-<span class="st"> </span><span class="dv">-100</span> <span class="co"># do:</span></span></code></pre></div>
 <p>The following code prints the predicted and observed full areas under the ROCs followed by the predicted and observed true performances. With this many cases sampling variability is small and the predicted and observed values are close.</p>
 <pre><code>#&gt; A_z predicted =  0.9213504 
-#&gt; A_z observed =  0.9232382
+#&gt; A_z observed =  0.9209746
 #&gt; A_z{c;true} predicted =  0.8244498 
-#&gt; A_z{c;true} observed =  0.8257136</code></pre>
+#&gt; A_z{c;true} observed =  0.8242749</code></pre>
 <p>Note that:</p>
 <ul>
 <li><span class="math inline">\(A_{z;c,\text{TRUE}} &lt; A_z\)</span>, because ordering information is lost for all cases with z-samples less than <span class="math inline">\(\zeta_1\)</span>.</li>
@@ -1237,18 +1237,18 @@ P(\text{FN}) =&amp; P(+) (1-\text{TPF})
 <li><p>For a given disease prevalence, if the cost of a FP decision is high (or if the benefit of a TN is high - recall that a benefit is the same as a negative cost), then the optimal operating point is where the slope of the ROC is high, which is near the lower-left corner. One sets the operating point at low sensitivity and high specificity.</p></li>
 <li><p>For a given disease prevalence, if the cost of a FN decision is high (or if the benefit of a TP is high), then the optimal operating point is where the slope of the ROC is low, which is near the upper-right corner. One sets the operating point at high sensitivity and low specificity.</p></li>
 </ul>
-<p>The costs and benefits are often difficult to quantify. If one assumes that the right hand side of Eqn. <a href="binormal-model.html#eq:binormal-model-cost4">(13.25)</a> equals unity (roughly speaking, the four costs / benefits are equal and disease-prevalence is 50%) then the optimal operating point is defined by that point on the ROC curve where the slope is unity, which is the point of nearest approach of the curve to the upper-left corner. This corresponds maximizing the Youden index <span class="citation">(Youden <a href="#ref-youden1950index" role="doc-biblioref">1950</a>)</span>, defined as the sum of sensitivity and specificity minus one. This is demonstrated in the following code.</p>
+<p>The costs and benefits are often difficult to quantify. If one assumes that the right hand side of Eqn. <a href="binormal-model.html#eq:binormal-model-cost4">(13.25)</a> equals unity (e.g., the four costs / benefits are equal and disease-prevalence is 50%) then the optimal operating point is defined by that point on the ROC curve where the slope is unity, which is the point of nearest approach of the curve to the upper-left corner. This corresponds to maximizing the Youden index <span class="citation">(Youden <a href="#ref-youden1950index" role="doc-biblioref">1950</a>)</span>, defined as the sum of sensitivity and specificity minus one. This is demonstrated in the following code.</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="binormal-model.html#cb62-1"></a>a &lt;-<span class="st"> </span><span class="dv">2</span>;b &lt;-<span class="st"> </span><span class="dv">1</span></span>
 <span id="cb62-2"><a href="binormal-model.html#cb62-2"></a>z &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">3</span>,<span class="fl">5.5</span>,<span class="fl">0.05</span>)</span>
 <span id="cb62-3"><a href="binormal-model.html#cb62-3"></a>FPF &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="op">-</span>z)</span>
 <span id="cb62-4"><a href="binormal-model.html#cb62-4"></a>TPF &lt;-<span class="st"> </span><span class="kw">pnorm</span>(a <span class="op">-</span><span class="st"> </span>b<span class="op">*</span>z)</span>
 <span id="cb62-5"><a href="binormal-model.html#cb62-5"></a>Youden &lt;-<span class="st"> </span>TPF <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>FPF) <span class="op">-</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb62-6"><a href="binormal-model.html#cb62-6"></a>curve &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">FPF =</span> FPF, <span class="dt">TPF =</span> TPF)</span>
+<span id="cb62-6"><a href="binormal-model.html#cb62-6"></a>curve &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">FPF =</span> FPF, <span class="dt">TPF =</span> TPF, <span class="dt">YOU =</span> Youden)</span>
 <span id="cb62-7"><a href="binormal-model.html#cb62-7"></a>dist &lt;-<span class="st"> </span><span class="kw">sqrt</span>(FPF<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>TPF)<span class="op">^</span><span class="dv">2</span>)</span>
 <span id="cb62-8"><a href="binormal-model.html#cb62-8"></a>p1 &lt;-<span class="st"> </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(curve, <span class="kw">aes</span>(<span class="dt">x =</span> FPF, <span class="dt">y =</span> TPF)) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb62-9"><a href="binormal-model.html#cb62-9"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
 <span id="cb62-10"><a href="binormal-model.html#cb62-10"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
-<span id="cb62-11"><a href="binormal-model.html#cb62-11"></a>p2 &lt;-<span class="st"> </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(curve, <span class="kw">aes</span>(<span class="dt">x =</span> FPF, <span class="dt">y =</span> Youden)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb62-11"><a href="binormal-model.html#cb62-11"></a>p2 &lt;-<span class="st"> </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(curve, <span class="kw">aes</span>(<span class="dt">x =</span> FPF, <span class="dt">y =</span> YOU)) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb62-12"><a href="binormal-model.html#cb62-12"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
 <span id="cb62-13"><a href="binormal-model.html#cb62-13"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
 <span id="cb62-14"><a href="binormal-model.html#cb62-14"></a>indxDist &lt;-<span class="st"> </span><span class="kw">which</span>(dist <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(dist))</span>
@@ -1256,16 +1256,16 @@ P(\text{FN}) =&amp; P(+) (1-\text{TPF})
 <span id="cb62-16"><a href="binormal-model.html#cb62-16"></a><span class="cf">if</span> (indxDist <span class="op">!=</span><span class="st"> </span>indxYoud) <span class="kw">stop</span>(<span class="st">&quot;The two indices are different&quot;</span>) <span class="cf">else</span> {</span>
 <span id="cb62-17"><a href="binormal-model.html#cb62-17"></a>  <span class="kw">cat</span>(<span class="st">&quot;Op Pt corresponding to max Youden and min distance is: </span><span class="ch">\n</span><span class="st">FPF = &quot;</span>, </span>
 <span id="cb62-18"><a href="binormal-model.html#cb62-18"></a>      FPF[indxDist], </span>
-<span id="cb62-19"><a href="binormal-model.html#cb62-19"></a>      <span class="st">&quot;, </span><span class="ch">\n</span><span class="st">TPF = &quot;</span>, </span>
+<span id="cb62-19"><a href="binormal-model.html#cb62-19"></a>      <span class="st">&quot;</span><span class="ch">\n</span><span class="st">TPF = &quot;</span>, </span>
 <span id="cb62-20"><a href="binormal-model.html#cb62-20"></a>      TPF[indxDist])</span>
 <span id="cb62-21"><a href="binormal-model.html#cb62-21"></a>}</span>
 <span id="cb62-22"><a href="binormal-model.html#cb62-22"></a><span class="co">#&gt; Op Pt corresponding to max Youden and min distance is: </span></span>
-<span id="cb62-23"><a href="binormal-model.html#cb62-23"></a><span class="co">#&gt; FPF =  0.1586553 , </span></span>
+<span id="cb62-23"><a href="binormal-model.html#cb62-23"></a><span class="co">#&gt; FPF =  0.1586553 </span></span>
 <span id="cb62-24"><a href="binormal-model.html#cb62-24"></a><span class="co">#&gt; TPF =  0.8413447</span></span></code></pre></div>
 <div class="figure"><span id="fig:binormal-model-youden-max"></span>
-<img src="06-binormal-model_files/figure-html/binormal-model-youden-max-1.png" alt="Left panel: binormal ROC curve corresponding to a = 2 and b = 1. Right panel: variation of Youden index with FPF; at FPF = 0.1586553 the plot shows a maximum; this point corresponds to the point of nearest approch of the ROC to the upper-left corner. The corresponding TPF is 0.8413447." width="672" />
+<img src="06-binormal-model_files/figure-html/binormal-model-youden-max-1.png" alt="Left panel: binormal ROC curve corresponding to a = 2 and b = 1. Right panel: variation of Youden index with FPF; the plot shows a maximum at FPF = 0.1586553; this corresponds to the nearest approch of the ROC curve to the upper-left corner." width="672" />
 <p class="caption">
-FIGURE 13.4: Left panel: binormal ROC curve corresponding to a = 2 and b = 1. Right panel: variation of Youden index with FPF; at FPF = 0.1586553 the plot shows a maximum; this point corresponds to the point of nearest approch of the ROC to the upper-left corner. The corresponding TPF is 0.8413447.
+FIGURE 13.4: Left panel: binormal ROC curve corresponding to a = 2 and b = 1. Right panel: variation of Youden index with FPF; the plot shows a maximum at FPF = 0.1586553; this corresponds to the nearest approch of the ROC curve to the upper-left corner.
 </p>
 </div>
 </div>
