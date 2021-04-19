@@ -745,11 +745,104 @@ Defining geometrical features of a proper ROC are:
 The geometry ensures that true performance for a proper ROC is maximized at $\zeta_1 = -\infty$, i.e., at FPF = 1, as in Fig. \@ref(fig:binormal-model-threshold-dependence-2), right panel.
 
 
-## TBA Optimal operating point on ROC {#binormal-model-optimal-op-pt} 
-TBA While 
+## Optimal operating point on ROC {#binormal-model-optimal-op-pt} 
+We have seen that optimal ROC AUC is achieved by setting $\zeta_1 = -\infty$, i.e., by reporting all cases as diseased. Of course, from clinical considerations, this is nonsense. Consider screening mammography, where typically for every 1000 cases only 5 are malignant. Recalling everybody would incur huge costs from having to rule out cancer in 995 actually non-diseased patients. Of course the 5 malignant cancers would be confirmed at the follow-up diagnostic mammography examination. But one can clearly see that the benefit of correctly detecting the 5 malignancies is far outweighed by the 995 unnecessary recalls. And if one is going to recall everybody, why perform the initial screeing mammography exam?
 
-[@metz1978rocmethodology]  
-[@youden1950index]
+So what is going on? The problem is that AUC measures classification performance in a 2AFC task. A screening examination is not a 2AFC task: the radiologist is not presented two cases, one non-diseased and one diseased, and asked to pick the diseased patient. Rather, the radiologist is shown images of a single patient, and the object is to maximize the detection rate while minimizing false positives. 
+
+To address this optimization task one needs to know the costs and benefits of the four decision outcomes in the binary paradigm: true and false positives, and true and false negatives. This has been addressed in [@metz1978rocmethodology]. Here is the reasonaing. Let 
+
+* $C_0$ denote the overhead cost of performing the imaging examination, 
+* $C_{\text{TP}}$ denote the cost of a true positive decision (a benefit can be expressed as a negative cost), 
+* $C_{\text{FN}}$ denote the cost of a false negative decision,
+* $C_{\text{FP}}$ denote the cost of a false positive decision, and 
+* $C_{\text{TN}}$ denote the cost (or negative benefit) of a true negative decision.    
+
+
+It is shown [@metz1978rocmethodology] that the average cost of the examination is:
+
+
+\begin{equation} 
+\overline{C} = C_0 + C_{\text{TP}} P(\text{TP}) 
++ C_{\text{TN}} P(\text{TN})
++ C_{\text{FP}} P(\text{FP})
++ C_{\text{FN}} P(\text{FN})
+(\#eq:binormal-model-cost)
+\end{equation}
+
+In this equation $P(\text{TP})$ is the probability of a TP-event, etc. These probabilities are related to disease prevalence $P(+)$ and the operating point by:
+
+\begin{equation} 
+\left.
+\begin{aligned}
+P(\text{TP}) =& P(+) \text{TPF} \\
+P(\text{TN}) =& (1-P(+)) (1-\text{FPF}) \\
+P(\text{FP}) =& (1-P(+)) \text{FPF} \\
+P(\text{FN}) =& P(+) (1-\text{TPF}) 
+\end{aligned}
+\right \}
+(\#eq:binormal-model-cost2)
+\end{equation}
+
+
+With these substitutions one gets for the average cost:
+
+
+\begin{equation} 
+\overline{C} = C_0 + C_{\text{TN}} P(-) + C_{\text{FN}}  P(+) \\
++ (C_{\text{TP}} - C_{\text{FN}}) P(+) \text{TPF} \\
++ (C_{\text{FP}} - C_{\text{TN}}) P(-) \text{FPF} \\
+(\#eq:binormal-model-cost3)
+\end{equation}
+
+Equating the derivative of the average cost to zero, to minimize the average cost, one gets:
+
+
+\begin{equation} 
+\frac{d(\text{TPF})}{d(\text{FPF})} = \frac{C_{\text{FP}} - C_{\text{TN}}}{C_{\text{FN}} - C_{\text{TP}}}\frac{P(-)}{P(+)}
+(\#eq:binormal-model-cost4)
+\end{equation}
+
+This defines the slope $\frac{d(\text{TPF})}{d(\text{FPF})}$ of the ROC at the optimal operating point, i.e., the point that minimizes the average cost of the examination. Note that $P(-) = 1 - P(+)$. 
+
+* If disease prevalence is high, then the optimal operating point is where the slope of the ROC is low, which is near the  upper-right corner. With mostly diseased cases it makes sense to set the operating point at high sensitivity and low specificity. Conversely, with low prevalence, one should set the operating point at low sensitivity and high specificity.
+
+* For a given disease prevalence, if the cost of a FP decision is high (or if the benefit of a TN is high - recall that a benefit is the same as a negative cost), then the optimal operating point is where the slope of the ROC is high, which is near the lower-left corner. One sets the operating point at low sensitivity and high specificity.
+
+* For a given disease prevalence, if the cost of a FN decision is high (or if the benefit of a TP is high), then the optimal operating point is where the slope of the ROC is low, which is near the  upper-right corner. One sets the operating point at high sensitivity and low specificity.
+
+
+The costs and benefits are often difficult to quantify. If one assumes that the right hand side of Eqn. \@ref(eq:binormal-model-cost4) equals unity (roughly speaking, the four costs / benefits are equal and disease-prevalence is 50%) then the optimal operating point is defined by that point on the ROC curve where the slope is unity, which is the point of nearest approach of the curve to the upper-left corner. This corresponds maximizing the Youden index [@youden1950index], defined as the sum of sensitivity and specificity minus one. This is demonstrated in the following code.
+
+```{r}
+a <- 2;b <- 1
+z <- seq(-3,5.5,0.05)
+FPF <- pnorm(-z)
+TPF <- pnorm(a - b*z)
+Youden <- TPF + (1 - FPF) - 1
+curve <- data.frame(FPF = FPF, TPF = TPF)
+dist <- sqrt(FPF^2 + (1 - TPF)^2)
+p1 <- ggplot2::ggplot(curve, aes(x = FPF, y = TPF)) + 
+  geom_line() +
+  scale_x_continuous(limits = c(0,1)) + scale_y_continuous(limits = c(0,1))
+p2 <- ggplot2::ggplot(curve, aes(x = FPF, y = Youden)) + 
+  geom_line() +
+  scale_x_continuous(limits = c(0,1)) + scale_y_continuous(limits = c(0,1))
+indxDist <- which(dist == min(dist))
+indxYoud <- which(Youden == max(Youden))
+if (indxDist != indxYoud) stop("The two indices are different") else {
+  cat("Op Pt corresponding to max Youden and min distance is: \nFPF = ", 
+      FPF[indxDist], 
+      ", \nTPF = ", 
+      TPF[indxDist])
+}
+```
+
+
+```{r binormal-model-youden-max, fig.cap="Left panel: binormal ROC curve corresponding to a = 2 and b = 1. Right panel: variation of Youden index with FPF; at FPF = 0.1586553 the plot shows a maximum; this point corresponds to the point of nearest approch of the ROC to the upper-left corner. The corresponding TPF is 0.8413447.", fig.show='hold', echo=FALSE}
+grid.arrange(p1, p2, ncol = 2)
+```
+
 
 ## Discussion{#binormal-model-discussion}
 The binormal model is historically very important and the contribution by Dorfman and Alf [@RN1081] was seminal. Prior to their work, there was no valid way of estimating AUC from observed ratings counts. Their work and a key paper [@RN1487] accelerated research using ROC methods. The number of publications using their algorithm, and the more modern versions developed by Metz and colleagues, is probably well in excess of 500. Because of its key role, I have endeavored to take out some of the mystery about how the binormal model parameters are estimated. In particular, a common misunderstanding that the binormal model assumptions are violated by real datasets, when in fact it is quite robust to apparent deviations from normality, is addressed. 
