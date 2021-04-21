@@ -1,11 +1,7 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
-
-
 # Introduction to the Obuchowski-Rockette method {#or-method-intro}
+
+
+
 
 
 
@@ -16,7 +12,6 @@ output:
 
 
 
-
 ## Introduction {#or-method-intro-introduction}
 * This chapter starts with a gentle introduction to the Obuchowski and Rockette method. The reason is that the method was rather opaque to me, and I suspect most non-statistician users. Part of the problem, in my opinion, is the notation, namely lack of the *case-set* index $\{c\}$. While this may seem like a trivial point to statisticians, it did present a conceptual problem for me. 
 
@@ -24,24 +19,24 @@ output:
 
 * To illustrate the covariance matrix, a single reader interpreting a case-set in multiple treatments is analyzed and the results compared to that using DBM fixed-reader analysis described in previous chapters. 
 
-## Single-reader multiple-treatment {#OR1RMTModel}
-Consider a single-reader providing ROC interpretations of a common case-set $\{c\}$ in multiple-treatments $i$ ($i$ = 1, 2, …, $I$). Before proceeding, we note that this is not formally equivalent to multiple-readers providing ROC interpretations in a single treatment. This is because reader is a random factor while treatment is a fixed factor. 
+## Single-reader multiple-treatment {#or-single-reader-multiple-treatment}
+Consider a single-reader providing ROC interpretations of a common case-set $\{c\}$ in multiple-treatments $i$ ($i$ = 1, 2, …, $I$). This is not equivalent to multiple-readers providing ROC interpretations in a single treatment. This is because reader is a random factor while treatment is a fixed factor. 
 
 *In the OR method one models the figure-of-merit, not the pseudovalues; indeed this is a key differences from the DBM method.* The figure of merit $\theta$ is modeled as:
 
 \begin{equation}
 \theta_{i\{c\}}=\mu+\tau_i+\epsilon_{i\{c\}}
-(\#eq:ORModel1RMT)
+(\#eq:or-sampling-model-multiple-treatments)
 \end{equation}
 
-Eqn. \@ref(eq:ORModel1RMT) models the observed figure-of-merit $\theta_{i\{c\}}$ as a constant term $\mu$, a treatment dependent term $\tau_i$ (the treatment-effect), and a random term $\epsilon_{i\{c\}}$. The term $\tau_i$ has the constraint: 
+Eqn. \@ref(eq:or-sampling-model-multiple-treatments) models the observed figure-of-merit $\theta_{i\{c\}}$ as a constant term $\mu$, a treatment dependent term $\tau_i$ (the treatment-effect), and a random term $\epsilon_{i\{c\}}$. The term $\tau_i$ has the constraint: 
 
 \begin{equation}
 \sum_{i=1}^{I}\tau_i=0
 (\#eq:ConstraintTau)
 \end{equation}
 
-The left hand side of Eqn. \@ref(eq:ORModel1RMT) is the figure-of-merit $\theta_i\{c\}$ for treatment $i$ and case-set index $\{c\}$, where $c$ = 1, 2, ..., $C$ denotes different independent case-sets sampled from the population, i.e., different *collections* of $K_1$ non-diseased and $K_2$ diseased cases.
+The left hand side of Eqn. \@ref(eq:or-sampling-model-multiple-treatments) is the figure-of-merit $\theta_i\{c\}$ for treatment $i$ and case-set index $\{c\}$, where $c$ = 1, 2, ..., $C$ denotes different independent case-sets sampled from the population, i.e., different *collections* of $K_1$ non-diseased and $K_2$ diseased cases.
 
 *The case-set index is essential for clarity. Without it $\theta_i$ is a fixed quantity - the figure of merit estimate for treatment $i$ - lacking an index allowing for sampling related variability.* Obuchowski and Rockette define a *k-index*, the: 
 
@@ -51,14 +46,14 @@ Needed is a *case-set* index rather than a *repetition* index. Repeating a study
 
 *It is shown below that usage of the case-set index interpretation yields the same results using the DBM or the OR methods (for empirical AUC).*
 
-Eqn. \@ref(eq:ORModel1RMT) has an additive random error term $\epsilon_{i\{c\}}$ whose sampling behavior is described by a multivariate normal distribution with an I-dimensional zero mean vector and an $I \times I$ dimensional covariance matrix $\Sigma$:
+Eqn. \@ref(eq:or-sampling-model-multiple-treatments) has an additive random error term $\epsilon_{i\{c\}}$ whose sampling behavior is described by a multivariate normal distribution with an I-dimensional zero mean vector and an $I \times I$ dimensional covariance matrix $\Sigma$:
 
 \begin{equation}
 \epsilon_{i\{c\}} \sim N_I\left ( \vec{0} ,  \Sigma\right )
 (\#eq:DefinitionEpsilon)
 \end{equation}
 
-Here $N_I$ is the I-variate normal distribution (i.e., each sample yields $I$ random numbers). For the single-reader model Eqn. \@ref(eq:ORModel1RMT), the covariance matrix has the following structure :
+Here $N_I$ is the I-variate normal distribution (i.e., each sample yields $I$ random numbers). For the single-reader model Eqn. \@ref(eq:or-sampling-model-multiple-treatments), the covariance matrix has the following structure :
 
 \begin{equation}
 \Sigma_{ii'}=Cov\left ( \epsilon_{i\{c\}}, \epsilon_{i'\{c\}} \right )=\left\{\begin{matrix}
@@ -249,6 +244,11 @@ The following code chunk extracts (using the `DfExtractDataset` function) a sing
 rocData1R <- DfExtractDataset(dataset02, rdrs = 1) #select the 1st reader to be analyzed
 zik1 <- rocData1R$ratings$NL[,1,,1];K <- dim(zik1)[2];I <- dim(zik1)[1]
 zik2 <- rocData1R$ratings$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
+cat("here")
+```
+
+```
+## here
 ```
 
 The following notation is used in the code below:
@@ -267,15 +267,23 @@ ret1 <- VarCov1_Jk(zik1, zik2)
 Var <- ret1$Var
 Cov1 <- ret1$Cov1 # use these (i.e., jackknife) as default values in subsequent code
 data.frame ("Cov1_jk" = Cov1, "Var_jk" = Var)
-#>        Cov1_jk       Var_jk
-#> 1 0.0003734661 0.0006989006
+```
 
+```
+##        Cov1_jk       Var_jk
+## 1 0.0003734661 0.0006989006
+```
+
+```r
 ret4 <- UtilORVarComponentsFactorial(
   rocData1R, FOM = "Wilcoxon") # the functions default `covEstMethod` is jackknife
 data.frame ("Cov1_rj_jk" = ret4$VarCom["Cov1", "Estimates"], 
             "Var_rj_jk" = ret4$VarCom["Var", "Estimates"])
-#>     Cov1_rj_jk    Var_rj_jk
-#> 1 0.0003734661 0.0006989006
+```
+
+```
+##     Cov1_rj_jk    Var_rj_jk
+## 1 0.0003734661 0.0006989006
 ```
 
 Note that the estimates are identical and that the $\text{Cov1}$ estimate is smaller than the $\text{Var}$ estimate (their ratio is the correlation $\rho_1 = \text{Cov1}/\text{Var}$ = 0.5343623). 
@@ -285,18 +293,31 @@ Shown next are bootstrap method estimates with increasing number of bootstraps (
 ```r
 ret2 <- VarCov1_Bs(zik1, zik2, 200, seed = 100)
 data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) 
-#>        Cov_bs       Var_bs
-#> 1 0.000283905 0.0005845354
+```
 
+```
+##        Cov_bs       Var_bs
+## 1 0.000283905 0.0005845354
+```
+
+```r
 ret2 <- VarCov1_Bs(zik1, zik2, 2000, seed = 100)
 data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) 
-#>         Cov_bs       Var_bs
-#> 1 0.0003466804 0.0006738506
+```
 
+```
+##         Cov_bs       Var_bs
+## 1 0.0003466804 0.0006738506
+```
+
+```r
 ret2 <- VarCov1_Bs(zik1, zik2, 20000, seed = 100)
 data.frame ("Cov_bs" = ret2$Cov1, "Var_bs" = ret2$Var) 
-#>         Cov_bs       Var_bs
-#> 1 0.0003680714 0.0006862668
+```
+
+```
+##         Cov_bs       Var_bs
+## 1 0.0003680714 0.0006862668
 ```
 
 With increasing number of bootstraps the values approach the jackknife estimates.
@@ -310,8 +331,11 @@ ret5 <- UtilORVarComponentsFactorial(
   covEstMethod = "bootstrap", nBoots = 2000, seed = 100)
 data.frame ("Cov_rj_bs" = ret5$VarCom["Cov1", "Estimates"], 
             "Var_rj_bs" = ret5$VarCom["Var", "Estimates"])
-#>      Cov_rj_bs    Var_rj_bs
-#> 1 0.0003466804 0.0006738506
+```
+
+```
+##      Cov_rj_bs    Var_rj_bs
+## 1 0.0003466804 0.0006738506
 ```
 
 Note that the two estimates shown above for $B = 2000$ are identical. This is because *the seeds are identical*. With different seeds on expect sampling related fluctuations.
@@ -323,25 +347,33 @@ Following are results of the DeLong covariance estimation method, the first outp
 mtrxDLStr <- VarCovMtrxDLStr(rocData1R)
 ret3 <- VarCovs(mtrxDLStr)
 data.frame ("Cov_dl" = ret3$cov1, "Var_dl" = ret3$var)
-#>         Cov_dl       Var_dl
-#> 1 0.0003684357 0.0006900766
+```
 
+```
+##         Cov_dl       Var_dl
+## 1 0.0003684357 0.0006900766
+```
+
+```r
 ret5 <- UtilORVarComponentsFactorial(
   rocData1R, FOM = "Wilcoxon", covEstMethod = "DeLong")
 data.frame ("Cov_rj_dl" = ret5$VarCom["Cov1", "Estimates"], 
             "Var_rj_dl" = ret5$VarCom["Var", "Estimates"])
-#>      Cov_rj_dl    Var_rj_dl
-#> 1 0.0003684357 0.0006900766
+```
+
+```
+##      Cov_rj_dl    Var_rj_dl
+## 1 0.0003684357 0.0006900766
 ```
 
 Note that the two estimates are identical and that the DeLong estimate are close to the bootstrap estimates using 20,000 bootstraps. The just demonstrated close correspondence is only expected when using the Wilcoxon figure of merit, i.e., the empirical AUC.
 
-### Significance testing {#SignificanceTesting1ROR}
+### Significance testing {#st-or-multiple-treatment}
 The covariance matrix is needed for significance testing. Define the mean square corresponding to the treatment effect, denoted $MS(T)$, by:
 
 \begin{equation}
 MS(T)=\frac{1}{I-1}\sum_{i=1}^{I}(\theta_i-\theta_\bullet)^2
-(\#eq:DefinitionMST)
+(\#eq:def-mst)
 \end{equation}
 
 *Unlike the previous DBM related chapters, all mean square quantities in this chapter are based on FOMs, not pseudovalues.*
@@ -384,9 +416,18 @@ Here is an `R` illustration of this theorem for $I-1 = 4$ and $\alpha = 0.05$:
 
 ```r
 qf(0.05, 4, Inf)
-#> [1] 0.1776808
+```
+
+```
+## [1] 0.1776808
+```
+
+```r
 qchisq(0.05,4)/4
-#> [1] 0.1776808
+```
+
+```
+## [1] 0.1776808
 ```
 
 ### p-value and confidence interval {#or-method-intro-pvalue-ci}
@@ -418,34 +459,52 @@ ret1 <- StSignificanceTesting(
 data.frame("DBM:F" = ret1$FRRC$FTests["Treatment", "FStat"], 
            "DBM:ddf" = ret1$FRRC$FTests["Treatment", "DF"], 
            "DBM:P-val" = ret1$FRRC$FTests["Treatment", "p"])
-#>       DBM.F DBM.ddf  DBM.P.val
-#> 1 1.2201111       1 0.27168532
+```
 
+```
+##       DBM.F DBM.ddf  DBM.P.val
+## 1 1.2201111       1 0.27168532
+```
+
+```r
 ret2 <- StSignificanceTesting(
   rocData1R,FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC")
 data.frame("ORJack:Chisq" = ret2$FRRC$FTests["Treatment", "Chisq"], 
            "ORJack:ddf" = ret2$FRRC$FTests["Treatment", "DF"], 
            "ORJack:P-val" = ret2$FRRC$FTests["Treatment", "p"])
-#>   ORJack.Chisq ORJack.ddf ORJack.P.val
-#> 1    1.2201111          1   0.26933885
+```
 
+```
+##   ORJack.Chisq ORJack.ddf ORJack.P.val
+## 1    1.2201111          1   0.26933885
+```
+
+```r
 ret3 <- StSignificanceTesting(
   rocData1R,FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC", 
                               covEstMethod = "DeLong")
 data.frame("ORDeLong:Chisq" = ret3$FRRC$FTests["Treatment", "Chisq"], 
            "ORDeLong:ddf" = ret3$FRRC$FTests["Treatment", "DF"], 
            "ORDeLong:P-val" = ret3$FRRC$FTests["Treatment", "p"])
-#>   ORDeLong.Chisq ORDeLong.ddf ORDeLong.P.val
-#> 1      1.2345017            1     0.26653335
+```
 
+```
+##   ORDeLong.Chisq ORDeLong.ddf ORDeLong.P.val
+## 1      1.2345017            1     0.26653335
+```
+
+```r
 ret4 <- StSignificanceTesting(
   rocData1R,FOM = "Wilcoxon", method = "OR", analysisOption = "FRRC", 
                               covEstMethod = "bootstrap")
 data.frame("ORBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"], 
            "ORBoot:ddf" = ret4$FRRC$FTests["Treatment", "DF"], 
            "ORBoot:P-val" = ret4$FRRC$FTests["Treatment", "p"])
-#>   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-#> 1    1.4576263          1   0.22730818
+```
+
+```
+##   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
+## 1     1.303976          1   0.25348824
 ```
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBM and $\infty$ for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
@@ -489,10 +548,13 @@ for (i in 1 : nDiffs) {
                    "Mid" = CI_DIFF_FOM_1RMT[i,2], 
                    "Upper" = CI_DIFF_FOM_1RMT[i,3]))
 }
-#>      theta_1    theta_2           Var         Cov1          MS_T      F_1R
-#> 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111
-#>       pValue        Lower          Mid       Upper
-#> 1 0.26933885 -0.078183215 -0.028180354 0.021822507
+```
+
+```
+##      theta_1    theta_2           Var         Cov1          MS_T      F_1R
+## 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111
+##       pValue        Lower          Mid       Upper
+## 1 0.26933885 -0.078183215 -0.028180354 0.021822507
 ```
 
 The following shows the corresponding output of `RJafroc`.
@@ -511,10 +573,13 @@ print(data.frame("theta_1" = ret_rj$FOMs$foms[1,1],
                  "Lower" = ret_rj$FRRC$ciDiffTrt[1,"CILower"], 
                  "Mid" = ret_rj$FRRC$ciDiffTrt[1,"Estimate"], 
                  "Upper" = ret_rj$FRRC$ciDiffTrt[1,"CIUpper"]))
-#>      theta_1    theta_2           Var         Cov1          MS_T  Chisq_1R
-#> 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111
-#>       pValue        Lower          Mid       Upper
-#> 1 0.26933885 -0.078183215 -0.028180354 0.021822507
+```
+
+```
+##      theta_1    theta_2           Var         Cov1          MS_T  Chisq_1R
+## 1 0.91964573 0.94782609 0.00069890056 0.0003734661 0.00039706618 1.2201111
+##       pValue        Lower          Mid       Upper
+## 1 0.26933885 -0.078183215 -0.028180354 0.021822507
 ```
 
 The first-principles and the `RJafroc` values agree exactly with each other [for $I = 2$, the F and chisquare statistics are identical]. This above code also shows how to extract the different estimates ($Var$, $\text{Cov1}$, etc.) from the object `ret_rj` returned by `RJafroc`. Specifically,
@@ -549,18 +614,107 @@ If RRRC analysis were conducted, the values are [one needs to analyze a dataset 
 
 For `RRFC` analysis, one replaces `RRRC` with `RRFC`, etc. I should note that the auto-prompt feature of `RStudio` makes it unnecessary to enter the complex string names shown above  - `RStudio` will suggest them.
 
-## Multiple-reader multiple-treatment {#SignificanceTestingORMRMC}
-The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to Eqn. \@ref(eq:ORModel1RMT), one needs an additional $j$ index to denote reader dependence of the figure of merit, and additional terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random (i.e., reader) factor. 
+## Single-treatment multiple-reader {#or-single-treatment-multiple-reader}
+Consider multiple readers $j$ ($j$ = 1, 2, …, $J$) providing ROC interpretations of a common case-set $\{c\}$ in a single treatment. The OR sampling model is:
+
+
+\begin{equation}
+\theta_{j\{c\}}=\mu+R_j+\epsilon_{j\{c\}}
+(\#eq:or-sampling-model-multiple-readers)
+\end{equation}
+
+
+
+Eqn. \@ref(eq:or-sampling-model-multiple-readers) models the observed figure-of-merit $\theta_{j\{c\}}$ as a constant term $\mu$, a reader-dependent term $R_j$ (the reader effect), and a random error term $\epsilon_{j\{c\}}$. 
+
+The error term $\epsilon_{j\{c\}}$ has sampling behavior described by a multivariate normal distribution with a J-dimensional zero mean vector and an $J \times J$ dimensional covariance matrix $\Sigma$:
+
+\begin{equation}
+\epsilon_{j\{c\}} \sim N_J\left ( \vec{0} ,  \Sigma\right )
+(\#eq:def-epsilon-multiple-readers)
+\end{equation}
+
+
+Here $N_J$ is the J-variate normal distribution (i.e., each sample yields $J$ random numbers). The covariance matrix has the following structure :
+
+\begin{equation}
+\Sigma_{jj'}=Cov\left ( \epsilon_{j\{c\}}, \epsilon_{j'\{c\}} \right )=\left\{\begin{matrix}
+\text{Var} \qquad (j=j')\\ 
+Cov_2 \qquad (j\neq j')
+\end{matrix}\right.
+(\#eq:def-sigma-multiple-reader)
+\end{equation}
+
+
+The reason for the subscript "2" in $Cov_2$  will become clear when one extends this model to multiple readers. The $J \times J$ covariance matrix $\Sigma$  is: 
+
+\begin{equation}
+\Sigma=
+\begin{pmatrix}
+\text{Var} & Cov_2   & \ldots & Cov_2 & Cov_2 \\
+Cov_2 & \text{Var}   & \ldots &Cov_2 & Cov_2 \\
+\vdots & \vdots & \vdots & \vdots & \vdots \\
+Cov_2 & Cov_2 & \ldots & \text{Var} & Cov_2 \\
+Cov_2 & Cov_2 & \ldots & Cov_2 & \text{Var}
+\end{pmatrix}
+(\#eq:ExampleSigma1)
+\end{equation}
+
+
+### Significance testing {#st-or-multiple-reader}
+Define the mean square corresponding to the reader effect, $MS(R)$, by:
+
+\begin{equation}
+MS(R)=\frac{1}{J-1}\sum_{j=1}^{J}(\theta_j-\theta_\bullet)^2
+(\#eq:def-msr)
+\end{equation}
+
+
+It can be shown that under the null hypothesis that all treatments have identical performances, the test statistic $\chi_{1R}$ defined below (the $1R$ subscript denotes single-reader analysis) is distributed approximately as a $\chi^2$ distribution with $I-1$ degrees of freedom, i.e., 
+
+\begin{equation}
+\chi_{\text{1R}} \equiv \frac{(I-1)MS(T)}{\text{Var}-\text{Cov1}} \sim \chi_{I-1}^{2}
+(\#eq:F-1RMT1)
+\end{equation}
+
+Eqn. \@ref(eq:F-1RMT) is from §5.4 in [@RN1865] with two covariance terms "zeroed out" because they are multiplied by $J-1 = 0$ (since we are restricting to $J=1$). 
+
+Or equivalently, in terms of the F-distribution [@RN1772]:
+
+\begin{equation}
+F_{\text{1R}} \equiv \frac{MS(T)}{\text{Var}-\text{Cov1}} \sim F_{I-1, \infty}
+(\#eq:DefF-1RMT1)
+\end{equation}
+
+### p-value and confidence interval {#or-method-intro-pvalue-ci-1}
+The p-value is the probability that a sample from the $F_{I-1,\infty}$ distribution is greater than the observed value of the test statistic, namely: 
+
+\begin{equation}
+p\equiv \Pr(f>F_{1R} \mid f \sim F_{I-1,\infty})
+(\#eq:pValue1RMT1)
+\end{equation}
+
+The $(1-\alpha)$  confidence interval for the inter-treatment FOM difference is given by:
+
+\begin{equation}
+CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\infty} \sqrt{2(\text{Var}-\text{Cov1})}
+(\#eq:CIalpha1R1)
+\end{equation}
+
+Comparing Eqn. \@ref(eq:CIalpha1R) to Eqn. \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(\text{Var}-\text{Cov1})}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.] 
+
+## Multiple-reader multiple-treatment {#st-or-multiple-reader-multiple-treatment}
+The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to Eqn. \@ref(eq:or-sampling-model-multiple-treatments), one needs an additional $j$ index to denote reader dependence of the figure of merit, and additional terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random (i.e., reader) factor. 
 
 The general Obuchowski and Rockette model for fully paired multiple-reader multiple-treatment interpretations is: 
 
 \begin{equation}
 \theta_{ij\{c\}}=\mu+\tau_i+R_j+(\tau R)_{ij}+\epsilon_{ij\{c\}}
-(\#eq:ORModel)
+(\#eq:or-sampling-model-general)
 \end{equation}
 
 * The fixed treatment effect $\tau_i$ is subject to the usual constraint, Eqn. \@ref(eq:ConstraintTau). 
-* The first two terms on the right hand side of Eqn. \@ref(eq:ORModel) have their usual meanings: a constant term $\mu$ representing performance averaged over treatments and readers, and a treatment effect $\tau_i$ ($i$ = 1,2, ..., $I$). 
+* The first two terms on the right hand side of Eqn. \@ref(eq:or-sampling-model-general) have their usual meanings: a constant term $\mu$ representing performance averaged over treatments and readers, and a treatment effect $\tau_i$ ($i$ = 1,2, ..., $I$). 
 * The next two terms are, by assumption, mutually independent random samples specified as follows: 
     + $R_j$ denotes the random treatment-independent figure-of-merit contribution of reader $j$ ($j$ = 1,2, ..., $J$), modeled by a zero-mean normal distribution with variance $\sigma_R^2$; 
     + $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance $\sigma_{\tau R}^2$. There could be a perceived notational clash with similar variance component terms defined for the DBM model – except in that case they applied to pseudovalues. The meaning should be clear from the context. 
@@ -591,7 +745,7 @@ Averaging over the j index and performing a subtraction yields an estimate of $\
 
 The $\tau_i$ estimates obey the constraint Eqn. \@ref(eq:ConstraintTau). For example, with two treatments, the values of $\tau_i$ must be the negatives of each other: $\tau_1=-\tau_2$. 
 
-The error term on the right hand side of Eqn. \@ref(eq:ORModel) is more complex than the corresponding DBM model error term. Obuchowski and Rockette model this term with a multivariate normal distribution with a length $(IJ)$ zero-mean vector and a $(IJ \times IJ)$ dimensional covariance matrix $\Sigma$. In other words, 
+The error term on the right hand side of Eqn. \@ref(eq:or-sampling-model-general) is more complex than the corresponding DBM model error term. Obuchowski and Rockette model this term with a multivariate normal distribution with a length $(IJ)$ zero-mean vector and a $(IJ \times IJ)$ dimensional covariance matrix $\Sigma$. In other words, 
 
 \begin{equation}
 \epsilon_{ij\{c\}} \sim N_{IJ}(\vec{0},\Sigma)
@@ -611,11 +765,11 @@ Cov(\epsilon_{ij\{c\}},\epsilon_{i'j'\{c\}}) =
 (\#eq:ORVarCov)
 \end{equation}
 
-Apart from fixed effects, the model implied by Eqn. \@ref(eq:ORModel) and Eqn. \@ref(eq:ORVarCov) contains 6 parameters: 
+Apart from fixed effects, the model implied by Eqn. \@ref(eq:or-sampling-model-general) and Eqn. \@ref(eq:ORVarCov) contains 6 parameters: 
 
 $$\sigma_R^2,\sigma_{\tau R}^2,\text{Var}, \text{Cov1}, \text{Cov2}, \text{Cov3}$$
 
-This is the same number of variance component parameters as in the DBM model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model Eqn. \@ref(eq:ORModel) "looks" simpler because four covariance terms are encapsulated in the $\epsilon$ term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader. 
+This is the same number of variance component parameters as in the DBM model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model Eqn. \@ref(eq:or-sampling-model-general) "looks" simpler because four covariance terms are encapsulated in the $\epsilon$ term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader. 
 
 *It is implicit in the Obuchowski-Rockette model that the $Var$, $\text{Cov1}$, $Cov_2$, and $Cov_3$ estimates are averaged over all applicable treatment-reader combinations.*
 
@@ -740,6 +894,11 @@ Cov_3 \leq  Cov_2 \leq  \text{Cov1} \leq  \text{Var}
 \end{equation}
 
 ## Summary{#or-method-intro-Summary}
+
 ## Discussion{#or-method-intro-Discussion}
+
+
 ## References {#or-method-intro-references}
+
+
 
