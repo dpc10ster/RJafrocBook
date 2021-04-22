@@ -26,7 +26,7 @@ library(here)
 * To illustrate the covariance matrix, a single reader interpreting a case-set in multiple treatments is analyzed and the results compared to that using DBM fixed-reader analysis described in previous chapters. 
 
 ## Single-reader multiple-treatment {#or-single-reader-multiple-treatment}
-Consider a single-reader providing ROC interpretations of a common case-set $\{c\}$ in multiple-treatments $i$ ($i$ = 1, 2, …, $I$). This is not equivalent to multiple-readers providing ROC interpretations in a single treatment. This is because reader is a random factor while treatment is a fixed factor. 
+Consider a single-reader interpreting a common case-set $\{c\}$ in multiple-treatments $i$ ($i$ = 1, 2, …, $I$).  
 
 *In the OR method one models the figure-of-merit, not the pseudovalues; indeed this is a key differences from the DBM method.* The figure of merit $\theta$ is modeled as:
 
@@ -248,7 +248,6 @@ The following code chunk extracts (using the `DfExtractDataset` function) a sing
 rocData1R <- DfExtractDataset(dataset02, rdrs = 1) #select the 1st reader to be analyzed
 zik1 <- rocData1R$ratings$NL[,1,,1];K <- dim(zik1)[2];I <- dim(zik1)[1]
 zik2 <- rocData1R$ratings$LL[,1,,1];K2 <- dim(zik2)[2];K1 <- K-K2;zik1 <- zik1[,1:K1]
-cat("here")
 ```
 
 The following notation is used in the code below:
@@ -383,6 +382,42 @@ CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\inf
 
 Comparing Eqn. \@ref(eq:CIalpha1R) to Eqn. \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(\text{Var}-\text{Cov1})}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.] 
 
+
+
+```{r, attr.source = ".numberLines"}
+ds <- DfExtractDataset(dataset02, rdrs = 1)
+fom <- as.vector(UtilFigureOfMerit(ds, FOM = "Wilcoxon"))
+fom <- t(fom)
+vc <- UtilORVarComponentsFactorial(ds, FOM = "Wilcoxon")
+cov1 <- vc$IndividualRdr$cov1EachRdr
+var <- vc$IndividualRdr$varEachRdr
+msT <- vc$IndividualRdr$msTEachRdr
+I <- length(ds$ratings$NL[,1,1,1])
+chi1T <- (I-1)*msT/(var-cov1)
+pval <- pchisq(chi1T,I-1,lower.tail = F)
+ci <- array(dim = 2)
+ci[1] <- (fom[1] - fom[2]) + qt(0.025, Inf, lower.tail = F) * sqrt(2*(var - cov1))
+ci[2] <- (fom[1] - fom[2]) - qt(0.025, Inf, lower.tail = F) * sqrt(2*(var - cov1))
+```
+
+
+```{r}
+cat("fom = ", fom, "\n")
+cat("diff_fom = ", fom[1]-fom[2], "\n")
+cat("pval = ", pval,"\n")
+cat("ci = ", ci,"\n")
+cat("mean(ci) = ", mean(ci),"\n")
+```
+
+
+
+```{r}
+pv <- UtilPseudoValues(ds, FOM = "Wilcoxon")$jkPseudoValues
+t.test(pv[1,1,], pv[2,1,], paired = T, var.equal = T)
+```
+STOP
+
+
 ### Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments {#or-method-intro-CompareDBM2OR41R}
 We have shown two methods for analyzing a single reader in multiple treatments: the DBM method, involving jackknife derived pseudovalues and the Obuchowski and Rockette method that does not have to use the jackknife, since it could use the bootstrap, or the DeLong method, if one restricts to the Wilcoxon statistic for the figure of merit, to get the covariance matrix. Since one is dealing with a single reader in multiple treatments, for DBM one needs the fixed-reader random-case analysis described in TBA §9.8 of the previous chapter (it should be obvious that with one reader the conclusions apply to the specific reader only, so reader must be regarded as a fixed factor).
 
@@ -508,19 +543,16 @@ If RRRC analysis were conducted, the values are [one needs to analyze a dataset 
 For `RRFC` analysis, one replaces `RRRC` with `RRFC`, etc. I should note that the auto-prompt feature of `RStudio` makes it unnecessary to enter the complex string names shown above  - `RStudio` will suggest them.
 
 ## Single-treatment multiple-reader {#or-single-treatment-multiple-reader}
-Consider multiple readers $j$ ($j$ = 1, 2, …, $J$) providing ROC interpretations of a common case-set $\{c\}$ in a single treatment. The OR sampling model is:
+Consider multiple readers $j$ ($j$ = 1, 2, …, $J$) interpreting a common case-set $\{c\}$ in a single treatment. The OR sampling model is:
 
 
 \begin{equation}
 \theta_{j\{c\}}=\mu+R_j+\epsilon_{j\{c\}}
-(\#eq:or-sampling-model-multiple-readers)
+(\#eq:or-sampling-model-multiple-reader)
 \end{equation}
 
 
-
-Eqn. \@ref(eq:or-sampling-model-multiple-readers) models the observed figure-of-merit $\theta_{j\{c\}}$ as a constant term $\mu$, a reader-dependent term $R_j$ (the reader effect), and a random error term $\epsilon_{j\{c\}}$. 
-
-The error term $\epsilon_{j\{c\}}$ has sampling behavior described by a multivariate normal distribution with a J-dimensional zero mean vector and an $J \times J$ dimensional covariance matrix $\Sigma$:
+The error term $\epsilon_{j\{c\}}$ has sampling behavior described by a multivariate normal distribution with a J-dimensional zero mean vector and a $J \times J$ dimensional covariance matrix $\Sigma$:
 
 \begin{equation}
 \epsilon_{j\{c\}} \sim N_J\left ( \vec{0} ,  \Sigma\right )
@@ -528,7 +560,7 @@ The error term $\epsilon_{j\{c\}}$ has sampling behavior described by a multivar
 \end{equation}
 
 
-Here $N_J$ is the J-variate normal distribution (i.e., each sample yields $J$ random numbers). The covariance matrix has the following structure :
+The covariance matrix has the following structure:
 
 \begin{equation}
 \Sigma_{jj'}=Cov\left ( \epsilon_{j\{c\}}, \epsilon_{j'\{c\}} \right )=\left\{\begin{matrix}
@@ -554,6 +586,10 @@ Cov_2 & Cov_2 & \ldots & Cov_2 & \text{Var}
 \end{equation}
 
 
+The covariance matrix is estimated, as usual, by either a resampling method or, for the special case of Wilcoxon figure of merit, by the DeLong method.
+
+
+
 ### Significance testing {#st-or-multiple-reader}
 Define the mean square corresponding to the reader effect, $MS(R)$, by:
 
@@ -563,29 +599,59 @@ MS(R)=\frac{1}{J-1}\sum_{j=1}^{J}(\theta_j-\theta_\bullet)^2
 \end{equation}
 
 
-It can be shown that under the null hypothesis that all treatments have identical performances, the test statistic $\chi_{1R}$ defined below (the $1R$ subscript denotes single-reader analysis) is distributed approximately as a $\chi^2$ distribution with $I-1$ degrees of freedom, i.e., 
+It can be shown that under the null hypothesis that all treatments have identical performances, the test statistic $\chi_{1T}$ defined below (the $1T$ subscript denotes single-treatment analysis) is distributed approximately as a $\chi^2$ distribution with $J-1$ degrees of freedom, i.e., 
 
 \begin{equation}
-\chi_{\text{1R}} \equiv \frac{(I-1)MS(T)}{\text{Var}-\text{Cov1}} \sim \chi_{I-1}^{2}
-(\#eq:F-1RMT1)
+\chi_{\text{1T}} \equiv \frac{(J-1)MS(R)}{\text{Var}-\text{Cov2}} \sim \chi_{J-1}^{2}
+(\#eq:chisq-single-reader)
 \end{equation}
 
-Eqn. \@ref(eq:F-1RMT) is from §5.4 in [@RN1865] with two covariance terms "zeroed out" because they are multiplied by $J-1 = 0$ (since we are restricting to $J=1$). 
-
-Or equivalently, in terms of the F-distribution [@RN1772]:
-
-\begin{equation}
-F_{\text{1R}} \equiv \frac{MS(T)}{\text{Var}-\text{Cov1}} \sim F_{I-1, \infty}
-(\#eq:DefF-1RMT1)
-\end{equation}
 
 ### p-value and confidence interval {#or-method-intro-pvalue-ci-1}
-The p-value is the probability that a sample from the $F_{I-1,\infty}$ distribution is greater than the observed value of the test statistic, namely: 
+The p-value is the probability that a sample from the $\chi_{J-1}^{2}$ distribution is greater than the observed value of the test statistic, namely: 
 
 \begin{equation}
-p\equiv \Pr(f>F_{1R} \mid f \sim F_{I-1,\infty})
-(\#eq:pValue1RMT1)
+p\equiv \Pr(\chi>\chi_{1T} \mid \chi \sim \chi_{J-1}^{2})
+(\#eq:p-single-treatment)
 \end{equation}
+
+
+```{r, attr.source = ".numberLines"}
+# ds <- DfExtractDataset(dataset02, trts = 1)
+# fom =  0.9196457 0.8587762 0.9038647 0.9731079 0.8297907
+#ds <- DfExtractDataset(dataset02, trts = 1, rdrs = c(4,5))
+#ds <- DfExtractDataset(dataset02, trts = 1)
+ds <- DfExtractDataset(dataset02, trts = 1, rdrs = c(1,3))
+fom <- as.numeric(UtilFigureOfMerit(ds, FOM = "Wilcoxon"))
+vc <- UtilORVarComponentsFactorial(ds, FOM = "Wilcoxon")
+cov2 <- vc$IndividualTrt$cov2EachTrt
+var <- vc$IndividualTrt$varEachTrt
+msR <- vc$IndividualTrt$msREachTrt
+J <- length(ds$ratings$NL[1,,1,1])
+chi1T <- (J-1)*msR/(var-cov2)
+pval <- pchisq(chi1T,J-1,lower.tail = F)
+ci <- array(dim = 2)
+ci[1] <- (fom[1] - fom[2]) + qt(0.025, Inf, lower.tail = F) * sqrt(2*(var - cov2))
+ci[2] <- (fom[1] - fom[2]) - qt(0.025, Inf, lower.tail = F) * sqrt(2*(var - cov2))
+```
+
+
+```{r}
+cat("fom = ", fom, "\n")
+cat("diff_fom = ", fom[1]-fom[2], "\n")
+cat("pval = ", pval,"\n")
+cat("ci = ", ci,"\n")
+cat("mean(ci) = ", mean(ci),"\n")
+```
+
+
+
+```{r}
+pv <- UtilPseudoValues(ds, FOM = "Wilcoxon")$jkPseudoValues
+t.test(pv[1,1,], pv[1,2,], paired = T, var.equal = T)
+
+```
+STOP
 
 The $(1-\alpha)$  confidence interval for the inter-treatment FOM difference is given by:
 

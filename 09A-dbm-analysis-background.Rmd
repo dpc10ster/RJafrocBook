@@ -1,11 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
-
-
-
 # DBM method background {#dbm-analysis-background}
 
 
