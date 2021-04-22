@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-04-21}
+\date{2021-04-22}
 
 \begin{document}
 \maketitle
@@ -5008,9 +5008,9 @@ The following code prints the predicted and observed full areas under the ROCs f
 
 \begin{verbatim}
 #> A_z predicted =  0.9213504 
-#> A_z observed =  0.9182975
+#> A_z observed =  0.9231229
 #> A_z{c;true} predicted =  0.8244498 
-#> A_z{c;true} observed =  0.8229293
+#> A_z{c;true} observed =  0.8244865
 \end{verbatim}
 
 Note that:
@@ -7114,8 +7114,6 @@ Since ROC studies in medical imaging have serious health-care related consequenc
 \hypertarget{dbm-analysis-significance-testing}{%
 \chapter{Significance Testing using the DBM Method}\label{dbm-analysis-significance-testing}}
 
-DBM = Dorfman Berbaum Metz
-
 \hypertarget{dbm-analysis-significance-testing-how-much-finished}{%
 \section{TBA How much finished}\label{dbm-analysis-significance-testing-how-much-finished}}
 
@@ -7123,6 +7121,8 @@ DBM = Dorfman Berbaum Metz
 
 \hypertarget{the-dbm-sampling-model}{%
 \section{The DBM sampling model}\label{the-dbm-sampling-model}}
+
+DBM = Dorfman Berbaum Metz
 
 The figure-of-merit has three indices:
 
@@ -8201,7 +8201,7 @@ CI_{1-\alpha}=\left ( \theta_{i \bullet} - \theta_{i' \bullet} \right ) \pm t_{\
 \hypertarget{or-single-reader-multiple-treatment}{%
 \section{Single-reader multiple-treatment}\label{or-single-reader-multiple-treatment}}
 
-Consider a single-reader providing ROC interpretations of a common case-set \(\{c\}\) in multiple-treatments \(i\) (\(i\) = 1, 2, \ldots, \(I\)). This is not equivalent to multiple-readers providing ROC interpretations in a single treatment. This is because reader is a random factor while treatment is a fixed factor.
+Consider a single-reader interpreting a common case-set \(\{c\}\) in multiple-treatments \(i\) (\(i\) = 1, 2, \ldots, \(I\)).
 
 \emph{In the OR method one models the figure-of-merit, not the pseudovalues; indeed this is a key differences from the DBM method.} The figure of merit \(\theta\) is modeled as:
 
@@ -8438,13 +8438,8 @@ The following code chunk extracts (using the \texttt{DfExtractDataset} function)
 \NormalTok{rocData1R <-}\StringTok{ }\KeywordTok{DfExtractDataset}\NormalTok{(dataset02, }\DataTypeTok{rdrs =} \DecValTok{1}\NormalTok{) }\CommentTok{#select the 1st reader to be analyzed}
 \NormalTok{zik1 <-}\StringTok{ }\NormalTok{rocData1R}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{];K <-}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik1)[}\DecValTok{2}\NormalTok{];I <-}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik1)[}\DecValTok{1}\NormalTok{]}
 \NormalTok{zik2 <-}\StringTok{ }\NormalTok{rocData1R}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{LL[,}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{];K2 <-}\StringTok{ }\KeywordTok{dim}\NormalTok{(zik2)[}\DecValTok{2}\NormalTok{];K1 <-}\StringTok{ }\NormalTok{K}\OperatorTok{-}\NormalTok{K2;zik1 <-}\StringTok{ }\NormalTok{zik1[,}\DecValTok{1}\OperatorTok{:}\NormalTok{K1]}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"here"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-## here
-\end{verbatim}
 
 The following notation is used in the code below:
 
@@ -8672,6 +8667,97 @@ CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\inf
 
 Comparing Eqn. \eqref{eq:CIalpha1R} to Eqn. \eqref{eq:UsefulTheorem} shows that the term \(\sqrt{2(\text{Var}-\text{Cov1})}\) is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term \(t_{\alpha/2,\infty}\) is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. {[}One has probably encountered the rule that a 95\% confidence interval is plus or minus two standard deviations from the central value. The ``2'' comes from rounding up 1.96.{]}
 
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{ds <-}\StringTok{ }\KeywordTok{DfExtractDataset}\NormalTok{(dataset02, }\DataTypeTok{rdrs =} \DecValTok{1}\NormalTok{)}
+\NormalTok{fom <-}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{UtilFigureOfMerit}\NormalTok{(ds, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{))}
+\NormalTok{fom <-}\StringTok{ }\KeywordTok{t}\NormalTok{(fom)}
+\NormalTok{vc <-}\StringTok{ }\KeywordTok{UtilORVarComponentsFactorial}\NormalTok{(ds, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}
+\NormalTok{cov1 <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualRdr}\OperatorTok{$}\NormalTok{cov1EachRdr}
+\NormalTok{var <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualRdr}\OperatorTok{$}\NormalTok{varEachRdr}
+\NormalTok{msT <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualRdr}\OperatorTok{$}\NormalTok{msTEachRdr}
+\NormalTok{I <-}\StringTok{ }\KeywordTok{length}\NormalTok{(ds}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{])}
+\NormalTok{chi1T <-}\StringTok{ }\NormalTok{(I}\DecValTok{-1}\NormalTok{)}\OperatorTok{*}\NormalTok{msT}\OperatorTok{/}\NormalTok{(var}\OperatorTok{-}\NormalTok{cov1)}
+\NormalTok{pval <-}\StringTok{ }\KeywordTok{pchisq}\NormalTok{(chi1T,I}\DecValTok{-1}\NormalTok{,}\DataTypeTok{lower.tail =}\NormalTok{ F)}
+\NormalTok{ci <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \DecValTok{2}\NormalTok{)}
+\NormalTok{ci[}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\NormalTok{(fom[}\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{fom[}\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.025}\NormalTok{, }\OtherTok{Inf}\NormalTok{, }\DataTypeTok{lower.tail =}\NormalTok{ F) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{(var }\OperatorTok{-}\StringTok{ }\NormalTok{cov1))}
+\NormalTok{ci[}\DecValTok{2}\NormalTok{] <-}\StringTok{ }\NormalTok{(fom[}\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{fom[}\DecValTok{2}\NormalTok{]) }\OperatorTok{-}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.025}\NormalTok{, }\OtherTok{Inf}\NormalTok{, }\DataTypeTok{lower.tail =}\NormalTok{ F) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{(var }\OperatorTok{-}\StringTok{ }\NormalTok{cov1))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"fom = "}\NormalTok{, fom, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## fom =  0.9196457 0.9478261
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"diff_fom = "}\NormalTok{, fom[}\DecValTok{1}\NormalTok{]}\OperatorTok{-}\NormalTok{fom[}\DecValTok{2}\NormalTok{], }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## diff_fom =  -0.02818035
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"pval = "}\NormalTok{, pval,}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## pval =  0.2693389
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"ci = "}\NormalTok{, ci,}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## ci =  0.02182251 -0.07818322
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"mean(ci) = "}\NormalTok{, }\KeywordTok{mean}\NormalTok{(ci),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## mean(ci) =  -0.02818035
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pv <-}\StringTok{ }\KeywordTok{UtilPseudoValues}\NormalTok{(ds, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}\OperatorTok{$}\NormalTok{jkPseudoValues}
+\KeywordTok{t.test}\NormalTok{(pv[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,], pv[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{,], }\DataTypeTok{paired =}\NormalTok{ T, }\DataTypeTok{var.equal =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Paired t-test
+## 
+## data:  pv[1, 1, ] and pv[2, 1, ]
+## t = -1.1046, df = 113, p-value = 0.2717
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.07872449  0.02236378
+## sample estimates:
+## mean of the differences 
+##             -0.02818035
+\end{verbatim}
+
+STOP
+
 \hypertarget{or-method-intro-CompareDBM2OR41R}{%
 \subsection{Comparing DBM to Obuchowski and Rockette for single-reader multiple-treatments}\label{or-method-intro-CompareDBM2OR41R}}
 
@@ -8738,7 +8824,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
 
 \begin{verbatim}
 ##   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-## 1    1.1688992          1   0.27962753
+## 1    1.3614101          1   0.24329325
 \end{verbatim}
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, \((I-1)(K-1)\) = 113 for DBM and \(\infty\) for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
@@ -8885,23 +8971,21 @@ For \texttt{RRFC} analysis, one replaces \texttt{RRRC} with \texttt{RRFC}, etc. 
 \hypertarget{or-single-treatment-multiple-reader}{%
 \section{Single-treatment multiple-reader}\label{or-single-treatment-multiple-reader}}
 
-Consider multiple readers \(j\) (\(j\) = 1, 2, \ldots, \(J\)) providing ROC interpretations of a common case-set \(\{c\}\) in a single treatment. The OR sampling model is:
+Consider multiple readers \(j\) (\(j\) = 1, 2, \ldots, \(J\)) interpreting a common case-set \(\{c\}\) in a single treatment. The OR sampling model is:
 
 \begin{equation}
 \theta_{j\{c\}}=\mu+R_j+\epsilon_{j\{c\}}
-\label{eq:or-sampling-model-multiple-readers}
+\label{eq:or-sampling-model-multiple-reader}
 \end{equation}
 
-Eqn. \eqref{eq:or-sampling-model-multiple-readers} models the observed figure-of-merit \(\theta_{j\{c\}}\) as a constant term \(\mu\), a reader-dependent term \(R_j\) (the reader effect), and a random error term \(\epsilon_{j\{c\}}\).
-
-The error term \(\epsilon_{j\{c\}}\) has sampling behavior described by a multivariate normal distribution with a J-dimensional zero mean vector and an \(J \times J\) dimensional covariance matrix \(\Sigma\):
+The error term \(\epsilon_{j\{c\}}\) has sampling behavior described by a multivariate normal distribution with a J-dimensional zero mean vector and a \(J \times J\) dimensional covariance matrix \(\Sigma\):
 
 \begin{equation}
 \epsilon_{j\{c\}} \sim N_J\left ( \vec{0} ,  \Sigma\right )
 \label{eq:def-epsilon-multiple-readers}
 \end{equation}
 
-Here \(N_J\) is the J-variate normal distribution (i.e., each sample yields \(J\) random numbers). The covariance matrix has the following structure :
+The covariance matrix has the following structure:
 
 \begin{equation}
 \Sigma_{jj'}=Cov\left ( \epsilon_{j\{c\}}, \epsilon_{j'\{c\}} \right )=\left\{\begin{matrix}
@@ -8925,6 +9009,8 @@ Cov_2 & Cov_2 & \ldots & Cov_2 & \text{Var}
 \label{eq:ExampleSigma1}
 \end{equation}
 
+The covariance matrix is estimated, as usual, by either a resampling method or, for the special case of Wilcoxon figure of merit, by the DeLong method.
+
 \hypertarget{st-or-multiple-reader}{%
 \subsection{Significance testing}\label{st-or-multiple-reader}}
 
@@ -8935,31 +9021,116 @@ MS(R)=\frac{1}{J-1}\sum_{j=1}^{J}(\theta_j-\theta_\bullet)^2
 \label{eq:def-msr}
 \end{equation}
 
-It can be shown that under the null hypothesis that all treatments have identical performances, the test statistic \(\chi_{1R}\) defined below (the \(1R\) subscript denotes single-reader analysis) is distributed approximately as a \(\chi^2\) distribution with \(I-1\) degrees of freedom, i.e.,
+It can be shown that under the null hypothesis that all treatments have identical performances, the test statistic \(\chi_{1T}\) defined below (the \(1T\) subscript denotes single-treatment analysis) is distributed approximately as a \(\chi^2\) distribution with \(J-1\) degrees of freedom, i.e.,
 
 \begin{equation}
-\chi_{\text{1R}} \equiv \frac{(I-1)MS(T)}{\text{Var}-\text{Cov1}} \sim \chi_{I-1}^{2}
-\label{eq:F-1RMT1}
-\end{equation}
-
-Eqn. \eqref{eq:F-1RMT} is from §5.4 in \citep{RN1865} with two covariance terms ``zeroed out'' because they are multiplied by \(J-1 = 0\) (since we are restricting to \(J=1\)).
-
-Or equivalently, in terms of the F-distribution \citep{RN1772}:
-
-\begin{equation}
-F_{\text{1R}} \equiv \frac{MS(T)}{\text{Var}-\text{Cov1}} \sim F_{I-1, \infty}
-\label{eq:DefF-1RMT1}
+\chi_{\text{1T}} \equiv \frac{(J-1)MS(R)}{\text{Var}-\text{Cov2}} \sim \chi_{J-1}^{2}
+\label{eq:chisq-single-reader}
 \end{equation}
 
 \hypertarget{or-method-intro-pvalue-ci-1}{%
 \subsection{p-value and confidence interval}\label{or-method-intro-pvalue-ci-1}}
 
-The p-value is the probability that a sample from the \(F_{I-1,\infty}\) distribution is greater than the observed value of the test statistic, namely:
+The p-value is the probability that a sample from the \(\chi_{J-1}^{2}\) distribution is greater than the observed value of the test statistic, namely:
 
 \begin{equation}
-p\equiv \Pr(f>F_{1R} \mid f \sim F_{I-1,\infty})
-\label{eq:pValue1RMT1}
+p\equiv \Pr(\chi>\chi_{1T} \mid \chi \sim \chi_{J-1}^{2})
+\label{eq:p-single-treatment}
 \end{equation}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{# ds <- DfExtractDataset(dataset02, trts = 1)}
+\CommentTok{# fom =  0.9196457 0.8587762 0.9038647 0.9731079 0.8297907}
+\CommentTok{#ds <- DfExtractDataset(dataset02, trts = 1, rdrs = c(4,5))}
+\CommentTok{#ds <- DfExtractDataset(dataset02, trts = 1)}
+\NormalTok{ds <-}\StringTok{ }\KeywordTok{DfExtractDataset}\NormalTok{(dataset02, }\DataTypeTok{trts =} \DecValTok{1}\NormalTok{, }\DataTypeTok{rdrs =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{))}
+\NormalTok{fom <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{UtilFigureOfMerit}\NormalTok{(ds, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{))}
+\NormalTok{vc <-}\StringTok{ }\KeywordTok{UtilORVarComponentsFactorial}\NormalTok{(ds, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}
+\NormalTok{cov2 <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualTrt}\OperatorTok{$}\NormalTok{cov2EachTrt}
+\NormalTok{var <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualTrt}\OperatorTok{$}\NormalTok{varEachTrt}
+\NormalTok{msR <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualTrt}\OperatorTok{$}\NormalTok{msREachTrt}
+\NormalTok{J <-}\StringTok{ }\KeywordTok{length}\NormalTok{(ds}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{])}
+\NormalTok{chi1T <-}\StringTok{ }\NormalTok{(J}\DecValTok{-1}\NormalTok{)}\OperatorTok{*}\NormalTok{msR}\OperatorTok{/}\NormalTok{(var}\OperatorTok{-}\NormalTok{cov2)}
+\NormalTok{pval <-}\StringTok{ }\KeywordTok{pchisq}\NormalTok{(chi1T,J}\DecValTok{-1}\NormalTok{,}\DataTypeTok{lower.tail =}\NormalTok{ F)}
+\NormalTok{ci <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \DecValTok{2}\NormalTok{)}
+\NormalTok{ci[}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\NormalTok{(fom[}\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{fom[}\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.025}\NormalTok{, }\OtherTok{Inf}\NormalTok{, }\DataTypeTok{lower.tail =}\NormalTok{ F) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{(var }\OperatorTok{-}\StringTok{ }\NormalTok{cov2))}
+\NormalTok{ci[}\DecValTok{2}\NormalTok{] <-}\StringTok{ }\NormalTok{(fom[}\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{fom[}\DecValTok{2}\NormalTok{]) }\OperatorTok{-}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.025}\NormalTok{, }\OtherTok{Inf}\NormalTok{, }\DataTypeTok{lower.tail =}\NormalTok{ F) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{(var }\OperatorTok{-}\StringTok{ }\NormalTok{cov2))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"fom = "}\NormalTok{, fom, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## fom =  0.91964573 0.90386473
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"diff_fom = "}\NormalTok{, fom[}\DecValTok{1}\NormalTok{]}\OperatorTok{-}\NormalTok{fom[}\DecValTok{2}\NormalTok{], }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## diff_fom =  0.015780998
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"pval = "}\NormalTok{, pval,}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## pval =  0.54157744
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"ci = "}\NormalTok{, ci,}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## ci =  0.066450563 -0.034888566
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cat}\NormalTok{(}\StringTok{"mean(ci) = "}\NormalTok{, }\KeywordTok{mean}\NormalTok{(ci),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## mean(ci) =  0.015780998
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pv <-}\StringTok{ }\KeywordTok{UtilPseudoValues}\NormalTok{(ds, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}\OperatorTok{$}\NormalTok{jkPseudoValues}
+\KeywordTok{t.test}\NormalTok{(pv[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,], pv[}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,], }\DataTypeTok{paired =}\NormalTok{ T, }\DataTypeTok{var.equal =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Paired t-test
+## 
+## data:  pv[1, 1, ] and pv[1, 2, ]
+## t = 0.610429, df = 113, p-value = 0.5428
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.035437058  0.066999055
+## sample estimates:
+## mean of the differences 
+##             0.015780998
+\end{verbatim}
+
+STOP
 
 The \((1-\alpha)\) confidence interval for the inter-treatment FOM difference is given by:
 
@@ -9195,16 +9366,16 @@ Cov_3 \leq  Cov_2 \leq  \text{Cov1} \leq  \text{Var}
 \hypertarget{or-method-intro-references}{%
 \section{References}\label{or-method-intro-references}}
 
-\hypertarget{or-analysis-significance-testing}{%
-\chapter{Obuchowski Rockette (OR) Analysis}\label{or-analysis-significance-testing}}
+\hypertarget{or-analysis-st}{%
+\chapter{Obuchowski Rockette (OR) Analysis}\label{or-analysis-st}}
 
-\hypertarget{or-analysis-significance-testing-how-much-finished}{%
-\section{TBA How much finished}\label{or-analysis-significance-testing-how-much-finished}}
+\hypertarget{or-analysis-st-how-much-finished}{%
+\section{TBA How much finished}\label{or-analysis-st-how-much-finished}}
 
 80\%
 
-\hypertarget{or-analysis-significance-testing-introduction}{%
-\section{Introduction}\label{or-analysis-significance-testing-introduction}}
+\hypertarget{or-analysis-st-introduction}{%
+\section{Introduction}\label{or-analysis-st-introduction}}
 
 In previous chapters the DBM significance testing procedure \citep{RN204} for analyzing MRMC ROC data, along with improvements \citep{RN2508}, has been described. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been rightly criticized by Hillis and others \citep{zhou2009statistical}. Hillis states that the method ``works'' but lacks firm statistical foundations \citep{RN1772, RN1865, RN1866}. I would add that it ``works'' as long as one restricts to the empirical AUC figure of merit. In my book I gave a justification for why the method ``works''. Specifically, the \emph{empirical AUC pseudovalues qualify as case-level FOMs} - this property has also been noted by \citep{RN1395}. However, this property applies \emph{only} to the empirical AUC, so an alternate approach that applies to any figure of merit is highly desirable.
 
@@ -9216,8 +9387,8 @@ Multiple readers interpreting a case-set in multiple treatments is analyzed and 
 
 Before proceeding, it is understood that datasets analyzed in this chapter follow a \emph{factorial} design, sometimes call fully-factorial or fully-crossed design. Basically, the data structure is symmetric, e.g., all readers interpret all cases in all modalities. The next chapter will describe the analysis of \emph{split-plot} datasets, where, for example, some readers interpret all cases in one modality, while the remaining readers interpret all cases in the other modality.
 
-\hypertarget{OR_RRRC}{%
-\section{Random-reader random-case}\label{OR_RRRC}}
+\hypertarget{or-analysis-st-rrrc}{%
+\section{Random-reader random-case}\label{or-analysis-st-rrrc}}
 
 In conventional ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented in the DBM model by the scalar \(\epsilon\) term. Because of the correlated structure of the error term, in OR analysis, a customized ANOVA is needed. The null hypothesis (NH) is that the true figures-of-merit of all treatments are identical, i.e.,
 
@@ -9360,8 +9531,8 @@ CI_{1-\alpha,RRRC,\theta_{i \bullet}} = \theta_{i \bullet} \pm t_{\alpha/2, \tex
 \label{eq:CI-RRRC-IndvlTrt}
 \end{equation}
 
-\hypertarget{OR-FRRC}{%
-\section{Fixed-reader random-case}\label{OR-FRRC}}
+\hypertarget{or-analysis-st-frrc}{%
+\section{Fixed-reader random-case}\label{or-analysis-st-frrc}}
 
 Using the vertical bar notation \(\mid R\) to denote that reader is regarded as a fixed effect \citep{RN1124}, the F -statistic for testing the null hypothesis \(NH: \tau_i = 0 \; (i=1,1,2,...I)\) is \citep{RN1865}:
 
@@ -9441,8 +9612,8 @@ CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i' j}} = (\theta_{i j} - \theta_{i' j})
 
 In these equations \(\text{Var}_i\) and \(\text{Cov2}_i\) are computed using the data for treatment \(i\) only, and \(\text{Var}_j\) and \(\text{Cov1}_j\) are computed using the data for reader \(j\) only.
 
-\hypertarget{or-analysis-significance-testing-RRFCAnalysis}{%
-\section{Random-reader fixed-case}\label{or-analysis-significance-testing-RRFCAnalysis}}
+\hypertarget{or-analysis-st-rrfc}{%
+\section{Random-reader fixed-case}\label{or-analysis-st-rrfc}}
 
 When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis \(NH: \tau_i = 0 \; (i=1,1,2,...I)\) is:
 
@@ -9486,14 +9657,13 @@ CI_{1-\alpha,RRFC,\theta_{i \bullet}} = \theta_{i \bullet} \pm t_{\alpha/2, J-1}
 
 Here \(\text{MS(R)}_i\) is the reader mean-square for modality \(i\).
 
-\hypertarget{or-analysis-significance-testing-Summary}{%
-\section{Summary}\label{or-analysis-significance-testing-Summary}}
+\hypertarget{or-analysis-st-single-treatment}{%
+\section{Single treatment analysis}\label{or-analysis-st-single-treatment}}
 
-\hypertarget{or-analysis-significance-testing-Discussion}{%
-\section{Discussion}\label{or-analysis-significance-testing-Discussion}}
-
-\hypertarget{or-analysis-significance-testing-references}{%
-\section{References}\label{or-analysis-significance-testing-references}}
+TBA
+\#\# Summary\{\#or-analysis-st-summary\}
+\#\# Discussion\{\#or-analysis-st-discussion\}
+\#\# References \{\#or-analysis-st-references\}
 
 \hypertarget{or-applications}{%
 \chapter{Obuchowski Rockette Applications}\label{or-applications}}

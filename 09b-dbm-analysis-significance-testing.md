@@ -1,14 +1,6 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
-
-
 # Significance Testing using the DBM Method {#dbm-analysis-significance-testing}
 
 
-DBM = Dorfman Berbaum Metz
 
 
 
@@ -23,6 +15,8 @@ DBM = Dorfman Berbaum Metz
 
 
 ## The DBM sampling model
+DBM = Dorfman Berbaum Metz
+
 The figure-of-merit has three indices:  
 
 * A treatment index $i$, where $i$ runs from 1 to $I$, where $I$ is the total number of treatments.  

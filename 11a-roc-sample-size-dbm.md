@@ -1,10 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
-
-
 # Sample size estimation for ROC studies DBM method {#roc-sample-size-dbm}
 
 

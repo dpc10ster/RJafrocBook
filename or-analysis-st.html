@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 16 DBM method background | The RJafroc Book</title>
+  <title>Chapter 20 Obuchowski Rockette (OR) Analysis | The RJafroc Book</title>
   <meta name="description" content="Artificial intelligence and observer performance book based on RJafroc." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 16 DBM method background | The RJafroc Book" />
+  <meta property="og:title" content="Chapter 20 Obuchowski Rockette (OR) Analysis | The RJafroc Book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="dpc10ster/RJafrocBook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 16 DBM method background | The RJafroc Book" />
+  <meta name="twitter:title" content="Chapter 20 Obuchowski Rockette (OR) Analysis | The RJafroc Book" />
   
   <meta name="twitter:description" content="Artificial intelligence and observer performance book based on RJafroc." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="hypothesis-testing.html"/>
-<link rel="next" href="dbm-analysis-significance-testing.html"/>
+<link rel="prev" href="or-method-intro.html"/>
+<link rel="next" href="or-applications.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -915,103 +915,230 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="dbm-analysis-background" class="section level1">
-<h1><span class="header-section-number">Chapter 16</span> DBM method background</h1>
-<div id="dbm-analysis-background-how-much-finished" class="section level2">
-<h2><span class="header-section-number">16.1</span> TBA How much finished</h2>
+<div id="or-analysis-st" class="section level1">
+<h1><span class="header-section-number">Chapter 20</span> Obuchowski Rockette (OR) Analysis</h1>
+<div id="or-analysis-st-how-much-finished" class="section level2">
+<h2><span class="header-section-number">20.1</span> TBA How much finished</h2>
 <p>80%</p>
 </div>
-<div id="dbm-analysis-background-introduction" class="section level2">
-<h2><span class="header-section-number">16.2</span> Introduction</h2>
-<p>The term <em>treatment</em> is generic for <em>imaging system</em>, <em>modality</em> or <em>image processing</em>; <em>reader</em> is generic for <em>radiologist</em> or <em>algorithmic observer</em>, e.g., a computer aided detection (CAD) or artificial intelligence (AI) algorithm. The previous chapter described analysis of a single ROC dataset and comparing the observed area <span class="math inline">\(AUC\)</span> under the ROC plot to a specified value. Clinically this is not an interesting problem; rather, interest is usually in comparing performance of a group of readers interpreting a common set of cases in two or more treatments. Such data is termed multiple reader multiple case (MRMC). [An argument could be made in favor of the term “multiple-treatment multiple-reader”, since “multiple-case” is implicit in any ROC analysis that takes into account correct and incorrect decisions on cases. However, I will stick with existing terminology.] The basic idea is that by sampling a sufficiently large number of readers and cases one can draw conclusions that apply broadly to other readers of similar skill levels interpreting other similar case sets in the selected treatments. How one accomplishes this, termed MRMC analysis, is the subject of this chapter.</p>
-<p>This chapter describes the first truly successful method of analyzing MRMC ROC data, namely the Dorfman-Berbaum-Metz (DBM) method <span class="citation">(Dorfman, Berbaum, and Metz <a href="#ref-RN204" role="doc-biblioref">1992</a>)</span>. The other method, due to Obuchowski and Rockette <span class="citation">(N. A. Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span>, is the subject of Chapter 10 (TBA). Both methods have been substantially improved by Hillis <span class="citation">(Stephen L. Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>; Stephen L. Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>; Hillis <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span>. It is not an overstatement that ROC analysis came of age with the methods described in this chapter. Prior to the techniques described here, one knew of the existence of sources of variability affecting a measured <span class="math inline">\(AUC\)</span> value, as discussed in (book) Chapter 07, but then-known techniques <span class="citation">(Swets and Pickett <a href="#ref-RN412" role="doc-biblioref">1982</a>)</span> for estimating the corresponding variances and correlations were impractical.</p>
-<div id="historical-background" class="section level3">
-<h3><span class="header-section-number">16.2.1</span> Historical background</h3>
-<p>The author was thrown (unprepared) into the methodology field ca. 1985 when, as a junior faculty member, he undertook comparing a prototype digital chest-imaging device (Picker International, ca. 1983) vs. an optimized analog chest-imaging device at the University of Alabama at Birmingham. At the outset a decision was made to use free-response ROC methodology instead of ROC, as the former accounted for lesion localization, and I and my mentor, Prof. Gary T. Barnes, were influenced in that decision by a publication <span class="citation">(Philip C Bunch et al. <a href="#ref-bunch1977free" role="doc-biblioref">1977</a>)</span> to be described in (book) Chapter 12. Therefore, instead of ROC-AUC one had lesion-level sensitivity at a fixed number of location level false positives per case as the figure-of-merit (FOM). Details of the FOM are not relevant at this time. Suffice to state that methods described in this chapter, which had not been developed in 1983, while developed for analyzing reader-averaged inter-treatment ROC-AUC differences, <em>apply to any scalar FOM</em>. While I was successful at calculating confidence intervals (this is the heart of what is loosely termed <em>statistical analysis</em>) and publishing the work <span class="citation">(Chakraborty et al. <a href="#ref-Chakraborty1986DigitalVsConv" role="doc-biblioref">1986</a>)</span> using techniques described in a book <span class="citation">(Swets and Pickett <a href="#ref-RN412" role="doc-biblioref">1982</a>)</span> titled “Evaluation of Diagnostic Systems: Methods from Signal Detection Theory”, subsequent attempts at applying these methods in a follow-up paper <span class="citation">(Niklason et al. <a href="#ref-Niklason1986SimulatedPulmonary" role="doc-biblioref">1986</a>)</span> led to negative variance estimates (private communication, Dr. Loren Niklason, ca. 1985). With the benefit of hindsight, negative variance estimates are not that uncommon and the method to be described in this chapter has to deal with that possibility.</p>
-<p>The methods <span class="citation">(Swets and Pickett <a href="#ref-RN412" role="doc-biblioref">1982</a>)</span> described in the cited book involved estimating the different variability components – case sampling, between-reader and within-reader variability. Between-reader and within-reader variability (the two cannot be separated as discussed in (book) Chapter 07) could be estimated from the variance of the <span class="math inline">\(AUC\)</span> values corresponding to the readers interpreting the cases within a treatment and then averaging the variances over all treatments. Estimating case-sampling and within-reader variability required splitting the dataset into a few smaller subsets (e.g., a case set with 60 cases might be split into 3 sub-sets of 20 cases each), analyzing each subset to get an <span class="math inline">\(AUC\)</span> estimate, calculating the variance of the resulting <span class="math inline">\(AUC\)</span> values <span class="citation">(Swets and Pickett <a href="#ref-RN412" role="doc-biblioref">1982</a>)</span> and scaling the result to the original case size. Because it was based on few values, the estimate was inaccurate, and the already case-starved original dataset made it difficult to estimate AUCs for the subsets; moreover, the division into subsets was at the discretion of the researcher, and therefore unlikely to be reproduced by others. Estimating within-reader variability required re-reading the entire case set, or at least a part of it. ROC studies have earned a deserved reputation for taking much time to complete, and having to re-read a case set was not a viable option. [Historical note: I recalls a barroom conversation with Dr. Thomas Mertelmeir after the conclusion of an SPIE meeting ca. 2004, where Dr. Mertelmeir commiserated mightily, over several beers, about the impracticality of some of the ROC studies required of imaging device manufacturers by the FDA.]</p>
+<div id="or-analysis-st-introduction" class="section level2">
+<h2><span class="header-section-number">20.2</span> Introduction</h2>
+<p>In previous chapters the DBM significance testing procedure <span class="citation">(Dorfman, Berbaum, and Metz <a href="#ref-RN204" role="doc-biblioref">1992</a>)</span> for analyzing MRMC ROC data, along with improvements <span class="citation">(Hillis <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span>, has been described. Because the method assumes that jackknife pseudovalues can be regarded as independent and identically distributed case-level figures of merit, it has been rightly criticized by Hillis and others <span class="citation">(Zhou, McClish, and Obuchowski <a href="#ref-zhou2009statistical" role="doc-biblioref">2009</a>)</span>. Hillis states that the method “works” but lacks firm statistical foundations <span class="citation">(S. L. Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>; Stephen L. Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>; Stephen L. Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span>. I would add that it “works” as long as one restricts to the empirical AUC figure of merit. In my book I gave a justification for why the method “works”. Specifically, the <em>empirical AUC pseudovalues qualify as case-level FOMs</em> - this property has also been noted by <span class="citation">(Hajian-Tilaki et al. <a href="#ref-RN1395" role="doc-biblioref">1997</a>)</span>. However, this property applies <em>only</em> to the empirical AUC, so an alternate approach that applies to any figure of merit is highly desirable.</p>
+<p>Hillis’ has proposed that a method based on an earlier publication <span class="citation">(N. A. Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span>, which does not depend on pseudovalues, is preferable from both conceptual and practical points of view. This chapter is named “OR Analysis”, where OR stands for Obuchowski and Rockette. The OR method has advantages in being able to handle more complex study designs <span class="citation">(Hillis <a href="#ref-RN2508" role="doc-biblioref">2014</a>)</span> that are addressed in subsequent chapters, and applications to other FOMs (e.g., the FROC paradigm uses a rather different FOM from empirical ROC-AUC) are best performed with the OR method.</p>
+<p>This chapter delves into the significance testing procedure employed in OR analysis.</p>
+<p>Multiple readers interpreting a case-set in multiple treatments is analyzed and the results, DBM vs. OR, are compared for the same dataset. The special cases of fixed-reader and fixed-case analyses are described. Single treatment analysis, where interest is in comparing average performance of readers to a fixed value, is described. Three methods of estimating the covariance matrix are described.</p>
+<p>Before proceeding, it is understood that datasets analyzed in this chapter follow a <em>factorial</em> design, sometimes call fully-factorial or fully-crossed design. Basically, the data structure is symmetric, e.g., all readers interpret all cases in all modalities. The next chapter will describe the analysis of <em>split-plot</em> datasets, where, for example, some readers interpret all cases in one modality, while the remaining readers interpret all cases in the other modality.</p>
 </div>
-<div id="the-wagner-analogy" class="section level3">
-<h3><span class="header-section-number">16.2.2</span> The Wagner analogy</h3>
-<p>An important objective of modality comparison studies is to estimate the variance of the difference in reader-averaged AUCs between the treatments. For two treatments one sums the reader-averaged variance in each treatment and subtracts twice the covariance (a scaled version of the correlation). Therefore, in addition to estimating variances, one needs to estimate correlations. Correlations are present due to the common case set interpreted by the readers in the different treatments. If the correlation is large, i.e., close to unity, then the individual treatment variances tend to cancel, making the constant treatment-induced difference easier to detect. The author recalls a vivid analogy used by the late Dr. Robert F. Wagner to illustrate this point at an SPIE meeting ca. 2008. To paraphrase him, <em>consider measuring from shore the heights of the masts on two adjacent boats in a turbulent ocean. Because of the waves, the heights, as measured from shore, are fluctuating wildly, so the variance of the individual height measurements is large. However, the difference between the two heights is likely to be relatively constant, i.e., have small variance. This is because the wave that causes one mast’s height to increase also increases the height of the other mast.</em></p>
-</div>
-<div id="the-shortage-of-numbers-to-analyze-and-a-pivotal-breakthrough" class="section level3">
-<h3><span class="header-section-number">16.2.3</span> The shortage of numbers to analyze and a pivotal breakthrough</h3>
-<p><em>The basic issue was that the calculation of <span class="math inline">\(AUC\)</span> reduces the relatively large number of ratings of a set of non-diseased and diseased cases to a single number.</em> For example, after completion of an ROC study with 5 readers and 100 non-diseased and 100 diseased cases interpreted in two treatments, the data is reduced to just 10 numbers, i.e., five readers times two treatments. It is difficult to perform statistics with so few numbers. The author recalls a conversation with Prof. Kevin Berbaum at a Medical Image Perception Society meeting in Tucson, Arizona, ca. 1997, in which he described the basic idea that forms the subject of this chapter. Namely, using jackknife pseudovalues (to be defined below) as individual case-level figures of merit. This, of course, greatly increases the amount of data that one can work with; instead of just 10 numbers one now has 2,000 pseudovalues (2 x 5 x 200). If one assumes the pseudovalues behave essentially as case-level data, then by assumption they are independent and identically distributed, and therefore satisfy the conditions for application of standard analysis of variance (ANOVA) techniques. [This assumption has been much criticized and is the basis for some preferring alternate approaches - but, as Hillis has stated, and I paraphrase, the pseudovalue based method “works”, but lacks sufficient rigor.] The relevant paper had already been published in 1992 but other projects and lack of formal statistical training kept me from fully appreciating this work until later.</p>
-<p>For the moment I restrict to fully paired data (i.e., each case is interpreted by all readers in all treatments). There is a long history of how this field has evolved and I cannot do justice to all methods that are currently available. Some of the methods <span class="citation">(Toledano <a href="#ref-RN1441" role="doc-biblioref">2003</a>; Ishwaran and Gatsonis <a href="#ref-RN2013" role="doc-biblioref">2000</a>; Toledano and Gatsonis <a href="#ref-RN1451" role="doc-biblioref">1996</a>)</span> have the advantage that they can handle explanatory variables (termed covariates) that could influence performance, e.g., years of experience, types of cases, etc. Other methods are restricted to specific choices of FOM. Specifically, the probabilistic approach <span class="citation">(Clarkson, Kupinski, and Barrett <a href="#ref-RN2253" role="doc-biblioref">2006</a>; Kupinski, Clarkson, and Barrett <a href="#ref-RN2254" role="doc-biblioref">2006</a>; Gallas, Pennello, and Myers <a href="#ref-RN2351" role="doc-biblioref">2007</a>; Gallas <a href="#ref-RN2080" role="doc-biblioref">2006</a>)</span> is restricted to the empirical <span class="math inline">\(AUC\)</span> under the ROC curve, and is not applicable to other FOMs, e.g., parametrically fitted ROC AUCs or, more importantly, to location specific paradigm FOMs. Instead, I will focus on methods for which software is readily available (i.e., freely on websites), which have been widely used (the method that I am about to describe has been used in several hundred publications) and validated via simulations, and which apply to any scalar figure of merit, and therefore widely applicable, for example, to location specific paradigms.</p>
-</div>
-<div id="organization-of-chapter" class="section level3">
-<h3><span class="header-section-number">16.2.4</span> Organization of chapter</h3>
-<p>The concepts of reader and case populations, introduced in (book) Chapter 07, are recapitulated. A distinction is made between <em>fixed</em> and <em>random</em> factors – statistical terms with which one must become familiar. Described next are three types of analysis that are possible with MRMC data, depending on which factors are regarded as random and which as fixed. The general approach to the analysis is described. Two methods of analysis are possible: the jackknife pseudovalue-based approach detailed in this chapter and an alternative approach is detailed in Chapter 10. The Dorfman-Berbaum-Metz (DBM) model for the jackknife pseudovalues is described that incorporates different sources of variability and correlations possible with MRMC data. Calculation of ANOVA-related quantities, termed mean squares, from the pseudovalues, are described followed by the significance testing procedure for testing the null hypothesis of no treatment effect. A relevant distribution used in the analysis, namely the F-distribution, is illustrated with R examples. The decision rule, i.e., whether to reject the NH, calculation of the ubiquitous p-value, confidence intervals and how to handle multiple treatments is illustrated with two datasets, one an older ROC dataset that has been widely used to demonstrate advances in ROC analysis, and the other a recent dataset involving evaluation of digital chest tomosynthesis vs. conventional chest imaging. The approach to validation of DBM analysis is illustrated with an R example. The chapter concludes with a section on the meaning of the pseudovalues. The intent is to explain, at an intuitive level, why the DBM method “works”, even though use of pseudovalues has been questioned at the conceptual level. For organizational reasons and space limitations, details of the software are relegated to Online Appendices, but they are essential reading, preferably in front of a computer running the online software that is part of this book. The author has included material here that may be obvious to statisticians, e.g., an explanation of the Satterthwaite approximation, but are expected to be helpful to others from non-statistical backgrounds.</p>
-</div>
-</div>
-<div id="dbm-analysis-background-random-fixed-factors" class="section level2">
-<h2><span class="header-section-number">16.3</span> Random and fixed factors</h2>
-<p><em>This paragraph introduces some analysis of variance (ANOVA) terminology. Treatment, reader and case are factors with different numbers of levels corresponding to each factor. For an ROC study with two treatments, five readers and 200 cases, there are two levels of the treatment factor, five levels of the reader factor and 200 levels of the case factor. If a factor is regarded as fixed, then the conclusions of the analysis apply only to the specific levels of the factor used in the study. If a factor is regarded as random, the levels of the factor are regarded as random samples from a parent population of the corresponding factor, and conclusions regarding specific levels are not allowed; rather, conclusions apply to the distribution from which the levels were sampled.</em></p>
-<p>ROC MRMC studies require a sample of cases and interpretations by one or more readers in one or more treatments (in this book the term <em>multiple</em> includes as a special case <em>one</em>). A study is never conducted on a sample of treatments. It would be nonsensical to image patients using a “sample” of all possible treatments. Every variation of an imaging technique (e.g., different kilovoltage or kVp) or display method (e.g., window-level setting) or image processing techniques qualifies as a distinct treatment. The number of possible treatments is very large, and, from a practical point of view, most of them are uninteresting. Rather, interest is in comparing two or more (a few at most) treatments that, based on preliminary studies, are clinically interesting. One treatment may be computed tomography, the other magnetic resonance imaging, or one may be interested in comparing a standard image processing method to a newly proposed one, or one may be interested in comparing CAD to a group of readers.</p>
-<p>This brings out an essential difference between how cases, readers and treatments have to be regarded in the variability estimation procedure. Cases and readers are usually regarded as random factors (there has to be at least one random factor – if not, there are no sources of variability and nothing to apply statistics to!), while treatments are regarded as fixed factors. The random factors contribute variability, but the fixed factors do not, rather they contribute constant shifts in performance. The terms <em>fixed</em> and <em>random</em> factors are used in this specific sense, and are derived, in turn, from ANOVA methods in statistics. With two or more treatments, there are shifts in performance of treatments relative to each other, that one seeks to assess the significance of, against a background of noise contributed by the random factors. If the shifts are sufficiently large compared to the noise, then one can state, with some certainty, that they are real. Quantifying the last statement uses the methods of hypothesis testing introduced in Chapter <a href="hypothesis-testing.html#hypothesis-testing">15</a>.</p>
-</div>
-<div id="dbm-analysis-background-reader-case-populations" class="section level2">
-<h2><span class="header-section-number">16.4</span> Reader and case populations</h2>
-<p>Consider a sample of <span class="math inline">\(J\)</span> readers. Conceptually there is a reader-population, modeled as a normal distribution <span class="math inline">\(\theta_j \sim N\left ( \theta_{\bullet\{1\}}, \sigma_{br+wr}^{2} \right )\)</span>, describing the variation of skill-level of readers. Here <span class="math inline">\(\theta\)</span> is a generic FOM. Each reader <span class="math inline">\(j\)</span> is characterized by a different value of <span class="math inline">\(\theta_j\)</span>, <span class="math inline">\(j=1,2,...J\)</span> and one can conceptually think of a bell-shaped curve with variance <span class="math inline">\(\sigma_{br+wr}^{2}\)</span> describing between-reader variability of the readers. A large variance implies large spread in reader skill levels.</p>
-<p>Likewise, there is a case-population, also modeled as a normal distribution, describing the variations in difficulty levels of the patients. One actually has two unit-variance distributions, one for non-diseased and one for diseased cases, characterized by a separation parameter. The separation parameter is scaled (i.e., normalized) by the standard deviation of each distribution (assumed equal). Each distribution has unit variance. Conceptually an easy case set has a larger than usual scaled separation parameter while a difficult case set has a smaller than usual scaled separation parameter. The distribution of the scaled separation parameter can be modeled as a bell-shaped curve <span class="math inline">\(\theta_{\{c\}} \sim N\left ( \theta_{\{\bullet\}}, \sigma_{cs+wr}^{2} \right )\)</span> with variance <span class="math inline">\(\sigma_{cs+wr}^{2}\)</span> describing the variations in difficulty levels of different case samples. Note the need for the case-set index, introduced in (book) Chapter 07, to specify the separation parameter for a specific case-set (in principle a <span class="math inline">\(j\)</span>-index is also needed as one cannot have an interpretation without a reader; for now it is suppressed. A small variance <span class="math inline">\(\sigma_{cs}^{2}\)</span> implies the different case sets have similar difficulty levels while a larger variance would imply a larger spread in difficulty levels. Just as the previous paragraph described reader-varibility, this paragraph has described case-variability.</p>
-<p><em>Anytime one has a common random component to two measurements, the measurements are correlated.</em> In the Wagner analogy, the common component is the random height, as a function of time, of a wave, which contributes the same amount to both height measurements (since the boats are adjacent). Since the readers interpret a common case set in all treatments one needs to account for various types of correlations that are potentially present. These occur due to the various types of pairings that can occur with MRMC data, where each pairing implies the presence of a common component to the measurements: (a) the same reader interpreting the <em>same cases</em> in different treatments, (b) different readers interpreting the <em>same cases</em> in the same treatment and (c) different readers interpreting the <em>same cases</em> in different treatments. These pairings are more clearly elucidated in (book) Chapter 10. The current chapter uses jackknife pseudovalue based analysis to model the variances and the correlations. Hillis has shown that the two approaches are essentially equivalent <span class="citation">(Stephen L. Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span>.</p>
-</div>
-<div id="dbm-analysis-background-threeAnalyses" class="section level2">
-<h2><span class="header-section-number">16.5</span> Three types of analyses</h2>
-<p><em>MRMC analysis aims to draw conclusions regarding the significances of inter-treatment shifts in performance. Ideally a conclusion (i.e., a difference is significant) should generalize to the respective populations from which the random samples were obtained. In other words, the idea is to generalize from the observed samples to the underlying populations. Three types of analyses are possible depending on which factor(s) one regards as random and which as fixed: random-reader random-case (RRRC), fixed-reader random-case (FRRC) and random-reader fixed-case (RRFC). If a factor is regarded as random, then the conclusion of the study applies to the population from which the levels of the factor were sampled. If a factor is regarded as fixed, then the conclusion applies only to the specific levels of the sampled factor. For example, if reader is regarded as a random factor, the conclusion generalizes to the reader population from which the readers used in the study were obtained. If reader is regarded as a fixed factor, then the conclusion applies to the specific readers that participated in the study. Regarding a factor as fixed effectively “freezes out” the sampling variability of the population and interest then centers only on the specific levels of the factor used in the study. Likewise, treating case as a fixed factor means the conclusion of the study is specific to the case-set used in the study.</em></p>
-</div>
-<div id="dbm-analysis-background-approach" class="section level2">
-<h2><span class="header-section-number">16.6</span> General approach</h2>
-<p>This section provides an overview of the steps involved in analysis of MRMC data. Two approaches are described in parallel: a figure of merit (FOM) derived jackknife pseudovalue based approach, detailed in this chapter and an FOM based approach, detailed in the next chapter. The analysis proceeds as follows:</p>
-<ol style="list-style-type: decimal">
-<li>A FOM is selected: <em>the selection of FOM is the single-most critical aspect of analyzing an observer performance study</em>. The selected FOM is denoted <span class="math inline">\(\theta\)</span>. The FOM has to be an objective scalar measure of performance with larger values characterizing better performance. [The qualifier “larger” is trivially satisfied; if the figure of merit has the opposite characteristic, a sign change is all that is needed to bring it back to compliance with this requirement.] Examples are empirical <span class="math inline">\(AUC\)</span>, the binormal model-based estimate <span class="math inline">\(A_z\)</span> , other advance method based estimates of <span class="math inline">\(AUC\)</span>, sensitivity at a predefined value of specificity, etc. An example of a FOM requiring a sign-change is <span class="math inline">\(FPF\)</span> at a specified <span class="math inline">\(TPF\)</span>, where smaller values signify better performance.</li>
-<li>For each treatment <span class="math inline">\(i\)</span> and reader <span class="math inline">\(j\)</span> the figure of merit <span class="math inline">\(\theta_{ij}\)</span> is estimated from the ratings data. Repeating this over all treatments and readers yields a matrix of observed values <span class="math inline">\(\theta_{ij}\)</span>. This is averaged over all readers in each treatment yielding <span class="math inline">\(\theta_{i\bullet}\)</span>. The observed effect-size <span class="math inline">\(ES_{obs}\)</span> is defined as the difference between the reader-averaged FOMs in the two treatments, i.e., <span class="math inline">\(ES_{obs} = \theta_{2\bullet}-\theta_{1\bullet}\)</span>. While extensible to more than two treatments, the explanation is more transparent by restricting to two modalities.</li>
-<li>If the magnitude of <span class="math inline">\(ES_{obs}\)</span> is “large” one has reason to suspect that there might indeed be a significant difference in AUCs between the two treatments, where <em>significant</em> is used in the sense of (book) Chapter 08. Quantification of this statement, specifically how large is “large”, requires the conceptually more complex steps described next.
+<div id="or-analysis-st-rrrc" class="section level2">
+<h2><span class="header-section-number">20.3</span> Random-reader random-case</h2>
+<p>In conventional ANOVA models, such as used in DBM, the covariance matrix of the error term is diagonal with all diagonal elements equal to a common variance, represented in the DBM model by the scalar <span class="math inline">\(\epsilon\)</span> term. Because of the correlated structure of the error term, in OR analysis, a customized ANOVA is needed. The null hypothesis (NH) is that the true figures-of-merit of all treatments are identical, i.e.,</p>
+<p><span class="math display" id="eq:ORModelNH">\[\begin{equation}
+NH:\tau_i=0\;\; (i=1,2,...,I)
+\tag{20.1}
+\end{equation}\]</span></p>
+<p>The analysis described next considers both readers and cases as random effects. The F-statistic is denoted <span class="math inline">\(F_{ORH}\)</span>, defined by:</p>
+<p><span class="math display" id="eq:F-ORH-RRRC">\[\begin{equation}
+F_{ORH}=\frac{MS(T)}{MS(TR)+J\max(\text{Cov2}-\text{Cov3},0)}
+\tag{20.2}
+\end{equation}\]</span></p>
+<p>Eqn. <a href="or-analysis-st.html#eq:F-ORH-RRRC">(20.2)</a> incorporates Hillis’ modification of the original OR F-statistic. The modification ensures that the constraint Eqn. <a href="or-method-intro.html#eq:CovOrderings">(19.40)</a> is always obeyed and also avoids a possibly negative (and hence illegal) F-statistic. The relevant mean squares are defined by (note that these are calculated using <em>FOM</em> values, not <em>pseudovalues</em>):</p>
+<p><span class="math display" id="eq:MS-OR">\[\begin{align}
+\left.\begin{array}{rcl}
+MS(T)&amp;=&amp;\frac{J}{I-1}\sum_{i=1}^{I}(\theta_{i\bullet}-\theta_{\bullet\bullet})^2\\
+\\ 
+MS(R)&amp;=&amp;\frac{I}{J-1}\sum_{j=1}^{J}(\theta_{\bullet j}-\theta_{\bullet\bullet})^2\\
+\\
+MS(TR)&amp;=&amp;\frac{1}{(I-1)(J-1)}\sum_{i=1}^{I}\sum_{j=1}^{J}(\theta_{ij}-\theta_{i\bullet}-\theta_{\bullet j}+\theta_{\bullet\bullet})
+\end{array}\right\}
+\tag{20.3}
+\end{align}\]</span></p>
+<p>The original paper <span class="citation">(N. A. Obuchowski and Rockette <a href="#ref-RN1450" role="doc-biblioref">1995</a>)</span> actually proposed a different test statistic <span class="math inline">\(F_{OR}\)</span>:</p>
+<p><span class="math display" id="eq:F-OR">\[\begin{equation}
+F_{OR}=\frac{MS(T)}{MS(TR)+J(\text{Cov2}-\text{Cov3})}
+\tag{20.4}
+\end{equation}\]</span></p>
+<p>Note that Eqn. <a href="or-analysis-st.html#eq:F-OR">(20.4)</a> lacks the constraint, subsequently proposed by Hillis, which ensures that the denominator cannot be negative. The following distribution was proposed for the test statistic.</p>
+<p><span class="math display" id="eq:SamplingDistr-F-OR">\[\begin{equation}
+F_{OR}\sim F_{\text{ndf},\text{ddf}}
+\tag{20.5}
+\end{equation}\]</span></p>
+<p>The original degrees of freedom were defined by:</p>
+<p><span class="math display" id="eq:ORdegreesOfFreedom">\[\begin{align}
+\begin{split}
+\text{ndf}&amp;=I-1\\
+\text{ddf}&amp;=(I-1)\times(J-1)
+\end{split}
+\tag{20.6}
+\end{align}\]</span></p>
+<p>It turns out that the Obuchowski-Rockette test statistic is very conservative, meaning it is highly biased against rejecting the null hypothesis (the data simulator used in the validation described in their publication did not detect this behavior). Because of the conservative behavior, the predicted sample sizes tended to be quite large (if the test statistic does not reject the NH as often as it should, one way to overcome this tendency is to use a larger sample size). In this connection I have two informative anecdotes.</p>
+<div id="TwoAnecdotes" class="section level3">
+<h3><span class="header-section-number">20.3.1</span> Two anecdotes</h3>
 <ul>
-<li>In the DBM approach, the subject of this chapter, jackknife pseudovalues are calculated as described in Chapter 08. A standard ANOVA model with uncorrelated errors is used to model the pseudovalues.</li>
-<li>In the OR approach, the subject of the next chapter, the FOM is modeled directly using a custom ANOVA model with correlated errors.</li>
-</ul></li>
-<li>Depending on the selected method of modeling the data (pseudovalue vs. FOM) a statistical model is used which includes parameters modeling the true values in each treatment, and expected variations due to different variability components in the model, e.g., between-reader variability, case-sampling variability, interactions (e.g., allowing for the possibility that the random effect of a given reader could be treatment dependent) and the presence of correlations (between pseudovalues or FOMs) because of the pairings inherent in the interpretations.</li>
-<li>In RRRC analysis one accounts for randomness in readers and cases. In FRRC analysis one regards reader as a fixed factor. In RRFC analysis one regards the case-sample (set of cases) as a fixed factor. The statistical model depends on the type of analysis.</li>
-<li>The parameters of the statistical model are estimated from the observed data.</li>
-<li>The estimates are used to infer the statistical distribution of the observed effect size, <span class="math inline">\(ES_{obs}\)</span>, regarded as a realization of a random variable, under the null hypothesis (NH) that the true effect size is zero.</li>
-<li>Based on this statistical distribution, and assuming a two-sided test, the probability (this is the oft-quoted p-value) of obtaining an effect size at least as extreme as that actually observed, is calculated, as in (book) Chapter 08.</li>
-<li>If the p-value is smaller than a preselected value, denoted <span class="math inline">\(\alpha\)</span>, one declares the treatments different at the <span class="math inline">\(\alpha\)</span> - significance level. The quantity <span class="math inline">\(\alpha\)</span> is the control (or “cap”) on the probability of making a Type I error, defined as rejecting the NH when it is true. It is common to set <span class="math inline">\(\alpha\)</span> = 0.05 but depending on the severity of the consequences of a Type I error, as discussed in (book) Chapter 08, one might consider choosing a different value. Notice that <span class="math inline">\(\alpha\)</span> is a pre-selected number while the p-value is a realization (observation) of a random variable.</li>
-<li>For a valid statistical analysis, the empirical probability <span class="math inline">\(\alpha_{emp}\)</span> over many (typically 2000) independent NH datasets, that the p-value is smaller than <span class="math inline">\(\alpha\)</span>, should equal <span class="math inline">\(\alpha\)</span> to within statistical uncertainty.</li>
-</ol>
+<li><p>The late Dr. Robert F. Wagner once stated to me (ca. 2001) that the sample-size tables published by Obuchowski <span class="citation">(Obuchowski <a href="#ref-RN1971" role="doc-biblioref">1998</a>, <a href="#ref-RN1972" role="doc-biblioref">2000</a>)</span>, using the version of Eqn. <a href="or-analysis-st.html#eq:F-ORH-RRRC">(20.2)</a> with the <em>ddf</em> as originally suggested by Obuchowski and Rockette, predicted such high number of readers and cases that he was doubtful about the chances of anyone conducting a practical ROC study!</p></li>
+<li><p>The second story is that I once conducted NH simulations and analyses using a Roe-Metz simulator <span class="citation">(Roe and Metz <a href="#ref-RN1125" role="doc-biblioref">1997</a><a href="#ref-RN1125" role="doc-biblioref">a</a>)</span> and the significance testing described in the Obuchowski-Rockette paper: the method did not reject the null hypothesis even once in 2000 trials! Recall that with <span class="math inline">\(\alpha = 0.05\)</span> a valid test should reject the null hypothesis about <span class="math inline">\(100\pm20\)</span> times in 2000 trials. I recalls (ca. 2004) telling Dr. Steve Hillis about this issue, and he suggested a different denominator degrees of freedom <em>ddf</em>, see next, substitution of which magically solved the problem, i.e., the simulations rejected the null hypothesis 5% of the time.</p></li>
+</ul>
 </div>
-<div id="dbm-analysis-background-summary" class="section level2">
-<h2><span class="header-section-number">16.7</span> Summary TBA</h2>
-<p>This chapter has detailed analysis of MRMC ROC data using the DBM method. A reason for the level of detail is that almost all of the material carries over to other data collection paradigms, and a thorough understanding of the relatively simple ROC paradigm data is helpful to understanding the more complex ones.</p>
-<p>DBM has been used in several hundred ROC studies (Prof. Kevin Berbaum, private communication ca. 2010). While the method allows generalization of a study finding, e.g., rejection of the NH, to the population of readers and cases, I believe this is sometimes taken too literally. If a study is done at a single hospital, then the radiologists tend to be more homogenous as compared to sampling radiologists from different hospitals. This is because close interactions between radiologists at a hospital tend to homogenize reading styles and performance. A similar issue applies to patient characteristics, which are also expected to vary more between different geographical locations than within a given location served by the hospital. This means is that single hospital study based p-values may tend to be biased downwards, declaring differences that may not be replicable if a wider sampling “net” were used using the same sample size. The price paid for a wider sampling net is that one must use more readers and cases to achieve the same sensitivity to genuine treatment effects, i.e., statistical power (i.e., there is no “free-lunch”).</p>
-<p>A third MRMC ROC method, due to Clarkson, Kupinski and Barrett19,20, implemented in open-source JAVA software by Gallas and colleagues22,44 (<a href="http://didsr.github.io/iMRMC/" class="uri">http://didsr.github.io/iMRMC/</a>) is available on the web. Clarkson et al19,20 provide a probabilistic rationale for the DBM model, provided the figure of merit is the empirical <span class="math inline">\(AUC\)</span>. The method is elegant but it is only applicable as long as one is using the empirical AUC as the figure of merit (FOM) for quantifying observer performance. In contrast the DBM approach outlined in this chapter, and the approach outlined in the following chapter, are applicable to any scalar FOM. Broader applicability ensures that significance-testing methods described in this, and the following chapter, apply to other ROC FOMs, such as binormal model or other fitted AUCs, and more importantly, to other observer performance paradigms, such as free-response ROC paradigm. An advantage of the Clarkson et al. approach is that it predicts truth-state dependence of the variance components. One knows from modeling ROC data that diseased cases tend to have greater variance than non-diseased ones, and there is no reason to suspect that similar differences do not exist between the variance components.</p>
-<p>Testing validity of an analysis method via simulation testing is only as good as the simulator used to generate the datasets, and this is where current research is at a bottleneck. The simulator plays a central role in ROC analysis. In my opinion this is not widely appreciated. In contrast, simulators are taken very seriously in other disciplines, such as cosmology, high-energy physics and weather forecasting. The simulator used to validate3 DBM is that proposed by Roe and Metz39 in 1997. This simulator has several shortcomings. (a) It assumes that the ratings are distributed like an equal-variance binormal model, which is not true for most clinical datasets (recall that the b-parameter of the binormal model is usually less than one). Work extending this simulator to unequal variance has been published3. (b) It does not take into account that some lesions are not visible, which is the basis of the contaminated binormal model (CBM). A CBM model based simulator would use equal variance distributions with the difference that the distribution for diseased cases would be a mixture distribution with two peaks. The radiological search model (RSM) of free-response data, Chapter 16 &amp;17 also implies a mixture distribution for diseased cases, and it goes farther, as it predicts some cases yield no z-samples, which means they will always be rated in the lowest bin no matter how low the reporting threshold. Both CBM and RSM account for truth dependence by accounting for the underlying perceptual process. (c) The Roe-Metz simulator is out dated; the parameter values are based on datasets then available (prior to 1997). Medical imaging technology has changed substantially in the intervening decades. (d) Finally, the methodology used to arrive at the proposed parameter values is not clearly described. Needed is a more realistic simulator, incorporating knowledge from alternative ROC models and paradigms that is calibrated, by a clearly defined method, to current datasets.</p>
-<p>Since ROC studies in medical imaging have serious health-care related consequences, no method should be used unless it has been thoroughly validated. Much work still remains to be done in proper simulator design, on which validation is dependent.</p>
+<div id="Hills-ddf" class="section level3">
+<h3><span class="header-section-number">20.3.2</span> Hillis ddf</h3>
+<p>Hillis’ proposed new <em>ddf</em> is shown below (<em>ndf</em> is unchanged), with the subscript <span class="math inline">\(H\)</span> denoting the Hillis modification:</p>
+<p><span class="math display" id="eq:ddfH-RRRC">\[\begin{equation}
+\text{ddf}_H = \frac{\left [ MS(TR) + J \max(\text{Cov2}-\text{Cov3},0)\right ]^2}{\frac{\left [ MS(TR) \right ]^2}{(I-1)(J-1)}}
+\tag{20.7}
+\end{equation}\]</span></p>
+<p>From the previous chapter, the ordering of the covariances is as follows:</p>
+<p><span class="math display">\[\begin{equation*}
+\text{Cov3} \leq  \text{Cov2} \leq  \text{Cov1} \leq  \text{Var}
+\end{equation*}\]</span></p>
+<p>If <span class="math inline">\(\text{Cov2} &lt; \text{Cov3}\)</span> (which is the <em>exact opposite</em> of the expected ordering), <span class="math inline">\(\text{ddf}_H\)</span> reduces to <span class="math inline">\((I-1)\times(J-1)\)</span>, the value originally proposed by Obuchowski and Rockette. With Hillis’ proposed changes, under the null hypothesis the observed statistic <span class="math inline">\(F_{ORH}\)</span>, defined in Eqn. <a href="or-analysis-st.html#eq:F-ORH-RRRC">(20.2)</a>, is distributed as an F-statistic with <span class="math inline">\(\text{ndf} = I-1\)</span> and <em>ddf</em> = <span class="math inline">\(\text{ddf}_H\)</span> degrees of freedom <span class="citation">(S. L. Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>; Stephen L. Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>; Stephen L. Hillis, Berbaum, and Metz <a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span>:</p>
+<p><span class="math display" id="eq:SamplingDistr-F-ORH-RRRC">\[\begin{equation}
+F_{ORH}\sim F_{\text{ndf},\text{ddf}_H}
+\tag{20.8}
+\end{equation}\]</span></p>
+<p>If the expected ordering is true, i.e., <span class="math inline">\(\text{Cov2} &gt; \text{Cov3}\)</span> , which is the more likely situation, then <span class="math inline">\(\text{ddf}_H\)</span> is <em>larger</em> than <span class="math inline">\((I-1)\times(J-1)\)</span>, i.e., the Obuchowski-Rockette <em>ddf</em>, and the p-value decreases and there is a larger probability of rejecting the NH. The modified OR method is more likely to have the correct NH behavior, i.e, it will reject the NH 5% of the time when alpha is set to 0.05 (statisticians refer to this as “passing the 5% test”). The correct NH behavior has been confirmed in simulation testing using the Roe-Metz simulator (<span class="citation">Stephen L. Hillis, Berbaum, and Metz (<a href="#ref-RN1866" role="doc-biblioref">2008</a>)</span>).</p>
 </div>
-<div id="dbm-analysis-background-references" class="section level2">
-<h2><span class="header-section-number">16.8</span> References</h2>
+<div id="decision-rule-p-value-and-confidence-interval" class="section level3">
+<h3><span class="header-section-number">20.3.3</span> Decision rule, p-value and confidence interval</h3>
+<p>The critical value of the F-statistic for rejection of the null hypothesis is <span class="math inline">\(F_{1-\alpha,\text{ndf},\text{ddf}_H}\)</span>, i.e., that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the area under the distribution lies to the left of the critical value. From Eqn. <a href="or-analysis-st.html#eq:F-ORH-RRRC">(20.2)</a>:</p>
+<ul>
+<li><p>Rejection of the NH is more likely if <span class="math inline">\(MS(T)\)</span> increases, meaning the treatment effect is larger;</p></li>
+<li><p><span class="math inline">\(MS(TR)\)</span> is smaller, meaning there is less contamination of the treatment effect by treatment-reader variability;</p></li>
+<li><p>The greater of <span class="math inline">\(\text{Cov2}\)</span> or <span class="math inline">\(\text{Cov3}\)</span>, which is usually <span class="math inline">\(\text{Cov2}\)</span>, decreases, meaning there is less “noise” in the measurement due to between-reader variability. Recall that <span class="math inline">\(\text{Cov2}\)</span> involves different-reader same-treatment pairings.<br />
+</p></li>
+<li><p><span class="math inline">\(\alpha\)</span> increases, meaning one is allowing a greater probability of Type I errors;</p></li>
+<li><p><span class="math inline">\(\text{ndf}\)</span> increases, as this lowers the critical value of the F-statistic. With more treatment pairings, the chance that at least one paired-difference will reject the NH is larger.</p></li>
+<li><p><span class="math inline">\(\text{ddf}_H\)</span> increases, as this lowers the critical value of the F-statistic.</p></li>
+</ul>
+<p>The p-value of the test is the probability, under the NH, that an equal or larger value of the F-statistic than <span class="math inline">\(F_{ORH}\)</span> could be observed by chance. In other words, it is the area under the F-distribution <span class="math inline">\(F_{\text{ndf},\text{ddf}_H}\)</span> that lies above the observed value <span class="math inline">\(F_{ORH}\)</span>:</p>
+<p><span class="math display" id="eq:pValueOR-RRRC">\[\begin{equation}
+p=\Pr(F&gt;F_{ORH} \mid F\sim F_{\text{ndf},\text{ddf}_H})
+\tag{20.9}
+\end{equation}\]</span></p>
+<p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval for <span class="math inline">\(\theta_{i \bullet} - \theta_{i&#39; \bullet}\)</span> is given by:</p>
+<p><span class="math display" id="eq:CI-DiffFomRRRC">\[\begin{equation}
+\begin{split}
+CI_{1-\alpha,RRRC,\theta_{i \bullet} - \theta_{i&#39; \bullet}} =&amp; \theta_{i \bullet} - \theta_{i&#39; \bullet} \\ 
+&amp;\pm t_{\alpha/2, \text{ddf}_H}\sqrt{\textstyle\frac{2}{J}(MS(TR)+J\max(\text{Cov2}-\text{Cov3},0))}
+\end{split}
+\tag{20.10}
+\end{equation}\]</span></p>
+<p>Define <span class="math inline">\(\text{df}_i\)</span>, the degrees of freedom for modality <span class="math inline">\(i\)</span>:</p>
+<p><span class="math display" id="eq:CI-RRRC-df-IndvlTrt">\[\begin{equation}
+\text{df}_i = (\text{MS(R)}_i + J\max(\text{Cov2}_{i}, 0))^2/\text{MS(R)}_i^2 * (J - 1)
+\tag{20.11}
+\end{equation}\]</span></p>
+<p>Here <span class="math inline">\(\text{MS(R)}_i\)</span> is the reader mean-square for modality <span class="math inline">\(i\)</span>, and <span class="math inline">\(\text{Cov2}_i\)</span> is <span class="math inline">\(\text{Cov2}\)</span> for modality <span class="math inline">\(i\)</span>. Note that all quantities with an <span class="math inline">\(i\)</span> index are calculated using data from modality <span class="math inline">\(i\)</span> only.</p>
+<p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval for <span class="math inline">\(\theta_{i \bullet}\)</span>, i.e., <span class="math inline">\(CI_{1-\alpha,RRRC,\theta_{i \bullet}}\)</span>, is given by:</p>
+<p><span class="math display" id="eq:CI-RRRC-IndvlTrt">\[\begin{equation}
+CI_{1-\alpha,RRRC,\theta_{i \bullet}} = \theta_{i \bullet} \pm t_{\alpha/2, \text{df}_i}\sqrt{\textstyle\frac{1}{J}(\text{MS(R)}_i + J\max(\text{Cov2}_{i}, 0))}
+\tag{20.12}
+\end{equation}\]</span></p>
+</div>
+</div>
+<div id="or-analysis-st-frrc" class="section level2">
+<h2><span class="header-section-number">20.4</span> Fixed-reader random-case</h2>
+<p>Using the vertical bar notation <span class="math inline">\(\mid R\)</span> to denote that reader is regarded as a fixed effect <span class="citation">(Roe and Metz <a href="#ref-RN1124" role="doc-biblioref">1997</a><a href="#ref-RN1124" role="doc-biblioref">b</a>)</span>, the F -statistic for testing the null hypothesis <span class="math inline">\(NH: \tau_i = 0 \; (i=1,1,2,...I)\)</span> is <span class="citation">(Stephen L. Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>)</span>:</p>
+<p><span class="math display" id="eq:DefFStatFRRC-OR">\[\begin{equation}
+F_{ORH \mid R}=\frac{MS(T)}{\text{Var}-\text{Cov1}+(J-1)\max(\text{Cov2}-\text{Cov3},0)}
+\tag{20.13}
+\end{equation}\]</span></p>
+<p>[Note that for <span class="math inline">\(J\)</span> = 1, Eqn. <a href="or-analysis-st.html#eq:DefFStatFRRC-OR">(20.13)</a> reduces to Eqn. <a href="or-method-intro.html#eq:DefF-1RMT">(19.19)</a>, i.e., the single-reader analysis described in the previous chapter.]</p>
+<p><span class="math inline">\(F_{ORH \mid R}\)</span> is distributed as an F-statistic with <span class="math inline">\(\text{ndf} = I-1\)</span> and <span class="math inline">\(\text{ddf} = \infty\)</span>:</p>
+<p><span class="math display" id="eq:FStatDistrFRRC-OR">\[\begin{equation}
+F_{ORH \mid R} \sim F_{I-1,\infty}
+\tag{20.14}
+\end{equation}\]</span></p>
+<p>One can get rid of the infinite denominator degrees of freedom by recognizing, as in the previous chapter, that <span class="math inline">\((I-1) F_{I-1,\infty}\)</span> is distributed as a <span class="math inline">\(\chi^2\)</span> distribution with <span class="math inline">\(I-1\)</span> degrees of freedom, i.e., as <span class="math inline">\(\chi^2_{I-1}\)</span>. Therefore, one has, analogous to Eqn. <a href="or-method-intro.html#eq:F-1RMT">(19.18)</a>,</p>
+<p><span class="math display" id="eq:ChisqStatFRRC-OR">\[\begin{equation}
+\chi^2_{ORH \mid R} \equiv (I-1)F_{ORH \mid R} \sim \chi^2_{I-1}
+\tag{20.15}
+\end{equation}\]</span></p>
+<p>The critical value of the <span class="math inline">\(\chi^2\)</span> statistic is <span class="math inline">\(\chi^2_{1-\alpha,I-1}\)</span>, which is that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the area under the <span class="math inline">\(\chi^2_{I-1}\)</span> distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the <span class="math inline">\(\chi^2\)</span> statistic exceeds the critical value, i.e.,</p>
+<p><span class="math display">\[\chi^2_{ORH \mid R} &gt; \chi^2_{1-\alpha,I-1}\]</span></p>
+<p>The p-value of the test is the probability that a random sample from the chi-square distribution <span class="math inline">\(\chi^2_{I-1}\)</span> exceeds the observed value of the test statistic <span class="math inline">\(\chi^2_{ORH \mid R}\)</span> statistic defined in Eqn. <a href="or-analysis-st.html#eq:ChisqStatFRRC-OR">(20.15)</a>:</p>
+<p><span class="math display" id="eq:pValueFRRC-OR">\[\begin{equation}
+p=\Pr(\chi^2 &gt; \chi^2_{ORH \mid R} \mid \chi^2 \sim \chi^2_{I-1})
+\tag{20.16}
+\end{equation}\]</span></p>
+<p>The <span class="math inline">\((1-\alpha)\)</span> (symmetric) confidence interval for the difference figure of merit is given by:</p>
+<p><span class="math display" id="eq:CIDiffFomFRRC-OR">\[\begin{equation}
+\begin{split}
+CI_{1-\alpha,FRRC,\theta_{i \bullet} - \theta_{i&#39; \bullet}} =&amp;(\theta_{i \bullet} - \theta_{i&#39; \bullet}) \\ 
+&amp;\pm t_{\alpha/2, \infty}\sqrt{\textstyle\frac{2}{J}(\text{Var}-\text{Cov1}+(J-1)\max(\text{Cov2}-\text{Cov3},0))}
+\end{split}
+\tag{20.17}
+\end{equation}\]</span></p>
+<p>The NH is rejected if any of the following equivalent conditions is met (these statements are also true for <code>RRRC</code> analysis, and <code>RRFC</code> analysis to be described next):</p>
+<ul>
+<li>The observed value of the <span class="math inline">\(\chi^2\)</span> statistic exceeds the critical value <span class="math inline">\(\chi^2_{1-\alpha,I-1}\)</span>.</li>
+<li>The p-value is less than <span class="math inline">\(\alpha\)</span>.</li>
+<li>The <span class="math inline">\((1-\alpha)\)</span> confidence interval for at least one treatment-pairing does not include zero.</li>
+</ul>
+<p>Additional confidence intervals are stated below:</p>
+<ul>
+<li>The confidence interval for the reader-averaged FOM for each treatment, denoted <span class="math inline">\(CI_{1-\alpha,FRRC,\theta_{i \bullet}}\)</span>.</li>
+<li>The confidence interval for treatment FOM differences for each reader, denoted <span class="math inline">\(CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i&#39; j}}\)</span>.</li>
+</ul>
+<p><span class="math display" id="eq:CIIndTrtFomFRRC-OR">\[\begin{equation}
+CI_{1-\alpha,FRRC,\theta_{i \bullet}} = \theta_{i \bullet} \pm z_{\alpha/2}\sqrt{\textstyle\frac{1}{J}(\text{Var}_i+(J-1)\max(\text{Cov2}_i,0)}
+\tag{20.18}
+\end{equation}\]</span></p>
+<p><span class="math display" id="eq:CIIndRdrDiffFomFRRC-OR">\[\begin{equation}
+CI_{1-\alpha,FRRC,\theta_{i j} - \theta_{i&#39; j}} = (\theta_{i j} - \theta_{i&#39; j}) \pm z_{\alpha/2}\sqrt{2(\text{Var}_j - \text{Cov1}_j)}
+\tag{20.19}
+\end{equation}\]</span></p>
+<p>In these equations <span class="math inline">\(\text{Var}_i\)</span> and <span class="math inline">\(\text{Cov2}_i\)</span> are computed using the data for treatment <span class="math inline">\(i\)</span> only, and <span class="math inline">\(\text{Var}_j\)</span> and <span class="math inline">\(\text{Cov1}_j\)</span> are computed using the data for reader <span class="math inline">\(j\)</span> only.</p>
+</div>
+<div id="or-analysis-st-rrfc" class="section level2">
+<h2><span class="header-section-number">20.5</span> Random-reader fixed-case</h2>
+<p>When case is treated as a fixed factor, the appropriate F-statistic for testing the null hypothesis <span class="math inline">\(NH: \tau_i = 0 \; (i=1,1,2,...I)\)</span> is:</p>
+<p><span class="math display" id="eq:DefFStatRRFC">\[\begin{equation}
+F_{ORH \mid C}=\frac{MS(T)}{MS(TR)}
+\tag{20.20}
+\end{equation}\]</span></p>
+<p><span class="math inline">\(F_{ORH \mid C}\)</span> is distributed as an F-statistic with <span class="math inline">\(ndf = I-1\)</span> and <span class="math inline">\(ddf = (I-1)(J-1)\)</span>:</p>
+<p><span class="math display" id="eq:FStatRRFC">\[\begin{equation}
+\left.\begin{array}{rcl}
+\text{ndf}&amp;=&amp;I-1\\ 
+\text{ddf}&amp;=&amp;(I-1)(J-1)\\
+F_{ORH \mid C} &amp;\sim&amp; F_{\text{ndf},\text{ddf}}
+\end{array}\right\}
+\tag{20.21}
+\end{equation}\]</span></p>
+<p>Here is a situation where the degrees of freedom agree with those originally proposed by Obuchowski-Rockette. The critical value of the statistic is <span class="math inline">\(F_{1-\alpha,I-1,(I-1)(J-1)}\)</span>, which is that value such that fraction <span class="math inline">\((1-\alpha)\)</span> of the distribution lies to the left of the critical value. The null hypothesis is rejected if the observed value of the F statistic exceeds the critical value:</p>
+<p><span class="math display">\[F_{ORH \mid C}&gt;F_{1-\alpha,I-1,(I-1)(J-1)}\]</span></p>
+<p>The p-value of the test is the probability that a random sample from the distribution exceeds the observed value:</p>
+<p><span class="math display">\[p=\Pr(F&gt;F_{ORH \mid C} \mid F \sim F_{1-\alpha,I-1,(I-1)(J-1)})\]</span></p>
+<p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval for the reader-averaged difference FOM, <span class="math inline">\(CI_{1-\alpha,RRFC,\theta_{i \bullet} - \theta_{i&#39; \bullet}}\)</span>, is given by:</p>
+<p><span class="math display" id="eq:CIDiffFomRRFC">\[\begin{equation}
+CI_{1-\alpha,RRFC,\theta_{i \bullet} - \theta_{i&#39; \bullet}} = (\theta_{i \bullet} - \theta_{i&#39; \bullet}) \pm t_{\alpha/2, (I-1)(J-1)}\sqrt{\textstyle\frac{2}{J}MS(TR)}
+\tag{20.22}
+\end{equation}\]</span></p>
+<p>The <span class="math inline">\((1-\alpha)\)</span> confidence interval for the reader-averaged FOM for each treatment, <span class="math inline">\(CI_{1-\alpha,RRFC,\theta_{i \bullet}}\)</span>, is given by:</p>
+<p><span class="math display" id="eq:CIRRFCIndTrt">\[\begin{equation}
+CI_{1-\alpha,RRFC,\theta_{i \bullet}} = \theta_{i \bullet} \pm t_{\alpha/2, J-1}\sqrt{\textstyle\frac{1}{J}\text{MS(R)}_i}
+\tag{20.23}
+\end{equation}\]</span></p>
+<p>Here <span class="math inline">\(\text{MS(R)}_i\)</span> is the reader mean-square for modality <span class="math inline">\(i\)</span>.</p>
+</div>
+<div id="or-analysis-st-single-treatment" class="section level2">
+<h2><span class="header-section-number">20.6</span> Single treatment analysis</h2>
+<p>TBA
+## Summary{#or-analysis-st-summary}
+## Discussion{#or-analysis-st-discussion}
+## References {#or-analysis-st-references}</p>
 
 </div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-bunch1977free">
-<p>Bunch, Philip C, John F Hamilton, Gary K Sanderson, and Arthur H Simmons. 1977. “A Free Response Approach to the Measurement and Characterization of Radiographic Observer Performance.” In <em>Application of Optical Instrumentation in Medicine Vi</em>, 127:124–35. International Society for Optics; Photonics.</p>
-</div>
-<div id="ref-Chakraborty1986DigitalVsConv">
-<p>Chakraborty, D. P., E. S. Breatnach, M. V. Yester, B. Soto, G. T. Barnes, and R. G. Fraser. 1986. “Digital and Conventional Chest Imaging: A Modified ROC Study of Observer Performance Using Simulated Nodules.” Journal Article. <em>Radiology</em> 158: 35–39. <a href="https://doi.org/10.1148/radiology.158.1.3940394">https://doi.org/10.1148/radiology.158.1.3940394</a>.</p>
-</div>
-<div id="ref-RN2253">
-<p>Clarkson, Eric, Matthew A. Kupinski, and Harrison H. Barrett. 2006. “A Probabilistic Model for the MRMC Method, Part 1: Theoretical Development.” Journal Article. <em>Academic Radiology</em> 13 (11): 1410–21. <a href="https://doi.org/10.1016/j.acra.2006.07.016">https://doi.org/10.1016/j.acra.2006.07.016</a>.</p>
-</div>
 <div id="ref-RN204">
 <p>Dorfman, D. D., K. S. Berbaum, and C. E. Metz. 1992. “ROC Characteristic Rating Analysis: Generalization to the Population of Readers and Patients with the Jackknife Method.” Journal Article. <em>Invest. Radiol.</em> 27 (9): 723–31. <a href="https://pubmed.ncbi.nlm.nih.gov/1399456">https://pubmed.ncbi.nlm.nih.gov/1399456</a>.</p>
 </div>
-<div id="ref-RN2080">
-<p>Gallas, Brandon D. 2006. “One-Shot Estimate of MRMC Variance: AUC.” Journal Article. <em>Academic Radiology</em> 13 (3): 353–62. <a href="https://doi.org/10.1016/j.acra.2005.11.030">https://doi.org/10.1016/j.acra.2005.11.030</a>.</p>
+<div id="ref-RN1395">
+<p>Hajian-Tilaki, K. O., James A. Hanley, L. Joseph, and J. P. Collet. 1997. “Extension of Receiver Operating Characteristic Analysis to Data Concerning Multiple Signal Detection Tasks.” Journal Article. <em>Acad Radiol</em> 4: 222–29. <a href="https://doi.org/10.1016/S1076-6332(05)80295-8">https://doi.org/10.1016/S1076-6332(05)80295-8</a>.</p>
 </div>
-<div id="ref-RN2351">
-<p>Gallas, Brandon D., Gene a Pennello, and Kyle J. Myers. 2007. “Multireader Multicase Variance Analysis for Binary Data.” Journal Article. <em>Journal of the Optical Society of America. A, Optics, Image Science, and Vision</em> 24 (12): 70–80. <a href="https://doi.org/10.1364/josaa.24.000b70">https://doi.org/10.1364/josaa.24.000b70</a>.</p>
+<div id="ref-RN1772">
+<p>Hillis, S. L., N. A. Obuchowski, K. M. Schartz, and K. S. Berbaum. 2005. “A Comparison of the Dorfman-Berbaum-Metz and Obuchowski-Rockette Methods for Receiver Operating Characteristic (ROC) Data.” Journal Article. <em>Statistics in Medicine</em> 24 (10): 1579–1607. <a href="https://doi.org/10.1002/sim.2024">https://doi.org/10.1002/sim.2024</a>.</p>
 </div>
 <div id="ref-RN1865">
 <p>Hillis, Stephen L. 2007. “A Comparison of Denominator Degrees of Freedom Methods for Multiple Observer (ROC) Studies.” Journal Article. <em>Statistics in Medicine</em> 26: 596–619. <a href="https://doi.org/10.1002/sim.2532">https://doi.org/10.1002/sim.2532</a>.</p>
@@ -1022,26 +1149,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ref-RN1866">
 <p>Hillis, Stephen L., K. S. Berbaum, and C. E. Metz. 2008. “Recent Developments in the Dorfman-Berbaum-Metz Procedure for Multireader (ROC) Study Analysis.” Journal Article. <em>Acad Radiol</em> 15 (5): 647–61. <a href="https://doi.org/10.1016/j.acra.2007.12.015">https://doi.org/10.1016/j.acra.2007.12.015</a>.</p>
 </div>
-<div id="ref-RN2013">
-<p>Ishwaran, Hemant, and Constantine A. Gatsonis. 2000. “A General Class of Hierarchical Ordinal Regression Models with Applications to Correlated ROC Analysis.” Journal Article. <em>The Canadian Journal of Statistics</em> 28 (4): 731–50. <a href="https://doi.org/10.2307/3315913">https://doi.org/10.2307/3315913</a>.</p>
+<div id="ref-RN1971">
+<p>Obuchowski, Nancy A. 1998. “Sample Size Calculations in Studies of Test Accuracy.” Journal Article. <em>Statistical Methods in Medical Research</em> 7 (4): 371–92. <a href="https://doi.org/10.1177/096228029800700405">https://doi.org/10.1177/096228029800700405</a>.</p>
 </div>
-<div id="ref-RN2254">
-<p>Kupinski, Matthew A., Eric Clarkson, and Harrison H. Barrett. 2006. “A Probabilistic Model for the MRMC Method, Part 2: Validation and Applications.” Journal Article. <em>Academic Radiology</em> 13 (11): 1422–30. <a href="https://doi.org/10.1016/j.acra.2006.07.015">https://doi.org/10.1016/j.acra.2006.07.015</a>.</p>
-</div>
-<div id="ref-Niklason1986SimulatedPulmonary">
-<p>Niklason, L. T., N. M. Hickey, Dev P. Chakraborty, E. A. Sabbagh, M. V. Yester, R. G. Fraser, and G. T. Barnes. 1986. “Simulated Pulmonary Nodules: Detection with Dual-Energy Digital Versus Conventional Radiography.” Journal Article. <em>Radiology</em> 160: 589–93. <a href="https://doi.org/10.1148/radiology.160.3.3526398">https://doi.org/10.1148/radiology.160.3.3526398</a>.</p>
+<div id="ref-RN1972">
+<p>Obuchowski, Nancy A. 2000. “Sample Size Tables for Receiver Operating Characteristic Studies.” Journal Article. <em>Am. J. Roentgenol.</em> 175 (3): 603–8. <a href="http://www.ajronline.org/cgi/content/abstract/175/3/603">http://www.ajronline.org/cgi/content/abstract/175/3/603</a>.</p>
 </div>
 <div id="ref-RN1450">
 <p>Obuchowski, N. A., and H. E. Rockette. 1995. “Hypothesis Testing of the Diagnostic Accuracy for Multiple Diagnostic Tests: An ANOVA Approach with Dependent Observations.” Journal Article. <em>Communications in Statistics: Simulation and Computation</em> 24: 285–308. <a href="https://doi.org/10.1080/03610919508813243">https://doi.org/10.1080/03610919508813243</a>.</p>
 </div>
-<div id="ref-RN412">
-<p>Swets, John A., and Ronald M. Pickett. 1982. <em>Evaluation of Diagnostic Systems: Methods from Signal Detection Theory</em>. Book. First. Series in Cognition and Perception. New York: Academic Press.</p>
+<div id="ref-RN1125">
+<p>Roe, C. A., and C. E. Metz. 1997a. “Dorfman-Berbaum-Metz Method for Statistical Analysis of Multireader, Multimodality Receiver Operating Characteristic Data: Validation with Computer Simulation.” Journal Article. <em>Acad Radiol</em> 4: 298–303. <a href="https://doi.org/10.1016/S1076-6332(97)80032-3">https://doi.org/10.1016/S1076-6332(97)80032-3</a>.</p>
 </div>
-<div id="ref-RN1441">
-<p>Toledano, A. Y. 2003. “Three Methods for Analyzing Correlated ROC Curves: A Comparison in Real Data Sets.” Journal Article. <em>Statistics in Medicine</em> 22 (18): 2919–33. <a href="https://doi.org/10.1002/sim.1518">https://doi.org/10.1002/sim.1518</a>.</p>
+<div id="ref-RN1124">
+<p>Roe, C. 1997b. “Variance-Component Modeling in the Analysis of Receiver Operating Characteristic Index Estimates.” Journal Article. <em>Acad. Radiol.</em> 4 (8): 587–600. <a href="https://doi.org/10.1016/S1076-6332(97)80210-3">https://doi.org/10.1016/S1076-6332(97)80210-3</a>.</p>
 </div>
-<div id="ref-RN1451">
-<p>Toledano, A. Y., and C. Gatsonis. 1996. “Ordinal Regression Methodology for ROC Curves Derived from Correlated Data.” Journal Article. <em>Stat Med</em> 15 (16): 1807–26. <a href="https://doi.org/10.1002/(SICI)1097-0258(19960830)15:16%3C1807::AID-SIM333%3E3.0.CO;2-U">https://doi.org/10.1002/(SICI)1097-0258(19960830)15:16&lt;1807::AID-SIM333&gt;3.0.CO;2-U</a>.</p>
+<div id="ref-zhou2009statistical">
+<p>Zhou, Xiao-Hua, Donna K McClish, and Nancy A Obuchowski. 2009. <em>Statistical Methods in Diagnostic Medicine</em>. Vol. 569. John Wiley &amp; Sons. <a href="https://doi.org/110.1002/9780470906514">https://doi.org/110.1002/9780470906514</a>.</p>
 </div>
 </div>
             </section>
@@ -1049,8 +1173,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="hypothesis-testing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="dbm-analysis-significance-testing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="or-method-intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="or-applications.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
