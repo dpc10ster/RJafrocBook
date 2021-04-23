@@ -135,7 +135,7 @@ Or equivalently, in terms of the F-distribution [@RN1772]:
 ```{=tex}
 \begin{equation}
 F_{\text{1R}} \equiv \frac{MS(T)}{\text{Var}-\text{Cov1}} \sim F_{I-1, \infty}
-(\#eq:DefF-1RMT)
+(\#eq:or-sampling-model-def-f-single-reader)
 \end{equation}
 ```
 ### p-value and confidence interval {#or-method-intro-pvalue-ci}
@@ -160,10 +160,10 @@ Comparing Eqn. \@ref(eq:CIalpha1R) to Eqn. \@ref(eq:UsefulTheorem) shows that th
 
 ### Null hypothesis validation {#or-method-intro-single-reader-nh-validation}
 
-It is important to validate the significance testing method just outlined above. This is the subject of NH validation. If the testing procedure is correct, then, when the NH is true, it should reject it with probability $\alpha$. In the following, as is usual, we set $\alpha = 0.05$.
+It is important to validate the significance testing method just outlined above. If the testing procedure is valid, then, when the NH is true, the procedure should reject it with probability $\alpha$. In the following, as is usual, we set $\alpha = 0.05$.
 
 ```{r, echo=TRUE, attr.source = ".numberLines"}
-set.seed(201)
+set.seed(seed = 201)
 mu <- 0.8
 trueVar <- 0.0006989006
 trueCov1 <- 0.0003734661
@@ -196,6 +196,7 @@ for(s in 1:S) {
   pValue <- 1 - pf(F_1R, I-1, Inf)
   if (pValue < 0.05) reject <- reject + 1
 }
+alphaObs <- reject/S
 ```
 
 ```{r, echo=FALSE}
@@ -204,15 +205,28 @@ cat(sprintf("True, estimated variances = %9.6f,  %9.6f",
 cat(sprintf("True, estimated Cov1 = %9.6f,  %9.6f", 
     trueCov1, Cov1), "\n")
 cat(sprintf("NH rejection fraction = %9.4f", 
-    reject/S), "\n")
-
+    alphaObs), "\n")
 ```
 
-STOP
+The `seed` variable, set to 201 at line 1, is equivalent to the case sample index $c$. Different values of `seed` correspond to different case samples. Line 2 sets the value of $\mu$ to 0.8, the average figure of merit, appearing in Eqn. \@ref(eq:or-sampling-model-multiple-treatments). 
+
+Lines 3-4 set the values of true $Var$ and true $Cov_1$ to values characterizing `dataset02` for reader one, as determined by function `UtilORVarComponentsFactorial`. 
+
+Lines 5-9 initializes the covariance matrix $\Sigma$. The diagonal contains the variance and the off-diagonal contains $Cov_1$. These are the *true* values.
+
+Lines 10-11 initializes $I = 2$, the number of treatments, and $S = 2000$, the number of simulations.
+
+Line 14 generates 2000 samples from the two dimensional multivariate normal distribution with zero mean vector (**this is the null hypothesis**) and covariance equal to $\Sigma$. 
+
+Lines 16-18 computes the *estimates* of the means and covariances. The helper function used `VarCov1_FomInput` (the name stands for $Var$ and $Cov_1$ using FOM input) is included in the distribution. The locations of helper functions are shown in Section \@ref(or-method-intro-helper-functions).
+
+Lines 21-33 performs the NH testing. It starts by setting the counter variable `reject` to zero. A for-loop is set up to repeat 2000 times. For each iteration line 24-28 computes the treatment mean-square `MS_T`. Note the use, at line 25, of the two values of $theta_i$ corresponding to the s-th sample from the multivariate norrmal distribution at line 14. Line 30 computes the F-statistic - compare to Eqn. \@ref(eq:or-sampling-model-def-f-single-reader). Line 31 computes the p-values and, if the p-value is less than $\alpha = 0.05$, line 32 increments `reject` by one. The observed NH rejection rate, `alphaObs`, is the final value of `reject` divided by 2000, line 34. For a valid test it is expected to be in the range (0.04, 0.06). The actual value, for the chosen value of `seed`, is `r alphaObs`. 
+
+
 
 ### Application 1 {#or-method-intro-single-reader-application-roc}
 
-Here is an application of the method for an ROC dataset, `dataset02`.
+Here is an application of the method for an ROC dataset, `dataset02`, which consists of two treatments and five readers.
 
 ```{r, attr.source = ".numberLines"}
 ds <- DfExtractDataset(dataset02, rdrs = 1)
@@ -241,7 +255,7 @@ We extract the data for reader 1 only, line 1, resulting in a 2-treatment single
 
 ### Application 2 {#or-method-intro-single-reader-application-froc}
 
-Here is an application of the method for an FROC dataset, `dataset04`.
+Here is an application of the method for an FROC dataset, `dataset04`, which consists of five treatments and four readers.
 
 ```{r, attr.source = ".numberLines"}
 ds <- DfExtractDataset(dataset04, rdrs = 1, trts = c(4,5))
@@ -255,8 +269,10 @@ I <- length(ds$ratings$NL[,1,1,1])
 chiObs <- (I-1)*msT/(Var-Cov1)
 pval <- pchisq(chiObs,I-1,lower.tail = F)
 ci <- array(dim = 2)
-ci[1] <- (fom[1] - fom[2]) + qt(0.025, Inf, lower.tail = F) * sqrt(2*(Var - Cov1))
-ci[2] <- (fom[1] - fom[2]) - qt(0.025, Inf, lower.tail = F) * sqrt(2*(Var - Cov1))
+ci[1] <- (fom[1] - fom[2]) + 
+  qt(0.025, Inf, lower.tail = F) * sqrt(2*(Var - Cov1))
+ci[2] <- (fom[1] - fom[2]) - 
+  qt(0.025, Inf, lower.tail = F) * sqrt(2*(Var - Cov1))
 ```
 
 ```{r, echo=FALSE}
@@ -323,11 +339,14 @@ Unlike the seemingly analogous single-reader multiple-treatment case, the single
 Significance testing between two readers can be performed if reader is regarded as a *fixed* effect. Then the analysis presented in Section \@ref(st-or-multiple-treatment) is applicable, with the treatment factor replaced by the reader factor. This is appropriate when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the very literal sense.
 
 
+
+
 ## Multiple-reader multiple-treatment {#or-method-intro-multiple-reader-multiple-treatment}
 
-The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to Eqn. \@ref(eq:or-sampling-model-multiple-treatments), one needs an additional $j$ index to denote reader dependence of the figure of merit, and additional terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random (i.e., reader) factor.
 
-The general Obuchowski and Rockette model for fully paired multiple-reader multiple-treatment interpretations is:
+The previous sections introduced Obuchowski and Rockette method using single reader and single treatment examples. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to Eqn. \@ref(eq:or-sampling-model-multiple-treatments), one needs an additional $j$ index to denote reader dependence of the figure of merit, and additional terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random reader factor.
+
+The Obuchowski and Rockette model for fully paired multiple-reader multiple-treatment interpretations is:
 
 ```{=tex}
 \begin{equation}
