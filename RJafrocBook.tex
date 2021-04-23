@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-04-22}
+\date{2021-04-23}
 
 \begin{document}
 \maketitle
@@ -5008,9 +5008,9 @@ The following code prints the predicted and observed full areas under the ROCs f
 
 \begin{verbatim}
 #> A_z predicted =  0.9213504 
-#> A_z observed =  0.9217555
+#> A_z observed =  0.9242629
 #> A_z{c;true} predicted =  0.8244498 
-#> A_z{c;true} observed =  0.822334
+#> A_z{c;true} observed =  0.8271442
 \end{verbatim}
 
 Note that:
@@ -8236,10 +8236,10 @@ Eqn. \eqref{eq:or-sampling-model-multiple-treatments} models the observed figure
 
 The left hand side of Eqn. \eqref{eq:or-sampling-model-multiple-treatments} is the figure-of-merit \(\theta_i\{c\}\) for treatment \(i\) and case-set index \(\{c\}\), where \(c\) = 1, 2, \ldots, \(C\) denotes different independent case-sets sampled from the population, i.e., different \emph{collections} of \(K_1\) non-diseased and \(K_2\) diseased cases.
 
-\emph{The case-set index is essential for clarity. Without it \(\theta_i\) is a fixed quantity - the figure of merit estimate for treatment \(i\) - lacking an index allowing for sampling related variability.} Obuchowski and Rockette define a \emph{k-index}, the:
+\emph{The case-set index is essential for clarity. Without it} \(\theta_i\) is a fixed quantity - the figure of merit estimate for treatment \(i\) - lacking an index allowing for sampling related variability. Obuchowski and Rockette define a \emph{k-index}, the:
 
 \begin{quote}
-\(k^{th}\) repetition of the study involving the same diagnostic test, reader and patient (sic)''.
+\(k^{th}\) repetition of the study involving the same diagnostic test, reader and patient (sic)".
 \end{quote}
 
 Needed is a \emph{case-set} index rather than a \emph{repetition} index. Repeating a study with the same treatment, reader and cases yields \emph{within-reader} variability, when what is needed, for significance testing, is \emph{case-sampling plus within-reader} variability.
@@ -8279,7 +8279,7 @@ Cov_1 & Cov_1 & \ldots & Cov_1 & \text{Var}
 
 If \(I\) = 2 then \(\Sigma\) is a symmetric 2 x 2 matrix, whose diagonal terms are the common variances in the two treatments (each assumed equal to \(\text{Var}\)) and whose off-diagonal terms (each assumed equal to \(Cov_1\)) are the co-variances. With \(I\) = 3 one has a 3 x 3 symmetric matrix with all diagonal elements equal to \(\text{Var}\) and all off-diagonal terms are equal to \(Cov_1\), etc.
 
-\emph{An important aspect of the Obuchowski and Rockette model is that the variances and co-variances are assumed to be treatment independent. This implies that \(\text{Var}\) estimates need to be averaged over all treatments. Likewise, \(Cov_1\) estimates need to be averaged over all distinct treatment-treatment pairings.}
+\emph{An important aspect of the Obuchowski and Rockette model is that the variances and co-variances are assumed to be treatment independent. This implies that} \(\text{Var}\) estimates need to be averaged over all treatments. Likewise, \(Cov_1\) estimates need to be averaged over all distinct treatment-treatment pairings.
 
 \footnote{A more complex model, with more parameters and therefore more difficult to work with, would allow the variances to be treatment dependent, and the covariances to depend on the specific treatment pairings. For obvious reasons (``Occam's Razor'' or the law of parsimony ) one wishes to start with the simplest model that, one hopes, captures essential characteristics of the data.}
 
@@ -8474,6 +8474,9 @@ We extract the data for reader 1 only, for treatments 4 and 5, line 1, resulting
 \hypertarget{or-method-intro-single-treatment}{%
 \section{Single-treatment multiple-reader}\label{or-method-intro-single-treatment}}
 
+\hypertarget{or-method-intro-single-treatment-overview}{%
+\subsection{Overview}\label{or-method-intro-single-treatment-overview}}
+
 Consider multiple readers \(j\) (\(j\) = 1, 2, \ldots, \(J\)) interpreting a common case-set \(\{c\}\) in a single treatment. The OR sampling model is:
 
 \begin{equation}
@@ -8517,132 +8520,9 @@ The covariance matrix is estimated, as usual, by either a resampling method or, 
 \hypertarget{st-or-multiple-reader}{%
 \subsection{Significance testing}\label{st-or-multiple-reader}}
 
-Define the mean square corresponding to the reader effect, \(MS(R)\), by:
+Unlike the seemingly analogous single-reader multiple-treatment case, the single-treatment multiple-reader case is fundamentally different. This is because \emph{reader is a random factor}. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., \(R_1 = R_2\) (since reader is modeled as a random sample from a distribution: \(R \sim N(0,\sigma_R^2)\)). The only statistics that can be estimated in this situation are the mean vector and the covariance matrix corresponding to the reader effect.
 
-\begin{equation}
-MS(R)=\frac{1}{J-1}\sum_{j=1}^{J}(\theta_j-\theta_\bullet)^2
-\label{eq:def-msr}
-\end{equation}
-
-It can be shown that under the null hypothesis that all treatments have identical performances, the test statistic \(\chi_{1T}\) defined below (the \(1T\) subscript denotes single-treatment analysis) is distributed approximately as a \(\chi^2\) distribution with \(J-1\) degrees of freedom, i.e.,
-
-\begin{equation}
-\chi_{\text{1T}} \equiv \frac{(J-1)MS(R)}{\text{Var}-\text{Cov2}} \sim \chi_{J-1}^{2}
-\label{eq:chisq-single-reader}
-\end{equation}
-
-\hypertarget{or-method-intro-pvalue-ci-1}{%
-\subsection{p-value and confidence interval}\label{or-method-intro-pvalue-ci-1}}
-
-The p-value is the probability that a sample from the \(\chi_{J-1}^{2}\) distribution is greater than the observed value of the test statistic, namely:
-
-\begin{equation}
-p\equiv \Pr(\chi>\chi_{1T} \mid \chi \sim \chi_{J-1}^{2})
-\label{eq:p-single-treatment}
-\end{equation}
-
-\begin{Shaded}
-\begin{Highlighting}[numbers=left,,]
-\CommentTok{# ds <- DfExtractDataset(dataset02, trts = 1)}
-\CommentTok{# fom =  0.9196457 0.8587762 0.9038647 0.9731079 0.8297907}
-\CommentTok{#ds <- DfExtractDataset(dataset02, trts = 1, rdrs = c(4,5))}
-\CommentTok{#ds <- DfExtractDataset(dataset02, trts = 1)}
-\NormalTok{ds <-}\StringTok{ }\KeywordTok{DfExtractDataset}\NormalTok{(dataset02, }\DataTypeTok{trts =} \DecValTok{1}\NormalTok{, }\DataTypeTok{rdrs =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{))}
-\NormalTok{fom <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{UtilFigureOfMerit}\NormalTok{(ds, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{))}
-\NormalTok{vc <-}\StringTok{ }\KeywordTok{UtilORVarComponentsFactorial}\NormalTok{(ds, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}
-\NormalTok{cov2 <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualTrt}\OperatorTok{$}\NormalTok{cov2EachTrt}
-\NormalTok{var <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualTrt}\OperatorTok{$}\NormalTok{varEachTrt}
-\NormalTok{msR <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualTrt}\OperatorTok{$}\NormalTok{msREachTrt}
-\NormalTok{J <-}\StringTok{ }\KeywordTok{length}\NormalTok{(ds}\OperatorTok{$}\NormalTok{ratings}\OperatorTok{$}\NormalTok{NL[}\DecValTok{1}\NormalTok{,,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{])}
-\NormalTok{chi1T <-}\StringTok{ }\NormalTok{(J}\DecValTok{-1}\NormalTok{)}\OperatorTok{*}\NormalTok{msR}\OperatorTok{/}\NormalTok{(var}\OperatorTok{-}\NormalTok{cov2)}
-\NormalTok{pval <-}\StringTok{ }\KeywordTok{pchisq}\NormalTok{(chi1T,J}\DecValTok{-1}\NormalTok{,}\DataTypeTok{lower.tail =}\NormalTok{ F)}
-\NormalTok{ci <-}\StringTok{ }\KeywordTok{array}\NormalTok{(}\DataTypeTok{dim =} \DecValTok{2}\NormalTok{)}
-\NormalTok{ci[}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\NormalTok{(fom[}\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{fom[}\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.025}\NormalTok{, }\OtherTok{Inf}\NormalTok{, }\DataTypeTok{lower.tail =}\NormalTok{ F) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{(var }\OperatorTok{-}\StringTok{ }\NormalTok{cov2))}
-\NormalTok{ci[}\DecValTok{2}\NormalTok{] <-}\StringTok{ }\NormalTok{(fom[}\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{fom[}\DecValTok{2}\NormalTok{]) }\OperatorTok{-}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.025}\NormalTok{, }\OtherTok{Inf}\NormalTok{, }\DataTypeTok{lower.tail =}\NormalTok{ F) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{(var }\OperatorTok{-}\StringTok{ }\NormalTok{cov2))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cat}\NormalTok{(}\StringTok{"fom = "}\NormalTok{, fom, }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## fom =  0.9196457 0.9038647
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cat}\NormalTok{(}\StringTok{"diff_fom = "}\NormalTok{, fom[}\DecValTok{1}\NormalTok{]}\OperatorTok{-}\NormalTok{fom[}\DecValTok{2}\NormalTok{], }\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## diff_fom =  0.015781
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cat}\NormalTok{(}\StringTok{"pval = "}\NormalTok{, pval,}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## pval =  0.5415774
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cat}\NormalTok{(}\StringTok{"ci = "}\NormalTok{, ci,}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## ci =  0.06645056 -0.03488857
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{cat}\NormalTok{(}\StringTok{"mean(ci) = "}\NormalTok{, }\KeywordTok{mean}\NormalTok{(ci),}\StringTok{"}\CharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## mean(ci) =  0.015781
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{pv <-}\StringTok{ }\KeywordTok{UtilPseudoValues}\NormalTok{(ds, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}\OperatorTok{$}\NormalTok{jkPseudoValues}
-\KeywordTok{t.test}\NormalTok{(pv[}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,], pv[}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,], }\DataTypeTok{paired =}\NormalTok{ T, }\DataTypeTok{var.equal =}\NormalTok{ T)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-##  Paired t-test
-## 
-## data:  pv[1, 1, ] and pv[1, 2, ]
-## t = 0.61043, df = 113, p-value = 0.5428
-## alternative hypothesis: true difference in means is not equal to 0
-## 95 percent confidence interval:
-##  -0.03543706  0.06699905
-## sample estimates:
-## mean of the differences 
-##                0.015781
-\end{verbatim}
-
-STOP
-
-The \((1-\alpha)\) confidence interval for the inter-treatment FOM difference is given by:
-
-\begin{equation}
-CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\infty} \sqrt{2(\text{Var}-\text{Cov1})}
-\label{eq:CIalpha1R1}
-\end{equation}
-
-Comparing Eqn. \eqref{eq:CIalpha1R} to Eqn. \eqref{eq:UsefulTheorem} shows that the term \(\sqrt{2(\text{Var}-\text{Cov1})}\) is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term \(t_{\alpha/2,\infty}\) is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. {[}One has probably encountered the rule that a 95\% confidence interval is plus or minus two standard deviations from the central value. The ``2'' comes from rounding up 1.96.{]}
+Significance testing between two readers can be performed if reader is regarded as a \emph{fixed} effect. Then the analysis presented in Section \ref{st-or-multiple-treatment} is applicable, with the treatment factor replaced by the reader factor. This is appropriate when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the very literal sense.
 
 \hypertarget{or-method-intro-multiple-reader-multiple-treatment}{%
 \section{Multiple-reader multiple-treatment}\label{or-method-intro-multiple-reader-multiple-treatment}}
@@ -8657,7 +8537,6 @@ The general Obuchowski and Rockette model for fully paired multiple-reader multi
 \end{equation}
 
 \begin{itemize}
-\tightlist
 \item
   The fixed treatment effect \(\tau_i\) is subject to the usual constraint, Eqn. \eqref{eq:ConstraintTau}.
 \item
@@ -8726,7 +8605,7 @@ Apart from fixed effects, the model implied by Eqn. \eqref{eq:or-sampling-model-
 
 This is the same number of variance component parameters as in the DBM model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model Eqn. \eqref{eq:or-sampling-model-general} ``looks'' simpler because four covariance terms are encapsulated in the \(\epsilon\) term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader.
 
-\emph{It is implicit in the Obuchowski-Rockette model that the \(Var\), \(\text{Cov1}\), \(Cov_2\), and \(Cov_3\) estimates are averaged over all applicable treatment-reader combinations.}
+\emph{It is implicit in the Obuchowski-Rockette model that the} \(Var\), \(\text{Cov1}\), \(Cov_2\), and \(Cov_3\) estimates are averaged over all applicable treatment-reader combinations.
 
 \hypertarget{StrCovMatrix}{%
 \subsection{Structure of the covariance matrix}\label{StrCovMatrix}}
@@ -8823,7 +8702,7 @@ Cov_3=\left \langle \frac{1}{C-1}\sum_{c=1}^{C} (\theta_{ij\{c\}}-\theta_{ij\{\b
 \label{eq:EstCovMatrix}
 \end{equation}
 
-\emph{In Eqn. \eqref{eq:EstCovMatrix} the convention is that primed and unprimed variables are always different.}
+\emph{In Eqn.} \eqref{eq:EstCovMatrix} \emph{the convention is that primed and unprimed variables are always different.}
 
 Since there are no treatment and reader dependencies on the left-hand-sides of the above equations, one averages the estimates as follows:
 
@@ -8869,8 +8748,11 @@ Cov_3 \leq  Cov_2 \leq  \text{Cov1} \leq  \text{Var}
 \hypertarget{or-method-intro-elementary-stats}{%
 \section{Appendix: Covariance and correlation}\label{or-method-intro-elementary-stats}}
 
-Some elementary statistics are reviewed here.
-\#\#\# Relation: chisquare and F with infinite ddf \{\#or-method-intro-elementary-stats-f-stat-chisq-stat\}
+Some elementary statistical results are reviewed here.
+
+\hypertarget{or-method-intro-elementary-stats-f-stat-chisq-stat}{%
+\subsection{Relation: chisquare and F with infinite ddf}\label{or-method-intro-elementary-stats-f-stat-chisq-stat}}
+
 Define \(D_{1-\alpha}\), the \((1-\alpha)\) quantile of distribution \(D\), such that the probability of observing a random sample \(d\) less than or equal to \(D_{1-\alpha}\) is \((1-\alpha)\):
 
 \begin{equation}
@@ -8885,7 +8767,7 @@ With definition Eqn. \eqref{eq:DefQuantile}, the \((1-\alpha)\) quantile of the 
 \label{eq:Chisqr2F}
 \end{equation}
 
-Eqn. \eqref{eq:Chisqr2F} implies that the \((1-\alpha)\) quantile of the F-distribution with \(ndf=(I-1)\) and \(ddf =\infty\) equals the \((1-\alpha)\) quantile of the \(\chi_{I-1}^2\) distribution \emph{divided by \((I-1)\)}.
+Eqn. \eqref{eq:Chisqr2F} implies that the \((1-\alpha)\) quantile of the F-distribution with \(ndf=(I-1)\) and \(ddf =\infty\) equals the \((1-\alpha)\) quantile of the \(\chi_{I-1}^2\) distribution \emph{divided by} \((I-1)\).
 
 Here is an \texttt{R} illustration of this theorem for \(I-1 = 4\) and \(\alpha = 0.05\):
 
@@ -9275,7 +9157,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
 
 \begin{verbatim}
 ##   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-## 1     1.066851          1   0.30165781
+## 1    1.0736593          1   0.30012037
 \end{verbatim}
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, \((I-1)(K-1)\) = 113 for DBM and \(\infty\) for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
