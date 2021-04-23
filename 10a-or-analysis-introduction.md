@@ -4,7 +4,7 @@
 
 ## TBA How much finished {#or-method-intro-how-much-finished}
 
-40%
+70%
 
 ## Locations of helper functions {#or-method-intro-helper-functions}
 
@@ -937,7 +937,7 @@ data.frame("ORBoot:Chisq" = ret4$FRRC$FTests["Treatment", "Chisq"],
 
 ```
 ##   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-## 1    1.3339794          1   0.24809851
+## 1    1.0470032          1   0.30619829
 ```
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, $(I-1)(K-1)$ = 113 for DBM and $\infty$ for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
