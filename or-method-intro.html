@@ -24,7 +24,7 @@
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2021-04-23" />
+<meta name="date" content="2021-04-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -1016,7 +1016,7 @@ MS(T)=\frac{1}{I-1}\sum_{i=1}^{I}(\theta_i-\theta_\bullet)^2
 \end{equation}\]</span>
 <p>Eqn. <a href="or-method-intro.html#eq:F-1RMT">(19.7)</a> is from §5.4 in <span class="citation">(Stephen L. Hillis <a href="#ref-RN1865" role="doc-biblioref">2007</a>)</span> with two covariance terms “zeroed out” because they are multiplied by <span class="math inline">\(J-1 = 0\)</span> (since we are restricting to <span class="math inline">\(J=1\)</span>).</p>
 <p>Or equivalently, in terms of the F-distribution <span class="citation">(S. L. Hillis et al. <a href="#ref-RN1772" role="doc-biblioref">2005</a>)</span>:</p>
-<span class="math display" id="eq:DefF-1RMT">\[\begin{equation}
+<span class="math display" id="eq:or-sampling-model-def-f-single-reader">\[\begin{equation}
 F_{\text{1R}} \equiv \frac{MS(T)}{\text{Var}-\text{Cov1}} \sim F_{I-1, \infty}
 \tag{19.8}
 \end{equation}\]</span>
@@ -1037,8 +1037,8 @@ CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i&#39;\bullet}) \pm t_{\alpha/2,
 </div>
 <div id="or-method-intro-single-reader-nh-validation" class="section level3">
 <h3><span class="header-section-number">19.4.4</span> Null hypothesis validation</h3>
-<p>It is important to validate the significance testing method just outlined above. This is the subject of NH validation. If the testing procedure is correct, then, when the NH is true, it should reject it with probability <span class="math inline">\(\alpha\)</span>. In the following, as is usual, we set <span class="math inline">\(\alpha = 0.05\)</span>.</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb101-1"><a href="or-method-intro.html#cb101-1"></a><span class="kw">set.seed</span>(<span class="dv">201</span>)</span>
+<p>It is important to validate the significance testing method just outlined above. If the testing procedure is valid, then, when the NH is true, the procedure should reject it with probability <span class="math inline">\(\alpha\)</span>. In the following, as is usual, we set <span class="math inline">\(\alpha = 0.05\)</span>.</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb101-1"><a href="or-method-intro.html#cb101-1"></a><span class="kw">set.seed</span>(<span class="dt">seed =</span> <span class="dv">201</span>)</span>
 <span id="cb101-2"><a href="or-method-intro.html#cb101-2"></a>mu &lt;-<span class="st"> </span><span class="fl">0.8</span></span>
 <span id="cb101-3"><a href="or-method-intro.html#cb101-3"></a>trueVar &lt;-<span class="st"> </span><span class="fl">0.0006989006</span></span>
 <span id="cb101-4"><a href="or-method-intro.html#cb101-4"></a>trueCov1 &lt;-<span class="st"> </span><span class="fl">0.0003734661</span></span>
@@ -1070,15 +1070,23 @@ CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i&#39;\bullet}) \pm t_{\alpha/2,
 <span id="cb101-30"><a href="or-method-intro.html#cb101-30"></a>  F_1R &lt;-<span class="st"> </span>MS_T<span class="op">/</span>(Var <span class="op">-</span><span class="st"> </span>Cov1)</span>
 <span id="cb101-31"><a href="or-method-intro.html#cb101-31"></a>  pValue &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pf</span>(F_1R, I<span class="dv">-1</span>, <span class="ot">Inf</span>)</span>
 <span id="cb101-32"><a href="or-method-intro.html#cb101-32"></a>  <span class="cf">if</span> (pValue <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>) reject &lt;-<span class="st"> </span>reject <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb101-33"><a href="or-method-intro.html#cb101-33"></a>}</span></code></pre></div>
+<span id="cb101-33"><a href="or-method-intro.html#cb101-33"></a>}</span>
+<span id="cb101-34"><a href="or-method-intro.html#cb101-34"></a>alphaObs &lt;-<span class="st"> </span>reject<span class="op">/</span>S</span></code></pre></div>
 <pre><code>## True, estimated variances =  0.000699,   0.000695</code></pre>
 <pre><code>## True, estimated Cov1 =  0.000373,   0.000351</code></pre>
 <pre><code>## NH rejection fraction =    0.0515</code></pre>
-<p>STOP</p>
+<p>The <code>seed</code> variable, set to 201 at line 1, is equivalent to the case sample index <span class="math inline">\(c\)</span> in Eqn. <a href="or-method-intro.html#eq:or-sampling-model-multiple-treatments">(19.1)</a>. Different values of <code>seed</code> correspond to different case samples.</p>
+<p>Line 2 sets the value of <span class="math inline">\(\mu\)</span> to 0.8, the average figure of merit, appearing in Eqn. <a href="or-method-intro.html#eq:or-sampling-model-multiple-treatments">(19.1)</a>.</p>
+<p>Lines 3-4 set the values of true <span class="math inline">\(Var\)</span> and true <span class="math inline">\(Cov_1\)</span> to values characterizing <code>dataset02</code> for reader one, as determined by function <code>UtilORVarComponentsFactorial</code>.</p>
+<p>Lines 5-9 initializes the covariance matrix <span class="math inline">\(\Sigma\)</span>. The diagonal contains the variance and the off-diagonal contains <span class="math inline">\(Cov_1\)</span>. These are the <em>true</em> values.</p>
+<p>Lines 10-11 initializes <span class="math inline">\(I = 2\)</span>, the number of treatments, and <span class="math inline">\(S = 2000\)</span>, the number of simulations.</p>
+<p>Line 14 generates 2000 samples from the two dimensional multivariate normal distribution with zero mean vector (<strong>this is the null hypothesis</strong>) and covariance equal to <span class="math inline">\(\Sigma\)</span>.</p>
+<p>Lines 16-18 computes the <em>estimates</em> of the means and covariances. The helper function used <code>VarCov1_FomInput</code> (the name stands for <span class="math inline">\(Var\)</span> and <span class="math inline">\(Cov_1\)</span> using FOM input) is included in the distribution. The locations of helper functions are shown in Section <a href="or-method-intro.html#or-method-intro-helper-functions">19.2</a>.</p>
+<p>Lines 21-33 performs the NH testing. It starts by setting the counter variable <code>reject</code> to zero. A for-loop is set up to repeat 2000 times. For each iteration line 24-28 computes the treatment mean-square <code>MS_T</code>. Note the use, at line 25, of the two values of <span class="math inline">\(theta_i\)</span> corresponding to the s-th sample from the multivariate norrmal distribution (at line 14). Line 30 computes the F-statistic - compare to Eqn. <a href="or-method-intro.html#eq:or-sampling-model-def-f-single-reader">(19.8)</a>. Line 31 computes the p-values and, if the p-value is less than <span class="math inline">\(\alpha = 0.05\)</span>, line 32 increments <code>reject</code> by one. The observed NH rejection rate, <code>alphaObs</code>, is the final value of <code>reject</code> divided by 2000, line 34. For a valid test it is expected to be in the range (0.04, 0.06). The actual value, for the chosen value of <code>seed</code>, is 0.0515.</p>
 </div>
 <div id="or-method-intro-single-reader-application-roc" class="section level3">
 <h3><span class="header-section-number">19.4.5</span> Application 1</h3>
-<p>Here is an application of the method for an ROC dataset, <code>dataset02</code>.</p>
+<p>Here is an application of the method for an ROC dataset, <code>dataset02</code>, which consists of two treatments and five readers.</p>
 <div class="sourceCode" id="cb105"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb105-1"><a href="or-method-intro.html#cb105-1"></a>ds &lt;-<span class="st"> </span><span class="kw">DfExtractDataset</span>(dataset02, <span class="dt">rdrs =</span> <span class="dv">1</span>)</span>
 <span id="cb105-2"><a href="or-method-intro.html#cb105-2"></a>fom &lt;-<span class="st"> </span><span class="kw">as.vector</span>(<span class="kw">UtilFigureOfMerit</span>(ds, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>))</span>
 <span id="cb105-3"><a href="or-method-intro.html#cb105-3"></a>fom &lt;-<span class="st"> </span><span class="kw">t</span>(fom)</span>
@@ -1100,7 +1108,7 @@ CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i&#39;\bullet}) \pm t_{\alpha/2,
 </div>
 <div id="or-method-intro-single-reader-application-froc" class="section level3">
 <h3><span class="header-section-number">19.4.6</span> Application 2</h3>
-<p>Here is an application of the method for an FROC dataset, <code>dataset04</code>.</p>
+<p>Here is an application of the method for an FROC dataset, <code>dataset04</code>, which consists of five treatments and four readers.</p>
 <div class="sourceCode" id="cb110"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb110-1"><a href="or-method-intro.html#cb110-1"></a>ds &lt;-<span class="st"> </span><span class="kw">DfExtractDataset</span>(dataset04, <span class="dt">rdrs =</span> <span class="dv">1</span>, <span class="dt">trts =</span> <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">5</span>))</span>
 <span id="cb110-2"><a href="or-method-intro.html#cb110-2"></a>fom &lt;-<span class="st"> </span><span class="kw">as.vector</span>(<span class="kw">UtilFigureOfMerit</span>(ds, <span class="dt">FOM =</span> <span class="st">&quot;wAFROC&quot;</span>))</span>
 <span id="cb110-3"><a href="or-method-intro.html#cb110-3"></a>fom &lt;-<span class="st"> </span><span class="kw">t</span>(fom)</span>
@@ -1112,8 +1120,10 @@ CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i&#39;\bullet}) \pm t_{\alpha/2,
 <span id="cb110-9"><a href="or-method-intro.html#cb110-9"></a>chiObs &lt;-<span class="st"> </span>(I<span class="dv">-1</span>)<span class="op">*</span>msT<span class="op">/</span>(Var<span class="op">-</span>Cov1)</span>
 <span id="cb110-10"><a href="or-method-intro.html#cb110-10"></a>pval &lt;-<span class="st"> </span><span class="kw">pchisq</span>(chiObs,I<span class="dv">-1</span>,<span class="dt">lower.tail =</span> F)</span>
 <span id="cb110-11"><a href="or-method-intro.html#cb110-11"></a>ci &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="dv">2</span>)</span>
-<span id="cb110-12"><a href="or-method-intro.html#cb110-12"></a>ci[<span class="dv">1</span>] &lt;-<span class="st"> </span>(fom[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>fom[<span class="dv">2</span>]) <span class="op">+</span><span class="st"> </span><span class="kw">qt</span>(<span class="fl">0.025</span>, <span class="ot">Inf</span>, <span class="dt">lower.tail =</span> F) <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>(Var <span class="op">-</span><span class="st"> </span>Cov1))</span>
-<span id="cb110-13"><a href="or-method-intro.html#cb110-13"></a>ci[<span class="dv">2</span>] &lt;-<span class="st"> </span>(fom[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>fom[<span class="dv">2</span>]) <span class="op">-</span><span class="st"> </span><span class="kw">qt</span>(<span class="fl">0.025</span>, <span class="ot">Inf</span>, <span class="dt">lower.tail =</span> F) <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>(Var <span class="op">-</span><span class="st"> </span>Cov1))</span></code></pre></div>
+<span id="cb110-12"><a href="or-method-intro.html#cb110-12"></a>ci[<span class="dv">1</span>] &lt;-<span class="st"> </span>(fom[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>fom[<span class="dv">2</span>]) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb110-13"><a href="or-method-intro.html#cb110-13"></a><span class="st">  </span><span class="kw">qt</span>(<span class="fl">0.025</span>, <span class="ot">Inf</span>, <span class="dt">lower.tail =</span> F) <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>(Var <span class="op">-</span><span class="st"> </span>Cov1))</span>
+<span id="cb110-14"><a href="or-method-intro.html#cb110-14"></a>ci[<span class="dv">2</span>] &lt;-<span class="st"> </span>(fom[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>fom[<span class="dv">2</span>]) <span class="op">-</span><span class="st"> </span></span>
+<span id="cb110-15"><a href="or-method-intro.html#cb110-15"></a><span class="st">  </span><span class="kw">qt</span>(<span class="fl">0.025</span>, <span class="ot">Inf</span>, <span class="dt">lower.tail =</span> F) <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">2</span><span class="op">*</span>(Var <span class="op">-</span><span class="st"> </span>Cov1))</span></code></pre></div>
 <pre><code>## fom =  0.8101333 0.7488</code></pre>
 <pre><code>## fom diff =  0.06133333</code></pre>
 <pre><code>## pval =  0.03189534</code></pre>
@@ -1165,8 +1175,8 @@ Cov_2 &amp; Cov_2 &amp; \ldots &amp; Cov_2 &amp; \text{Var}
 </div>
 <div id="or-method-intro-multiple-reader-multiple-treatment" class="section level2">
 <h2><span class="header-section-number">19.6</span> Multiple-reader multiple-treatment</h2>
-<p>The previous sections served as a gentle introduction to the single-reader multiple-treatment Obuchowski and Rockette method. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to Eqn. <a href="or-method-intro.html#eq:or-sampling-model-multiple-treatments">(19.1)</a>, one needs an additional <span class="math inline">\(j\)</span> index to denote reader dependence of the figure of merit, and additional terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random (i.e., reader) factor.</p>
-<p>The general Obuchowski and Rockette model for fully paired multiple-reader multiple-treatment interpretations is:</p>
+<p>The previous sections introduced Obuchowski and Rockette method using single reader and single treatment examples. This section extends it to multiple-readers interpreting a common case-set in multiple-treatments (MRMC). The extension is, in principle, fairly straightforward. Compared to Eqn. <a href="or-method-intro.html#eq:or-sampling-model-multiple-treatments">(19.1)</a>, one needs an additional <span class="math inline">\(j\)</span> index to denote reader dependence of the figure of merit, and additional terms to model reader and treatment-reader variability, and the error term needs to be modified to account for the additional random reader factor.</p>
+<p>The Obuchowski and Rockette model for fully paired multiple-reader multiple-treatment interpretations is:</p>
 <span class="math display" id="eq:or-sampling-model-general">\[\begin{equation}
 \theta_{ij\{c\}}=\mu+\tau_i+R_j+(\tau R)_{ij}+\epsilon_{ij\{c\}}
 \tag{19.15}
@@ -1550,7 +1560,7 @@ Cov(X,Y) =\frac{\sum_{i=1}^{N}(x_{i}-x_{\bullet})(y_{i}-y_{\bullet})}{N-1}=E(XY)
 <span id="cb142-5"><a href="or-method-intro.html#cb142-5"></a>           <span class="st">&quot;ORBoot:ddf&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>FRRC<span class="op">$</span>FTests[<span class="st">&quot;Treatment&quot;</span>, <span class="st">&quot;DF&quot;</span>], </span>
 <span id="cb142-6"><a href="or-method-intro.html#cb142-6"></a>           <span class="st">&quot;ORBoot:P-val&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>FRRC<span class="op">$</span>FTests[<span class="st">&quot;Treatment&quot;</span>, <span class="st">&quot;p&quot;</span>])</span></code></pre></div>
 <pre><code>##   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-## 1    1.0470032          1   0.30619829</code></pre>
+## 1    1.2945906          1   0.25520367</code></pre>
 <p>The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, <span class="math inline">\((I-1)(K-1)\)</span> = 113 for DBM and <span class="math inline">\(\infty\)</span> for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.</p>
 <p>Shown below is a first-principles implementation of OR significance testing for the one-reader case.</p>
 <div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="or-method-intro.html#cb144-1"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
