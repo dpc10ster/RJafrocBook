@@ -83,7 +83,8 @@ Cov_1 \qquad (i\neq i')
 (\#eq:DefinitionSigma)
 \end{equation}
 ```
-The reason for the subscript "1" in $Cov_1$ will become clear when we extend this model to multiple readers. The $I \times I$ covariance matrix $\Sigma$ is:
+
+The reason for the subscript "1" in $Cov_1$ will become clear when we extend this model to multiple- treatments and multiple-readers. The $I \times I$ covariance matrix $\Sigma$ is:
 
 ```{=tex}
 \begin{equation}
@@ -148,6 +149,7 @@ p\equiv \Pr(f>F_{1R} \mid f \sim F_{I-1,\infty})
 (\#eq:pValue1RMT)
 \end{equation}
 ```
+
 The $(1-\alpha)$ confidence interval for the inter-treatment FOM difference is given by:
 
 ```{=tex}
@@ -156,6 +158,7 @@ CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i'\bullet}) \pm t_{\alpha/2,\inf
 (\#eq:CIalpha1R)
 \end{equation}
 ```
+
 Comparing Eqn. \@ref(eq:CIalpha1R) to Eqn. \@ref(eq:UsefulTheorem) shows that the term $\sqrt{2(\text{Var}-\text{Cov1})}$ is the standard error of the inter-treatment FOM difference, whose square root is the standard deviation. The term $t_{\alpha/2,\infty}$ is -1.96. Therefore, the confidence interval is constructed by adding and subtracting 1.96 times the standard deviation of the difference from the central value. [One has probably encountered the rule that a 95% confidence interval is plus or minus two standard deviations from the central value. The "2" comes from rounding up 1.96.]
 
 ### Null hypothesis validation {#or-method-intro-single-reader-nh-validation}
@@ -165,8 +168,9 @@ It is important to validate the significance testing method just outlined above.
 ```{r, echo=TRUE, attr.source = ".numberLines"}
 set.seed(seed = 201)
 mu <- 0.8
-trueVar <- 0.0006989006
-trueCov1 <- 0.0003734661
+vc <- UtilORVarComponentsFactorial(dataset02, FOM = "Wilcoxon")
+trueVar <- vc$IndividualRdr$varEachRdr[1]
+trueCov1 <- vc$IndividualRdr$cov1EachRdr[1]
 sigma <- matrix(c(trueVar, 
                   trueCov1, 
                   trueCov1, 
@@ -317,7 +321,8 @@ Cov_2 \qquad (j\neq j')
 (\#eq:def-sigma-multiple-reader)
 \end{equation}
 ```
-The reason for the subscript "2" in $Cov_2$ will become clear when one extends this model to multiple readers. The $J \times J$ covariance matrix $\Sigma$ is:
+
+The reason for the subscript "2" in $Cov_2$ will become clear when one extends this model to multiple- treatments and multiple-readers. The $J \times J$ covariance matrix $\Sigma$ is:
 
 ```{=tex}
 \begin{equation}
@@ -332,14 +337,14 @@ Cov_2 & Cov_2 & \ldots & Cov_2 & \text{Var}
 (\#eq:ExampleSigma1)
 \end{equation}
 ```
-The covariance matrix is estimated, as usual, by either a resampling method or, for the special case of Wilcoxon figure of merit, by the DeLong method.
+
+The covariance matrix is estimated, as usual, by either a resampling method (jackknife of bootstrap) or, for the special case of Wilcoxon figure of merit, by the DeLong method.
 
 ### Significance testing {#st-or-multiple-reader}
 
-Unlike the seemingly analogous single-reader multiple-treatment case, the single-treatment multiple-reader case is fundamentally different. This is because *reader is a random factor*. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., $R_1 = R_2$ (since reader is modeled as a random sample from a distribution: $R \sim N(0,\sigma_R^2)$). The only statistics that can be estimated in this situation are the mean vector and the covariance matrix corresponding to the reader effect.
+Unlike the seemingly analogous single-reader multiple-treatment case, the single-treatment multiple-reader case is fundamentally different. This is because *reader is a random factor* while treatment is a fixed factor. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., $R_1 = R_2$ (since reader is modeled as a random sample from a distribution: $R \sim N(0,\sigma_R^2)$). The only statistics that can be estimated in this situation are the mean vector and the covariance matrix corresponding to the reader effect.
 
-Significance testing between two readers can be performed if reader is regarded as a *fixed* effect. Then the analysis presented in Section \@ref(st-or-multiple-treatment) is applicable, with the treatment factor replaced by the reader factor. This is appropriate when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the very literal sense.
-
+**Special case:** Significance testing between readers can be performed if reader is regarded as a *fixed* factor. Then the analysis presented in Section \@ref(st-or-multiple-treatment) is applicable, with the treatment factor replaced by the reader factor. This is appropriate, for example, when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the very literal sense.
 
 
 
