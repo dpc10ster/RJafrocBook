@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-04-24}
+\date{2021-04-30}
 
 \begin{document}
 \maketitle
@@ -5014,9 +5014,9 @@ The following code prints the predicted and observed full areas under the ROCs f
 
 \begin{verbatim}
 #> A_z predicted =  0.9213504 
-#> A_z observed =  0.9206354
+#> A_z observed =  0.9236876
 #> A_z{c;true} predicted =  0.8244498 
-#> A_z{c;true} observed =  0.8238982
+#> A_z{c;true} observed =  0.8250629
 \end{verbatim}
 
 Note that:
@@ -8269,7 +8269,7 @@ Cov_1 \qquad (i\neq i')
 \label{eq:DefinitionSigma}
 \end{equation}
 
-The reason for the subscript ``1'' in \(Cov_1\) will become clear when we extend this model to multiple readers. The \(I \times I\) covariance matrix \(\Sigma\) is:
+The reason for the subscript ``1'' in \(Cov_1\) will become clear when we extend this model to multiple- treatments and multiple-readers. The \(I \times I\) covariance matrix \(\Sigma\) is:
 
 \begin{equation}
 \Sigma=
@@ -8347,8 +8347,9 @@ It is important to validate the significance testing method just outlined above.
 \begin{Highlighting}[numbers=left,,]
 \KeywordTok{set.seed}\NormalTok{(}\DataTypeTok{seed =} \DecValTok{201}\NormalTok{)}
 \NormalTok{mu <-}\StringTok{ }\FloatTok{0.8}
-\NormalTok{trueVar <-}\StringTok{ }\FloatTok{0.0006989006}
-\NormalTok{trueCov1 <-}\StringTok{ }\FloatTok{0.0003734661}
+\NormalTok{vc <-}\StringTok{ }\KeywordTok{UtilORVarComponentsFactorial}\NormalTok{(dataset02, }\DataTypeTok{FOM =} \StringTok{"Wilcoxon"}\NormalTok{)}
+\NormalTok{trueVar <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualRdr}\OperatorTok{$}\NormalTok{varEachRdr[}\DecValTok{1}\NormalTok{]}
+\NormalTok{trueCov1 <-}\StringTok{ }\NormalTok{vc}\OperatorTok{$}\NormalTok{IndividualRdr}\OperatorTok{$}\NormalTok{cov1EachRdr[}\DecValTok{1}\NormalTok{]}
 \NormalTok{sigma <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(trueVar, }
 \NormalTok{                  trueCov1, }
 \NormalTok{                  trueCov1, }
@@ -8524,7 +8525,7 @@ Cov_2 \qquad (j\neq j')
 \label{eq:def-sigma-multiple-reader}
 \end{equation}
 
-The reason for the subscript ``2'' in \(Cov_2\) will become clear when one extends this model to multiple readers. The \(J \times J\) covariance matrix \(\Sigma\) is:
+The reason for the subscript ``2'' in \(Cov_2\) will become clear when one extends this model to multiple- treatments and multiple-readers. The \(J \times J\) covariance matrix \(\Sigma\) is:
 
 \begin{equation}
 \Sigma=
@@ -8538,14 +8539,14 @@ Cov_2 & Cov_2 & \ldots & Cov_2 & \text{Var}
 \label{eq:ExampleSigma1}
 \end{equation}
 
-The covariance matrix is estimated, as usual, by either a resampling method or, for the special case of Wilcoxon figure of merit, by the DeLong method.
+The covariance matrix is estimated, as usual, by either a resampling method (jackknife of bootstrap) or, for the special case of Wilcoxon figure of merit, by the DeLong method.
 
 \hypertarget{st-or-multiple-reader}{%
 \subsection{Significance testing}\label{st-or-multiple-reader}}
 
-Unlike the seemingly analogous single-reader multiple-treatment case, the single-treatment multiple-reader case is fundamentally different. This is because \emph{reader is a random factor}. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., \(R_1 = R_2\) (since reader is modeled as a random sample from a distribution: \(R \sim N(0,\sigma_R^2)\)). The only statistics that can be estimated in this situation are the mean vector and the covariance matrix corresponding to the reader effect.
+Unlike the seemingly analogous single-reader multiple-treatment case, the single-treatment multiple-reader case is fundamentally different. This is because \emph{reader is a random factor} while treatment is a fixed factor. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., \(R_1 = R_2\) (since reader is modeled as a random sample from a distribution: \(R \sim N(0,\sigma_R^2)\)). The only statistics that can be estimated in this situation are the mean vector and the covariance matrix corresponding to the reader effect.
 
-Significance testing between two readers can be performed if reader is regarded as a \emph{fixed} effect. Then the analysis presented in Section \ref{st-or-multiple-treatment} is applicable, with the treatment factor replaced by the reader factor. This is appropriate when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the very literal sense.
+\textbf{Special case:} Significance testing between readers can be performed if reader is regarded as a \emph{fixed} factor. Then the analysis presented in Section \ref{st-or-multiple-treatment} is applicable, with the treatment factor replaced by the reader factor. This is appropriate, for example, when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the very literal sense.
 
 \hypertarget{or-method-intro-multiple-reader-multiple-treatment}{%
 \section{Multiple-reader multiple-treatment}\label{or-method-intro-multiple-reader-multiple-treatment}}
@@ -9180,7 +9181,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
 
 \begin{verbatim}
 ##   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-## 1     1.376724          1   0.24065996
+## 1    1.4631391          1   0.22643132
 \end{verbatim}
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, \((I-1)(K-1)\) = 113 for DBM and \(\infty\) for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
@@ -17583,15 +17584,15 @@ The first example shows the structure of `RRFC\_1T\_PCL\_0\_2
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{print}\NormalTok{(fom_individual_rad)}
-\CommentTok{#>         rdr1 rdr2    rdr3  rdr4       rdr5       rdr6   rdr7  rdr8  rdr9}
-\CommentTok{#> 1 0.69453125 0.65 0.80625 0.725 0.65982143 0.76845238 0.7375 0.675 0.675}
+\CommentTok{#>        rdr1 rdr2    rdr3  rdr4      rdr5      rdr6   rdr7  rdr8  rdr9}
+\CommentTok{#> 1 0.6945313 0.65 0.80625 0.725 0.6598214 0.7684524 0.7375 0.675 0.675}
 \KeywordTok{print}\NormalTok{(stats)}
-\CommentTok{#>       fomCAD  avgRadFom avgDiffFom        varR     Tstat df          pval}
-\CommentTok{#> 1 0.59166667 0.71017278 0.11850612 0.002808612 6.7083568  8 0.00015139664}
+\CommentTok{#>      fomCAD avgRadFom avgDiffFom        varR    Tstat df         pval}
+\CommentTok{#> 1 0.5916667 0.7101728  0.1185061 0.002808612 6.708357  8 0.0001513966}
 \KeywordTok{print}\NormalTok{(ConfidenceIntervals)}
 \CommentTok{#>       CIAvgRadFom CIAvgDiffFom}
-\CommentTok{#> Lower  0.66943619  0.077769525}
-\CommentTok{#> Upper  0.75090938  0.159242710}
+\CommentTok{#> Lower   0.6694362   0.07776953}
+\CommentTok{#> Upper   0.7509094   0.15924271}
 \end{Highlighting}
 \end{Shaded}
 
@@ -17648,16 +17649,16 @@ The next example shows the structure of \texttt{RRRC\_2T\_PCL\_0\_2}.
 \begin{Highlighting}[]
 
 \KeywordTok{print}\NormalTok{(fom_individual_rad)}
-\CommentTok{#>         rdr1 rdr2    rdr3  rdr4       rdr5       rdr6   rdr7  rdr8  rdr9}
-\CommentTok{#> 1 0.69453125 0.65 0.80625 0.725 0.65982143 0.76845238 0.7375 0.675 0.675}
+\CommentTok{#>        rdr1 rdr2    rdr3  rdr4      rdr5      rdr6   rdr7  rdr8  rdr9}
+\CommentTok{#> 1 0.6945313 0.65 0.80625 0.725 0.6598214 0.7684524 0.7375 0.675 0.675}
 \KeywordTok{print}\NormalTok{(stats1)}
-\CommentTok{#>       fomCAD  avgRadFom avgDiffFom}
-\CommentTok{#> 1 0.59166667 0.71017278 0.11850612}
+\CommentTok{#>      fomCAD avgRadFom avgDiffFom}
+\CommentTok{#> 1 0.5916667 0.7101728  0.1185061}
 \KeywordTok{print}\NormalTok{(stats2)}
-\CommentTok{#>             varR         varTR          cov1         cov2          cov3}
-\CommentTok{#> 1 -7.5894152e-19 0.00026488983 0.00076136841 0.0022942211 0.00076136841}
-\CommentTok{#>            Var     FStat        df        pval}
-\CommentTok{#> 1 0.0034336373 4.1576797 937.24371 0.041726262}
+\CommentTok{#>            varR        varTR         cov1        cov2         cov3         Var}
+\CommentTok{#> 1 -7.589415e-19 0.0002648898 0.0007613684 0.002294221 0.0007613684 0.003433637}
+\CommentTok{#>     FStat       df       pval}
+\CommentTok{#> 1 4.15768 937.2437 0.04172626}
 \end{Highlighting}
 \end{Shaded}
 
@@ -17695,9 +17696,9 @@ Shown next are the confidence interval statistics \texttt{x\$ciAvgRdrEachTrt} fo
 \begin{Highlighting}[]
 
 \KeywordTok{print}\NormalTok{(x}\OperatorTok{$}\NormalTok{ciAvgRdrEachTrt)}
-\CommentTok{#>        Estimate      StdErr        DF    CILower    CIUpper         Cov2}
-\CommentTok{#> trt1 0.59166667 0.058028349       Inf 0.47793319 0.70540014 0.0033672893}
-\CommentTok{#> trt2 0.71017278 0.039156365 193.10832 0.63294372 0.78740185 0.0012211529}
+\CommentTok{#>       Estimate     StdErr       DF   CILower   CIUpper        Cov2}
+\CommentTok{#> trt1 0.5916667 0.05802835      Inf 0.4779332 0.7054001 0.003367289}
+\CommentTok{#> trt2 0.7101728 0.03915636 193.1083 0.6329437 0.7874018 0.001221153}
 \end{Highlighting}
 \end{Shaded}
 
@@ -17725,8 +17726,8 @@ Shown next are the confidence interval statistics \texttt{x\$ciDiffFom} between 
 \begin{Highlighting}[]
 
 \KeywordTok{print}\NormalTok{(x}\OperatorTok{$}\NormalTok{ciDiffFom)}
-\CommentTok{#>             Estimate      StdErr        DF         t       PrGTt     CILower}
-\CommentTok{#> trt2-trt1 0.11850612 0.058118615 937.24371 2.0390389 0.041726262 0.004448434}
+\CommentTok{#>            Estimate     StdErr       DF        t      PrGTt     CILower}
+\CommentTok{#> trt2-trt1 0.1185061 0.05811861 937.2437 2.039039 0.04172626 0.004448434}
 \CommentTok{#>             CIUpper}
 \CommentTok{#> trt2-trt1 0.2325638}
 \end{Highlighting}
@@ -17773,20 +17774,20 @@ The last example shows the structure of \texttt{RRRC\_1T\_PCL\_0\_2}.
 \begin{Highlighting}[]
 \NormalTok{RRRC_1T_PCL_}\DecValTok{0}\NormalTok{_}\DecValTok{2}
 \CommentTok{#> $fomCAD}
-\CommentTok{#> [1] 0.59166667}
+\CommentTok{#> [1] 0.5916667}
 \CommentTok{#> }
 \CommentTok{#> $fomRAD}
-\CommentTok{#> [1] 0.69453125 0.65000000 0.80625000 0.72500000 0.65982143 0.76845238 0.73750000}
-\CommentTok{#> [8] 0.67500000 0.67500000}
+\CommentTok{#> [1] 0.6945313 0.6500000 0.8062500 0.7250000 0.6598214 0.7684524 0.7375000}
+\CommentTok{#> [8] 0.6750000 0.6750000}
 \CommentTok{#> }
 \CommentTok{#> $avgRadFom}
-\CommentTok{#> [1] 0.71017278}
+\CommentTok{#> [1] 0.7101728}
 \CommentTok{#> }
 \CommentTok{#> $CIAvgRad}
-\CommentTok{#> [1] 0.59611510 0.82423047}
+\CommentTok{#> [1] 0.5961151 0.8242305}
 \CommentTok{#> }
 \CommentTok{#> $avgDiffFom}
-\CommentTok{#> [1] 0.11850612}
+\CommentTok{#> [1] 0.1185061}
 \CommentTok{#> }
 \CommentTok{#> $CIAvgDiffFom}
 \CommentTok{#> [1] 0.004448434 0.232563801}
@@ -17795,22 +17796,22 @@ The last example shows the structure of \texttt{RRRC\_1T\_PCL\_0\_2}.
 \CommentTok{#> [1] 0.002808612}
 \CommentTok{#> }
 \CommentTok{#> $varError}
-\CommentTok{#> [1] 0.0053445377}
+\CommentTok{#> [1] 0.005344538}
 \CommentTok{#> }
 \CommentTok{#> $cov2}
-\CommentTok{#> [1] 0.0030657054}
+\CommentTok{#> [1] 0.003065705}
 \CommentTok{#> }
 \CommentTok{#> $Tstat}
-\CommentTok{#>      rdr2 }
-\CommentTok{#> 2.0390389 }
+\CommentTok{#>     rdr2 }
+\CommentTok{#> 2.039039 }
 \CommentTok{#> }
 \CommentTok{#> $df}
-\CommentTok{#>      rdr2 }
-\CommentTok{#> 937.24371 }
+\CommentTok{#>     rdr2 }
+\CommentTok{#> 937.2437 }
 \CommentTok{#> }
 \CommentTok{#> $pval}
-\CommentTok{#>        rdr2 }
-\CommentTok{#> 0.041726262}
+\CommentTok{#>       rdr2 }
+\CommentTok{#> 0.04172626}
 \end{Highlighting}
 \end{Shaded}
 
@@ -17826,7 +17827,7 @@ The differences from \texttt{RRFC\_1T\_PCL\_0\_2} are listed next:
   \texttt{varError} is \(\text{Var}\) of the single treatment model for comparing CAD to RAD.
 \end{itemize}
 
-Notice that the \texttt{RRRC\_1T\_PCL\_0\_2} p value, i.e., 0.04172626, is identical to that of \texttt{RRRC\_2T\_PCL\_0\_2}, i.e., 0.04172626.
+Notice that the \texttt{RRRC\_1T\_PCL\_0\_2} p value, i.e., 0.0417263, is identical to that of \texttt{RRRC\_2T\_PCL\_0\_2}, i.e., 0.0417263.
 
 \hypertarget{standalone-cad-radiologists-references}{%
 \section{References}\label{standalone-cad-radiologists-references}}

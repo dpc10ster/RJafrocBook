@@ -24,7 +24,7 @@
 <meta name="author" content="Dev P. Chakraborty, PhD" />
 
 
-<meta name="date" content="2021-04-24" />
+<meta name="date" content="2021-04-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -985,7 +985,7 @@ Cov_1 \qquad (i\neq i&#39;)
 \end{matrix}\right.
 \tag{19.4}
 \end{equation}\]</span>
-<p>The reason for the subscript “1” in <span class="math inline">\(Cov_1\)</span> will become clear when we extend this model to multiple readers. The <span class="math inline">\(I \times I\)</span> covariance matrix <span class="math inline">\(\Sigma\)</span> is:</p>
+<p>The reason for the subscript “1” in <span class="math inline">\(Cov_1\)</span> will become clear when we extend this model to multiple- treatments and multiple-readers. The <span class="math inline">\(I \times I\)</span> covariance matrix <span class="math inline">\(\Sigma\)</span> is:</p>
 <span class="math display" id="eq:ExampleSigma">\[\begin{equation}
 \Sigma=
 \begin{pmatrix}
@@ -1041,38 +1041,39 @@ CI_{1-\alpha,1R} = (\theta_{i\bullet} - \theta_{i&#39;\bullet}) \pm t_{\alpha/2,
 <p>It is important to validate the significance testing method just outlined above. If the testing procedure is valid, then, when the NH is true, the procedure should reject it with probability <span class="math inline">\(\alpha\)</span>. In the following, as is usual, we set <span class="math inline">\(\alpha = 0.05\)</span>.</p>
 <div class="sourceCode" id="cb101"><pre class="sourceCode numberSource r numberLines"><code class="sourceCode r"><span id="cb101-1"><a href="or-method-intro.html#cb101-1"></a><span class="kw">set.seed</span>(<span class="dt">seed =</span> <span class="dv">201</span>)</span>
 <span id="cb101-2"><a href="or-method-intro.html#cb101-2"></a>mu &lt;-<span class="st"> </span><span class="fl">0.8</span></span>
-<span id="cb101-3"><a href="or-method-intro.html#cb101-3"></a>trueVar &lt;-<span class="st"> </span><span class="fl">0.0006989006</span></span>
-<span id="cb101-4"><a href="or-method-intro.html#cb101-4"></a>trueCov1 &lt;-<span class="st"> </span><span class="fl">0.0003734661</span></span>
-<span id="cb101-5"><a href="or-method-intro.html#cb101-5"></a>sigma &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(trueVar, </span>
-<span id="cb101-6"><a href="or-method-intro.html#cb101-6"></a>                  trueCov1, </span>
+<span id="cb101-3"><a href="or-method-intro.html#cb101-3"></a>vc &lt;-<span class="st"> </span><span class="kw">UtilORVarComponentsFactorial</span>(dataset02, <span class="dt">FOM =</span> <span class="st">&quot;Wilcoxon&quot;</span>)</span>
+<span id="cb101-4"><a href="or-method-intro.html#cb101-4"></a>trueVar &lt;-<span class="st"> </span>vc<span class="op">$</span>IndividualRdr<span class="op">$</span>varEachRdr[<span class="dv">1</span>]</span>
+<span id="cb101-5"><a href="or-method-intro.html#cb101-5"></a>trueCov1 &lt;-<span class="st"> </span>vc<span class="op">$</span>IndividualRdr<span class="op">$</span>cov1EachRdr[<span class="dv">1</span>]</span>
+<span id="cb101-6"><a href="or-method-intro.html#cb101-6"></a>sigma &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(trueVar, </span>
 <span id="cb101-7"><a href="or-method-intro.html#cb101-7"></a>                  trueCov1, </span>
-<span id="cb101-8"><a href="or-method-intro.html#cb101-8"></a>                  trueVar), </span>
-<span id="cb101-9"><a href="or-method-intro.html#cb101-9"></a>                  <span class="dt">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb101-10"><a href="or-method-intro.html#cb101-10"></a>I &lt;-<span class="st"> </span><span class="dv">2</span></span>
-<span id="cb101-11"><a href="or-method-intro.html#cb101-11"></a>S &lt;-<span class="st">  </span><span class="dv">2000</span></span>
-<span id="cb101-12"><a href="or-method-intro.html#cb101-12"></a><span class="co"># simulate foms for two modalities, S times</span></span>
-<span id="cb101-13"><a href="or-method-intro.html#cb101-13"></a><span class="co"># using the sampling model</span></span>
-<span id="cb101-14"><a href="or-method-intro.html#cb101-14"></a>theta_i &lt;-<span class="st"> </span><span class="kw">t</span>(<span class="kw">rmvnorm</span>(<span class="dt">n=</span>S, <span class="dt">mean=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">sigma=</span>sigma) <span class="op">+</span><span class="st"> </span>mu)</span>
-<span id="cb101-15"><a href="or-method-intro.html#cb101-15"></a><span class="co"># estimated variance covariances</span></span>
-<span id="cb101-16"><a href="or-method-intro.html#cb101-16"></a>vc &lt;-<span class="st"> </span><span class="kw">VarCov1_FomInput</span>(theta_i)</span>
-<span id="cb101-17"><a href="or-method-intro.html#cb101-17"></a>Var &lt;-<span class="st"> </span>vc<span class="op">$</span>Var</span>
-<span id="cb101-18"><a href="or-method-intro.html#cb101-18"></a>Cov1 &lt;-<span class="st"> </span>vc<span class="op">$</span>Cov1</span>
-<span id="cb101-19"><a href="or-method-intro.html#cb101-19"></a></span>
-<span id="cb101-20"><a href="or-method-intro.html#cb101-20"></a><span class="co"># conduct NH testing</span></span>
-<span id="cb101-21"><a href="or-method-intro.html#cb101-21"></a>reject &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb101-22"><a href="or-method-intro.html#cb101-22"></a><span class="cf">for</span>(s <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>S) {</span>
-<span id="cb101-23"><a href="or-method-intro.html#cb101-23"></a></span>
-<span id="cb101-24"><a href="or-method-intro.html#cb101-24"></a>  MS_T &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb101-25"><a href="or-method-intro.html#cb101-25"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
-<span id="cb101-26"><a href="or-method-intro.html#cb101-26"></a>    MS_T &lt;-<span class="st"> </span>MS_T <span class="op">+</span><span class="st"> </span>(theta_i[i,s]<span class="op">-</span><span class="kw">mean</span>(theta_i[,s]))<span class="op">^</span><span class="dv">2</span></span>
-<span id="cb101-27"><a href="or-method-intro.html#cb101-27"></a>  }</span>
-<span id="cb101-28"><a href="or-method-intro.html#cb101-28"></a>  MS_T &lt;-<span class="st"> </span>MS_T<span class="op">/</span>(I<span class="dv">-1</span>)</span>
-<span id="cb101-29"><a href="or-method-intro.html#cb101-29"></a>  </span>
-<span id="cb101-30"><a href="or-method-intro.html#cb101-30"></a>  F_1R &lt;-<span class="st"> </span>MS_T<span class="op">/</span>(Var <span class="op">-</span><span class="st"> </span>Cov1)</span>
-<span id="cb101-31"><a href="or-method-intro.html#cb101-31"></a>  pValue &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pf</span>(F_1R, I<span class="dv">-1</span>, <span class="ot">Inf</span>)</span>
-<span id="cb101-32"><a href="or-method-intro.html#cb101-32"></a>  <span class="cf">if</span> (pValue <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>) reject &lt;-<span class="st"> </span>reject <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb101-33"><a href="or-method-intro.html#cb101-33"></a>}</span>
-<span id="cb101-34"><a href="or-method-intro.html#cb101-34"></a>alphaObs &lt;-<span class="st"> </span>reject<span class="op">/</span>S</span></code></pre></div>
+<span id="cb101-8"><a href="or-method-intro.html#cb101-8"></a>                  trueCov1, </span>
+<span id="cb101-9"><a href="or-method-intro.html#cb101-9"></a>                  trueVar), </span>
+<span id="cb101-10"><a href="or-method-intro.html#cb101-10"></a>                  <span class="dt">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb101-11"><a href="or-method-intro.html#cb101-11"></a>I &lt;-<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb101-12"><a href="or-method-intro.html#cb101-12"></a>S &lt;-<span class="st">  </span><span class="dv">2000</span></span>
+<span id="cb101-13"><a href="or-method-intro.html#cb101-13"></a><span class="co"># simulate foms for two modalities, S times</span></span>
+<span id="cb101-14"><a href="or-method-intro.html#cb101-14"></a><span class="co"># using the sampling model</span></span>
+<span id="cb101-15"><a href="or-method-intro.html#cb101-15"></a>theta_i &lt;-<span class="st"> </span><span class="kw">t</span>(<span class="kw">rmvnorm</span>(<span class="dt">n=</span>S, <span class="dt">mean=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">sigma=</span>sigma) <span class="op">+</span><span class="st"> </span>mu)</span>
+<span id="cb101-16"><a href="or-method-intro.html#cb101-16"></a><span class="co"># estimated variance covariances</span></span>
+<span id="cb101-17"><a href="or-method-intro.html#cb101-17"></a>vc &lt;-<span class="st"> </span><span class="kw">VarCov1_FomInput</span>(theta_i)</span>
+<span id="cb101-18"><a href="or-method-intro.html#cb101-18"></a>Var &lt;-<span class="st"> </span>vc<span class="op">$</span>Var</span>
+<span id="cb101-19"><a href="or-method-intro.html#cb101-19"></a>Cov1 &lt;-<span class="st"> </span>vc<span class="op">$</span>Cov1</span>
+<span id="cb101-20"><a href="or-method-intro.html#cb101-20"></a></span>
+<span id="cb101-21"><a href="or-method-intro.html#cb101-21"></a><span class="co"># conduct NH testing</span></span>
+<span id="cb101-22"><a href="or-method-intro.html#cb101-22"></a>reject &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb101-23"><a href="or-method-intro.html#cb101-23"></a><span class="cf">for</span>(s <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>S) {</span>
+<span id="cb101-24"><a href="or-method-intro.html#cb101-24"></a></span>
+<span id="cb101-25"><a href="or-method-intro.html#cb101-25"></a>  MS_T &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb101-26"><a href="or-method-intro.html#cb101-26"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>I) {</span>
+<span id="cb101-27"><a href="or-method-intro.html#cb101-27"></a>    MS_T &lt;-<span class="st"> </span>MS_T <span class="op">+</span><span class="st"> </span>(theta_i[i,s]<span class="op">-</span><span class="kw">mean</span>(theta_i[,s]))<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb101-28"><a href="or-method-intro.html#cb101-28"></a>  }</span>
+<span id="cb101-29"><a href="or-method-intro.html#cb101-29"></a>  MS_T &lt;-<span class="st"> </span>MS_T<span class="op">/</span>(I<span class="dv">-1</span>)</span>
+<span id="cb101-30"><a href="or-method-intro.html#cb101-30"></a>  </span>
+<span id="cb101-31"><a href="or-method-intro.html#cb101-31"></a>  F_1R &lt;-<span class="st"> </span>MS_T<span class="op">/</span>(Var <span class="op">-</span><span class="st"> </span>Cov1)</span>
+<span id="cb101-32"><a href="or-method-intro.html#cb101-32"></a>  pValue &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pf</span>(F_1R, I<span class="dv">-1</span>, <span class="ot">Inf</span>)</span>
+<span id="cb101-33"><a href="or-method-intro.html#cb101-33"></a>  <span class="cf">if</span> (pValue <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>) reject &lt;-<span class="st"> </span>reject <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb101-34"><a href="or-method-intro.html#cb101-34"></a>}</span>
+<span id="cb101-35"><a href="or-method-intro.html#cb101-35"></a>alphaObs &lt;-<span class="st"> </span>reject<span class="op">/</span>S</span></code></pre></div>
 <pre><code>## True, estimated variances =  0.000699,   0.000695</code></pre>
 <pre><code>## True, estimated Cov1 =  0.000373,   0.000351</code></pre>
 <pre><code>## NH rejection fraction =    0.0515</code></pre>
@@ -1154,7 +1155,7 @@ Cov_2 \qquad (j\neq j&#39;)
 \end{matrix}\right.
 \tag{19.13}
 \end{equation}\]</span>
-<p>The reason for the subscript “2” in <span class="math inline">\(Cov_2\)</span> will become clear when one extends this model to multiple readers. The <span class="math inline">\(J \times J\)</span> covariance matrix <span class="math inline">\(\Sigma\)</span> is:</p>
+<p>The reason for the subscript “2” in <span class="math inline">\(Cov_2\)</span> will become clear when one extends this model to multiple- treatments and multiple-readers. The <span class="math inline">\(J \times J\)</span> covariance matrix <span class="math inline">\(\Sigma\)</span> is:</p>
 <span class="math display" id="eq:ExampleSigma1">\[\begin{equation}
 \Sigma=
 \begin{pmatrix}
@@ -1166,12 +1167,12 @@ Cov_2 &amp; Cov_2 &amp; \ldots &amp; Cov_2 &amp; \text{Var}
 \end{pmatrix}
 \tag{19.14}
 \end{equation}\]</span>
-<p>The covariance matrix is estimated, as usual, by either a resampling method or, for the special case of Wilcoxon figure of merit, by the DeLong method.</p>
+<p>The covariance matrix is estimated, as usual, by either a resampling method (jackknife of bootstrap) or, for the special case of Wilcoxon figure of merit, by the DeLong method.</p>
 </div>
 <div id="st-or-multiple-reader" class="section level3">
 <h3><span class="header-section-number">19.5.2</span> Significance testing</h3>
-<p>Unlike the seemingly analogous single-reader multiple-treatment case, the single-treatment multiple-reader case is fundamentally different. This is because <em>reader is a random factor</em>. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., <span class="math inline">\(R_1 = R_2\)</span> (since reader is modeled as a random sample from a distribution: <span class="math inline">\(R \sim N(0,\sigma_R^2)\)</span>). The only statistics that can be estimated in this situation are the mean vector and the covariance matrix corresponding to the reader effect.</p>
-<p>Significance testing between two readers can be performed if reader is regarded as a <em>fixed</em> effect. Then the analysis presented in Section <a href="or-method-intro.html#st-or-multiple-treatment">19.4.2</a> is applicable, with the treatment factor replaced by the reader factor. This is appropriate when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the very literal sense.</p>
+<p>Unlike the seemingly analogous single-reader multiple-treatment case, the single-treatment multiple-reader case is fundamentally different. This is because <em>reader is a random factor</em> while treatment is a fixed factor. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., <span class="math inline">\(R_1 = R_2\)</span> (since reader is modeled as a random sample from a distribution: <span class="math inline">\(R \sim N(0,\sigma_R^2)\)</span>). The only statistics that can be estimated in this situation are the mean vector and the covariance matrix corresponding to the reader effect.</p>
+<p><strong>Special case:</strong> Significance testing between readers can be performed if reader is regarded as a <em>fixed</em> factor. Then the analysis presented in Section <a href="or-method-intro.html#st-or-multiple-treatment">19.4.2</a> is applicable, with the treatment factor replaced by the reader factor. This is appropriate, for example, when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the very literal sense.</p>
 </div>
 </div>
 <div id="or-method-intro-multiple-reader-multiple-treatment" class="section level2">
@@ -1561,7 +1562,7 @@ Cov(X,Y) =\frac{\sum_{i=1}^{N}(x_{i}-x_{\bullet})(y_{i}-y_{\bullet})}{N-1}=E(XY)
 <span id="cb142-5"><a href="or-method-intro.html#cb142-5"></a>           <span class="st">&quot;ORBoot:ddf&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>FRRC<span class="op">$</span>FTests[<span class="st">&quot;Treatment&quot;</span>, <span class="st">&quot;DF&quot;</span>], </span>
 <span id="cb142-6"><a href="or-method-intro.html#cb142-6"></a>           <span class="st">&quot;ORBoot:P-val&quot;</span> =<span class="st"> </span>ret4<span class="op">$</span>FRRC<span class="op">$</span>FTests[<span class="st">&quot;Treatment&quot;</span>, <span class="st">&quot;p&quot;</span>])</span></code></pre></div>
 <pre><code>##   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-## 1    1.2412666          1   0.26522709</code></pre>
+## 1    1.1744802          1   0.27848258</code></pre>
 <p>The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, <span class="math inline">\((I-1)(K-1)\)</span> = 113 for DBM and <span class="math inline">\(\infty\)</span> for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.</p>
 <p>Shown below is a first-principles implementation of OR significance testing for the one-reader case.</p>
 <div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="or-method-intro.html#cb144-1"></a>alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></span>
