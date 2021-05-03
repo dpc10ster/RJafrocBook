@@ -204,9 +204,9 @@ alphaObs <- reject/S
 ```
 
 ```{r, echo=FALSE}
-cat(sprintf("True, estimated variances = %9.6f,  %9.6f", 
+cat(sprintf("True, estimated diagonal elements = %9.6f,  %9.6f", 
     trueVar, Var), "\n")
-cat(sprintf("True, estimated Cov1 = %9.6f,  %9.6f", 
+cat(sprintf("True, estimated off-diagonal elements = %9.6f,  %9.6f", 
     trueCov1, Cov1), "\n")
 cat(sprintf("NH rejection fraction = %9.4f", 
     alphaObs), "\n")
@@ -342,10 +342,11 @@ The covariance matrix is estimated, as usual, by either a resampling method (jac
 
 ### Significance testing {#st-or-multiple-reader}
 
-Unlike the seemingly analogous single-reader multiple-treatment case, the single-treatment multiple-reader case is fundamentally different. This is because *reader is a random factor* while treatment is a fixed factor. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., $R_1 = R_2$ (since reader is modeled as a random sample from a distribution: $R \sim N(0,\sigma_R^2)$). The only statistics that can be estimated in this situation are the mean vector and the covariance matrix corresponding to the reader effect.
+Unlike the seemingly analogous single-reader multiple-treatment case addressed in Section \@ref(st-or-multiple-treatment), the single-treatment multiple-reader case is fundamentally different. This is because reader is a *random* factor while treatment, in Section \@ref(st-or-multiple-treatment), was a *fixed* factor. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., $R_1 = R_2$, since reader is modeled as a random sample from a distribution, i.e., $R \sim N(0,\sigma_R^2)$. 
 
-**Special case:** Significance testing between readers can be performed if reader is regarded as a *fixed* factor. Then the analysis presented in Section \@ref(st-or-multiple-treatment) is applicable, with the treatment factor replaced by the reader factor. This is appropriate, for example, when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the very literal sense.
+### Special case {#st-or-multiple-reader-example-three}
 
+If reader is regarded as a *fixed* factor significance testing between readers can be performed. The analysis presented in Section \@ref(st-or-multiple-treatment) is applicable, with the treatment factor replaced by the reader factor. This is appropriate, for example, when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the literal sense. 
 
 
 ## Multiple-reader multiple-treatment {#or-method-intro-multiple-reader-multiple-treatment}
@@ -368,16 +369,20 @@ The Obuchowski and Rockette model for fully paired multiple-reader multiple-trea
 -   The next two terms are, by assumption, mutually independent random samples specified as follows:
 
     -   $R_j$ denotes the random treatment-independent figure-of-merit contribution of reader $j$ ($j$ = 1,2, ..., $J$), modeled by a zero-mean normal distribution with variance $\sigma_R^2$;
-    -   $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance $\sigma_{\tau R}^2$. There could be a perceived notational clash with similar variance component terms defined for the DBM model -- except in that case they applied to pseudovalues. The meaning should be clear from the context.
+    -   $(\tau R)_{ij}$ denotes the treatment-dependent random contribution of reader $j$ in treatment $i$, modeled as a sample from a zero-mean normal distribution with variance $\sigma_{\tau R}^2$. 
 
 -   Summarizing:
 
 ```{=tex}
 \begin{equation}
-\left\{\begin{matrix}
+\left.
+\begin{aligned}
+\begin{matrix}
 R_j \sim N(0,\sigma_R^2)\\ 
 {\tau R} \sim N(0,\sigma_{\tau R}^2)
-\end{matrix}\right.
+\end{matrix}
+\end{aligned}
+\right \}
 (\#eq:ORVariances)
 \end{equation}
 ```
@@ -427,11 +432,11 @@ $$\sigma_R^2,\sigma_{\tau R}^2,\text{Var}, \text{Cov1}, \text{Cov2}, \text{Cov3}
 
 This is the same number of variance component parameters as in the DBM model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model Eqn. \@ref(eq:or-sampling-model-general) "looks" simpler because four covariance terms are encapsulated in the $\epsilon$ term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader.
 
-*It is implicit in the Obuchowski-Rockette model that the* $Var$, $\text{Cov1}$, $Cov_2$, and $Cov_3$ estimates are averaged over all applicable treatment-reader combinations.
+It is implicit in the Obuchowski-Rockette model that the $Var$, $\text{Cov1}$, $Cov_2$, and $Cov_3$ estimates are averaged over all applicable treatment-reader combinations.
 
 ### Structure of the covariance matrix {#StrCovMatrix}
 
-To understand the structure of this matrix, recall that the diagonal elements of a square covariance matrix are the variances and the off-diagonal elements are covariances. With two indices $ij$ one can still imagine a square matrix where each dimension is labeled by a pair of indices $ij$. One $ij$ pair corresponds to the horizontal direction, and the other $ij$ pair corresponds to the vertical direction. To visualize this let consider the simpler situation of two treatments ($I = 2$) and three readers ($J = 3$). The resulting $6 \times 6$ covariance matrix would look like this:
+To understand the structure of this matrix, recall that the diagonal elements of a square covariance matrix are the variances and the off-diagonal elements are covariances. With two indices $ij$ one can still imagine a square matrix where the position along each dimension is labeled by a pair of indices $ij$. One $ij$ pair corresponds to the horizontal direction, and the other $ij$ pair corresponds to the vertical direction. To visualize this let consider the simpler situation of two treatments ($I = 2$) and three readers ($J = 3$). The resulting $6 \times 6$ covariance matrix would look like this:
 
 $$
 \Sigma=
