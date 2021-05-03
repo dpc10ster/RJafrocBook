@@ -134,7 +134,7 @@
 
 \title{The RJafroc Book}
 \author{Dev P. Chakraborty, PhD}
-\date{2021-04-30}
+\date{2021-05-03}
 
 \begin{document}
 \maketitle
@@ -5014,9 +5014,9 @@ The following code prints the predicted and observed full areas under the ROCs f
 
 \begin{verbatim}
 #> A_z predicted =  0.9213504 
-#> A_z observed =  0.9236876
+#> A_z observed =  0.9219085
 #> A_z{c;true} predicted =  0.8244498 
-#> A_z{c;true} observed =  0.8250629
+#> A_z{c;true} observed =  0.8245879
 \end{verbatim}
 
 Note that:
@@ -8384,11 +8384,11 @@ It is important to validate the significance testing method just outlined above.
 \end{Shaded}
 
 \begin{verbatim}
-## True, estimated variances =  0.000699,   0.000695
+## True, estimated diagonal elements =  0.000699,   0.000695
 \end{verbatim}
 
 \begin{verbatim}
-## True, estimated Cov1 =  0.000373,   0.000351
+## True, estimated off-diagonal elements =  0.000373,   0.000351
 \end{verbatim}
 
 \begin{verbatim}
@@ -8544,9 +8544,12 @@ The covariance matrix is estimated, as usual, by either a resampling method (jac
 \hypertarget{st-or-multiple-reader}{%
 \subsection{Significance testing}\label{st-or-multiple-reader}}
 
-Unlike the seemingly analogous single-reader multiple-treatment case, the single-treatment multiple-reader case is fundamentally different. This is because \emph{reader is a random factor} while treatment is a fixed factor. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., \(R_1 = R_2\) (since reader is modeled as a random sample from a distribution: \(R \sim N(0,\sigma_R^2)\)). The only statistics that can be estimated in this situation are the mean vector and the covariance matrix corresponding to the reader effect.
+Unlike the seemingly analogous single-reader multiple-treatment case addressed in Section \ref{st-or-multiple-treatment}, the single-treatment multiple-reader case is fundamentally different. This is because reader is a \emph{random} factor while treatment, in Section \ref{st-or-multiple-treatment}, was a \emph{fixed} factor. This makes it impossible to define a null hypothesis analogous to that with the treatment factor, e.g., \(R_1 = R_2\), since reader is modeled as a random sample from a distribution, i.e., \(R \sim N(0,\sigma_R^2)\).
 
-\textbf{Special case:} Significance testing between readers can be performed if reader is regarded as a \emph{fixed} factor. Then the analysis presented in Section \ref{st-or-multiple-treatment} is applicable, with the treatment factor replaced by the reader factor. This is appropriate, for example, when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the very literal sense.
+\hypertarget{st-or-multiple-reader-example-three}{%
+\subsection{Special case}\label{st-or-multiple-reader-example-three}}
+
+If reader is regarded as a \emph{fixed} factor significance testing between readers can be performed. The analysis presented in Section \ref{st-or-multiple-treatment} is applicable, with the treatment factor replaced by the reader factor. This is appropriate, for example, when comparing two AI (artificial intelligence) algorithms. The two algorithms, each of which qualifies as a reader, are not random samples from a population of AI readers: rather they are two fixed algorithms, in the literal sense.
 
 \hypertarget{or-method-intro-multiple-reader-multiple-treatment}{%
 \section{Multiple-reader multiple-treatment}\label{or-method-intro-multiple-reader-multiple-treatment}}
@@ -8573,17 +8576,21 @@ The Obuchowski and Rockette model for fully paired multiple-reader multiple-trea
   \item
     \(R_j\) denotes the random treatment-independent figure-of-merit contribution of reader \(j\) (\(j\) = 1,2, \ldots, \(J\)), modeled by a zero-mean normal distribution with variance \(\sigma_R^2\);
   \item
-    \((\tau R)_{ij}\) denotes the treatment-dependent random contribution of reader \(j\) in treatment \(i\), modeled as a sample from a zero-mean normal distribution with variance \(\sigma_{\tau R}^2\). There could be a perceived notational clash with similar variance component terms defined for the DBM model -- except in that case they applied to pseudovalues. The meaning should be clear from the context.
+    \((\tau R)_{ij}\) denotes the treatment-dependent random contribution of reader \(j\) in treatment \(i\), modeled as a sample from a zero-mean normal distribution with variance \(\sigma_{\tau R}^2\).
   \end{itemize}
 \item
   Summarizing:
 \end{itemize}
 
 \begin{equation}
-\left\{\begin{matrix}
+\left.
+\begin{aligned}
+\begin{matrix}
 R_j \sim N(0,\sigma_R^2)\\ 
 {\tau R} \sim N(0,\sigma_{\tau R}^2)
-\end{matrix}\right.
+\end{matrix}
+\end{aligned}
+\right \}
 \label{eq:ORVariances}
 \end{equation}
 
@@ -8629,12 +8636,12 @@ Apart from fixed effects, the model implied by Eqn. \eqref{eq:or-sampling-model-
 
 This is the same number of variance component parameters as in the DBM model, which should not be a surprise since one is modeling the data with equivalent models. The Obuchowski and Rockette model Eqn. \eqref{eq:or-sampling-model-general} ``looks'' simpler because four covariance terms are encapsulated in the \(\epsilon\) term. As with the singe-reader multiple-treatment model, the covariance matrix is assumed to be independent of treatment or reader.
 
-\emph{It is implicit in the Obuchowski-Rockette model that the} \(Var\), \(\text{Cov1}\), \(Cov_2\), and \(Cov_3\) estimates are averaged over all applicable treatment-reader combinations.
+It is implicit in the Obuchowski-Rockette model that the \(Var\), \(\text{Cov1}\), \(Cov_2\), and \(Cov_3\) estimates are averaged over all applicable treatment-reader combinations.
 
 \hypertarget{StrCovMatrix}{%
 \subsection{Structure of the covariance matrix}\label{StrCovMatrix}}
 
-To understand the structure of this matrix, recall that the diagonal elements of a square covariance matrix are the variances and the off-diagonal elements are covariances. With two indices \(ij\) one can still imagine a square matrix where each dimension is labeled by a pair of indices \(ij\). One \(ij\) pair corresponds to the horizontal direction, and the other \(ij\) pair corresponds to the vertical direction. To visualize this let consider the simpler situation of two treatments (\(I = 2\)) and three readers (\(J = 3\)). The resulting \(6 \times 6\) covariance matrix would look like this:
+To understand the structure of this matrix, recall that the diagonal elements of a square covariance matrix are the variances and the off-diagonal elements are covariances. With two indices \(ij\) one can still imagine a square matrix where the position along each dimension is labeled by a pair of indices \(ij\). One \(ij\) pair corresponds to the horizontal direction, and the other \(ij\) pair corresponds to the vertical direction. To visualize this let consider the simpler situation of two treatments (\(I = 2\)) and three readers (\(J = 3\)). The resulting \(6 \times 6\) covariance matrix would look like this:
 
 \[
 \Sigma=
@@ -9181,7 +9188,7 @@ Shown below are results obtained using \texttt{RJafroc} function \texttt{StSigni
 
 \begin{verbatim}
 ##   ORBoot.Chisq ORBoot.ddf ORBoot.P.val
-## 1    1.4631391          1   0.22643132
+## 1    1.1731386          1   0.27875728
 \end{verbatim}
 
 The DBM and OR-jackknife methods yield identical F-statistics, but the denominator degrees of freedom are different, \((I-1)(K-1)\) = 113 for DBM and \(\infty\) for OR. The F-statistics for OR-bootstrap and OR-DeLong are different.
