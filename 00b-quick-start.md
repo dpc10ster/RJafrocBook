@@ -1,4 +1,4 @@
-# JAFROC data format {#quick-start-data-format}
+# JAFROC ROC data format {#quick-start-data-format}
 
 
 
@@ -26,7 +26,7 @@
 * Reasons for the change will become clearer in later chapters ^[They are needed for generalization to other data collection paradigms and for better data entry error control].
 
 ## Contents of Excel file {#quick-start-data-format-contents}
-* The illustrations in this chapter correspond to Excel file `R/quick-start/rocCr.xlsx` in the project directory ^[To access files one needs to `fork` the repository, which creates, on your computer, a copy of all files used to create this document]. This is a *toy file*, i.e., an artificial small dataset intended to illustrate essential features of the data format. 
+* The illustrations in this chapter correspond to Excel file `R/quick-start/rocCr.xlsx` in the project directory ^[To access files one needs to `fork` the repository, which creates, on your computer, a copy of all files used to create this document]. This is termed a *toy file*, i.e., an artificial small dataset created to illustrate essential features of the data format. 
 * The Excel file has three worksheets: `Truth`, `NL` (or `FP`) and `LL` (or `TP`).
 
 ## The `Truth` worksheet {#quick-start-data-format-truth-worksheet}
