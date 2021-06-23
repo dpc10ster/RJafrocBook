@@ -34,7 +34,7 @@ Location-specific paradigms take into account, to varying degrees, information r
 All observer performance methods involve detecting the presence of true lesions; so ROC methodology is, in this sense, also lesion-specific. On the other hand location is a characteristic of true and perceived focal lesions, and methods that account for location are better termed *location-specific* than lesion-specific. There are three location-specific paradigms:
 
 -   the free-response ROC (FROC) [@bunch1977free; @chakraborty1989maximum];
--   the location ROC (LROC) [@RN1311; @RN209];
+-   the location ROC (LROC) [@starr1977comments; @swensson1996unified];
 -   the region of interest (ROI) [@obuchowski2010data].
 
 <div class="figure">
