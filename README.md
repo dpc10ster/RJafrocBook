@@ -1,6 +1,5 @@
 ### RJafrocBook
 
-[![Build Status](https://travis-ci.org/dpc10ster/RJafrocBook.svg?branch=master)](https://travis-ci.org/dpc10ster/RJafrocBook)
 
 # What is this repository for? #
 * Extended documentation for the CRAN version of the RJafroc package. 
