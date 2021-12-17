@@ -1,0 +1,91 @@
+--- 
+title: "The RJafroc Book"
+author: "Dev P. Chakraborty, PhD"
+date: "2021-12-17"
+site: bookdown::bookdown_site
+output: 
+   bookdown::pdf_document: default
+documentclass: book
+bibliography: [packages.bib, myRefs.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: dpc10ster/RJafrocBook
+description: "Artificial intelligence and observer performance book based on RJafroc."
+---
+
+
+
+
+
+# Preface {-}
+* This book is currently (as of April 2021) in preparation. 
+* It is intended as an online update to my "physical" book [@chakraborty2017observer]. Since its publication in 2017 the `RJafroc` package, on which the `R` code examples in the book depend, has evolved considerably, causing many of the examples to "break". This also gives me the opportunity to improve on the book and include additional material.
+* The physical book chapters are labeled (book), to distinguish them from the chapters in this online book.
+
+
+
+## TBA How much finished {-}
+
+10%
+
+## The pdf file of the book {-}
+Go [here](https://github.com/dpc10ster/RJafrocBook/blob/gh-pages/RJafrocBook.pdf) and then click on `Download` to get the `RJafrocBook.pdf` file.
+
+## A note on the online distribution mechanism of the book {-}
+* In the hard-copy version of my book [@chakraborty2017observer] the online distribution mechanism was `BitBucket`. 
+* `BitBucket` allows code sharing within a _closed_ group of a few users (e.g., myself and a grad student). 
+* Since the purpose of open-source code is to encourage collaborations, this was, in hindsight, an unfortunate choice. Moreover, as my experience with R-packages grew, it became apparent that the vast majority of R-packages are shared on `GitHub`, not `BitBucket`. 
+* For these reasons I have switched to `GitHub`. All previous instructions pertaining to `BitBucket` are obsolete.
+* In order to access `GitHub` material one needs to create a (free) `GitHub` account. 
+* Go to [this link](https://github.com) and click on `Sign Up`.
+
+## Structure of the book {-}
+The book is divided into parts as follows:
+
+* Part I: Quick Start: intended for existing Windows `JAFROC` users who are seeking a quick-and-easy transition from Windows `JAFROC` to `RJafroc`. 
+* Part II: Basics: this covers the basics of ROC methods 
+* Part III: Significance Testing: TBA
+* Part IV: FROC paradigm: TBA
+
+
+## Contributing to this book {-}
+* I appreciate constructive feedback on this document, e.g., corrections, comments, etc.  
+* To do this raise an `Issue` on the `GitHub` [interface](https://github.com/dpc10ster/RJafrocBook). 
+* Click on the `Issues` tab under `dpc10ster/RJafrocBook`, then click on `New issue`.
+* When done this way, contributions from users automatically become part of the `GitHub` documentation/history of the book.
+
+## Is this book relevant to you and what are the alternatives? {-}
+* Diagnostic imaging system evaluation
+* Detection
+* Detection combined with localization
+* Detection combined with localization and classification
+* Optimization of Artificial Intelligence (AI) algorithms
+* CV
+* Alternatives
+
+## ToDos TBA {-}
+* Check Bamber theorem derivation.
+* Parts labeled TBA and TODOLAST need to be updated on final revision.
+* Change third person to first person in references to myself.
+
+## Chapters needing heavy edits {-}
+* 12-froc.
+* 13-froc-empirical.
+* 13-froc-empirical-examples.
+
+
+## Shelved vs. removed vs. parked folders needing heavy edits {-}
+* TBA
+* Temporarily shelved 17c-rsm-evidence.Rmd in removed folder
+* Now 17-b is breaking; possibly related to changes in RJafroc: had to do with recent changes to RJafroc code - RSM_xFROC etc requiring intrinsic parameters; fixed 17-b
+* parked has dependence of ROC/FROC performance on threshold
+
+
+## Coding aids {-}
+* sprintf("%.4f", proper formatting of numbers
+* OpPtStr(, do:
+* kbl(dfA, caption = "....", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1, 3), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+* ```{r, attr.source = ".numberLines"}
+* kbl(x12, caption = "Summary of optimization results using wAFROC-AUC.", booktabs = TRUE, escape = FALSE) %>% collapse_rows(columns = c(1), valign = "middle") %>% kable_styling(latex_options = c("basic", "scale_down", "HOLD_position"), row_label_position = "c") 
+
+
