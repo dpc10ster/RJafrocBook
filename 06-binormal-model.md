@@ -348,9 +348,9 @@ The following code prints the predicted and observed full areas under the ROCs f
 
 ```
 #> A_z predicted =  0.9213504 
-#> A_z observed =  0.9204247
+#> A_z observed =  0.92056
 #> A_z{c;true} predicted =  0.8244498 
-#> A_z{c;true} observed =  0.825764
+#> A_z{c;true} observed =  0.8259413
 ```
 
 
